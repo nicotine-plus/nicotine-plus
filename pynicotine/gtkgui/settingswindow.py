@@ -2707,13 +2707,8 @@ class PluginsFrame(BuildFrame):
                 container.set_orientation(Gtk.Orientation.VERTICAL)
 
             label = self.generate_label(description)
-
-            if Gtk.get_major_version() == 4:
-                container.append(label)
-                self.get_content_area().append(container)
-            else:
-                container.add(label)
-                self.get_content_area().add(container)
+            container.add(label)
+            self.get_content_area().add(container)
 
             return container
 
@@ -2734,15 +2729,12 @@ class PluginsFrame(BuildFrame):
 
             if Gtk.get_major_version() == 4:
                 scrolled_window.set_has_frame(True)
-
                 scrolled_window.set_child(self.tw[name])
-                container.append(scrolled_window)
-
             else:
                 scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
-
                 scrolled_window.add(self.tw[name])
-                container.add(scrolled_window)
+
+            container.add(scrolled_window)
 
             cols = initialise_columns(
                 None, self.tw[name],
@@ -2760,18 +2752,11 @@ class PluginsFrame(BuildFrame):
             box = Gtk.Box()
             box.set_spacing(6)
 
-            if Gtk.get_major_version() == 4:
-                box.append(self.add_button)
-                box.append(self.remove_button)
+            box.add(self.add_button)
+            box.add(self.remove_button)
 
-                self.get_content_area().append(container)
-                self.get_content_area().append(box)
-            else:
-                box.add(self.add_button)
-                box.add(self.remove_button)
-
-                self.get_content_area().add(container)
-                self.get_content_area().add(box)
+            self.get_content_area().add(container)
+            self.get_content_area().add(box)
 
             renderers = cols[description].get_cells()
             for render in renderers:
@@ -2809,10 +2794,7 @@ class PluginsFrame(BuildFrame):
                     self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment.new(0, 0, 99999, 1, 10, 0), 1, 2)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
-                    if Gtk.get_major_version() == 4:
-                        container.append(self.tw[name])
-                    else:
-                        container.add(self.tw[name])
+                    container.add(self.tw[name])
 
                 elif data["type"] in ("bool",):
                     container = Gtk.Box()
@@ -2820,12 +2802,8 @@ class PluginsFrame(BuildFrame):
                     self.tw[name] = Gtk.CheckButton.new_with_label(data["description"])
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
-                    if Gtk.get_major_version() == 4:
-                        self.get_content_area().append(container)
-                        container.append(self.tw[name])
-                    else:
-                        self.get_content_area().add(container)
-                        container.add(self.tw[name])
+                    self.get_content_area().add(container)
+                    container.add(self.tw[name])
 
                 elif data["type"] in ("radio",):
                     container = self.generate_widget_container(data["description"])
@@ -2863,10 +2841,7 @@ class PluginsFrame(BuildFrame):
 
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
-                    if Gtk.get_major_version() == 4:
-                        container.append(self.tw[name])
-                    else:
-                        container.add(self.tw[name])
+                    container.add(self.tw[name])
 
                 elif data["type"] in ("str", "string"):
                     container = self.generate_widget_container(data["description"])
@@ -2875,10 +2850,7 @@ class PluginsFrame(BuildFrame):
                     entry.set_hexpand(True)
                     self.settings.set_widget(entry, config.sections["plugins"][plugin][name])
 
-                    if Gtk.get_major_version() == 4:
-                        container.append(entry)
-                    else:
-                        container.add(entry)
+                    container.add(entry)
 
                 elif data["type"] in ("textview"):
                     container = self.generate_widget_container(data["description"], vertical=True)
@@ -2921,10 +2893,7 @@ class PluginsFrame(BuildFrame):
                     self.tw[name] = FileChooserButton(button_widget, self, chooser)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
-                    if Gtk.get_major_version() == 4:
-                        container.append(button_widget)
-                    else:
-                        container.add(button_widget)
+                    container.add(button_widget)
 
                 else:
                     print("Unknown setting type '%s', data '%s'" % (name, data))
@@ -3149,7 +3118,6 @@ class Settings:
 
         if Gtk.get_major_version() == 4:
             self.Main.set_property("resize-start-child", False)
-
         else:
             self.Main.child_set_property(self.SettingsList, "resize", False)
 

@@ -96,13 +96,11 @@ class ImageLabel(Gtk.Box):
 
         if Gtk.get_major_version() == 4:
             self.eventbox = Gtk.Box()
-            self.append(self.eventbox)
-            self.eventbox.append(self.box)
         else:
             self.eventbox = Gtk.EventBox()
-            self.add(self.eventbox)
-            self.eventbox.add(self.box)
 
+        self.add(self.eventbox)
+        self.eventbox.add(self.box)
         self.eventbox.show()
 
         if self.centered:
@@ -112,9 +110,6 @@ class ImageLabel(Gtk.Box):
 
         self.status_image.set_margin_end(5)
         self.hilite_image.set_margin_start(5)
-
-        if Gtk.get_major_version() == 4:
-            self.box.add = self.box.append
 
         self.box.add(self.status_image)
         self.box.add(self.label)
@@ -137,13 +132,13 @@ class ImageLabel(Gtk.Box):
         if Gtk.get_major_version() == 4:
             self.button.set_child(close_image)
             self.button.set_has_frame(False)
-            self.append(self.button)
 
         else:
             self.button.add(close_image)
             self.button.set_relief(Gtk.ReliefStyle.NONE)
             self.button.show_all()
-            self.add(self.button)
+
+        self.add(self.button)
 
         if self.onclose is not None:
             self.button.connect("clicked", self.onclose)

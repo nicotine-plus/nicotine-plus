@@ -1124,11 +1124,7 @@ class NicotineFrame:
 
         elif mode == "tab":
 
-            if Gtk.get_major_version() == 4:
-                self.userlistvbox.append(self.userlist.Main)
-            else:
-                self.userlistvbox.add(self.userlist.Main)
-
+            self.userlistvbox.add(self.userlist.Main)
             self.show_tab(self.userlistvbox)
 
             self.userlist.BuddiesToolbar.hide()
@@ -1403,7 +1399,6 @@ class NicotineFrame:
 
         if Gtk.get_major_version() == 4:
             header_bar.set_title_widget(None)
-            toolbar_contents.add = toolbar_contents.append
         else:
             header_bar.set_custom_title(None)
 
@@ -2597,6 +2592,13 @@ class Application(Gtk.Application):
         except AttributeError:
             # GTK 4 replacement
             Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values
+
+        try:
+            Gtk.Box.add
+
+        except AttributeError:
+            # GTK 4 replacement
+            Gtk.Box.add = Gtk.Box.append
 
     def do_activate(self):
         if not self.get_windows():

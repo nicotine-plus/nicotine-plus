@@ -35,10 +35,7 @@ def generic_dialog(parent=None, content_box=None, quit_callback=None, type_hint=
     )
 
     if content_box:
-        if Gtk.get_major_version() == 4:
-            dialog.get_content_area().append(content_box)
-        else:
-            dialog.get_content_area().add(content_box)
+        dialog.get_content_area().add(content_box)
 
     set_dialog_properties(dialog, parent, quit_callback, type_hint, modal)
     return dialog
@@ -97,21 +94,12 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
         for i in droplist:
             dropdown.append_text(i)
 
-        if Gtk.get_major_version() == 4:
-            self.get_message_area().append(dropdown)
-        else:
-            self.get_message_area().add(dropdown)
-
+        self.get_message_area().add(dropdown)
         dropdown.show()
 
     else:
         entry = Gtk.Entry()
-
-        if Gtk.get_major_version() == 4:
-            self.get_message_area().append(entry)
-        else:
-            self.get_message_area().add(entry)
-
+        self.get_message_area().add(entry)
         entry.show()
 
     self.get_response_value = entry.get_text
@@ -124,11 +112,7 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
         self.option.set_active(optionvalue)
         self.option.set_label(optionmessage)
 
-        if Gtk.get_major_version() == 4:
-            self.get_message_area().append(self.option)
-        else:
-            self.get_message_area().add(self.option)
-
+        self.get_message_area().add(self.option)
         self.option.show()
 
         self.get_second_response_value = self.option.get_active
@@ -194,11 +178,7 @@ def option_dialog(parent, title, message, callback, callback_data=None,
         self.checkbox = Gtk.CheckButton()
         self.checkbox.set_label(checkbox_label)
 
-        if Gtk.get_major_version() == 4:
-            self.get_message_area().append(self.checkbox)
-        else:
-            self.get_message_area().add(self.checkbox)
-
+        self.get_message_area().add(self.checkbox)
         self.checkbox.show()
 
     if third:

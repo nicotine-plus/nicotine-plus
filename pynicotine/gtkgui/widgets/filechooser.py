@@ -235,14 +235,12 @@ class FileChooserButton:
             self.icon.set_property("icon-name", "text-x-generic-symbolic")
 
         self.label = Gtk.Label.new(_("(None)"))
+        box.add(self.icon)
+        box.add(self.label)
 
         if Gtk.get_major_version() == 4:
-            box.append(self.icon)
-            box.append(self.label)
             self.button.set_child(box)
         else:
-            box.add(self.icon)
-            box.add(self.label)
             self.button.add(box)
             self.button.show_all()
 
