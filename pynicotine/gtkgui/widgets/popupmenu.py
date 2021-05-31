@@ -370,7 +370,8 @@ class PopupMenu(Gio.Menu):
 
     def _callback_legacy(self, controller, event):
         """ Gtk.TextView: Prevent GTK's built-in context menu from showing
-            Gtk.TreeView: Preserve multi-row selection when showing menu """
+            Gtk.TreeView: Preserve multi-row selection when showing menu
+            Gtk.TreeView Header Button: Prevent main context menu of treeview from showing """
 
         if self.menu_open:
             self.menu_open = False
@@ -394,7 +395,8 @@ class PopupMenu(Gio.Menu):
     def connect_events(self, widget):
 
         if Gtk.get_major_version() == 4:
-            if isinstance(self.widget, (Gtk.TextView, Gtk.TreeView)):
+            if isinstance(widget, (Gtk.TextView, Gtk.TreeView)) or \
+                    isinstance(widget.get_parent(), Gtk.TreeView):
                 self.legacy_controller = Gtk.EventControllerLegacy()
                 self.legacy_controller.connect("event", self._callback_legacy)
                 widget.add_controller(self.legacy_controller)
