@@ -82,6 +82,7 @@ class ImageLabel(Gtk.Box):
                 self.box.remove(widget)
 
             self.eventbox.remove(self.box)
+            self.remove(self.eventbox)
 
     def _add_close_button(self):
 
@@ -123,7 +124,7 @@ class ImageLabel(Gtk.Box):
             self.eventbox = Gtk.EventBox()
 
         self.box = Gtk.Box()
-        self.box.set_spacing(2)
+        self.box.set_spacing(6)
 
         self.add(self.eventbox)
         self.eventbox.add(self.box)
@@ -133,9 +134,6 @@ class ImageLabel(Gtk.Box):
             self.set_halign(Gtk.Align.CENTER)
         else:
             self.set_halign(Gtk.Align.FILL)
-
-        self.status_image.set_margin_end(5)
-        self.hilite_image.set_margin_start(5)
 
         self.box.add(self.status_image)
         self.box.add(self.label)
