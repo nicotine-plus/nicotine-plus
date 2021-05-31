@@ -356,9 +356,9 @@ class NicotineFrame:
 
         """ Connect """
 
-        network_processor.start(self, self.network_callback)
+        connect_ready = network_processor.start(self, self.network_callback)
 
-        if config.need_config():
+        if not connect_ready:
             self.connect_action.set_enabled(False)
             self.rescan_public_action.set_enabled(True)
 

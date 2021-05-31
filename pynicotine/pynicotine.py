@@ -300,6 +300,13 @@ class NetworkEventProcessor:
         port_range = config.sections["server"]["portrange"]
         self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
+        connect_ready = not config.need_config()
+
+        if not connect_ready:
+            log.add(_("You need to specify a username and password before connecting..."))
+
+        return connect_ready
+
     def quit(self, *args):
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread

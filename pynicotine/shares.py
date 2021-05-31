@@ -597,7 +597,8 @@ class Shares:
 
     def init_shares(self):
 
-        rescan_startup = self.config.sections["transfers"]["rescanonstartup"]
+        rescan_startup = self.config.sections["transfers"]["rescanonstartup"] and \
+            not self.config.need_config()
 
         # Rescan public shares if necessary
         if not self.config.sections["transfers"]["friendsonly"]:

@@ -519,8 +519,6 @@ class Config:
         # Check if we have specified a username or password
         if not self.sections["server"]["login"] or \
                 not self.sections["server"]["passw"]:
-
-            log.add(_("You need to specify a username and password before connecting..."))
             return True
 
         return False

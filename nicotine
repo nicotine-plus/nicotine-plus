@@ -193,12 +193,14 @@ def run_headless(network_processor):
     for signal_type in (signal.SIGINT, signal.SIGTERM):
         signal.signal(signal_type, network_processor.quit)
 
-    network_processor.start()
-    network_processor.connect()
+    connect_ready = network_processor.start()
 
-    while not network_processor.shutdown:
-        time.sleep(0.2)
-        pass
+    if connect_ready:
+        network_processor.connect()
+
+        while not network_processor.shutdown:
+            time.sleep(0.2)
+            pass
 
     config.write_configuration()
     return 0
