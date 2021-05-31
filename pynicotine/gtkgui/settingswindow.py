@@ -1349,7 +1349,14 @@ class IconsFrame(BuildFrame):
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite"]), _("Highlight")],
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite3"]), _("Highlight")],
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["n"]), _("Window")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["notify"]), _("Notification")],
+            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["notify"]), _("Notification")]
+        ):
+            liststore.insert_with_valuesv(-1, column_numbers, row)
+
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            return
+
+        for row in (
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_connect"]), _("Connected (Tray)")],
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_disconnect"]), _("Disconnected (Tray)")],
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_away"]), _("Away (Tray)")],
@@ -1372,7 +1379,7 @@ class IconsFrame(BuildFrame):
             elif exitdialog == 0:
                 self.QuitOnClose.set_active(True)
 
-        if sys.platform == "darwin":
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
             self.hide_tray_icon_settings()
             return
@@ -1384,16 +1391,6 @@ class IconsFrame(BuildFrame):
 
         # Hide widgets
         self.TraySettings.hide()
-
-        self.Trayicon_Label.hide()
-        self.Trayicon_Away.hide()
-        self.Trayicon_Away_Label.hide()
-        self.Trayicon_Connect.hide()
-        self.Trayicon_Online_Label.hide()
-        self.Trayicon_Disconnect.hide()
-        self.Trayicon_Offline_Label.hide()
-        self.Trayicon_Msg.hide()
-        self.Trayicon_Hilite_Label.hide()
 
         # Always exit on close, since there's no tray icon
         self.QuitOnClose.set_active(True)
