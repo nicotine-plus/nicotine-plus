@@ -223,8 +223,7 @@ class Searches(IconNotebook):
 
         label = fulltext[:length]
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
-        tab_label, menu_label = self.get_labels(tab.Main)
-        tab.set_label(tab_label)
+        tab.set_label(self.get_tab_label_inner(tab.Main))
 
     def show_search_result(self, msg, username, country):
 

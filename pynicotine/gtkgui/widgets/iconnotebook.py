@@ -281,6 +281,13 @@ class IconNotebook:
 
         return tab_label, menu_label
 
+    def get_tab_label_inner(self, page):
+
+        if Gtk.get_major_version() == 4:
+            return self.notebook.get_tab_label(page).get_first_child()
+        else:
+            return self.notebook.get_tab_label(page).get_children()[0]
+
     def set_reorderable(self, reorderable):
 
         self.reorderable = reorderable

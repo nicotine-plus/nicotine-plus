@@ -145,8 +145,7 @@ class PrivateChats(IconNotebook):
             self.frame.np.watch_user(user)
 
             self.append_page(tab.Main, user, tab.on_close, status=status)
-            tab_label, menu_label = self.get_labels(tab.Main)
-            tab.set_label(tab_label)
+            tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if show_user:
             if self.get_current_page() != self.page_num(self.users[user].Main):

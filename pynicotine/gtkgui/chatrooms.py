@@ -186,8 +186,7 @@ class ChatRooms(IconNotebook):
         self.joinedrooms[msg.room] = tab = ChatRoom(self, msg.room, msg.users, meta)
 
         self.append_page(tab.Main, msg.room, tab.on_leave)
-        tab_label, menu_label = self.get_labels(tab.Main)
-        tab.set_label(tab_label)
+        tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if self.switch_tab:
             page_num = self.page_num(tab.Main)

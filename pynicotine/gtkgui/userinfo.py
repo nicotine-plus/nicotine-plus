@@ -75,8 +75,7 @@ class UserTabs(IconNotebook):
 
         w = self.users[user] = self.subwindow(self, user)
         self.append_page(w.Main, user, w.on_close, status=status)
-        tab_label, menu_label = self.get_labels(w.Main)
-        w.set_label(tab_label)
+        w.set_label(self.get_tab_label_inner(w.Main))
 
     def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
 
