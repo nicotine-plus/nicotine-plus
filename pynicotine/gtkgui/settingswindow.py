@@ -3441,8 +3441,11 @@ class Settings:
 
         child = self.viewport1.get_child()
 
-        if child and Gtk.get_major_version() == 3:
-            self.viewport1.remove(child)
+        if child:
+            if Gtk.get_major_version() == 4:
+                self.viewport1.set_child(None)
+            else:
+                self.viewport1.remove(child)
 
         model, iterator = selection.get_selected()
 
@@ -3452,11 +3455,10 @@ class Settings:
         page_id = model.get_value(iterator, 1)
 
         if page_id not in self.pages:
-            try:
-                self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
-            except AttributeError:
+            if not hasattr(sys.modules[__name__], page_id + "Frame"):
                 return
 
+            self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
             self.update_visuals(page)
 
