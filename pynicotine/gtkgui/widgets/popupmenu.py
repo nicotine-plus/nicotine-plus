@@ -364,10 +364,10 @@ class PopupMenu(Gio.Menu):
         self.popup(x, y)
 
     def _callback_legacy(self, controller, event):
+        """ Gtk.TextView: Prevent GTK's built-in context menu from showing
+            Gtk.TreeView: Preserve multi-row selection when showing menu """
 
-        if isinstance(self.widget, (Gtk.TextView, Gtk.TreeView)) and self.menu_open:
-            # Gtk.TextView: Prevent GTK's built-in context menu from showing
-            # Gtk.TreeView: Preserve multi-row selection when showing menu
+        if self.menu_open:
             self.menu_open = False
             return True
 
@@ -389,18 +389,18 @@ class PopupMenu(Gio.Menu):
     def connect_events(self, widget):
 
         if Gtk.get_major_version() == 4:
-            self.legacy_controller = Gtk.EventControllerLegacy()
-            self.legacy_controller.connect("event", self._callback_legacy)
+            if isinstance(self.widget, (Gtk.TextView, Gtk.TreeView)):
+                self.legacy_controller = Gtk.EventControllerLegacy()
+                self.legacy_controller.connect("event", self._callback_legacy)
+                widget.add_controller(self.legacy_controller)
 
             self.gesture_click = Gtk.GestureClick()
             self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
             self.gesture_click.connect("pressed", self._callback_click_gtk4)
+            widget.add_controller(self.gesture_click)
 
             self.gesture_press = Gtk.GestureLongPress()
-
-            widget.add_controller(self.legacy_controller)
             widget.add_controller(self.gesture_press)
-            widget.add_controller(self.gesture_click)
 
         else:
             self.gesture_press = Gtk.GestureLongPress.new(widget)
