@@ -67,10 +67,7 @@ class FastConfigureAssistant(object):
         self.shareddirectoriestree.set_model(self.sharelist)
 
         if Gtk.get_major_version() == 4:
-            self.shareddirectories.set_has_frame(True)
             self.sharelist.insert_with_valuesv = self.sharelist.insert_with_values
-        else:
-            self.shareddirectories.set_shadow_type(Gtk.ShadowType.IN)
 
     def show(self):
 

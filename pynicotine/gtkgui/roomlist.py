@@ -82,11 +82,9 @@ class RoomList:
         frame.RoomList.connect("clicked", self.show)
 
         if Gtk.get_major_version() == 4:
-            self.RoomsListScrolledWindow.set_has_frame(True)
             self.RoomListPopover.set_parent(frame.RoomList)
             self.room_model.insert_with_valuesv = self.room_model.insert_with_values
         else:
-            self.RoomsListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
             self.RoomListPopover.set_relative_to(frame.RoomList)
 
     def get_selected_room(self, treeview):

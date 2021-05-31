@@ -50,7 +50,11 @@ def load_ui_elements(ui_class, filename):
         with open(filename, 'r') as f:
             if Gtk.get_major_version() == 4:
                 builder = Gtk.Builder(ui_class)
-                builder.add_from_string(f.read().replace("GtkRadioButton", "GtkCheckButton"))
+                builder.add_from_string(
+                    f.read()
+                    .replace("GtkRadioButton", "GtkCheckButton")
+                    .replace("<property name=\"shadow-type\">in</property>", "<property name=\"has-frame\">1</property>")
+                )
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
                 builder = Gtk.Builder()

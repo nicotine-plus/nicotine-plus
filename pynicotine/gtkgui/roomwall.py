@@ -47,11 +47,6 @@ class RoomWall:
             height=600
         )
 
-        if Gtk.get_major_version() == 4:
-            self.RoomWallListWindow.set_has_frame(True)
-        else:
-            self.RoomWallListWindow.set_shadow_type(Gtk.ShadowType.IN)
-
     def on_set_room_wall_message(self, *args):
 
         result = self.RoomWallEntry.get_text()

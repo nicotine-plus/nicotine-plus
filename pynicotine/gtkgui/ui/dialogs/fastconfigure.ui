@@ -292,6 +292,7 @@
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="height-request">150</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="shareddirectoriestree">
                 <property name="visible">1</property>

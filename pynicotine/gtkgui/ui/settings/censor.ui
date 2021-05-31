@@ -53,11 +53,12 @@
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GtkScrolledWindow" id="CensorListScrolledWindow">
+          <object class="GtkScrolledWindow">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="CensorList">
                 <property name="visible">1</property>

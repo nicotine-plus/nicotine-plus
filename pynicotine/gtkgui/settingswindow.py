@@ -203,10 +203,7 @@ class DownloadsFrame(BuildFrame):
         )
 
         if Gtk.get_major_version() == 4:
-            self.FilterScrolledWindow.set_has_frame(True)
             self.filterlist.insert_with_valuesv = self.filterlist.insert_with_values
-        else:
-            self.FilterScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.downloadfilters = []
 
@@ -524,10 +521,7 @@ class SharesFrame(BuildFrame):
         )
 
         if Gtk.get_major_version() == 4:
-            self.SharesScrolledWindow.set_has_frame(True)
             self.shareslist.insert_with_valuesv = self.shareslist.insert_with_values
-        else:
-            self.SharesScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.Shares.set_model(self.shareslist)
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
@@ -915,11 +909,6 @@ class UserInfoFrame(BuildFrame):
 
         BuildFrame.__init__(self, "userinfo")
 
-        if Gtk.get_major_version() == 4:
-            self.UserInfoScrolledWindow.set_has_frame(True)
-        else:
-            self.UserInfoScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.ImageChooser = FileChooserButton(self.ImageChooser, parent.SettingsWindow, "image")
 
         self.options = {
@@ -997,13 +986,8 @@ class IgnoreListFrame(BuildFrame):
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
         if Gtk.get_major_version() == 4:
-            self.IgnoredUsersScrolledWindow.set_has_frame(True)
-            self.IgnoredIPsScrolledWindow.set_has_frame(True)
             self.ignorelist.insert_with_valuesv = self.ignorelist.insert_with_values
             self.ignored_ips_list.insert_with_valuesv = self.ignored_ips_list.insert_with_values
-        else:
-            self.IgnoredUsersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-            self.IgnoredIPsScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def set_settings(self):
         server = config.sections["server"]
@@ -1165,13 +1149,8 @@ class BanListFrame(BuildFrame):
         self.BlockedList.set_model(self.blocked_list_model)
 
         if Gtk.get_major_version() == 4:
-            self.BannedListScrolledWindow.set_has_frame(True)
-            self.BlockedListScrolledWindow.set_has_frame(True)
             self.banlist_model.insert_with_valuesv = self.banlist_model.insert_with_values
             self.blocked_list_model.insert_with_valuesv = self.blocked_list_model.insert_with_values
-        else:
-            self.BannedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-            self.BlockedListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def set_settings(self):
 
@@ -2057,10 +2036,7 @@ class UrlCatchingFrame(BuildFrame):
         self.protocolmodel = Gtk.ListStore(str, str)
 
         if Gtk.get_major_version() == 4:
-            self.ProtocolHandlersScrolledWindow.set_has_frame(True)
             self.protocolmodel.insert_with_valuesv = self.protocolmodel.insert_with_values
-        else:
-            self.ProtocolHandlersScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.protocols = {}
 
@@ -2208,11 +2184,6 @@ class CensorListFrame(BuildFrame):
             }
         }
 
-        if Gtk.get_major_version() == 4:
-            self.CensorListScrolledWindow.set_has_frame(True)
-        else:
-            self.CensorListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.censor_list_model = Gtk.ListStore(str)
 
         cols = initialise_columns(
@@ -2316,10 +2287,7 @@ class AutoReplaceListFrame(BuildFrame):
         self.replacelist = Gtk.ListStore(str, str)
 
         if Gtk.get_major_version() == 4:
-            self.ReplacementListScrolledWindow.set_has_frame(True)
             self.replacelist.insert_with_valuesv = self.replacelist.insert_with_values
-        else:
-            self.ReplacementListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.column_numbers = list(range(self.replacelist.get_n_columns()))
         cols = initialise_columns(
@@ -3034,12 +3002,7 @@ class PluginsFrame(BuildFrame):
         self.selected_plugin = None
 
         if Gtk.get_major_version() == 4:
-            self.PluginScrolledWindow.set_has_frame(True)
-            self.PluginDescriptionScrolledWindow.set_has_frame(True)
             self.plugins_model.insert_with_valuesv = self.plugins_model.insert_with_values
-        else:
-            self.PluginScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-            self.PluginDescriptionScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
         self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(

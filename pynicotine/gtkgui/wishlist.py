@@ -82,10 +82,7 @@ class WishList:
         frame.WishList.connect("clicked", self.show)
 
         if Gtk.get_major_version() == 4:
-            self.WishlistScrolledWindow.set_has_frame(True)
             self.store.insert_with_valuesv = self.store.insert_with_values
-        else:
-            self.WishlistScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 

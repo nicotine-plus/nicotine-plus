@@ -20,11 +20,12 @@
         <property name="spacing">18</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkScrolledWindow" id="PluginScrolledWindow">
+          <object class="GtkScrolledWindow">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="PluginTreeView">
                 <property name="visible">1</property>
@@ -127,10 +128,11 @@
               </object>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="PluginDescriptionScrolledWindow">
+              <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="vexpand">1</property>
+                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTextView" id="PluginDescription">
                     <property name="visible">1</property>
