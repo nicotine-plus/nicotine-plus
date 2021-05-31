@@ -75,29 +75,55 @@ class ImageLabel(Gtk.Box):
 
         self._pack_children()
 
-    def _pack_children(self):
+    def _remove_tab_label(self):
 
-        if hasattr(self, "box"):
-            if Gtk.get_major_version() == 4:
-                while self.box.get_first_child():
-                    self.box.remove(self.box.get_first_child())
-            else:
-                for widget in self.box.get_children():
-                    self.box.remove(widget)
+        if hasattr(self, "eventbox"):
+            for widget in self.box.get_children():
+                self.box.remove(widget)
 
             self.eventbox.remove(self.box)
+
+    def _add_close_button(self):
+
+        if not self.closebutton:
+            return
+
+        if hasattr(self, "button"):
+            return
+
+        if Gtk.get_major_version() == 4:
+            self.button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.button.set_has_frame(False)
+        else:
+            self.button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
+            self.button.set_relief(Gtk.ReliefStyle.NONE)
+
+        self.button.show()
+        self.add(self.button)
+
+        if self.onclose is not None:
+            self.button.connect("clicked", self.onclose)
+
+    def _remove_close_button(self):
+        if hasattr(self, "button"):
+            self.remove(self.button)
+
+    def _pack_children(self):
+
+        self._remove_tab_label()
+        self._remove_close_button()
 
         if sys.platform == "darwin":
             # Left align close button on macOS
             self._add_close_button()
 
-        self.box = Gtk.Box()
-        self.box.set_spacing(2)
-
         if Gtk.get_major_version() == 4:
             self.eventbox = Gtk.Box()
         else:
             self.eventbox = Gtk.EventBox()
+
+        self.box = Gtk.Box()
+        self.box.set_spacing(2)
 
         self.add(self.eventbox)
         self.eventbox.add(self.box)
@@ -118,34 +144,6 @@ class ImageLabel(Gtk.Box):
 
         if sys.platform != "darwin":
             self._add_close_button()
-
-    def _add_close_button(self):
-
-        if not self.closebutton:
-            return
-
-        close_image = Gtk.Image()
-        close_image.set_property("icon-name", "window-close-symbolic")
-
-        self.button = Gtk.Button()
-
-        if Gtk.get_major_version() == 4:
-            self.button.set_child(close_image)
-            self.button.set_has_frame(False)
-
-        else:
-            self.button.add(close_image)
-            self.button.set_relief(Gtk.ReliefStyle.NONE)
-            self.button.show_all()
-
-        self.add(self.button)
-
-        if self.onclose is not None:
-            self.button.connect("clicked", self.onclose)
-
-    def _remove_close_button(self):
-        self.remove(self.button)
-        del self.button
 
     def set_onclose(self, closebutton):
 
