@@ -129,7 +129,7 @@ class Config:
                 "autoclear_uploads": False,
                 "uploadsinsubdirs": True,
                 "rescanonstartup": True,
-                "enablefilters": True,
+                "enablefilters": False,
                 "downloadregexp": "",
                 "downloadfilters": [
                     ["desktop.ini", 1],
