@@ -1282,18 +1282,10 @@ class Search:
 
         if active:
             self.ResultsList.expand_all()
-
-            if Gtk.get_major_version() == 4:
-                self.expand.set_from_icon_name("go-up-symbolic")
-            else:
-                self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_property("icon-name", "go-up-symbolic")
         else:
             collapse_treeview(self.ResultsList, self.grouping_mode)
-
-            if Gtk.get_major_version() == 4:
-                self.expand.set_from_icon_name("go-down-symbolic")
-            else:
-                self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_property("icon-name", "go-down-symbolic")
 
         config.sections["searches"]["expand_searches"] = active
 

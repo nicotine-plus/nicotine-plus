@@ -58,15 +58,7 @@ class WishList:
             height=600
         )
 
-        if Gtk.get_major_version() == 4:
-            self.WishlistScrolledWindow.set_has_frame(True)
-        else:
-            self.WishlistScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.store = Gtk.ListStore(str)
-
-        if Gtk.get_major_version() == 4:
-            self.store.insert_with_valuesv = self.store.insert_with_values
 
         self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
@@ -88,6 +80,12 @@ class WishList:
             render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)
 
         frame.WishList.connect("clicked", self.show)
+
+        if Gtk.get_major_version() == 4:
+            self.WishlistScrolledWindow.set_has_frame(True)
+            self.store.insert_with_valuesv = self.store.insert_with_values
+        else:
+            self.WishlistScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 

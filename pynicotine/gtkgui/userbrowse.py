@@ -247,10 +247,6 @@ class UserBrowse:
 
         self.update_visuals()
 
-        for name, object in self.__dict__.items():
-            if isinstance(object, PopupMenu):
-                object.set_user(self.user)
-
     def set_label(self, label):
         self.user_popup.set_widget(label)
 
@@ -263,10 +259,10 @@ class UserBrowse:
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
-            self.expand.set_from_icon_name("go-up-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_property("icon-name", "go-up-symbolic")
         else:
             self.FolderTreeView.collapse_all()
-            self.expand.set_from_icon_name("go-down-symbolic", Gtk.IconSize.BUTTON)
+            self.expand.set_property("icon-name", "go-down-symbolic")
 
             dirs = sorted(self.directories.keys())
 

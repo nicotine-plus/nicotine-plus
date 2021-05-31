@@ -50,11 +50,6 @@ class FastConfigureAssistant(object):
         self.FastConfigureDialog.set_page_type(self.summarypage, Gtk.AssistantPageType.SUMMARY)
 
         # Page specific, sharepage
-        if Gtk.get_major_version() == 4:
-            self.shareddirectories.set_has_frame(True)
-        else:
-            self.shareddirectories.set_shadow_type(Gtk.ShadowType.IN)
-
         self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")
 
         self.sharelist = Gtk.ListStore(
@@ -70,6 +65,12 @@ class FastConfigureAssistant(object):
         )
 
         self.shareddirectoriestree.set_model(self.sharelist)
+
+        if Gtk.get_major_version() == 4:
+            self.shareddirectories.set_has_frame(True)
+            self.sharelist.insert_with_valuesv = self.sharelist.insert_with_values
+        else:
+            self.shareddirectories.set_shadow_type(Gtk.ShadowType.IN)
 
     def show(self):
 
@@ -164,9 +165,6 @@ class FastConfigureAssistant(object):
                 return
 
             iterator = self.sharelist.iter_next(iterator)
-
-        if Gtk.get_major_version() == 4:
-            self.sharelist.insert_with_valuesv = self.sharelist.insert_with_values
 
         self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual_name, path])
 

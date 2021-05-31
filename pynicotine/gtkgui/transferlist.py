@@ -744,10 +744,7 @@ class TransferList:
             icon_name = "go-down-symbolic"
             collapse_treeview(self.widget, self.tree_users)
 
-        if Gtk.get_major_version() == 4:
-            expand_button_icon.set_from_icon_name(icon_name)
-        else:
-            expand_button_icon.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
+        expand_button_icon.set_property("icon-name", icon_name)
 
         config.sections["transfers"]["%ssexpanded" % self.type] = expanded
         config.write_configuration()

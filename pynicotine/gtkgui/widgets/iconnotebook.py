@@ -87,6 +87,10 @@ class ImageLabel(Gtk.Box):
 
             self.eventbox.remove(self.box)
 
+        if sys.platform == "darwin":
+            # Left align close button on macOS
+            self._add_close_button()
+
         self.box = Gtk.Box()
         self.box.set_spacing(2)
 
@@ -117,30 +121,25 @@ class ImageLabel(Gtk.Box):
         self.box.add(self.hilite_image)
         self.box.show()
 
-        if self.closebutton and self.onclose is not None:
+        if sys.platform != "darwin":
             self._add_close_button()
 
     def _add_close_button(self):
 
-        if hasattr(self, "button"):
+        if not self.closebutton:
             return
 
         close_image = Gtk.Image()
+        close_image.set_property("icon-name", "window-close-symbolic")
+
         self.button = Gtk.Button()
 
         if Gtk.get_major_version() == 4:
-            close_image.set_from_icon_name("window-close-symbolic")
             self.button.set_child(close_image)
             self.button.set_has_frame(False)
-
-            if sys.platform == "darwin":
-                # Left align close button on macOS
-                self.prepend(self.button)
-            else:
-                self.append(self.button)
+            self.append(self.button)
 
         else:
-            close_image.set_from_icon_name("window-close-symbolic", Gtk.IconSize.MENU)
             self.button.add(close_image)
             self.button.set_relief(Gtk.ReliefStyle.NONE)
             self.button.show_all()
@@ -150,14 +149,11 @@ class ImageLabel(Gtk.Box):
             self.button.connect("clicked", self.onclose)
 
     def _remove_close_button(self):
-
-        if not hasattr(self, "button"):
-            return
-
         self.remove(self.button)
         del self.button
 
     def set_onclose(self, closebutton):
+
         self.closebutton = closebutton
 
         if self.closebutton:
@@ -166,6 +162,7 @@ class ImageLabel(Gtk.Box):
             self._remove_close_button()
 
     def show_hilite_image(self, show=True):
+
         if show and self.get_hilite_image() is not None:
             self.hilite_image.show()
         else:
@@ -226,11 +223,7 @@ class ImageLabel(Gtk.Box):
         return self.status_pixbuf
 
     def set_icon(self, icon_name):
-
-        if Gtk.get_major_version() == 4:
-            self.status_image.set_from_icon_name(icon_name)
-        else:
-            self.status_image.set_from_icon_name(icon_name, Gtk.IconSize.BUTTON)
+        self.status_image.set_property("icon-name", icon_name)
 
     def set_text(self, lbl):
         self.set_text_color(notify=None, text=lbl)
@@ -263,17 +256,17 @@ class IconNotebook:
         self.key_controller = connect_key_press_event(self.notebook, self.on_key_press_event)
         self.notebook.connect("switch-page", self.on_switch_page)
 
+        self.unread_button = Gtk.MenuButton.new()
+
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
 
-            self.unread_button = Gtk.MenuButton.new()
             self.unread_button.set_icon_name("emblem-important-symbolic")
             self.unread_button.set_has_frame(False)
         else:
             self.window = self.notebook.get_toplevel()
             self.popup_enable()
 
-            self.unread_button = Gtk.MenuButton.new()
             self.unread_button.set_image(Gtk.Image.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON))
             self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
 

@@ -48,11 +48,6 @@ class RoomList:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
-        if Gtk.get_major_version() == 4:
-            self.RoomsListScrolledWindow.set_has_frame(True)
-        else:
-            self.RoomsListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
-
         self.room_model = Gtk.ListStore(str, int, int)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
@@ -87,8 +82,11 @@ class RoomList:
         frame.RoomList.connect("clicked", self.show)
 
         if Gtk.get_major_version() == 4:
+            self.RoomsListScrolledWindow.set_has_frame(True)
             self.RoomListPopover.set_parent(frame.RoomList)
+            self.room_model.insert_with_valuesv = self.room_model.insert_with_values
         else:
+            self.RoomsListScrolledWindow.set_shadow_type(Gtk.ShadowType.IN)
             self.RoomListPopover.set_relative_to(frame.RoomList)
 
     def get_selected_room(self, treeview):
@@ -166,9 +164,6 @@ class RoomList:
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         self.room_model.clear()
-
-        if Gtk.get_major_version() == 4:
-            self.room_model.insert_with_valuesv = self.room_model.insert_with_values
 
         for room, users in rooms:
             self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, users, 0])

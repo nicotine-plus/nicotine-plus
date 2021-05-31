@@ -226,22 +226,13 @@ class FileChooserButton:
         self.icon = Gtk.Image.new()
 
         if chooser_type == "folder":
-            if Gtk.get_major_version() == 4:
-                self.icon.set_from_icon_name("folder-symbolic")
-            else:
-                self.icon.set_from_icon_name("folder-symbolic", Gtk.IconSize.BUTTON)
+            self.icon.set_property("icon-name", "folder-symbolic")
 
         elif chooser_type == "image":
-            if Gtk.get_major_version() == 4:
-                self.icon.set_from_icon_name("image-x-generic-symbolic")
-            else:
-                self.icon.set_from_icon_name("image-x-generic-symbolic", Gtk.IconSize.BUTTON)
+            self.icon.set_property("icon-name", "image-x-generic-symbolic")
 
         else:
-            if Gtk.get_major_version() == 4:
-                self.icon.set_from_icon_name("text-x-generic-symbolic")
-            else:
-                self.icon.set_from_icon_name("text-x-generic-symbolic", Gtk.IconSize.BUTTON)
+            self.icon.set_property("icon-name", "text-x-generic-symbolic")
 
         self.label = Gtk.Label.new(_("(None)"))
 
