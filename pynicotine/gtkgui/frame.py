@@ -1059,16 +1059,7 @@ class NicotineFrame:
 
         mode = self.verify_buddy_list_mode(mode)
 
-        if Gtk.get_major_version() == 4:
-            note_children = self.NotebooksPane
-            chat_children = self.ChatroomsPane
-            buddy_children = self.userlistvbox
-        else:
-            note_children = self.NotebooksPane.get_children()
-            chat_children = self.ChatroomsPane.get_children()
-            buddy_children = self.userlistvbox.get_children()
-
-        if self.userlist.Main in note_children:
+        if self.userlist.Main in self.NotebooksPane.get_children():
 
             if mode == "always":
                 return
@@ -1079,7 +1070,7 @@ class NicotineFrame:
             else:
                 self.NotebooksPane.remove(self.userlist.Main)
 
-        elif self.userlist.Main in chat_children:
+        elif self.userlist.Main in self.ChatroomsPane.get_children():
 
             if mode == "chatrooms":
                 return
@@ -1090,7 +1081,7 @@ class NicotineFrame:
             else:
                 self.ChatroomsPane.remove(self.userlist.Main)
 
-        elif self.userlist.Main in buddy_children:
+        elif self.userlist.Main in self.userlistvbox.get_children():
 
             if mode == "tab":
                 return
@@ -1100,7 +1091,7 @@ class NicotineFrame:
 
         if mode == "always":
 
-            if self.userlist.Main not in note_children:
+            if self.userlist.Main not in self.NotebooksPane.get_children():
                 if Gtk.get_major_version() == 4:
                     self.NotebooksPane.set_end_child(self.userlist.Main)
                     self.NotebooksPane.set_property("resize-end-child", False)
@@ -1112,7 +1103,7 @@ class NicotineFrame:
 
         elif mode == "chatrooms":
 
-            if self.userlist.Main not in chat_children:
+            if self.userlist.Main not in self.ChatroomsPane.get_children():
                 if Gtk.get_major_version() == 4:
                     self.ChatroomsPane.set_end_child(self.userlist.Main)
                     self.ChatroomsPane.set_property("resize-end-child", False)
@@ -1549,20 +1540,10 @@ class NicotineFrame:
         # Hide widgets on previous page for a performance boost
         current_page = notebook.get_nth_page(notebook.get_current_page())
 
-        if Gtk.get_major_version() == 4:
-            children = current_page
-        else:
-            children = current_page.get_children()
-
-        for child in children:
+        for child in current_page.get_children():
             child.hide()
 
-        if Gtk.get_major_version() == 4:
-            children = page
-        else:
-            children = page.get_children()
-
-        for child in children:
+        for child in page.get_children():
             child.show()
 
         GLib.idle_add(grab_widget_focus, notebook)
@@ -2595,10 +2576,14 @@ class Application(Gtk.Application):
 
         try:
             Gtk.Box.add
+            Gtk.Box.get_children
+            Gtk.Paned.get_children
 
         except AttributeError:
             # GTK 4 replacement
             Gtk.Box.add = Gtk.Box.append
+            Gtk.Box.get_children = Gtk.Box.__iter__
+            Gtk.Paned.get_children = Gtk.Paned.__iter__
 
     def do_activate(self):
         if not self.get_windows():

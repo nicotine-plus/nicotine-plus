@@ -578,20 +578,10 @@ class IconNotebook:
         # Hide widgets on previous page for a performance boost
         current_page = self.get_nth_page(self.get_current_page())
 
-        if Gtk.get_major_version() == 4:
-            children = current_page
-        else:
-            children = current_page.get_children()
-
-        for child in children:
+        for child in current_page.get_children():
             child.hide()
 
-        if Gtk.get_major_version() == 4:
-            children = new_page
-        else:
-            children = new_page.get_children()
-
-        for child in children:
+        for child in new_page.get_children():
             child.show()
 
         # Dismiss tab notification
