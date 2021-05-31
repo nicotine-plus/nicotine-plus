@@ -178,7 +178,7 @@ def rescan_shares():
     return 0
 
 
-def run_headless(network_processor):
+def run_headless(network_processor, ci_mode):
     """ Run Nicotine+ in headless (no GUI) mode """
 
     import signal
@@ -195,7 +195,7 @@ def run_headless(network_processor):
 
     connect_ready = network_processor.start()
 
-    if connect_ready:
+    if connect_ready or ci_mode:
         network_processor.connect()
 
         while not network_processor.shutdown:
@@ -246,7 +246,7 @@ binary package and what you try to run Nicotine+ with).""")
 
     # Run without a GUI (beta)
     if headless:
-        return run_headless(network_processor)
+        return run_headless(network_processor, ci_mode)
 
     error = check_gui_dependencies(gtk4_unstable)
 
