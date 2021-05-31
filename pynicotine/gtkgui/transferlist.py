@@ -129,9 +129,6 @@ class TransferList:
             GObject.TYPE_PYOBJECT  # (18) transfer object
         )
 
-        if Gtk.get_major_version() == 4:
-            self.transfersmodel.insert_with_valuesv = self.transfersmodel.insert_with_values
-
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
             type, widget,

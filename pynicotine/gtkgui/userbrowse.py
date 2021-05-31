@@ -194,9 +194,6 @@ class UserBrowse:
             GObject.TYPE_UINT64   # (6) length
         )
 
-        if Gtk.get_major_version() == 4:
-            self.file_store.insert_with_valuesv = self.file_store.insert_with_values
-
         self.FileTreeView.set_model(self.file_store)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]

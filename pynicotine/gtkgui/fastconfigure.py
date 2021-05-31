@@ -66,9 +66,6 @@ class FastConfigureAssistant(object):
 
         self.shareddirectoriestree.set_model(self.sharelist)
 
-        if Gtk.get_major_version() == 4:
-            self.sharelist.insert_with_valuesv = self.sharelist.insert_with_values
-
     def show(self):
 
         # userpasspage

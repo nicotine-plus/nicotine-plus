@@ -593,9 +593,6 @@ class ChatRoom:
         hspeed = human_speed(avgspeed)
         hfiles = humanize(files)
 
-        if Gtk.get_major_version() == 4:
-            self.usersmodel.insert_with_valuesv = self.usersmodel.insert_with_values
-
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [

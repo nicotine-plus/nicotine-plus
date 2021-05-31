@@ -215,9 +215,6 @@ class UserList:
             country
         ]
 
-        if Gtk.get_major_version() == 4:
-            self.usersmodel.insert_with_valuesv = self.usersmodel.insert_with_values
-
         self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
 
     def buddies_combos_fill(self):

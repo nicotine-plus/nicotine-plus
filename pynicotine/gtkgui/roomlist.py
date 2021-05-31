@@ -83,7 +83,6 @@ class RoomList:
 
         if Gtk.get_major_version() == 4:
             self.RoomListPopover.set_parent(frame.RoomList)
-            self.room_model.insert_with_valuesv = self.room_model.insert_with_values
         else:
             self.RoomListPopover.set_relative_to(frame.RoomList)
 

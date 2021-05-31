@@ -94,10 +94,6 @@ class ChatEntry:
 
         if config.sections["words"]["dropdown"]:
             model = self.entry.get_completion().get_model()
-
-            if Gtk.get_major_version() == 4:
-                model.insert_with_valuesv = model.insert_with_values
-
             model.insert_with_valuesv(-1, self.column_numbers, [item])
 
     def get_completion(self, part, list):
@@ -164,9 +160,6 @@ class ChatEntry:
         completion.set_popup_completion(False)
 
         if config_words["dropdown"]:
-            if Gtk.get_major_version() == 4:
-                model.insert_with_valuesv = model.insert_with_values
-
             for word in completion_list:
                 model.insert_with_valuesv(-1, self.column_numbers, [word])
 

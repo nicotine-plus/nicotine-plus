@@ -81,9 +81,6 @@ class WishList:
 
         frame.WishList.connect("clicked", self.show)
 
-        if Gtk.get_major_version() == 4:
-            self.store.insert_with_valuesv = self.store.insert_with_values
-
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
         store = treeview.get_model()

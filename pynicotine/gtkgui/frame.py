@@ -2591,6 +2591,13 @@ class Application(Gtk.Application):
         self.bindip = bindip
         self.port = port
 
+        try:
+            Gtk.ListStore.insert_with_valuesv
+
+        except AttributeError:
+            # GTK 4 replacement
+            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values
+
     def do_activate(self):
         if not self.get_windows():
             # Only allow one instance of the main window

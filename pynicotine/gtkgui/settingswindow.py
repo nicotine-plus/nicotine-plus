@@ -202,9 +202,6 @@ class DownloadsFrame(BuildFrame):
             bool
         )
 
-        if Gtk.get_major_version() == 4:
-            self.filterlist.insert_with_valuesv = self.filterlist.insert_with_values
-
         self.downloadfilters = []
 
         self.column_numbers = list(range(self.filterlist.get_n_columns()))
@@ -519,9 +516,6 @@ class SharesFrame(BuildFrame):
             str,
             bool
         )
-
-        if Gtk.get_major_version() == 4:
-            self.shareslist.insert_with_valuesv = self.shareslist.insert_with_values
 
         self.Shares.set_model(self.shareslist)
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
@@ -985,10 +979,6 @@ class IgnoreListFrame(BuildFrame):
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
-        if Gtk.get_major_version() == 4:
-            self.ignorelist.insert_with_valuesv = self.ignorelist.insert_with_values
-            self.ignored_ips_list.insert_with_valuesv = self.ignored_ips_list.insert_with_values
-
     def set_settings(self):
         server = config.sections["server"]
 
@@ -1147,10 +1137,6 @@ class BanListFrame(BuildFrame):
         cols["users"].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
-
-        if Gtk.get_major_version() == 4:
-            self.banlist_model.insert_with_valuesv = self.banlist_model.insert_with_values
-            self.blocked_list_model.insert_with_valuesv = self.blocked_list_model.insert_with_values
 
     def set_settings(self):
 
@@ -1355,9 +1341,6 @@ class IconsFrame(BuildFrame):
         liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
         column_numbers = list(range(liststore.get_n_columns()))
         self.IconView.set_model(liststore)
-
-        if Gtk.get_major_version() == 4:
-            liststore.insert_with_valuesv = liststore.insert_with_values
 
         for row in (
             [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["online"]), _("Connected")],
@@ -1684,9 +1667,6 @@ class TabsFrame(BuildFrame):
         # the second is a GtkPositionType
         self.pos_list = Gtk.ListStore(str, str)
         column_numbers = list(range(self.pos_list.get_n_columns()))
-
-        if Gtk.get_major_version() == 4:
-            self.pos_list.insert_with_valuesv = self.pos_list.insert_with_values
 
         for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
             self.pos_list.insert_with_valuesv(-1, column_numbers, item)
@@ -2035,9 +2015,6 @@ class UrlCatchingFrame(BuildFrame):
 
         self.protocolmodel = Gtk.ListStore(str, str)
 
-        if Gtk.get_major_version() == 4:
-            self.protocolmodel.insert_with_valuesv = self.protocolmodel.insert_with_values
-
         self.protocols = {}
 
         self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
@@ -2285,9 +2262,6 @@ class AutoReplaceListFrame(BuildFrame):
         }
 
         self.replacelist = Gtk.ListStore(str, str)
-
-        if Gtk.get_major_version() == 4:
-            self.replacelist.insert_with_valuesv = self.replacelist.insert_with_values
 
         self.column_numbers = list(range(self.replacelist.get_n_columns()))
         cols = initialise_columns(
@@ -3001,9 +2975,6 @@ class PluginsFrame(BuildFrame):
         self.pluginsiters = {}
         self.selected_plugin = None
 
-        if Gtk.get_major_version() == 4:
-            self.plugins_model.insert_with_valuesv = self.plugins_model.insert_with_values
-
         self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(
             None, self.PluginTreeView,
@@ -3434,9 +3405,6 @@ class Settings:
         elif isinstance(widget, Gtk.TreeView) and isinstance(value, list) and widget.get_model().get_n_columns() == 1:
             model = widget.get_model()
             column_numbers = list(range(model.get_n_columns()))
-
-            if Gtk.get_major_version() == 4:
-                model.insert_with_valuesv = model.insert_with_values
 
             for item in value:
                 model.insert_with_valuesv(-1, column_numbers, [str(item)])

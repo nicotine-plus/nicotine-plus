@@ -147,13 +147,6 @@ class Interests:
         self.RecommendationUsersList.set_model(self.recommendation_users_model)
         self.recommendation_users_model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
 
-        if Gtk.get_major_version() == 4:
-            self.likes_model.insert_with_valuesv = self.likes_model.insert_with_values
-            self.dislikes_model.insert_with_valuesv = self.dislikes_model.insert_with_values
-            self.recommendations_model.insert_with_valuesv = self.recommendations_model.insert_with_values
-            self.unrecommendations_model.insert_with_valuesv = self.unrecommendations_model.insert_with_values
-            self.recommendation_users_model.insert_with_valuesv = self.recommendation_users_model.insert_with_values
-
         for thing in config.sections["interests"]["likes"]:
             if thing and isinstance(thing, str):
                 self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
