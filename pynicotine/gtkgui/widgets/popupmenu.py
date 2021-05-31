@@ -142,9 +142,10 @@ class PopupMenu(Gio.Menu):
             menuitem.set_submenu(item[1])
             self.submenus.append(item[1])
 
-            # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
-            # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
-            menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
+            if Gtk.get_major_version() == 3:
+                # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
+                # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
+                menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
         elif item[1]:
             action_name = "change-state" if stateful else "activate"
