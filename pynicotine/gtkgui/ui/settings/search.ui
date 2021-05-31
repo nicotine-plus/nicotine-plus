@@ -245,7 +245,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="RegexpFilters">
-            <property name="label" translatable="yes">Allow regular expressions for the filter&apos;s include &amp; exclude</property>
+            <property name="label" translatable="yes">Allow regular expressions for the filter&apos;s include and exclude</property>
             <property name="visible">1</property>
             <property name="can-focus">1</property>
             <property name="use-underline">1</property>
