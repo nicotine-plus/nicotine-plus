@@ -364,7 +364,7 @@ class TrayIcon:
             return False
 
         if self.appindicator is None:
-            return self.trayicon.get_visible()
+            return self.trayicon.get_visible() and self.trayicon.is_embedded()
 
         if self.appindicator is not None and self.trayicon.get_status() != self.appindicator.IndicatorStatus.ACTIVE:
             return False

@@ -1334,16 +1334,15 @@ class NicotineFrame:
 
         header_bar = getattr(self, "Header" + page_id)
         end_widget = getattr(self, page_id + "End")
+        end_widget.add(self.HeaderMenu)
 
         if Gtk.get_major_version() == 4:
             self.HeaderMenu.set_icon_name("open-menu-symbolic")
-            end_widget.append(self.HeaderMenu)
 
             header_bar.set_show_title_buttons(True)
 
         else:
             self.HeaderMenu.set_image(self.HeaderMenuIcon)
-            end_widget.add(self.HeaderMenu)
 
             if page_id == "Default":
                 header_bar.set_has_subtitle(False)
