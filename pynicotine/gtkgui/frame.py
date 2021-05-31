@@ -302,10 +302,10 @@ class NicotineFrame:
         TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
 
         if Gtk.get_major_version() == 4:
-            self.MainPaned.set_property("resize-start-child", True)
-            self.MainPaned.set_property("shrink-start-child", False)
-            self.MainPaned.set_property("resize-end-child", False)
-            self.MainPaned.set_property("shrink-end-child", False)
+            self.MainPaned.set_resize_start_child(True)
+            self.MainPaned.set_shrink_start_child(False)
+            self.MainPaned.set_resize_end_child(False)
+            self.MainPaned.set_shrink_end_child(False)
         else:
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.MainPaned.child_set_property(self.NotebooksPane, "shrink", False)
@@ -1065,8 +1065,7 @@ class NicotineFrame:
                 return
 
             if Gtk.get_major_version() == 4:
-                self.NotebooksPane.set_end_child(Gtk.Box())
-                self.NotebooksPane.get_end_child().hide()
+                self.NotebooksPane.set_property("end-child", None)
             else:
                 self.NotebooksPane.remove(self.userlist.Main)
 
@@ -1076,8 +1075,7 @@ class NicotineFrame:
                 return
 
             if Gtk.get_major_version() == 4:
-                self.ChatroomsPane.set_end_child(Gtk.Box())
-                self.ChatroomsPane.get_end_child().hide()
+                self.ChatroomsPane.set_property("end-child", None)
             else:
                 self.ChatroomsPane.remove(self.userlist.Main)
 
@@ -1094,7 +1092,7 @@ class NicotineFrame:
             if self.userlist.Main not in self.NotebooksPane.get_children():
                 if Gtk.get_major_version() == 4:
                     self.NotebooksPane.set_end_child(self.userlist.Main)
-                    self.NotebooksPane.set_property("resize-end-child", False)
+                    self.NotebooksPane.set_resize_end_child(False)
                 else:
                     self.NotebooksPane.pack2(self.userlist.Main, False, True)
 
@@ -1106,7 +1104,7 @@ class NicotineFrame:
             if self.userlist.Main not in self.ChatroomsPane.get_children():
                 if Gtk.get_major_version() == 4:
                     self.ChatroomsPane.set_end_child(self.userlist.Main)
-                    self.ChatroomsPane.set_property("resize-end-child", False)
+                    self.ChatroomsPane.set_resize_end_child(False)
                 else:
                     self.ChatroomsPane.pack2(self.userlist.Main, False, True)
 
@@ -1730,7 +1728,7 @@ class NicotineFrame:
             expand = True
 
         if Gtk.get_major_version() == 4:
-            self.MainNotebook.get_page(tab_box).set_property("tab_expand", expand)
+            self.MainNotebook.get_page(tab_box).set_property("tab-expand", expand)
         else:
             self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
 

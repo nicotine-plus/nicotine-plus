@@ -65,11 +65,9 @@ class UserBrowse:
         self.key_controller_file = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
 
         if Gtk.get_major_version() == 4:
-            self.MainPaned.set_property("resize-start-child", True)
-            self.MainPaned.set_property("resize-end-child", True)
+            self.MainPaned.set_resize_start_child(True)
         else:
             self.MainPaned.child_set_property(self.FolderPane, "resize", True)
-            self.MainPaned.child_set_property(self.FilePane, "resize", True)
 
         # Monitor user online status
         self.frame.np.watch_user(user)

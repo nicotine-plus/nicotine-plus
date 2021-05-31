@@ -188,9 +188,6 @@ class UserInfo:
             self.scroll_controller.connect("scroll", self.on_scroll)
             self.ImageViewport.add_controller(self.scroll_controller)
 
-            self.MainPaned.set_property("resize-start-child", False)
-            self.SecondPaned.set_property("resize-start-child", False)
-
         else:
             self.image = Gtk.Image()
             self.UserImage = Gtk.EventBox()
@@ -205,9 +202,6 @@ class UserInfo:
             except AttributeError:
                 # GTK <3.24
                 self.ImageViewport.connect("scroll-event", self.on_scroll_event)
-
-            self.MainPaned.child_set_property(self.InfoVbox, "resize", False)
-            self.SecondPaned.child_set_property(self.Interests, "resize", False)
 
         # Request user status, speed and number of shared files
         self.frame.np.watch_user(user, force_update=True)

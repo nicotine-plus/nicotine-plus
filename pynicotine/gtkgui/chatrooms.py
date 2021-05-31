@@ -113,7 +113,7 @@ class ChatRooms(IconNotebook):
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
         if Gtk.get_major_version() == 4:
-            self.frame.ChatroomsPane.set_property("resize-start-child", True)
+            self.frame.ChatroomsPane.set_resize_start_child(True)
         else:
             self.frame.ChatroomsPane.child_set_property(self.notebook, "resize", True)
 
@@ -442,13 +442,11 @@ class ChatRoom:
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
 
-            self.ChatPaned.set_property("resize-start-child", True)
-            self.ChatPaned.set_property("shrink-start-child", False)
-            self.ChatPaned.set_property("resize-end-child", False)
-            self.ChatPaned.set_property("shrink-end-child", True)
-
-            self.ChatPanedSecond.set_property("resize-start-child", False)
-            self.ChatPanedSecond.set_property("shrink-end-child", False)
+            self.ChatPaned.set_resize_start_child(True)
+            self.ChatPaned.set_shrink_start_child(False)
+            self.ChatPaned.set_resize_end_child(False)
+            self.ChatPaned.set_shrink_end_child(False)
+            self.ChatPanedSecond.set_shrink_end_child(False)
 
         else:
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
@@ -457,8 +455,6 @@ class ChatRoom:
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
             self.ChatPaned.child_set_property(self.UserView, "resize", False)
             self.ChatPaned.child_set_property(self.UserView, "shrink", False)
-
-            self.ChatPanedSecond.child_set_property(self.ActivityView, "resize", False)
             self.ChatPanedSecond.child_set_property(self.ChatView, "shrink", False)
 
         self.tickers = Tickers()

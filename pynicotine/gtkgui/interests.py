@@ -45,12 +45,10 @@ class Interests:
         self.frame.interestsvbox.add(self.Main)
 
         if Gtk.get_major_version() == 4:
-            self.InterestsPaned.set_property("resize-start-child", False)
-            self.InterestsPanedSecond.set_property("resize-start-child", True)
-            self.InterestsPanedSecond.set_property("resize-end-child", False)
+            self.InterestsPanedSecond.set_resize_start_child(True)
+            self.InterestsPanedSecond.set_resize_end_child(False)
 
         else:
-            self.InterestsPaned.child_set_property(self.LikesDislikes, "resize", False)
             self.InterestsPanedSecond.child_set_property(self.RecommendationsVbox, "resize", True)
             self.InterestsPanedSecond.child_set_property(self.SimilarUsers, "resize", False)
 

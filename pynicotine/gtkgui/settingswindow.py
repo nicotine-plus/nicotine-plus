@@ -3113,11 +3113,7 @@ class Settings:
         dialog.set_default_response(Gtk.ResponseType.OK)
         dialog.connect("response", self.on_response)
 
-        if Gtk.get_major_version() == 4:
-            self.Main.set_property("resize-start-child", False)
-        else:
-            self.Main.child_set_property(self.SettingsList, "resize", False)
-
+        if Gtk.get_major_version() == 3:
             action_area = dialog.get_action_area()
             action_area.set_margin_top(10)
             action_area.set_margin_bottom(10)
