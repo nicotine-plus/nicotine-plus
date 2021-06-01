@@ -407,7 +407,6 @@ class PopupMenu(Gio.Menu):
                 widget.add_controller(self.legacy_controller)
 
             self.gesture_click = Gtk.GestureClick()
-            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
             self.gesture_click.connect("pressed", self._callback_click_gtk4)
             widget.add_controller(self.gesture_click)
