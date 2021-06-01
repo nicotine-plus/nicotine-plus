@@ -21,7 +21,7 @@ import textwrap
 import threading
 import time
 
-from ctypes import Structure, sizeof
+from ctypes import Structure, byref, sizeof
 
 from gi.repository import Gdk
 from gi.repository import Gio
@@ -270,7 +270,7 @@ class WinNotify:
         self.nid.szInfoTitle = textwrap.shorten(title, width=64, placeholder="...")
         self.nid.szInfo = textwrap.shorten(message, width=256, placeholder="...")
 
-        windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, self.nid)
+        windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)
 
         if not has_tray_icon:
