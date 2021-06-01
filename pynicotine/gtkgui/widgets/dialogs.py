@@ -76,7 +76,7 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
         secondary_text=message
     )
     self.connect("response", callback, callback_data)
-    self.set_default_size(500, -1)
+    self.set_size_request(500, -1)
     self.set_destroy_with_parent(True)
     self.set_modal(True)
 
