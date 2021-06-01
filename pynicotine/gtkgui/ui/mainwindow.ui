@@ -67,6 +67,7 @@
             </items>
             <child internal-child="entry">
               <object class="GtkEntry" id="RoomSearchEntry">
+                <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Room...</property>
@@ -86,6 +87,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserSearchEntry">
+                <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
@@ -106,6 +108,7 @@
             <child internal-child="entry">
               <object class="GtkEntry" id="SearchEntry">
                 <property name="hexpand">1</property>
+                <property name="height-request">0</property>
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Search term...</property>
@@ -528,6 +531,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="PrivateChatEntry">
+                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
@@ -583,6 +587,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserInfoEntry">
+                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
@@ -670,6 +675,7 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserBrowseEntry">
+                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
@@ -722,6 +728,7 @@
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <property name="height-request">0</property>
             <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
             <property name="placeholder-text" translatable="yes">Add buddy...</property>
@@ -780,6 +787,7 @@
           <object class="GtkEntry" id="JoinRoomEntry">
             <property name="visible">1</property>
             <property name="can-focus">1</property>
+            <property name="height-request">0</property>
             <property name="max-width-chars">40</property>
             <property name="width-chars">5</property>
             <property name="placeholder-text" translatable="yes">Create or join room...</property>
