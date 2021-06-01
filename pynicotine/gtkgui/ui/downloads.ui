@@ -11,18 +11,24 @@
         <property name="can-focus">1</property>
         <property name="vexpand">1</property>
         <child>
-          <object class="GtkTreeView" id="DownloadList">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="has-tooltip">1</property>
-            <property name="enable-tree-lines">1</property>
-            <property name="rubber-banding">1</property>
-            <property name="sensitive">0</property>
-            <signal name="query-tooltip" handler="on_tooltip"/>
-            <signal name="row-activated" handler="on_row_activated"/>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection">
-                <property name="mode">multiple</property>
+            <child>
+              <object class="GtkTreeView" id="DownloadList">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="has-tooltip">1</property>
+                <property name="enable-tree-lines">1</property>
+                <property name="rubber-banding">1</property>
+                <property name="sensitive">0</property>
+                <signal name="query-tooltip" handler="on_tooltip"/>
+                <signal name="row-activated" handler="on_row_activated"/>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection">
+                    <property name="mode">multiple</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

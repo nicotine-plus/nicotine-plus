@@ -39,12 +39,18 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="LikesList">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="enable-search">0</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
+                        <child>
+                          <object class="GtkTreeView" id="LikesList">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="enable-search">0</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -84,12 +90,18 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="DislikesList">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="enable-search">0</property>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
+                        <child>
+                          <object class="GtkTreeView" id="DislikesList">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="enable-search">0</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -211,12 +223,18 @@
                         <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkTreeView" id="RecommendationsList">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="search-column">1</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <child>
+                              <object class="GtkTreeView" id="RecommendationsList">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="search-column">1</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>
@@ -248,12 +266,18 @@
                         <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkTreeView" id="UnrecommendationsList">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="search-column">1</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
+                            <child>
+                              <object class="GtkTreeView" id="UnrecommendationsList">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="search-column">1</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>
@@ -314,14 +338,20 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="RecommendationUsersList">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="has-tooltip">1</property>
-                        <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
-                        <signal name="row-activated" handler="on_ru_row_activated"/>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection"/>
+                        <child>
+                          <object class="GtkTreeView" id="RecommendationUsersList">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="has-tooltip">1</property>
+                            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                            <signal name="row-activated" handler="on_ru_row_activated"/>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
+                          </object>
                         </child>
                       </object>
                     </child>

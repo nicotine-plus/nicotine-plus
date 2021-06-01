@@ -89,8 +89,12 @@ class PopupMenu(Gio.Menu):
     def create_context_menu(self, widget):
 
         if Gtk.get_major_version() == 4:
-            if isinstance(widget, Gtk.TreeView):
-                widget = widget.get_next_sibling()
+            if isinstance(widget, (Gtk.TextView, Gtk.TreeView)):
+                """ Attaching directly to a Gtk.TextView or Gtk.TreeView seems to cause
+                issues related to resizing the menu and updating the hover state of menu
+                items. Wrap these widgets in a Gtk.Box and attach to it instead. """
+
+                widget = widget.get_parent()
 
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)
@@ -326,6 +330,7 @@ class PopupMenu(Gio.Menu):
     def popup(self, x, y, button=3):
 
         if Gtk.get_major_version() == 4:
+            self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_offset(x, y)
             self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
             self.popup_menu.popup()
@@ -402,6 +407,7 @@ class PopupMenu(Gio.Menu):
                 widget.add_controller(self.legacy_controller)
 
             self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
             self.gesture_click.connect("pressed", self._callback_click_gtk4)
             widget.add_controller(self.gesture_click)

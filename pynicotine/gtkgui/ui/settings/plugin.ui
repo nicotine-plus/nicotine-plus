@@ -134,18 +134,24 @@
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
-                  <object class="GtkTextView" id="PluginDescription">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="editable">0</property>
-                    <property name="cursor-visible">0</property>
-                    <property name="pixels-above-lines">1</property>
-                    <property name="pixels-below-lines">1</property>
-                    <property name="left-margin">8</property>
-                    <property name="right-margin">8</property>
-                    <property name="top-margin">5</property>
-                    <property name="bottom-margin">5</property>
-                    <property name="wrap-mode">word-char</property>
+                    <child>
+                      <object class="GtkTextView" id="PluginDescription">
+                        <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="editable">0</property>
+                        <property name="cursor-visible">0</property>
+                        <property name="pixels-above-lines">1</property>
+                        <property name="pixels-below-lines">1</property>
+                        <property name="left-margin">8</property>
+                        <property name="right-margin">8</property>
+                        <property name="top-margin">5</property>
+                        <property name="bottom-margin">5</property>
+                        <property name="wrap-mode">word-char</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

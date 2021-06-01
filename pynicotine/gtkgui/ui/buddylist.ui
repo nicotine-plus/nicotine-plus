@@ -74,12 +74,18 @@
         <property name="can-focus">1</property>
         <property name="vexpand">1</property>
         <child>
-          <object class="GtkTreeView" id="UserListTree">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="has-tooltip">1</property>
-            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
-            <signal name="row-activated" handler="on_row_activated"/>
+            <child>
+              <object class="GtkTreeView" id="UserListTree">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="hexpand">1</property>
+                <property name="has-tooltip">1</property>
+                <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                <signal name="row-activated" handler="on_row_activated"/>
+              </object>
+            </child>
           </object>
         </child>
       </object>

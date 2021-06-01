@@ -57,17 +57,23 @@
                             <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkTextView" id="descr">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <property name="editable">0</property>
-                                <property name="wrap-mode">word</property>
-                                <property name="cursor-visible">0</property>
-                                <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
-                                <property name="left-margin">10</property>
-                                <property name="right-margin">10</property>
-                                <property name="bottom-margin">5</property>
+                                <child>
+                                  <object class="GtkTextView" id="descr">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="editable">0</property>
+                                    <property name="wrap-mode">word</property>
+                                    <property name="cursor-visible">0</property>
+                                    <property name="pixels-above-lines">1</property>
+                                    <property name="pixels-below-lines">1</property>
+                                    <property name="left-margin">10</property>
+                                    <property name="right-margin">10</property>
+                                    <property name="bottom-margin">5</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -214,11 +220,17 @@
                             <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkTreeView" id="Likes">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
+                                <child>
+                                  <object class="GtkTreeView" id="Likes">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <property name="hexpand">1</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection"/>
+                                    </child>
+                                  </object>
                                 </child>
                               </object>
                             </child>
@@ -230,11 +242,17 @@
                             <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkTreeView" id="Hates">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
+                                <child>
+                                  <object class="GtkTreeView" id="Hates">
+                                    <property name="visible">1</property>
+                                    <property name="can-focus">1</property>
+                                    <property name="hexpand">1</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection"/>
+                                    </child>
+                                  </object>
                                 </child>
                               </object>
                             </child>

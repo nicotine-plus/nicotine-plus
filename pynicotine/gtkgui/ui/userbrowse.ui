@@ -195,13 +195,19 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="FolderTreeView">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="sensitive">0</property>
-                        <property name="can-focus">1</property>
-                        <property name="enable-tree-lines">1</property>
-                        <property name="headers-visible">0</property>
-                        <signal name="row-activated" handler="on_folder_row_activated"/>
+                        <child>
+                          <object class="GtkTreeView" id="FolderTreeView">
+                            <property name="visible">1</property>
+                            <property name="sensitive">0</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="enable-tree-lines">1</property>
+                            <property name="headers-visible">0</property>
+                            <signal name="row-activated" handler="on_folder_row_activated"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -230,15 +236,21 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="FileTreeView">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="sensitive">0</property>
-                        <property name="can-focus">1</property>
-                        <property name="rubber-banding">1</property>
-                        <signal name="row-activated" handler="on_file_row_activated"/>
-                        <child internal-child="selection">
-                          <object class="GtkTreeSelection">
-                            <property name="mode">multiple</property>
+                        <child>
+                          <object class="GtkTreeView" id="FileTreeView">
+                            <property name="visible">1</property>
+                            <property name="sensitive">0</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="rubber-banding">1</property>
+                            <signal name="row-activated" handler="on_file_row_activated"/>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection">
+                                <property name="mode">multiple</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>

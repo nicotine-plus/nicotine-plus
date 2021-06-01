@@ -45,18 +45,24 @@
                         <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkTextView" id="RoomLog">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="editable">0</property>
-                            <property name="wrap-mode">word-char</property>
-                            <property name="cursor-visible">0</property>
-                            <property name="pixels-above-lines">1</property>
-                            <property name="pixels-below-lines">1</property>
-                            <property name="left-margin">10</property>
-                            <property name="right-margin">10</property>
-                            <property name="top-margin">5</property>
-                            <property name="bottom-margin">5</property>
+                            <child>
+                              <object class="GtkTextView" id="RoomLog">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="editable">0</property>
+                                <property name="wrap-mode">word-char</property>
+                                <property name="cursor-visible">0</property>
+                                <property name="pixels-above-lines">1</property>
+                                <property name="pixels-below-lines">1</property>
+                                <property name="left-margin">10</property>
+                                <property name="right-margin">10</property>
+                                <property name="top-margin">5</property>
+                                <property name="bottom-margin">5</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -92,18 +98,24 @@
                         <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkTextView" id="ChatScroll">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="editable">0</property>
-                            <property name="wrap-mode">word-char</property>
-                            <property name="cursor-visible">0</property>
-                            <property name="pixels-above-lines">1</property>
-                            <property name="pixels-below-lines">1</property>
-                            <property name="left-margin">10</property>
-                            <property name="right-margin">10</property>
-                            <property name="top-margin">5</property>
-                            <property name="bottom-margin">5</property>
+                            <child>
+                              <object class="GtkTextView" id="ChatScroll">
+                                <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="editable">0</property>
+                                <property name="wrap-mode">word-char</property>
+                                <property name="cursor-visible">0</property>
+                                <property name="pixels-above-lines">1</property>
+                                <property name="pixels-below-lines">1</property>
+                                <property name="left-margin">10</property>
+                                <property name="right-margin">10</property>
+                                <property name="top-margin">5</property>
+                                <property name="bottom-margin">5</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -232,12 +244,18 @@
                     <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkTreeView" id="UserList">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="has-tooltip">1</property>
-                        <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
-                        <signal name="row-activated" handler="on_row_activated"/>
+                        <child>
+                          <object class="GtkTreeView" id="UserList">
+                            <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="has-tooltip">1</property>
+                            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                            <signal name="row-activated" handler="on_row_activated"/>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

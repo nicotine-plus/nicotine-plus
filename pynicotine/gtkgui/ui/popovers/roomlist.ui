@@ -52,10 +52,16 @@
             <property name="width-request">350</property>
             <property name="shadow-type">in</property>
             <child>
-              <object class="GtkTreeView" id="RoomsList">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <signal name="row-activated" handler="on_row_activated"/>
+                <child>
+                  <object class="GtkTreeView" id="RoomsList">
+                    <property name="visible">1</property>
+                    <property name="can-focus">1</property>
+                    <property name="hexpand">1</property>
+                    <signal name="row-activated" handler="on_row_activated"/>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
