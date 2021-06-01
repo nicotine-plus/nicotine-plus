@@ -83,6 +83,13 @@ def verify_grouping_mode(mode):
     return mode
 
 
+def column_header_sort(controller, *args):
+    """ Temporary hack to restore sorting by clicking column headers in GTK 4 """
+
+    controller.get_widget().emit("clicked")
+    controller.set_state(Gtk.EventSequenceState.CLAIMED)
+
+
 def initialise_columns(treeview_name, treeview, *args):
 
     i = 0
@@ -182,6 +189,11 @@ def initialise_columns(treeview_name, treeview, *args):
         column.set_widget(Gtk.Label.new(title))
         column.get_widget().set_margin_start(6)
         column.get_widget().show()
+
+        if Gtk.get_major_version() == 4:
+            gesture_click = Gtk.GestureClick()
+            gesture_click.connect("pressed", column_header_sort)
+            column.get_button().add_controller(gesture_click)
 
         cols[id] = column
 
