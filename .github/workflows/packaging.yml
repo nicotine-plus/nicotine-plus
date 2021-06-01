@@ -65,14 +65,15 @@ jobs:
     strategy:
       matrix:
         include: [
-          { msystem: MINGW64, arch: x86_64 },
-          { msystem: MINGW32, arch: i686   }
+          { msystem: MINGW64, arch: x86_64, gtk: 3 },
+          { msystem: MINGW32, arch: i686, gtk: 3 }
         ]
     defaults:
       run:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -111,6 +112,8 @@ jobs:
 
   macos:
     runs-on: macos-10.15
+    env:
+      NICOTINE_GTK_VERSION: 3
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

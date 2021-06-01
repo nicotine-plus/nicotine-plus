@@ -24,7 +24,7 @@
 brew install \
   adwaita-icon-theme \
   flake8 \
-  gtk+3 \
+  gtk+$NICOTINE_GTK_VERSION
 
 # Install dependencies with pip
 pip3 install \

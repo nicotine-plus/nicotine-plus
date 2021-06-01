@@ -23,7 +23,7 @@
 # Install dependencies from the main MinGW repos
 pacman --noconfirm -S --needed \
   mingw-w64-$ARCH-gspell \
-  mingw-w64-$ARCH-gtk3 \
+  mingw-w64-$ARCH-gtk$NICOTINE_GTK_VERSION \
   mingw-w64-$ARCH-python \
   mingw-w64-$ARCH-python-flake8 \
   mingw-w64-$ARCH-python-pip \
