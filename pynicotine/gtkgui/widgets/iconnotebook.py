@@ -361,6 +361,7 @@ class IconNotebook:
             status_image=self.images["offline"],
             show_status_image=self._show_status_image
         )
+        label_tab.show()
 
         if fulltext is None:
             fulltext = label
@@ -369,14 +370,13 @@ class IconNotebook:
         label_tab_menu = ImageLabel(label)
 
         if Gtk.get_major_version() == 4:
-            self.gesture_click = Gtk.GestureClick()
-            self.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
-            self.gesture_click.connect("pressed", self.on_tab_click_controller, page)
-            label_tab.add_controller(self.gesture_click)
-
+            label_tab.gesture_click = Gtk.GestureClick()
+            label_tab.add_controller(label_tab.gesture_click)
         else:
-            label_tab.connect("button-press-event", self.on_tab_click_event, page)
-            label_tab.show()
+            label_tab.gesture_click = Gtk.GestureMultiPress.new(label_tab)
+
+        label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
+        label_tab.gesture_click.connect("pressed", label_tab.onclose, page)
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
@@ -544,20 +544,6 @@ class IconNotebook:
 
     def show(self):
         self.notebook.show()
-
-    def on_tab_click_controller(self, *args):
-
-        page = args[-1]
-        tab_label, menu_label = self.get_labels(page)
-        tab_label.onclose(None)
-
-    def on_tab_click_event(self, widget, event, page):
-
-        if event.button == Gdk.BUTTON_MIDDLE:
-            # Middle click
-            self.on_tab_click_controller(page)
-
-        return False
 
     def on_key_press_event(self, *args):
 
