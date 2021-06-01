@@ -26,6 +26,7 @@
 
 import argparse
 import importlib.util
+import os
 import sys
 
 
@@ -83,7 +84,6 @@ def check_arguments():
 
     # Disables critical error dialog; used for integration tests
     parser.add_argument("--ci-mode", action="store_true", help=argparse.SUPPRESS)
-    parser.add_argument("--gtk4-unstable", action="store_true", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
     trayicon = None
@@ -100,7 +100,7 @@ def check_arguments():
     if args.disable_trayicon:
         trayicon = False
 
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, args.gtk4_unstable
+    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan
 
 
 def check_core_dependencies():
@@ -129,7 +129,7 @@ You should install Python %(min_version)s or newer.""") % {
     return None
 
 
-def check_gui_dependencies(use_gtk4=False):
+def check_gui_dependencies():
 
     # Require GTK+ >= 3.18
     try:
@@ -140,7 +140,8 @@ def check_gui_dependencies(use_gtk4=False):
 
     else:
         try:
-            gi.require_version('Gtk', '4.0' if use_gtk4 else '3.0')
+            version = '4.0' if os.getenv("NICOTINE_GTK_VERSION") == '4' else '3.0'
+            gi.require_version('Gtk', version)
 
         except ValueError as e:
             return _("""You are using an unsupported version of GTK.
@@ -230,7 +231,7 @@ binary package and what you try to run Nicotine+ with).""")
     rename_process(b'nicotine')
     apply_translation()
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan, gtk4_unstable = check_arguments()
+    trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
     error = check_core_dependencies()
 
     if error:
@@ -248,7 +249,7 @@ binary package and what you try to run Nicotine+ with).""")
     if headless:
         return run_headless(network_processor, ci_mode)
 
-    error = check_gui_dependencies(gtk4_unstable)
+    error = check_gui_dependencies()
 
     if error:
         print(error)

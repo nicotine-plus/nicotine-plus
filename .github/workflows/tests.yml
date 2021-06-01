@@ -30,7 +30,7 @@ jobs:
         run: |
           python -m flake8
 
-      - name: Unit tests
+      - name: Integration and unit tests
         run: |
           xvfb-run python -m pytest
 
@@ -39,6 +39,11 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+    strategy:
+      matrix:
+        gtk: [3, 4]
+    env:
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -60,12 +65,17 @@ jobs:
         run: |
           flake8
 
-      - name: Unit tests
+      - name: Integration and unit tests
         run: |
           pytest
 
   macos:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        gtk: [3, 4]
+    env:
+      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -80,6 +90,6 @@ jobs:
         run: |
           flake8
 
-      - name: Unit tests
+      - name: Integration and unit tests
         run: |
           pytest
