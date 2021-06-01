@@ -177,23 +177,15 @@ class NicotineFrame:
 
         try:
             if Gtk.get_major_version() == 4:
-                self.focus_controller = Gtk.EventControllerFocus()
                 self.motion_controller = Gtk.EventControllerMotion()
-                self.MainWindow.add_controller(self.focus_controller)
                 self.MainWindow.add_controller(self.motion_controller)
-
-                self.focus_controller.connect("enter", self.on_focus_in_event)
             else:
-                self.focus_controller = Gtk.EventControllerKey.new(self.MainWindow)
                 self.motion_controller = Gtk.EventControllerMotion.new(self.MainWindow)
-
-                self.focus_controller.connect("focus-in", self.on_focus_in_event)
 
             self.motion_controller.connect("motion", self.on_disable_auto_away)
 
         except AttributeError:
             # GTK <3.24
-            self.MainWindow.connect("focus-in-event", self.on_focus_in_event)
             self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
 
         # Handle Ctrl+C and "kill" exit gracefully
@@ -373,13 +365,16 @@ class NicotineFrame:
 
     """ Window State """
 
-    def on_focus_in_event(self, *args):
+    def on_window_active_changed(self, window, param):
+
+        if not window.get_property(param.name):
+            return
 
         self.chatrooms.clear_notifications()
         self.privatechats.clear_notifications()
 
-        if Gtk.get_major_version() == 3 and self.MainWindow.get_urgency_hint():
-            self.MainWindow.set_urgency_hint(False)
+        if Gtk.get_major_version() == 3 and window.get_urgency_hint():
+            window.set_urgency_hint(False)
 
     def save_window_state(self):
 
