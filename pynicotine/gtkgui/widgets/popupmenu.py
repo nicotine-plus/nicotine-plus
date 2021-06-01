@@ -51,7 +51,6 @@ class PopupMenu(Gio.Menu):
         self.gesture_click = None
         self.gesture_press = None
         self.last_controller = None
-        self.menu_open = False
 
         if widget:
             self.connect_events(widget)
@@ -366,6 +365,10 @@ class PopupMenu(Gio.Menu):
 
             set_treeview_selected_row(self.widget, bin_x, bin_y)
 
+            if not self.widget.get_path_at_pos(bin_x, bin_y):
+                # Stop here to allow column header menus to appear
+                return
+
         if self.callback:
             cancel = self.callback(self, self.widget)
 
@@ -374,19 +377,11 @@ class PopupMenu(Gio.Menu):
 
         self.popup(x, y)
 
-    def _callback_legacy(self, controller, event):
-        """ Gtk.TextView: Prevent GTK's built-in context menu from showing
-            Gtk.TreeView: Preserve multi-row selection when showing menu
-            Gtk.TreeView Header Button: Prevent main context menu of treeview from showing """
-
-        if self.menu_open:
-            self.menu_open = False
-            return True
+        if controller:
+            controller.set_state(Gtk.EventSequenceState.CLAIMED)
 
     def _callback_click_gtk4(self, controller, num_p, x, y):
-
         self._callback(controller, x, y)
-        self.menu_open = True
 
     def _callback_click_gtk3(self, widget, event):
 
@@ -401,13 +396,8 @@ class PopupMenu(Gio.Menu):
     def connect_events(self, widget):
 
         if Gtk.get_major_version() == 4:
-            if isinstance(widget, (Gtk.TextView, Gtk.TreeView)) or \
-                    isinstance(widget.get_parent(), Gtk.TreeView):
-                self.legacy_controller = Gtk.EventControllerLegacy()
-                self.legacy_controller.connect("event", self._callback_legacy)
-                widget.add_controller(self.legacy_controller)
-
             self.gesture_click = Gtk.GestureClick()
+            self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)
             self.gesture_click.connect("pressed", self._callback_click_gtk4)
             widget.add_controller(self.gesture_click)
