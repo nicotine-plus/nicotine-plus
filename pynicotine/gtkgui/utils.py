@@ -301,8 +301,7 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
         _usertag(buffer, line)
 
     if scroll:
-        wrapper = textview.get_parent()
-        scrollable = wrapper.get_parent()
+        scrollable = textview.get_parent()
         va = scrollable.get_vadjustment()
 
         # Scroll to bottom if we had scrolled up less than ~2 lines previously

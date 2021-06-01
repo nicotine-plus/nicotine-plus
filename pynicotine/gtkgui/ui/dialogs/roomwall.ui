@@ -18,16 +18,17 @@
       </object>
     </child>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkBox">
         <property name="visible">1</property>
         <property name="can-focus">1</property>
-        <property name="vexpand">1</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="shadow-type">in</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkScrolledWindow">
             <property name="visible">1</property>
+            <property name="can-focus">1</property>
+            <property name="vexpand">1</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="shadow-type">in</property>
             <child>
               <object class="GtkTextView" id="RoomWallList">
                 <property name="visible">1</property>

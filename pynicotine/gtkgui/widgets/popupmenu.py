@@ -92,9 +92,10 @@ class PopupMenu(Gio.Menu):
             if isinstance(widget, (Gtk.TextView, Gtk.TreeView)):
                 """ Attaching directly to a Gtk.TextView or Gtk.TreeView seems to cause
                 issues related to resizing the menu and updating the hover state of menu
-                items. Wrap these widgets in a Gtk.Box and attach to it instead. """
+                items. Wrap the GtkScrolledWindow parent of these widgets in a Gtk.Box and
+                attach to it instead. """
 
-                widget = widget.get_parent()
+                widget = widget.get_parent().get_parent()
 
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)

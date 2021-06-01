@@ -40,13 +40,14 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="RoomLogWindow">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
-                        <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkScrolledWindow" id="RoomLogWindow">
                             <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTextView" id="RoomLog">
                                 <property name="visible">1</property>
@@ -93,13 +94,14 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkScrolledWindow" id="ChatScrollWindow">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
-                        <property name="vexpand">1</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkScrolledWindow" id="ChatScrollWindow">
                             <property name="visible">1</property>
+                            <property name="can-focus">1</property>
+                            <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTextView" id="ChatScroll">
                                 <property name="visible">1</property>

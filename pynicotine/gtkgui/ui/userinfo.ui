@@ -52,13 +52,14 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTextView" id="descr">
                                     <property name="visible">1</property>
@@ -215,13 +216,14 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTreeView" id="Likes">
                                     <property name="visible">1</property>
@@ -237,13 +239,14 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
-                            <property name="vexpand">1</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
+                                <property name="can-focus">1</property>
+                                <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTreeView" id="Hates">
                                     <property name="visible">1</property>

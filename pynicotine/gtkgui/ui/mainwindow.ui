@@ -1383,14 +1383,15 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow" id="LogScrolledWindow">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="min-content-height">90</property>
-                    <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkScrolledWindow" id="LogScrolledWindow">
                         <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="min-content-height">90</property>
+                        <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTextView" id="LogWindow">
                             <property name="visible">1</property>

@@ -190,13 +190,14 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="FolderTreeView">
                             <property name="visible">1</property>
@@ -230,14 +231,15 @@
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="width-request">400</property>
+                  <object class="GtkBox">
                     <property name="visible">1</property>
                     <property name="can-focus">1</property>
-                    <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkScrolledWindow">
+                        <property name="width-request">400</property>
                         <property name="visible">1</property>
+                        <property name="can-focus">1</property>
+                        <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="FileTreeView">
                             <property name="visible">1</property>
