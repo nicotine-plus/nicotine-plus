@@ -46,6 +46,9 @@ class FastConfigureAssistant(object):
         for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):
             self.FastConfigureDialog.append_page(page)
 
+            if Gtk.get_major_version() == 3:
+                self.FastConfigureDialog.child_set_property(page, "has-padding", False)
+
         self.FastConfigureDialog.set_page_type(self.welcomepage, Gtk.AssistantPageType.CUSTOM)
         self.FastConfigureDialog.set_page_type(self.summarypage, Gtk.AssistantPageType.SUMMARY)
 
