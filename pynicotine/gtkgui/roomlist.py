@@ -45,6 +45,7 @@ class RoomList:
         self.server_rooms = set()
         self.joined_rooms = joined_rooms
         self.private_rooms = private_rooms
+        frame.RoomSearchCombo.set_active_id("joined")
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
