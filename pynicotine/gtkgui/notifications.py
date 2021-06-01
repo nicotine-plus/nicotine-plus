@@ -267,8 +267,8 @@ class WinNotify:
             # Tray icon was disabled by the user. Enable it temporarily to show a notification.
             self.tray_icon.show()
 
-        self.nid.szInfoTitle = textwrap.shorten(title, width=64, placeholder="...")
-        self.nid.szInfo = textwrap.shorten(message, width=256, placeholder="...")
+        self.nid.szInfoTitle = textwrap.shorten(title, width=63, placeholder="...")
+        self.nid.szInfo = textwrap.shorten(message, width=255, placeholder="...")
 
         windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)
