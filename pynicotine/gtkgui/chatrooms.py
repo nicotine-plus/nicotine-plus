@@ -444,7 +444,6 @@ class ChatRoom:
             self.ChatPaned.set_resize_start_child(True)
             self.ChatPaned.set_shrink_start_child(False)
             self.ChatPaned.set_resize_end_child(False)
-            self.ChatPaned.set_shrink_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
 
         else:
@@ -453,7 +452,6 @@ class ChatRoom:
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
             self.ChatPaned.child_set_property(self.UserView, "resize", False)
-            self.ChatPaned.child_set_property(self.UserView, "shrink", False)
             self.ChatPanedSecond.child_set_property(self.ChatView, "shrink", False)
 
         self.tickers = Tickers()
