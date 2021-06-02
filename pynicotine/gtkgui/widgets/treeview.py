@@ -180,7 +180,7 @@ def initialise_columns(treeview_name, treeview, *args):
         column.set_min_width(20)
 
         column.set_widget(Gtk.Label.new(title))
-        column.get_widget().set_margin_start(6)
+        column.get_widget().set_margin_start(5)
         column.get_widget().show()
 
         if Gtk.get_major_version() == 4:
@@ -265,7 +265,7 @@ def set_last_column_autosize(treeview):
 def hide_columns(treeview, cols, config):
 
     for (column_id, column) in cols.items():
-        parent = column.get_widget().get_ancestor(Gtk.Button)
+        parent = column.get_button()
         if parent:
             PopupMenu(widget=parent, callback=press_header)
 
