@@ -2811,6 +2811,8 @@ class PluginsFrame(BuildFrame):
                     container.add(vbox)
 
                     last_radio = None
+                    group_radios = []
+
                     for label in data["options"]:
                         if Gtk.get_major_version() == 4:
                             radio = Gtk.CheckButton.new_with_label(label)
@@ -2824,8 +2826,10 @@ class PluginsFrame(BuildFrame):
                             radio.set_group(last_radio)
 
                         last_radio = radio
+                        group_radios.append(radio)
                         vbox.add(radio)
 
+                    self.tw[name].group_radios = group_radios
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
                 elif data["type"] in ("dropdown",):
@@ -3259,16 +3263,9 @@ class Settings:
         elif isinstance(widget, Gtk.CheckButton):
             try:
                 # Radio button
-                if Gtk.get_major_version() == 4:
-                    group = widget.get_property("group")
-                else:
-                    group = widget.get_group()
-
-                radio_list = list(reversed(group))
-
-                for radio in radio_list:
+                for radio in widget.group_radios:
                     if radio.get_active():
-                        return radio_list.index(radio)
+                        return widget.group_radios.index(radio)
 
                 return 0
 
@@ -3335,15 +3332,8 @@ class Settings:
         elif isinstance(widget, Gtk.CheckButton):
             try:
                 # Radio button
-                if Gtk.get_major_version() == 4:
-                    group = widget.get_property("group")
-                else:
-                    group = widget.get_group()
-
-                radio_list = list(reversed(group))
-
-                if isinstance(value, int) and value < len(radio_list):
-                    radio_list[value].set_active(True)
+                if isinstance(value, int) and value < len(widget.group_radios):
+                    widget.group_radios[value].set_active(True)
 
             except (AttributeError, TypeError):
                 # Regular check button
