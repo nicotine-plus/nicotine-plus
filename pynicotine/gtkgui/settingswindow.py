@@ -194,6 +194,7 @@ class DownloadsFrame(BuildFrame):
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed,
+                "downloadlimitalt": self.DownloadSpeedAlternative,
                 "usernamesubfolders": self.UsernameSubfolders
             }
         }
@@ -265,6 +266,7 @@ class DownloadsFrame(BuildFrame):
                 "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
+                "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
                 "usernamesubfolders": self.UsernameSubfolders.get_active()
             }
         }
@@ -797,6 +799,7 @@ class UploadsFrame(BuildFrame):
                 "uploadslots": self.QueueSlots,
                 "uselimit": self.Limit,
                 "uploadlimit": self.LimitSpeed,
+                "uploadlimitalt": self.LimitSpeedAlternative,
                 "fifoqueue": self.FirstInFirstOut,
                 "limitby": self.LimitTotalTransfers,
                 "queuelimit": self.MaxUserQueue,
@@ -823,6 +826,7 @@ class UploadsFrame(BuildFrame):
                 "uploadslots": self.QueueSlots.get_value_as_int(),
                 "uselimit": self.Limit.get_active(),
                 "uploadlimit": self.LimitSpeed.get_value_as_int(),
+                "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
                 "fifoqueue": self.FirstInFirstOut.get_active(),
                 "limitby": self.LimitTotalTransfers.get_active(),
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
@@ -842,11 +846,8 @@ class UploadsFrame(BuildFrame):
         self.QueueBandwidthText1.set_sensitive(not sensitive)
 
     def on_limit_toggled(self, widget):
-
         sensitive = widget.get_active()
-
-        for w in self.LimitSpeed, self.LimitPerTransfer, self.LimitTotalTransfers:
-            w.set_sensitive(sensitive)
+        self.LimitSpeed.set_sensitive(sensitive)
 
 
 class GeoBlockFrame(BuildFrame):

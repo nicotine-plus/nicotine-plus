@@ -880,6 +880,13 @@ class NicotineFrame:
         action.connect("change-state", self.on_debug_miscellaneous)
         self.application.add_action(action)
 
+        # Status Bar
+
+        state = config.sections["transfers"]["usealtlimits"]
+        action = Gio.SimpleAction.new_stateful("altspeedlimit", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_alternative_speed_limit)
+        self.application.add_action(action)
+
     """ Menu """
 
     def set_up_menu(self):
@@ -2315,6 +2322,16 @@ class NicotineFrame:
         self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
 
         self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
+
+    def on_alternative_speed_limit(self, action, *args):
+
+        state = config.sections["transfers"]["usealtlimits"]
+        action.set_state(GLib.Variant.new_boolean(not state))
+
+        config.sections["transfers"]["usealtlimits"] = not state
+
+        if self.np.transfers is not None:
+            self.np.transfers.update_limits()
 
     """ Settings """
 

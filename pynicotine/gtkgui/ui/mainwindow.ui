@@ -1516,6 +1516,25 @@
               </object>
             </child>
             <child>
+              <object class="GtkToggleButton">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
+                <property name="action-name">app.altspeedlimit</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">media-seek-backward-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="circular"/>
+                  <class name="flat"/>
+                  <class name="image-button"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkButton">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>

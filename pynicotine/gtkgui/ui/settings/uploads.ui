@@ -3,7 +3,11 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment_LimitSpeed">
     <property name="upper">1000000</property>
-    <property name="value">3</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_LimitSpeedAlternative">
+    <property name="upper">1000000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
@@ -59,6 +63,23 @@
             </child>
           </object>
         </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">10</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Upload Speed Limits</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
@@ -68,27 +89,11 @@
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
-              <object class="GtkCheckButton" id="Limit">
-                <property name="label" translatable="yes">Limit uploads speed to (KiB/s):</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="LimitSpeed">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                <property name="adjustment">adjustment_LimitSpeed</property>
-                <property name="hexpand">1</property>
-                <property name="numeric">1</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
+                <property name="label" translatable="yes">Limit upload speed:</property>
+                <property name="single-line-mode">1</property>
+                <property name="xalign">0</property>
               </object>
             </child>
             <child>
@@ -114,6 +119,43 @@
                     <property name="group">LimitPerTransfer</property>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="Limit">
+                <property name="label" translatable="yes">Limit upload speed to (KiB/s):</property>
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="use-underline">1</property>
+                <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="LimitSpeed">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="adjustment">adjustment_LimitSpeed</property>
+                <property name="hexpand">1</property>
+                <property name="numeric">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Alternative upload speed limit (KiB/s):</property>
+                <property name="single-line-mode">1</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="LimitSpeedAlternative">
+                <property name="visible">1</property>
+                <property name="can-focus">1</property>
+                <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                <property name="adjustment">adjustment_LimitSpeedAlternative</property>
+                <property name="hexpand">1</property>
+                <property name="numeric">1</property>
               </object>
             </child>
           </object>

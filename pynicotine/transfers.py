@@ -337,8 +337,8 @@ class Transfers:
 
     """ Limits """
 
-    def update_limits(self):
-        """ Sends the updated speed limits to the networking thread """
+    def _update_regular_limits(self):
+        """ Sends the regular speed limits to the networking thread """
 
         uselimit = self.config.sections["transfers"]["uselimit"]
         uploadlimit = self.config.sections["transfers"]["uploadlimit"]
@@ -346,6 +346,24 @@ class Transfers:
 
         self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
         self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimit"]))
+
+    def _update_alt_limits(self):
+        """ Sends the alternative speed limits to the networking thread """
+
+        uselimit = True
+        uploadlimit = self.config.sections["transfers"]["uploadlimitalt"]
+        limitby = self.config.sections["transfers"]["limitby"]
+
+        self.queue.append(slskmessages.SetUploadLimit(uselimit, uploadlimit, limitby))
+        self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimitalt"]))
+
+    def update_limits(self):
+
+        if self.config.sections["transfers"]["usealtlimits"]:
+            self._update_alt_limits()
+            return
+
+        self._update_regular_limits()
 
     def queue_limit_reached(self, user):
 
