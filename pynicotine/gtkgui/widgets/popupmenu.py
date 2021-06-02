@@ -330,9 +330,14 @@ class PopupMenu(Gio.Menu):
     def popup(self, x, y, controller=None, button=3):
 
         if Gtk.get_major_version() == 4:
+            if x and y:
+                rectangle = Gdk.Rectangle(x, y, 1, 1)
+                self.popup_menu.set_offset(x, y)
+            else:
+                rectangle = Gdk.Rectangle(0, 0, 1, 1)
+
             self.popup_menu.set_halign(Gtk.Align.START)
-            self.popup_menu.set_offset(x, y)
-            self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
+            self.popup_menu.set_pointing_to(rectangle)
             self.popup_menu.popup()
             return
 
@@ -353,14 +358,19 @@ class PopupMenu(Gio.Menu):
 
     def _callback(self, controller, x, y):
 
-        if x and y and isinstance(self.widget, Gtk.TreeView):
-            from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
+        if isinstance(self.widget, Gtk.TreeView):
+            if x and y:
+                from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 
-            bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(x, y)
-            set_treeview_selected_row(self.widget, bin_x, bin_y)
+                bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(x, y)
+                set_treeview_selected_row(self.widget, bin_x, bin_y)
 
-            if not self.widget.get_path_at_pos(bin_x, bin_y):
-                # Stop here to allow column header menus to appear
+                if not self.widget.get_path_at_pos(bin_x, bin_y):
+                    # Stop here to allow column header menus to appear
+                    return
+
+            elif not self.widget.get_selection().count_selected_rows():
+                # No rows selected, don't show menu
                 return
 
         if self.callback:
@@ -377,7 +387,7 @@ class PopupMenu(Gio.Menu):
     def _callback_click(self, controller, num_p, x, y):
         self._callback(controller, x, y)
 
-    def _callback_menu(self, widget):
+    def _callback_menu(self, *args):
         self._callback(None, None, None)
         return True
 
@@ -390,9 +400,21 @@ class PopupMenu(Gio.Menu):
             self.gesture_press = Gtk.GestureLongPress()
             widget.add_controller(self.gesture_press)
 
+            self.shortcut_controller = Gtk.ShortcutController()
+            self.shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
+            self.shortcut_controller.add_shortcut(
+                Gtk.Shortcut(
+                    trigger=Gtk.ShortcutTrigger.parse_string("<Shift>F10"),
+                    action=Gtk.CallbackAction.new(self._callback_menu),
+                )
+            )
+            widget.add_controller(self.shortcut_controller)
+
         else:
             self.gesture_click = Gtk.GestureMultiPress.new(widget)
             self.gesture_press = Gtk.GestureLongPress.new(widget)
+
+            # Shift+F10
             widget.connect("popup-menu", self._callback_menu)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
