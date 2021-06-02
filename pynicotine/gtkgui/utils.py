@@ -47,7 +47,7 @@ NICOTINE = None
 def load_ui_elements(ui_class, filename):
 
     try:
-        with open(filename, 'r') as f:
+        with open(filename, "r", encoding="utf-8") as f:
             if Gtk.get_major_version() == 4:
                 builder = Gtk.Builder(ui_class)
                 builder.add_from_string(
