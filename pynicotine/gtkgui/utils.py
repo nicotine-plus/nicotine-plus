@@ -58,7 +58,10 @@ def load_ui_elements(ui_class, filename):
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
                 builder = Gtk.Builder()
-                builder.add_from_string(f.read())
+                builder.add_from_string(
+                    f.read()
+                    .replace("<child type=\"center\">", "<child>")
+                )
                 builder.connect_signals(ui_class)
 
         for obj in builder.get_objects():

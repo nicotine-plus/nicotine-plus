@@ -60,7 +60,7 @@
                 <child>
                   <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <child>
+                    <child type="center">
                       <object class="GtkEntry" id="AddLikeEntry">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
@@ -112,7 +112,7 @@
                 <child>
                   <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <child>
+                    <child type="center">
                       <object class="GtkEntry" id="AddDislikeEntry">
                         <property name="visible">1</property>
                         <property name="can-focus">1</property>
