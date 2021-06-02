@@ -298,29 +298,7 @@
             <child>
               <object class="GtkMenuButton" id="ToggleTreeDownloads">
                 <property name="visible">1</property>
-                <property name="menu-model">ToggleDownloadsModel</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
-                <child>
-                  <menu id="ToggleDownloadsModel">
-                    <section>
-                      <item>
-                        <attribute name="label" translatable="yes">Ungrouped</attribute>
-                        <attribute name="action">win.downloadgrouping</attribute>
-                        <attribute name="target">ungrouped</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label" translatable="yes">Group by Folder</attribute>
-                        <attribute name="action">win.downloadgrouping</attribute>
-                        <attribute name="target">folder_grouping</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label" translatable="yes">Group by User</attribute>
-                        <attribute name="action">win.downloadgrouping</attribute>
-                        <attribute name="target">user_grouping</attribute>
-                      </item>
-                    </section>
-                  </menu>
-                </child>
               </object>
             </child>
             <style>
@@ -469,29 +447,7 @@
             <child>
               <object class="GtkMenuButton" id="ToggleTreeUploads">
                 <property name="visible">1</property>
-                <property name="menu-model">ToggleUploadsModel</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
-                <child>
-                  <menu id="ToggleUploadsModel">
-                    <section>
-                      <item>
-                        <attribute name="label" translatable="yes">Ungrouped</attribute>
-                        <attribute name="action">win.uploadgrouping</attribute>
-                        <attribute name="target">ungrouped</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label" translatable="yes">Group by Folder</attribute>
-                        <attribute name="action">win.uploadgrouping</attribute>
-                        <attribute name="target">folder_grouping</attribute>
-                      </item>
-                      <item>
-                        <attribute name="label" translatable="yes">Group by User</attribute>
-                        <attribute name="action">win.uploadgrouping</attribute>
-                        <attribute name="target">user_grouping</attribute>
-                      </item>
-                    </section>
-                  </menu>
-                </child>
               </object>
             </child>
             <style>

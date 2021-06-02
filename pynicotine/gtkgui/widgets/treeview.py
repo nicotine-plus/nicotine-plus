@@ -20,10 +20,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import random
+import string
 import sys
 
 from collections import OrderedDict
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
@@ -33,6 +36,49 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
 """ Treeview """
+
+
+def verify_grouping_mode(mode):
+
+    # Map legacy values
+    if mode == "0":
+        mode = "ungrouped"
+
+    elif mode == "1":
+        mode = "folder_grouping"
+
+    elif mode == "2":
+        mode = "user_grouping"
+
+    # Verify mode validity
+    elif mode not in ("ungrouped", "folder_grouping", "user_grouping"):
+        mode = "folder_grouping"
+
+    return mode
+
+
+def create_grouping_menu(window, active_mode, callback):
+
+    action_id = "grouping" + ''.join(random.choice(string.digits) for i in range(8))
+    menu = Gio.Menu.new()
+
+    menuitem = Gio.MenuItem.new(_("Ungrouped"), "win." + action_id + "::ungrouped")
+    menu.append_item(menuitem)
+
+    menuitem = Gio.MenuItem.new(_("Group by Folder"), "win." + action_id + "::folder_grouping")
+    menu.append_item(menuitem)
+
+    menuitem = Gio.MenuItem.new(_("Group by User"), "win." + action_id + "::user_grouping")
+    menu.append_item(menuitem)
+
+    state = GLib.Variant.new_string(verify_grouping_mode(active_mode))
+    action = Gio.SimpleAction.new_stateful(action_id, GLib.VariantType.new("s"), state)
+    action.connect("change-state", callback)
+
+    window.add_action(action)
+    action.change_state(state)
+
+    return menu
 
 
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
@@ -62,25 +108,6 @@ def collapse_treeview(treeview, grouping_mode):
             path = model.get_path(iterator)
             treeview.expand_to_path(path)
             iterator = model.iter_next(iterator)
-
-
-def verify_grouping_mode(mode):
-
-    # Map legacy values
-    if mode == "0":
-        mode = "ungrouped"
-
-    elif mode == "1":
-        mode = "folder_grouping"
-
-    elif mode == "2":
-        mode = "user_grouping"
-
-    # Verify mode validity
-    elif mode not in ("ungrouped", "folder_grouping", "user_grouping"):
-        mode = "folder_grouping"
-
-    return mode
 
 
 def initialise_columns(treeview_name, treeview, *args):

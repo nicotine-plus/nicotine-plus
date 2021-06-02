@@ -28,7 +28,6 @@ import sre_constants
 
 from collections import defaultdict
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -48,12 +47,12 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
+from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
-from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
@@ -427,11 +426,8 @@ class Search:
 
         """ Grouping """
 
-        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["searches"]["group_searches"]))
-        action = Gio.SimpleAction.new_stateful("searchgrouping", GLib.VariantType.new("s"), state)
-        action.connect("change-state", self.on_group)
-        self.frame.MainWindow.add_action(action)
-        action.change_state(state)
+        menu = create_grouping_menu(self.frame.MainWindow, config.sections["searches"]["group_searches"], self.on_group)
+        self.ResultGrouping.set_menu_model(menu)
 
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
 

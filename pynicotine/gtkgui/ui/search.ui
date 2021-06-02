@@ -124,29 +124,7 @@
                 <child>
                   <object class="GtkMenuButton" id="ResultGrouping">
                     <property name="visible">1</property>
-                    <property name="menu-model">ResultGroupingModel</property>
                     <property name="tooltip-text" translatable="yes">Result grouping mode</property>
-                    <child>
-                      <menu id="ResultGroupingModel">
-                        <section>
-                          <item>
-                            <attribute name="label" translatable="yes">Ungrouped</attribute>
-                            <attribute name="action">win.searchgrouping</attribute>
-                            <attribute name="target">ungrouped</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Group by Folder</attribute>
-                            <attribute name="action">win.searchgrouping</attribute>
-                            <attribute name="target">folder_grouping</attribute>
-                          </item>
-                          <item>
-                            <attribute name="label" translatable="yes">Group by User</attribute>
-                            <attribute name="action">win.searchgrouping</attribute>
-                            <attribute name="target">user_grouping</attribute>
-                          </item>
-                        </section>
-                      </menu>
-                    </child>
                   </object>
                 </child>
                 <style>
