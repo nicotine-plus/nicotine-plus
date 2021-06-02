@@ -213,10 +213,13 @@ def initialise_columns(treeview_name, treeview, *args):
         if Gtk.get_major_version() == 4:
             """ Temporary hack to restore sorting by clicking column headers in GTK 4 """
 
+            button = column.get_button()
+            button.set_overflow(Gtk.Overflow.HIDDEN)
+
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect("pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
-            column.get_button().add_controller(gesture_click)
+            button.add_controller(gesture_click)
 
         cols[id] = column
 
