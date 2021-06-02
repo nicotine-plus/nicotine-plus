@@ -330,14 +330,12 @@ class PopupMenu(Gio.Menu):
     def popup(self, x, y, controller=None, button=3):
 
         if Gtk.get_major_version() == 4:
-            if x and y:
-                rectangle = Gdk.Rectangle(x, y, 1, 1)
-                self.popup_menu.set_offset(x, y)
-            else:
-                rectangle = Gdk.Rectangle(0, 0, 1, 1)
+            if not x and not y:
+                x = y = 0
 
             self.popup_menu.set_halign(Gtk.Align.START)
-            self.popup_menu.set_pointing_to(rectangle)
+            self.popup_menu.set_offset(x, y)
+            self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
             self.popup_menu.popup()
             return
 
