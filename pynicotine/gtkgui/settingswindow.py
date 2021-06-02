@@ -37,6 +37,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -2962,6 +2963,17 @@ class PluginsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
+
+    def on_add_plugins(self, widget):
+
+        try:
+            if not os.path.isdir(config.plugin_dir):
+                os.makedirs(config.plugin_dir)
+
+            open_file_path(config.plugin_dir)
+
+        except Exception as e:
+            log.add("Failed to open folder containing user plugins: %s", e)
 
     def on_plugin_properties(self, widget):
 
