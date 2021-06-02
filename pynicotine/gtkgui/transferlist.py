@@ -64,10 +64,10 @@ class TransferList:
         load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
         grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
 
-        self.ActionBar.remove(self.End)
-        self.ActionBar.pack_end(self.End)
-
         if Gtk.get_major_version() == 4:
+            self.ActionBar.remove(self.End)
+            self.ActionBar.pack_end(self.End)
+
             getattr(frame, type + "svbox").append(self.Main)
             grouping_button.set_icon_name("view-list-symbolic")
 

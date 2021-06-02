@@ -137,6 +137,8 @@
               <object class="GtkBox" id="End">
                 <property name="visible">1</property>
                 <property name="spacing">6</property>
+                <property name="halign">end</property>
+                <property name="hexpand">1</property>
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
