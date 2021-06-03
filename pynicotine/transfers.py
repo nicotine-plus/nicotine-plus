@@ -149,8 +149,8 @@ class Transfers:
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
                 status = "Aborted"
-            elif len(i) >= 4 and i[3] == "Filtered":
-                status = "Filtered"
+            elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
+                status = i[3]
             else:
                 status = "Getting status"
 
@@ -2287,7 +2287,7 @@ class Transfers:
 
     def get_downloads(self):
         """ Get a list of incomplete and not aborted downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads if i.status != "Finished"]
+        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads]
 
     def save_downloads_callback(self, f):
         import json
