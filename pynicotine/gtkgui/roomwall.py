@@ -78,7 +78,7 @@ class RoomWall:
 
         self.update_message_list()
 
-    def on_icon_pressed(self, entry, icon_pos):
+    def on_icon_pressed(self, entry, icon_pos, *args):
 
         if icon_pos == Gtk.EntryIconPosition.PRIMARY:
             self.on_set_room_wall_message()
