@@ -876,6 +876,45 @@ class Search:
 
         return True
 
+    def update_filter_counter(self, count):
+
+        if count > 0:
+            self.FilterLabel.set_text(_("Result Filters") + " *")
+        else:
+            self.FilterLabel.set_text(_("Result Filters"))
+
+        self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
+
+    def update_results_model(self):
+
+        self.ResultsList.set_model(None)
+
+        self.usersiters.clear()
+        self.directoryiters.clear()
+        self.resultsmodel.clear()
+        self.numvisibleresults = 0
+
+        for row in self.all_data:
+            if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
+                break
+
+            if self.check_filter(row):
+                self.add_row_to_model(row)
+
+        # Update number of visible results
+        self.update_result_counter()
+        self.update_filter_counter(self.active_filter_count)
+
+        self.ResultsList.set_model(self.resultsmodel)
+
+        if self.grouping_mode != "ungrouped":
+            # Group by folder or user
+
+            if self.ExpandButton.get_active():
+                self.ResultsList.expand_all()
+            else:
+                collapse_treeview(self.ResultsList, self.grouping_mode)
+
     def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country, f_type):
 
         self.filters = {
@@ -931,21 +970,7 @@ class Search:
         if freeslot:
             self.active_filter_count += 1
 
-        self.usersiters.clear()
-        self.directoryiters.clear()
-        self.resultsmodel.clear()
-        self.numvisibleresults = 0
-
-        for row in self.all_data:
-            if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
-                break
-
-            if self.check_filter(row):
-                self.add_row_to_model(row)
-
-        # Update number of visible results
-        self.update_result_counter()
-        self.update_filter_counter(self.active_filter_count)
+        self.update_results_model()
 
     def add_popup_menu_user(self, popup, user):
 
@@ -1265,9 +1290,7 @@ class Search:
         self.ExpandButton.set_visible(active)
 
         self.grouping_mode = mode
-
-        if self.filters:
-            self.on_refilter()
+        self.update_results_model()
 
         action.set_state(state)
 
@@ -1338,17 +1361,7 @@ class Search:
         f_country = self.push_history(self.FilterCountry, "filtercc")
         f_type = self.push_history(self.FilterType, "filtertype")
 
-        self.ResultsList.set_model(None)
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country, f_type)
-        self.ResultsList.set_model(self.resultsmodel)
-
-        if self.grouping_mode != "ungrouped":
-            # Group by folder or user
-
-            if self.ExpandButton.get_active():
-                self.ResultsList.expand_all()
-            else:
-                collapse_treeview(self.ResultsList, self.grouping_mode)
 
     def on_clear_filters(self, *args):
 
@@ -1365,15 +1378,6 @@ class Search:
         self.clearing_filters = False
         self.FilterInEntry.grab_focus()
         self.on_refilter()
-
-    def update_filter_counter(self, count):
-
-        if count > 0:
-            self.FilterLabel.set_text(_("Result Filters") + " *")
-        else:
-            self.FilterLabel.set_text(_("Result Filters"))
-
-        self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
     def on_clear(self, *args):
 
