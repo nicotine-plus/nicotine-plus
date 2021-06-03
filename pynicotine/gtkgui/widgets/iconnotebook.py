@@ -99,6 +99,7 @@ class ImageLabel(Gtk.Box):
             self.button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
             self.button.set_relief(Gtk.ReliefStyle.NONE)
 
+        self.button.get_style_context().add_class("circular")
         self.button.set_tooltip_text(_("Close tab"))
         self.button.show()
         self.add(self.button)
