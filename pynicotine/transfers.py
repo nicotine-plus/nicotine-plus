@@ -120,51 +120,11 @@ class Transfers:
         self.uploads = deque()
         self.privilegedusers = set()
         self.requested_folders = defaultdict(dict)
-        userstatus = set()
 
         self.update_limits()
 
-        for i in self.load_download_queue():
-            size = currentbytes = bitrate = length = None
-
-            try:
-                size = int(i[4])
-            except Exception:
-                pass
-
-            try:
-                currentbytes = int(i[5])
-            except Exception:
-                pass
-
-            try:
-                bitrate = i[6]
-            except Exception:
-                pass
-
-            try:
-                length = i[7]
-            except Exception:
-                pass
-
-            if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
-                status = "Aborted"
-            elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
-                status = i[3]
-            else:
-                status = "Getting status"
-
-            self.downloads.appendleft(
-                Transfer(
-                    user=i[0], filename=i[1], path=i[2], status=status,
-                    size=size, currentbytes=currentbytes, bitrate=bitrate,
-                    length=length
-                )
-            )
-            userstatus.add(i[0])
-
-        for user in userstatus:
-            self.eventprocessor.watch_user(user)
+        self.add_stored_transfers("downloads")
+        self.add_stored_transfers("uploads")
 
         self.users = users
         self.network_callback = network_callback
@@ -197,7 +157,7 @@ class Transfers:
         self.downloadsview = downloads
         self.uploadsview = uploads
 
-    """ Load Downloads """
+    """ Load Transfers """
 
     def get_download_queue_file_name(self):
 
@@ -220,22 +180,22 @@ class Transfers:
 
         return None
 
-    def load_current_queue_format(self, downloads_file):
-        """ Loads a download queue file in json format """
+    def load_current_transfers_format(self, transfers_file):
+        """ Loads a file of transfers in json format """
 
-        download_queue = []
+        transfers = []
 
         try:
-            with open(downloads_file, encoding="utf-8") as handle:
+            with open(transfers_file, encoding="utf-8") as handle:
                 import json
-                download_queue = json.load(handle)
+                transfers = json.load(handle)
 
         except Exception as inst:
             log.add(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
 
-        return download_queue
+        return transfers
 
-    def load_legacy_queue_format(self, downloads_file):
+    def load_legacy_transfers_format(self, downloads_file):
         """ Loads a download queue file in pickle format (legacy) """
 
         download_queue = []
@@ -250,17 +210,77 @@ class Transfers:
 
         return download_queue
 
-    def load_download_queue(self):
+    def load_transfers(self, transfer_type):
 
-        downloads_file = self.get_download_queue_file_name()
+        if transfer_type == "uploads":
+            transfers_file = os.path.join(self.config.data_dir, 'uploads.json')
+        else:
+            transfers_file = self.get_download_queue_file_name()
 
-        if not downloads_file:
+        if not transfers_file:
             return []
 
-        if not downloads_file.endswith("downloads.json"):
-            return self.load_legacy_queue_format(downloads_file)
+        if transfer_type == "downloads" and not transfers_file.endswith("downloads.json"):
+            return self.load_legacy_transfers_format(transfers_file)
 
-        return self.load_current_queue_format(downloads_file)
+        return self.load_current_transfers_format(transfers_file)
+
+    def add_stored_transfers(self, transfer_type):
+
+        users = set()
+
+        if transfer_type == "uploads":
+            transfer_list = self.uploads
+        else:
+            transfer_list = self.downloads
+
+        for i in self.load_transfers(transfer_type):
+            size = currentbytes = bitrate = length = None
+
+            try:
+                size = int(i[4])
+            except Exception:
+                pass
+
+            try:
+                currentbytes = int(i[5])
+            except Exception:
+                pass
+
+            try:
+                bitrate = i[6]
+            except Exception:
+                pass
+
+            try:
+                length = i[7]
+            except Exception:
+                pass
+
+            if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
+                status = "Aborted"
+            elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
+                status = i[3]
+            else:
+                status = "Getting status"
+
+            if transfer_type == "uploads" and status != "Finished":
+                # Only finished uploads are supposed to be restored
+                continue
+
+            transfer_list.appendleft(
+                Transfer(
+                    user=i[0], filename=i[1], path=i[2], status=status,
+                    size=size, currentbytes=currentbytes, bitrate=bitrate,
+                    length=length
+                )
+            )
+
+            if transfer_type == "downloads":
+                users.add(i[0])
+
+        for user in users:
+            self.eventprocessor.watch_user(user)
 
     """ Privileges """
 
@@ -1942,7 +1962,7 @@ class Transfers:
         if not self.auto_clear_download(i) and self.downloadsview:
             self.downloadsview.update(i)
 
-        self.save_downloads()
+        self.save_transfers("downloads")
 
         log.add_download(
             _("Download finished: user %(user)s, file %(file)s"), {
@@ -1991,6 +2011,7 @@ class Transfers:
         if not self.auto_clear_upload(i) and self.uploadsview:
             self.uploadsview.update(i)
 
+        self.save_transfers("uploads")
         self.check_upload_queue()
 
     def auto_clear_download(self, transfer):
@@ -2286,24 +2307,40 @@ class Transfers:
                 i.status = "Old"
 
     def get_downloads(self):
-        """ Get a list of incomplete and not aborted downloads """
+        """ Get a list of downloads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.downloads]
+
+    def get_uploads(self):
+        """ Get a list of finished uploads """
+        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length] for i in self.uploads if i.status == "Finished"]
 
     def save_downloads_callback(self, f):
         import json
         json.dump(self.get_downloads(), f, ensure_ascii=False)
 
-    def save_downloads(self):
-        """ Save list of files to be downloaded """
+    def save_uploads_callback(self, f):
+        import json
+        json.dump(self.get_uploads(), f, ensure_ascii=False)
+
+    def save_transfers(self, transfer_type):
+        """ Save list of transfers """
 
         self.config.create_data_folder()
-        downloads_file = os.path.join(self.config.data_dir, 'downloads.json')
 
-        write_file_and_backup(downloads_file, self.save_downloads_callback)
+        if transfer_type == "uploads":
+            transfers_file = os.path.join(self.config.data_dir, 'uploads.json')
+            callback = self.save_uploads_callback
+        else:
+            transfers_file = os.path.join(self.config.data_dir, 'downloads.json')
+            callback = self.save_downloads_callback
+
+        write_file_and_backup(transfers_file, callback)
 
     def disconnect(self):
+
         self.abort_transfers()
-        self.save_downloads()
+        self.save_transfers("downloads")
+        self.save_transfers("uploads")
 
 
 class Statistics:

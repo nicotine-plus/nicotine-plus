@@ -301,10 +301,11 @@ class TransferList:
 
         if (curtime - self.last_save) > 15:
 
-            """ Save downloads list to file every 15 seconds """
+            """ Save list of transfers to file every 15 seconds """
 
             if self.frame.np.transfers is not None:
-                self.frame.np.transfers.save_downloads()
+                self.frame.np.transfers.save_transfers("downloads")
+                self.frame.np.transfers.save_transfers("uploads")
 
             self.last_save = curtime
 

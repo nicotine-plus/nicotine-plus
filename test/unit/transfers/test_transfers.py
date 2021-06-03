@@ -77,6 +77,34 @@ def test_load_downloads(transfers):
     assert transfer.length == "4:12"
 
 
+def test_load_uploads(transfers):
+    """ Test loading a uploads.json file """
+
+    # Only finished uploads are loaded, other types should never be stored
+    assert len(transfers.uploads) == 3
+    assert len(transfers.queue) == 2
+
+    transfer = transfers.uploads[0]
+
+    assert transfer.user == "user5"
+    assert transfer.filename == "Junk\\Song5.mp3"
+    assert transfer.status == "Finished"
+    assert transfer.size == 11733776
+    assert transfer.currentbytes == 11733776
+    assert transfer.bitrate == "319"
+    assert transfer.length == "4:53"
+
+    transfer = transfers.uploads[2]
+
+    assert transfer.user == "user3"
+    assert transfer.filename == "Junk\\Song3.flac"
+    assert transfer.status == "Finished"
+    assert transfer.size == 27231044
+    assert transfer.currentbytes == 27231044
+    assert transfer.bitrate == "792"
+    assert transfer.length == "4:28"
+
+
 def test_queue_download(transfers):
     """ Verify that new downloads are prepended to the list """
 

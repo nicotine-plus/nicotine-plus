@@ -70,6 +70,9 @@ downloadsexpanded = True
 uploadsexpanded = True
 buddysharestrustedonly = False
 usernamesubfolders = False
+usealtlimits = False
+uploadlimitalt = 100
+downloadlimitalt = 100
 
 [userinfo]
 descr = ''
