@@ -180,6 +180,16 @@ class Transfers:
 
         return None
 
+    def get_upload_list_file_name(self):
+
+        data_dir = self.config.data_dir
+        uploads_file_json = os.path.join(data_dir, 'uploads.json')
+
+        if os.path.exists(uploads_file_json):
+            return uploads_file_json
+
+        return None
+
     def load_current_transfers_format(self, transfers_file):
         """ Loads a file of transfers in json format """
 
@@ -213,7 +223,7 @@ class Transfers:
     def load_transfers(self, transfer_type):
 
         if transfer_type == "uploads":
-            transfers_file = os.path.join(self.config.data_dir, 'uploads.json')
+            transfers_file = self.get_upload_list_file_name()
         else:
             transfers_file = self.get_download_queue_file_name()
 
