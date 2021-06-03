@@ -1337,6 +1337,7 @@ class Search:
 
         if text in history:
             history.remove(text)
+
         elif len(history) >= 5:
             del history[-1]
 
@@ -1344,8 +1345,6 @@ class Search:
         config.write_configuration()
 
         self.add_combo(widget, text)
-        widget.get_child().set_text(text)
-
         return text
 
     def on_refilter(self, *args):
