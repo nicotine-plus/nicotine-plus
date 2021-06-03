@@ -1847,7 +1847,6 @@ class SearchesFrame(BuildFrame):
                 "defilter": None,
                 "search_results": self.ToggleResults,
                 "max_displayed_results": self.MaxDisplayedResults,
-                "max_stored_results": self.MaxStoredResults,
                 "min_search_chars": self.MinSearchChars,
                 "remove_special_chars": self.RemoveSpecialChars
             }
@@ -1898,7 +1897,6 @@ class SearchesFrame(BuildFrame):
                 ],
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
-                "max_stored_results": self.MaxStoredResults.get_value_as_int(),
                 "min_search_chars": self.MinSearchChars.get_value_as_int(),
                 "remove_special_chars": self.RemoveSpecialChars.get_active()
             }

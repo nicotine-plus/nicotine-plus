@@ -239,8 +239,8 @@ class Searches(IconNotebook):
 
         counter = len(search["tab"].all_data) + 1
 
-        # No more things to add because we've reached the max_stored_results limit
-        if counter > config.sections["searches"]["max_stored_results"]:
+        # No more things to add because we've reached the result limit
+        if counter > config.sections["searches"]["max_displayed_results"]:
             return
 
         search["tab"].add_user_results(msg, username, country)
@@ -567,11 +567,11 @@ class Search:
         h_queue = humanize(inqueue)
 
         update_ui = False
-        maxstoredresults = config.sections["searches"]["max_stored_results"]
+        max_results = config.sections["searches"]["max_displayed_results"]
 
         for result in msg.list:
 
-            if counter > maxstoredresults:
+            if counter > max_results:
                 break
 
             fullpath = result[1]
@@ -640,9 +640,6 @@ class Search:
     def append(self, row):
 
         self.all_data.append(row)
-
-        if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
-            return False
 
         if not self.check_filter(row):
             return False
@@ -895,9 +892,6 @@ class Search:
         self.numvisibleresults = 0
 
         for row in self.all_data:
-            if self.numvisibleresults >= config.sections["searches"]["max_displayed_results"]:
-                break
-
             if self.check_filter(row):
                 self.add_row_to_model(row)
 

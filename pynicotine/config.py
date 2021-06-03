@@ -231,8 +231,7 @@ class Config:
                 "filterbr": [],
                 "filtertype": [],
                 "search_results": True,
-                "max_displayed_results": 1000,
-                "max_stored_results": 1500,
+                "max_displayed_results": 1500,
                 "min_search_chars": 3,
                 "remove_special_chars": True
             },
@@ -699,6 +698,9 @@ class Config:
 
         # Remove option to toggle chatroom arrow buttons, since they no longer exist
         self.remove_old_option("ui", "chat_hidebuttons")
+
+        # Remove max stored search results, only visible search result limit is used now
+        self.remove_old_option("searches", "max_stored_results")
 
     def remove_old_option(self, section, option):
 

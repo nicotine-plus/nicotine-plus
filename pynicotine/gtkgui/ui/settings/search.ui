@@ -151,38 +151,15 @@
               <object class="GtkLabel" id="MaxDisLabel">
                 <property name="visible">1</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Maximum results per search visible at a time:</property>
+                <property name="label" translatable="yes">Limit number of results per search:</property>
               </object>
             </child>
             <child>
               <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
-                <property name="tooltip_text" translatable="yes">When the maximum number of visible results is smaller than the maximum total results, use the search result filters to refine what is visible.</property>
                 <property name="width-chars">6</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
-                <property name="numeric">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkLabel" id="MaxStoredLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Maximum total results per search:</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="MaxStoredResults">
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="width-chars">6</property>
-                <property name="adjustment">adjustment_MaxStoredResults</property>
                 <property name="numeric">1</property>
               </object>
             </child>
