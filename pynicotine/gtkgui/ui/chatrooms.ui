@@ -161,7 +161,6 @@
                             <property name="visible">1</property>
                             <property name="can-focus">1</property>
                             <property name="receives-default">1</property>
-                            <property name="tooltip-text" translatable="yes">Room wall</property>
                             <signal name="clicked" handler="on_show_room_wall" swapped="no"/>
                             <child>
                               <object class="GtkImage">
