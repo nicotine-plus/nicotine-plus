@@ -57,7 +57,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Autoclear finished/canceled uploads from the transfer list</property>
+                <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
                 <property name="wrap">1</property>
               </object>
             </child>
