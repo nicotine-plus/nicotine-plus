@@ -1071,12 +1071,7 @@ class Transfers:
 
             except OSError as strerror:
                 log.add(_("OS error: %s"), strerror)
-
-                self.abort_transfer(i)
-                i.status = "Download directory error"
-
-                if self.notifications:
-                    self.notifications.new_notification(_("OS error: %s") % strerror, title=_("Folder download error"))
+                self.download_folder_error(i, strerror)
 
             else:
                 f = None
@@ -1281,7 +1276,7 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status in ("Aborted", "Local file error", "User logged off"):
+            if i.status in ("Aborted", "Download folder error", "Local file error", "User logged off"):
                 continue
 
             if not i.legacy_attempt:
@@ -1925,6 +1920,14 @@ class Transfers:
             else:
                 log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
 
+    def download_folder_error(self, transfer, error):
+
+        self.abort_transfer(transfer)
+        transfer.status = "Download folder error"
+
+        if self.notifications:
+            self.notifications.new_notification(_("OS error: %s") % error, title=_("Download folder error"))
+
     def download_finished(self, file, i):
 
         self.close_file(file, i)
@@ -1953,6 +1956,12 @@ class Transfers:
                     'error': inst
                 }
             )
+            self.download_folder_error(i, inst)
+
+            if self.downloadsview:
+                self.downloadsview.update(i)
+
+            return
 
         i.status = "Finished"
         i.currentbytes = i.size

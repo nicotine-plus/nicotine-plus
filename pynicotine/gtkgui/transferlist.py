@@ -101,7 +101,7 @@ class TransferList:
         self.statuses["Filtered"] = _("Filtered")
         self.statuses["File not shared"] = _("File not shared")
         self.statuses["File not shared."] = _("File not shared")  # The official client sends a variant containing a dot
-        self.statuses["Download directory error"] = _("Download directory error")
+        self.statuses["Download folder error"] = _("Download folder error")
         self.statuses["Local file error"] = _("Local file error")
         self.statuses["Remote file error"] = _("Remote file error")
 
