@@ -226,6 +226,7 @@ class Search:
             word index. If not, exit, since we don't have relevant results. """
 
             largest = 0
+            largest_key = None
             words = searchterm.split()
 
             for word in words:
@@ -242,6 +243,9 @@ class Search:
             in the previous step, and gradually remove matches that other words in the search
             term don't have. Return the remaining matches, if any. """
 
+            if not largest_key:
+                return
+            
             results = wordindex[largest_key]
             words.remove(largest_key)
 
