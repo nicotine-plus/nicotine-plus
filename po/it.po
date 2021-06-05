@@ -3951,7 +3951,7 @@ msgstr "Errore I/O in download: %s"
 #: pynicotine/transfers.py:1070
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr "Download fallito: utente %(user)s, file %(file)s"
+msgstr "Download iniziato: utente %(user)s, file %(file)s"
 
 # pynicotine/transfers.py
 #: pynicotine/transfers.py:1116
