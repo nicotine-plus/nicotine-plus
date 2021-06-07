@@ -865,22 +865,12 @@ class TransferList:
 
     def on_file_properties(self, *args):
 
-        if not self.frame.np.transfers:
-            return
-
         data = []
-        model, paths = self.widget.get_selection().get_selected_rows()
 
-        for path in paths:
-            iterator = model.get_iter(path)
-            transfer = model.get_value(iterator, 18)
-
-            if not isinstance(transfer, Transfer):
-                continue
-
-            user = model.get_value(iterator, 0)
-            filename = model.get_value(iterator, 2)
-            fullname = model.get_value(iterator, 10)
+        for transfer in self.selected_transfers:
+            user = transfer.user
+            fullname = transfer.filename
+            filename = fullname.split("\\")[-1]
             size = speed = length = queue = immediate = num = country = bitratestr = ""
 
             size = str(human_size(transfer.size))
@@ -908,7 +898,7 @@ class TransferList:
                 "country": country
             })
 
-        if paths:
+        if data:
             FileProperties(self.frame, data).show()
 
     def on_copy_file_path(self, *args):
