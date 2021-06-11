@@ -15,7 +15,7 @@
             <property name="can-focus">1</property>
             <property name="vexpand">1</property>
             <child>
-              <object class="GtkTreeView" id="DownloadList">
+              <object class="GtkTreeView" id="TransferList">
                 <property name="visible">1</property>
                 <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
@@ -37,7 +37,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkRevealer" id="DownloadButtons">
+      <object class="GtkRevealer" id="TransferButtons">
         <property name="visible">1</property>
         <property name="transition-type">slide-up</property>
         <child>

@@ -643,8 +643,8 @@ class NicotineFrame:
         self.interests.GlobalRecommendationsButton.set_sensitive(status)
         self.interests.RecommendationsButton.set_sensitive(status)
 
-        self.downloads.DownloadButtons.set_sensitive(status)
-        self.uploads.UploadButtons.set_sensitive(status)
+        self.downloads.TransferButtons.set_sensitive(status)
+        self.uploads.TransferButtons.set_sensitive(status)
 
         self.RoomType.set_sensitive(status)
         self.JoinRoomEntry.set_sensitive(status)
@@ -1045,8 +1045,8 @@ class NicotineFrame:
         config.sections["columns"]["hideflags"] = not state
 
     def set_show_transfer_buttons(self, show):
-        self.downloads.DownloadButtons.set_reveal_child(show)
-        self.uploads.UploadButtons.set_reveal_child(show)
+        self.downloads.TransferButtons.set_reveal_child(show)
+        self.uploads.TransferButtons.set_reveal_child(show)
 
     def on_show_transfer_buttons(self, action, *args):
 
