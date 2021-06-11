@@ -28,9 +28,9 @@ pacman --noconfirm -S --needed \
 
 # Install PyInstaller dependency
 # Rebuild bootloader to reduce false positives in anti-malware software
-wget https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.3.zip
-unzip v4.3.zip
-cd pyinstaller-4.3/bootloader/
+wget https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.1.zip
+unzip v4.1.zip
+cd pyinstaller-4.1/bootloader/
 
 if [ $ARCH == "i686" ]; then
   python3 ./waf all --target-arch=32bit
