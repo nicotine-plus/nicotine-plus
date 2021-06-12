@@ -26,7 +26,6 @@
 
 import argparse
 import importlib.util
-import os
 import sys
 
 
@@ -103,59 +102,6 @@ def check_arguments():
     return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan
 
 
-def check_core_dependencies():
-
-    # Require Python >= 3.6
-    try:
-        assert sys.version_info[:2] >= (3, 6), '.'.join(
-            map(str, sys.version_info[:3])
-        )
-
-    except AssertionError as e:
-        return _("""You are using an unsupported version of Python (%(old_version)s).
-You should install Python %(min_version)s or newer.""") % {
-            "old_version": e,
-            "min_version": "3.6"
-        }
-
-    # Require gdbm or semidbm, for faster loading of shelves
-    if not importlib.util.find_spec("_gdbm") and \
-            not importlib.util.find_spec("semidbm"):
-        return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
-            "option1": "gdbm",
-            "option2": "semidbm"
-        }
-
-    return None
-
-
-def check_gui_dependencies():
-
-    # Require GTK+ >= 3.18
-    try:
-        import gi
-
-    except ImportError:
-        return _("Cannot find %s, please install it.") % "pygobject"
-
-    else:
-        try:
-            version = '4.0' if os.getenv("NICOTINE_GTK_VERSION") == '4' else '3.0'
-            gi.require_version('Gtk', version)
-
-        except ValueError as e:
-            return _("""You are using an unsupported version of GTK.
-You should install GTK %s or newer.""") % "3.18"
-
-    try:
-        from gi.repository import Gtk  # noqa: F401
-
-    except ImportError:
-        return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
-
-    return None
-
-
 def rescan_shares():
 
     from collections import deque
@@ -211,7 +157,7 @@ def run():
     """ Run Nicotine+ and return its exit code """
 
     # Support file scanning process in frozen Windows and macOS binaries
-    if getattr(sys, 'frozen', False) :
+    if getattr(sys, 'frozen', False):
         import multiprocessing
         multiprocessing.freeze_support()
 
@@ -225,15 +171,7 @@ what version of Python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
         return 1
 
-    from pynicotine.utils import rename_process
-    rename_process(b'nicotine')
-
     trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
-    error = check_core_dependencies()
-
-    if error:
-        print(error)
-        return 1
 
     if rescan:
         return rescan_shares()
@@ -242,15 +180,9 @@ binary package and what you try to run Nicotine+ with).""")
     from pynicotine.pynicotine import NetworkEventProcessor
     network_processor = NetworkEventProcessor(bindip, port)
 
-    # Run without a GUI (beta)
+    # Run without a GUI
     if headless:
         return run_headless(network_processor, ci_mode)
-
-    error = check_gui_dependencies()
-
-    if error:
-        print(error)
-        return 1
 
     # Initialize GTK-based GUI
     from pynicotine.gtkgui.frame import Application
