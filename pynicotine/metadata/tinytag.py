@@ -28,13 +28,17 @@
 # SOFTWARE.
 
 
+import aifc
 import codecs
 import io
+import operator
 import os
 import re
 import struct
 import sys
 
+from chunk import Chunk
+from collections import defaultdict
 from collections.abc import MutableMapping
 from functools import reduce
 from io import BytesIO
@@ -69,6 +73,12 @@ def _bytes_to_int(b):
 
 class TinyTag(object):
     def __init__(self, filehandler=None, filesize=0, ignore_errors=False):
+        # This is required for compatibility between python2 and python3
+        # in python2 there is a difference between `str` and `unicode`
+        # whereas in python3 everything every string is `unicode` by default and
+        # the type `unicode` is deprecated
+        if type(filehandler).__name__ in ('str', 'unicode'):
+            raise Exception('Use `TinyTag.get(filepath)` instead of `TinyTag(filepath)`')
         self._filehandler = filehandler
         self.filesize = filesize
         self.album = None
@@ -82,6 +92,7 @@ class TinyTag(object):
         self.disc = None
         self.disc_total = None
         self.duration = None
+        self.extra = defaultdict(lambda: None)
         self.genre = None
         self.samplerate = None
         self.title = None
@@ -106,6 +117,7 @@ class TinyTag(object):
                 ('.flac',): Flac,
                 ('.wma',): Wma,
                 ('.m4b', '.m4a', '.mp4'): MP4,
+                ('.aiff', '.aifc', '.aif', '.afc'): Aiff,
             }
         for ext, tagclass in self._mapping.items():
             if filename.lower().endswith(ext):
@@ -115,7 +127,11 @@ class TinyTag(object):
         with io.open(filename, 'rb') as af:
             tag = parser_class(af, size, ignore_errors=ignore_errors)
             tag.load(tags=tags, duration=duration, image=image)
+            tag.extra = dict(tag.extra)  # turn default dict into dict so that it can throw KeyError
             return tag
+
+    def __repr__(self):
+        return str(self)
 
     def load(self, tags, duration, image=False):
         self._load_image = image
@@ -129,7 +145,16 @@ class TinyTag(object):
     def _set_field(self, fieldname, bytestring, transfunc=None):
         """convienience function to set fields of the tinytag by name.
         the payload (bytestring) can be changed using the transfunc"""
-        if getattr(self, fieldname):  # do not overwrite existing data
+        write_dest = self  # write into the TinyTag by default
+        get_func = getattr
+        set_func = setattr
+        is_extra = fieldname.startswith('extra.')  # but if it's marked as extra field
+        if is_extra:
+            fieldname = fieldname[6:]
+            write_dest = self.extra  # write into the extra field instead
+            get_func = operator.getitem
+            set_func = operator.setitem
+        if get_func(write_dest, fieldname):  # do not overwrite existing data
             return
         value = bytestring if transfunc is None else transfunc(bytestring)
         if DEBUG:
@@ -147,16 +172,16 @@ class TinyTag(object):
         if fieldname in ("track", "disc"):
             if type(value).__name__ in ('str', 'unicode') and '/' in value:
                 current, total = value.split('/')[:2]
-                setattr(self, "%s_total" % fieldname, total)
+                set_func(write_dest, "%s_total" % fieldname, total)
             else:
                 # Converting 'track', 'disk' to string for type consistency.
                 current = str(value) if isinstance(value, int) else value
-            setattr(self, fieldname, current)
+            set_func(write_dest, fieldname, current)
         elif fieldname in ("track_total", "disc_total") and isinstance(value, int):
             # Converting to string 'track_total', 'disc_total' for type consistency.
-            setattr(self, fieldname, str(value))
+            set_func(write_dest, fieldname, str(value))
         else:
-            setattr(self, fieldname, value)
+            set_func(write_dest, fieldname, value)
 
     def _determine_duration(self, fh):
         raise NotImplementedError()
@@ -370,6 +395,10 @@ class ID3(TinyTag):
         'TCON': 'genre', 'TCO': 'genre',
         'TPOS': 'disc',
         'TPE2': 'albumartist', 'TCOM': 'composer',
+        'WXXX': 'extra.url',
+        'TXXX': 'extra.text',
+        'TKEY': 'extra.initial_key',
+        'USLT': 'extra.lyrics',
     }
     IMAGE_FRAME_IDS = {'APIC', 'PIC'}
     PARSABLE_FRAME_IDS = set(FRAME_ID_TO_FIELD.keys()).union(IMAGE_FRAME_IDS)
@@ -570,7 +599,10 @@ class ID3(TinyTag):
             major, rev = header[1:3]
             if DEBUG:
                 stderr('Found id3 v2.%s' % major)
+            # unsync = (header[3] & 0x80) > 0
             extended = (header[3] & 0x40) > 0
+            # experimental = (header[3] & 0x20) > 0
+            # footer = (header[3] & 0x10) > 0
             size = self._calc_size(header[4:8], 7)
             self._bytepos_after_id3v2 = size
             end_pos = fh.tell() + size
@@ -619,6 +651,7 @@ class ID3(TinyTag):
         if DEBUG:
             stderr('Found id3 Frame %s at %d-%d of %d' % (frame_id, fh.tell(), fh.tell() + frame_size, self.filesize))
         if frame_size > 0:
+            # flags = frame[1+frame_size_bytes:] # dont care about flags.
             if frame_id not in ID3.PARSABLE_FRAME_IDS:  # jump over unparsable frames
                 fh.seek(frame_size, os.SEEK_CUR)
                 return frame_size
@@ -927,6 +960,8 @@ class Flac(TinyTag):
                 # #---4---# #---5---# #---6---# #---7---# #--8-~   ~-12-#
                 self.samplerate = _bytes_to_int(header[4:7]) >> 4
                 self.channels = ((header[6] >> 1) & 0x07) + 1
+                # bit_depth = ((header[6] & 1) << 4) + ((header[7] & 0xF0) >> 4)
+                # bit_depth = (bit_depth + 1)
                 total_sample_bytes = [(header[7] & 0x0F)] + list(header[8:12])
                 total_samples = _bytes_to_int(total_sample_bytes)
                 self.duration = float(total_samples) / self.samplerate
@@ -986,6 +1021,15 @@ class Wma(TinyTag):
             decoded[block[0]] = val
         return decoded
 
+    def __bytes_to_guid(self, obj_id_bytes):
+        return '-'.join([
+            hex(_bytes_to_int_le(obj_id_bytes[:-12]))[2:].zfill(6),
+            hex(_bytes_to_int_le(obj_id_bytes[-12:-10]))[2:].zfill(4),
+            hex(_bytes_to_int_le(obj_id_bytes[-10:-8]))[2:].zfill(4),
+            hex(_bytes_to_int(obj_id_bytes[-8:-6]))[2:].zfill(4),
+            hex(_bytes_to_int(obj_id_bytes[-6:]))[2:].zfill(12),
+        ])
+
     def __decode_string(self, bytestring):
         return self._unpad(codecs.decode(bytestring, 'utf-16'))
 
@@ -1003,8 +1047,8 @@ class Wma(TinyTag):
         guid = fh.read(16)  # 128 bit GUID
         if guid != b'0&\xb2u\x8ef\xcf\x11\xa6\xd9\x00\xaa\x00b\xcel':
             return  # not a valid ASF container! see: http://www.garykessler.net/library/file_sigs.html
-        struct.unpack('Q', fh.read(8))  # size
-        struct.unpack('I', fh.read(4))  # obj_count
+        struct.unpack('Q', fh.read(8))[0]  # size
+        struct.unpack('I', fh.read(4))[0]  # obj_count
         if fh.read(2) != b'\x01\x02':
             # http://web.archive.org/web/20131203084402/http://msdn.microsoft.com/en-us/library/bb643323.aspx#_Toc521913958
             return  # not a valid asf header!
@@ -1095,3 +1139,97 @@ class Wma(TinyTag):
                 fh.seek(blocks['error_correction_data_length'], os.SEEK_CUR)
             else:
                 fh.seek(object_size - 24, os.SEEK_CUR)  # read over onknown object ids
+
+
+class Aiff(ID3):
+    #
+    # AIFF is part of the IFF family of file formats.  That means it has a _wide_
+    # variety of things that can appear in it.  However... Python natively
+    # supports reading/writing the most common AIFF formats! But it does not
+    # support pulling tags out of them.  Therefore, Python is going to do the
+    # heavy lifting and this code just handles the metadata chunks.
+    #
+    # https://en.wikipedia.org/wiki/Audio_Interchange_File_Format#Data_format
+    # https://web.archive.org/web/20171118222232/http://www-mmsp.ece.mcgill.ca/documents/audioformats/aiff/aiff.html
+    # https://web.archive.org/web/20071219035740/http://www.cnpbagwell.com/aiff-c.txt
+    #
+    # A few things about the spec:
+    #
+    # * IFF strings are not supposed to be null terminated.  They sometimes are.
+    # * The spec is a bit contradictory in terms of strings being ASCII or not. The assumption
+    #   here is that they are.
+    # * Some tools might throw more metadata into the ANNO chunk but it is
+    #   wildly unreliable to count on it. In fact, the official spec recommends against
+    #   using it. That said... this code throws the ANNO field into comment and hopes
+    #   for the best.
+    #
+    # Additionally:
+    #
+    # * Python allegedly supports ALAW/alaw, G722, and ULAW/ulaw AIFF-C compression.
+    #   However it does seem to have implementation bugs.
+    #   Anything it doesn't understand (e.g., 'sowt') will throw an exception.
+    #
+    # The key thing here is that AIFF metadata is usually in a handful of fields
+    # and the rest is an ID3 or XMP field.  XMP is too complicated and only Adobe-related
+    # products support it. The vast majority use ID3. As such, this code inherits from
+    # ID3 rather than TinyTag since it does everything that needs to be done here.
+    #
+    #
+    def __init__(self, filehandler, filesize, *args, **kwargs):
+        super(Aiff, self).__init__(filehandler, filesize, *args, **kwargs)
+        self.__tag_parsed = False
+
+    def _determine_duration(self, fh):
+        fh.seek(0, 0)
+        # NOTE: aifc will throw an exception if a compression
+        # type is not supported, such as 'sowt'
+        aiffobj = aifc.open(fh, 'rb')
+        self.channels = aiffobj.getnchannels()
+        self.samplerate = aiffobj.getframerate()
+        self.duration = float(aiffobj.getnframes()) / float(self.samplerate)
+        self.bitrate = self.samplerate * self.channels * 16.0 / 1024.0
+
+    def _parse_tag(self, fh):
+        fh.seek(0, 0)
+        self.__tag_parsed = True
+        chunk = Chunk(fh)
+        if chunk.getname() != b'FORM':
+            raise TinyTagException('not an aiff file!')
+
+        formdata = chunk.read(4)
+        if formdata not in (b'AIFC', b'AIFF'):
+            raise TinyTagException('not an aiff file!')
+
+        while True:
+            try:
+                chunk = Chunk(fh)
+            except EOFError:
+                break
+
+            chunkname = chunk.getname()
+            if chunkname == b'NAME':
+                # "Name Chunk text contains the name of the sampled sound."
+                self.title = self._unpad(chunk.read().decode('ascii'))
+            elif chunkname == b'AUTH':
+                # "Author Chunk text contains one or more author names.  An author in
+                # this case is the creator of a sampled sound."
+                self.artist = self._unpad(chunk.read().decode('ascii'))
+            elif chunkname == b'ANNO':
+                # "Annotation Chunk text contains a comment.  Use of this chunk is
+                # discouraged within FORM AIFC." Some tools: "hold my beer"
+                self._set_field('comment', self._unpad(chunk.read().decode('ascii')))
+            elif chunkname == b'(c) ':
+                # "The Copyright Chunk contains a copyright notice for the sound.  text
+                #  contains a date followed by the copyright owner.  The chunk ID '[c] '
+                # serves as the copyright character. " Some tools: "hold my beer"
+                field = chunk.read().decode('utf-8')
+                self._set_field('extra.copyright', field)
+            elif chunkname == b'ID3 ':
+                super(Aiff, self)._parse_tag(fh)
+            elif chunkname == b'SSND':
+                # probably the closest equivalent, but this isn't particular viable
+                # for AIFF
+                self.audio_offset = fh.tell()
+                chunk.skip()
+            else:
+                chunk.skip()

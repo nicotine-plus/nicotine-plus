@@ -68,20 +68,21 @@ class Scanner:
 
     def __init__(self, config, queue, shared_folders, sharestype="normal", rebuild=False):
 
-        from pynicotine.metadata.tinytag import TinyTag
-
         self.config = config
         self.queue = queue
         self.shared_folders = shared_folders
         self.share_dbs = {}
         self.sharestype = sharestype
         self.rebuild = rebuild
-        self.tinytag = TinyTag()
+        self.tinytag = None
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
     def run(self):
 
         try:
+            from pynicotine.metadata.tinytag import TinyTag
+            self.tinytag = TinyTag()
+
             rename_process(b'nicotine-scan')
             apply_translation()
 
