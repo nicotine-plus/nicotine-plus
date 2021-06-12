@@ -21,7 +21,6 @@ import importlib.util
 import sys
 
 from pynicotine.i18n import apply_translation
-from pynicotine.utils import rename_process
 
 
 def check_arguments():
@@ -192,7 +191,15 @@ what version of Python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
         return 1
 
+    from pynicotine.utils import rename_process
+    rename_process(b'nicotine')
+
     trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
+    error = check_core_dependencies()
+
+    if error:
+        print(error)
+        return 1
 
     if rescan:
         return rescan_shares()
@@ -206,15 +213,8 @@ binary package and what you try to run Nicotine+ with).""")
         return run_headless(network_processor, ci_mode)
 
     # Initialize GTK-based GUI
-    from pynicotine.gtkgui.frame import Application
-    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode).run()
+    from pynicotine.gtkgui import run_gui
+    return run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode)
 
 
-rename_process(b'nicotine')
 apply_translation()
-
-error = check_core_dependencies()
-
-if error:
-    print(error)
-    sys.exit(1)

@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
 
 def check_gui_dependencies():
@@ -47,8 +46,14 @@ You should install GTK %s or newer.""") % "3.18"
     return None
 
 
-error = check_gui_dependencies()
+def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode):
+    """ Run Nicotine+ GTK GUI """
 
-if error:
-    print(error)
-    sys.exit(1)
+    error = check_gui_dependencies()
+
+    if error:
+        print(error)
+        return 1
+
+    from pynicotine.gtkgui.frame import Application
+    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode).run()
