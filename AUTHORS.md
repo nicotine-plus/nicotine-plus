@@ -186,8 +186,8 @@ Jason Green
 
 # Attributions
 
-- This product includes IP2Location LITE data, available from:  
-  https://www.ip2location.com
+- This product includes IP2Location LITE data available from:  
+  https://lite.ip2location.com
 
 - Country flags licensed under the MIT License.  
   Copyright (c) 2016 Bowtie AB  

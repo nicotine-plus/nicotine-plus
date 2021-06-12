@@ -39,6 +39,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import config
+from pynicotine.geoip.countrycodes import code2name
 from pynicotine.geoip.ip2location import IP2Location
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
@@ -118,6 +119,7 @@ class NetworkEventProcessor:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
+        self.geoip = None
 
         self.chatrooms = None
         self.privatechat = None
@@ -142,10 +144,6 @@ class NetworkEventProcessor:
         self.users = {}
         self.out_indirect_conn_request_times = {}
         self.automatic_message_times = {}
-
-        script_dir = os.path.dirname(__file__)
-        file_path = os.path.join(script_dir, "geoip/ipcountrydb.bin")
-        self.geoip = IP2Location(file_path, "SHARED_MEMORY")
 
         self.queue = deque()
 
@@ -287,6 +285,9 @@ class NetworkEventProcessor:
             self.network_callback = network_callback
         else:
             self.network_callback = self.network_event
+
+        script_dir = os.path.dirname(__file__)
+        self.geoip = IP2Location(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
 
         self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
         self.statistics = Statistics(config, ui_callback)
@@ -670,8 +671,7 @@ class NetworkEventProcessor:
             if self.network_filter.ignore_unignore_user_ip_callback(user):
                 return
 
-        ip_record = self.geoip.get_all(msg.ip)
-        country_code = ip_record.country_short
+        country_code = self.geoip.get_country_code(msg.ip)
 
         if country_code == "-":
             country_code = ""
@@ -692,7 +692,7 @@ class NetworkEventProcessor:
         self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, country_code)
 
         if country_code:
-            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': ip_record.country_long}
+            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': code2name(country_code)}
         else:
             country = ""
 
@@ -1851,7 +1851,7 @@ class NetworkEventProcessor:
             return
 
         if addr:
-            country = self.geoip.get_all(addr[0]).country_short
+            country = self.geoip.get_country_code(addr[0])
         else:
             country = ""
 
