@@ -52,9 +52,9 @@ class UPnPPortMapping:
             return
 
         log.add_debug(
-            _('Managed to map external WAN port %(externalwanport)s ' +
-                'to your local host %(internalipaddress)s ' +
-                'port %(internallanport)s.'),
+            _('Managed to map external WAN port %(externalwanport)s '
+              + 'to your local host %(internalipaddress)s '
+              + 'port %(internallanport)s.'),
             {
                 'externalwanport': self.externalwanport,
                 'internalipaddress': self.internalipaddress,

@@ -2313,10 +2313,10 @@ class PMessageUser(PeerMessage):
         self.msg = msg
 
     def make_network_message(self):
-        return (self.pack_object(0) +
-                self.pack_object(0) +
-                self.pack_object(self.user) +
-                self.pack_object(self.msg))
+        return (self.pack_object(0)
+                + self.pack_object(0)
+                + self.pack_object(self.user)
+                + self.pack_object(self.msg))
 
     def parse_network_message(self, message):
         pos, self.msgid = self.get_object(message, int)

@@ -564,8 +564,8 @@ class ID3(TinyTag):
             frame_length = (144000 * frame_bitrate) // self.samplerate + padding
             frame_size_accu += frame_length
             # if bitrate does not change over time its probably CBR
-            is_cbr = (frames == ID3._CBR_DETECTION_FRAME_COUNT and
-                      len(set(last_bitrates)) == 1)
+            is_cbr = (frames == ID3._CBR_DETECTION_FRAME_COUNT
+                      and len(set(last_bitrates)) == 1)
             if frames == max_estimation_frames or is_cbr:
                 # try to estimate duration
                 fh.seek(-128, 2)  # jump to last byte (leaving out id3v1 tag)

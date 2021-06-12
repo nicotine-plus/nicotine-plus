@@ -2479,8 +2479,8 @@ class NicotineFrame:
         option_dialog(
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
-            message=_("Nicotine+ has encountered a critical error and needs to exit. Please copy the following error and include it in a bug report:") +
-            "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
+            message=_("Nicotine+ has encountered a critical error and needs to exit. Please copy the following error and include it in a bug report:")
+            + "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
             third=_("Report Bug"),
             cancel=False,
             callback=self.on_critical_error_response,

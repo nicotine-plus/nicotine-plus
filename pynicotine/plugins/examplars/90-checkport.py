@@ -33,8 +33,8 @@ class Plugin(BasePlugin):
             self.log("%s requested a port scan" % (user,))
             self.checked[user] = 1
             self.resolve(user)
-        elif (('cant' in words or "can't" in words or 'can someone' in words or 'can anyone' in words) and
-              ('browse' in words or 'download' in words or 'connect' in words)):
+        elif (('cant' in words or "can't" in words or 'can someone' in words or 'can anyone' in words)
+              and ('browse' in words or 'download' in words or 'connect' in words)):
             if user not in self.checked:
                 self.log("%s seems to have trouble, performing a port scan" % (user,))
                 self.checked[user] = 2
