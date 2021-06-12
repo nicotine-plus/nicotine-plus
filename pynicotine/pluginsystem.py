@@ -183,7 +183,7 @@ class PluginHandler:
         if pluginname in self.enabled_plugins:
             plugin = self.enabled_plugins[pluginname]
 
-            if hasattr(plugin.PLUGIN, "metasettings"):
+            if plugin.PLUGIN.metasettings:
                 return plugin.PLUGIN.metasettings
 
         return None
@@ -222,7 +222,7 @@ class PluginHandler:
 
     def plugin_settings(self, pluginname, plugin):
         try:
-            if not hasattr(plugin, "settings"):
+            if not plugin.settings:
                 return
 
             if pluginname not in self.config.sections["plugins"]:
@@ -539,6 +539,8 @@ class BasePlugin:
     __version__ = "2016-08-30"
     __publiccommands__ = []
     __privatecommands__ = []
+    settings = {}
+    metasettings = {}
 
     def __init__(self, parent, enable_plugin=True):
 
@@ -546,7 +548,6 @@ class BasePlugin:
         self.parent = parent
         self.np = parent.np
         self.frame = parent.np.ui_callback
-        self.settings = None
 
         if not enable_plugin:
             # Plugin was loaded, but not enabled yet
