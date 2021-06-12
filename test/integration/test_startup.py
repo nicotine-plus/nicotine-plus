@@ -23,8 +23,8 @@ import subprocess
 
 config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_config")
 commands = (
-    ["python3", "nicotine", "--config=" + config_file, "--ci-mode"],               # GUI
-    ["python3", "nicotine", "--config=" + config_file, "--ci-mode", "--headless"]  # Headless
+    ["python3", "-m", "pynicotine", "--config=" + config_file, "--ci-mode"],               # GUI
+    ["python3", "-m", "pynicotine", "--config=" + config_file, "--ci-mode", "--headless"]  # Headless
 )
 
 

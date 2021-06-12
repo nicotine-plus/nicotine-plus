@@ -22,11 +22,11 @@ import subprocess
 def test_cli():
     """ Verify that CLI-exclusive functionality works """
 
-    output = subprocess.check_output(["python3", "nicotine", "--help"], timeout=1)
+    output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=1)
     assert str(output).find("--help") > -1
 
-    # output = subprocess.check_output(["python3", "nicotine", "--rescan"], timeout=1)
+    # output = subprocess.check_output(["python3", "-m", "pynicotine", "--rescan"], timeout=1)
     # assert str(output).find("100 %") > -1
 
-    output = subprocess.check_output(["python3", "nicotine", "--version"], timeout=1)
+    output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=1)
     assert str(output).find("Nicotine+") > -1
