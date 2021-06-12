@@ -29,13 +29,15 @@
 
 import glob
 import os
-import pynicotine
 import sys
 
 from distutils.core import setup
 from distutils.cmd import Command
 from os.path import abspath
 from pkgutil import walk_packages
+
+import pynicotine
+
 from pynicotine.config import config
 
 

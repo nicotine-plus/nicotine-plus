@@ -53,7 +53,7 @@ from pynicotine.utils import unescape
 
 class UserAddr:
 
-    __slots__ = "addr", "status"
+    __slots__ = ("addr", "status")
 
     def __init__(self, addr=None, status=None):
         self.addr = addr
@@ -69,7 +69,7 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = "addr", "username", "conn", "msgs", "token", "init", "type", "tryaddr"
+    __slots__ = ("addr", "username", "conn", "msgs", "token", "init", "type", "tryaddr")
 
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, tryaddr=None):
         self.addr = addr
@@ -84,7 +84,7 @@ class PeerConnection:
 
 class Timeout:
 
-    __slots__ = "callback"
+    __slots__ = ("callback",)
 
     def __init__(self, callback):
         self.callback = callback
@@ -92,13 +92,13 @@ class Timeout:
     def timeout(self):
         try:
             self.callback([self])
-        except Exception as e:
-            log.add(_("Exception in callback %s: %s"), (self.callback, e))
+        except Exception as error:
+            log.add(_("Exception in callback %s: %s"), (self.callback, error))
 
 
 class ConnectToPeerTimeout:
 
-    __slots__ = "conn"
+    __slots__ = ("conn",)
 
     def __init__(self, conn):
         self.conn = conn
@@ -307,7 +307,7 @@ class NetworkEventProcessor:
 
         return connect_ready
 
-    def quit(self, *args):
+    def quit(self, *_args):
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
@@ -362,7 +362,7 @@ class NetworkEventProcessor:
             if self.shutdown:
                 return
 
-            elif i.__class__ in self.events:
+            if i.__class__ in self.events:
                 self.events[i.__class__](i)
 
             else:
@@ -671,13 +671,13 @@ class NetworkEventProcessor:
                 return
 
         ip_record = self.geoip.get_all(msg.ip)
-        cc = ip_record.country_short
+        country_code = ip_record.country_short
 
-        if cc == "-":
-            cc = ""
+        if country_code == "-":
+            country_code = ""
 
         if self.ui_callback:
-            self.ui_callback.has_user_flag(user, cc)
+            self.ui_callback.has_user_flag(user, country_code)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
@@ -689,10 +689,10 @@ class NetworkEventProcessor:
             return
 
         self.ip_requested.remove(user)
-        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, cc)
+        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, country_code)
 
-        if cc != "":
-            country = " (%(cc)s / %(country)s)" % {'cc': cc, 'country': ip_record.country_long}
+        if country_code:
+            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': ip_record.country_long}
         else:
             country = ""
 
@@ -725,7 +725,8 @@ class NetworkEventProcessor:
 
         peerconn.msgs = []
 
-    def inc_conn(self, msg):
+    @staticmethod
+    def inc_conn(msg):
         log.add_msg_contents(msg)
 
     def out_conn(self, msg):
@@ -798,7 +799,7 @@ class NetworkEventProcessor:
 
                 break
 
-    def close_peer_connection(self, conn, username):
+    def close_peer_connection(self, conn):
 
         """ Forcibly close a peer connection. Only used after receiving a search result,
         as we need to get rid of connections before they pile up """
@@ -1092,7 +1093,8 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
         self.connect()
 
-    def dummy_message(self, msg):
+    @staticmethod
+    def dummy_message(msg):
         log.add_msg_contents(msg)
 
     def ignore(self, msg):
@@ -1102,7 +1104,8 @@ class NetworkEventProcessor:
     # notify user of error when recieving or sending a message
     # @param self NetworkEventProcessor (Class)
     # @param string a string containing an error message
-    def notify(self, string):
+    @staticmethod
+    def notify(string):
         log.add_msg_contents("%s", string)
 
     def server_conn(self, msg):
@@ -1157,7 +1160,7 @@ class NetworkEventProcessor:
         if self.transfers is not None:
             self.transfers.check_download_queue()
 
-    def check_upload_queue(self, msg):
+    def check_upload_queue(self, _msg):
 
         if self.transfers is not None:
             self.transfers.check_upload_queue()
@@ -1437,7 +1440,7 @@ class NetworkEventProcessor:
 
         self.pluginhandler.user_stats_notification(msg.user, stats)
 
-    def relogged(self, msg):
+    def relogged(self, _msg):
         """ Server code: 41 """
 
         log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
@@ -1744,7 +1747,7 @@ class NetworkEventProcessor:
 
         log.add_msg_contents(msg)
 
-        user = ip = port = None
+        user = ip_address = port = None
         conn = msg.conn.conn
 
         # Get peer's username, ip and port
@@ -1754,7 +1757,7 @@ class NetworkEventProcessor:
                 if i.addr is not None:
                     if len(i.addr) != 2:
                         break
-                    ip, port = i.addr
+                    ip_address, port = i.addr
                 break
 
         if user is None:
@@ -1763,11 +1766,11 @@ class NetworkEventProcessor:
 
         # Check address is spoofed, if possible
         if user == config.sections["server"]["login"]:
-            if ip is not None and port is not None:
+            if ip_address is not None and port is not None:
                 log.add(
                     _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s"), {
                         'user': user,
-                        'ip': ip,
+                        'ip': ip_address,
                         'port': port
                     })
             else:
@@ -1784,28 +1787,28 @@ class NetworkEventProcessor:
             'user': user
         })
 
-        ip, port = msg.conn.addr
-        checkuser, reason = self.network_filter.check_user(user, ip)
+        ip_address, port = msg.conn.addr
+        checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
             self.send_automatic_message(user, reason)
 
-        m = None
+        shares_list = None
 
         if checkuser == 1:
             # Send Normal Shares
-            m = self.shares.get_compressed_shares_message("normal")
+            shares_list = self.shares.get_compressed_shares_message("normal")
 
         elif checkuser == 2:
             # Send Buddy Shares
-            m = self.shares.get_compressed_shares_message("buddy")
+            shares_list = self.shares.get_compressed_shares_message("buddy")
 
-        if not m:
+        if not shares_list:
             # Nyah, Nyah
-            m = slskmessages.SharedFileList(conn, {})
+            shares_list = slskmessages.SharedFileList(conn, {})
 
-        m.conn = conn
-        self.queue.append(m)
+        shares_list.conn = conn
+        self.queue.append(shares_list)
 
     def shared_file_list(self, msg):
         """ Peer code: 5 """
@@ -1858,14 +1861,14 @@ class NetworkEventProcessor:
         self.search.show_search_result(msg, msg.user, country)
 
         # Close peer connection immediately, otherwise we exhaust our connection limit
-        self.close_peer_connection(conn, msg.user)
+        self.close_peer_connection(conn)
 
     def user_info_request(self, msg):
         """ Peer code: 15 """
 
         log.add_msg_contents(msg)
 
-        user = ip = port = None
+        user = ip_address = port = None
         conn = msg.conn.conn
 
         # Get peer's username, ip and port
@@ -1873,7 +1876,7 @@ class NetworkEventProcessor:
             if i.conn is conn:
                 user = i.username
                 if i.addr is not None:
-                    ip, port = i.addr
+                    ip_address, port = i.addr
                 break
 
         if user is None:
@@ -1892,11 +1895,11 @@ class NetworkEventProcessor:
         # Check address is spoofed, if possible
         if user == config.sections["server"]["login"]:
 
-            if ip is not None and port is not None:
+            if ip_address is not None and port is not None:
                 log.add(
                     _("Blocking %(user)s from making a UserInfo request, possible spoofing attempt from IP %(ip)s port %(port)s"), {
                         'user': user,
-                        'ip': ip,
+                        'ip': ip_address,
                         'port': port
                     }
                 )
@@ -1920,8 +1923,8 @@ class NetworkEventProcessor:
         try:
             userpic = config.sections["userinfo"]["pic"]
 
-            with open(userpic, 'rb') as f:
-                pic = f.read()
+            with open(userpic, 'rb') as file_handle:
+                pic = file_handle.read()
 
         except Exception:
             pic = None
@@ -1994,7 +1997,7 @@ class NetworkEventProcessor:
         log.add_msg_contents(msg)
 
         conn = msg.conn.conn
-        ip, port = msg.conn.addr
+        ip_address, _port = msg.conn.addr
         username = None
         checkuser = None
         reason = ""
@@ -2002,7 +2005,7 @@ class NetworkEventProcessor:
         for i in self.peerconns:
             if i.conn is conn:
                 username = i.username
-                checkuser, reason = self.network_filter.check_user(username, ip)
+                checkuser, reason = self.network_filter.check_user(username, ip_address)
                 break
 
         if not username:
@@ -2215,7 +2218,8 @@ class NetworkEventProcessor:
         self.queue.append(slskmessages.BranchRoot(msg.user))
         log.add_conn("Our branch root is user %s", msg.user)
 
-    def distrib_child_depth(self, msg):
+    @staticmethod
+    def distrib_child_depth(msg):
         """ Distrib code: 7 """
 
         # TODO: Implement me

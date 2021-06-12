@@ -20,7 +20,7 @@ import os
 import time
 
 
-class Logger(object):
+class Logger:
 
     def __init__(self):
 
@@ -28,7 +28,8 @@ class Logger(object):
         self.log_levels = None
         self.file_name = "debug_" + str(int(time.time()))
 
-    def set_msg_prefix(self, level, msg):
+    @staticmethod
+    def set_msg_prefix(level, msg):
 
         if level == "download":
             prefix = "Download"
@@ -85,8 +86,8 @@ class Logger(object):
         for callback in self.listeners:
             try:
                 callback(timestamp_format, level, msg)
-            except Exception as e:
-                print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, e))
+            except Exception as error:
+                print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
@@ -114,7 +115,8 @@ class Logger(object):
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="miscellaneous")
 
-    def contents(self, obj):
+    @staticmethod
+    def contents(obj):
         """ Returns variables for object, for debug output """
         try:
             return {s: getattr(obj, s) for s in obj.__slots__ if hasattr(obj, s)}
@@ -160,7 +162,8 @@ class Logger(object):
         except Exception as error:
             print(_("Couldn't write to log file \"%s\": %s") % (filename, error))
 
-    def write_log_callback(self, path, data):
+    @staticmethod
+    def write_log_callback(path, data):
 
         oldumask, timestamp_format, msg = data
 
@@ -171,12 +174,13 @@ class Logger(object):
             logfile.write(text.encode('utf-8', 'replace'))
 
 
-class Console(object):
+class Console:
 
     def __init__(self, logger):
         logger.add_listener(self.console_logger)
 
-    def console_logger(self, timestamp_format, level, msg):
+    @staticmethod
+    def console_logger(timestamp_format, level, msg):
         print("[" + time.strftime(timestamp_format) + "] " + msg)
 
 

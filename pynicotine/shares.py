@@ -41,7 +41,7 @@ from pynicotine.utils import rename_process
 if importlib.util.find_spec("_gdbm"):
 
     def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
-        import _gdbm
+        import _gdbm  # pylint: disable=import-error
         return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_gdbm
@@ -49,7 +49,7 @@ if importlib.util.find_spec("_gdbm"):
 elif importlib.util.find_spec("semidbm"):
 
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
-        import semidbm
+        import semidbm  # pylint: disable=import-error
         return shelve.Shelf(semidbm.open(filename, flag), protocol, writeback)
 
     shelve.open = shelve_open_semidbm
@@ -119,7 +119,7 @@ class Scanner:
             ))
             self.queue.put(Exception("Scanning failed"))
 
-    def set_shares(self, files=None, streams=None, mtimes=None, wordindex=None, fileindex=None):
+    def set_shares(self, files=None, streams=None, mtimes=None, wordindex=None):
 
         self.config.create_data_folder()
 
@@ -139,12 +139,12 @@ class Scanner:
                     if self.sharestype == "buddy":
                         destination = "buddy" + destination
 
-                    db = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                    db.update(source)
-                    db.close()
+                    database = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                    database.update(source)
+                    database.close()
 
-                except Exception as e:
-                    self.queue.put((0, _("Can't save %s: %s"), (destination + ".db", e)))
+                except Exception as error:
+                    self.queue.put((0, _("Can't save %s: %s"), (destination + ".db", error)))
                     return
 
     def rescan_dirs(self, shared, oldmtimes, oldfiles, oldstreams, rebuild=False):
@@ -202,7 +202,8 @@ class Scanner:
         del newsharedfiles
         gc.collect()
 
-    def is_hidden(self, folder, filename=None, folder_obj=None):
+    @staticmethod
+    def is_hidden(folder, filename=None, folder_obj=None):
         """ Stop sharing any dot/hidden directories/files """
 
         # If any part of the directory structure start with a dot we exclude it
@@ -234,7 +235,8 @@ class Scanner:
 
         return False
 
-    def get_utf8_path(self, path):
+    @staticmethod
+    def get_utf8_path(path):
         """ Convert a path to utf-8, if necessary """
 
         try:
@@ -295,11 +297,11 @@ class Scanner:
                 # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
                 percent = float("%.2f" % (float(count) / len(mtimes) * 0.5))
 
-                if percent > lastpercent and percent <= 1.0:
+                if lastpercent < percent <= 1.0:
                     self.queue.put(percent)
                     lastpercent = percent
 
-                virtualdir = Shares._real2virtual(folder, self.config)
+                virtualdir = Shares.real2virtual_cls(folder, self.config)
 
                 if not rebuild and folder in oldmtimes:
                     if mtimes[folder] == oldmtimes[folder]:
@@ -340,8 +342,8 @@ class Scanner:
 
         return files, streams
 
-    @classmethod
-    def get_file_info(cls, name, pathname, tinytag, queue=None, file=None):
+    @staticmethod
+    def get_file_info(name, pathname, tinytag, queue=None, file=None):
         """ Get file metadata """
 
         size = 0
@@ -394,8 +396,8 @@ class Scanner:
 
         return (name, size, bitrateinfo, duration)
 
-    @classmethod
-    def get_dir_stream(cls, folder):
+    @staticmethod
+    def get_dir_stream(folder):
         """ Pack all files and metadata in directory """
 
         message = slskmessages.SlskMessage()
@@ -441,8 +443,8 @@ class Scanner:
 
         return stream
 
-    @classmethod
-    def add_file_to_index(cls, index, filename, folder, fileinfo, wordindex, fileindex, pattern):
+    @staticmethod
+    def add_file_to_index(index, filename, folder, fileinfo, wordindex, fileindex, pattern):
         """ Add a file to the file index database """
 
         fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
@@ -480,7 +482,7 @@ class Scanner:
             # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
             percent = float("%.2f" % (float(count) / len(sharedfiles) * 0.5))
 
-            if percent > lastpercent and percent <= 1.0:
+            if lastpercent < percent <= 1.0:
                 self.queue.put(percent)
                 lastpercent = percent
 
@@ -541,14 +543,14 @@ class Shares:
     """ Shares-related actions """
 
     def real2virtual(self, path):
-        return self._real2virtual(path, self.config)
+        return self.real2virtual_cls(path, self.config)
 
     @classmethod
-    def _real2virtual(cls, path, config):
+    def real2virtual_cls(cls, path, config):
 
         path = path.replace('/', '\\')
 
-        for (virtual, real, *unused) in cls._virtualmapping(config):
+        for (virtual, real, *_unused) in cls._virtualmapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -569,7 +571,7 @@ class Shares:
 
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for (virtual, real, *unused) in self._virtualmapping(self.config):
+        for (virtual, real, *_unused) in self._virtualmapping(self.config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -582,8 +584,8 @@ class Shares:
 
         return "__INTERNAL_ERROR__" + path
 
-    @classmethod
-    def _virtualmapping(cls, config):
+    @staticmethod
+    def _virtualmapping(config):
 
         mapping = config.sections["transfers"]["shared"][:]
 
@@ -621,12 +623,13 @@ class Shares:
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
 
-        def _convert_to_virtual(x):
-            if isinstance(x, tuple):
-                return x
-            virtual = x.replace('/', '_').replace('\\', '_').strip('_')
-            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.", (x, virtual))
-            return (virtual, x)
+        def _convert_to_virtual(shared_folder):
+            if isinstance(shared_folder, tuple):
+                return shared_folder
+
+            virtual = shared_folder.replace('/', '_').replace('\\', '_').strip('_')
+            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.", (shared_folder, virtual))
+            return (virtual, shared_folder)
 
         self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
         self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
@@ -674,7 +677,7 @@ class Shares:
             })
             return False
 
-        folder, sep, file = virtualfilename.rpartition('\\')
+        folder, _sep, file = virtualfilename.rpartition('\\')
         shared = self.share_dbs.get("files")
         bshared = self.share_dbs.get("buddyfiles")
 
@@ -820,6 +823,8 @@ class Shares:
             self.newbuddyshares = False
             return self.compressed_shares_buddy
 
+        return None
+
     def compress_shares(self, sharestype):
         """ Begin compressing the shares list. This compressed list will be used to
         quickly send our file list to users. """
@@ -847,12 +852,12 @@ class Shares:
                 "buddyfileindex", "buddymtimes"
             ]
 
-        for db in dbs:
-            db_file = self.share_dbs.get(db)
+        for database in dbs:
+            db_file = self.share_dbs.get(database)
 
             if db_file is not None:
-                self.share_dbs[db].close()
-                del self.share_dbs[db]
+                self.share_dbs[database].close()
+                del self.share_dbs[database]
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
@@ -880,8 +885,8 @@ class Shares:
 
             self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
-        except Exception as e:
-            log.add(_("Failed to send number of shared files to the server: %s"), e)
+        except Exception as error:
+            log.add(_("Failed to send number of shared files to the server: %s"), error)
 
     """ Scanning """
 
@@ -940,7 +945,7 @@ class Shares:
                 if isinstance(item, Exception):
                     return True
 
-                elif isinstance(item, tuple):
+                if isinstance(item, tuple):
                     log_level, template, args = item
                     log.add(template, args, log_level)
 
@@ -955,10 +960,10 @@ class Shares:
     def rescan_shares(self, sharestype, rebuild=False, use_thread=True):
 
         if sharestype == "normal" and self.public_rescanning:
-            return
+            return None
 
         if sharestype == "buddy" and self.buddy_rescanning:
-            return
+            return None
 
         if sharestype == "normal":
             log.add(_("Rescanning normal shares..."))
@@ -981,7 +986,7 @@ class Shares:
             thread.name = "ProcessShareScanner"
             thread.daemon = True
             thread.start()
-            return
+            return None
 
         return self._process_scanner(scanner, scanner_queue, sharestype)
 

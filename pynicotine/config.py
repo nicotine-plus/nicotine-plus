@@ -383,7 +383,8 @@ class Config:
         for key, value in self.defaults.items():
             self.sections[key] = value.copy()
 
-    def get_user_directories(self):
+    @staticmethod
+    def get_user_directories():
         """ Returns a tuple:
         - the config directory
         - the data directory """
@@ -392,7 +393,7 @@ class Config:
             try:
                 data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
             except KeyError:
-                data_dir, x = os.path.split(sys.argv[0])
+                data_dir, _filename = os.path.split(sys.argv[0])
 
             config_dir = os.path.join(data_dir, "config")
             return config_dir, data_dir
@@ -420,7 +421,7 @@ class Config:
         """ Create the folder for storing the config file in, if the folder
         doesn't exist """
 
-        path, fn = os.path.split(self.filename)
+        path, _filename = os.path.split(self.filename)
 
         if not path:
             # Only file name specified, use current folder
@@ -468,9 +469,9 @@ class Config:
         # Load command aliases from legacy file
         try:
             if not self.sections["server"]["command_aliases"] and os.path.exists(self.filename + ".alias"):
-                with open(self.filename + ".alias", 'rb') as f:
+                with open(self.filename + ".alias", 'rb') as file_handle:
                     from pynicotine.utils import RestrictedUnpickler
-                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(f, encoding='utf-8').load()
+                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(file_handle, encoding='utf-8').load()
 
         except Exception:
             return
@@ -479,17 +480,17 @@ class Config:
         """ Parses the config file """
 
         try:
-            with open(self.filename, 'a+', encoding="utf-8") as f:
-                f.seek(0)
-                self.parser.read_file(f)
+            with open(self.filename, 'a+', encoding="utf-8") as file_handle:
+                file_handle.seek(0)
+                self.parser.read_file(file_handle)
 
         except configparser.ParsingError:
             # Ignore parsing errors, the offending lines are removed later
             pass
 
-        except Exception as e:
+        except Exception as error:
             # Miscellaneous failure, default config will be used
-            log.add(_("Unable to parse config file: %s"), e)
+            log.add(_("Unable to parse config file: %s"), error)
 
     def convert_config(self):
         """ Converts the config to utf-8.
@@ -504,15 +505,15 @@ class Config:
 
         os.rename(self.filename, self.filename + ".conv")
 
-        with open(self.filename + ".conv", 'rb') as f:
-            rawdata = f.read()
+        with open(self.filename + ".conv", 'rb') as file_handle:
+            rawdata = file_handle.read()
 
         from_encoding = detect(rawdata)['encoding']
 
-        with open(self.filename + ".conv", 'r', encoding=from_encoding) as fr:
-            with open(self.filename, 'w', encoding="utf-8") as fw:
-                for line in fr:
-                    fw.write(line[:-1] + '\r\n')
+        with open(self.filename + ".conv", 'r', encoding=from_encoding) as file_read:
+            with open(self.filename, 'w', encoding="utf-8") as file_write:
+                for line in file_read:
+                    file_write.write(line[:-1] + '\r\n')
 
         os.remove(self.filename + ".conv")
 
@@ -712,8 +713,8 @@ class Config:
         if section in self.parser.sections():
             self.parser.remove_section(section)
 
-    def write_config_callback(self, f):
-        self.parser.write(f)
+    def write_config_callback(self, filename):
+        self.parser.write(filename)
 
     def write_configuration(self):
 
@@ -737,7 +738,7 @@ class Config:
 
         try:
             if os.path.exists(filename):
-                raise FileExistsError("File %s exists", filename)
+                raise FileExistsError("File %s exists" % filename)
 
             import tarfile
             with tarfile.open(filename, "w:bz2") as tar:
@@ -746,9 +747,9 @@ class Config:
 
                 tar.add(self.filename)
 
-        except Exception as e:
-            print(e)
-            return (True, "Cannot write backup archive: %s" % e)
+        except Exception as error:
+            print(error)
+            return (True, "Cannot write backup archive: %s" % error)
 
         return (False, filename)
 

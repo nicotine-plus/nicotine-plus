@@ -31,6 +31,7 @@ class NowPlaying:
     def __init__(self, config):
 
         self.config = config
+        self.bus = None
         self.title_clear()
 
     def title_clear(self):
@@ -47,7 +48,7 @@ class NowPlaying:
             "filename": ""
         }
 
-    def display_now_playing(self, obj=None, callback=None, get_player=None, get_command=None, get_format=None):
+    def display_now_playing(self, _obj=None, callback=None, get_player=None, get_command=None, get_format=None):
 
         self.get_np(callback, get_player, get_command, get_format)
 
@@ -252,7 +253,8 @@ class NowPlaying:
 
         return True
 
-    def get_length_time(self, length):
+    @staticmethod
+    def get_length_time(length):
         """ Function used to normalize tracks duration """
 
         if length != '' and length is not None:

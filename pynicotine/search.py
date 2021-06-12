@@ -46,7 +46,6 @@ class Search:
     def process_search_term(self, text, mode, room, user):
 
         users = []
-        room = room
         feedback = None
 
         if mode == "global" and self.np:
@@ -77,7 +76,7 @@ class Search:
             if user:
                 users = [user]
             else:
-                return
+                return None
 
             if self.np:
                 feedback = self.np.pluginhandler.outgoing_user_search_event(users, text)
@@ -96,7 +95,7 @@ class Search:
         processed_search = self.process_search_term(text, mode, room, user)
 
         if not processed_search:
-            return
+            return None
 
         text, room, users = processed_search
 
@@ -155,35 +154,35 @@ class Search:
 
         return (self.searchid, searchterm_with_excluded, searchterm_without_excluded)
 
-    def do_global_search(self, id, text):
-        self.queue.append(slskmessages.FileSearch(id, text))
+    def do_global_search(self, search_id, text):
+        self.queue.append(slskmessages.FileSearch(search_id, text))
 
         """ Request a list of related searches from the server.
         Seemingly non-functional since 2018 (always receiving empty lists). """
 
         # self.queue.append(slskmessages.RelatedSearch(text))
 
-    def do_rooms_search(self, id, text, room=None):
+    def do_rooms_search(self, search_id, text, room=None):
 
         if room is not None:
-            self.queue.append(slskmessages.RoomSearch(room, id, text))
+            self.queue.append(slskmessages.RoomSearch(room, search_id, text))
         else:
-            for room in self.np.chatrooms.joinedrooms:
-                self.queue.append(slskmessages.RoomSearch(room, id, text))
+            for joined_room in self.np.chatrooms.joinedrooms:
+                self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
 
-    def do_buddies_search(self, id, text):
+    def do_buddies_search(self, search_id, text):
 
         for row in self.config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
-                self.queue.append(slskmessages.UserSearch(user, id, text))
+                self.queue.append(slskmessages.UserSearch(user, search_id, text))
 
-    def do_peer_search(self, id, text, users):
+    def do_peer_search(self, search_id, text, users):
         for user in users:
-            self.queue.append(slskmessages.UserSearch(user, id, text))
+            self.queue.append(slskmessages.UserSearch(user, search_id, text))
 
-    def do_wishlist_search(self, id, text):
-        self.queue.append(slskmessages.WishlistSearch(id, text))
+    def do_wishlist_search(self, search_id, text):
+        self.queue.append(slskmessages.WishlistSearch(search_id, text))
 
     def get_current_search_id(self):
         return self.searchid
@@ -218,7 +217,8 @@ class Search:
 
     """ Incoming search requests """
 
-    def create_search_result_list(self, searchterm, wordindex, maxresults=50):
+    @staticmethod
+    def create_search_result_list(searchterm, wordindex):
 
         try:
             """ Stage 1: Check if each word in the search term is included in our word index.
@@ -230,7 +230,7 @@ class Search:
 
             for word in words:
                 if word not in wordindex:
-                    return
+                    return None
 
                 list_size = len(wordindex[word])
 
@@ -252,7 +252,7 @@ class Search:
 
         except ValueError:
             # DB is closed, perhaps when rescanning share or closing Nicotine+
-            return
+            return None
 
     def process_search_request(self, searchterm, user, searchid, direct=False):
         """ Note: since this section is accessed every time a search request arrives,
@@ -290,7 +290,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, reason = self.np.network_filter.check_user(user, None)
+        checkuser, _reason = self.np.network_filter.check_user(user, None)
 
         if not checkuser:
             return
@@ -304,7 +304,7 @@ class Search:
             return
 
         # Find common file matches for each word in search term
-        resultlist = self.create_search_result_list(searchterm, wordindex, maxresults)
+        resultlist = self.create_search_result_list(searchterm, wordindex)
 
         if not resultlist:
             return

@@ -38,7 +38,7 @@ returncode = {
 }                # returning nothing is the same as 'pass'
 
 
-class PluginHandler(object):
+class PluginHandler:
 
     def __init__(self, np, config):
 
@@ -126,10 +126,10 @@ class PluginHandler(object):
                 "name": pluginname,
                 "characters": "="
             })
-            return
+            return False
 
         if pluginname in self.enabled_plugins:
-            return
+            return False
 
         try:
             plugin = self.load_plugin(pluginname)
@@ -162,7 +162,7 @@ class PluginHandler(object):
 
     def disable_plugin(self, pluginname):
         if pluginname not in self.enabled_plugins:
-            return
+            return False
 
         try:
             plugin = self.enabled_plugins[pluginname]
@@ -186,13 +186,15 @@ class PluginHandler(object):
             if hasattr(plugin.PLUGIN, "metasettings"):
                 return plugin.PLUGIN.metasettings
 
+        return None
+
     def get_plugin_info(self, pluginname):
         path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
 
-        with open(path) as f:
+        with open(path) as file_handle:
             infodict = {}
 
-            for line in f:
+            for line in file_handle:
                 try:
                     key, val = line.split("=", 1)
                     infodict[key.strip()] = literal_eval(val.strip())
@@ -266,7 +268,8 @@ class PluginHandler(object):
 
                 if return_value == returncode['zap']:
                     return True
-                elif return_value == returncode['pass']:
+
+                if return_value == returncode['pass']:
                     continue
 
                 log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(return_value)})
@@ -306,9 +309,11 @@ class PluginHandler(object):
 
                 if return_value == returncode['zap']:
                     return None
-                elif return_value == returncode['break']:
+
+                if return_value == returncode['break']:
                     return args
-                elif return_value == returncode['pass']:
+
+                if return_value == returncode['pass']:
                     continue
 
                 log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': return_value})
@@ -341,8 +346,8 @@ class PluginHandler(object):
         if user != self.my_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self.trigger_event("IncomingPrivateChatEvent", (user, line))
-        else:
-            return (user, line)
+
+        return (user, line)
 
     def incoming_private_chat_notification(self, user, line):
         self.trigger_event("IncomingPrivateChatNotification", (user, line))
@@ -357,8 +362,8 @@ class PluginHandler(object):
         if line is not None:
             # if line is None nobody actually said anything
             return self.trigger_event("OutgoingPrivateChatEvent", (user, line))
-        else:
-            return (user, line)
+
+        return (user, line)
 
     def outgoing_private_chat_notification(self, user, line):
         self.trigger_event("OutgoingPrivateChatNotification", (user, line))
@@ -381,11 +386,11 @@ class PluginHandler(object):
     def outgoing_user_search_event(self, users, text):
         return self.trigger_event("OutgoingUserSearchEvent", (users, text))
 
-    def user_resolve_notification(self, user, ip, port, country=None):
+    def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        self.trigger_event("UserResolveNotification", (user, ip, port, country))
+        self.trigger_event("UserResolveNotification", (user, ip_address, port, country))
 
     def server_connect_notification(self):
         self.trigger_event("ServerConnectNotification", (),)
@@ -416,7 +421,8 @@ class PluginHandler(object):
 
     """ Other Functions """
 
-    def log(self, text):
+    @staticmethod
+    def log(text):
         log.add(text)
 
     def saychatroom(self, room, text):
@@ -435,7 +441,7 @@ class PluginHandler(object):
             self.np.ui_callback.privatechats.send_message(user, text)
 
 
-class ResponseThrottle(object):
+class ResponseThrottle:
 
     """
     ResponseThrottle - Mutnick 2016
@@ -456,6 +462,10 @@ class ResponseThrottle(object):
         self.logging = logging
         self.plugin_usage = {}
 
+        self.room = None
+        self.nick = None
+        self.request = None
+
     def ok_to_respond(self, room, nick, request, seconds_limit_min=30):
 
         self.room = room
@@ -474,7 +484,7 @@ class ResponseThrottle(object):
 
         port = False
         try:
-            ip, port = self.np.users[nick].addr
+            _ip_address, port = self.np.users[nick].addr
         except Exception:
             port = True
 
@@ -491,7 +501,7 @@ class ResponseThrottle(object):
             if (current_time - last_time) < 12 * seconds_limit_min:
                 willing_to_respond, reason = False, "Too soon for same nick to request same resource in room"
 
-        elif (request == last_request):
+        elif request == last_request:
             if (current_time - last_time) < 3 * seconds_limit_min:
                 willing_to_respond, reason = False, "Too soon for different nick to request same resource in room"
 
@@ -522,7 +532,7 @@ class ResponseThrottle(object):
         self.plugin_usage[self.room] = {'last_time': time(), 'last_request': self.request, 'last_nick': self.nick}
 
 
-class BasePlugin(object):
+class BasePlugin:
 
     __name__ = "BasePlugin"
     __desc__ = "No description provided"
@@ -536,6 +546,7 @@ class BasePlugin(object):
         self.parent = parent
         self.np = parent.np
         self.frame = parent.np.ui_callback
+        self.settings = None
 
         if not enable_plugin:
             # Plugin was loaded, but not enabled yet
@@ -544,95 +555,95 @@ class BasePlugin(object):
         self.init()
 
         if parent.np.ui_callback:
-            for (trigger, func) in self.__publiccommands__:
+            for trigger, _func in self.__publiccommands__:
                 parent.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
 
-            for (trigger, func) in self.__privatecommands__:
+            for trigger, _func in self.__privatecommands__:
                 parent.np.ui_callback.privatechats.CMDS.add('/' + trigger + ' ')
 
     def init(self):
         # Custom init function for plugins
         pass
 
-    def LoadSettings(self, settings):  # noqa
+    def LoadSettings(self, settings):  # pylint: disable=invalid-name, # noqa
         self.settings = settings
 
-    def LoadNotification(self):  # noqa
+    def LoadNotification(self):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def PublicRoomMessageNotification(self, room, user, line):  # noqa
+    def PublicRoomMessageNotification(self, room, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def SearchRequestNotification(self, searchterm, user, searchid):  # noqa
+    def SearchRequestNotification(self, searchterm, user, searchid):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def DistribSearchNotification(self, searchterm, user, searchid):  # noqa
+    def DistribSearchNotification(self, searchterm, user, searchid):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def IncomingPrivateChatEvent(self, user, line):  # noqa
+    def IncomingPrivateChatEvent(self, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def IncomingPrivateChatNotification(self, user, line):  # noqa
+    def IncomingPrivateChatNotification(self, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def IncomingPublicChatEvent(self, room, user, line):  # noqa
+    def IncomingPublicChatEvent(self, room, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def IncomingPublicChatNotification(self, room, user, line):  # noqa
+    def IncomingPublicChatNotification(self, room, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingPrivateChatEvent(self, user, line):  # noqa
+    def OutgoingPrivateChatEvent(self, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingPrivateChatNotification(self, user, line):  # noqa
+    def OutgoingPrivateChatNotification(self, user, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingPublicChatEvent(self, room, line):  # noqa
+    def OutgoingPublicChatEvent(self, room, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingPublicChatNotification(self, room, line):  # noqa
+    def OutgoingPublicChatNotification(self, room, line):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingGlobalSearchEvent(self, text):  # noqa
+    def OutgoingGlobalSearchEvent(self, text):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingRoomSearchEvent(self, rooms, text):  # noqa
+    def OutgoingRoomSearchEvent(self, rooms, text):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingBuddySearchEvent(self, text):  # noqa
+    def OutgoingBuddySearchEvent(self, text):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def OutgoingUserSearchEvent(self, users, text):  # noqa
+    def OutgoingUserSearchEvent(self, users, text):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UserResolveNotification(self, user, ip, port, country):  # noqa
+    def UserResolveNotification(self, user, ip, port, country):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def ServerConnectNotification(self):  # noqa
+    def ServerConnectNotification(self):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def ServerDisconnectNotification(self, userchoice):  # noqa
+    def ServerDisconnectNotification(self, userchoice):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def JoinChatroomNotification(self, room):  # noqa
+    def JoinChatroomNotification(self, room):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def LeaveChatroomNotification(self, room):  # noqa
+    def LeaveChatroomNotification(self, room):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UserJoinChatroomNotification(self, room, user):  # noqa
+    def UserJoinChatroomNotification(self, room, user):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UserLeaveChatroomNotification(self, room, user):  # noqa
+    def UserLeaveChatroomNotification(self, room, user):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
+    def UploadQueuedNotification(self, user, virtualfile, realfile):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UserStatsNotification(self, user, stats):  # noqa
+    def UserStatsNotification(self, user, stats):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def ShutdownNotification(self):  # noqa
+    def ShutdownNotification(self):  # pylint: disable=invalid-name, # noqa
         pass
 
     # The following are functions to make your life easier,
@@ -664,12 +675,16 @@ class BasePlugin(object):
 
     # The following are functions used by the plugin system,
     # you are not allowed to override these.
-    def PublicCommandEvent(self, command, room, args):  # noqa
+    def PublicCommandEvent(self, command, room, args):  # pylint: disable=invalid-name, # noqa
         for (trigger, func) in self.__publiccommands__:
             if trigger == command:
                 return func(self, room, args)
 
-    def PrivateCommandEvent(self, command, user, args):  # noqa
+        return None
+
+    def PrivateCommandEvent(self, command, user, args):  # pylint: disable=invalid-name, # noqa
         for (trigger, func) in self.__privatecommands__:
             if trigger == command:
                 return func(self, user, args)
+
+        return None

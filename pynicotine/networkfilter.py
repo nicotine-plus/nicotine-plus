@@ -22,9 +22,9 @@ from pynicotine import slskmessages
 class NetworkFilter:
     """ Functions related to banning, blocking and ignoring users """
 
-    def __init__(self, np, config, users, queue, geoip):
+    def __init__(self, network_processor, config, users, queue, geoip):
 
-        self.np = np
+        self.network_processor = network_processor
         self.config = config
         self.users = users
         self.queue = queue
@@ -64,9 +64,9 @@ class NetworkFilter:
         if self._request_ip(user, "add", list_type):
             return
 
-        ip, port = self.users[user].addr
-        if ip not in ip_list or ip_list[ip] != user:
-            ip_list[ip] = user
+        ip_address, _port = self.users[user].addr
+        if ip_address not in ip_list or ip_list[ip_address] != user:
+            ip_list[ip_address] = user
             self.config.write_configuration()
 
     def _remove_user_ip_from_list(self, user, list_type):
@@ -82,14 +82,14 @@ class NetworkFilter:
         if cached_ip is not None:
             del ip_list[cached_ip]
             self.config.write_configuration()
-            return True
+            return
 
         if self._request_ip(user, "remove", list_type):
             return
 
-        ip, port = self.users[user].addr
-        if ip in ip_list:
-            del ip_list[ip]
+        ip_address, _port = self.users[user].addr
+        if ip_address in ip_list:
+            del ip_list[ip_address]
             self.config.write_configuration()
 
     def _get_cached_user_ip(self, user, list_type):
@@ -100,9 +100,9 @@ class NetworkFilter:
         else:
             ip_list = self.config.sections["server"]["ipignorelist"]
 
-        for ip, username in ip_list.items():
+        for ip_address, username in ip_list.items():
             if user == username:
-                return ip
+                return ip_address
 
         return None
 
@@ -120,16 +120,16 @@ class NetworkFilter:
 
         s_address = address.split(".")
 
-        for ip in ip_list:
+        for ip_address in ip_list:
 
             # No Wildcard in IP
-            if "*" not in ip:
-                if address == ip:
+            if "*" not in ip_address:
+                if address == ip_address:
                     return True
                 continue
 
             # Wildcard in IP
-            parts = ip.split(".")
+            parts = ip_address.split(".")
             seg = 0
 
             for part in parts:
@@ -147,15 +147,15 @@ class NetworkFilter:
         # Not blocked
         return False
 
-    def check_user(self, user, ip):
+    def check_user(self, user, ip_address):
         """ Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings. """
 
         if self.is_user_banned(user):
             if self.config.sections["transfers"]["usecustomban"]:
                 return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
-            else:
-                return 0, "Banned"
+
+            return 0, "Banned"
 
         for row in self.config.sections["server"]["userlist"]:
             if row[0] != user:
@@ -175,12 +175,12 @@ class NetworkFilter:
         if self.config.sections["transfers"]["friendsonly"]:
             return 0, "Sorry, friends only"
 
-        if ip is None or not self.config.sections["transfers"]["geoblock"]:
+        if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
 
-        cc = self.geoip.get_all(ip).country_short
+        country_code = self.geoip.get_all(ip_address).country_short
 
-        if cc == "-":
+        if country_code == "-":
             if self.config.sections["transfers"]["geopanic"]:
                 return 0, "Blocked country (Sorry, geographical paranoia)"
 
@@ -189,11 +189,11 @@ class NetworkFilter:
         """ Please note that all country codes are stored in the same string at the first index
         of an array, separated by commas (no idea why...) """
 
-        if self.config.sections["transfers"]["geoblockcc"][0].find(cc) >= 0:
+        if self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if self.config.sections["transfers"]["usecustomgeoblock"]:
                 return 0, "Blocked country (%s)" % self.config.sections["transfers"]["customgeoblock"]
-            else:
-                return 0, "Blocked country"
+
+            return 0, "Blocked country"
 
         return 1, ""
 
@@ -204,7 +204,7 @@ class NetworkFilter:
         if user not in self.users or not isinstance(self.users[user].addr, tuple):
             return
 
-        new_ip, new_port = self.users[user].addr
+        new_ip, _new_port = self.users[user].addr
         cached_blocked_ip = self.get_cached_blocked_user_ip(user)
 
         if cached_blocked_ip is not None and cached_blocked_ip != new_ip:
@@ -227,8 +227,8 @@ class NetworkFilter:
         self.config.sections["server"]["banlist"].append(user)
         self.config.write_configuration()
 
-        if self.np.transfers is not None:
-            self.np.transfers.ban_user(user)
+        if self.network_processor.transfers is not None:
+            self.network_processor.transfers.ban_user(user)
 
     def unban_user(self, user):
 
@@ -276,15 +276,15 @@ class NetworkFilter:
             self.config.sections["server"]["ignorelist"].remove(user)
             self.config.write_configuration()
 
-    def ignore_ip(self, ip):
+    def ignore_ip(self, ip_address):
 
-        if ip is None or ip == "" or ip.count(".") != 3:
+        if not ip_address or ip_address.count(".") != 3:
             return
 
         ipignorelist = self.config.sections["server"]["ipignorelist"]
 
-        if ip not in ipignorelist:
-            ipignorelist[ip] = ""
+        if ip_address not in ipignorelist:
+            ipignorelist[ip_address] = ""
             self.config.write_configuration()
 
     def ignore_user_ip(self, user):
@@ -320,8 +320,8 @@ class NetworkFilter:
         if user not in self.users or not isinstance(self.users[user].addr, tuple):
             return False
 
-        ip, port = self.users[user].addr
-        if self.is_ip_ignored(ip):
+        ip_address, _port = self.users[user].addr
+        if self.is_ip_ignored(ip_address):
             return True
 
         return False
