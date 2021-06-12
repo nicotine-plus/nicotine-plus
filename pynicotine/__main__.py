@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # COPYRIGHT (C) 2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -21,5 +20,4 @@ import sys
 
 from pynicotine import run
 
-if __name__ == '__main__':
-    sys.exit(run())
+sys.exit(run())
