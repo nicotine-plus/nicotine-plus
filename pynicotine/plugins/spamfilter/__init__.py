@@ -21,10 +21,12 @@ class Plugin(BasePlugin):
         'badprivatephrases': ['buy viagra now', 'mybrute.com', 'mybrute.es', '0daymusic.biz']
     }
     metasettings = {
-        'minlength': {"description": 'The minimum length of a line before it\'s considered as \
-                                      ASCII spam', 'type': 'integer'},
-        'maxdiffcharacters': {"description": 'The maximum number of different characters that is \
-                                              still considered ASCII spam', 'type': 'integer'},
+        'minlength': {"description": 'The minimum length of a line before it\'s considered as '
+                                     + 'ASCII spam',
+                      'type': 'integer'},
+        'maxdiffcharacters': {"description": 'The maximum number of different characters that is '
+                                             + 'still considered ASCII spam',
+                              'type': 'integer'},
         'maxlength': {"description": 'The maximum length of a line before it\'s considered as spam.',
                       'type': 'integer'},
         'badprivatephrases': {"description": 'Filter chat room and private messages containing the following phrases:',
