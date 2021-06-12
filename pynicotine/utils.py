@@ -365,7 +365,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print("Yikes, I was asked to return output but I'm also asked to launch the process in the background. returnoutput gets precedent.")
+            print("Yikes, I was asked to return output but I'm also asked to launch \
+                   the process in the background. returnoutput gets precedent.")
         else:
             background = True
 
@@ -420,7 +421,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
         if not background and not returnoutput:
             procs[-1].wait()
     except Exception:
-        raise RuntimeError("Problem while executing command %s (%s of %s)" % (subcommands[len(procs)], len(procs) + 1, len(subcommands)))
+        raise RuntimeError("Problem while executing command %s (%s of %s)" %
+                           (subcommands[len(procs)], len(procs) + 1, len(subcommands)))
 
     if not returnoutput:
         return True

@@ -224,7 +224,8 @@ class SlskMessage:
                 elif getunsignedlonglong:
                     # little-endian unsigned long long (8 bytes)
                     try:
-                        return struct.calcsize("<Q") + start, struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0]
+                        return (struct.calcsize("<Q") + start,
+                                struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0])
                     except Exception:
                         return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
 
@@ -258,7 +259,8 @@ class SlskMessage:
                 return start, None
 
         except struct.error as error:
-            log.add("%s %s trying to unpack %s at '%s' at %s/%s", (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
+            log.add("%s %s trying to unpack %s at '%s' at %s/%s",
+                    (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
 
     def pack_object(self, object, unsignedint=False, unsignedlonglong=False, latin1=False):
@@ -288,7 +290,8 @@ class SlskMessage:
 
             return struct.pack("<i", len(encoded)) + encoded
 
-        log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s", {'obj_type': type(object), 'msg_type': self.__class__})
+        log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s",
+                {'obj_type': type(object), 'msg_type': self.__class__})
         return b""
 
     def make_network_message(self):
@@ -494,7 +497,8 @@ class UserData:
 
     __slots__ = "username", "status", "avgspeed", "downloadnum", "files", "dirs", "slotsfull", "country"
 
-    def __init__(self, username=None, status=None, avgspeed=None, downloadnum=None, files=None, dirs=None, slotsfull=None, country=None):
+    def __init__(self, username=None, status=None, avgspeed=None, downloadnum=None, files=None, dirs=None,
+                 slotsfull=None, country=None):
         self.username = username
         self.status = status
         self.avgspeed = avgspeed
@@ -2010,7 +2014,8 @@ class SharedFileList(PeerMessage):
 
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'SharedFileList', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+                    {'area': 'SharedFileList', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2120,10 +2125,11 @@ class FileSearchResult(PeerMessage):
     token/ticket is taken from original FileSearch, UserSearch or
     RoomSearch message. """
 
-    __slots__ = "conn", "user", "geoip", "token", "list", "fileindex", "freeulslots", \
-                "ulspeed", "inqueue", "fifoqueue", "numresults", "pos"
+    __slots__ = ("conn", "user", "geoip", "token", "list", "fileindex", "freeulslots",
+                 "ulspeed", "inqueue", "fifoqueue", "numresults", "pos")
 
-    def __init__(self, conn, user=None, token=None, shares=None, fileindex=None, freeulslots=None, ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
+    def __init__(self, conn, user=None, token=None, shares=None, fileindex=None, freeulslots=None,
+                 ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
         self.token = token
@@ -2141,7 +2147,8 @@ class FileSearchResult(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FileSearchResult', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+                    {'area': 'FileSearchResult', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2184,7 +2191,8 @@ class FileSearchResult(PeerMessage):
 
             except Exception:
                 log.add(
-                    _("Your shares database is corrupted. Please rescan your shares and report any potential scanning issues to the developers.")
+                    _("Your shares database is corrupted. Please rescan your shares and report "
+                      "any potential scanning issues to the developers.")
                 )
                 break
 
@@ -2360,7 +2368,8 @@ class FolderContentsResponse(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'FolderContentsResponse', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+                    {'area': 'FolderContentsResponse', 'exception': error})
             self.list = {}
 
     def _parse_network_message(self, message):
@@ -2647,7 +2656,8 @@ class DistribSearch(DistribMessage):
         try:
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'DistribSearch', 'exception': error})
+            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+                    {'area': 'DistribSearch', 'exception': error})
             return False
 
     def _parse_network_message(self, message):

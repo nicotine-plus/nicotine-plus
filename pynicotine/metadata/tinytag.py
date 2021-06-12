@@ -357,7 +357,8 @@ class MP4(TinyTag):
                 atom_header = fh.read(header_size)
                 continue
             if DEBUG:
-                stderr('%s pos: %d atom: %s len: %d' % (' ' * 4 * len(curr_path), fh.tell() - header_size, atom_type, atom_size + header_size))
+                stderr('%s pos: %d atom: %s len: %d' %
+                       (' ' * 4 * len(curr_path), fh.tell() - header_size, atom_type, atom_size + header_size))
             if atom_type in self.VERSIONED_ATOMS:  # jump atom version for now
                 fh.seek(4, os.SEEK_CUR)
             if atom_type in self.FLAGGED_ATOMS:  # jump atom flags for now
@@ -1085,7 +1086,8 @@ class Wma(TinyTag):
                     'WM/AlbumTitle': 'album',
                     'WM/Composer': 'composer',
                 }
-                # see: http://web.archive.org/web/20131203084402/http://msdn.microsoft.com/en-us/library/bb643323.aspx#_Toc509555195
+                # see: http://web.archive.org/web/20131203084402/http://msdn.microsoft.com/
+                # en-us/library/bb643323.aspx#_Toc509555195
                 descriptor_count = _bytes_to_int_le(fh.read(2))
                 for _ in range(descriptor_count):
                     name_len = _bytes_to_int_le(fh.read(2))

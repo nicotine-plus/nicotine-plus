@@ -150,7 +150,8 @@ class Interests:
 
         for thing in config.sections["interests"]["dislikes"]:
             if thing and isinstance(thing, str):
-                self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
+                self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(
+                    -1, self.dislikes_column_numbers, [thing])
 
         """ Popup """
 
@@ -355,7 +356,8 @@ class Interests:
 
         for user in msg.users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
-                -1, self.recommendation_users_column_numbers, [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, "0", "0", 0, 0, 0]
+                -1, self.recommendation_users_column_numbers,
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, "0", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 
@@ -373,7 +375,9 @@ class Interests:
         if msg.user not in self.recommendation_users:
             return
 
-        self.recommendation_users_model.set(self.recommendation_users[msg.user], 2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
+        self.recommendation_users_model.set(
+            self.recommendation_users[msg.user],
+            2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
 
     def get_selected_item(self, treeview, column=0):
 

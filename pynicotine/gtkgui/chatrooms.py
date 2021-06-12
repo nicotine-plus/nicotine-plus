@@ -73,10 +73,10 @@ class ChatRooms(IconNotebook):
     # List of allowed commands. The implementation for them is in the ChatEntry class.
     CMDS = {
         "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ", "/leave ",
-        "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-        "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ", "/tick ", "/t ",
-        "/info ", "/toggle ", "/tickers "
+        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ",
+        "/leave ", "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ",
+        "/unban ", "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ",
+        "/rescan ", "/tick ", "/t ", "/info ", "/toggle ", "/tickers "
     }
 
     def __init__(self, frame):
@@ -150,7 +150,8 @@ class ChatRooms(IconNotebook):
 
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and not forceupdate:
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) \
+                and not forceupdate:
             return
 
         for name, room in self.joinedrooms.items():
@@ -326,7 +327,8 @@ class ChatRooms(IconNotebook):
         config.sections["server"]["private_chatrooms"] = enabled
 
     def private_room_disown(self, msg):
-        if msg.room in self.private_rooms and self.private_rooms[msg.room]["owner"] == config.sections["server"]["login"]:
+        if msg.room in self.private_rooms and \
+                self.private_rooms[msg.room]["owner"] == config.sections["server"]["login"]:
             self.private_rooms[msg.room]["owner"] = None
 
     def get_user_stats(self, msg):
@@ -467,7 +469,8 @@ class ChatRoom:
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom, self.send_message, self.chatrooms.CMDS, self.ChatScroll, is_chatroom=True)
+        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,
+                               self.send_message, self.chatrooms.CMDS, self.ChatScroll, is_chatroom=True)
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -667,9 +670,11 @@ class ChatRoom:
                 line = re.sub(r"\\s\\s+", "  ", line)
 
                 if user != config.sections["server"]["login"]:
-                    append_line(self.ChatScroll, censor_chat(line), tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
+                    append_line(self.ChatScroll, censor_chat(line), tag, username=user,
+                                usertag=usertag, timestamp_format="", scroll=False)
                 else:
-                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag, timestamp_format="", scroll=False)
+                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag,
+                                timestamp_format="", scroll=False)
 
             if lines:
                 append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
@@ -738,7 +743,8 @@ class ChatRoom:
             if user == login:
                 has_own_ticker = True
 
-            if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
+            if self.frame.np.network_filter.is_user_ignored(user) or \
+                    self.frame.np.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
                 continue
 
@@ -798,8 +804,10 @@ class ChatRoom:
 
         # Don't show notifications if the chat is open and the window
         # is in use
-        if self.chatrooms.get_current_page() == self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) and \
-           self.frame.MainNotebook.get_current_page() == self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and \
+        if self.chatrooms.get_current_page() == \
+           self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) and \
+           self.frame.MainNotebook.get_current_page() == \
+           self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and \
            self.frame.MainWindow.is_active():
             return
 
@@ -924,7 +932,8 @@ class ChatRoom:
         # Add to completion list, and completion drop-down
         self.entry.add_completion(username)
 
-        if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
+        if not self.frame.np.network_filter.is_user_ignored(username) and \
+                not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
 
         self.add_user_row(userdata)
@@ -941,7 +950,8 @@ class ChatRoom:
         if username not in (i[0] for i in config.sections["server"]["userlist"]):
             self.entry.remove_completion(username)
 
-        if not self.frame.np.network_filter.is_user_ignored(username) and not self.frame.np.network_filter.is_user_ip_ignored(username):
+        if not self.frame.np.network_filter.is_user_ignored(username) and \
+                not self.frame.np.network_filter.is_user_ip_ignored(username):
             append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
 
         self.usersmodel.remove(self.users[username])
@@ -997,7 +1007,8 @@ class ChatRoom:
         else:
             action = _("%s has returned")
 
-        if not self.frame.np.network_filter.is_user_ignored(user) and not self.frame.np.network_filter.is_user_ip_ignored(user):
+        if not self.frame.np.network_filter.is_user_ignored(user) and \
+                not self.frame.np.network_filter.is_user_ip_ignored(user):
             append_line(self.RoomLog, action % user, self.tag_log)
 
         if user in self.tag_users:
@@ -1016,7 +1027,8 @@ class ChatRoom:
             # Country didn't change, no need to update
             return
 
-        self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
+        self.usersmodel.set_value(self.users[user], 1,
+                                  GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
         self.usersmodel.set_value(self.users[user], 8, country)
 
     def update_visuals(self):

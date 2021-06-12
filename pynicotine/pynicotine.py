@@ -298,7 +298,8 @@ class NetworkEventProcessor:
         self.add_upnp_portmapping()
 
         port_range = config.sections["server"]["portrange"]
-        self.protothread = slskproto.SlskProtoThread(self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
+        self.protothread = slskproto.SlskProtoThread(
+            self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
 
         connect_ready = not config.need_config()
 
@@ -405,7 +406,8 @@ class NetworkEventProcessor:
         msg_type = msg.type
         found_conn = False
 
-        if user != config.sections["server"]["login"]:  # We need two connections in our name if we're downloading from ourselves
+        # We need two connections in our name if we're downloading from ourselves
+        if user != config.sections["server"]["login"]:
             for i in self.peerconns:
                 if i.username == user and i.type != 'F' and i.type == msg_type:
                     i.addr = addr
@@ -542,7 +544,8 @@ class NetworkEventProcessor:
         self.out_indirect_conn_request_times[conn] = time.time()
 
         log.add_conn(
-            "Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. Error: %(error)s", {
+            """Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection.
+Error: %(error)s""", {
                 "type": conn.type,
                 "user": conn.username,
                 "error": error
@@ -691,7 +694,8 @@ class NetworkEventProcessor:
         self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, country_code)
 
         if country_code:
-            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
+            country = " (%(cc)s / %(country)s)" % {
+                'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
         else:
             country = ""
 
@@ -788,10 +792,11 @@ class NetworkEventProcessor:
                 self.queue.append(i.init)
                 i.conn = conn
 
-                log.add_conn("User %(user)s managed to connect to us indirectly, connection is established. List of outgoing messages: %(messages)s", {
-                    'user': i.username,
-                    'messages': i.msgs
-                })
+                log.add_conn("User %(user)s managed to connect to us indirectly, connection is established. "
+                             + "List of outgoing messages: %(messages)s", {
+                                 'user': i.username,
+                                 'messages': i.msgs
+                             })
 
                 # Deliver our messages to the peer
                 self.process_conn_messages(i, conn)
@@ -919,7 +924,8 @@ class NetworkEventProcessor:
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s", {'peer': log.contents(i), 'error': error})
+                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s",
+                                 {'peer': log.contents(i), 'error': error})
 
                     if i in self.out_indirect_conn_request_times:
                         del self.out_indirect_conn_request_times[i]
@@ -978,10 +984,11 @@ class NetworkEventProcessor:
                         """ Peer sent us an indirect connection request, and we weren't able to
                         connect to them. """
 
-                        log.add_conn("Can't respond to indirect connection request from user %(user)s. Error: %(error)s", {
-                            'user': i.username,
-                            'error': msg.err
-                        })
+                        log.add_conn(
+                            "Can't respond to indirect connection request from user %(user)s. Error: %(error)s", {
+                                'user': i.username,
+                                'error': msg.err
+                            })
 
                         self.peerconns.remove(i)
 
@@ -1043,7 +1050,8 @@ class NetworkEventProcessor:
         self.servertimer.daemon = True
         self.servertimer.start()
 
-        self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"), (self.server_timeout_value))
+        self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"),
+                        self.server_timeout_value)
 
     def server_timeout(self):
         if not config.need_config():
@@ -1232,7 +1240,8 @@ class NetworkEventProcessor:
                     self.watch_user(user)
 
             if self.ui_callback:
-                self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, self.userlist, self.interests = self.ui_callback.init_interface()
+                self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, \
+                    self.userlist, self.interests = self.ui_callback.init_interface()
                 self.transfers.set_transfer_views(downloads, uploads)
 
             if msg.banner != "":
@@ -1525,11 +1534,13 @@ class NetworkEventProcessor:
 
         if msg.seconds == 0:
             log.add(
-                _("You have no privileges left. They are not necessary, but allow your downloads to be queued ahead of non-privileged users.")
+                _("You have no privileges left. They are not necessary, but allow your downloads "
+                  "to be queued ahead of non-privileged users.")
             )
         else:
             log.add(
-                _("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of download privileges left."), {
+                _("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
+                  "download privileges left."), {
                     'days': days,
                     'hours': hours % 24,
                     'minutes': mins % 60,
@@ -1686,7 +1697,8 @@ class NetworkEventProcessor:
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        self.network_callback([slskmessages.PopupMessage(_("Your password has been changed"), _("Password is %s") % password)])
+        self.network_callback([slskmessages.PopupMessage(
+            _("Your password has been changed"), _("Password is %s") % password)])
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """
@@ -1767,14 +1779,16 @@ class NetworkEventProcessor:
         if user == config.sections["server"]["login"]:
             if ip_address is not None and port is not None:
                 log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from IP %(ip)s port %(port)s"), {
+                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt "
+                      "from IP %(ip)s port %(port)s"), {
                         'user': user,
                         'ip': ip_address,
                         'port': port
                     })
             else:
                 log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt from an unknown IP & port"), {
+                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt "
+                      "from an unknown IP & port"), {
                         'user': user
                     })
 
@@ -1896,14 +1910,16 @@ class NetworkEventProcessor:
 
             if ip_address is not None and port is not None:
                 log.add(
-                    _("Blocking %(user)s from making a UserInfo request, possible spoofing attempt from IP %(ip)s port %(port)s"), {
+                    _("Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
+                      "from IP %(ip)s port %(port)s"), {
                         'user': user,
                         'ip': ip_address,
                         'port': port
                     }
                 )
             else:
-                log.add(_("Blocking %s from making a UserInfo request, possible spoofing attempt from an unknown IP & port"), user)
+                log.add(_("Blocking %s from making a UserInfo request, possible spoofing attempt from "
+                          "an unknown IP & port"), user)
 
             if conn is not None:
                 self.queue.append(slskmessages.ConnClose(conn))
@@ -1940,7 +1956,8 @@ class NetworkEventProcessor:
             else:
                 uploadallowed = 0
 
-            self.queue.append(slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+            self.queue.append(
+                slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
         log.add(
             _("%(user)s is making a UserInfo request"), {
@@ -1982,7 +1999,8 @@ class NetworkEventProcessor:
             return
 
         if user != msg.user:
-            text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {"realuser": user, "fakeuser": msg.user} + msg.msg
+            text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
+                "realuser": user, "fakeuser": msg.user} + msg.msg
             msg.user = user
         else:
             text = msg.msg

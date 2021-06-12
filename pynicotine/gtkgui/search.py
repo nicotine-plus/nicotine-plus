@@ -662,7 +662,8 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
+        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, \
+            h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -1178,7 +1179,8 @@ class Search:
         for file in self.selected_results:
             # Make sure the selected result is not a directory
             if not file[1].endswith('\\'):
-                self.frame.np.transfers.get_file(file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
+                self.frame.np.transfers.get_file(
+                    file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
 
     def on_download_files_to_selected(self, selected, data):
         self.on_download_files(prefix=selected)
@@ -1225,8 +1227,11 @@ class Search:
                     continue
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
-                counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
-                files.append((user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
+                counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, \
+                    h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, \
+                    queue, length, color = row
+                files.append(
+                    (user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
 
             if config.sections["transfers"]["reverseorder"]:
                 files.sort(key=lambda x: x[1], reverse=True)

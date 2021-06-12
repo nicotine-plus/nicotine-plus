@@ -275,13 +275,13 @@ class UserBrowse:
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
-                      _("Upload Folder To..."), _("Upload Folder Recursive To..."), _("Open in File _Manager"),
-                      _("Copy _Folder Path"), _("Copy _URL")):
+            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
+                      _("Download R_ecursive To..."), _("Upload Folder To..."), _("Upload Folder Recursive To..."),
+                      _("Open in File _Manager"), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
         else:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"), _("Download R_ecursive To..."),
-                      _("Copy _Folder Path"), _("Copy _URL")):
+            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
+                      _("Download R_ecursive To..."), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
 
         self.user_popup.toggle_user_items()
@@ -515,7 +515,8 @@ class UserBrowse:
             try:
                 self.files[f[0]] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
             except Exception as msg:
-                log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"), {'folder': directory, 'error': msg})
+                log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"),
+                        {'folder': directory, 'error': msg})
 
     def on_save(self, *args):
 
@@ -526,11 +527,13 @@ class UserBrowse:
                 os.makedirs(sharesdir)
 
         except Exception as msg:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
+                    {'folder': sharesdir, 'error': msg})
 
         try:
             get_path(sharesdir, self.user, self.dump_shares_to_file)
-            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"), {'user': self.user, 'dir': sharesdir})
+            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
+                    {'user': self.user, 'dir': sharesdir})
 
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
@@ -569,7 +572,8 @@ class UserBrowse:
 
         if msg and not msg.list:
             self.info_bar.show_message(
-                _("User's list of shared files is empty. Either the user is not sharing anything, or they are sharing files privately.")
+                _("User's list of shared files is empty. Either the user is not sharing anything, "
+                  "or they are sharing files privately.")
             )
 
         else:
@@ -581,7 +585,8 @@ class UserBrowse:
     def show_connection_error(self):
 
         self.info_bar.show_message(
-            _("Unable to request shared files from user. Either the user is offline, you both have a closed listening port, or there's a temporary connectivity issue.")
+            _("Unable to request shared files from user. Either the user is offline, you both have "
+              "a closed listening port, or there's a temporary connectivity issue.")
         )
 
         self.set_finished()
@@ -887,7 +892,8 @@ class UserBrowse:
         prefix = ""
 
         for fn, size in self.selected_files.items():
-            self.frame.np.transfers.push_file(user, "\\".join([folder, fn]), prefix, size=size, locally_queued=locally_queued)
+            self.frame.np.transfers.push_file(
+                user, "\\".join([folder, fn]), prefix, size=size, locally_queued=locally_queued)
             locally_queued = True
 
     def on_upload_files(self, *args):

@@ -142,7 +142,8 @@ class PopupMenu(Gio.Menu):
         else:
             label = "dummy"
 
-        action_id = (label + self.popup_id).replace(" ", "").lower().translate(str.maketrans(dict.fromkeys(string.punctuation)))
+        action_id = (label + self.popup_id).replace(" ", "").lower().translate(
+            str.maketrans(dict.fromkeys(string.punctuation)))
         action = self.create_action(action_id, stateful)
 
         menuitem = Gio.MenuItem.new(label, "win." + action_id)
@@ -305,7 +306,8 @@ class PopupMenu(Gio.Menu):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
-                popup.append_item(("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
+                popup.append_item(
+                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
             else:
                 popup.append_item(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
 
@@ -313,7 +315,8 @@ class PopupMenu(Gio.Menu):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
-                popup.append_item(("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
+                popup.append_item(
+                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
             else:
                 popup.append_item(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
 
@@ -556,7 +559,8 @@ class PopupMenu(Gio.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        message = _("How many days of privileges should user %s be gifted?") % self.user + " (" + _("%(days)s days left") % {'days': days} + ")"
+        message = _("How many days of privileges should user %s be gifted?") % \
+            self.user + " (" + _("%(days)s days left") % {'days': days} + ")"
 
         if error:
             message += "\n\n" + error

@@ -140,7 +140,9 @@ class NowPlaying:
             log.add(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
-        conn.request("GET", "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json", headers={"User-Agent": "Nicotine+"})
+        conn.request("GET", "/2.0/?method=user.getrecenttracks&user="
+                     + user + "&api_key=" + apikey + "&limit=1&format=json",
+                     headers={"User-Agent": "Nicotine+"})
         resp = conn.getresponse()
         data = resp.read().decode("utf-8")
         conn.close()
@@ -155,7 +157,8 @@ class NowPlaying:
         self.title["artist"] = lastplayed["artist"]["#text"]
         self.title["title"] = lastplayed["name"]
         self.title["album"] = lastplayed["album"]["#text"]
-        self.title["nowplaying"] = "%s: %s - %s - %s" % (_("Last played"), self.title["artist"], self.title["album"], self.title["title"])
+        self.title["nowplaying"] = "%s: %s - %s - %s" % (
+            _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
 
         return True
 
@@ -195,7 +198,8 @@ class NowPlaying:
 
             player = players[0]
             if len(players) > 1:
-                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"), {'players': players, 'player': player})
+                log.add(_("Found multiple MPRIS players: %(players)s. Using: %(player)s"),
+                        {'players': players, 'player': player})
             else:
                 log.add(_("Auto-detected MPRIS player: %s."), player)
 
@@ -211,7 +215,8 @@ class NowPlaying:
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 
         except Exception as exception:
-            log.add(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"), {'player': player, 'exception': exception})
+            log.add(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
+                    {'player': player, 'exception': exception})
             return None
 
         self.title['program'] = player

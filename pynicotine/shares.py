@@ -111,7 +111,9 @@ class Scanner:
             from traceback import format_exc
 
             self.queue.put((
-                0, _("Serious error occurred while rescanning shares. If this problem persists, delete %(dir)s/*.db and try again. If that doesn't help, please file a bug report with this stack trace included: %(trace)s"), {
+                0, _("Serious error occurred while rescanning shares. If this problem persists, "
+                     "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
+                     "report with this stack trace included: %(trace)s"), {
                     "dir": self.config.data_dir,
                     "trace": "\n" + format_exc()
                 }
@@ -138,7 +140,8 @@ class Scanner:
                     if self.sharestype == "buddy":
                         destination = "buddy" + destination
 
-                    database = shelve.open(os.path.join(self.config.data_dir, destination + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                    database = shelve.open(os.path.join(self.config.data_dir, destination + ".db"),
+                                           flag='n', protocol=pickle.HIGHEST_PROTOCOL)
                     database.update(source)
                     database.close()
 
@@ -276,7 +279,8 @@ class Scanner:
                         mtimes[k] = dircontents[k]
 
         except OSError as errtuple:
-            self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple}))
+            self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"),
+                           {'path': folder, 'error': errtuple}))
 
         return mtimes
 
@@ -336,7 +340,8 @@ class Scanner:
                 streams[virtualdir] = self.get_dir_stream(files[virtualdir])
 
             except OSError as errtuple:
-                self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"), {'path': folder, 'error': errtuple}))
+                self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"),
+                               {'path': folder, 'error': errtuple}))
                 continue
 
         return files, streams
@@ -468,7 +473,8 @@ class Scanner:
         else:
             fileindex_dest = "buddyfileindex"
 
-        fileindex = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"), flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+        fileindex = shelve.open(os.path.join(self.config.data_dir, fileindex_dest + ".db"),
+                                flag='n', protocol=pickle.HIGHEST_PROTOCOL)
         wordindex = {}
 
         index = 0
@@ -486,7 +492,8 @@ class Scanner:
                 lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
-                self.add_file_to_index(index, fileinfo[0], folder, fileinfo, wordindex, fileindex, self.translatepunctuation)
+                self.add_file_to_index(
+                    index, fileinfo[0], folder, fileinfo, wordindex, fileindex, self.translatepunctuation)
                 index += 1
 
         fileindex.close()
@@ -627,11 +634,14 @@ class Shares:
                 return shared_folder
 
             virtual = shared_folder.replace('/', '_').replace('\\', '_').strip('_')
-            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.", (shared_folder, virtual))
+            log.add("Renaming shared folder '%s' to '%s'. A rescan of your share is required.",
+                    (shared_folder, virtual))
             return (virtual, shared_folder)
 
-        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["shared"]]
-        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x) for x in self.config.sections["transfers"]["buddyshared"]]
+        self.config.sections["transfers"]["shared"] = [_convert_to_virtual(x)
+                                                       for x in self.config.sections["transfers"]["shared"]]
+        self.config.sections["transfers"]["buddyshared"] = [_convert_to_virtual(x)
+                                                            for x in self.config.sections["transfers"]["buddyshared"]]
 
     @classmethod
     def load_shares(cls, shares, dbs, reset_shares=False):
@@ -739,7 +749,8 @@ class Shares:
             except TypeError:
                 index = len(list(fileindex))
 
-            Scanner.add_file_to_index(index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
+            Scanner.add_file_to_index(
+                index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
 
             self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
             self.newnormalshares = True
@@ -925,7 +936,8 @@ class Shares:
             shared_folders = self.config.sections["transfers"]["shared"][:]
 
         else:
-            shared_folders = self.config.sections["transfers"]["buddyshared"][:] + self.config.sections["transfers"]["shared"][:]
+            shared_folders = self.config.sections["transfers"]["buddyshared"][:] + \
+                self.config.sections["transfers"]["shared"][:]
 
         if self.config.sections["transfers"]["sharedownloaddir"]:
             shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))

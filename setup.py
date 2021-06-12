@@ -107,7 +107,8 @@ alternative to the official Soulseek client, providing additional
 functionality while keeping current with the Soulseek protocol."""
 
     # Specify included files
-    PACKAGES = ["pynicotine"] + [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
+    PACKAGES = ["pynicotine"] + \
+        [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
     PACKAGE_DATA = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in PACKAGES)
 
     SCRIPTS = ["nicotine"]

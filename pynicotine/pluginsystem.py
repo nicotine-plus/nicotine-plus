@@ -122,10 +122,11 @@ class PluginHandler:
 
         # Our config file doesn't play nicely with some characters
         if "=" in pluginname:
-            log.add(_("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
-                "name": pluginname,
-                "characters": "="
-            })
+            log.add(
+                _("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
+                    "name": pluginname,
+                    "characters": "="
+                })
             return False
 
         if pluginname in self.enabled_plugins:
@@ -272,14 +273,16 @@ class PluginHandler:
                 if return_value == returncode['pass']:
                     continue
 
-                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': str(return_value)})
+                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+                        {'module': module, 'value': str(return_value)})
 
             except Exception:
                 from traceback import extract_stack
                 from traceback import extract_tb
                 from traceback import format_list
 
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s"), {
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                          "Trace: %(trace)s\nProblem area:%(area)s"), {
                     'module': module,
                     'errortype': sys.exc_info()[0],
                     'error': sys.exc_info()[1],
@@ -316,14 +319,16 @@ class PluginHandler:
                 if return_value == returncode['pass']:
                     continue
 
-                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"), {'module': module, 'value': return_value})
+                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+                        {'module': module, 'value': return_value})
 
             except Exception:
                 from traceback import extract_stack
                 from traceback import extract_tb
                 from traceback import format_list
 
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\nTrace: %(trace)s\nProblem area:%(area)s"), {
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                          "Trace: %(trace)s\nProblem area:%(area)s"), {
                     'module': module,
                     'errortype': sys.exc_info()[0],
                     'error': sys.exc_info()[1],

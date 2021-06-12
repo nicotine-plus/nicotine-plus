@@ -23,7 +23,8 @@ from gi.repository import Gtk
 """ Dialogs """
 
 
-def generic_dialog(parent=None, content_box=None, quit_callback=None, type_hint="normal", title="Dialog", width=400, height=400, modal=True):
+def generic_dialog(parent=None, content_box=None, quit_callback=None, type_hint="normal",
+                   title="Dialog", width=400, height=400, modal=True):
 
     from pynicotine.config import config
 

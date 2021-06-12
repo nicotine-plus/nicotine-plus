@@ -19,10 +19,14 @@ class Plugin(BasePlugin):
     __name__ = "Port Checker"
     __version__ = "2008-11-26r00"
     __author__ = "quinox"
-    __desc__ = """By examining chatroom messages this plugin tries to find people that have a potential firewall/router problem, and if found tests their port. If a closed port is encountered a message will be sent to him/her."""
+    __desc__ = """By examining chatroom messages this plugin tries to find people that have a potential
+firewall/router problem, and if found tests their port. If a closed port is encountered a message will
+be sent to him/her."""
 
     def init(self):
-        self.checked = {}  # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan and 3 means the user was scanned
+        # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan
+        # and 3 means the user was scanned
+        self.checked = {}
         self.checkroom = 'nicotine'
 
     def IncomingPublicChatNotification(self, room, user, line):  # noqa
@@ -47,14 +51,21 @@ class Plugin(BasePlugin):
             status = self.checkport(ip, port)
             if status in ('open',):
                 if self.checked[user] in (1,):
-                    self.saypublic(self.checkroom, '%s: Your port is accessible, you can blame others in case of problems ;)' % (user,))
+                    self.saypublic(
+                        self.checkroom,
+                        '%s: Your port is accessible, you can blame others in case of problems ;)' % user)
                 else:
                     self.log("%s: Port is accessible, not reporting since this was an unrequested scan." % (user,))
             elif status in ('closed',):
-                self.saypublic(self.checkroom, '%s: Alas, your firewall and/or router is not configured properly. I could not contact you at port %s' % (user, port))
+                self.saypublic(
+                    self.checkroom,
+                    '%s: Alas, your firewall and/or router is not configured properly. I could not \
+                    contact you at port %s' % (user, port))
             else:
                 if self.checked[user] in (1,):
-                    self.saypublic(self.checkroom, '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
+                    self.saypublic(
+                        self.checkroom,
+                        '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
                 else:
                     self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
             self.checked[user] = 3

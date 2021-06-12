@@ -218,7 +218,8 @@ def initialise_columns(treeview_name, treeview, *args):
 
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            gesture_click.connect("pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
+            gesture_click.connect(
+                "pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
             button.add_controller(gesture_click)
 
         cols[id] = column

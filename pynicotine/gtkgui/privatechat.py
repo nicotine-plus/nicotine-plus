@@ -95,7 +95,8 @@ class PrivateChats(IconNotebook):
 
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
+        if self.frame.MainNotebook.get_current_page() != \
+                self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
             return
 
         for user, tab in list(self.users.items()):
@@ -186,7 +187,8 @@ class PrivateChats(IconNotebook):
         # Don't show notifications if the private chat is open and the window
         # is in use
         if self.get_current_page() == self.page_num(chat.Main) and \
-           self.frame.MainNotebook.get_current_page() == self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
+           self.frame.MainNotebook.get_current_page() == \
+           self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
            self.frame.MainWindow.is_active():
             return
 
@@ -315,7 +317,8 @@ class PrivateChat:
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry)
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser, self.send_message, self.chats.CMDS, self.ChatScroll)
+        self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
+                               self.send_message, self.chats.CMDS, self.ChatScroll)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
@@ -382,7 +385,8 @@ class PrivateChat:
             lines = deque(lines, numlines)
 
             for line in lines:
-                append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user, usertag=self.tag_hilite, scroll=False)
+                append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user,
+                            usertag=self.tag_hilite, scroll=False)
 
     def login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
@@ -467,9 +471,11 @@ class PrivateChat:
             else:
                 timestamp += altzone
 
-            append_line(self.ChatScroll, line, self.tag_hilite, timestamp=timestamp, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
+            append_line(self.ChatScroll, line, self.tag_hilite, timestamp=timestamp, timestamp_format=timestamp_format,
+                        username=self.user, usertag=self.tag_username)
         else:
-            append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user, usertag=self.tag_username)
+            append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=self.user,
+                        usertag=self.tag_username)
 
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
@@ -515,7 +521,8 @@ class PrivateChat:
             line = "[%s] %s" % (my_username, line)
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format, username=my_username, usertag=usertag)
+        append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format,
+                    username=my_username, usertag=usertag)
 
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]

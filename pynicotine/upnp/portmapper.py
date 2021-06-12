@@ -80,7 +80,8 @@ class UPnPPortMapping:
         # Create a UDP socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        # Send a broadcast packet on a local address (doesn't need to be reachable, but MacOS requires port to be non-zero)
+        # Send a broadcast packet on a local address (doesn't need to be reachable,
+        # but MacOS requires port to be non-zero)
         s.connect(('10.255.255.255', 1))
 
         # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.

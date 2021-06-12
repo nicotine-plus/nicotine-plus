@@ -196,11 +196,12 @@ class RoomList:
             try:
                 self.private_rooms[room[0]]['joined'] = room[1]
                 if self.private_rooms[room[0]]['owner'] != myusername:
-                    log.add("I remember the room %(room)s being owned by %(previous)s, but the server says its owned by %(new)s.", {
-                        'room': room[0],
-                        'previous': self.private_rooms[room[0]]['owner'],
-                        'new': myusername
-                    })
+                    log.add("I remember the room %(room)s being owned by %(previous)s, but the "
+                            + "server says its owned by %(new)s.", {
+                                'room': room[0],
+                                'previous': self.private_rooms[room[0]]['owner'],
+                                'new': myusername
+                            })
                 self.private_rooms[room[0]]['owner'] = myusername
             except KeyError:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
@@ -209,10 +210,11 @@ class RoomList:
             try:
                 self.private_rooms[room[0]]['joined'] = room[1]
                 if self.private_rooms[room[0]]['owner'] == myusername:
-                    log.add("I remember the room %(room)s being owned by %(old)s, but the server says that's not true.", {
-                        'room': room[0],
-                        'old': self.private_rooms[room[0]]['owner'],
-                    })
+                    log.add("I remember the room %(room)s being owned by %(old)s, but the server "
+                            + "says that's not true.", {
+                                'room': room[0],
+                                'old': self.private_rooms[room[0]]['owner'],
+                            })
                     self.private_rooms[room[0]]['owner'] = None
             except KeyError:
                 self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
@@ -284,7 +286,8 @@ class RoomList:
         actions[_("Leave Room")].set_enabled(act[1])
 
         actions[_("Disown Private Room")].set_enabled(self.is_private_room_owned(self.popup_room))
-        actions[_("Cancel Room Membership")].set_enabled((prooms_enabled and self.is_private_room_member(self.popup_room)))
+        actions[_("Cancel Room Membership")].set_enabled(
+            (prooms_enabled and self.is_private_room_member(self.popup_room)))
 
     def on_popup_join(self, *args):
         self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))

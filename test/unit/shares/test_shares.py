@@ -62,7 +62,8 @@ def test_shares_scan(config):
     ogg_indexes = list(word_index["ogg"])
 
     assert set(word_index) == set(
-        ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1', 'folder2', 'nothing', 'something', 'test']
+        ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
+         'folder2', 'nothing', 'something', 'test']
     )
     assert len(nicotinetestdata_indexes) == 2
     assert len(ogg_indexes) == 1

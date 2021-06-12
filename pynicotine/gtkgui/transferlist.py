@@ -166,7 +166,8 @@ class TransferList:
         frame.MainWindow.add_action(action)
         action.change_state(state)
 
-        menu = create_grouping_menu(frame.MainWindow, config.sections["transfers"]["group%ss" % self.type], self.on_toggle_tree)
+        menu = create_grouping_menu(
+            frame.MainWindow, config.sections["transfers"]["group%ss" % self.type], self.on_toggle_tree)
         grouping_button.set_menu_model(menu)
 
         self.expand_button.connect("toggled", self.on_expand_tree)

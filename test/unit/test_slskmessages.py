@@ -70,7 +70,8 @@ class LoginMessageTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(
-            bytearray(b'\x04\x00\x00\x00test\x07\x00\x00\x00s33cr3t\x9d\x00\x00\x00 \x00\x00\x00dbc93f24d8f3f109deed23c3e2f8b74c\x13\x00\x00\x00'),
+            bytearray(b'\x04\x00\x00\x00test\x07\x00\x00\x00s33cr3t\x9d\x00\x00\x00 '
+                      b'\x00\x00\x00dbc93f24d8f3f109deed23c3e2f8b74c\x13\x00\x00\x00'),
             message)
 
 

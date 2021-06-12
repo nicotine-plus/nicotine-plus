@@ -111,4 +111,5 @@ class Uploads(TransferList):
         self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished"])
 
     def on_clear_finished_failed(self, *args):
-        self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished", "Cannot connect", "Local file error", "Remote file error"])
+        self.clear_transfers(["Aborted", "Cancelled", "User logged off", "Finished",
+                              "Cannot connect", "Local file error", "Remote file error"])

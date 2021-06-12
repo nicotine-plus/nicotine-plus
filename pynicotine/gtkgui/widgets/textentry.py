@@ -372,7 +372,8 @@ class ChatEntry:
 
         elif cmd == "/ctcpversion":
             if arg_self:
-                self.frame.privatechats.send_message(arg_self, self.frame.privatechats.CTCP_VERSION, show_user=True, bytestring=True)
+                self.frame.privatechats.send_message(
+                    arg_self, self.frame.privatechats.CTCP_VERSION, show_user=True, bytestring=True)
 
         elif cmd in ("/clear", "/cl"):
             self.textview.get_buffer().set_text("")
@@ -412,10 +413,12 @@ class ChatEntry:
                 if config.sections["words"]["commands"]:
                     self.frame.update_completions()
 
-        elif cmd[:1] == "/" and self.is_chatroom and self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args):
+        elif cmd[:1] == "/" and self.is_chatroom and \
+                self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args):
             pass
 
-        elif cmd[:1] == "/" and not self.is_chatroom and self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args):
+        elif cmd[:1] == "/" and not self.is_chatroom and \
+                self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args):
             pass
 
         else:
@@ -483,7 +486,8 @@ class ChatEntry:
                 if state & Gdk.ModifierType.SHIFT_MASK:
                     direction = -1  # Backward cycle
 
-                self.completions['currentindex'] = (self.completions['currentindex'] + direction) % len(self.completions['completions'])
+                self.completions['currentindex'] = (self.completions['currentindex'] + direction) % \
+                    len(self.completions['completions'])
 
                 newnick = self.completions['completions'][self.completions['currentindex']]
                 self.entry.insert_text(newnick, preix)
@@ -525,9 +529,11 @@ class TextSearchBar:
             iterator = buffer.get_iter_at_mark(current)
 
         if search_type == "previous":
-            match = iterator.backward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+            match = iterator.backward_search(
+                query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
         else:
-            match = iterator.forward_search(query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
+            match = iterator.forward_search(
+                query, Gtk.TextSearchFlags.TEXT_ONLY | Gtk.TextSearchFlags.CASE_INSENSITIVE, limit=None)
 
         if match is not None and len(match) == 2:
             match_start, match_end = match

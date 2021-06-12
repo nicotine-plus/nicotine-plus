@@ -229,8 +229,8 @@ class Connection:
 
 class PeerConnection(Connection):
 
-    __slots__ = "filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw", \
-                "lastcallback", "starttime", "sentbytes2", "readbytes2"
+    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw",
+                 "lastcallback", "starttime", "sentbytes2", "readbytes2")
 
     def __init__(self, conn=None, addr=None, init=None):
         Connection.__init__(self, conn, addr)
@@ -589,7 +589,8 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown" % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
+                msgs.append("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown" %
+                            {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
@@ -681,7 +682,8 @@ class SlskProtoThread(threading.Thread):
 
             if len(msg_buffer) >= 8:
                 msgtype = struct.unpack("<i", msg_buffer[4:8])[0]
-                self._ui_callback([PeerTransfer(conn, msgsize, len(msg_buffer) - 4, self.peerclasses.get(msgtype, None))])
+                self._ui_callback(
+                    [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, self.peerclasses.get(msgtype, None))])
 
             if msgsize + 4 > len(msg_buffer):
                 break
@@ -749,7 +751,12 @@ class SlskProtoThread(threading.Thread):
                                 if conn.addr is not None:
                                     host = conn.addr[0]
                                     port = conn.addr[1]
-                            debugmessage = "There was an error while unpacking Peer message type %(type)s size %(size)i contents %(msg_buffer)s from user: %(user)s, %(host)s:%(port)s" % {'type': msgname, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user, 'host': host, 'port': port}
+                            debugmessage = "There was an error while unpacking Peer message type %(type)s size "
+                            + "%(size)i contents %(msg_buffer)s from user: %(user)s, "
+                            + "%(host)s:%(port)s" % {
+                                'type': msgname, 'size': msgsize - 4,
+                                'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user,
+                                'host': host, 'port': port}
                             msgs.append(debugmessage)
 
                             del msg
@@ -780,7 +787,10 @@ class SlskProtoThread(threading.Thread):
                         newbuf += char
                         x += 1
 
-                    debugmessage = "Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, from user: %(user)s, %(host)s:%(port)s" % {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': newbuf, 'user': conn.init.user, 'host': host, 'port': port}
+                    debugmessage = "Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
+                    + "from user: %(user)s, %(host)s:%(port)s" % {
+                        'type': msgtype, 'size': msgsize - 4, 'msg_buffer': newbuf, 'user': conn.init.user,
+                        'host': host, 'port': port}
                     msgs.append(debugmessage)
 
             else:
@@ -817,7 +827,8 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown" % {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                msgs.append("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown" %
+                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
                 self._ui_callback([ConnClose(conn.conn, conn.addr)])
                 conn.conn.close()
                 conn.conn = None
@@ -914,15 +925,18 @@ class SlskProtoThread(threading.Thread):
                     msg = msg_obj.make_network_message()
 
                     if server_socket in conns:
-                        conns[server_socket].obuf.extend(struct.pack("<ii", len(msg) + 4, self.servercodes[msg_obj.__class__]))
+                        conns[server_socket].obuf.extend(
+                            struct.pack("<ii", len(msg) + 4, self.servercodes[msg_obj.__class__]))
                         conns[server_socket].obuf.extend(msg)
                     else:
                         queue.append(msg_obj)
                         needsleep = True
 
                 except Exception as error:
-                    print("Error packaging message: %(type)s %(msg_obj)s, %(error)s" % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)})
-                    self._ui_callback(["Error packaging message: %(type)s %(msg_obj)s, %(error)s" % {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)}])
+                    print("Error packaging message: %(type)s %(msg_obj)s, %(error)s" %
+                          {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)})
+                    self._ui_callback(["Error packaging message: %(type)s %(msg_obj)s, %(error)s" %
+                                      {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)}])
 
             elif issubclass(msg_obj.__class__, PeerMessage):
                 if msg_obj.conn in conns:
@@ -956,7 +970,8 @@ class SlskProtoThread(threading.Thread):
 
                     else:
                         msg = msg_obj.make_network_message()
-                        conns[msg_obj.conn].obuf.extend(struct.pack("<ii", len(msg) + 4, self.peercodes[msg_obj.__class__]))
+                        conns[msg_obj.conn].obuf.extend(
+                            struct.pack("<ii", len(msg) + 4, self.peercodes[msg_obj.__class__]))
                         conns[msg_obj.conn].obuf.extend(msg)
 
                 else:
@@ -1192,7 +1207,8 @@ class SlskProtoThread(threading.Thread):
                     conn = conns[i]
                     event_masks = selectors.EVENT_READ
 
-                    if conn.obuf or (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
+                    if conn.obuf or \
+                            (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
                         if self._is_upload(conn):
                             limit = self._uploadlimit[0](conns, conn)
 
@@ -1302,7 +1318,8 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback([ServerConn(server_socket, addr)])
 
                         else:
-                            conns[connection_in_progress] = PeerConnection(conn=connection_in_progress, addr=addr, init=msg_obj.init)
+                            conns[connection_in_progress] = PeerConnection(
+                                conn=connection_in_progress, addr=addr, init=msg_obj.init)
                             self._ui_callback([OutConn(connection_in_progress, addr)])
 
                         del connsinprogress[connection_in_progress]

@@ -48,7 +48,8 @@ def parse_color_string(color_string):
         color_rgba = Gdk.RGBA()
 
         if color_rgba.parse(color_string):
-            color_hex = "#%02X%02X%02X" % (round(color_rgba.red * 255), round(color_rgba.green * 255), round(color_rgba.blue * 255))
+            color_hex = "#%02X%02X%02X" % (
+                round(color_rgba.red * 255), round(color_rgba.green * 255), round(color_rgba.blue * 255))
             return color_hex
 
     return None

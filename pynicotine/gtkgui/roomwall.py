@@ -49,7 +49,9 @@ class RoomWall:
 
     def update_message_list(self):
         tickers = self.room.tickers.get_tickers()
-        append_line(self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])), showstamp=False, scroll=False)
+        append_line(
+            self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])),
+            showstamp=False, scroll=False)
 
     def clear_room_wall_message(self, update_list=True):
 

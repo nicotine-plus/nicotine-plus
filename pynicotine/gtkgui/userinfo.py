@@ -77,7 +77,8 @@ class UserTabs(IconNotebook):
         self.append_page(w.Main, user, w.on_close, status=status)
         w.set_label(self.get_tab_label_inner(w.Main))
 
-    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False, change_page=True, folder=None, local_shares_type=None):
+    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False,
+                  change_page=True, folder=None, local_shares_type=None):
 
         self.save_columns()
 
@@ -195,7 +196,8 @@ class UserInfo:
             self.ImageViewport.show_all()
 
             try:
-                self.scroll_controller = Gtk.EventControllerScroll.new(self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
+                self.scroll_controller = Gtk.EventControllerScroll.new(
+                    self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
                 self.scroll_controller.connect("scroll", self.on_scroll)
 
             except AttributeError:
@@ -363,7 +365,8 @@ class UserInfo:
     def show_connection_error(self):
 
         self.info_bar.show_message(
-            _("Unable to request information from user. Either you both have a closed listening port, the user is offline, or there's a temporary connectivity issue.")
+            _("Unable to request information from user. Either you both have a closed listening "
+              "port, the user is offline, or there's a temporary connectivity issue.")
         )
 
         self.set_finished()

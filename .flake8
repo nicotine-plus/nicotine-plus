@@ -1,3 +1,4 @@
 [flake8]
 builtins = _
-ignore = E501,W503
+max-line-length = 120
+ignore = W503

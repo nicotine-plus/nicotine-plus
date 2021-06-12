@@ -53,7 +53,8 @@ def load_ui_elements(ui_class, filename):
                 builder.add_from_string(
                     f.read()
                     .replace("GtkRadioButton", "GtkCheckButton")
-                    .replace("<property name=\"shadow-type\">in</property>", "<property name=\"has-frame\">1</property>")
+                    .replace("<property name=\"shadow-type\">in</property>",
+                             "<property name=\"has-frame\">1</property>")
                 )
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
@@ -195,7 +196,8 @@ def on_soul_seek_uri(url):
         user, file = urllib.parse.unquote(url[7:]).split("/", 1)
 
         if file[-1] == "/":
-            NICOTINE.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
+            NICOTINE.np.send_message_to_peer(
+                user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
         else:
             NICOTINE.np.transfers.get_file(user, file.replace("/", "\\"), "")
 
@@ -218,7 +220,8 @@ def scroll_bottom(widget):
 
 def url_event(tag, widget, event, iterator, url):
 
-    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
+    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and \
+            event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
         if url[:4] == "www.":
             url = "http://" + url
         open_uri(url, widget.get_toplevel())
@@ -226,7 +229,8 @@ def url_event(tag, widget, event, iterator, url):
     tag.last_event_type = event.button.type
 
 
-def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S", username=None, usertag=None, scroll=True, find_urls=True):
+def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S",
+                username=None, usertag=None, scroll=True, find_urls=True):
 
     def _makeurltag(buffer, url):
 

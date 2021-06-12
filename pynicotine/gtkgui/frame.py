@@ -203,7 +203,8 @@ class NicotineFrame:
             xpos = config.sections["ui"]["xposition"]
             ypos = config.sections["ui"]["yposition"]
 
-            # According to the pygtk doc this will be ignored my many window managers since the move takes place before we do a show()
+            # According to the pygtk doc this will be ignored my many window managers
+            # since the move takes place before we do a show()
             if min(xpos, ypos) < 0:
                 self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
             else:
@@ -337,7 +338,10 @@ class NicotineFrame:
 
         if corruptfile:
             short_message = _("Your config file is corrupt")
-            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open this file with a text editor you might be able to rescue some of your settings.") % {'corrupt': corruptfile}
+            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure "
+                             "Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open "
+                             "this file with a text editor you might be able to rescue some of your settings.") % {
+                                 'corrupt': corruptfile}
 
             message_dialog(
                 parent=self.MainWindow,
@@ -421,7 +425,8 @@ class NicotineFrame:
         self.userbrowse.login()
         self.userinfo.login()
 
-        return self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.downloads, self.uploads, self.userlist, self.interests
+        return (self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.downloads,
+                self.uploads, self.userlist, self.interests)
 
     def init_spell_checker(self):
 
@@ -483,7 +488,8 @@ class NicotineFrame:
                 loaded = False
 
                 while not path or (exts and not loaded):
-                    path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" % (name, exts.pop())))
+                    path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
+                                              (name, exts.pop())))
 
                     if os.path.isfile(path):
                         try:
@@ -748,7 +754,8 @@ class NicotineFrame:
         self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
 
         state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
-        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful("togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
+        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful(
+            "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
 
@@ -942,8 +949,9 @@ class NicotineFrame:
     def on_get_privileges(self, *args):
         import urllib.parse
 
+        login = urllib.parse.quote(config.sections["server"]["login"])
         url = "%(url)s" % {
-            'url': 'https://www.slsknet.org/userlogin.php?username=' + urllib.parse.quote(config.sections["server"]["login"])
+            'url': 'https://www.slsknet.org/userlogin.php?username=' + login
         }
         open_uri(url, self.MainWindow)
 
@@ -1958,7 +1966,8 @@ class NicotineFrame:
         msg.parse_network_message(built)
 
         indeterminate_progress = change_page = False
-        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress, change_page, folder, shares_type)
+        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress,
+                      change_page, folder, shares_type)
 
     def on_get_shares(self, widget, *args):
 
@@ -2007,7 +2016,8 @@ class NicotineFrame:
             if not os.path.exists(sharesdir):
                 os.makedirs(sharesdir)
         except Exception as msg:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"), {'folder': sharesdir, 'error': msg})
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
+                    {'folder': sharesdir, 'error': msg})
 
         choose_file(
             parent=self.MainWindow,
@@ -2321,7 +2331,8 @@ class NicotineFrame:
         self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersdown, 'speed': down})
         self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
 
-        self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down}, self.tray_upload_template % {'speed': up})
+        self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down},
+                                           self.tray_upload_template % {'speed': up})
 
     def on_alternative_speed_limit(self, action, *args):
 
@@ -2479,7 +2490,8 @@ class NicotineFrame:
         option_dialog(
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
-            message=_("Nicotine+ has encountered a critical error and needs to exit. Please copy the following error and include it in a bug report:")
+            message=_("Nicotine+ has encountered a critical error and needs to exit. "
+                      "Please copy the following error and include it in a bug report:")
             + "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
             third=_("Report Bug"),
             cancel=False,

@@ -145,7 +145,8 @@ class ServerFrame(BuildFrame):
         self.frame.np.queue.append(slskmessages.ChangePassword(self.Password.get_text()))
 
     def on_check_port(self, widget):
-        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.waitport)]), self.p.SettingsWindow)
+        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
+                 str(self.frame.np.waitport)]), self.p.SettingsWindow)
 
     def on_toggle_upnp(self, widget, *args):
 
@@ -1912,7 +1913,8 @@ class SearchesFrame(BuildFrame):
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
-        for w in self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC, self.FilterFree:
+        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
+                  self.FilterBR, self.FilterCC, self.FilterFree):
             w.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
@@ -2554,7 +2556,8 @@ class NowPlayingFrame(BuildFrame):
             if item == "$t":
                 legend += _("Title")
             elif item == "$n":
-                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {'artist': _("Artist"), 'title': _("Title")}
+                legend += _("Now Playing (typically \"%(artist)s - %(title)s\")") % {
+                    'artist': _("Artist"), 'title': _("Title")}
             elif item == "$l":
                 legend += _("Length")
             elif item == "$r":
@@ -2923,7 +2926,8 @@ class PluginsFrame(BuildFrame):
                     if value is not None:
                         config.sections["plugins"][self.plugin][name] = value
 
-                self.settings.frame.np.pluginhandler.plugin_settings(self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+                self.settings.frame.np.pluginhandler.plugin_settings(
+                    self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
 
             self.destroy()
 
@@ -3139,7 +3143,8 @@ class Settings:
             content_area.set_border_width(0)
 
         # Signal sent and catch by frame.py on update
-        GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST, GObject.TYPE_NONE, (GObject.TYPE_STRING,))
+        GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
+                           GObject.TYPE_NONE, (GObject.TYPE_STRING,))
         self.SettingsWindow.connect("settings-updated", self.frame.on_settings_updated)
 
         # Treeview of the settings

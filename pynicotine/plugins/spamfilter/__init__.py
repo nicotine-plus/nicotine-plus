@@ -21,14 +21,20 @@ class Plugin(BasePlugin):
         'badprivatephrases': ['buy viagra now', 'mybrute.com', 'mybrute.es', '0daymusic.biz']
     }
     metasettings = {
-        'minlength': {"description": 'The minimum length of a line before it\'s considered as ASCII spam', 'type': 'integer'},
-        'maxdiffcharacters': {"description": 'The maximum number of different characters that is still considered ASCII spam', 'type': 'integer'},
-        'maxlength': {"description": 'The maximum length of a line before it\'s considered as spam.', 'type': 'integer'},
-        'badprivatephrases': {"description": 'Filter chat room and private messages containing the following phrases:', 'type': 'list string'},
+        'minlength': {"description": 'The minimum length of a line before it\'s considered as \
+                                      ASCII spam', 'type': 'integer'},
+        'maxdiffcharacters': {"description": 'The maximum number of different characters that is \
+                                              still considered ASCII spam', 'type': 'integer'},
+        'maxlength': {"description": 'The maximum length of a line before it\'s considered as spam.',
+                      'type': 'integer'},
+        'badprivatephrases': {"description": 'Filter chat room and private messages containing the following phrases:',
+                              'type': 'list string'},
     }
 
     def LoadNotification(self):  # noqa
-        self.log('A line should be at least %s long with a maximum of %s different characters before it\'s considered ASCII spam.' % (self.settings['minlength'], self.settings['maxdiffcharacters']))
+        self.log('A line should be at least %s long with a maximum of %s different characters \
+                 before it\'s considered ASCII spam.' %
+                 (self.settings['minlength'], self.settings['maxdiffcharacters']))
 
     def check_phrases(self, user, line):
 

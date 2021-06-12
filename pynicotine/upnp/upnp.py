@@ -112,17 +112,31 @@ class PortMapping:
 
 class UPnp:
 
-    _add_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol><NewInternalPort>{}</NewInternalPort><NewInternalClient>{}</NewInternalClient><NewEnabled>1</NewEnabled><NewPortMappingDescription>{}</NewPortMappingDescription><NewLeaseDuration>{}</NewLeaseDuration></u:AddPortMapping></s:Body></s:Envelope>'
-    _delete_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:DeletePortMapping xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost><NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol></u:DeletePortMapping></s:Body></s:Envelope>'
-    _list_port_mappings_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:GetGenericPortMappingEntry xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewPortMappingIndex>{}</NewPortMappingIndex></u:GetGenericPortMappingEntry></s:Body></s:Envelope>'
+    _add_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" \
+        s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping \
+        xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost>\
+        <NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol><NewInternalPort>{}</NewInternalPort>\
+        <NewInternalClient>{}</NewInternalClient><NewEnabled>1</NewEnabled>\
+        <NewPortMappingDescription>{}</NewPortMappingDescription><NewLeaseDuration>{}</NewLeaseDuration>\
+        </u:AddPortMapping></s:Body></s:Envelope>'
+    _delete_port_mapping_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" \
+        s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>\
+        <u:DeletePortMapping xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1"><NewRemoteHost></NewRemoteHost>\
+        <NewExternalPort>{}</NewExternalPort><NewProtocol>{}</NewProtocol></u:DeletePortMapping></s:Body></s:Envelope>'
+    _list_port_mappings_template = '<?xml version="1.0"?><s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" \
+        s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body>\
+        <u:GetGenericPortMappingEntry xmlns:u="urn:schemas-upnp-org:service:WANIPConnection:1">\
+        <NewPortMappingIndex>{}</NewPortMappingIndex></u:GetGenericPortMappingEntry></s:Body></s:Envelope>'
 
     @classmethod
-    def add_port_mapping(cls, router, protocol, public_port, private_ip, private_port, mapping_description, lease_duration):
+    def add_port_mapping(cls, router, protocol, public_port, private_ip, private_port,
+                         mapping_description, lease_duration):
         """ Adds a port mapping to a router """
 
         from xml.etree import ElementTree
 
-        log.add_debug("Adding port mapping (%s, %s, %s, %s, %s)", (router.uuid, protocol, public_port, private_ip, private_port))
+        log.add_debug("Adding port mapping (%s, %s, %s, %s, %s)",
+                      (router.uuid, protocol, public_port, private_ip, private_port))
 
         url = '{}{}'.format(router.base_url, router.control_url)
         log.add_debug('Adding port mapping (%s %s/%s) at url "%s"', (private_ip, private_port, protocol, url))
@@ -165,7 +179,8 @@ class UPnp:
         )
 
         if error_code or error_description:
-            raise Exception('Error code %(code)s: %(description)s' % {'code': error_code, 'description': error_description})
+            raise Exception('Error code %(code)s: %(description)s' %
+                            {'code': error_code, 'description': error_description})
 
     @classmethod
     def delete_port_mapping(cls, router, protocol, public_port):
@@ -239,16 +254,20 @@ class UPnp:
         router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
 
         if not router:
-            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:1"), None)
+            router = next(
+                (r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:1"), None)
 
         if not router:
-            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
+            router = next(
+                (r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANPPPConnection:1"), None)
 
         if not router:
-            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:2"), None)
+            router = next(
+                (r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:2"), None)
 
         if not router:
-            router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
+            router = next(
+                (r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
 
         if not router:
             router = next((r for r in routers), None)

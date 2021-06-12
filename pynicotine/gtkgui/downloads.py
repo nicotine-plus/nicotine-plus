@@ -89,7 +89,8 @@ class Downloads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
-            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {'num': numfiles, 'user': username, 'folder': folder},
+            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {
+                'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
             callback_data=(conn, file_list)
         )

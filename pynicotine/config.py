@@ -432,7 +432,8 @@ class Config:
                 os.makedirs(path)
 
         except OSError as msg:
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': path, 'error': msg})
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+                    {'path': path, 'error': msg})
             return False
 
         return True
@@ -446,7 +447,8 @@ class Config:
                 os.makedirs(self.data_dir)
 
         except OSError as msg:
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"), {'path': self.data_dir, 'error': msg})
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+                    {'path': self.data_dir, 'error': msg})
 
     def load_config(self):
 
@@ -471,7 +473,8 @@ class Config:
             if not self.sections["server"]["command_aliases"] and os.path.exists(self.filename + ".alias"):
                 with open(self.filename + ".alias", 'rb') as file_handle:
                     from pynicotine.utils import RestrictedUnpickler
-                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(file_handle, encoding='utf-8').load()
+                    self.sections["server"]["command_aliases"] = RestrictedUnpickler(
+                        file_handle, encoding='utf-8').load()
 
         except Exception:
             return
@@ -538,7 +541,8 @@ class Config:
 
                 # Check if config option exists in defaults
                 elif j not in self.defaults[i] and i != "plugins" and j != "filter":
-                    log.add(_("Unknown config option '%(option)s' in section '%(section)s'"), {'option': j, 'section': i})
+                    log.add(_("Unknown config option '%(option)s' in section '%(section)s'"),
+                            {'option': j, 'section': i})
 
                 else:
                     """ Attempt to get the default value for a config option. If there's no default
@@ -569,14 +573,16 @@ class Config:
                             eval_val = val
 
                         if i != "plugins" and j != "filter":
-                            if (isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val != 0 and eval_val != 1) or \
-                                    (not isinstance(default_val, bool) and type(eval_val) != type(default_val)):
+                            if type(eval_val) == type(default_val) or \
+                                    isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val in (0, 1):
+                                pass
 
+                            else:
                                 raise TypeError("Invalid config value type detected")
 
                         self.sections[i][j] = eval_val
 
-                    except Exception:
+                    except TypeError:
                         # Value was unexpected, reset option
                         self.sections[i][j] = default_val
 
@@ -584,8 +590,7 @@ class Config:
                             (i[:120] + '..') if len(i) > 120 else i,
                             (j[:120] + '..') if len(j) > 120 else j,
                             (val[:120] + '..') if len(val) > 120 else val
-                        )
-                        )
+                        ))
 
         server = self.sections["server"]
 

@@ -38,7 +38,8 @@ from pynicotine.config import config
 
 class ImageLabel(Gtk.Box):
 
-    def __init__(self, label="", onclose=None, closebutton=False, hilite_image=None, show_hilite_image=True, status_image=None, show_status_image=False):
+    def __init__(self, label="", onclose=None, closebutton=False, hilite_image=None,
+                 show_hilite_image=True, status_image=None, show_status_image=False):
 
         Gtk.Box.__init__(self)
         self.set_hexpand(False)
@@ -233,7 +234,8 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, images, tabclosers=False, show_hilite_image=True, reorderable=True, show_status_image=False, notebookraw=None):
+    def __init__(self, images, tabclosers=False, show_hilite_image=True, reorderable=True,
+                 show_status_image=False, notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
