@@ -22,16 +22,9 @@ import pytest
 from collections import deque
 
 from pynicotine.config import Config
-from pynicotine.i18n import apply_translation
 from pynicotine.shares import Shares
 
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
-
-
-@pytest.fixture(scope="module", autouse=True)
-def setup():
-    # Setting gettext and locale
-    apply_translation()
 
 
 @pytest.fixture

@@ -31,7 +31,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.geoip.countrycodes import code2name
+from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -439,7 +439,7 @@ def get_country_tooltip_text(column_value, strip_prefix):
 
     column_value = column_value[len(strip_prefix):]
     if column_value:
-        return code2name(column_value)
+        return GeoIP.country_code_to_name(column_value)
 
     return _("Earth")
 

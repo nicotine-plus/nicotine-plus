@@ -32,7 +32,6 @@ import threading
 import time
 
 from pynicotine import slskmessages
-from pynicotine.i18n import apply_translation
 from pynicotine.logfacility import log
 from pynicotine.utils import rename_process
 
@@ -84,7 +83,6 @@ class Scanner:
             self.tinytag = TinyTag()
 
             rename_process(b'nicotine-scan')
-            apply_translation()
 
             if self.sharestype == "normal":
                 Shares.load_shares(self.share_dbs, [

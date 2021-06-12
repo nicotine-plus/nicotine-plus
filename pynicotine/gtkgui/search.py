@@ -34,7 +34,6 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.geoip.countrycodes import code2name
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
@@ -1151,7 +1150,7 @@ class Search:
             fn = model.get_value(iterator, 12)
             directory = fn.rsplit('\\', 1)[0]
             cc = model.get_value(iterator, 13)
-            country = "%s / %s" % (cc, code2name(cc))
+            country = "%s / %s" % (cc, self.frame.np.geoip.country_code_to_name(cc))
 
             data.append({
                 "user": user,

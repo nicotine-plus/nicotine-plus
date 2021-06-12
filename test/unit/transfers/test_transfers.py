@@ -22,15 +22,8 @@ import pytest
 from collections import deque
 
 from pynicotine.config import Config
-from pynicotine.i18n import apply_translation
 from pynicotine.pynicotine import NetworkEventProcessor
 from pynicotine.transfers import Transfers
-
-
-@pytest.fixture(scope="module", autouse=True)
-def setup():
-    # Setting gettext and locale
-    apply_translation()
 
 
 @pytest.fixture

@@ -39,8 +39,7 @@ from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import config
-from pynicotine.geoip.countrycodes import code2name
-from pynicotine.geoip.ip2location import IP2Location
+from pynicotine.geoip.geoip import GeoIP
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
 from pynicotine.nowplaying import NowPlaying
@@ -287,7 +286,7 @@ class NetworkEventProcessor:
             self.network_callback = self.network_event
 
         script_dir = os.path.dirname(__file__)
-        self.geoip = IP2Location(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
+        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
 
         self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
         self.statistics = Statistics(config, ui_callback)
@@ -692,7 +691,7 @@ class NetworkEventProcessor:
         self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, country_code)
 
         if country_code:
-            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': code2name(country_code)}
+            country = " (%(cc)s / %(country)s)" % {'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
         else:
             country = ""
 

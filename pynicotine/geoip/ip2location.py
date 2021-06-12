@@ -29,7 +29,7 @@ import socket
 MAX_IPV4_RANGE = 4294967295
 
 
-class IP2Location(object):
+class IP2Location:
     """ IP2Location country database """
 
     def __init__(self, filename):

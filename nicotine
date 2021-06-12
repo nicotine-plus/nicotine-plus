@@ -225,11 +225,8 @@ what version of Python was used to build the Nicotine
 binary package and what you try to run Nicotine+ with).""")
         return 1
 
-    from pynicotine.i18n import apply_translation
     from pynicotine.utils import rename_process
-
     rename_process(b'nicotine')
-    apply_translation()
 
     trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
     error = check_core_dependencies()

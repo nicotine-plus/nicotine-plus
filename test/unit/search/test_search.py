@@ -22,17 +22,10 @@ import pytest
 from collections import deque
 
 from pynicotine.config import Config
-from pynicotine.i18n import apply_translation
 from pynicotine.search import Search
 
 SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ [[ @@ auto -no yes'
 SEARCH_MODE = 'global'
-
-
-@pytest.fixture(scope="module", autouse=True)
-def setup():
-    # Setting gettext and locale
-    apply_translation()
 
 
 @pytest.fixture
