@@ -651,7 +651,6 @@ class ConnectToPeer(ServerMessage):
         self.type = type
         self.ip = None
         self.port = None
-        self.token = None
         self.privileged = None
 
     def make_network_message(self):
