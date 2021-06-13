@@ -29,6 +29,12 @@ from pynicotine.upnp.upnp import UPnp
 class UPnPPortMapping:
     """ Class that handles UPnP Port Mapping """
 
+    def __init__(self):
+
+        self.externalwanport = None
+        self.internalipaddress = None
+        self.internallanport = None
+
     def add_port_mapping(self, np):
         """
         This function supports creating a Port Mapping via the UPnP
@@ -46,8 +52,8 @@ class UPnPPortMapping:
         try:
             self._add_port_mapping(np)
 
-        except Exception as e:
-            log.add(_('UPnP exception: %(error)s'), {'error': str(e)})
+        except Exception as error:
+            log.add(_('UPnP exception: %(error)s'), {'error': error})
             log.add(_('Failed to automate the creation of UPnP Port Mapping rule.'))
             return
 
@@ -78,20 +84,20 @@ class UPnPPortMapping:
             raise RuntimeError('UPnP does not work on this network')
 
         # Create a UDP socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        local_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
         # Send a broadcast packet on a local address (doesn't need to be reachable,
         # but MacOS requires port to be non-zero)
-        s.connect(('10.255.255.255', 1))
+        local_socket.connect(('10.255.255.255', 1))
 
         # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.
-        self.internalipaddress = s.getsockname()[0]
+        self.internalipaddress = local_socket.getsockname()[0]
 
         # Close the socket
-        s.close()
+        local_socket.close()
 
         # Store the Local LAN port
-        self.internallanport = np.protothread._p.getsockname()[1]
+        self.internallanport = np.protothread._listen_socket.getsockname()[1]
         self.externalwanport = self.internallanport
 
         # Do the port mapping
@@ -112,8 +118,8 @@ class UPnPPortMapping:
                 lease_duration=86400  # Expires in 24 hours
             )
 
-        except Exception as e:
+        except Exception as error:
             raise RuntimeError(
                 _('Failed to map the external WAN port: %(error)s') %
-                {'error': str(e)}
+                {'error': error}
             )

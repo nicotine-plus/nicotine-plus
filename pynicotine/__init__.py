@@ -104,10 +104,10 @@ def check_core_dependencies():
             map(str, sys.version_info[:3])
         )
 
-    except AssertionError as e:
+    except AssertionError as error:
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
-            "old_version": e,
+            "old_version": error,
             "min_version": "3.6"
         }
 
@@ -167,7 +167,6 @@ def run_headless(network_processor, ci_mode):
 
         while not network_processor.shutdown:
             time.sleep(0.2)
-            pass
 
     config.write_configuration()
     return 0

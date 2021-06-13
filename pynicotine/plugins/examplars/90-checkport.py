@@ -19,9 +19,9 @@ class Plugin(BasePlugin):
     __name__ = "Port Checker"
     __version__ = "2008-11-26r00"
     __author__ = "quinox"
-    __desc__ = """By examining chatroom messages this plugin tries to find people that have a potential
-firewall/router problem, and if found tests their port. If a closed port is encountered a message will
-be sent to him/her."""
+    __desc__ = ("By examining chatroom messages this plugin tries to find people that have a potential "
+                "firewall/router problem, and if found tests their port. If a closed port is encountered "
+                "a message will be sent to him/her.")
 
     def init(self):
         # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan
@@ -59,8 +59,8 @@ be sent to him/her."""
             elif status in ('closed',):
                 self.saypublic(
                     self.checkroom,
-                    '%s: Alas, your firewall and/or router is not configured properly. I could not \
-                    contact you at port %s' % (user, port))
+                    ('%s: Alas, your firewall and/or router is not configured properly. I could not '
+                     'contact you at port %s') % (user, port))
             else:
                 if self.checked[user] in (1,):
                     self.saypublic(

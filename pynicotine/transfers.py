@@ -49,22 +49,21 @@ from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import write_file_and_backup
 
 
-class Transfer(object):
+class Transfer:
     """ This class holds information about a single transfer. """
 
     __slots__ = ("conn", "user", "filename",
                  "path", "req", "size", "file", "starttime", "lasttime",
                  "offset", "currentbytes", "lastbytes", "speed", "timeelapsed",
-                 "timeleft", "timequeued",
-                 "modifier", "place", "bitrate", "length", "iter", "_status",
-                 "laststatuschange", "legacy_attempt")
+                 "timeleft", "timequeued", "modifier", "place", "bitrate", "length",
+                 "iterator", "_status", "laststatuschange", "legacy_attempt")
 
     def __init__(
         self, conn=None, user=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
         offset=None, currentbytes=None, speed=None, timeelapsed=None,
-        timeleft=None, timequeued=None, requestconn=None,
-        modifier=None, place=0, bitrate=None, length=None, iter=None, legacy_attempt=False
+        timeleft=None, timequeued=None, modifier=None, place=0, bitrate=None, length=None,
+        iterator=None, legacy_attempt=False
     ):
         self.user = user
         self.filename = filename
@@ -86,7 +85,7 @@ class Transfer(object):
         self.place = place  # Queue position
         self.bitrate = bitrate
         self.length = length
-        self.iter = iter
+        self.iterator = iterator
         self.legacy_attempt = legacy_attempt
         self.setstatus(status)
 
@@ -101,7 +100,7 @@ class Transfer(object):
 
 class TransferTimeout:
 
-    __slots__ = "transfer"
+    __slots__ = ("transfer",)
 
     def __init__(self, transfer):
         self.transfer = transfer
@@ -171,11 +170,11 @@ class Transfers:
             # New file format
             return downloads_file_json
 
-        elif os.path.exists(downloads_file_1_4_2):
+        if os.path.exists(downloads_file_1_4_2):
             # Nicotine+ 1.4.2+
             return downloads_file_1_4_2
 
-        elif os.path.exists(downloads_file_1_4_1):
+        if os.path.exists(downloads_file_1_4_1):
             # Nicotine <=1.4.1
             return downloads_file_1_4_1
 
@@ -191,7 +190,8 @@ class Transfers:
 
         return None
 
-    def load_current_transfers_format(self, transfers_file):
+    @staticmethod
+    def load_current_transfers_format(transfers_file):
         """ Loads a file of transfers in json format """
 
         transfers = []
@@ -206,7 +206,8 @@ class Transfers:
 
         return transfers
 
-    def load_legacy_transfers_format(self, downloads_file):
+    @staticmethod
+    def load_legacy_transfers_format(downloads_file):
         """ Loads a download queue file in pickle format (legacy) """
 
         download_queue = []
@@ -295,9 +296,9 @@ class Transfers:
 
     """ Privileges """
 
-    def set_privileged_users(self, list):
-        for i in list:
-            self.add_to_privileged(i)
+    def set_privileged_users(self, user_list):
+        for user in user_list:
+            self.add_to_privileged(user)
 
     def add_to_privileged(self, user):
         self.privilegedusers.add(user)
@@ -340,7 +341,8 @@ class Transfers:
 
     """ File Actions """
 
-    def get_file_size(self, filename):
+    @staticmethod
+    def get_file_size(filename):
 
         try:
             size = os.path.getsize(filename)
@@ -350,20 +352,21 @@ class Transfers:
 
         return size
 
-    def close_file(self, file, transfer):
+    @staticmethod
+    def close_file(file_handle, transfer):
 
         transfer.file = None
 
-        if file is None:
+        if file_handle is None:
             return
 
         try:
-            file.close()
+            file_handle.close()
 
-        except Exception as e:
+        except Exception as error:
             log.add_transfer("Failed to close file %(filename)s: %(error)s", {
-                "filename": file.name,
-                "error": e
+                "filename": file_handle.name,
+                "error": error
             })
 
     """ Limits """
@@ -587,7 +590,7 @@ class Transfers:
                     for file in files:
                         virtualpath = directory.rstrip('\\') + '\\' + file[1]
                         size = file[2]
-                        h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+                        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
 
                         self.get_file(
                             username, virtualpath, destination,
@@ -1083,28 +1086,28 @@ class Transfers:
                 self.download_folder_error(i, strerror)
 
             else:
-                f = None
+                file_handle = None
                 try:
                     from hashlib import md5
-                    m = md5()
-                    m.update((i.filename + i.user).encode('utf-8'))
+                    md5sum = md5()
+                    md5sum.update((i.filename + i.user).encode('utf-8'))
 
                     basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
-                    fname = os.path.join(incompletedir, "INCOMPLETE" + m.hexdigest() + basename)
-                    f = open(fname, 'ab+')
+                    fname = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + basename)
+                    file_handle = open(fname, 'ab+')
 
                     if self.config.sections["transfers"]["lock"]:
                         try:
                             import fcntl
                             try:
-                                fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                                fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
                             except IOError as strerror:
                                 log.add(_("Can't get an exclusive lock on file - I/O error: %s"), strerror)
                         except ImportError:
                             pass
 
-                    f.seek(0, 2)
-                    size = f.tell()
+                    file_handle.seek(0, 2)
+                    size = file_handle.tell()
 
                 except IOError as strerror:
                     log.add(_("Download I/O error: %s"), strerror)
@@ -1114,7 +1117,7 @@ class Transfers:
 
                 else:
                     i.currentbytes = size
-                    i.file = f
+                    i.file = file_handle
                     i.place = 0
                     i.offset = size
                     i.starttime = time.time()
@@ -1124,15 +1127,15 @@ class Transfers:
                     if i.size > size:
                         i.status = "Transferring"
                         i.legacy_attempt = False
-                        self.queue.append(slskmessages.DownloadFile(i.conn, size, f, i.size))
+                        self.queue.append(slskmessages.DownloadFile(i.conn, size, file_handle, i.size))
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
                                 "user": i.user,
-                                "file": "%s" % f.name
+                                "file": "%s" % file_handle.name
                             }
                         )
                     else:
-                        self.download_finished(f, i)
+                        self.download_finished(file_handle, i)
                         needupdate = False
 
             if self.downloadsview:
@@ -1161,7 +1164,7 @@ class Transfers:
         if i.conn is None:
             i.conn = msg.conn
             i.req = None
-            f = None
+            file_handle = None
 
             if i in self.transfer_request_times:
                 del self.transfer_request_times[i]
@@ -1169,7 +1172,7 @@ class Transfers:
             try:
                 # Open File
                 realpath = self.eventprocessor.shares.virtual2real(i.filename)
-                f = open(realpath, "rb")
+                file_handle = open(realpath, "rb")
 
             except IOError as strerror:
                 log.add(_("Upload I/O error: %s"), strerror)
@@ -1178,9 +1181,9 @@ class Transfers:
                 i.status = "Local file error"
 
             else:
-                self.queue.append(slskmessages.UploadFile(i.conn, file=f, size=i.size))
+                self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
                 i.status = "Transferring"
-                i.file = f
+                i.file = file_handle
 
                 if self.is_privileged(i.user):
                     i.modifier = _("privileged")
@@ -1211,7 +1214,7 @@ class Transfers:
                 # If filesize is 0, we will not receive a UploadFile message later. Finish now.
                 i.conn = None
                 i.lasttime = time.time()
-                self.upload_finished(i, file=f)
+                self.upload_finished(i, file_handle=file_handle)
 
         else:
             log.add_transfer("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
@@ -1254,7 +1257,7 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-            elif i.status != "Aborted":
+            if i.status != "Aborted":
                 if i.status == "Transferring":
                     self.abort_transfer(i, reason=msg.reason)
 
@@ -1296,19 +1299,18 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-            else:
-                """ Already failed once previously, give up """
+            """ Already failed once previously, give up """
 
-                i.status = "Remote file error"
+            i.status = "Remote file error"
 
-                if self.downloadsview:
-                    self.downloadsview.update(i)
+            if self.downloadsview:
+                self.downloadsview.update(i)
 
-                log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-                    "filename": i.filename,
-                    "user": user,
-                    "reason": "Remote file error"
-                })
+            log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
+                "filename": i.filename,
+                "user": user,
+                "reason": "Remote file error"
+            })
 
     def file_download(self, msg):
         """ A file download is in progress"""
@@ -1438,7 +1440,7 @@ class Transfers:
                 self.check_upload_queue()
                 sleep(0.01)
             else:
-                self.upload_finished(i, file=msg.file)
+                self.upload_finished(i, file_handle=msg.file)
                 needupdate = False
 
             if needupdate and self.uploadsview:
@@ -1446,13 +1448,13 @@ class Transfers:
 
             break
 
-    def conn_close(self, conn, addr, user, error):
+    def conn_close(self, conn, user, error):
         """ The remote user has closed the connection either because
         he logged off, or because there's a network problem. """
 
         for i in self.downloads:
             if i.conn == conn:
-                self._conn_close(conn, addr, i, "download")
+                self._conn_close(i, "download")
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in self.uploads.copy():
@@ -1462,21 +1464,21 @@ class Transfers:
             if i.user != user:
                 continue
 
-            self._conn_close(conn, addr, i, "upload")
+            self._conn_close(i, "upload")
 
-    def _conn_close(self, conn, addr, i, type):
+    def _conn_close(self, i, transfer_type):
 
         self.abort_transfer(i)
         auto_clear = False
 
         if i.status != "Finished":
-            if type == "download":
+            if transfer_type == "download":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
 
-            elif type == "upload":
+            elif transfer_type == "upload":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
@@ -1489,10 +1491,10 @@ class Transfers:
 
                 auto_clear = True
 
-        if type == "download" and self.downloadsview:
+        if transfer_type == "download" and self.downloadsview:
             self.downloadsview.update(i)
 
-        elif type == "upload":
+        elif transfer_type == "upload":
             curtime = time.time()
             for j in self.uploads:
                 if j.user == i.user:
@@ -1782,7 +1784,7 @@ class Transfers:
         """ Check if a user who previously queued a file has logged out since """
 
         try:
-            return (self.users[user].status <= 0)
+            return self.users[user].status <= 0
 
         except (KeyError, TypeError):
             return False
@@ -1819,15 +1821,16 @@ class Transfers:
         if self.config.sections["transfers"]["useupslots"]:
             maxupslots = self.config.sections["transfers"]["uploadslots"]
             return maxupslots
-        else:
-            lstlen = sum(1 for i in self.uploads if i.conn is not None)
 
-            if self.allow_new_uploads():
-                return lstlen + 1
-            else:
-                return lstlen
+        lstlen = sum(1 for i in self.uploads if i.conn is not None)
 
-    def get_time(self, seconds):
+        if self.allow_new_uploads():
+            return lstlen + 1
+
+        return lstlen
+
+    @staticmethod
+    def get_time(seconds):
 
         sec = int(seconds % 60)
         minutes = int(seconds / 60 % 60)
@@ -1865,13 +1868,14 @@ class Transfers:
                 if not os.path.isdir(downloaddir):
                     os.makedirs(downloaddir)
 
-            except Exception as e:
+            except Exception as error:
                 log.add(_("Unable to save download to username subfolder, falling back "
-                          "to default download folder. Error: %s") % e)
+                          "to default download folder. Error: %s") % error)
 
         return downloaddir
 
-    def get_renamed(self, name):
+    @staticmethod
+    def get_renamed(name):
         """ When a transfer is finished, we remove INCOMPLETE~ or INCOMPLETE
         prefix from the file's name.
 
@@ -1906,7 +1910,7 @@ class Transfers:
             else:
                 log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
 
-    def folder_downloaded_actions(self, user, filepath, folderpath):
+    def folder_downloaded_actions(self, user, folderpath):
 
         # walk through downloads and break if any file in the same folder exists, else execute
         for i in self.downloads:
@@ -1994,7 +1998,7 @@ class Transfers:
 
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
-        self.folder_downloaded_actions(i.user, newname, i.path)
+        self.folder_downloaded_actions(i.user, i.path)
 
         # Attempt to autoclear this download, if configured
         if not self.auto_clear_download(i) and self.downloadsview:
@@ -2009,14 +2013,14 @@ class Transfers:
             }
         )
 
-    def upload_finished(self, i, file=None):
+    def upload_finished(self, i, file_handle=None):
 
         if i.speed is not None:
             speedbytes = int(i.speed)
             self.eventprocessor.speed = speedbytes
             self.queue.append(slskmessages.SendUploadSpeed(speedbytes))
 
-        self.close_file(file, i)
+        self.close_file(file_handle, i)
 
         ip_address = None
         if i.conn is not None:
@@ -2192,7 +2196,7 @@ class Transfers:
 
         while True:
             # Check if any uploads exist
-            if not len(self.uploads):
+            if not self.uploads:
                 return
 
             if not self.allow_new_uploads():
@@ -2356,13 +2360,13 @@ class Transfers:
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
                 for i in self.uploads if i.status == "Finished"]
 
-    def save_downloads_callback(self, f):
+    def save_downloads_callback(self, filename):
         import json
-        json.dump(self.get_downloads(), f, ensure_ascii=False)
+        json.dump(self.get_downloads(), filename, ensure_ascii=False)
 
-    def save_uploads_callback(self, f):
+    def save_uploads_callback(self, filename):
         import json
-        json.dump(self.get_uploads(), f, ensure_ascii=False)
+        json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
     def save_transfers(self, transfer_type):
         """ Save list of transfers """

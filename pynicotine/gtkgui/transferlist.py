@@ -492,8 +492,8 @@ class TransferList:
             percent = 100
 
         # Modify old transfer
-        if transfer.iter is not None:
-            initer = transfer.iter
+        if transfer.iterator is not None:
+            initer = transfer.iterator
 
             self.transfersmodel.set_value(initer, 3, hstatus)
             self.transfersmodel.set_value(initer, 4, hplace)
@@ -624,7 +624,7 @@ class TransferList:
                     transfer
                 )
             )
-            transfer.iter = iterator
+            transfer.iterator = iterator
 
             # Expand path
             if parent is not None:
@@ -669,8 +669,8 @@ class TransferList:
         if not cleartreeviewonly:
             self.list.remove(transfer)
 
-        if transfer.iter is not None:
-            self.transfersmodel.remove(transfer.iter)
+        if transfer.iterator is not None:
+            self.transfersmodel.remove(transfer.iterator)
 
         self.update_parent_rows(only_remove=True)
 
@@ -691,7 +691,7 @@ class TransferList:
 
         if self.list is not None:
             for transfer in self.list:
-                transfer.iter = None
+                transfer.iterator = None
 
     def add_popup_menu_user(self, popup, user):
 

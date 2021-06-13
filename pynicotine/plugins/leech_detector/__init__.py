@@ -27,7 +27,7 @@ class Plugin(BasePlugin):
     def init(self):
         self.probed = {}
 
-    def UploadQueuedNotification(self, user, virualfile, realfile):  # noqa
+    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
         try:
             self.probed[user]
         except KeyError:

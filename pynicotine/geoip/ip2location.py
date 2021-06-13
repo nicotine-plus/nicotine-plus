@@ -71,10 +71,10 @@ class IP2Location:
 
         return country_code
 
-    def _get_record(self, ip):
+    def _get_record(self, ip_address):
 
         low = 0
-        ipnum = struct.unpack('!L', socket.inet_aton(ip))[0]
+        ipnum = struct.unpack('!L', socket.inet_aton(ip_address))[0]
 
         if ipnum == MAX_IPV4_RANGE:
             ipno = ipnum - 1
@@ -96,8 +96,8 @@ class IP2Location:
 
             if ipfrom <= ipno < ipto:
                 return self._read_record(mid)
+
+            if ipno < ipfrom:
+                high = mid - 1
             else:
-                if ipno < ipfrom:
-                    high = mid - 1
-                else:
-                    low = mid + 1
+                low = mid + 1

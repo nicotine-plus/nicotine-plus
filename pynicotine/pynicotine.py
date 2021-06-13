@@ -931,7 +931,7 @@ Error: %(error)s""", {
                         del self.out_indirect_conn_request_times[i]
 
                     if self.transfers is not None:
-                        self.transfers.conn_close(conn, addr, i.username, error)
+                        self.transfers.conn_close(conn, i.username, error)
 
                     if i.type == 'D':
                         self.send_have_no_parent()

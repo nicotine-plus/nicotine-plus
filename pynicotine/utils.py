@@ -28,19 +28,16 @@ This module contains utility functions.
 import errno
 import os
 import pickle
-import sys
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
-win32 = sys.platform.startswith("win")
-
-illegalpathchars = ["?", ":", ">", "<", "|", "*", '"']
-illegalfilechars = illegalpathchars + ["\\", "/"]
-replacementchar = '_'
+ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
+ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
+REPLACEMENTCHAR = '_'
 
 
-def rename_process(new_name, debug=False):
+def rename_process(new_name, debug_info=False):
 
     errors = []
 
@@ -51,8 +48,8 @@ def rename_process(new_name, debug=False):
         libc = ctypes.CDLL(None)
         libc.prctl(15, new_name, 0, 0, 0)
 
-    except Exception as e:
-        errors.append(e)
+    except Exception as error:
+        errors.append(error)
         errors.append("Failed GNU/Linux style")
 
         try:
@@ -61,11 +58,11 @@ def rename_process(new_name, debug=False):
             libc = ctypes.CDLL(None)
             libc.setproctitle(new_name)
 
-        except Exception as e:
-            errors.append(e)
+        except Exception as error:
+            errors.append(error)
             errors.append("Failed BSD style")
 
-    if debug and errors:
+    if debug_info and errors:
         msg = ["Errors occurred while trying to change process name:"]
         for i in errors:
             msg.append("%s" % (i,))
@@ -74,8 +71,8 @@ def rename_process(new_name, debug=False):
 
 def clean_file(filename):
 
-    for char in illegalfilechars:
-        filename = filename.replace(char, replacementchar)
+    for char in ILLEGALFILECHARS:
+        filename = filename.replace(char, REPLACEMENTCHAR)
 
     return filename
 
@@ -90,8 +87,8 @@ def clean_path(path, absolute=False):
         drive = path[:3]
         path = path[3:]
 
-    for char in illegalpathchars:
-        path = path.replace(char, replacementchar)
+    for char in ILLEGALPATHCHARS:
+        path = path.replace(char, REPLACEMENTCHAR)
 
     path = ''.join([drive, path])
 
@@ -109,10 +106,10 @@ def get_path(folder_name, base_name, callback, data=None):
         filepath = os.path.join(folder_name, base_name)
         callback(filepath, data)
 
-    except OSError as e:
-        if e.errno != errno.EINVAL:
+    except OSError as error:
+        if error.errno != errno.EINVAL:
             # The issue is not caused by invalid path characters, raise error as usual
-            raise OSError(e)
+            raise OSError from error
 
         # Use path with forbidden characters removed (NTFS/FAT)
         filepath = os.path.join(folder_name, clean_file(base_name))
@@ -142,8 +139,7 @@ def get_latest_version():
 
 def make_version(version):
 
-    s = version.split(".")
-    major, minor, patch = (int(i) for i in s[:3])
+    major, minor, patch = (int(i) for i in version.split(".")[:3])
     stable = 1
 
     if "dev" in version or \
@@ -173,7 +169,7 @@ def get_result_bitrate_length(filesize, attributes):
         third = attributes[2]
 
         # Sometimes the vbr indicator is in third position
-        if third == 0 or third == 1:
+        if third in (0, 1):
 
             if third == 1:
                 h_bitrate = " (vbr)"
@@ -185,7 +181,7 @@ def get_result_bitrate_length(filesize, attributes):
             h_length = '%i:%02i' % (second / 60, second % 60)
 
         # Sometimes the vbr indicator is in second position
-        elif second == 0 or second == 1:
+        elif second in (0, 1):
 
             if second == 1:
                 h_bitrate = " (vbr)"
@@ -219,7 +215,7 @@ def get_result_bitrate_length(filesize, attributes):
         second = attributes[1]
 
         # Sometimes the vbr indicator is in second position
-        if second == 0 or second == 1:
+        if second in (0, 1):
 
             # If it's a vbr file we can't deduce the length
             if second == 1:
@@ -267,8 +263,11 @@ def human_size(filesize):
                 return "%3.1f %s" % (filesize, i)
 
             filesize /= step_unit
+
     except TypeError:
-        return filesize
+        pass
+
+    return filesize
 
 
 speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
@@ -283,18 +282,21 @@ def human_speed(filesize):
                 return "%3.1f %s" % (filesize, i)
 
             filesize /= step_unit
+
     except TypeError:
-        return filesize
+        pass
+
+    return filesize
 
 
 def humanize(number):
 
     fashion = config.sections["ui"]["decimalsep"]
 
-    if fashion == "" or fashion == "<None>":
+    if fashion in ("", "<None>"):
         return str(number)
 
-    elif fashion == "<space>":
+    if fashion == "<space>":
         fashion = " "
 
     number = str(number)
@@ -452,8 +454,8 @@ def write_file_and_backup(path, callback, protect=False):
         oldumask = os.umask(0o077)
 
     try:
-        with open(path, "w", encoding="utf-8") as f:
-            callback(f)
+        with open(path, "w", encoding="utf-8") as file_handle:
+            callback(file_handle)
 
     except Exception as error:
         log.add(_("Unable to save file %(path)s: %(error)s"), {
@@ -476,7 +478,10 @@ def write_file_and_backup(path, callback, protect=False):
         os.umask(oldumask)
 
 
-def http_request(url_scheme, base_url, path, request_type="GET", body="", headers={}, timeout=10, redirect_depth=0):
+def http_request(url_scheme, base_url, path, request_type="GET", body="", headers=None, timeout=10, redirect_depth=0):
+
+    if headers is None:
+        headers = {}
 
     if redirect_depth > 15:
         raise Exception("Redirected too many times, giving up")
@@ -537,16 +542,15 @@ def add_alias(rest):
 
         if args[0] in aliases:
             return "Alias %s: %s\n" % (args[0], aliases[args[0]])
-        else:
-            return _("No such alias (%s)") % rest + "\n"
 
-    else:
-        m = "\n" + _("Aliases:") + "\n"
+        return _("No such alias (%s)") % rest + "\n"
 
-        for (key, value) in aliases.items():
-            m = m + "%s: %s\n" % (key, value)
+    m = "\n" + _("Aliases:") + "\n"
 
-        return m + "\n"
+    for (key, value) in aliases.items():
+        m = m + "%s: %s\n" % (key, value)
+
+    return m + "\n"
 
 
 def unalias(rest):
@@ -559,8 +563,7 @@ def unalias(rest):
 
         return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
 
-    else:
-        return _("No such alias (%(alias)s)\n") % {'alias': rest}
+    return _("No such alias (%(alias)s)\n") % {'alias': rest}
 
 
 def is_alias(cmd):
@@ -598,8 +601,7 @@ def _expand_alias(aliases, cmd):
             if line[ix] == ")":
                 if level == 0:
                     return ret
-                else:
-                    level = level - 1
+                level = level - 1
             ret = ret + line[ix]
             ix = ix + 1
         return ""

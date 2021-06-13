@@ -192,20 +192,21 @@ else:
         """ Maximum number of files a process can open is 10240 on macOS.
         macOS reports INFINITE as hard limit, so we need this special case. """
 
-        maxfilelimit = 10240
+        MAXFILELIMIT = 10240
     else:
-        _softlimit, maxfilelimit = resource.getrlimit(resource.RLIMIT_NOFILE)
+        _SOFTLIMIT, MAXFILELIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)
 
     try:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (maxfilelimit, maxfilelimit))
-    except Exception as e:
-        log.add("Failed to set RLIMIT_NOFILE: %s", e)
+        resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
+
+    except Exception as error:
+        log.add("Failed to set RLIMIT_NOFILE: %s", error)
 
     """ Set the maximum number of open sockets to a lower value than the hard limit,
     otherwise we just waste resources.
     The maximum is 1024, but can be lower if the file limit is too low. """
 
-    MAXSOCKETS = min(max(int(maxfilelimit * 0.75), 50), 1024)
+    MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 1024)
 
 
 class Connection:
@@ -427,8 +428,9 @@ class SlskProtoThread(threading.Thread):
         for i in self.peercodes:
             self.peerclasses[self.peercodes[i]] = i
 
-        self._p = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._p.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._server_socket = None
 
         self._conns = {}
         self._connsinprogress = {}
@@ -446,11 +448,11 @@ class SlskProtoThread(threading.Thread):
 
         for listenport in range(int(portrange[0]), int(portrange[1]) + 1):
             try:
-                self._p.bind((bindip or '', listenport))
+                self._listen_socket.bind((bindip or '', listenport))
             except socket.error:
                 listenport = None
             else:
-                self._p.listen(1)
+                self._listen_socket.listen(1)
                 self._ui_callback([IncPort(listenport)])
                 break
 
@@ -471,10 +473,12 @@ class SlskProtoThread(threading.Thread):
                 )
             self._ui_callback([PopupMessage(short_message, long_message)])
 
-    def _is_upload(self, conn):
+    @staticmethod
+    def _is_upload(conn):
         return conn.__class__ is PeerConnection and conn.fileupl is not None
 
-    def _is_download(self, conn):
+    @staticmethod
+    def _is_download(conn):
         return conn.__class__ is PeerConnection and conn.filedown is not None
 
     def _calc_transfer_speed(self, i):
@@ -487,19 +491,20 @@ class SlskProtoThread(threading.Thread):
 
         if elapsed == 0:
             return 0
-        elif self._is_upload(i):
-            return i.sentbytes2 / elapsed
-        else:
-            return i.readbytes2 / elapsed
 
-    def _calc_upload_limit_by_transfer(self, conns, i):
+        if self._is_upload(i):
+            return i.sentbytes2 / elapsed
+
+        return i.readbytes2 / elapsed
+
+    def _calc_upload_limit_by_transfer(self, conns):
         self.total_uploads = sum(1 for j in conns.values() if self._is_upload(j))
 
         return int(self._uploadlimit[1] * 1024.0)
 
-    def _calc_upload_limit_by_total(self, conns, i):
+    def _calc_upload_limit_by_total(self, conns):
         max_limit = self._uploadlimit[1] * 1024.0
-        bw = 0.0
+        bandwidth = 0.0
         self.total_uploads = 1
 
         """ Skip first upload
@@ -508,20 +513,18 @@ class SlskProtoThread(threading.Thread):
 
         uploads = islice((j for j in conns.values() if self._is_upload(j)), 1, None)
         for j in uploads:
-            bw += self._calc_transfer_speed(j)
+            bandwidth += self._calc_transfer_speed(j)
             self.total_uploads += 1
 
-        limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum upload speed per transfer
+        limit = int(max(1024, max_limit - bandwidth))  # 1 KB/s is the minimum upload speed per transfer
         return limit
 
-    def _calc_upload_limit_none(self, conns, i):
+    def _calc_upload_limit_none(self, conns):
         self.total_uploads = sum(1 for j in conns.values() if self._is_upload(j))
 
-        return None
-
-    def _calc_download_limit_by_total(self, conns, i):
+    def _calc_download_limit_by_total(self, conns):
         max_limit = self._downloadlimit[1] * 1024.0
-        bw = 0.0
+        bandwidth = 0.0
         self.total_downloads = 1
 
         """ Skip first download
@@ -530,14 +533,14 @@ class SlskProtoThread(threading.Thread):
 
         downloads = islice((j for j in conns.values() if self._is_download(j)), 1, None)
         for j in downloads:
-            bw += self._calc_transfer_speed(j)
+            bandwidth += self._calc_transfer_speed(j)
             self.total_downloads += 1
 
         if max_limit == 0:
             # Download limit disabled
             limit = 0
         else:
-            limit = int(max(1024, max_limit - bw))  # 1 KB/s is the minimum download speed per transfer
+            limit = int(max(1024, max_limit - bandwidth))  # 1 KB/s is the minimum download speed per transfer
 
         return limit
 
@@ -549,7 +552,8 @@ class SlskProtoThread(threading.Thread):
 
         return len(connection.obuf) > 0 or len(connection.ibuf) > 0
 
-    def parse_file_req(self, conn, msg_buffer):
+    @staticmethod
+    def parse_file_req(conn, msg_buffer):
         msg = None
 
         # File Request messages are 4 bytes or greater in length
@@ -560,7 +564,8 @@ class SlskProtoThread(threading.Thread):
 
         return msg, msg_buffer
 
-    def parse_offset(self, conn, msg_buffer):
+    @staticmethod
+    def parse_offset(msg_buffer):
         offset = None
 
         if len(msg_buffer) >= 8:
@@ -583,7 +588,7 @@ class SlskProtoThread(threading.Thread):
             if msgsize + 4 > len(msg_buffer):
                 break
 
-            elif msgtype in self.serverclasses:
+            if msgtype in self.serverclasses:
                 msg = self.serverclasses[msgtype]()
                 msg.parse_network_message(msg_buffer[8:msgsize + 4])
                 msgs.append(msg)
@@ -651,7 +656,7 @@ class SlskProtoThread(threading.Thread):
 
         elif conn.fileupl is not None:
             if conn.fileupl.offset is None:
-                offset, msg_buffer = self.parse_offset(conn, msg_buffer)
+                offset, msg_buffer = self.parse_offset(msg_buffer)
 
                 if offset is not None:
                     try:
@@ -688,7 +693,7 @@ class SlskProtoThread(threading.Thread):
             if msgsize + 4 > len(msg_buffer):
                 break
 
-            elif conn.init is None:
+            if conn.init is None:
                 # Unpack Peer Connections
                 if msg_buffer[4] == 0:
                     msg = PierceFireWall(conn)
@@ -751,9 +756,10 @@ class SlskProtoThread(threading.Thread):
                                 if conn.addr is not None:
                                     host = conn.addr[0]
                                     port = conn.addr[1]
-                            debugmessage = "There was an error while unpacking Peer message type %(type)s size "
-                            + "%(size)i contents %(msg_buffer)s from user: %(user)s, "
-                            + "%(host)s:%(port)s" % {
+
+                            debugmessage = ("There was an error while unpacking Peer message type %(type)s size "
+                                            "%(size)i contents %(msg_buffer)s from user: %(user)s, "
+                                            "%(host)s:%(port)s") % {
                                 'type': msgname, 'size': msgsize - 4,
                                 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user,
                                 'host': host, 'port': port}
@@ -775,22 +781,10 @@ class SlskProtoThread(threading.Thread):
                         host = conn.addr[0]
                         port = conn.addr[1]
 
-                    # Unknown Peer Message
-                    x = 0
-                    newbuf = ""
-
-                    # massive speedup in the status log with the newline
-                    # wrapping is incredibly slow
-                    for char in msg_buffer[8:msgsize + 4].__repr__():
-                        if x % 80 == 0:
-                            newbuf += "\n"
-                        newbuf += char
-                        x += 1
-
-                    debugmessage = "Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
-                    + "from user: %(user)s, %(host)s:%(port)s" % {
-                        'type': msgtype, 'size': msgsize - 4, 'msg_buffer': newbuf, 'user': conn.init.user,
-                        'host': host, 'port': port}
+                    debugmessage = ("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
+                                    "from user: %(user)s, %(host)s:%(port)s") % {
+                        'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(),
+                        'user': conn.init.user, 'host': host, 'port': port}
                     msgs.append(debugmessage)
 
             else:
@@ -854,7 +848,8 @@ class SlskProtoThread(threading.Thread):
                 i.starttime = curtime
                 i.sentbytes2 = 0
 
-    def set_server_socket_keepalive(self, server_socket, idle=10, interval=4, count=10):
+    @staticmethod
+    def set_server_socket_keepalive(server_socket, idle=10, interval=4, count=10):
         """ Ensure we are disconnected from the server in case of connectivity issues,
         by sending TCP keepalive pings. Assuming default values are used, once we reach
         10 seconds of idle time, we start sending keepalive pings once every 4 seconds.
@@ -1058,15 +1053,15 @@ class SlskProtoThread(threading.Thread):
                 elif msg_obj.__class__ is SetUploadLimit:
                     if msg_obj.uselimit:
                         if msg_obj.limitby:
-                            cb = self._calc_upload_limit_by_total
+                            callback = self._calc_upload_limit_by_total
                         else:
-                            cb = self._calc_upload_limit_by_transfer
+                            callback = self._calc_upload_limit_by_transfer
 
                     else:
-                        cb = self._calc_upload_limit_none
+                        callback = self._calc_upload_limit_none
 
                     self._reset_counters(conns)
-                    self._uploadlimit = (cb, msg_obj.limit)
+                    self._uploadlimit = (callback, msg_obj.limit)
 
                 elif msg_obj.__class__ is SetDownloadLimit:
                     self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
@@ -1174,7 +1169,7 @@ class SlskProtoThread(threading.Thread):
         """ Actual networking loop is here."""
 
         # @var p Peer / Listen Port
-        p = self._p
+        listen_socket = self._listen_socket
 
         # @var s Server Port
         self._server_socket = server_socket = None
@@ -1210,7 +1205,7 @@ class SlskProtoThread(threading.Thread):
                     if conn.obuf or \
                             (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
                         if self._is_upload(conn):
-                            limit = self._uploadlimit[0](conns, conn)
+                            limit = self._uploadlimit[0](conns)
 
                             if limit is not None:
                                 limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
@@ -1228,7 +1223,7 @@ class SlskProtoThread(threading.Thread):
                     event_masks = selectors.EVENT_READ | selectors.EVENT_WRITE
                     selector.register(i, event_masks)
 
-                selector.register(p, selectors.EVENT_READ)
+                selector.register(listen_socket, selectors.EVENT_READ)
 
                 key_events = selector.select(timeout)
                 input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
@@ -1263,9 +1258,9 @@ class SlskProtoThread(threading.Thread):
                 self.last_conncount_ui_update = curtime
 
             # Listen / Peer Port
-            if p in input_list:
+            if listen_socket in input_list:
                 try:
-                    incconn, incaddr = p.accept()
+                    incconn, incaddr = listen_socket.accept()
                 except Exception:
                     time.sleep(0.01)
                 else:
@@ -1348,7 +1343,7 @@ class SlskProtoThread(threading.Thread):
                 if connection is not server_socket:
                     addr = conn_obj.addr
 
-                    if connection is not p:
+                    if connection is not listen_socket:
                         # Timeout Connections
 
                         if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
@@ -1366,7 +1361,7 @@ class SlskProtoThread(threading.Thread):
 
                 if connection in input_list:
                     if self._is_download(conn_obj):
-                        limit = self._downloadlimit[0](conns, connection)
+                        limit = self._downloadlimit[0](conns)
 
                         if limit is not None:
                             limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second

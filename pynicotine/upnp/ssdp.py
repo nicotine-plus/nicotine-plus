@@ -33,8 +33,8 @@ from pynicotine.utils import http_request
 
 
 class Router:
-    def __init__(self, ip, port, wan_ip_type, url_scheme, base_url, root_url):
-        self.ip = ip
+    def __init__(self, ip_address, port, wan_ip_type, url_scheme, base_url, root_url):
+        self.ip_address = ip_address
         self.port = port
         self.search_target = wan_ip_type
         self.url_scheme = url_scheme
@@ -58,7 +58,7 @@ class Router:
         urlparts = urlsplit(response_headers['LOCATION'])
 
         return Router(
-            ip=sender[0],
+            ip_address=sender[0],
             port=sender[1],
             wan_ip_type=response_headers['ST'],
             url_scheme=urlparts.scheme,
@@ -74,7 +74,7 @@ class SSDP:
     response_time_secs = 2
 
     @classmethod
-    def list(cls, refresh=False):
+    def list(cls):
         """ list finds all devices responding to an SSDP search """
 
         log.add_debug('UPnP: Discovering... delay=%s seconds', SSDP.response_time_secs)
@@ -163,15 +163,15 @@ class SSDP:
             # Cooldown
             time.sleep(0.4)
 
-        for r in routers:
+        for router in routers:
             serial_number, control_url, uuid, svc_type = SSDP._get_router_service_description(
-                r.url_scheme, r.base_url, r.root_url
+                router.url_scheme, router.base_url, router.root_url
             )
 
-            r.serial_number = serial_number
-            r.control_url = control_url
-            r.uuid = uuid
-            r.svc_type = svc_type
+            router.serial_number = serial_number
+            router.control_url = control_url
+            router.uuid = uuid
+            router.svc_type = svc_type
 
         sock.close()
         log.add_debug('UPnP: %s device(s) detected', str(len(routers)))
@@ -224,8 +224,8 @@ class SSDP:
 
     @classmethod
     def _is_wanip_service(cls, svc_type):
-        return svc_type == "urn:schemas-upnp-org:service:WANIPConnection:1" \
-            or svc_type == "urn:schemas-upnp-org:service:WANIPConnection:2"
+        return svc_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                            "urn:schemas-upnp-org:service:WANIPConnection:2")
 
 
 class SSDPMessage:

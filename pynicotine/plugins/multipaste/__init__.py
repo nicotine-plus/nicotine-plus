@@ -23,19 +23,24 @@ class Plugin(BasePlugin):
         'maxprivatelines': {"description": 'The maximum number of lines that will be pasted in private', 'type': 'int'},
     }
 
-    def OutgoingPrivateChatEvent(self, nick, line):  # noqa
+    def OutgoingPrivateChatEvent(self, user, line):  # noqa
         lines = [x for x in line.splitlines() if x]
+
         if len(lines) > 1:
             if len(lines) > self.settings['maxprivatelines']:
                 self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
             for line in lines[:self.settings['maxprivatelines']]:
-                self.sayprivate(nick, line)
+                self.sayprivate(user, line)
+
             return returncode['zap']
+
+        return None
 
     def OutgoingPublicChatEvent(self, room, line):  # noqa
         lines = [x for x in line.splitlines() if x]
+
         if len(lines) > 1:
             if len(lines) > self.settings['maxpubliclines']:
                 self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
@@ -43,4 +48,7 @@ class Plugin(BasePlugin):
                 self.log("Splitting lines.")
             for line in lines[:self.settings['maxpubliclines']]:
                 self.saypublic(room, line)
+
             return returncode['zap']
+
+        return None
