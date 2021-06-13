@@ -39,7 +39,7 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 class PopupMenu(Gio.Menu):
 
-    def __init__(self, frame=None, widget=None, callback=None):
+    def __init__(self, frame=None, widget=None, callback=None, connect_events=True):
 
         Gio.Menu.__init__(self)
 
@@ -52,7 +52,7 @@ class PopupMenu(Gio.Menu):
         self.gesture_press = None
         self.last_controller = None
 
-        if widget:
+        if connect_events and widget:
             self.connect_events(widget)
 
         self.actions = {}

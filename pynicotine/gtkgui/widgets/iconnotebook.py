@@ -274,7 +274,7 @@ class IconNotebook:
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
-        self.popup_menu_unread = PopupMenu(widget=self.unread_button)
+        self.popup_menu_unread = PopupMenu(widget=self.unread_button, connect_events=False)
         self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
