@@ -550,7 +550,7 @@ class JoinRoom(ServerMessage):
         if message[pos:] and self.private:
             pos, numops = self.get_object(message, int, pos)
 
-            for _i in range(numops):
+            for _ in range(numops):
                 pos, operator = self.get_object(message, str, pos)
 
                 self.operators.append(operator)
@@ -949,7 +949,7 @@ class Recommendations(ServerMessage):
 
         pos, num = self.get_object(message, int, pos)
 
-        for _i in range(num):
+        for _ in range(num):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
 
@@ -962,7 +962,7 @@ class Recommendations(ServerMessage):
 
         pos, num2 = self.get_object(message, int, pos)
 
-        for _i in range(num2):
+        for _ in range(num2):
             pos, key = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos, getsignedint=True)
 
@@ -994,14 +994,14 @@ class UserInterests(ServerMessage):
         pos, self.user = self.get_object(message, str, pos)
         pos, likesnum = self.get_object(message, int, pos)
 
-        for _i in range(likesnum):
+        for _ in range(likesnum):
             pos, key = self.get_object(message, str, pos)
 
             self.likes.append(key)
 
         pos, hatesnum = self.get_object(message, int, pos)
 
-        for _i in range(hatesnum):
+        for _ in range(hatesnum):
             pos, key = self.get_object(message, str, pos)
 
             self.hates.append(key)
@@ -1269,7 +1269,7 @@ class PrivilegedUsers(ServerMessage):
         pos, numusers = self.get_object(message, int)
 
         self.users = []
-        for _i in range(numusers):
+        for _ in range(numusers):
             pos, user = self.get_object(message, str, pos)
 
             self.users.append(user)
@@ -1437,7 +1437,7 @@ class PossibleParents(ServerMessage):
         pos, num = self.get_object(message, int)
 
         self.list = {}
-        for _i in range(num):
+        for _ in range(num):
             pos, username = self.get_object(message, str, pos)
             pos, ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
             pos, port = self.get_object(message, int, pos)
@@ -1473,7 +1473,7 @@ class SimilarUsers(ServerMessage):
         pos, num = self.get_object(message, int)
 
         self.users = {}
-        for _i in range(num):
+        for _ in range(num):
             pos, user = self.get_object(message, str, pos)
             pos, rating = self.get_object(message, int, pos)
 
@@ -1515,7 +1515,7 @@ class ItemSimilarUsers(ServerMessage):
         pos, num = self.get_object(message, int, pos)
 
         self.users = []
-        for _i in range(num):
+        for _ in range(num):
             pos, user = self.get_object(message, str, pos)
 
             self.users.append(user)
@@ -1537,7 +1537,7 @@ class RoomTickerState(ServerMessage):
         pos, self.room = self.get_object(message, str)
         pos, num = self.get_object(message, int, pos)
 
-        for _i in range(num):
+        for _ in range(num):
             pos, user = self.get_object(message, str, pos)
             pos, msg = self.get_object(message, str, pos)
 
@@ -1765,7 +1765,7 @@ class PrivateRoomUsers(ServerMessage):
         pos, self.room = self.get_object(message, str)
         pos, self.numusers = self.get_object(message, int, pos)
 
-        for _i in range(self.numusers):
+        for _ in range(self.numusers):
             pos, user = self.get_object(message, str, pos)
 
             self.users.append(user)
@@ -1929,7 +1929,7 @@ class PrivateRoomOwned(ServerMessage):
         pos, self.room = self.get_object(message, str)
         pos, self.number = self.get_object(message, int, pos)
 
-        for _i in range(self.number):
+        for _ in range(self.number):
             pos, user = self.get_object(message, str, pos)
 
             self.operators.append(user)
@@ -1985,7 +1985,7 @@ class RelatedSearch(ServerMessage):
         pos, self.query = self.get_object(message, str)
         pos, num = self.get_object(message, int, pos)
 
-        for _i in range(num):
+        for _ in range(num):
             pos, term = self.get_object(message, str, pos)
             pos, score = self.get_object(message, int, pos)
 
@@ -2123,14 +2123,14 @@ class SharedFileList(PeerMessage):
         shares = []
         pos, ndir = self.get_object(message, int)
 
-        for _i in range(ndir):
+        for _ in range(ndir):
             pos, directory = self.get_object(message, str, pos)
             directory = directory.replace('/', '\\')
             pos, nfiles = self.get_object(message, int, pos)
 
             files = []
 
-            for _j in range(nfiles):
+            for _ in range(nfiles):
                 pos, code = pos + 1, message[pos]
                 pos, name = self.get_object(message, str, pos)
                 pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
@@ -2150,7 +2150,7 @@ class SharedFileList(PeerMessage):
 
                 attrs = []
 
-                for _k in range(numattr):
+                for _ in range(numattr):
                     pos, _attrnum = self.get_object(message, int, pos)
                     pos, attr = self.get_object(message, int, pos)
                     attrs.append(attr)
@@ -2260,7 +2260,7 @@ class FileSearchResult(PeerMessage):
         self.pos, nfiles = self.get_object(message, int, self.pos)
 
         shares = []
-        for _i in range(nfiles):
+        for _ in range(nfiles):
             self.pos, code = self.pos + 1, message[self.pos]
             self.pos, name = self.get_object(message, str, self.pos)
 
@@ -2270,7 +2270,7 @@ class FileSearchResult(PeerMessage):
 
             attrs = []
             if numattr:
-                for _j in range(numattr):
+                for _ in range(numattr):
                     self.pos, _attrnum = self.get_object(message, int, self.pos)
                     self.pos, attr = self.get_object(message, int, self.pos)
                     attrs.append(attr)
@@ -2490,14 +2490,14 @@ class FolderContentsResponse(PeerMessage):
 
             pos, ndir = self.get_object(message, int, pos)
 
-            for _i in range(ndir):
+            for _ in range(ndir):
                 pos, directory = self.get_object(message, str, pos)
                 directory = directory.replace('/', '\\')
                 pos, nfiles = self.get_object(message, int, pos)
 
                 shares[folder][directory] = []
 
-                for _j in range(nfiles):
+                for _ in range(nfiles):
                     pos, code = pos + 1, message[pos]
                     pos, name = self.get_object(message, str, pos)
                     pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
@@ -2506,7 +2506,7 @@ class FolderContentsResponse(PeerMessage):
 
                     attrs = []
 
-                    for _k in range(numattr):
+                    for _ in range(numattr):
                         pos, _attrnum = self.get_object(message, int, pos)
                         pos, attr = self.get_object(message, int, pos)
                         attrs.append(attr)

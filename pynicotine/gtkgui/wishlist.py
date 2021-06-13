@@ -49,7 +49,7 @@ class WishList:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "wishlist.ui"))
 
-        self.WishListDialog = generic_dialog(
+        self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
             quit_callback=self.quit,
@@ -121,7 +121,7 @@ class WishList:
     def on_clear_wishlist(self, *args):
 
         option_dialog(
-            parent=self.WishListDialog,
+            parent=self.dialog,
             title=_('Clear Wishlist?'),
             message=_('Are you sure you wish to clear your wishlist?'),
             callback=self.clear_wishlist_response
@@ -232,13 +232,13 @@ class WishList:
 
     def show(self, *args):
 
-        self.WishListDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version() == 3:
-            self.WishListDialog.get_window().set_functions(
+            self.dialog.get_window().set_functions(
                 Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
             )
 
     def quit(self, *args):
-        self.WishListDialog.hide()
+        self.dialog.hide()
         return True

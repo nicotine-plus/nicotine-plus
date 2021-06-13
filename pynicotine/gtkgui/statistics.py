@@ -36,7 +36,7 @@ class Statistics:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "statistics.ui"))
 
-        self.StatisticsDialog = generic_dialog(
+        self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
             quit_callback=self.hide,
@@ -72,21 +72,21 @@ class Statistics:
     def on_reset_statistics(self, *args):
 
         option_dialog(
-            parent=self.StatisticsDialog,
+            parent=self.dialog,
             title=_('Reset Transfer Statistics?'),
             message=_('Are you sure you wish to reset transfer statistics?'),
             callback=self.on_reset_statistics_response
         )
 
     def hide(self, *args):
-        self.StatisticsDialog.hide()
+        self.dialog.hide()
         return True
 
     def show(self):
 
-        self.StatisticsDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version() == 3:
-            self.StatisticsDialog.get_window().set_functions(
+            self.dialog.get_window().set_functions(
                 Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
             )

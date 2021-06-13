@@ -37,7 +37,7 @@ class FileProperties:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fileproperties.ui"))
 
-        self.FilePropertiesDialog = generic_dialog(
+        self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
             title=_("File Properties"),
@@ -71,7 +71,7 @@ class FileProperties:
         self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
 
     def update_title(self):
-        self.FilePropertiesDialog.set_title(_("File Properties (%(num)i of %(total)i)") % {
+        self.dialog.set_title(_("File Properties (%(num)i of %(total)i)") % {
             'num': self.current_index + 1,
             'total': len(self.properties)
         })
@@ -153,9 +153,9 @@ class FileProperties:
     def show(self):
 
         self.update_current_file()
-        self.FilePropertiesDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version() == 3:
-            self.FilePropertiesDialog.get_window().set_functions(
+            self.dialog.get_window().set_functions(
                 Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
             )

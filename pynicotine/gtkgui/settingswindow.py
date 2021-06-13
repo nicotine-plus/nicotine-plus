@@ -146,7 +146,7 @@ class ServerFrame(BuildFrame):
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
-                 str(self.frame.np.waitport)]), self.p.SettingsWindow)
+                 str(self.frame.np.waitport)]), self.p.dialog)
 
     def on_toggle_upnp(self, widget, *args):
 
@@ -172,13 +172,13 @@ class DownloadsFrame(BuildFrame):
         self.needrescan = False
 
         self.IncompleteDir = FileChooserButton(
-            self.IncompleteDir, parent.SettingsWindow, "folder"
+            self.IncompleteDir, parent.dialog, "folder"
         )
         self.DownloadDir = FileChooserButton(
-            self.DownloadDir, parent.SettingsWindow, "folder", self.on_choose_download_dir
+            self.DownloadDir, parent.dialog, "folder", self.on_choose_download_dir
         )
         self.UploadDir = FileChooserButton(
-            self.UploadDir, parent.SettingsWindow, "folder"
+            self.UploadDir, parent.dialog, "folder"
         )
 
         self.options = {
@@ -328,7 +328,7 @@ class DownloadsFrame(BuildFrame):
     def on_add_filter(self, widget):
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
@@ -390,7 +390,7 @@ class DownloadsFrame(BuildFrame):
         escapedvalue = self.filterlist.get_value(iterator, 1)
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Edit Download Filter"),
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
@@ -652,7 +652,7 @@ class SharesFrame(BuildFrame):
         # If the virtual share name is not already used
         if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
             message_dialog(
-                parent=self.p.SettingsWindow,
+                parent=self.p.dialog,
                 title=_("Unable to Share Folder"),
                 message=_("The chosen virtual name is either empty or already exists")
             )
@@ -682,14 +682,14 @@ class SharesFrame(BuildFrame):
         # If the directory is already shared
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
             message_dialog(
-                parent=self.p.SettingsWindow,
+                parent=self.p.dialog,
                 title=_("Unable to Share Folder"),
                 message=_("The chosen folder is already shared.")
             )
             return
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Set Virtual Name"),
             message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
             option=True,
@@ -706,7 +706,7 @@ class SharesFrame(BuildFrame):
     def on_add_shared_dir(self, *args):
 
         choose_dir(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder")
         )
@@ -750,7 +750,7 @@ class SharesFrame(BuildFrame):
             folder = model.get_value(iterator, 1)
 
             entry_dialog(
-                parent=self.p.SettingsWindow,
+                parent=self.p.dialog,
                 title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 callback=self.rename_virtuals_response,
@@ -906,7 +906,7 @@ class UserInfoFrame(BuildFrame):
 
         BuildFrame.__init__(self, "userinfo")
 
-        self.ImageChooser = FileChooserButton(self.ImageChooser, parent.SettingsWindow, "image")
+        self.ImageChooser = FileChooserButton(self.ImageChooser, parent.dialog, "image")
 
         self.options = {
             "userinfo": {
@@ -1024,7 +1024,7 @@ class IgnoreListFrame(BuildFrame):
     def on_add_ignored(self, widget):
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Ignore User"),
             message=_("Enter the name of a user you wish to ignore:"),
             callback=self.on_add_ignored_response
@@ -1076,7 +1076,7 @@ class IgnoreListFrame(BuildFrame):
     def on_add_ignored_ip(self, widget):
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you wish to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
@@ -1187,7 +1187,7 @@ class BanListFrame(BuildFrame):
     def on_add_banned(self, widget):
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Ban User"),
             message=_("Enter the name of a user you wish to ban:"),
             callback=self.on_add_banned_response
@@ -1242,7 +1242,7 @@ class BanListFrame(BuildFrame):
     def on_add_blocked(self, widget):
 
         entry_dialog(
-            parent=self.p.SettingsWindow,
+            parent=self.p.dialog,
             title=_("Block IP Address"),
             message=_("Enter an IP address you wish to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
@@ -1330,7 +1330,7 @@ class IconsFrame(BuildFrame):
 
         BuildFrame.__init__(self, "icons")
 
-        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.SettingsWindow, "folder")
+        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
 
         self.options = {
             "ui": {
@@ -1769,10 +1769,10 @@ class LoggingFrame(BuildFrame):
 
         BuildFrame.__init__(self, "log")
 
-        self.PrivateLogDir = FileChooserButton(self.PrivateLogDir, parent.SettingsWindow, "folder")
-        self.RoomLogDir = FileChooserButton(self.RoomLogDir, parent.SettingsWindow, "folder")
-        self.TransfersLogDir = FileChooserButton(self.TransfersLogDir, parent.SettingsWindow, "folder")
-        self.DebugLogDir = FileChooserButton(self.DebugLogDir, parent.SettingsWindow, "folder")
+        self.PrivateLogDir = FileChooserButton(self.PrivateLogDir, parent.dialog, "folder")
+        self.RoomLogDir = FileChooserButton(self.RoomLogDir, parent.dialog, "folder")
+        self.TransfersLogDir = FileChooserButton(self.TransfersLogDir, parent.dialog, "folder")
+        self.DebugLogDir = FileChooserButton(self.DebugLogDir, parent.dialog, "folder")
 
         self.options = {
             "logging": {
@@ -2664,7 +2664,7 @@ class PluginsFrame(BuildFrame):
                 default_width=600,
                 use_header_bar=config.sections["ui"]["header_bar"]
             )
-            set_dialog_properties(self, self.settings.SettingsWindow)
+            set_dialog_properties(self, self.settings.dialog)
 
             self.add_buttons(
                 _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
@@ -3113,7 +3113,7 @@ class Settings:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", "settingswindow.ui"))
 
-        self.SettingsWindow = dialog = generic_dialog(
+        self.dialog = dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
             quit_callback=self.on_delete,
@@ -3145,7 +3145,7 @@ class Settings:
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
                            GObject.TYPE_NONE, (GObject.TYPE_STRING,))
-        self.SettingsWindow.connect("settings-updated", self.frame.on_settings_updated)
+        dialog.connect("settings-updated", self.frame.on_settings_updated)
 
         # Treeview of the settings
         self.tree = {}
@@ -3491,21 +3491,21 @@ class Settings:
     def on_response(self, dialog, response_id):
 
         if response_id == Gtk.ResponseType.OK:
-            self.SettingsWindow.hide()
-            self.SettingsWindow.emit("settings-updated", "ok")
+            self.dialog.hide()
+            self.dialog.emit("settings-updated", "ok")
 
         elif response_id == Gtk.ResponseType.APPLY:
-            self.SettingsWindow.emit("settings-updated", "apply")
+            self.dialog.emit("settings-updated", "apply")
 
         elif response_id == Gtk.ResponseType.HELP:
             self.on_backup_config()
 
         else:
-            self.SettingsWindow.hide()
+            self.dialog.hide()
 
     def on_delete(self, *args):
-        self.SettingsWindow.hide()
+        self.dialog.hide()
         return True
 
     def show(self, *args):
-        self.SettingsWindow.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)

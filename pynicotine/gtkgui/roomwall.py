@@ -38,7 +38,7 @@ class RoomWall:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
 
-        self.RoomWallDialog = generic_dialog(
+        self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
             quit_callback=self.hide,
@@ -96,7 +96,7 @@ class RoomWall:
     def hide(self, *args):
 
         self.RoomWallList.get_buffer().set_text("")
-        self.RoomWallDialog.hide()
+        self.dialog.hide()
         return True
 
     def show(self):
@@ -110,10 +110,10 @@ class RoomWall:
                 self.RoomWallEntry.set_text(msg)
                 self.RoomWallEntry.select_region(0, -1)
 
-        self.RoomWallDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.dialog.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version == 3:
-            self.RoomWallDialog.get_window().set_functions(
+            self.dialog.get_window().set_functions(
                 Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
             )
 
