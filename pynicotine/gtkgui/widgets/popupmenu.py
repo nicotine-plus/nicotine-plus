@@ -54,7 +54,6 @@ class PopupMenu(Gio.Menu):
 
         if widget:
             self.connect_events(widget)
-            self.create_context_menu(widget)
 
         self.actions = {}
         self.items = {}
@@ -82,10 +81,12 @@ class PopupMenu(Gio.Menu):
 
         if widget:
             self.connect_events(widget)
-            self.create_context_menu(widget)
             self.widget = widget
 
     def create_context_menu(self, widget):
+
+        if self.popup_menu:
+            return
 
         if Gtk.get_major_version() == 4:
             if isinstance(widget, (Gtk.TextView, Gtk.TreeView)):
@@ -339,6 +340,8 @@ class PopupMenu(Gio.Menu):
         self.useritem = None
 
     def popup(self, x, y, controller=None, button=3):
+
+        self.create_context_menu(self.widget)
 
         if Gtk.get_major_version() == 4:
             if not x and not y:

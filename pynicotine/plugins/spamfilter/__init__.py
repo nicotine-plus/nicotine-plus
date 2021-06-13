@@ -34,8 +34,8 @@ class Plugin(BasePlugin):
     }
 
     def LoadNotification(self):  # noqa
-        self.log('A line should be at least %s long with a maximum of %s different characters \
-                 before it\'s considered ASCII spam.' %
+        self.log('A line should be at least %s long with a maximum of %s different characters '
+                 'before it\'s considered ASCII spam.' %
                  (self.settings['minlength'], self.settings['maxdiffcharacters']))
 
     def check_phrases(self, user, line):
