@@ -130,8 +130,8 @@ If you'd like to contribute, you have a couple of options to get started:
   * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
   * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
 * If you're packaging Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md) for a list of dependencies.
-* Code contributors, developers and maintainers should read [DEVELOPING.md](doc/DEVELOPING.md) for important information about various aspects of Nicotine+ development. Developers are also encouraged to join the [Launchpad Team](https://launchpad.net/~nicotine-team) or subscribe to the mailing list so that they are automatically notified of failed commits.
-* For (unofficial) documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md)
+* Code contributors, developers and maintainers should read [DEVELOPING.md](doc/DEVELOPING.md) for important information about various aspects of Nicotine+ development.
+* For unofficial documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
 * For a current list of things to do, see the [issue tracker](https://github.com/Nicotine-Plus/nicotine-plus/issues).
 * For a list of contributors to Nicotine+ and its predecessors, see [AUTHORS.md](AUTHORS.md).
 
