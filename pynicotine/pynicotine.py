@@ -785,8 +785,7 @@ Error: %(error)s""", {
             if i.token is None or i.conn is not None:
                 continue
 
-            if msg.token is None and i.addr == msg.conn.addr or \
-                    i.token == msg.token:
+            if (msg.token is None and i.addr == msg.conn.addr) or i.token == msg.token:
                 conn = msg.conn.conn
 
                 if i in self.out_indirect_conn_request_times:
@@ -1244,8 +1243,8 @@ Error: %(error)s""", {
                     self.watch_user(user)
 
             if self.ui_callback:
-                self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads, \
-                    self.userlist, self.interests = self.ui_callback.init_interface()
+                (self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads,
+                    self.userlist, self.interests) = self.ui_callback.init_interface()
                 self.transfers.set_transfer_views(downloads, uploads)
 
             if msg.banner != "":

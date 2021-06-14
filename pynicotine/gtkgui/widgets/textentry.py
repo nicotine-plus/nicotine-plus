@@ -413,12 +413,12 @@ class ChatEntry:
                 if config.sections["words"]["commands"]:
                     self.frame.update_completions()
 
-        elif cmd[:1] == "/" and self.is_chatroom and \
-                self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args):
+        elif (cmd[:1] == "/" and self.is_chatroom
+                and self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)):
             pass
 
-        elif cmd[:1] == "/" and not self.is_chatroom and \
-                self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args):
+        elif (cmd[:1] == "/" and not self.is_chatroom
+                and self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)):
             pass
 
         else:
@@ -438,9 +438,9 @@ class ChatEntry:
             key, codes_shift_l, mods = parse_accelerator("Shift_L")
             key, codes_shift_r, mods = parse_accelerator("Shift_R")
 
-            if keycode not in codes_shift_l and \
-                    keycode not in codes_shift_r:
+            if keycode not in codes_shift_l and keycode not in codes_shift_r:
                 self.midwaycompletion = False
+
             return False
 
         config_words = config.sections["words"]
@@ -486,8 +486,8 @@ class ChatEntry:
                 if state & Gdk.ModifierType.SHIFT_MASK:
                     direction = -1  # Backward cycle
 
-                self.completions['currentindex'] = (self.completions['currentindex'] + direction) % \
-                    len(self.completions['completions'])
+                self.completions['currentindex'] = ((self.completions['currentindex'] + direction) %
+                                                    len(self.completions['completions']))
 
                 newnick = self.completions['completions'][self.completions['currentindex']]
                 self.entry.insert_text(newnick, preix)

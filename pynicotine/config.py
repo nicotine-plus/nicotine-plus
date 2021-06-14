@@ -523,8 +523,7 @@ class Config:
     def need_config(self):
 
         # Check if we have specified a username or password
-        if not self.sections["server"]["login"] or \
-                not self.sections["server"]["passw"]:
+        if not self.sections["server"]["login"] or not self.sections["server"]["passw"]:
             return True
 
         return False
@@ -573,8 +572,9 @@ class Config:
                             eval_val = val
 
                         if i != "plugins" and j != "filter":
-                            if isinstance(eval_val, type(default_val)) or \
-                                    isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val in (0, 1):
+                            if (isinstance(eval_val, type(default_val))
+                                    or (isinstance(default_val, bool)
+                                        and isinstance(eval_val, int) and eval_val in (0, 1))):
                                 pass
 
                             else:
@@ -595,15 +595,15 @@ class Config:
         server = self.sections["server"]
 
         # Check if server value is valid
-        if len(server["server"]) != 2 or \
-                not isinstance(server["server"][0], str) or \
-                not isinstance(server["server"][1], int):
+        if (len(server["server"]) != 2
+                or not isinstance(server["server"][0], str)
+                or not isinstance(server["server"][1], int)):
 
             server["server"] = self.defaults["server"]["server"]
 
         # Check if port range value is valid
-        if len(server["portrange"]) != 2 or \
-                not all(isinstance(i, int) for i in server["portrange"]):
+        if (len(server["portrange"]) != 2
+                or not all(isinstance(i, int) for i in server["portrange"])):
 
             server["portrange"] = self.defaults["server"]["portrange"]
 

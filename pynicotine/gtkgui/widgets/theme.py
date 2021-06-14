@@ -144,8 +144,7 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
 
     config_ui = config.sections["ui"]
 
-    if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or \
-            isinstance(widget, Gtk.Entry):
+    if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or isinstance(widget, Gtk.Entry):
         if isinstance(widget, Gtk.ComboBox):
             widget = widget.get_child()
 

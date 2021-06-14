@@ -497,8 +497,8 @@ class UserList:
         user_list = []
 
         for i in self.usersmodel:
-            status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged, \
-                hlast_seen, comments, status, speed, file_count, last_seen, country = i
+            (status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged,
+                hlast_seen, comments, status, speed, file_count, last_seen, country) = i
             user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
 
         config.sections["server"]["userlist"] = user_list

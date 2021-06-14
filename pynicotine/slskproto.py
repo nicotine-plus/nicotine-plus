@@ -1137,8 +1137,7 @@ class SlskProtoThread(threading.Thread):
             illusion that uploads are updated often. """
             cooldown = max(1.0, min(self.total_uploads * uniform(0.8, 1.0), 15))
 
-            if totalsentbytes == size or \
-                    (curtime - conn.lastcallback) > cooldown:
+            if totalsentbytes == size or (curtime - conn.lastcallback) > cooldown:
 
                 """ We save resources by not sending data back to the UI every time
                 a part of a file is uploaded """
@@ -1208,8 +1207,8 @@ class SlskProtoThread(threading.Thread):
                     conn = conns[i]
                     event_masks = selectors.EVENT_READ
 
-                    if conn.obuf or \
-                            (i is not server_socket and conn.fileupl is not None and conn.fileupl.offset is not None):
+                    if (conn.obuf or (i is not server_socket
+                                      and conn.fileupl is not None and conn.fileupl.offset is not None)):
                         event_masks |= selectors.EVENT_WRITE
 
                     try:

@@ -1239,8 +1239,7 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and \
-                    not i.legacy_attempt:
+            if msg.reason in ("File not shared.", "File not shared", "Remote file error") and not i.legacy_attempt:
                 """ The peer is possibly using an old client that doesn't support Unicode
                 (Soulseek NS). Attempt to request file name encoded as latin-1 once. """
 
@@ -1341,8 +1340,7 @@ class Transfers:
                 oldelapsed = i.timeelapsed
                 i.timeelapsed = curtime - i.starttime
 
-                if curtime > i.starttime and \
-                        i.currentbytes > i.lastbytes:
+                if curtime > i.starttime and i.currentbytes > i.lastbytes:
 
                     bytesdifference = (i.currentbytes - i.lastbytes)
                     self.eventprocessor.statistics.append_stat_value("downloaded_size", bytesdifference)
@@ -1407,8 +1405,7 @@ class Transfers:
             oldelapsed = i.timeelapsed
             i.timeelapsed = curtime - i.starttime
 
-            if curtime > i.starttime and \
-                    i.currentbytes > i.lastbytes:
+            if curtime > i.starttime and i.currentbytes > i.lastbytes:
 
                 bytesdifference = (i.currentbytes - i.lastbytes)
                 self.eventprocessor.statistics.append_stat_value("uploaded_size", bytesdifference)
@@ -1791,8 +1788,8 @@ class Transfers:
     def get_folder_destination(self, user, directory):
 
         # Check if a custom download location was specified
-        if user in self.requested_folders and directory in self.requested_folders[user] and \
-                self.requested_folders[user][directory]:
+        if (user in self.requested_folders and directory in self.requested_folders[user]
+                and self.requested_folders[user][directory]):
             download_location = self.requested_folders[user][directory]
 
         else:

@@ -302,8 +302,8 @@ class PopupMenu(Gio.Menu):
 
         for room in self.frame.chatrooms.private_rooms:
 
-            if not self.frame.chatrooms.roomlist.is_private_room_owned(room) and \
-                    not self.frame.chatrooms.roomlist.is_private_room_operator(room):
+            if (not self.frame.chatrooms.roomlist.is_private_room_owned(room)
+                    and not self.frame.chatrooms.roomlist.is_private_room_operator(room)):
                 continue
 
             if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
@@ -562,8 +562,8 @@ class PopupMenu(Gio.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        message = _("How many days of privileges should user %s be gifted?") % \
-            self.user + " (" + _("%(days)s days left") % {'days': days} + ")"
+        message = (_("How many days of privileges should user %s be gifted?") %
+                   self.user + " (" + _("%(days)s days left") % {'days': days} + ")")
 
         if error:
             message += "\n\n" + error

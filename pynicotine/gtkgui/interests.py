@@ -251,16 +251,14 @@ class Interests:
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and \
-                thing and thing not in config.sections["interests"]["likes"]:
+        if state.get_boolean() and thing and thing not in config.sections["interests"]["likes"]:
             config.sections["interests"]["likes"].append(thing)
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
             config.write_configuration()
             self.frame.np.queue.append(slskmessages.AddThingILike(thing))
 
-        elif not state and \
-                thing and thing in config.sections["interests"]["likes"]:
+        elif not state and thing and thing in config.sections["interests"]["likes"]:
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
             config.sections["interests"]["likes"].remove(thing)
@@ -275,16 +273,14 @@ class Interests:
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and \
-                thing and thing not in config.sections["interests"]["dislikes"]:
+        if state.get_boolean() and thing and thing not in config.sections["interests"]["dislikes"]:
             config.sections["interests"]["dislikes"].append(thing)
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
             config.write_configuration()
             self.frame.np.queue.append(slskmessages.AddThingIHate(thing))
 
-        elif not state and \
-                thing and thing in config.sections["interests"]["dislikes"]:
+        elif not state and thing and thing in config.sections["interests"]["dislikes"]:
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
             config.sections["interests"]["dislikes"].remove(thing)

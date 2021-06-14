@@ -311,8 +311,7 @@ class TransferList:
 
         finished = (transfer is not None and transfer.status == "Finished")
 
-        if forceupdate or finished or \
-                (curtime - self.last_ui_update) > 1:
+        if forceupdate or finished or (curtime - self.last_ui_update) > 1:
             self.frame.update_bandwidth()
 
         if not forceupdate and self.frame.current_tab_label != self.tab_label:
@@ -326,8 +325,7 @@ class TransferList:
             for transfer in reversed(self.list):
                 self.update_specific(transfer)
 
-        if forceupdate or finished or \
-                (curtime - self.last_ui_update) > 1:
+        if forceupdate or finished or (curtime - self.last_ui_update) > 1:
 
             """ Unless a transfer finishes, use a cooldown to avoid updating
             too often """
@@ -850,8 +848,7 @@ class TransferList:
         elif keycode in parse_accelerator("r")[1]:
             self.retry_transfers()
 
-        elif state & parse_accelerator("<Primary>")[2] and \
-                keycode in parse_accelerator("c")[1]:
+        elif state & parse_accelerator("<Primary>")[2] and keycode in parse_accelerator("c")[1]:
             self.on_copy_file_path()
 
         elif keycode in parse_accelerator("Delete")[1]:

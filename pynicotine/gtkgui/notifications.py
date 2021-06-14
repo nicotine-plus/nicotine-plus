@@ -62,8 +62,8 @@ class Notifications:
                 self.frame.hilites[location].append(user)
                 self.frame.tray_icon.set_image()
 
-        if Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"] and \
-                not self.frame.MainWindow.is_active():
+        if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
+                and not self.frame.MainWindow.is_active()):
             self.frame.MainWindow.set_urgency_hint(True)
 
         self.set_title(user)

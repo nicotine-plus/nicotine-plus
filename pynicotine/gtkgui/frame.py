@@ -969,8 +969,7 @@ class NicotineFrame:
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
 
-        if self.fastconfigure is not None and \
-                self.fastconfigure.FastConfigureDialog.get_property("visible"):
+        if self.fastconfigure is not None and self.fastconfigure.FastConfigureDialog.get_property("visible"):
             return
 
         self.settingswindow.set_settings()
@@ -1730,8 +1729,7 @@ class NicotineFrame:
         tab_label = self.MainNotebook.get_tab_label(tab_box)
         tab_position = config.sections["ui"]["tabmain"]
 
-        if tab_position in ("Left", "left", _("Left")) or \
-                tab_position in ("Right", "right", _("Right")):
+        if tab_position in ("Left", "left", _("Left"), "Right", "right", _("Right")):
             expand = False
         else:
             expand = True

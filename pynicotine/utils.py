@@ -142,8 +142,7 @@ def make_version(version):
     major, minor, patch = (int(i) for i in version.split(".")[:3])
     stable = 1
 
-    if "dev" in version or \
-            "rc" in version:
+    if "dev" in version or "rc" in version:
         # Example: 2.0.1.dev1
         # A dev version will be one less than a stable version
         stable = 0
@@ -367,8 +366,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print("Yikes, I was asked to return output but I'm also asked to launch \
-                   the process in the background. returnoutput gets precedent.")
+            print("Yikes, I was asked to return output but I'm also asked to launch "
+                  "the process in the background. returnoutput gets precedent.")
         else:
             background = True
 

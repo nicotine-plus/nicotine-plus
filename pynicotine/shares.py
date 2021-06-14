@@ -605,8 +605,8 @@ class Shares:
 
     def init_shares(self):
 
-        rescan_startup = self.config.sections["transfers"]["rescanonstartup"] and \
-            not self.config.need_config()
+        rescan_startup = (self.config.sections["transfers"]["rescanonstartup"]
+                          and not self.config.need_config())
 
         # Rescan public shares if necessary
         if not self.config.sections["transfers"]["friendsonly"]:
@@ -821,8 +821,8 @@ class Shares:
         """ Returns the compressed shares message. Creates a new one if necessary, e.g.
         if an individual file was added to our shares. """
 
-        if sharestype == "normal" and self.newnormalshares or \
-                sharestype == "buddy" and self.newbuddyshares:
+        if (sharestype == "normal" and self.newnormalshares
+                or sharestype == "buddy" and self.newbuddyshares):
             self.create_compressed_shares_message(sharestype)
 
         if sharestype == "normal":
@@ -938,8 +938,8 @@ class Shares:
             shared_folders = self.config.sections["transfers"]["shared"][:]
 
         else:
-            shared_folders = self.config.sections["transfers"]["buddyshared"][:] + \
-                self.config.sections["transfers"]["shared"][:]
+            shared_folders = (self.config.sections["transfers"]["buddyshared"][:]
+                              + self.config.sections["transfers"]["shared"][:])
 
         if self.config.sections["transfers"]["sharedownloaddir"]:
             shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))

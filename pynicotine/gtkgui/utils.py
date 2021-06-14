@@ -220,8 +220,8 @@ def scroll_bottom(widget):
 
 def url_event(tag, widget, event, iterator, url):
 
-    if tag.last_event_type == Gdk.EventType.BUTTON_PRESS and \
-            event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1:
+    if (tag.last_event_type == Gdk.EventType.BUTTON_PRESS
+            and event.button.type == Gdk.EventType.BUTTON_RELEASE and event.button.button == 1):
         if url[:4] == "www.":
             url = "http://" + url
         open_uri(url, widget.get_toplevel())

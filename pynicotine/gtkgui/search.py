@@ -662,8 +662,8 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate, \
-            h_length, bitrate, fullpath, country, size, speed, queue, length, color = row
+        (counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate,
+            h_length, bitrate, fullpath, country, size, speed, queue, length, color) = row
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -1227,9 +1227,9 @@ class Search:
                     continue
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
-                counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, \
-                    h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed, \
-                    queue, length, color = row
+                (counter, user, flag, immediatedl, h_speed, h_queue, directory, filename,
+                    h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed,
+                    queue, length, color) = row
                 files.append(
                     (user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
 
