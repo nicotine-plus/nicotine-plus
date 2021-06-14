@@ -17,24 +17,68 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import pickle
+import select
 import socket
 
 from collections import deque
 from time import sleep
 from unittest.mock import Mock
 
-import pytest
-
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
-from test.unit.mock_socket import monkeypatch_socket, monkeypatch_select
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 0.5
-LOGIN_DATAFILE = 'data/login/socket_localhost_22420.log'
+LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
 
-def test_instantiate_proto() -> None:
+class MockSocket(Mock):
+
+    def set_data(self, datafile):
+
+        windows_line_ending = b'\r\n'
+        unix_line_ending = b'\n'
+
+        file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), datafile)
+
+        with open(file_path, 'rb') as file_handle:
+            content = file_handle.read()
+
+        content = content.replace(windows_line_ending, unix_line_ending)
+        logs = pickle.loads(content, encoding='bytes')
+        self.events = {}
+
+        for mode in b'send', b'recv':
+            for time, event in logs[b'transactions'][mode].items():
+                self.events[time] = (mode.decode('latin1'), event)
+
+    def send(self, data):
+        print("sending data {}".format(data))
+
+    def recv(self, bufsize):
+        print("recving {} data".format(bufsize))
+        return b''
+
+
+def monkeypatch_socket(monkeypatch, datafile):
+
+    mock_socket = MockSocket()
+    mock_socket.set_data(datafile)
+    monkeypatch.setattr(socket, 'socket', lambda family, type: mock_socket)
+    return mock_socket
+
+
+def monkeypatch_select(monkeypatch):
+
+    monkeypatch.setattr(
+        select, 'select', lambda rlist, wlist, xlist, timeout=None: (rlist, wlist, xlist)
+    )
+
+
+def test_instantiate_proto():
+
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=deque(), bindip='',
         port=None, port_range=(1, 2), network_filter=None,
@@ -44,7 +88,8 @@ def test_instantiate_proto() -> None:
     proto.abort()
 
 
-def test_server_conn(monkeypatch) -> None:
+def test_server_conn(monkeypatch):
+
     mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
@@ -79,7 +124,8 @@ def test_server_conn(monkeypatch) -> None:
     assert mock_socket.close.call_count == 1
 
 
-def test_login(monkeypatch) -> None:
+def test_login(monkeypatch):
+
     monkeypatch_select(monkeypatch)
     proto = SlskProtoThread(
         ui_callback=Mock(), queue=deque(), bindip='',
@@ -91,10 +137,9 @@ def test_login(monkeypatch) -> None:
 
     sleep(SLSKPROTO_RUN_TIME / 2)
 
-    proto._queue.append(Login('username', 'password', 157))
+    proto._queue.append(Login('username', 'password', 160, 1))
     proto._queue.append(SetWaitPort(1))
 
     sleep(SLSKPROTO_RUN_TIME)
 
     proto.abort()
-    pytest.skip('Login succeeded, actual test TBD')
