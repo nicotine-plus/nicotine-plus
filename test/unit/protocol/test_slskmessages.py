@@ -21,6 +21,7 @@ import unittest
 from pynicotine.slskmessages import AckNotifyPrivileges
 from pynicotine.slskmessages import AddUser
 from pynicotine.slskmessages import ChangePassword
+from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import GetPeerAddress
 from pynicotine.slskmessages import GetUserStatus
 from pynicotine.slskmessages import JoinPublicRoom
@@ -41,6 +42,7 @@ from pynicotine.slskmessages import SlskMessage
 
 
 class SlskMessageTest(unittest.TestCase):
+
     def test_pack_object(self):
         # Arrange
         obj = SlskMessage()
@@ -61,6 +63,7 @@ class SlskMessageTest(unittest.TestCase):
 
 
 class LoginMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = Login(username='test', passwd='s33cr3t', version=157, minorversion=19)
@@ -76,6 +79,7 @@ class LoginMessageTest(unittest.TestCase):
 
 
 class ChangePasswordMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = ChangePassword(password='s33cr3t')
@@ -90,6 +94,7 @@ class ChangePasswordMessageTest(unittest.TestCase):
 
 
 class SetWaitPortMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = SetWaitPort(port=1337)
@@ -104,6 +109,7 @@ class SetWaitPortMessageTest(unittest.TestCase):
 
 
 class GetPeerAddressMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = GetPeerAddress(user='test')
@@ -118,6 +124,7 @@ class GetPeerAddressMessageTest(unittest.TestCase):
 
 
 class AddUserMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = AddUser(user='test')
@@ -132,6 +139,7 @@ class AddUserMessageTest(unittest.TestCase):
 
 
 class RemoveUserMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = RemoveUser(user='test')
@@ -146,6 +154,7 @@ class RemoveUserMessageTest(unittest.TestCase):
 
 
 class GetUserStatusMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = GetUserStatus(user='test')
@@ -159,7 +168,23 @@ class GetUserStatusMessageTest(unittest.TestCase):
             message)
 
 
+class FileSearchTest(unittest.TestCase):
+
+    def test_make_network_message(self):
+        # Arrange
+        obj = FileSearch(requestid=524700074, text='70 gwen auto')
+
+        # Act
+        message = obj.make_network_message()
+
+        # Assert
+        self.assertEqual(
+            b'\xaaIF\x1f\x0c\x00\x00\x0070 gwen auto',
+            message)
+
+
 class SetStatusMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = SetStatus(status=1)
@@ -174,6 +199,7 @@ class SetStatusMessageTest(unittest.TestCase):
 
 
 class NotifyPrivilegesMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = NotifyPrivileges(token=123456, user='test')
@@ -188,6 +214,7 @@ class NotifyPrivilegesMessageTest(unittest.TestCase):
 
 
 class AckNotifyPrivilegesMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = AckNotifyPrivileges(token=123456)
@@ -202,6 +229,7 @@ class AckNotifyPrivilegesMessageTest(unittest.TestCase):
 
 
 class JoinPublicRoomMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = JoinPublicRoom()
@@ -216,6 +244,7 @@ class JoinPublicRoomMessageTest(unittest.TestCase):
 
 
 class LeavePublicRoomMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = LeavePublicRoom()
@@ -234,6 +263,7 @@ class PublicRoomMessageMessageTest(unittest.TestCase):
 
 
 class SayChatroomMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = SayChatroom(room='nicotine', msg='Wassup?')
@@ -248,6 +278,7 @@ class SayChatroomMessageTest(unittest.TestCase):
 
 
 class JoinRoomMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = JoinRoom(room='nicotine', private=0)
@@ -275,6 +306,7 @@ class PrivateRoomOwnedMessageTest(unittest.TestCase):
 
 
 class PrivateRoomAddUserMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = PrivateRoomAddUser(room='nicotine', user='admin')
@@ -289,6 +321,7 @@ class PrivateRoomAddUserMessageTest(unittest.TestCase):
 
 
 class PrivateRoomDismemberMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = PrivateRoomDismember(room='nicotine')
@@ -303,6 +336,7 @@ class PrivateRoomDismemberMessageTest(unittest.TestCase):
 
 
 class PrivateRoomDisownMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = PrivateRoomDisown(room='nicotine')
@@ -317,6 +351,7 @@ class PrivateRoomDisownMessageTest(unittest.TestCase):
 
 
 class PrivateRoomSomethingMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = PrivateRoomSomething(room='nicotine')
@@ -331,6 +366,7 @@ class PrivateRoomSomethingMessageTest(unittest.TestCase):
 
 
 class PrivateRoomRemoveUserMessageTest(unittest.TestCase):
+
     def test_make_network_message(self):
         # Arrange
         obj = PrivateRoomRemoveUser(room='nicotine', user='admin')

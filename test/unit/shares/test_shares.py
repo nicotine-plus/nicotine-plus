@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pytest
+import unittest
 
 from collections import deque
 
@@ -27,97 +27,95 @@ from pynicotine.shares import Shares
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
 
 
-@pytest.fixture
-def config():
-    config = Config()
-    config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
-    config.filename = os.path.join(config.data_dir, "temp_config")
+class SharesTest(unittest.TestCase):
 
-    config.load_config()
-    return config
+    def setUp(self):
 
+        self.config = Config()
+        self.config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
+        self.config.filename = os.path.join(self.config.data_dir, "temp_config")
 
-def test_shares_scan(config):
-    """ Test a full shares scan """
+        self.config.load_config()
 
-    config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
-    config.sections["transfers"]["rescanonstartup"] = False
+    def test_shares_scan(self):
+        """ Test a full shares scan """
 
-    shares = Shares(None, config, deque())
-    shares.rescan_public_shares(thread=False)
+        self.config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+        self.config.sections["transfers"]["rescanonstartup"] = False
 
-    # Verify that modification time was saved for shares folder
-    assert SHARES_DIR in list(shares.share_dbs["mtimes"])
+        shares = Shares(None, self.config, deque())
+        shares.rescan_public_shares(thread=False)
 
-    # Verify that shared files were added
-    assert ('dummy_file', 0, None, None) in shares.share_dbs["files"]["Shares"]
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Shares"]
+        # Verify that modification time was saved for shares folder
+        self.assertIn(SHARES_DIR, list(shares.share_dbs["mtimes"]))
 
-    # Verify that expected folder is empty
-    assert len(shares.share_dbs["files"]["Shares\\folder2"]) == 0
+        # Verify that shared files were added
+        self.assertIn(('dummy_file', 0, None, None), shares.share_dbs["files"]["Shares"])
+        self.assertIn(('nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["files"]["Shares"])
 
-    # Verify that search index was updated
-    word_index = shares.share_dbs["wordindex"]
-    nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
-    ogg_indexes = list(word_index["ogg"])
+        # Verify that expected folder is empty
+        self.assertEqual(len(shares.share_dbs["files"]["Shares\\folder2"]), 0)
 
-    assert set(word_index) == set(
-        ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
-         'folder2', 'nothing', 'something', 'test']
-    )
-    assert len(nicotinetestdata_indexes) == 2
-    assert len(ogg_indexes) == 1
+        # Verify that search index was updated
+        word_index = shares.share_dbs["wordindex"]
+        nicotinetestdata_indexes = list(word_index["nicotinetestdata"])
+        ogg_indexes = list(word_index["ogg"])
 
-    # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
-    assert ogg_indexes[0] in nicotinetestdata_indexes
-    assert shares.share_dbs["fileindex"][str(ogg_indexes[0])][0] == 'Shares\\nicotinetestdata.ogg'
+        self.assertEqual(set(word_index), set(
+            ['nicotinetestdata', 'ogg', 'mp3', 'shares', 'file', 'dummy', 'folder1',
+             'folder2', 'nothing', 'something', 'test']
+        ))
+        self.assertEqual(len(nicotinetestdata_indexes), 2)
+        self.assertEqual(len(ogg_indexes), 1)
 
-    shares.close_shares("normal")
+        # File ID associated with word "ogg" should return our nicotinetestdata.ogg file
+        self.assertIn(ogg_indexes[0], nicotinetestdata_indexes)
+        self.assertEqual(shares.share_dbs["fileindex"][str(ogg_indexes[0])][0], 'Shares\\nicotinetestdata.ogg')
 
+        shares.close_shares("normal")
 
-def test_hidden_file_folder_scan(config):
-    """ Test that hidden files and folders are excluded """
+    def test_hidden_file_folder_scan(self):
+        """ Test that hidden files and folders are excluded """
 
-    config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
-    config.sections["transfers"]["rescanonstartup"] = False
+        self.config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+        self.config.sections["transfers"]["rescanonstartup"] = False
 
-    shares = Shares(None, config, deque())
-    shares.rescan_public_shares(thread=False)
+        shares = Shares(None, self.config, deque())
+        shares.rescan_public_shares(thread=False)
 
-    # Check folders
-    mtimes = list(shares.share_dbs["mtimes"])
+        # Check folders
+        mtimes = list(shares.share_dbs["mtimes"])
 
-    assert os.path.join(SHARES_DIR, ".abc") not in mtimes
-    assert os.path.join(SHARES_DIR, ".xyz") not in mtimes
-    assert os.path.join(SHARES_DIR, "folder1") in mtimes
-    assert os.path.join(SHARES_DIR, "folder2") in mtimes
-    assert os.path.join(SHARES_DIR, "folder2", ".poof") not in mtimes
-    assert os.path.join(SHARES_DIR, "folder2", "test") in mtimes
-    assert os.path.join(SHARES_DIR, "something") in mtimes
+        self.assertNotIn(os.path.join(SHARES_DIR, ".abc"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_DIR, ".xyz"), mtimes)
+        self.assertIn(os.path.join(SHARES_DIR, "folder1"), mtimes)
+        self.assertIn(os.path.join(SHARES_DIR, "folder2"), mtimes)
+        self.assertNotIn(os.path.join(SHARES_DIR, "folder2", ".poof"), mtimes)
+        self.assertIn(os.path.join(SHARES_DIR, "folder2", "test"), mtimes)
+        self.assertIn(os.path.join(SHARES_DIR, "something"), mtimes)
 
-    # Check files
-    files = shares.share_dbs["files"]["Shares"]
+        # Check files
+        files = shares.share_dbs["files"]["Shares"]
 
-    assert (".abc_file", 0, None, None) not in files
-    assert (".hidden_file", 0, None, None) not in files
-    assert (".xyz_file", 0, None, None) not in files
-    assert ("dummy_file", 0, None, None) in files
-    assert len(files) == 3
+        self.assertNotIn((".abc_file", 0, None, None), files)
+        self.assertNotIn((".hidden_file", 0, None, None), files)
+        self.assertNotIn((".xyz_file", 0, None, None), files)
+        self.assertIn(("dummy_file", 0, None, None), files)
+        self.assertEqual(len(files), 3)
 
-    shares.close_shares("normal")
+        shares.close_shares("normal")
 
+    def test_shares_add_downloaded(self):
+        """ Test that downloaded files are added to shared files """
 
-def test_shares_add_downloaded(config):
-    """ Test that downloaded files are added to shared files """
+        self.config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
+        self.config.sections["transfers"]["rescanonstartup"] = False
+        self.config.sections["transfers"]["sharedownloaddir"] = True
 
-    config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
-    config.sections["transfers"]["rescanonstartup"] = False
-    config.sections["transfers"]["sharedownloaddir"] = True
+        shares = Shares(None, self.config, deque(), None)
+        shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
-    shares = Shares(None, config, deque(), None)
-    shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
+        self.assertIn(('nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["files"]["Downloaded"])
+        self.assertIn(('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["fileindex"].values())
 
-    assert ('nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["files"]["Downloaded"]
-    assert ('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5) in shares.share_dbs["fileindex"].values()
-
-    shares.close_shares("normal")
+        shares.close_shares("normal")

@@ -17,16 +17,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
+import unittest
 
 
-def test_cli():
-    """ Verify that CLI-exclusive functionality works """
+class CLITest(unittest.TestCase):
 
-    output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=1)
-    assert str(output).find("--help") > -1
+    def test_cli(self):
+        """ Verify that CLI-exclusive functionality works """
 
-    # output = subprocess.check_output(["python3", "-m", "pynicotine", "--rescan"], timeout=1)
-    # assert str(output).find("100 %") > -1
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=1)
+        self.assertTrue(str(output).find("--help") > -1)
 
-    output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=1)
-    assert str(output).find("Nicotine+") > -1
+        # output = subprocess.check_output(["python3", "-m", "pynicotine", "--rescan"], timeout=1)
+        # assert str(output).find("100 %") > -1
+
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=1)
+        self.assertTrue(str(output).find("Nicotine+") > -1)

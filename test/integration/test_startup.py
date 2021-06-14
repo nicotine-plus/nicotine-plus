@@ -17,28 +17,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pytest
 import subprocess
+import unittest
 
-
-config_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_config")
-commands = (
-    ["python3", "-m", "pynicotine", "--config=" + config_file, "--ci-mode"],               # GUI
-    ["python3", "-m", "pynicotine", "--config=" + config_file, "--ci-mode", "--headless"]  # Headless
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_config")
+COMMANDS = (
+    ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--ci-mode"],               # GUI
+    ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--ci-mode", "--headless"]  # Headless
 )
 
 
-@pytest.mark.parametrize("command", commands)
-def test_startup(command):
+class StartupTest(unittest.TestCase):
 
-    # Assume failure by default
-    is_success = False
+    def test_startup(self):
 
-    try:
-        subprocess.call(command, timeout=5)
+        for command in COMMANDS:
+            # Assume failure by default
+            is_success = False
 
-    except subprocess.TimeoutExpired:
-        # Program was still running, success!
-        is_success = True
+            try:
+                subprocess.call(command, timeout=5)
 
-    assert is_success is True
+            except subprocess.TimeoutExpired:
+                # Program was still running, success!
+                is_success = True
+
+            self.assertTrue(is_success)

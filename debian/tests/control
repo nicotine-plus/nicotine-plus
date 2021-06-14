@@ -6,6 +6,6 @@ Depends: @
 Restrictions: isolation-container
 
 # Perform integration and unit tests...
-Test-Command: xvfb-run py.test-3
+Test-Command: xvfb-run python3 -m unittest
 Depends: @
 Restrictions: isolation-container

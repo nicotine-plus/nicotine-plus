@@ -19,12 +19,13 @@
 
 import os
 import pickle
-import select
 import socket
+import unittest
 
 from collections import deque
 from time import sleep
 from unittest.mock import Mock
+from unittest.mock import patch
 
 from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
@@ -35,6 +36,10 @@ LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
 
 class MockSocket(Mock):
+
+    def __init__(self):
+        super().__init__()
+        self.events = None
 
     def set_data(self, datafile):
 
@@ -54,92 +59,70 @@ class MockSocket(Mock):
             for time, event in logs[b'transactions'][mode].items():
                 self.events[time] = (mode.decode('latin1'), event)
 
-    def send(self, data):
+    @staticmethod
+    def send(data):
         print("sending data {}".format(data))
 
-    def recv(self, bufsize):
+    @staticmethod
+    def recv(bufsize):
         print("recving {} data".format(bufsize))
         return b''
 
 
-def monkeypatch_socket(monkeypatch, datafile):
+class SlskProtoTest(unittest.TestCase):
 
-    mock_socket = MockSocket()
-    mock_socket.set_data(datafile)
-    monkeypatch.setattr(socket, 'socket', lambda family, type: mock_socket)
-    return mock_socket
+    def test_server_conn(self):
 
+        mock_socket = MockSocket()
+        queue = deque()
+        proto = SlskProtoThread(
+            ui_callback=Mock(), queue=queue, bindip='',
+            port=None, port_range=(1, 65535), network_filter=None,
+            eventprocessor=Mock()
+        )
 
-def monkeypatch_select(monkeypatch):
+        with patch('socket.socket') as mock_socket:
+            mock_socket.set_data(LOGIN_DATAFILE)
+            proto.server_connect()
 
-    monkeypatch.setattr(
-        select, 'select', lambda rlist, wlist, xlist, timeout=None: (rlist, wlist, xlist)
-    )
+            queue.append(ServerConn(addr=('0.0.0.0', 0)))
+            sleep(SLSKPROTO_RUN_TIME)
+            proto.abort()
 
+            if hasattr(socket, 'TCP_KEEPIDLE'):
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 4)
 
-def test_instantiate_proto():
+            elif hasattr(socket, 'TCP_KEEPALIVE'):
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 3)
 
-    proto = SlskProtoThread(
-        ui_callback=Mock(), queue=deque(), bindip='',
-        port=None, port_range=(1, 2), network_filter=None,
-        eventprocessor=Mock()
-    )
-    proto.server_connect()
-    proto.abort()
+            elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+                self.assertEqual(proto.server_socket.ioctl.call_count, 1)
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 1)
 
+            self.assertEqual(proto.server_socket.setblocking.call_count, 2)
+            self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
 
-def test_server_conn(monkeypatch):
+            sleep(SLSKPROTO_RUN_TIME)
 
-    mock_socket = monkeypatch_socket(monkeypatch, LOGIN_DATAFILE)
-    monkeypatch_select(monkeypatch)
-    proto = SlskProtoThread(
-        ui_callback=Mock(), queue=deque(), bindip='',
-        port=None, port_range=(1, 2), network_filter=None,
-        eventprocessor=Mock()
-    )
-    proto.server_connect()
-    proto._queue.append(ServerConn())
+            self.assertEqual(proto.server_socket.close.call_count, 1)
 
-    sleep(SLSKPROTO_RUN_TIME)
+    @staticmethod
+    def test_login():
 
-    proto.abort()
+        queue = deque()
+        proto = SlskProtoThread(
+            ui_callback=Mock(), queue=queue, bindip='',
+            port=None, port_range=(1, 65535), network_filter=None,
+            eventprocessor=Mock()
+        )
+        proto.server_connect()
+        queue.append(ServerConn(addr=('0.0.0.0', 0)))
 
-    if hasattr(socket, 'TCP_KEEPIDLE'):
-        assert mock_socket.setsockopt.call_count == 5
+        sleep(SLSKPROTO_RUN_TIME / 2)
 
-    elif hasattr(socket, 'TCP_KEEPALIVE'):
-        assert mock_socket.setsockopt.call_count == 3
+        queue.append(Login('username', 'password', 160, 1))
+        queue.append(SetWaitPort(1))
 
-    elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-        assert mock_socket.ioctl.call_count == 1
-        assert mock_socket.setsockopt.call_count == 2
+        sleep(SLSKPROTO_RUN_TIME)
 
-    assert mock_socket.setblocking.call_count == 2
-    assert mock_socket.bind.call_count == 1
-    assert mock_socket.connect_ex.call_count == 1
-    assert mock_socket.listen.call_count == 1
-
-    sleep(SLSKPROTO_RUN_TIME)
-
-    assert mock_socket.close.call_count == 1
-
-
-def test_login(monkeypatch):
-
-    monkeypatch_select(monkeypatch)
-    proto = SlskProtoThread(
-        ui_callback=Mock(), queue=deque(), bindip='',
-        port=None, port_range=(1, 2), network_filter=None,
-        eventprocessor=Mock()
-    )
-    proto.server_connect()
-    proto._queue.append(ServerConn())
-
-    sleep(SLSKPROTO_RUN_TIME / 2)
-
-    proto._queue.append(Login('username', 'password', 160, 1))
-    proto._queue.append(SetWaitPort(1))
-
-    sleep(SLSKPROTO_RUN_TIME)
-
-    proto.abort()
+        proto.abort()

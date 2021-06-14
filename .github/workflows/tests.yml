@@ -24,16 +24,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gir1.2-gtk-3.0 libgirepository1.0-dev
-          python -m pip install flake8 pep8-naming pygobject pylint pytest
+          python -m pip install flake8 pygobject pylint
 
       - name: Linter
         run: |
           python -m flake8
-          python -m pylint pynicotine
+          python -m pylint pynicotine test
 
       - name: Integration and unit tests
         run: |
-          xvfb-run python -m pytest
+          xvfb-run python -m unittest
 
   windows:
     runs-on: windows-latest
@@ -64,11 +64,11 @@ jobs:
 
       - name: Linter
         run: |
-          flake8
+          python3 -m flake8
 
       - name: Integration and unit tests
         run: |
-          pytest
+          python3 -m unittest
 
   macos:
     runs-on: macos-latest
@@ -89,9 +89,9 @@ jobs:
 
       - name: Linter
         run: |
-          flake8
-          pylint pynicotine
+          python3 -m flake8
+          python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
         run: |
-          pytest
+          python3 -m unittest

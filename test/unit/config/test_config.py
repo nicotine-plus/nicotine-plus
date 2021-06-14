@@ -17,49 +17,48 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import pytest
+import unittest
 
 from pynicotine.config import Config
 
 
-@pytest.fixture
-def config():
-    config = Config()
-    config.data_dir = os.path.dirname(os.path.realpath(__file__))
-    config.filename = os.path.join(config.data_dir, "config")
+class ConfigTest(unittest.TestCase):
 
-    config.load_config()
-    return config
+    def setUp(self):
 
+        self.config = Config()
+        self.config.data_dir = os.path.dirname(os.path.realpath(__file__))
+        self.config.filename = os.path.join(self.config.data_dir, "config")
 
-def test_load_config(config):
-    """ Test loading a config file """
+        self.config.load_config()
 
-    assert config.defaults["server"]["login"] == ""
-    assert config.defaults["server"]["passw"] == ""
+    def test_load_config(self):
+        """ Test loading a config file """
 
-    assert config.sections["server"]["login"] == "user123"
-    assert config.sections["server"]["passw"] == "pass123"
-    assert config.sections["server"]["autoreply"] == "ääääääää"
+        self.assertEqual(self.config.defaults["server"]["login"], "")
+        self.assertEqual(self.config.defaults["server"]["passw"], "")
 
+        self.assertEqual(self.config.sections["server"]["login"], "user123")
+        self.assertEqual(self.config.sections["server"]["passw"], "pass123")
+        self.assertEqual(self.config.sections["server"]["autoreply"], "ääääääää")
 
-def test_write_config(config):
-    """ Test writing to a config file """
+    def test_write_config(self):
+        """ Test writing to a config file """
 
-    # Verify that changes are saved
-    config.sections["server"]["login"] = "newname"
-    config.write_configuration()
+        # Verify that changes are saved
+        self.config.sections["server"]["login"] = "newname"
+        self.config.write_configuration()
 
-    with open(config.filename, encoding="utf-8") as f:
-        assert "newname" in f.read()
+        with open(self.config.filename, encoding="utf-8") as file_handle:
+            self.assertIn("newname", file_handle.read())
 
-    # Verify that the backup is valid
-    old_config = config.filename + ".old"
-    assert os.path.exists(old_config)
+        # Verify that the backup is valid
+        old_config = self.config.filename + ".old"
+        self.assertTrue(os.path.exists(old_config))
 
-    with open(old_config, encoding="utf-8") as f:
-        assert "user123" in f.read()
+        with open(old_config, encoding="utf-8") as file_handle:
+            self.assertIn("user123", file_handle.read())
 
-    # Reset
-    config.sections["server"]["login"] = "user123"
-    config.write_configuration()
+        # Reset
+        self.config.sections["server"]["login"] = "user123"
+        self.config.write_configuration()

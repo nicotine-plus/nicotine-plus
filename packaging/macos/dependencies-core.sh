@@ -28,7 +28,5 @@ brew install \
 # Install dependencies with pip
 pip3 install \
   flake8 \
-  pep8-naming \
   pygobject \
-  pylint \
-  pytest
+  pylint

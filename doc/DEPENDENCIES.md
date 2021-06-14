@@ -4,8 +4,8 @@
 
 ### Required
 
-* [python3](https://www.python.org/) >= 3.6 for interpreter;
-* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
+* [python](https://www.python.org/) >= 3.6 for interpreter;
+* [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
 * [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files.
 
@@ -20,11 +20,9 @@
 
 ## Testing
 
-* [pylint3](https://www.pylint.org/) for lint checks;
-* [python3-flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
-* [python3-pep8-naming](https://pypi.org/project/pep8-naming/) for PEP 8 naming conventions check;
-* [python3-pytest](https://docs.pytest.org/en/stable/getting-started.html) for integration and unit tests;
-* [python3-gi](https://pygobject.readthedocs.io/en/latest/getting_started.html) for integration tests;
+* [flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
+* [pylint](https://www.pylint.org/) for lint checks;
+* [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) for integration tests;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for integration tests.
 
 ## Installing dependencies
@@ -61,13 +59,13 @@ sudo dnf install gspell libappindicator-gtk3
 * On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install pylint3 python3-flake8 python3-pep8-naming python3-pytest
+sudo apt install gir1.2-gtk-3.0 pylint3 python3-flake8 python3-gi
 ```
 
 * On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install pylint python3-flake8 python3-pep8-naming python3-pytest
+sudo dnf install gtk3 pylint python3-flake8 python3-gobject
 ```
 
 #### Check the Python version.

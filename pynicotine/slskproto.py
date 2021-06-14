@@ -430,7 +430,7 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self._server_socket = None
+        self.server_socket = None
 
         self._conns = {}
         self._connsinprogress = {}
@@ -890,7 +890,7 @@ class SlskProtoThread(threading.Thread):
 
     def close_connection(self, connection_list, connection):
         try:
-            if connection is self._server_socket:
+            if connection is self.server_socket:
                 # Disconnected from server, clean up connections and queue
                 self.server_disconnect()
                 return
@@ -1173,7 +1173,7 @@ class SlskProtoThread(threading.Thread):
         listen_socket = self.listen_socket
 
         # @var s Server Port
-        self._server_socket = server_socket = None
+        self.server_socket = server_socket = None
 
         conns = self._conns
         connsinprogress = self._connsinprogress
@@ -1188,7 +1188,7 @@ class SlskProtoThread(threading.Thread):
 
             if queue:
                 conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
-                self._server_socket = server_socket
+                self.server_socket = server_socket
 
             self._ulimits = {}
             self._dlimits = {}
@@ -1330,7 +1330,7 @@ class SlskProtoThread(threading.Thread):
                     # Connection was removed, possibly disconnecting from the server
                     continue
 
-                if connection in output_list:
+                if conn_obj.obuf and connection in output_list:
                     # Write Output
 
                     try:

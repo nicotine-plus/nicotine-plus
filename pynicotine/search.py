@@ -48,11 +48,12 @@ class Search:
         users = []
         feedback = None
 
-        if mode == "global" and self.np:
-            feedback = self.np.pluginhandler.outgoing_global_search_event(text)
+        if mode == "global":
+            if self.np:
+                feedback = self.np.pluginhandler.outgoing_global_search_event(text)
 
-            if feedback is not None:
-                text = feedback[0]
+                if feedback is not None:
+                    text = feedback[0]
 
         elif mode == "rooms":
             # Space after Joined Rooms is important, so it doesn't conflict
