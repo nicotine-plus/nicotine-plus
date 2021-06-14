@@ -126,7 +126,7 @@ If you'd like to contribute, you have a couple of options to get started:
 
 * If you'd like to translate Nicotine+ into another language it has not been already, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * If you find a problem or have a feature request you can
-  * discuss your findings in the [#nicotine+ IRC channel](irc://irc.libera.chat/nicotine+) on [Libera.Chat](https://libera.chat/),
+  * discuss your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/),
   * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
   * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
 * If you're packaging Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md) for a list of dependencies.
