@@ -167,7 +167,7 @@ class NowPlaying:
 
         # https://media.readthedocs.org/pdf/mpris2/latest/mpris2.pdf
 
-        from gi.repository import Gio
+        from gi.repository import Gio  # pylint: disable=import-error
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
         dbus_mpris_service = 'org.mpris.MediaPlayer2.'

@@ -23,12 +23,12 @@
 # Install dependencies from the main Homebrew repos
 brew install \
   adwaita-icon-theme \
-  flake8 \
-  gtk+$NICOTINE_GTK_VERSION \
-  pylint
+  gtk+$NICOTINE_GTK_VERSION
 
 # Install dependencies with pip
 pip3 install \
+  flake8 \
   pep8-naming \
   pygobject \
+  pylint \
   pytest
