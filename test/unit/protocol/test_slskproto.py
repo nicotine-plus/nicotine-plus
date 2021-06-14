@@ -87,7 +87,6 @@ class SlskProtoTest(unittest.TestCase):
 
             queue.append(ServerConn(addr=('0.0.0.0', 0)))
             sleep(SLSKPROTO_RUN_TIME)
-            proto.abort()
 
             if hasattr(socket, 'TCP_KEEPIDLE'):
                 self.assertEqual(proto.server_socket.setsockopt.call_count, 4)
@@ -102,9 +101,9 @@ class SlskProtoTest(unittest.TestCase):
             self.assertEqual(proto.server_socket.setblocking.call_count, 2)
             self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
 
-            sleep(SLSKPROTO_RUN_TIME)
+            proto.abort()
 
-            self.assertEqual(proto.server_socket.close.call_count, 1)
+            self.assertIsNone(proto.server_socket)
 
     @staticmethod
     def test_login():
