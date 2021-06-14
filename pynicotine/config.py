@@ -573,7 +573,7 @@ class Config:
                             eval_val = val
 
                         if i != "plugins" and j != "filter":
-                            if type(eval_val) == type(default_val) or \
+                            if isinstance(eval_val, type(default_val)) or \
                                     isinstance(default_val, bool) and isinstance(eval_val, int) and eval_val in (0, 1):
                                 pass
 
@@ -582,7 +582,7 @@ class Config:
 
                         self.sections[i][j] = eval_val
 
-                    except TypeError:
+                    except (TypeError, ValueError):
                         # Value was unexpected, reset option
                         self.sections[i][j] = default_val
 

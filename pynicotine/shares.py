@@ -840,10 +840,12 @@ class Shares:
         quickly send our file list to users. """
 
         if sharestype == "normal":
-            thread = threading.Thread(target=self.compressed_shares_normal.make_network_message, args=(0, True))
+            self.compressed_shares_normal.built = None
+            thread = threading.Thread(target=self.compressed_shares_normal.make_network_message)
 
         elif sharestype == "buddy":
-            thread = threading.Thread(target=self.compressed_shares_buddy.make_network_message, args=(0, True))
+            self.compressed_shares_buddy.built = None
+            thread = threading.Thread(target=self.compressed_shares_buddy.make_network_message)
 
         thread.name = "CompressShares"
         thread.daemon = True
@@ -875,7 +877,7 @@ class Shares:
         if self.config.sections["transfers"]["friendsonly"]:
             # No public shares
             files = folders = 0
-            self.queue.append(slskmessages.SharedFoldersFiles(files, folders))
+            self.queue.append(slskmessages.SharedFoldersFiles(folders, files))
             return
 
         try:

@@ -11,6 +11,7 @@ Build-Depends:
     gettext,
     gir1.2-gtk-3.0,
     lintian,
+    pylint3,
     python3 (>= 3.6),
     python3-gdbm,
     python3-gi,

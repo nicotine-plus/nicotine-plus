@@ -402,7 +402,7 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
 
     # subcommands is now: [['C:\Program Files\WinAmp\WinAmp.exe', '--xforce', '--title=My Title', '$'], ['flite', '-t']]
     if replacement:
-        for i in range(0, len(subcommands)):
+        for i, _ in enumerate(subcommands):
             subcommands[i] = [x.replace(placeholder, replacement) for x in subcommands[i]]
 
     # Chaining commands...
@@ -422,9 +422,9 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
             procs.append(Popen(subcommands[-1], stdin=procs[-1].stdout, stdout=finalstdout))
         if not background and not returnoutput:
             procs[-1].wait()
-    except Exception:
+    except Exception as error:
         raise RuntimeError("Problem while executing command %s (%s of %s)" %
-                           (subcommands[len(procs)], len(procs) + 1, len(subcommands)))
+                           (subcommands[len(procs)], len(procs) + 1, len(subcommands))) from error
 
     if not returnoutput:
         return True
@@ -545,12 +545,12 @@ def add_alias(rest):
 
         return _("No such alias (%s)") % rest + "\n"
 
-    m = "\n" + _("Aliases:") + "\n"
+    msg = "\n" + _("Aliases:") + "\n"
 
     for (key, value) in aliases.items():
-        m = m + "%s: %s\n" % (key, value)
+        msg = msg + "%s: %s\n" % (key, value)
 
-    return m + "\n"
+    return msg + "\n"
 
 
 def unalias(rest):
@@ -558,10 +558,10 @@ def unalias(rest):
     aliases = config.sections["server"]["command_aliases"]
 
     if rest and rest in aliases:
-        x = aliases[rest]
+        action = aliases[rest]
         del aliases[rest]
 
-        return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': x}
+        return _("Removed alias %(alias)s: %(action)s\n") % {'alias': rest, 'action': action}
 
     return _("No such alias (%(alias)s)\n") % {'alias': rest}
 
@@ -592,18 +592,18 @@ def _expand_alias(aliases, cmd):
     def getpart(line):
         if line[0] != "(":
             return ""
-        ix = 1
+        i = 1
         ret = ""
         level = 0
-        while ix < len(line):
-            if line[ix] == "(":
+        while i < len(line):
+            if line[i] == "(":
                 level = level + 1
-            if line[ix] == ")":
+            if line[i] == ")":
                 if level == 0:
                     return ret
                 level = level - 1
-            ret = ret + line[ix]
-            ix = ix + 1
+            ret = ret + line[i]
+            i = i + 1
         return ""
 
     if not is_alias(cmd):
@@ -638,10 +638,10 @@ def _expand_alias(aliases, cmd):
                         last = int(args[1])
                     else:
                         last = len(cmd)
-                v = " ".join(cmd[first:last + 1])
-                if not v:
-                    v = default
-                ret = ret + v
+                value = " ".join(cmd[first:last + 1])
+                if not value:
+                    value = default
+                ret = ret + value
             else:
                 ret = ret + alias[i]
                 i = i + 1

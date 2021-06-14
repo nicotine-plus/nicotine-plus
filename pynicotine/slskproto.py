@@ -428,8 +428,8 @@ class SlskProtoThread(threading.Thread):
         for i in self.peercodes:
             self.peerclasses[self.peercodes[i]] = i
 
-        self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._server_socket = None
 
         self._conns = {}
@@ -448,11 +448,11 @@ class SlskProtoThread(threading.Thread):
 
         for listenport in range(int(portrange[0]), int(portrange[1]) + 1):
             try:
-                self._listen_socket.bind((bindip or '', listenport))
+                self.listen_socket.bind((bindip or '', listenport))
             except socket.error:
                 listenport = None
             else:
-                self._listen_socket.listen(1)
+                self.listen_socket.listen(1)
                 self._ui_callback([IncPort(listenport)])
                 break
 
@@ -682,7 +682,7 @@ class SlskProtoThread(threading.Thread):
         """
         msgs = []
 
-        while (conn.init is None or conn.init.type not in ['F', 'D']) and len(msg_buffer) >= 8:
+        while (conn.init is None or conn.init.conn_type not in ['F', 'D']) and len(msg_buffer) >= 8:
             msgsize = struct.unpack("<i", msg_buffer[:4])[0]
 
             if len(msg_buffer) >= 8:
@@ -731,7 +731,7 @@ class SlskProtoThread(threading.Thread):
                 else:
                     break
 
-            elif conn.init.type == 'P':
+            elif conn.init.conn_type == 'P':
                 # Unpack Peer Messages
                 msgtype = struct.unpack("<i", msg_buffer[4:8])[0]
 
@@ -789,7 +789,7 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 # Unknown Message type
-                msgs.append("Can't handle connection type %s" % (conn.init.type))
+                msgs.append("Can't handle connection type %s" % (conn.init.conn_type))
 
             if msgsize >= 0:
                 msg_buffer = msg_buffer[msgsize + 4:]
@@ -857,21 +857,22 @@ class SlskProtoThread(threading.Thread):
         dead. """
 
         if hasattr(socket, 'SO_KEEPALIVE'):
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=maybe-no-member
 
         if hasattr(socket, 'TCP_KEEPINTVL'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, interval)
+            server_socket.setsockopt(socket.IPPROTO_TCP,
+                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=maybe-no-member
 
         if hasattr(socket, 'TCP_KEEPCNT'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=maybe-no-member
 
         if hasattr(socket, 'TCP_KEEPIDLE'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=maybe-no-member
 
         elif hasattr(socket, 'TCP_KEEPALIVE'):
             # macOS fallback
 
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=maybe-no-member
 
         elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
             """ Windows fallback
@@ -879,7 +880,7 @@ class SlskProtoThread(threading.Thread):
             https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive """
 
             server_socket.ioctl(
-                socket.SIO_KEEPALIVE_VALS,
+                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=maybe-no-member
                 (
                     1,
                     idle * 1000,
@@ -1169,7 +1170,7 @@ class SlskProtoThread(threading.Thread):
         """ Actual networking loop is here."""
 
         # @var p Peer / Listen Port
-        listen_socket = self._listen_socket
+        listen_socket = self.listen_socket
 
         # @var s Server Port
         self._server_socket = server_socket = None
@@ -1384,15 +1385,15 @@ class SlskProtoThread(threading.Thread):
                             self._ui_callback(msgs)
 
                         else:
-                            if conn_obj.init is None or conn_obj.init.type not in ['F', 'D']:
+                            if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
                                 msgs, conn_obj = self.process_peer_input(conn_obj, conn_obj.ibuf)
                                 self._ui_callback(msgs)
 
-                            if conn_obj.init is not None and conn_obj.init.type == 'F':
+                            if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
                                 msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
                                 self._ui_callback(msgs)
 
-                            if conn_obj.init is not None and conn_obj.init.type == 'D':
+                            if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
                                 msgs, conn_obj = self.process_distrib_input(conn_obj, conn_obj.ibuf)
                                 self._ui_callback(msgs)
 

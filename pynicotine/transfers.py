@@ -41,7 +41,6 @@ from time import sleep
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
-from pynicotine.slskmessages import new_id
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
@@ -1706,7 +1705,7 @@ class Transfers:
                                      "request": transfer.req,
                                      "user": user
                                  })
-                transfer.req = new_id()
+                transfer.req = self.eventprocessor.get_new_token()
                 transfer.status = "Getting status"
                 self.transfer_request_times[transfer] = time.time()
 

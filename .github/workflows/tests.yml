@@ -24,11 +24,12 @@ jobs:
         run: |
           sudo apt update
           sudo apt install gir1.2-gtk-3.0 libgirepository1.0-dev
-          python -m pip install flake8 pep8-naming pygobject pytest
+          python -m pip install flake8 pep8-naming pygobject pylint pytest
 
-      - name: Lint with flake8
+      - name: Linter
         run: |
           python -m flake8
+          python -m pylint pynicotine
 
       - name: Integration and unit tests
         run: |
@@ -61,9 +62,10 @@ jobs:
           export ARCH=x86_64
           packaging/windows/dependencies-core.sh
 
-      - name: Lint with flake8
+      - name: Linter
         run: |
           flake8
+          pylint pynicotine
 
       - name: Integration and unit tests
         run: |
@@ -86,9 +88,10 @@ jobs:
         run: |
           packaging/macos/dependencies-core.sh
 
-      - name: Lint with flake8
+      - name: Linter
         run: |
           flake8
+          pylint pynicotine
 
       - name: Integration and unit tests
         run: |

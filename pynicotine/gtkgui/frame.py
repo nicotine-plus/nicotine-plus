@@ -1962,7 +1962,7 @@ class NicotineFrame:
     def parse_local_shares(self, username, msg, folder=None, shares_type="normal"):
         """ Parse our local shares list and show it in the UI """
 
-        built = msg.make_network_message(nozlib=0)
+        built = msg.make_network_message()
         msg.parse_network_message(built)
 
         indeterminate_progress = change_page = False
@@ -2149,12 +2149,12 @@ class NicotineFrame:
 
     """ Log Window """
 
-    def log_callback(self, timestamp_format, debug_level, msg):
+    def log_callback(self, timestamp_format, msg):
 
         if not self.np.shutdown:
-            GLib.idle_add(self.update_log, msg, debug_level, priority=GLib.PRIORITY_DEFAULT)
+            GLib.idle_add(self.update_log, msg, priority=GLib.PRIORITY_DEFAULT)
 
-    def update_log(self, msg, debug_level=None):
+    def update_log(self, msg):
 
         if self.np.shutdown:
             return

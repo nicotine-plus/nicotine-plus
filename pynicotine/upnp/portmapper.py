@@ -97,7 +97,7 @@ class UPnPPortMapping:
         local_socket.close()
 
         # Store the Local LAN port
-        self.internallanport = np.protothread._listen_socket.getsockname()[1]
+        self.internallanport = np.protothread.listen_socket.getsockname()[1]
         self.externalwanport = self.internallanport
 
         # Do the port mapping
@@ -120,6 +120,4 @@ class UPnPPortMapping:
 
         except Exception as error:
             raise RuntimeError(
-                _('Failed to map the external WAN port: %(error)s') %
-                {'error': error}
-            )
+                _('Failed to map the external WAN port: %(error)s') % {'error': error}) from error

@@ -22,7 +22,6 @@ import socket
 import struct
 import zlib
 
-from itertools import count
 from itertools import islice
 
 from pynicotine.logfacility import log
@@ -30,15 +29,7 @@ from pynicotine.utils import debug
 
 """ This module contains message classes, that networking and UI thread
 exchange. Basically there are three types of messages: internal messages,
-server messages and p2p messages (between clients)."""
-
-counter = count(100)
-
-
-def new_id():
-    global counter
-    new_id = next(counter)
-    return new_id
+server messages and p2p messages (between clients). """
 
 
 class InternalMessage:
@@ -109,11 +100,11 @@ class IncPort(InternalMessage):
 class PeerTransfer(InternalMessage):
     """ Used to indicate progress of long transfers. """
 
-    __slots__ = ("conn", "total", "bytes", "msg")
+    __slots__ = ("conn", "total", "bufferlen", "msg")
 
-    def __init__(self, conn=None, total=None, bytes=None, msg=None):
+    def __init__(self, conn=None, total=None, bufferlen=None, msg=None):
         self.conn = conn
-        self.bytes = bytes
+        self.bufferlen = bufferlen
         self.total = total
         self.msg = msg
 
@@ -204,14 +195,14 @@ class PopupMessage:
 class SlskMessage:
     """ This is a parent class for all protocol messages. """
 
-    def get_object(self, message, type, start=0, getsignedint=False, getunsignedlonglong=False):
+    def get_object(self, message, obj_type, start=0, getsignedint=False, getunsignedlonglong=False):
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
 
         intsize = struct.calcsize("<I")
 
         try:
-            if type is int:
+            if obj_type is int:
                 if getsignedint:
                     # little-endian signed integer (4 bytes)
                     return intsize + start, struct.unpack("<i", message[start:start + intsize])[0]
@@ -228,13 +219,13 @@ class SlskMessage:
                     # little-endian unsigned integer (4 bytes)
                     return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
 
-            elif type is bytes:
+            elif obj_type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 content = message[start + intsize:start + length + intsize]
 
                 return length + intsize + start, content
 
-            elif type is str:
+            elif obj_type is str:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 string = message[start + intsize:start + length + intsize]
 
@@ -255,38 +246,38 @@ class SlskMessage:
 
         except struct.error as error:
             log.add("%s %s trying to unpack %s at '%s' at %s/%s",
-                    (self.__class__, error, type, message[start:].__repr__(), start, len(message)))
+                    (self.__class__, error, obj_type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
 
-    def pack_object(self, object, unsignedint=False, unsignedlonglong=False, latin1=False):
+    def pack_object(self, obj, unsignedint=False, unsignedlonglong=False, latin1=False):
         """ Returns object (integer, long or string packed into a
         binary array."""
 
-        if isinstance(object, int):
+        if isinstance(obj, int):
             if unsignedint:
-                return struct.pack("<I", object)
+                return struct.pack("<I", obj)
             if unsignedlonglong:
-                return struct.pack("<Q", object)
+                return struct.pack("<Q", obj)
 
-            return struct.pack("<i", object)
+            return struct.pack("<i", obj)
 
-        if isinstance(object, bytes):
-            return struct.pack("<i", len(object)) + object
+        if isinstance(obj, bytes):
+            return struct.pack("<i", len(obj)) + obj
 
-        if isinstance(object, str):
+        if isinstance(obj, str):
             if latin1:
                 try:
                     # Try to encode in latin-1 first for older clients (Soulseek NS)
-                    encoded = object.encode("latin-1")
+                    encoded = obj.encode("latin-1")
                 except Exception:
-                    encoded = object.encode("utf-8", "replace")
+                    encoded = obj.encode("utf-8", "replace")
             else:
-                encoded = object.encode("utf-8", "replace")
+                encoded = obj.encode("utf-8", "replace")
 
             return struct.pack("<i", len(encoded)) + encoded
 
         log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s",
-                {'obj_type': type(object), 'msg_type': self.__class__})
+                {'obj_type': type(obj), 'msg_type': self.__class__})
 
         return b""
 
@@ -340,7 +331,7 @@ class Login(ServerMessage):
         self.success = None
         self.reason = None
         self.banner = None
-        self.ip = None
+        self.ip_address = None
         self.checksum = None
 
     def make_network_message(self):
@@ -371,7 +362,7 @@ class Login(ServerMessage):
             return
 
         try:
-            pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+            pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
 
         except Exception as error:
             log.add("Error unpacking IP address: %s", error)
@@ -400,7 +391,7 @@ class GetPeerAddress(ServerMessage):
 
     def __init__(self, user=None):
         self.user = user
-        self.ip = None
+        self.ip_address = None
         self.port = None
 
     def make_network_message(self):
@@ -408,7 +399,7 @@ class GetPeerAddress(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+        pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
         pos, self.port = self.get_object(message, int, pos, 1)
 
 
@@ -645,11 +636,11 @@ class ConnectToPeer(ServerMessage):
     to go the other way around (direct connection has failed).
     """
 
-    def __init__(self, token=None, user=None, type=None):
+    def __init__(self, token=None, user=None, conn_type=None):
         self.token = token
         self.user = user
-        self.type = type
-        self.ip = None
+        self.conn_type = conn_type
+        self.ip_address = None
         self.port = None
         self.privileged = None
 
@@ -657,14 +648,14 @@ class ConnectToPeer(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_object(self.token, unsignedint=True))
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.type))
+        msg.extend(self.pack_object(self.conn_type))
 
         return msg
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.type = self.get_object(message, str, pos)
-        pos, self.ip = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+        pos, self.conn_type = self.get_object(message, str, pos)
+        pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
         pos, self.port = self.get_object(message, int, pos, 1)
         pos, self.token = self.get_object(message, int, pos)
 
@@ -934,8 +925,8 @@ class Recommendations(ServerMessage):
     for each. """
 
     def __init__(self):
-        self.recommendations = None
-        self.unrecommendations = None
+        self.recommendations = {}
+        self.unrecommendations = {}
 
     def make_network_message(self):
         return b""
@@ -944,9 +935,6 @@ class Recommendations(ServerMessage):
         self.unpack_recommendations(message)
 
     def unpack_recommendations(self, message, pos=0):
-        self.recommendations = {}
-        self.unrecommendations = {}
-
         pos, num = self.get_object(message, int, pos)
 
         for _ in range(num):
@@ -990,8 +978,8 @@ class UserInterests(ServerMessage):
     def make_network_message(self):
         return self.pack_object(self.user)
 
-    def parse_network_message(self, message, pos=0):
-        pos, self.user = self.get_object(message, str, pos)
+    def parse_network_message(self, message):
+        pos, self.user = self.get_object(message, str)
         pos, likesnum = self.get_object(message, int, pos)
 
         for _ in range(likesnum):
@@ -1480,14 +1468,14 @@ class SimilarUsers(ServerMessage):
             self.users[user] = rating
 
 
-class ItemRecommendations(GlobalRecommendations):
+class ItemRecommendations(Recommendations):
     """ Server code: 111 """
     """ The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an existing
     recommendation list. """
 
     def __init__(self, thing=None):
-        GlobalRecommendations.__init__(self)
+        super().__init__()
         self.thing = thing
 
     def make_network_message(self):
@@ -2060,23 +2048,23 @@ class PeerInit(PeerMessage):
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
 
-    def __init__(self, conn, user=None, type=None, token=None):
+    def __init__(self, conn, user=None, conn_type=None, token=None):
         self.conn = conn
         self.user = user
-        self.type = type
+        self.conn_type = conn_type
         self.token = token
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.type))
+        msg.extend(self.pack_object(self.conn_type))
         msg.extend(self.pack_object(self.token, unsignedint=True))
 
         return msg
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.type = self.get_object(message, str, pos)
+        pos, self.conn_type = self.get_object(message, str, pos)
 
         if message[pos:]:
             # A token is not guaranteed to be sent
@@ -2108,12 +2096,11 @@ class SharedFileList(PeerMessage):
         self.list = shares
         self.built = None
 
-    def parse_network_message(self, message, nozlib=False):
+    def parse_network_message(self, message):
         try:
-            if not nozlib:
-                message = zlib.decompress(message)
-
+            message = zlib.decompress(message)
             self._parse_network_message(message)
+
         except Exception as error:
             log.add(_("Exception during parsing %(area)s: %(exception)s"),
                     {'area': 'SharedFileList', 'exception': error})
@@ -2161,11 +2148,10 @@ class SharedFileList(PeerMessage):
 
         self.list = shares
 
-    def make_network_message(self, nozlib=0, rebuild=False):
-        # Elaborate hack, to save CPU
-        # Store packed message contents in self.built, and use
-        # instead of repacking it, unless rebuild is True
-        if not rebuild and self.built is not None:
+    def make_network_message(self):
+        # Elaborate hack to save CPU
+        # Store packed message contents in self.built, and use instead of repacking it
+        if self.built is not None:
             return self.built
 
         msg = bytearray()
@@ -2188,11 +2174,7 @@ class SharedFileList(PeerMessage):
                 except KeyError:
                     pass
 
-        if not nozlib:
-            self.built = zlib.compress(msg)
-        else:
-            self.built = msg
-
+        self.built = zlib.compress(msg)
         return self.built
 
 
@@ -2483,7 +2465,7 @@ class FolderContentsResponse(PeerMessage):
         shares = {}
         pos, nfolders = self.get_object(message, int)
 
-        for _h in range(nfolders):
+        for _ in range(nfolders):
             pos, folder = self.get_object(message, str, pos)
 
             shares[folder] = {}

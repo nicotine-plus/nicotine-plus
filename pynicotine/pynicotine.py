@@ -46,7 +46,6 @@ from pynicotine.nowplaying import NowPlaying
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.search import Search
 from pynicotine.shares import Shares
-from pynicotine.slskmessages import new_id
 from pynicotine.transfers import Statistics
 from pynicotine.utils import unescape
 
@@ -69,7 +68,7 @@ class PeerConnection:
     slskmessages docstrings for explanation of these)
     """
 
-    __slots__ = ("addr", "username", "conn", "msgs", "token", "init", "type", "tryaddr")
+    __slots__ = ("addr", "username", "conn", "msgs", "token", "init", "conn_type", "tryaddr")
 
     def __init__(self, addr=None, username=None, conn=None, msgs=None, token=None, init=None, tryaddr=None):
         self.addr = addr
@@ -78,7 +77,7 @@ class PeerConnection:
         self.msgs = msgs
         self.token = token
         self.init = init
-        self.type = init.type
+        self.conn_type = init.conn_type
         self.tryaddr = tryaddr
 
 
@@ -159,6 +158,7 @@ class NetworkEventProcessor:
 
         self.requested_info = {}
         self.speed = 0
+        self.token = 100
 
         # Callback handlers for messages
         self.events = {
@@ -369,6 +369,10 @@ class NetworkEventProcessor:
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
+    def get_new_token(self):
+        self.token += 1
+        return self.token
+
     def set_status(self, msg, msg_args=None):
 
         if msg_args:
@@ -403,13 +407,13 @@ class NetworkEventProcessor:
         user = msg.user
         addr = msg.conn.addr
         conn = msg.conn.conn
-        msg_type = msg.type
+        conn_type = msg.conn_type
         found_conn = False
 
         # We need two connections in our name if we're downloading from ourselves
         if user != config.sections["server"]["login"]:
             for i in self.peerconns:
-                if i.username == user and i.type != 'F' and i.type == msg_type:
+                if i.username == user and i.conn_type != 'F' and i.conn_type == conn_type:
                     i.addr = addr
                     i.conn = conn
                     i.token = None
@@ -438,7 +442,7 @@ class NetworkEventProcessor:
             )
 
         log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s", {
-            'type': msg_type,
+            'type': conn_type,
             'user': user
         })
 
@@ -453,10 +457,10 @@ class NetworkEventProcessor:
             """ Check if there's already a connection object for the specified username """
 
             for i in self.peerconns:
-                if i.username == user and i.type == 'P':
+                if i.username == user and i.conn_type == 'P':
                     conn = i
                     log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
-                        'type': i.type,
+                        'type': i.conn_type,
                         'user': user
                     })
                     break
@@ -539,14 +543,14 @@ class NetworkEventProcessor:
 
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
-        conn.token = new_id()
-        self.queue.append(slskmessages.ConnectToPeer(conn.token, conn.username, conn.type))
+        conn.token = self.get_new_token()
+        self.queue.append(slskmessages.ConnectToPeer(conn.token, conn.username, conn.conn_type))
         self.out_indirect_conn_request_times[conn] = time.time()
 
         log.add_conn(
             """Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection.
 Error: %(error)s""", {
-                "type": conn.type,
+                "type": conn.conn_type,
                 "user": conn.username,
                 "error": error
             }
@@ -560,17 +564,17 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         user = msg.user
-        addr = (msg.ip, msg.port)
+        addr = (msg.ip_address, msg.port)
         token = msg.token
-        msg_type = msg.type
+        conn_type = msg.conn_type
         found_conn = False
         should_connect = True
 
-        init = slskmessages.PeerInit(None, user, msg_type, 0)
+        init = slskmessages.PeerInit(None, user, conn_type, 0)
 
         if user != config.sections["server"]["login"]:
             for i in self.peerconns:
-                if i.username == user and i.type != 'F' and i.type == msg_type:
+                if i.username == user and i.conn_type != 'F' and i.conn_type == conn_type:
                     """ Only update existing connection if it hasn't been established yet,
                     otherwise ignore indirect connection request. """
 
@@ -589,7 +593,7 @@ Error: %(error)s""", {
                     break
 
         if should_connect:
-            self.connect_to_peer_direct(user, addr, msg_type, init)
+            self.connect_to_peer_direct(user, addr, conn_type, init)
 
         if not found_conn:
             """ No previous connection exists for user """
@@ -634,10 +638,10 @@ Error: %(error)s""", {
                             }
                         )
 
-                    i.addr = (msg.ip, msg.port)
+                    i.addr = (msg.ip_address, msg.port)
                     i.tryaddr = None
 
-                    self.connect_to_peer_direct(user, i.addr, i.type)
+                    self.connect_to_peer_direct(user, i.addr, i.conn_type)
 
                 else:
 
@@ -657,12 +661,12 @@ Error: %(error)s""", {
                     return
 
         if user in self.users:
-            self.users[user].addr = (msg.ip, msg.port)
+            self.users[user].addr = (msg.ip_address, msg.port)
         else:
-            self.users[user] = UserAddr(addr=(msg.ip, msg.port))
+            self.users[user] = UserAddr(addr=(msg.ip_address, msg.port))
 
         # User seems to be offline, don't update IP
-        if msg.ip != "0.0.0.0":
+        if msg.ip_address != "0.0.0.0":
 
             # If the IP address changed, make sure our IP block/ignore list reflects this
             self.network_filter.update_saved_user_ip_filters(user)
@@ -673,7 +677,7 @@ Error: %(error)s""", {
             if self.network_filter.ignore_unignore_user_ip_callback(user):
                 return
 
-        country_code = self.geoip.get_country_code(msg.ip)
+        country_code = self.geoip.get_country_code(msg.ip_address)
 
         if country_code == "-":
             country_code = ""
@@ -687,11 +691,11 @@ Error: %(error)s""", {
             self.privatechat.private_message_queue_process(user)
 
         if user not in self.ip_requested:
-            self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port)
+            self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
             return
 
         self.ip_requested.remove(user)
-        self.pluginhandler.user_resolve_notification(user, msg.ip, msg.port, country_code)
+        self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
 
         if country_code:
             country = " (%(cc)s / %(country)s)" % {
@@ -699,13 +703,13 @@ Error: %(error)s""", {
         else:
             country = ""
 
-        if msg.ip == "0.0.0.0":
+        if msg.ip_address == "0.0.0.0":
             log.add(_("IP address of user %s is unknown, since user is offline"), user)
             return
 
         log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
             'user': user,
-            'ip': msg.ip,
+            'ip': msg.ip_address,
             'port': msg.port,
             'country': country
         })
@@ -875,7 +879,7 @@ Error: %(error)s""", {
         self.show_connection_error_message(conn)
         log.add_conn(
             "Indirect connect request of type %(type)s to user %(user)s expired, giving up", {
-                'type': conn.type,
+                'type': conn.conn_type,
                 'user': conn.username
             }
         )
@@ -933,7 +937,7 @@ Error: %(error)s""", {
                     if self.transfers is not None:
                         self.transfers.conn_close(conn, i.username, error)
 
-                    if i.type == 'D':
+                    if i.conn_type == 'D':
                         self.send_have_no_parent()
 
                     self.peerconns.remove(i)
@@ -1231,8 +1235,8 @@ Error: %(error)s""", {
                                                  self.network_callback, notifications, self.pluginhandler)
             self.shares.set_connected(True)
 
-            if msg.ip is not None:
-                self.ipaddress = msg.ip
+            if msg.ip_address is not None:
+                self.ipaddress = msg.ip_address
 
             for row in config.sections["server"]["userlist"]:
                 if row and isinstance(row, list):
@@ -1355,7 +1359,7 @@ Error: %(error)s""", {
         event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
 
         if event is not None:
-            (r, n, msg.msg) = event
+            _room, _user, msg.msg = event
 
             if self.chatrooms is not None:
                 self.chatrooms.say_chat_room(msg, msg.msg)
@@ -2169,7 +2173,7 @@ Error: %(error)s""", {
     def get_parent_conn(self):
 
         for i in self.peerconns:
-            if i.type == 'D':
+            if i.conn_type == 'D':
                 return i
 
         return None
@@ -2196,7 +2200,7 @@ Error: %(error)s""", {
         if not self.has_parent:
 
             for i in self.peerconns[:]:
-                if i.type == 'D':
+                if i.conn_type == 'D':
                     """ We previously attempted to connect to all potential parents. Since we now
                     have a parent, stop connecting to the others. """
 

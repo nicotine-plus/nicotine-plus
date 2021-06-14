@@ -85,7 +85,7 @@ class Logger:
 
         for callback in self.listeners:
             try:
-                callback(timestamp_format, level, msg)
+                callback(timestamp_format, msg)
             except Exception as error:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
 
@@ -180,7 +180,7 @@ class Console:
         logger.add_listener(self.console_logger)
 
     @staticmethod
-    def console_logger(timestamp_format, level, msg):
+    def console_logger(timestamp_format, msg):
         print("[" + time.strftime(timestamp_format) + "] " + msg)
 
 

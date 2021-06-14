@@ -20,6 +20,7 @@
 
 ## Testing
 
+* [pylint3](https://www.pylint.org/) for lint checks;
 * [python3-flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
 * [python3-pep8-naming](https://pypi.org/project/pep8-naming/) for PEP 8 naming conventions check;
 * [python3-pytest](https://docs.pytest.org/en/stable/getting-started.html) for integration and unit tests;
@@ -60,13 +61,13 @@ sudo dnf install gspell libappindicator-gtk3
 * On Debian/Ubuntu based distributions:
 
 ```sh
-sudo apt install python3-flake8 python3-pep8-naming python3-pytest
+sudo apt install pylint3 python3-flake8 python3-pep8-naming python3-pytest
 ```
 
 * On Redhat/Fedora based distributions:
 
 ```sh
-sudo dnf install python3-flake8 python3-pep8-naming python3-pytest
+sudo dnf install pylint python3-flake8 python3-pep8-naming python3-pytest
 ```
 
 #### Check the Python version.

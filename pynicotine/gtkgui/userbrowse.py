@@ -622,12 +622,12 @@ class UserBrowse:
 
     def update_gauge(self, msg):
 
-        if msg.total == 0 or msg.bytes == 0:
+        if msg.total == 0 or msg.bufferlen == 0:
             fraction = 0.0
-        elif msg.bytes >= msg.total:
+        elif msg.bufferlen >= msg.total:
             fraction = 1.0
         else:
-            fraction = float(msg.bytes) / msg.total
+            fraction = float(msg.bufferlen) / msg.total
 
         self.progressbar1.set_fraction(fraction)
 

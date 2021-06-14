@@ -15,7 +15,7 @@ extension-pkg-whitelist=
 fail-under=10.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=CVS
+ignore=gtkgui,metadata,plugins
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -75,7 +75,8 @@ disable=missing-class-docstring,
         too-many-statements,
         too-many-locals,
         too-many-return-statements,
-        too-many-instance-attributes
+        too-many-instance-attributes,
+        cyclic-import
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
