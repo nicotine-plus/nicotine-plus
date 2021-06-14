@@ -144,7 +144,7 @@ I stumbled across this quote:
 >
 > So I thought what the hell and bluntly stole etc's idea.  
 
-<p align="right">Hyriand, <i>founder of the Nicotine project</i></p>
+<p align="right">Hyriand, <i>founder of the Nicotine project</i>, 2003</p>
 
 # Legal and Privacy
 
