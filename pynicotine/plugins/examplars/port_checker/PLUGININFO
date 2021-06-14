@@ -1,0 +1,4 @@
+Version = "2008-11-26r00"
+Authors = ['quinox']
+Name = "Port Checker"
+Description = "By examining chatroom messages this plugin tries to find people that have a potential firewall/router problem, and if found tests their port. If a closed port is encountered a message will be sent to him/her."

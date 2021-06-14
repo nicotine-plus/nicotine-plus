@@ -22,7 +22,6 @@
 
 import os
 import sys
-import threading
 
 from ast import literal_eval
 from time import time
@@ -83,13 +82,9 @@ class PluginHandler:
         enabled = pluginname in self.enabled_plugins
 
         if enabled:
-            thread = threading.Thread(target=self.disable_plugin, args=(pluginname,))
+            self.disable_plugin(pluginname)
         else:
-            thread = threading.Thread(target=self.enable_plugin, args=(pluginname,))
-
-        thread.name = "TogglePlugin"
-        thread.daemon = True
-        thread.start()
+            self.enable_plugin(pluginname)
 
     def load_plugin(self, pluginname):
 
@@ -216,10 +211,7 @@ class PluginHandler:
         to_enable = self.config.sections["plugins"]["enabled"]
 
         for plugin in to_enable:
-            thread = threading.Thread(target=self.enable_plugin, args=(plugin,))
-            thread.name = "EnablePlugin"
-            thread.daemon = True
-            thread.start()
+            self.enable_plugin(plugin)
 
     def plugin_settings(self, pluginname, plugin):
         try:
