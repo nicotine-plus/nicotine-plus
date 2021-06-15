@@ -15,7 +15,7 @@ extension-pkg-whitelist=
 fail-under=10.0
 
 # Files or directories to be skipped. They should be base names, not paths.
-ignore=gtkgui,metadata,plugins
+ignore=gtkgui,metadata
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.

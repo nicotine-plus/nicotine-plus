@@ -1,15 +1,7 @@
-from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
+# pylint: disable=attribute-defined-outside-init
+
 from random import choice
-
-
-def enable(plugins):
-    global PLUGIN
-    PLUGIN = Plugin(plugins)
-
-
-def disable(plugins):
-    global PLUGIN
-    PLUGIN = None
+from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
 
 
 class Plugin(BasePlugin):
@@ -26,8 +18,8 @@ class Plugin(BasePlugin):
     def init(self):
         self.throttle = ResponseThrottle(self.np, self.__name__)
 
-    def IncomingPublicChatEvent(self, room, nick, line):  # noqa
+    def IncomingPublicChatEvent(self, room, user, line):  # noqa
         if line.lower() == 'test':
-            if self.throttle.ok_to_respond(room, nick, line, 10):
+            if self.throttle.ok_to_respond(room, user, line, 10):
                 self.throttle.responded()
                 self.saypublic(room, choice(self.settings['replies']))

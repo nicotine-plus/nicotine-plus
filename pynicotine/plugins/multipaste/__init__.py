@@ -2,16 +2,6 @@ from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import returncode
 
 
-def enable(plugins):
-    global PLUGIN
-    PLUGIN = Plugin(plugins)
-
-
-def disable(plugins):
-    global PLUGIN
-    PLUGIN = None
-
-
 class Plugin(BasePlugin):
     __name__ = "Multi Paste"
     settings = {
@@ -31,8 +21,8 @@ class Plugin(BasePlugin):
                 self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for line in lines[:self.settings['maxprivatelines']]:
-                self.sayprivate(user, line)
+            for split_line in lines[:self.settings['maxprivatelines']]:
+                self.sayprivate(user, split_line)
 
             return returncode['zap']
 
@@ -46,8 +36,8 @@ class Plugin(BasePlugin):
                 self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
             else:
                 self.log("Splitting lines.")
-            for line in lines[:self.settings['maxpubliclines']]:
-                self.saypublic(room, line)
+            for split_line in lines[:self.settings['maxpubliclines']]:
+                self.saypublic(room, split_line)
 
             return returncode['zap']
 

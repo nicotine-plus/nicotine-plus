@@ -49,7 +49,6 @@ class PluginHandler:
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
-        self.loaded_plugins = {}
 
         try:
             os.makedirs(config.plugin_dir)
@@ -106,12 +105,11 @@ class PluginHandler:
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
-        instance = plugin.Plugin(self, enable_plugin=False)
+        instance = plugin.Plugin(self, self.np, self.np.ui_callback)
         self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
 
-        self.loaded_plugins[pluginname] = plugin
-        return plugin
+        return instance
 
     def enable_plugin(self, pluginname):
 
@@ -133,9 +131,9 @@ class PluginHandler:
             if not plugin:
                 raise Exception("Error loading plugin '%s'" % pluginname)
 
-            plugin.enable(self)
+            plugin.__enable__()
             self.enabled_plugins[pluginname] = plugin
-            log.add(_("Enabled plugin %s"), plugin.PLUGIN.__name__)
+            log.add(_("Enabled plugin %s"), plugin.__name__)
 
         except Exception:
             from traceback import print_exc
@@ -163,9 +161,10 @@ class PluginHandler:
         try:
             plugin = self.enabled_plugins[pluginname]
 
-            log.add(_("Disabled plugin {}".format(plugin.PLUGIN.__name__)))
+            log.add(_("Disabled plugin {}".format(plugin.__name__)))
+            plugin.disable()
             del self.enabled_plugins[pluginname]
-            plugin.disable(self)
+            del plugin
 
         except Exception:
             from traceback import print_exc
@@ -179,8 +178,8 @@ class PluginHandler:
         if pluginname in self.enabled_plugins:
             plugin = self.enabled_plugins[pluginname]
 
-            if plugin.PLUGIN.metasettings:
-                return plugin.PLUGIN.metasettings
+            if plugin.metasettings:
+                return plugin.metasettings
 
         return None
 
@@ -247,13 +246,13 @@ class PluginHandler:
 
         for module, plugin in self.enabled_plugins.items():
             try:
-                if plugin.PLUGIN is None:
+                if plugin is None:
                     continue
 
                 if public_command:
-                    return_value = plugin.PLUGIN.PublicCommandEvent(command, source, args)
+                    return_value = plugin.PublicCommandEvent(command, source, args)
                 else:
-                    return_value = plugin.PLUGIN.PrivateCommandEvent(command, source, args)
+                    return_value = plugin.PrivateCommandEvent(command, source, args)
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
@@ -291,7 +290,7 @@ class PluginHandler:
 
         for module, plugin in self.enabled_plugins.items():
             try:
-                return_value = getattr(plugin.PLUGIN, function)(*args)
+                return_value = getattr(plugin, function)(*args)
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
@@ -532,35 +531,35 @@ class ResponseThrottle:
 class BasePlugin:
 
     __name__ = "BasePlugin"
-    __desc__ = "No description provided"
-    __version__ = "2016-08-30"
     __publiccommands__ = []
     __privatecommands__ = []
     settings = {}
     metasettings = {}
 
-    def __init__(self, parent, enable_plugin=True):
+    def __init__(self, parent, np, frame):
 
         # Never override this function, override init() instead
         self.parent = parent
-        self.np = parent.np
-        self.frame = parent.np.ui_callback
+        self.np = np
+        self.frame = frame
 
-        if not enable_plugin:
-            # Plugin was loaded, but not enabled yet
-            return
+    def __enable__(self):
 
         self.init()
 
-        if parent.np.ui_callback:
+        if self.parent.np.ui_callback:
             for trigger, _func in self.__publiccommands__:
-                parent.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
+                self.parent.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
 
             for trigger, _func in self.__privatecommands__:
-                parent.np.ui_callback.privatechats.CMDS.add('/' + trigger + ' ')
+                self.parent.np.ui_callback.privatechats.CMDS.add('/' + trigger + ' ')
 
     def init(self):
-        # Custom init function for plugins
+        # Custom enable function for plugins
+        pass
+
+    def disable(self):
+        # Custom disable function for plugins
         pass
 
     def LoadSettings(self, settings):  # pylint: disable=invalid-name, # noqa

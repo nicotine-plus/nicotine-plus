@@ -2927,7 +2927,7 @@ class PluginsFrame(BuildFrame):
                         config.sections["plugins"][self.plugin][name] = value
 
                 self.settings.frame.np.pluginhandler.plugin_settings(
-                    self.plugin, self.settings.frame.np.pluginhandler.loaded_plugins[self.plugin].PLUGIN)
+                    self.plugin, self.settings.frame.np.pluginhandler.enabled_plugins[self.plugin])
 
             self.destroy()
 

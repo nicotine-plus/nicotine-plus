@@ -1,3 +1,5 @@
+# pylint: disable=attribute-defined-outside-init
+
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 # COPYRIGHT (c) 2016 Mutnick <muhing@yahoo.com>
 #
@@ -31,16 +33,6 @@ from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import ResponseThrottle
 
 
-def enable(plugins):
-    global PLUGIN
-    PLUGIN = Plugin(plugins)
-
-
-def disable(plugins):
-    global PLUGIN
-    PLUGIN = None
-
-
 class Plugin(BasePlugin):
     __name__ = "Reddit"
     settings = {'reddit_links': 3}
@@ -50,7 +42,8 @@ class Plugin(BasePlugin):
         self.plugin_command = "!reddit"
         self.responder = ResponseThrottle(self.np, self.__name__)
 
-    def get_feed(self, domain, path):
+    @staticmethod
+    def get_feed(domain, path):
         import http.client
         import json
 
@@ -61,13 +54,13 @@ class Plugin(BasePlugin):
 
         return response
 
-    def IncomingPublicChatEvent(self, room, nick, line):  # noqa
+    def IncomingPublicChatEvent(self, room, user, line):  # noqa
         line = line.lower().strip()
 
         if line.startswith(self.plugin_command) and (" " in line):
             subreddit = line.split(" ")[1].strip("/")
 
-            if self.responder.ok_to_respond(room, nick, subreddit):
+            if self.responder.ok_to_respond(room, user, subreddit):
                 response = self.get_feed('www.reddit.com', '/r/' + subreddit + '/.json')
 
                 if response:

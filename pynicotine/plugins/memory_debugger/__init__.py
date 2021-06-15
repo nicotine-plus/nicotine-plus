@@ -3,17 +3,6 @@ import gc
 from pynicotine.pluginsystem import BasePlugin
 
 
-def enable(plugins):
-    global PLUGIN
-    PLUGIN = Plugin(plugins)
-
-
-def disable(plugins):
-    global PLUGIN
-    PLUGIN = None
-    gc.set_debug(0)
-
-
 class Plugin(BasePlugin):
     __name__ = "Memory Debugger"
 
@@ -35,3 +24,6 @@ Enabling GB debug output (check stderr)""" % (str(gc.isenabled()), repr(gc.get_t
             unclaimed.append('%s: %s (%s)' % (type(i), str(i), repr(i)))
         self.log('\n'.join(unclaimed))
         self.log("Done.")
+
+    def disable(self):
+        gc.set_debug(0)
