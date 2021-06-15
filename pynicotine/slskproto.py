@@ -29,7 +29,6 @@ import sys
 import threading
 import time
 
-from errno import EINTR
 from itertools import islice
 from random import uniform
 
@@ -1214,26 +1213,20 @@ class SlskProtoThread(threading.Thread):
 
                     self.selector.modify(i, event_masks)
 
-                timeout = -1
-                key_events = self.selector.select(timeout)
+                key_events = self.selector.select(timeout=-1)
                 input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
                 output_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
 
             except OSError as error:
-                if len(error.args) == 2 and error.args[0] == EINTR:
-                    # Error recieved; but we don't care :)
-                    time.sleep(0.2)
-                    continue
-
                 # Error recieved; terminate networking loop
-                print(time.strftime("%H:%M:%S"), "select OSError:", error)
-                self._want_abort = True
 
-                log.add("Major Socket Error: Networking terminated! %s", str(error))
+                self._want_abort = True
+                log.add("Major Socket Error: Networking terminated! %s", error)
 
             except ValueError as error:
                 # Possibly opened too many sockets
-                print(time.strftime("%H:%M:%S"), "select ValueError:", error)
+
+                log.add("select ValueError: %s", error)
                 time.sleep(0.2)
                 continue
 
