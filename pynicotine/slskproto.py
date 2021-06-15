@@ -1258,6 +1258,7 @@ class SlskProtoThread(threading.Thread):
                             'ip': incaddr[0],
                             'port': incaddr[1]
                         })
+                        incconn.close()
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
@@ -1352,6 +1353,7 @@ class SlskProtoThread(threading.Thread):
                             "ip": addr[0],
                             "port": addr[1]
                         })
+                        self._ui_callback([ConnClose(connection, addr)])
                         self.close_connection(conns, connection)
                         continue
 
