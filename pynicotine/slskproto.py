@@ -1212,11 +1212,7 @@ class SlskProtoThread(threading.Thread):
                                       and conn.fileupl is not None and conn.fileupl.offset is not None)):
                         event_masks |= selectors.EVENT_WRITE
 
-                    try:
-                        self.selector.modify(i, event_masks)
-
-                    except KeyError:
-                        self.selector.register(i, event_masks)
+                    self.selector.modify(i, event_masks)
 
                 timeout = -1
                 key_events = self.selector.select(timeout)
@@ -1265,6 +1261,7 @@ class SlskProtoThread(threading.Thread):
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
+                        self.selector.register(incconn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
             # Manage Connections
             curtime = time.time()
