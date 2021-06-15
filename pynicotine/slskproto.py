@@ -104,7 +104,6 @@ from pynicotine.slskmessages import PlaceInLineResponse
 from pynicotine.slskmessages import PlaceInQueue
 from pynicotine.slskmessages import PlaceInQueueRequest
 from pynicotine.slskmessages import PMessageUser
-from pynicotine.slskmessages import PopupMessage
 from pynicotine.slskmessages import PrivateRoomAdded
 from pynicotine.slskmessages import PrivateRoomAddOperator
 from pynicotine.slskmessages import PrivateRoomAddUser
@@ -403,7 +402,7 @@ class SlskProtoThread(threading.Thread):
     CONNECTION_MAX_IDLE = 60
     CONNCOUNT_UI_INTERVAL = 0.5
 
-    def __init__(self, ui_callback, queue, bindip, port, port_range, network_filter, eventprocessor):
+    def __init__(self, ui_callback, queue, bindip, interface, port, port_range, network_filter, eventprocessor):
         """ ui_callback is a UI callback function to be called with messages
         list as a parameter. queue is Queue object that holds messages from UI
         thread.
@@ -412,11 +411,18 @@ class SlskProtoThread(threading.Thread):
 
         self.name = "NetworkThread"
 
+        if sys.platform not in ("linux", "darwin"):
+            # TODO: support custom network interface for other systems than Linux and macOS
+            interface = None
+
         self._ui_callback = ui_callback
         self._queue = queue
         self._want_abort = False
         self._server_disconnect = True
         self._bindip = bindip
+        self._listenport = None
+        self.portrange = (port, port) if port else port_range
+        self.interface = interface
         self._network_filter = network_filter
         self._eventprocessor = eventprocessor
 
@@ -445,15 +451,54 @@ class SlskProtoThread(threading.Thread):
         self._dlimits = {}
         self.total_uploads = 0
         self.total_downloads = 0
-
         self.last_conncount_ui_update = time.time()
 
-        portrange = (port, port) if port else port_range
-        listenport = None
+        self.bind_listen_port()
 
-        for listenport in range(int(portrange[0]), int(portrange[1]) + 1):
+        self.daemon = True
+        self.start()
+
+    def validate_listen_port(self):
+
+        if self._listenport is not None:
+            return True
+
+        return False
+
+    def validate_network_interface(self):
+
+        try:
+            if self.interface and self.interface not in (name for _i, name in socket.if_nameindex()):
+                return False
+
+        except AttributeError:
+            pass
+
+        return True
+
+    @staticmethod
+    def bind_to_network_interface(sock, if_name):
+
+        if sys.platform == "linux":
+            sock.setsockopt(socket.SOL_SOCKET, 25, if_name.encode())
+
+        if sys.platform == "darwin":
+            sock.setsockopt(socket.IPPROTO_IP, 25, socket.if_nametoindex(if_name))
+
+    def bind_listen_port(self):
+
+        if not self.validate_network_interface():
+            return
+
+        ip_address = self._bindip or ''
+
+        if self.interface:
+            self.bind_to_network_interface(self.listen_socket, self.interface)
+            ip_address = ''
+
+        for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
-                self.listen_socket.bind((bindip or '', listenport))
+                self.listen_socket.bind((ip_address, listenport))
             except socket.error:
                 listenport = None
             else:
@@ -461,22 +506,7 @@ class SlskProtoThread(threading.Thread):
                 self._ui_callback([IncPort(listenport)])
                 break
 
-        if listenport is not None:
-            self.daemon = True
-            self.start()
-        else:
-            short_message = _("Could not bind to a local port, aborting connection")
-            long_message = _(
-                "The range you specified for client connection ports was "
-                "{}-{}, but none of these were usable. Increase and/or ".format(portrange[0], portrange[1])
-                + "move the range and restart Nicotine+."
-            )
-            if portrange[0] < 1024:
-                long_message += "\n\n" + _(
-                    "Note that part of your range lies below 1024, this is usually not allowed on"
-                    " most operating systems with the exception of Windows."
-                )
-            self._ui_callback([PopupMessage(short_message, long_message)])
+        self._listenport = listenport
 
     @staticmethod
     def _is_upload(conn):
@@ -989,7 +1019,10 @@ class SlskProtoThread(threading.Thread):
                             # Detect if our connection to the server is still alive
                             self.set_server_socket_keepalive(server_socket)
 
-                            if self._bindip:
+                            if self.interface:
+                                self.bind_to_network_interface(server_socket, self.interface)
+
+                            elif self._bindip:
                                 server_socket.bind((self._bindip, 0))
 
                             server_socket.setblocking(0)
@@ -1022,7 +1055,10 @@ class SlskProtoThread(threading.Thread):
                         try:
                             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-                            if self._bindip:
+                            if self.interface:
+                                self.bind_to_network_interface(conn, self.interface)
+
+                            elif self._bindip:
                                 conn.bind((self._bindip, 0))
 
                             conn.setblocking(0)

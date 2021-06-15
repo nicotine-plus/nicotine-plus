@@ -67,6 +67,7 @@ class Config:
                 "server": ('server.slsknet.org', 2242),
                 "login": '',
                 "passw": '',
+                "interface": '',
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
