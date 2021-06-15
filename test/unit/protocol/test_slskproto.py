@@ -76,7 +76,7 @@ class SlskProtoTest(unittest.TestCase):
         mock_socket = MockSocket()
         queue = deque()
         proto = SlskProtoThread(
-            ui_callback=Mock(), queue=queue, bindip='',
+            ui_callback=Mock(), queue=queue, interface='', bindip='',
             port=None, port_range=(1, 65535), network_filter=None,
             eventprocessor=Mock()
         )
@@ -110,7 +110,7 @@ class SlskProtoTest(unittest.TestCase):
 
         queue = deque()
         proto = SlskProtoThread(
-            ui_callback=Mock(), queue=queue, bindip='',
+            ui_callback=Mock(), queue=queue, interface='', bindip='',
             port=None, port_range=(1, 65535), network_filter=None,
             eventprocessor=Mock()
         )

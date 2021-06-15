@@ -298,8 +298,9 @@ class NetworkEventProcessor:
         self.add_upnp_portmapping()
 
         port_range = config.sections["server"]["portrange"]
+        interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, self.port, port_range, self.network_filter, self)
+            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
 
         connect_ready = not config.need_config()
 
@@ -344,6 +345,35 @@ class NetworkEventProcessor:
         # Clear any potential messages queued up to this point (should not happen)
         while self.queue:
             self.queue.popleft()
+
+        valid_network_interface = self.protothread.validate_network_interface()
+
+        if not valid_network_interface:
+            short_message = _("Could not bind to network interface, aborting connection")
+            long_message = _(
+                "The network interface you specified, '%s', does not exist. Change or remove the specified "
+                "network interface and restart Nicotine+."
+            ) % self.protothread.interface
+            self.network_callback([slskmessages.PopupMessage(short_message, long_message)])
+            return
+
+        valid_listen_port = self.protothread.validate_listen_port()
+
+        if not valid_listen_port:
+            short_message = _("Could not bind to a local port, aborting connection")
+            long_message = _(
+                "The range you specified for client connection ports was "
+                "{}-{}, but none of these were usable. Increase and/or ".format(self.protothread.portrange[0],
+                                                                                self.protothread.portrange[1])
+                + "move the range and restart Nicotine+."
+            )
+            if self.protothread.portrange[0] < 1024:
+                long_message += "\n\n" + _(
+                    "Note that part of your range lies below 1024, this is usually not allowed on"
+                    " most operating systems with the exception of Windows."
+                )
+            self.network_callback([slskmessages.PopupMessage(short_message, long_message)])
+            return
 
         server = config.sections["server"]["server"]
         self.set_status(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})

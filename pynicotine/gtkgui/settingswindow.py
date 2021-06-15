@@ -24,6 +24,7 @@
 
 import os
 import re
+import socket
 import sys
 import time
 
@@ -63,13 +64,13 @@ class BuildFrame:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", window + ".ui"))
 
 
-class ServerFrame(BuildFrame):
+class NetworkFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        BuildFrame.__init__(self, "server")
+        BuildFrame.__init__(self, "network")
 
         self.needportmap = False
 
@@ -79,6 +80,7 @@ class ServerFrame(BuildFrame):
                 "login": self.Login,
                 "passw": self.Password,
                 "portrange": None,
+                "interface": self.Interface,
                 "upnp": self.UseUPnP,
                 "upnp_interval": self.UPnPInterval,
                 "auto_connect_startup": self.AutoConnectStartup,
@@ -114,6 +116,20 @@ class ServerFrame(BuildFrame):
 
         self.needportmap = False
 
+        if sys.platform not in ("linux", "darwin"):
+            self.InterfaceRow.hide()
+            return
+
+        self.Interface.remove_all()
+        self.Interface.append_text("")
+
+        try:
+            for _i, interface in socket.if_nameindex():
+                self.Interface.append_text(interface)
+
+        except (AttributeError, OSError):
+            pass
+
     def get_settings(self):
 
         try:
@@ -134,6 +150,7 @@ class ServerFrame(BuildFrame):
                 "login": self.Login.get_text(),
                 "passw": self.Password.get_text(),
                 "portrange": portrange,
+                "interface": self.Interface.get_active_text(),
                 "upnp": self.UseUPnP.get_active(),
                 "upnp_interval": self.UPnPInterval.get_value_as_int(),
                 "auto_connect_startup": self.AutoConnectStartup.get_active(),
@@ -3156,7 +3173,7 @@ class Settings:
         self.SettingsTreeview.set_model(model)
 
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
-        self.tree["Server"] = model.append(row, [_("Server"), "Server"])
+        self.tree["Network"] = model.append(row, [_("Network"), "Network"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
@@ -3407,7 +3424,7 @@ class Settings:
                 config[key].update(data)
 
         try:
-            need_portmap = self.pages["Server"].needportmap
+            need_portmap = self.pages["Network"].needportmap
 
         except KeyError:
             need_portmap = False

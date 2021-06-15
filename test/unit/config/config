@@ -19,6 +19,7 @@ autoaway = 15
 away = False
 private_chatrooms = False
 command_aliases = {}
+interface = 
 
 [transfers]
 incompletedir = /home/default/.local/share/nicotine/incomplete
