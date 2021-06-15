@@ -1,4 +1,4 @@
 Version = "2009-09-05r00"
-Authors = ['quinox']
+Authors = ['Nicotine+ Team']
 Name = "Memory Debugger"
 Description = "Plugin to find memory leaks"

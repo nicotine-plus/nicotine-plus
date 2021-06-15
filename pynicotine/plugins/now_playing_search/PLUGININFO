@@ -1,4 +1,4 @@
 Version = "2020-11-08r00"
-Authors = ['mathiascode']
+Authors = ['Nicotine+ Team']
 Name = "Now Playing Search"
 Description = "Searches for a song your media player is currently playing. This plugin uses the media player specified in the settings of the 'Now Playing'-feature.\n\nThe following keywords can be used when searching:\n- $t : Title\n- $n : Now Playing (typically 'Artist' - 'Title')\n- $l : Length\n- $r : Bitrate\n- $c : Comment\n- $a : Artist\n- $b : Album\n- $k : Track Number\n- $y : Year\n- $f : Filename (URI)\n- $p : Program"

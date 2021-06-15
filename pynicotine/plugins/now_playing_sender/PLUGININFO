@@ -1,4 +1,4 @@
 Version = "2020-11-08r00"
-Authors = ['mathiascode']
+Authors = ['Nicotine+ Team']
 Name = "Now Playing Sender"
 Description = "Whenever your media player starts playing a new song, this plugin automatically sends the song name in specified chat rooms, when joined. The plugin makes use of the 'Now Playing'-feature, which can be configured in the chat-related settings. Only MPRIS is supported."

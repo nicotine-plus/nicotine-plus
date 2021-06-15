@@ -1,4 +1,4 @@
 Version = "2020-10-10r06"
-Authors = ['Mutnick']
+Authors = ['Nicotine+ Team']
 Name = "Reddit"
 Description = "Displays topics and links for a requested subreddit."

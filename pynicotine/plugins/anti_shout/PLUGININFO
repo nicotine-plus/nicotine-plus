@@ -1,4 +1,4 @@
 Version = "2008-11-18r00"
-Authors = ['quinox']
+Authors = ['Nicotine+ Team']
 Name = "Anti SHOUT"
 Description = "Tries to spot people shouting and converts their messages to a more polite form."

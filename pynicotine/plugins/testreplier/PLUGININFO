@@ -1,4 +1,4 @@
 Version = "2021-04-16r00"
-Authors = ['quinox']
+Authors = ['Nicotine+ Team']
 Name = "Test Replier"
-Description = "Replies to messages 'test' in chatrooms with the message 'Test failed.\n\n** Updated **\nAdd your own custom message(s) in the Plugin preferences.'"
+Description = "Replies to messages 'test' in chatrooms with the message 'Test failed.'\n\n** Updated **\nAdd your own custom message(s) in the Plugin preferences."
