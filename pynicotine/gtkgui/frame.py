@@ -959,7 +959,7 @@ class NicotineFrame:
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
-        if self.settingswindow is not None and self.settingswindow.SettingsWindow.get_property("visible"):
+        if self.settingswindow is not None and self.settingswindow.dialog.get_property("visible"):
             return
 
         if show:
