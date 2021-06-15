@@ -183,7 +183,7 @@ if sys.platform == "win32":
     """ For Windows, FD_SETSIZE is set to 512 in the Python source.
     This limit is hardcoded, so we'll have to live with it for now. """
 
-    MAXSOCKETS = int(512 * 0.9)
+    MAXSOCKETS = 512
 else:
     import resource
 
@@ -913,7 +913,7 @@ class SlskProtoThread(threading.Thread):
 
         msg_list = []
         needsleep = False
-        numsockets = len(conns) + len(connsinprogress)
+        numsockets = 1 + len(conns) + len(connsinprogress)  # 1 = listen socket
 
         while queue:
             msg_list.append(queue.popleft())
@@ -1075,7 +1075,7 @@ class SlskProtoThread(threading.Thread):
         if needsleep:
             time.sleep(1)
 
-        return conns, connsinprogress, server_socket
+        return conns, connsinprogress, server_socket, numsockets
 
     def write_data(self, server_socket, conns, i):
 
@@ -1196,7 +1196,8 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             if queue:
-                conns, connsinprogress, server_socket = self.process_queue(queue, conns, connsinprogress, server_socket)
+                conns, connsinprogress, server_socket, numsockets = self.process_queue(
+                    queue, conns, connsinprogress, server_socket)
                 self.server_socket = server_socket
 
             self._ulimits = {}
@@ -1245,7 +1246,6 @@ class SlskProtoThread(threading.Thread):
 
             if (curtime - self.last_conncount_ui_update) > self.CONNCOUNT_UI_INTERVAL:
                 # Avoid sending too many updates to the UI at once, if there are a lot of connections
-                numsockets = len(conns) + len(connsinprogress)
 
                 self._ui_callback([SetCurrentConnectionCount(numsockets)])
                 self.last_conncount_ui_update = curtime
@@ -1343,13 +1343,12 @@ class SlskProtoThread(threading.Thread):
                 if connection is not server_socket:
                     addr = conn_obj.addr
 
-                    if connection is not listen_socket:
-                        # Timeout Connections
+                    # Timeout Connections
 
-                        if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
-                            self._ui_callback([ConnClose(connection, addr)])
-                            self.close_connection(conns, connection)
-                            continue
+                    if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
+                        self._ui_callback([ConnClose(connection, addr)])
+                        self.close_connection(conns, connection)
+                        continue
 
                     if self._network_filter.is_ip_blocked(addr[0]):
                         log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {
