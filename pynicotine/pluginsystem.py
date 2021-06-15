@@ -105,6 +105,16 @@ class PluginHandler:
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
+        if hasattr(plugin, "enable"):
+            log.add(
+                "Plugin '%s': top-level enable() function is obsolete, please use BasePlugin.init() instead",
+                pluginname)
+
+        if hasattr(plugin, "disable"):
+            log.add(
+                "Plugin '%s': top-level disable() function is obsolete, please use BasePlugin.disable() instead",
+                pluginname)
+
         instance = plugin.Plugin(self, self.np, self.np.ui_callback)
         self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
