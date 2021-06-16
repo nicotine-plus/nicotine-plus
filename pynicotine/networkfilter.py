@@ -178,7 +178,7 @@ class NetworkFilter:
         if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
 
-        country_code = self.geoip.get_all(ip_address).country_short
+        country_code = self.geoip.get_country_code(ip_address)
 
         if country_code == "-":
             if self.config.sections["transfers"]["geopanic"]:
