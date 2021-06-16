@@ -85,6 +85,8 @@ class TrayIcon:
 
         self.tray_popup_menu = Gtk.Menu()
         self.hide_show_item, handler = self.create_item(_("Show Nicotine+"), self.on_hide_unhide_window)
+        self.alt_speed_item, self.alt_speed_handler = self.create_item(
+            _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
@@ -329,6 +331,8 @@ class TrayIcon:
 
             self.trayicon = trayicon
 
+        self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
+
         if use_trayicon or config.sections["ui"]["trayicon"]:
             self.show()
             self.set_image(self.tray_status["status"])
@@ -468,6 +472,15 @@ class TrayIcon:
 
         self.downloads_item.set_label(download)
         self.uploads_item.set_label(upload)
+
+    def set_alternative_speed_limit(self, enable):
+
+        if self.trayicon is None:
+            return
+
+        with self.alt_speed_item.handler_block(self.alt_speed_handler):
+            # Temporarily disable handler, we only want to change the visual checkbox appearance
+            self.alt_speed_item.set_active(enable)
 
     def show_window(self):
         self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
