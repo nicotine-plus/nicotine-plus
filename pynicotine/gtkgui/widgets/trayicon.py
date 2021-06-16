@@ -84,7 +84,7 @@ class TrayIcon:
             return
 
         self.tray_popup_menu = Gtk.Menu()
-        self.hide_show_item, handler = self.create_item(_("Hide / Show Nicotine+"), self.on_hide_unhide_window)
+        self.hide_show_item, handler = self.create_item(_("Show Nicotine+"), self.on_hide_unhide_window)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
@@ -113,8 +113,9 @@ class TrayIcon:
 
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
-        else:
-            self.show_window()
+            return
+
+        self.show_window()
 
     def on_downloads(self, *args):
         self.frame.on_downloads()
@@ -370,6 +371,18 @@ class TrayIcon:
             return False
 
         return True
+
+    def update_show_hide_label(self):
+
+        if self.trayicon is None:
+            return
+
+        if self.frame.MainWindow.get_property("visible"):
+            text = _("Hide Nicotine+")
+        else:
+            text = _("Show Nicotine+")
+
+        self.hide_show_item.set_label(text)
 
     def set_image(self, status=None):
 

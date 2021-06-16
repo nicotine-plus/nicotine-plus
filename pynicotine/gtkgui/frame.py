@@ -379,6 +379,9 @@ class NicotineFrame:
         if Gtk.get_major_version() == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
 
+    def on_window_visible_changed(self, window, param):
+        self.tray_icon.update_show_hide_label()
+
     def save_window_state(self):
 
         if Gtk.get_major_version() == 4:
