@@ -80,12 +80,13 @@ class RoomList:
         self.AcceptPrivateRoom.set_active(config.sections["server"]["private_chatrooms"])
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
-        frame.RoomList.connect("clicked", self.show)
-
         if Gtk.get_major_version() == 4:
-            self.RoomListPopover.set_parent(frame.RoomList)
+            button = frame.RoomList.get_first_child()
+            button.set_child(frame.RoomListLabel)
         else:
-            self.RoomListPopover.set_relative_to(frame.RoomList)
+            frame.RoomList.add(frame.RoomListLabel)
+
+        frame.RoomList.set_popover(self.RoomListPopover)
 
     def get_selected_room(self, treeview):
 
@@ -329,13 +330,3 @@ class RoomList:
 
     def clear(self):
         self.room_model.clear()
-
-    def show(self, *args):
-
-        try:
-            self.RoomListPopover.popup()
-
-        except AttributeError:
-            # GTK <3.22 support
-            self.RoomListPopover.set_transitions_enabled(True)
-            self.RoomListPopover.show()
