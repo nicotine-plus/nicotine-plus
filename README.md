@@ -15,7 +15,7 @@ The current stable version of Nicotine+ is 3.0.6, released on May 1, 2021. See t
 
 Windows packages have been replaced on June 11, 2021, to reduce the number of false positives.
 
-## GNU/Linux, *BSD
+## GNU/Linux, *BSD, Solaris
 
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use packages for your distribution/operating system. This will save you time.
 
