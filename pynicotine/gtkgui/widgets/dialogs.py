@@ -63,6 +63,26 @@ def set_dialog_properties(dialog, parent, quit_callback=None, type_hint="normal"
     dialog.set_transient_for(parent)
 
 
+def dialog_show(dialog):
+
+    dialog.present_with_time(Gdk.CURRENT_TIME)
+
+    if Gtk.get_major_version() == 3:
+        dialog.get_window().set_functions(
+            Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
+        )
+
+
+def dialog_hide(dialog):
+
+    # Hide the dialog
+    dialog.hide()
+
+    # "Soft-delete" the dialog. This is necessary to prevent the dialog from
+    # appearing in window peek on Windows
+    dialog.unrealize()
+
+
 """ Message Dialogs """
 
 

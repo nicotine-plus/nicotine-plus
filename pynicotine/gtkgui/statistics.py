@@ -18,11 +18,12 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.utils import human_size
@@ -79,14 +80,8 @@ class Statistics:
         )
 
     def hide(self, *args):
-        self.dialog.hide()
+        dialog_hide(self.dialog)
         return True
 
     def show(self):
-
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            self.dialog.get_window().set_functions(
-                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-            )
+        dialog_show(self.dialog)

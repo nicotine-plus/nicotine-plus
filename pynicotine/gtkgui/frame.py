@@ -66,6 +66,7 @@ from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.utils import scroll_bottom
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
@@ -2547,8 +2548,8 @@ class NicotineFrame:
 
         return True
 
-    def on_hide(self, widget, *args):
-        widget.hide()
+    def on_hide(self, dialog, *args):
+        dialog_hide(dialog)
         return True
 
     def on_quit(self, *args):

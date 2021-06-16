@@ -43,6 +43,7 @@ from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
@@ -3508,7 +3509,7 @@ class Settings:
     def on_response(self, dialog, response_id):
 
         if response_id == Gtk.ResponseType.OK:
-            self.dialog.hide()
+            self.on_delete()
             self.dialog.emit("settings-updated", "ok")
 
         elif response_id == Gtk.ResponseType.APPLY:
@@ -3518,10 +3519,10 @@ class Settings:
             self.on_backup_config()
 
         else:
-            self.dialog.hide()
+            self.on_delete()
 
     def on_delete(self, *args):
-        self.dialog.hide()
+        dialog_hide(self.dialog)
         return True
 
     def show(self, *args):

@@ -23,12 +23,13 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -52,7 +53,7 @@ class WishList:
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
-            quit_callback=self.quit,
+            quit_callback=self.hide,
             title=_("Search Wishlist"),
             width=600,
             height=600
@@ -231,14 +232,8 @@ class WishList:
             update_widget_visuals(widget)
 
     def show(self, *args):
+        dialog_show(self.dialog)
 
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            self.dialog.get_window().set_functions(
-                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-            )
-
-    def quit(self, *args):
-        self.dialog.hide()
+    def hide(self, *args):
+        dialog_hide(self.dialog)
         return True

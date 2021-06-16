@@ -18,13 +18,14 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 
@@ -96,7 +97,7 @@ class RoomWall:
     def hide(self, *args):
 
         self.RoomWallList.get_buffer().set_text("")
-        self.dialog.hide()
+        dialog_hide(self.dialog)
         return True
 
     def show(self):
@@ -110,12 +111,7 @@ class RoomWall:
                 self.RoomWallEntry.set_text(msg)
                 self.RoomWallEntry.select_region(0, -1)
 
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version == 3:
-            self.dialog.get_window().set_functions(
-                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-            )
+        dialog_show(self.dialog)
 
 
 class Tickers:

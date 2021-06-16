@@ -28,6 +28,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
@@ -94,16 +95,6 @@ class FastConfigureAssistant(object):
                 self.add_shared_folder(virtual_name, path)
 
         self.FastConfigureDialog.present_with_time(Gdk.CURRENT_TIME)
-
-    def store(self):
-
-        # userpasspage
-        config.sections["server"]["login"] = self.username.get_text()
-        config.sections["server"]["passw"] = self.password.get_text()
-
-        # sharepage
-        config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
-        config.sections["transfers"]["shared"] = self.get_shared_folders()
 
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
@@ -260,8 +251,15 @@ class FastConfigureAssistant(object):
 
     def on_close(self, *args):
 
-        self.store()
-        self.FastConfigureDialog.hide()
+        # userpasspage
+        config.sections["server"]["login"] = self.username.get_text()
+        config.sections["server"]["passw"] = self.password.get_text()
+
+        # sharepage
+        config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
+        config.sections["transfers"]["shared"] = self.get_shared_folders()
+
+        dialog_hide(self.FastConfigureDialog)
 
         # Rescan public shares if needed
         if not config.sections["transfers"]["friendsonly"]:
@@ -275,4 +273,5 @@ class FastConfigureAssistant(object):
             self.frame.on_connect()
 
     def on_cancel(self, *args):
-        self.FastConfigureDialog.hide()
+        dialog_hide(self.FastConfigureDialog)
+        return True
