@@ -2300,7 +2300,7 @@ Sends a broadcast private message to the given list of users.
 #### Function Names
 
 Museekd: SMessageUsers  
-Nicotine: Unimplemented
+Nicotine: MessageUsers
 
 #### Data Order
 

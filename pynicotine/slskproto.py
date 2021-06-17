@@ -87,6 +87,7 @@ from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import MessageAcked
 from pynicotine.slskmessages import MessageUser
+from pynicotine.slskmessages import MessageUsers
 from pynicotine.slskmessages import MinParentsInCache
 from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import NotifyPrivileges
@@ -358,6 +359,7 @@ class SlskProtoThread(threading.Thread):
         PrivateRoomOperatorAdded: 145,
         PrivateRoomOperatorRemoved: 146,
         PrivateRoomOwned: 148,
+        MessageUsers: 149,
         JoinPublicRoom: 150,
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,

@@ -1924,6 +1924,24 @@ class PrivateRoomOwned(ServerMessage):
             self.operators.append(user)
 
 
+class MessageUsers(ServerMessage):
+    """ Server code: 149 """
+    """ Sends a broadcast private message to the given list of users. """
+
+    def __init__(self, users=None, msg=None):
+        self.users = users
+        self.msg = msg
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(len(self.users)))
+
+        for user in self.users:
+            msg.extend(self.pack_object(user))
+
+        msg.extend(self.pack_object(self.msg))
+
+
 class JoinPublicRoom(ServerMessage):
     """ Server code: 150 """
     """ We ask the server to send us messages from all public rooms, also
