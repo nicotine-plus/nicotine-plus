@@ -188,7 +188,7 @@ class NetworkEventProcessor:
             slskmessages.PeerTransfer: self.peer_transfer,
             slskmessages.SharedFileList: self.shared_file_list,
             slskmessages.GetSharedFileList: self.get_shared_file_list,
-            slskmessages.FileSearchRequest: self.file_search_request,
+            slskmessages.FileSearchRequest: self.dummy_message,
             slskmessages.FileSearchResult: self.file_search_result,
             slskmessages.ConnectToPeer: self.connect_to_peer_request,
             slskmessages.GetUserStatus: self.get_user_status,
@@ -1550,6 +1550,7 @@ Error: %(error)s""", {
 
     def add_to_privileged(self, msg):
         """ Server code: 91 """
+        """ DEPRECATED """
 
         log.add_msg_contents(msg)
 
@@ -1867,23 +1868,6 @@ Error: %(error)s""", {
                     indeterminate_progress = change_page = False
                     self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
                     break
-
-    def file_search_request(self, msg):
-        """ Peer code: 8 """
-        """ DEPRECATED """
-
-        log.add_msg_contents(msg)
-
-        if self.search is None:
-            return
-
-        conn = msg.conn.conn
-
-        for i in self.peerconns:
-            if i.conn == conn:
-                user = i.username
-                self.search.process_search_request(msg.searchterm, user, msg.searchid, direct=True)
-                break
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
