@@ -2419,6 +2419,7 @@ class PMessageUser(PeerMessage):
     """ Peer code: 22 """
     """ Chat phrase sent to someone or received by us in private.
     This is a Nicotine+ extension to the Soulseek protocol. """
+    """ DEPRECATED """
 
     def __init__(self, conn=None, user=None, msg=None):
         self.conn = conn
@@ -2428,10 +2429,13 @@ class PMessageUser(PeerMessage):
         self.timestamp = None
 
     def make_network_message(self):
-        return (self.pack_object(0)
-                + self.pack_object(0)
-                + self.pack_object(self.user)
-                + self.pack_object(self.msg))
+        msg = bytearray()
+        msg.extend(self.pack_object(0))
+        msg.extend(self.pack_object(0))
+        msg.extend(self.pack_object(self.user))
+        msg.extend(self.pack_object(self.msg))
+
+        return msg
 
     def parse_network_message(self, message):
         pos, self.msgid = self.get_object(message, int)

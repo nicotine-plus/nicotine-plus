@@ -533,12 +533,7 @@ class PrivateChat:
         else:
             payload = auto_replace(text)
 
-        if self.PeerPrivateMessages.get_active():
-            # not in the soulseek protocol
-            self.frame.np.send_message_to_peer(self.user, slskmessages.PMessageUser(None, my_username, payload))
-        else:
-            self.frame.np.queue.append(slskmessages.MessageUser(self.user, payload))
-
+        self.frame.np.queue.append(slskmessages.MessageUser(self.user, payload))
         self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
 
     def update_visuals(self):
