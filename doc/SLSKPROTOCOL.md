@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on April 28, 2021
+Last updated on June 17, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -2197,10 +2197,10 @@ Nicotine: PrivateRoomAddOperator
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>operator</ins>
+    2.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **string** <ins>operator</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 144
 
@@ -2219,8 +2219,10 @@ Nicotine: PrivateRoomRemoveOperator
 
   - Send
     1.  **string** <ins>room</ins>
+    2.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>room</ins>
+    2.  **string** <ins>username</ins>
 
 ### Server Code 145
 
