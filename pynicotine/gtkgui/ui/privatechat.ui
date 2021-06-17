@@ -71,14 +71,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="PeerPrivateMessages">
-                <property name="label" translatable="yes">Direct Message</property>
-                <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="tooltip-text" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="Log">
                 <property name="label" translatable="yes">_Log</property>
                 <property name="visible">1</property>
