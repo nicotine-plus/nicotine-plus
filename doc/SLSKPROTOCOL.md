@@ -1661,7 +1661,7 @@ Nicotine: RoomTickerState
 
 The server returns a list of tickers in a chat room.
 
-Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+Tickers are customizable, user-specific messages that appear on chat room walls.
 
 #### Data Order
 
@@ -1687,7 +1687,7 @@ Nicotine: RoomTickerAdd
 
 The server sends us a new ticker that was added to a chat room.
 
-Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+Tickers are customizable, user-specific messages that appear on chat room walls.
 
 #### Data Order
 
@@ -1711,7 +1711,7 @@ Nicotine: RoomTickerRemove
 
 The server informs us that a ticker was removed from a chat room.
 
-Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+Tickers are customizable, user-specific messages that appear on chat room walls.
 
 #### Data Order
 
@@ -1732,9 +1732,9 @@ Nicotine: RoomTickerSet
 
 #### Description
 
-We send this to the server when we change our own ticker in a chat room.
+We send this to the server when we change our own ticker in a chat room. Sending an empty ticker string removes any existing ticker in the room.
 
-Tickers are customizable, user-specific messages that appear in a banner at the top of a chat room.
+Tickers are customizable, user-specific messages that appear on chat room walls.
 
 #### Data Order
 

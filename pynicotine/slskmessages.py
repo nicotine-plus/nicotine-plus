@@ -1513,8 +1513,8 @@ class RoomTickerState(ServerMessage):
     """ Server code: 113 """
     """ The server returns a list of tickers in a chat room.
 
-    Tickers are customizable, user-specific messages that appear in a
-    banner at the top of a chat room. """
+    Tickers are customizable, user-specific messages that appear on
+    chat room walls. """
 
     def __init__(self):
         self.room = None
@@ -1536,8 +1536,8 @@ class RoomTickerAdd(ServerMessage):
     """ Server code: 114 """
     """ The server sends us a new ticker that was added to a chat room.
 
-    Tickers are customizable, user-specific messages that appear in a
-    banner at the top of a chat room. """
+    Tickers are customizable, user-specific messages that appear on
+    chat room walls. """
 
     def __init__(self):
         self.room = None
@@ -1554,8 +1554,8 @@ class RoomTickerRemove(ServerMessage):
     """ Server code: 115 """
     """ The server informs us that a ticker was removed from a chat room.
 
-    Tickers are customizable, user-specific messages that appear in a
-    banner at the top of a chat room. """
+    Tickers are customizable, user-specific messages that appear on
+    chat room walls. """
 
     def __init__(self):
         self.room = None
@@ -1569,10 +1569,11 @@ class RoomTickerRemove(ServerMessage):
 class RoomTickerSet(ServerMessage):
     """ Server code: 116 """
     """ We send this to the server when we change our own ticker in
-    a chat room.
+    a chat room. Sending an empty ticker string removes any existing
+    ticker in the room.
 
-    Tickers are customizable, user-specific messages that appear in a
-    banner at the top of a chat room. """
+    Tickers are customizable, user-specific messages that appear on
+    chat room walls. """
 
     def __init__(self, room=None, msg=""):
         self.room = room
