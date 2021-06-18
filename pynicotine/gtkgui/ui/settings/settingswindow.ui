@@ -23,7 +23,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkScrolledWindow" id="ScrolledWindow">
         <property name="visible">1</property>
         <property name="hexpand">1</property>
         <child>

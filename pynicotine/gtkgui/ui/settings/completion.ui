@@ -10,12 +10,12 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -104,12 +104,12 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel" id="DropDownLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Drop-down list</property>
+            <property name="label" translatable="yes">Drop-down List</property>
             <property name="halign">start</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -126,11 +126,12 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="spacing">6</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Minimum characters required to display drop-down:</property>
+                <property name="mnemonic_widget">CharactersCompletion</property>
               </object>
             </child>
             <child>

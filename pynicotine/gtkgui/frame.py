@@ -565,7 +565,7 @@ class NicotineFrame:
 
             self.global_css_provider = Gtk.CssProvider()
             self.global_css_provider.load_from_data(
-                b".tab-toolbar { border-bottom: 1px solid @borders; }"
+                b".tab-toolbar { border-bottom: 1px solid @borders; } flowboxchild { padding: 0; }"
             )
             if Gtk.get_major_version() == 4:
                 display = Gdk.Display.get_default()

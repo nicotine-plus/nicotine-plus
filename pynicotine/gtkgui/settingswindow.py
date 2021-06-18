@@ -2112,12 +2112,7 @@ class UrlCatchingFrame(BuildFrame):
         self.HumanizeURLs.set_active(widget.get_active())
         act = self.URLCatching.get_active()
 
-        self.RemoveHandler.set_sensitive(act)
-        self.addButton.set_sensitive(act)
-        self.HumanizeURLs.set_sensitive(act)
-        self.ProtocolHandlers.set_sensitive(act)
-        self.ProtocolCombo.set_sensitive(act)
-        self.Handler.set_sensitive(act)
+        self.ProtocolContainer.set_sensitive(act)
 
     def on_select(self, selection):
 
@@ -2322,14 +2317,8 @@ class AutoReplaceListFrame(BuildFrame):
         self.on_replace_check(self.ReplaceCheck)
 
     def on_replace_check(self, widget):
-
         sensitive = widget.get_active()
-
-        self.ReplacementList.set_sensitive(sensitive)
-        self.RemoveReplacement.set_sensitive(sensitive)
-        self.AddReplacement.set_sensitive(sensitive)
-        self.ClearReplacements.set_sensitive(sensitive)
-        self.DefaultReplacements.set_sensitive(sensitive)
+        self.ReplacementsContainer.set_sensitive(sensitive)
 
     def get_settings(self):
 

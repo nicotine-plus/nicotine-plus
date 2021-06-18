@@ -3,148 +3,69 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">10</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
-    <child>
-      <object class="GtkCheckButton" id="URLCatching">
-        <property name="label" translatable="yes">Enable URL catching</property>
-        <property name="visible">1</property>
-        <property name="use-underline">1</property>
-        <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkCheckButton" id="HumanizeURLs">
-        <property name="label" translatable="yes">Humanize slsk:// URLs</property>
-        <property name="visible">1</property>
-        <property name="use-underline">1</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">1</property>
-        <property name="xalign">0</property>
-        <property name="label" translatable="yes">Instances of $ will be replaced by the link, add empty handlers to use the system default web browser.
-Protocols handlers: </property>
-        <property name="wrap">1</property>
-      </object>
-    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="vexpand">1</property>
-            <property name="shadow-type">in</property>
-            <child>
-              <object class="GtkTreeView" id="ProtocolHandlers">
-                <property name="visible">1</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection">
-                    <signal name="changed" handler="on_select" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
+            <property name="label" translatable="yes">General</property>
+            <property name="halign">start</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkCheckButton" id="URLCatching">
+            <property name="label" translatable="yes">Enable URL catching</property>
             <property name="visible">1</property>
-            <property name="orientation">vertical</property>
-            <property name="margin-start">6</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkButton" id="RemoveHandler">
-                <property name="visible">1</property>
-                <signal name="clicked" handler="on_remove" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">list-remove-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="ClearHandlers">
-                <property name="visible">1</property>
-                <signal name="clicked" handler="on_clear" swapped="no"/>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear All</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
+            <property name="use-underline">1</property>
+            <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="HumanizeURLs">
+            <property name="label" translatable="yes">Humanize slsk:// URLs</property>
+            <property name="visible">1</property>
+            <property name="use-underline">1</property>
           </object>
         </child>
       </object>
     </child>
     <child>
-      <object class="GtkFlowBox">
+      <object class="GtkBox" id="ProtocolContainer">
         <property name="visible">1</property>
-        <property name="row-spacing">6</property>
-        <property name="column-spacing">6</property>
-        <property name="max-children-per-line">2</property>
-        <property name="selection-mode">none</property>
+        <property name="spacing">18</property>
+        <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Protocol:</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="ProtocolCombo">
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="has-entry">1</property>
-            <items>
-              <item>http</item>
-              <item>https</item>
-              <item>ftp</item>
-              <item>sftp</item>
-              <item>news</item>
-              <item>irc</item>
-            </items>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Handler:</property>
-            <property name="xalign">0</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Protocol Handlers</property>
+                <property name="halign">start</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Instances of $ will be replaced by the link, add empty handlers to use the system default web browser.</property>
+                <property name="mnemonic_widget">ProtocolHandlers</property>
+                <property name="wrap">1</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -152,42 +73,193 @@ Protocols handlers: </property>
             <property name="visible">1</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkComboBoxText" id="Handler">
+              <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="has-entry">1</property>
-                <items>
-                  <item>xdg-open $</item>
-                  <item>firefox $</item>
-                  <item>firefox -a firefox --remote &quot;openURL($,new-tab)&quot;</item>
-                  <item>opera $</item>
-                  <item>links -g $</item>
-                  <item>dillo $</item>
-                  <item>konqueror $</item>
-                  <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
-                </items>
+                <property name="vexpand">1</property>
+                <property name="shadow-type">in</property>
+                <child>
+                  <object class="GtkTreeView" id="ProtocolHandlers">
+                    <property name="visible">1</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection">
+                        <signal name="changed" handler="on_select" swapped="no"/>
+                      </object>
+                    </child>
+                    <child internal-child="accessible">
+                      <object class="AtkObject">
+                        <property name="AtkObject::accessible-description" translatable="yes">Protocol Handlers</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="addButton">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="halign">start</property>
-                <signal name="clicked" handler="on_add" swapped="no"/>
+                <property name="orientation">vertical</property>
+                <property name="margin-start">6</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkButton" id="RemoveHandler">
+                    <property name="visible">1</property>
+                    <signal name="clicked" handler="on_remove" swapped="no"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">list-remove-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Remove</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="ClearHandlers">
+                    <property name="visible">1</property>
+                    <signal name="clicked" handler="on_clear" swapped="no"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Clear All</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">6</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Protocol:</property>
+                    <property name="halign">start</property>
+                    <property name="mnemonic_widget">ProtocolCombo</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="ProtocolCombo">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="has-entry">1</property>
+                    <items>
+                      <item>http</item>
+                      <item>https</item>
+                      <item>ftp</item>
+                      <item>sftp</item>
+                      <item>news</item>
+                      <item>irc</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Handler:</property>
+                    <property name="halign">start</property>
+                    <property name="mnemonic_widget">Handler</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">6</property>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkComboBoxText" id="Handler">
                         <property name="visible">1</property>
-                        <property name="icon-name">list-add-symbolic</property>
+                        <property name="hexpand">1</property>
+                        <property name="has-entry">1</property>
+                        <items>
+                          <item>xdg-open $</item>
+                          <item>firefox $</item>
+                          <item>firefox -a firefox --remote &quot;openURL($,new-tab)&quot;</item>
+                          <item>opera $</item>
+                          <item>links -g $</item>
+                          <item>dillo $</item>
+                          <item>konqueror $</item>
+                          <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
+                        </items>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkButton" id="addButton">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add</property>
-                        <property name="use-underline">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_add" swapped="no"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">list-add-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Add</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

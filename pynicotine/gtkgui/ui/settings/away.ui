@@ -9,53 +9,64 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">10</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Toggle away status after</property>
-            <property name="wrap">1</property>
-            <property name="xalign">0</property>
+            <property name="label" translatable="yes">General</property>
+            <property name="halign">start</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkSpinButton" id="AutoAway">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="adjustment">adjustment_AutoAway</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
+                <property name="wrap">1</property>
+                <property name="xalign">0</property>
+                <property name="mnemonic_widget">AutoAway</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="AutoAway">
+                <property name="visible">1</property>
+                <property name="adjustment">adjustment_AutoAway</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">minutes of inactivity</property>
-            <property name="wrap">1</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">6</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Auto-reply message when away:</property>
-            <property name="wrap">1</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkEntry" id="AutoReply">
-            <property name="width-request">193</property>
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
+            <property name="spacing">6</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Auto-reply message when away:</property>
+                <property name="wrap">1</property>
+                <property name="xalign">0</property>
+                <property name="mnemonic_widget">AutoReply</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="AutoReply">
+                <property name="width-request">193</property>
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
