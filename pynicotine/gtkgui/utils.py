@@ -55,8 +55,6 @@ def load_ui_elements(ui_class, filename):
                     .replace("GtkRadioButton", "GtkCheckButton")
                     .replace("<property name=\"can-focus\">0</property>",
                              "<property name=\"focusable\">0</property>")
-                    .replace("<property name=\"shadow-type\">in</property>",
-                             "<property name=\"has-frame\">1</property>")
                 )
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:

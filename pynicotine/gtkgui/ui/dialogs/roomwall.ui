@@ -4,42 +4,45 @@
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
     <property name="orientation">vertical</property>
+    <property name="margin-start">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-top">12</property>
+    <property name="margin-bottom">12</property>
+    <property name="spacing">12</property>
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="halign">start</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">13</property>
-        <property name="margin-bottom">13</property>
+        <property name="xalign">0</property>
         <property name="label" translatable="yes">The room wall feature allows users in a room to specify a unique message to display to others. Recent messages are shown at the top.</property>
-        <property name="justify">fill</property>
         <property name="wrap">1</property>
+        <property name="mnemonic_widget">RoomWallList</property>
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkFrame">
         <property name="visible">1</property>
         <child>
-          <object class="GtkScrolledWindow">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="vexpand">1</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">10</property>
-            <property name="shadow-type">in</property>
             <child>
-              <object class="GtkTextView" id="RoomWallList">
+              <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="editable">0</property>
-                <property name="wrap-mode">word-char</property>
-                <property name="cursor-visible">0</property>
-                <property name="pixels-above-lines">4</property>
-                <property name="pixels-below-lines">4</property>
-                <property name="left-margin">10</property>
-                <property name="right-margin">10</property>
-                <property name="top-margin">5</property>
-                <property name="bottom-margin">5</property>
+                <property name="vexpand">1</property>
+                <child>
+                  <object class="GtkTextView" id="RoomWallList">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="editable">0</property>
+                    <property name="wrap-mode">word-char</property>
+                    <property name="cursor-visible">0</property>
+                    <property name="pixels-above-lines">4</property>
+                    <property name="pixels-below-lines">4</property>
+                    <property name="left-margin">10</property>
+                    <property name="right-margin">10</property>
+                    <property name="top-margin">5</property>
+                    <property name="bottom-margin">5</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -49,11 +52,6 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">10</property>
-        <property name="margin-bottom">10</property>
-        <property name="spacing">10</property>
         <child>
           <object class="GtkEntry" id="RoomWallEntry">
             <property name="visible">1</property>

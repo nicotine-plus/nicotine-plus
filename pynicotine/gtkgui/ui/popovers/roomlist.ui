@@ -6,15 +6,15 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">10</property>
-        <property name="margin-bottom">10</property>
-        <property name="spacing">10</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">8</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkSearchEntry" id="SearchRooms">
                 <property name="visible">1</property>
@@ -43,19 +43,23 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFrame">
             <property name="visible">1</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="height-request">400</property>
-                <property name="width-request">350</property>
-                <property name="shadow-type">in</property>
                 <child>
-                  <object class="GtkTreeView" id="RoomsList">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <signal name="row-activated" handler="on_row_activated"/>
+                    <property name="height-request">400</property>
+                    <property name="width-request">350</property>
+                    <child>
+                      <object class="GtkTreeView" id="RoomsList">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <signal name="row-activated" handler="on_row_activated"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
