@@ -27,15 +27,16 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Results</property>
+                    <property name="mnemonic_widget">CounterButton</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
                     </attributes>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="CounterButton">
                     <property name="visible">1</property>
-                    <property name="sensitive">0</property>
+                    <signal name="clicked" handler="on_search_settings" swapped="no"/>
                     <child>
                       <object class="GtkBox">
                         <property name="width-request">24</property>
@@ -51,6 +52,9 @@
                             <attributes>
                               <attribute name="weight" value="bold"/>
                             </attributes>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
                           </object>
                         </child>
                       </object>

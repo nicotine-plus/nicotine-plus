@@ -1277,6 +1277,9 @@ class Search:
             user, path = self.selected_results[0][:2]
             copy_file_url(user, path.rsplit('\\', 1)[0] + '\\')
 
+    def on_search_settings(self, *args):
+        self.frame.on_settings(page='Searches')
+
     def on_group(self, action, state):
 
         mode = state.get_string()

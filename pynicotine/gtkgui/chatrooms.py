@@ -1231,6 +1231,9 @@ class ChatRoom:
     def on_clear_activity_log(self, *args):
         self.RoomLog.get_buffer().set_text("")
 
+    def on_ignore_users_settings(self, *args):
+        self.frame.on_settings(page='IgnoreList')
+
     def set_completion_list(self, completion_list):
 
         # We want to include users for this room only

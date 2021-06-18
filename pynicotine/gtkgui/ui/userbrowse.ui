@@ -53,15 +53,15 @@
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Folders</property>
+                                    <property name="mnemonic_widget">NumDirectoriesButton</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton">
+                                  <object class="GtkButton" id="NumDirectoriesButton">
                                     <property name="visible">1</property>
-                                    <property name="sensitive">0</property>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="width-request">24</property>
@@ -77,6 +77,9 @@
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                             </attributes>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -98,15 +101,15 @@
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Shared</property>
+                                    <property name="mnemonic_widget">AmountSharedButton</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkButton">
+                                  <object class="GtkButton" id="AmountSharedButton">
                                     <property name="visible">1</property>
-                                    <property name="sensitive">0</property>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="width-request">24</property>
@@ -122,6 +125,9 @@
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
                                             </attributes>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
                                           </object>
                                         </child>
                                       </object>

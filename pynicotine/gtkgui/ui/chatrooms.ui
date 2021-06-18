@@ -186,15 +186,16 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">User List</property>
+                        <property name="mnemonic_widget">PeopleButton</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="PeopleButton">
                         <property name="visible">1</property>
-                        <property name="sensitive">0</property>
+                        <signal name="clicked" handler="on_ignore_users_settings" swapped="no"/>
                         <child>
                           <object class="GtkBox">
                             <property name="width-request">24</property>
@@ -210,6 +211,9 @@
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
                               </object>
                             </child>
                           </object>

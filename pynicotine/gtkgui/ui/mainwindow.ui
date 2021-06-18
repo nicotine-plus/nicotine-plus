@@ -214,6 +214,9 @@
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -260,6 +263,9 @@
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -363,6 +369,9 @@
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                   </object>
@@ -409,6 +418,9 @@
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                     </child>
                   </object>
