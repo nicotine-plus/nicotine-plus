@@ -174,6 +174,9 @@ class FastConfigureAssistant(object):
         virtual = dialog.get_response_value()
         dialog.destroy()
 
+        if response_id != Gtk.ResponseType.OK:
+            return
+
         # If the virtual name is empty
         if not virtual:
             message_dialog(
@@ -231,7 +234,7 @@ class FastConfigureAssistant(object):
     def on_add_share(self, *args):
 
         choose_dir(
-            parent=self.FastConfigureDialog.get_toplevel(),
+            parent=self.FastConfigureDialog,
             title=_("Add a Shared Folder"),
             callback=self.on_add_share_selected
         )
