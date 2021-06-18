@@ -414,7 +414,7 @@ class AddUser(ServerMessage):
         self.userexists = None
         self.status = None
         self.avgspeed = None
-        self.downloadnum = None
+        self.uploadnum = None
         self.files = None
         self.dirs = None
         self.country = None
@@ -430,7 +430,7 @@ class AddUser(ServerMessage):
         if message[pos:]:
             pos, self.status = self.get_object(message, int, pos)
             pos, self.avgspeed = self.get_object(message, int, pos)
-            pos, self.downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, self.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
 
             pos, self.files = self.get_object(message, int, pos)
             pos, self.dirs = self.get_object(message, int, pos)
@@ -493,14 +493,14 @@ class SayChatroom(ServerMessage):
 class UserData:
     """ When we join a room, the server sends us a bunch of these for each user. """
 
-    __slots__ = ("username", "status", "avgspeed", "downloadnum", "files", "dirs", "slotsfull", "country")
+    __slots__ = ("username", "status", "avgspeed", "uploadnum", "files", "dirs", "slotsfull", "country")
 
-    def __init__(self, username=None, status=None, avgspeed=None, downloadnum=None, files=None, dirs=None,
+    def __init__(self, username=None, status=None, avgspeed=None, uploadnum=None, files=None, dirs=None,
                  slotsfull=None, country=None):
         self.username = username
         self.status = status
         self.avgspeed = avgspeed
-        self.downloadnum = downloadnum
+        self.uploadnum = uploadnum
         self.files = files
         self.dirs = dirs
         self.slotsfull = slotsfull
@@ -561,7 +561,7 @@ class JoinRoom(ServerMessage):
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
             pos, users[i].avgspeed = self.get_object(message, int, pos, getsignedint=True)
-            pos, users[i].downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, users[i].uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
             pos, users[i].files = self.get_object(message, int, pos)
             pos, users[i].dirs = self.get_object(message, int, pos)
 
@@ -606,7 +606,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.username = self.get_object(message, str, pos)
         pos, self.userdata.status = self.get_object(message, int, pos)
         pos, self.userdata.avgspeed = self.get_object(message, int, pos, getsignedint=True)
-        pos, self.userdata.downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+        pos, self.userdata.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
         pos, self.userdata.files = self.get_object(message, int, pos)
         pos, self.userdata.dirs = self.get_object(message, int, pos)
         pos, self.userdata.slotsfull = self.get_object(message, int, pos)
@@ -831,7 +831,7 @@ class GetUserStats(ServerMessage):
     def __init__(self, user=None):
         self.user = user
         self.avgspeed = None
-        self.downloadnum = None
+        self.uploadnum = None
         self.files = None
         self.dirs = None
 
@@ -841,7 +841,7 @@ class GetUserStats(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.avgspeed = self.get_object(message, int, pos, getsignedint=True)
-        pos, self.downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+        pos, self.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
         pos, self.files = self.get_object(message, int, pos)
         pos, self.dirs = self.get_object(message, int, pos)
 
@@ -1196,7 +1196,7 @@ class GlobalUserList(ServerMessage):
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
             pos, users[i].avgspeed = self.get_object(message, int, pos, getsignedint=True)
-            pos, users[i].downloadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, users[i].uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
             pos, users[i].files = self.get_object(message, int, pos)
             pos, users[i].dirs = self.get_object(message, int, pos)
 

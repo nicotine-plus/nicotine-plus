@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on June 17, 2021
+Last updated on June 18, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -330,7 +330,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
       - If <ins>exists</ins> is 1/True (may not be implemented)
         1.  **int** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
         2.  **int** <ins>avgspeed</ins>
-        3.  **off\_t** <ins>downloadnum</ins>
+        3.  **off\_t** <ins>uploadnum</ins>
         4.  **int** <ins>files</ins>
         5.  **int** <ins>dirs</ins>
         6.  **string** <ins>Country Code</ins> (may not be implemented)
@@ -437,7 +437,7 @@ Server responds with this message when we join a room. Contains users list with 
     6.  **int** <ins>number of userdata</ins>
     7.  Iterate the userdata **vector of userdata** (and add unpacked data to [User Data](#userdata))
         1.  **int** <ins>avgspeed</ins>
-        2.  **off\_t** <ins>downloadnum</ins>
+        2.  **off\_t** <ins>uploadnum</ins>
         3.  **int** <ins>files</ins>
         4.  **int** <ins>dirs</ins>
     8.  **int** <ins>number of slotsfree</ins>
@@ -497,7 +497,7 @@ The server tells us someone has just joined a room we're in.
     2.  **string** <ins>username</ins>
     3.  **int** <ins>status</ins>
     4.  **int** <ins>avgspeed</ins>
-    5.  **off\_t** <ins>downloadnum</ins>
+    5.  **off\_t** <ins>uploadnum</ins>
     6.  **int** <ins>files</ins>
     7.  **int** <ins>dirs</ins>
     8.  **int** <ins>slotsfree</ins>
@@ -763,7 +763,7 @@ The server sends this to indicate a change in a user's statistics, if we've requ
   - Receive
     1.  **string** <ins>username</ins>
     2.  **int** <ins>avgspeed</ins>
-    3.  **off\_t** <ins>downloadnum</ins>
+    3.  **off\_t** <ins>uploadnum</ins>
     4.  **int** <ins>files</ins>
     5.  **int** <ins>dirs</ins>
 
@@ -1198,7 +1198,7 @@ We send this to get a global list of all users online.
     5.  **int** <ins>number of userdata</ins>
     6.  Iterate the <ins>userdata</ins>
         1.  **int** <ins>avgspeed</ins>
-        2.  **off\_t** <ins>downloadnum</ins>
+        2.  **off\_t** <ins>uploadnum</ins>
         3.  **int** <ins>files</ins>
         4.  **int** <ins>dirs</ins>
     7.  **int** <ins>number of slotsfree</ins>
@@ -3293,7 +3293,7 @@ Nicotine: DistribEmbeddedMessage
 
 1.  **uint32** <ins>status</ins> *Online Status*
 2.  **uint32** <ins>avgspeed</ins> *Average Speed*
-3.  **off\_t** <ins>downloadnum</ins> *Number of downloaded files*
+3.  **off\_t** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
 4.  **uint32** <ins>files</ins> *Files shared*
 5.  **uint32** <ins>dirs</ins> *Directories shared*
 6.  **bool** <ins>slotsfree</ins> *Slots free*

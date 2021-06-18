@@ -1474,7 +1474,7 @@ Error: %(error)s""", {
 
         stats = {
             'avgspeed': msg.avgspeed,
-            'downloadnum': msg.downloadnum,
+            'uploadnum': msg.uploadnum,
             'files': msg.files,
             'dirs': msg.dirs,
         }
