@@ -97,56 +97,51 @@ class FileProperties:
 
         if bitrate:
             self.bitrate_value.set_text(bitrate)
-            self.bitrate_label.show()
-            self.bitrate_value.show()
+            self.bitrate_label.get_parent().show()
+            self.bitrate_value.get_parent().show()
         else:
-            self.bitrate_label.hide()
-            self.bitrate_value.hide()
+            self.bitrate_label.get_parent().hide()
+            self.bitrate_value.get_parent().hide()
 
         if length:
             self.length_value.set_text(length)
-            self.length_label.show()
-            self.length_value.show()
+            self.length_label.get_parent().show()
+            self.length_value.get_parent().show()
         else:
-            self.length_label.hide()
-            self.length_value.hide()
-
-        if bitrate and length:
-            self.empty_1.show()
-        else:
-            self.empty_1.hide()
+            self.length_label.get_parent().hide()
+            self.length_value.get_parent().hide()
 
         if immediate:
             self.immediate_value.set_text(immediate)
-            self.immediate_label.show()
-            self.immediate_value.show()
+            self.immediate_label.get_parent().show()
+            self.immediate_value.get_parent().show()
         else:
-            self.immediate_label.hide()
-            self.immediate_value.hide()
+            self.immediate_label.get_parent().hide()
+            self.immediate_value.get_parent().hide()
 
         if immediate == "N":
             self.queue_value.set_text(properties["queue"])
-            self.queue_label.show()
-            self.queue_value.show()
+            self.queue_label.get_parent().show()
+            self.queue_value.get_parent().show()
         else:
-            self.queue_label.hide()
-            self.queue_value.hide()
+            self.queue_label.get_parent().hide()
+            self.queue_value.get_parent().hide()
 
         if speed:
             self.speed_value.set_text(speed)
-            self.speed_label.show()
-            self.speed_value.show()
+            self.speed_label.get_parent().show()
+            self.speed_value.get_parent().show()
         else:
-            self.speed_label.hide()
-            self.speed_value.hide()
+            self.speed_label.get_parent().hide()
+            self.speed_value.get_parent().hide()
 
         if country:
             self.country_value.set_text(country)
-            self.country_label.show()
-            self.country_value.show()
+            self.country_label.get_parent().show()
+            self.country_value.get_parent().show()
         else:
-            self.country_label.hide()
-            self.country_value.hide()
+            self.country_label.get_parent().hide()
+            self.country_value.get_parent().hide()
 
         self.update_title()
 

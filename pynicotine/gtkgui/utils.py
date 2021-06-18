@@ -53,6 +53,8 @@ def load_ui_elements(ui_class, filename):
                 builder.add_from_string(
                     f.read()
                     .replace("GtkRadioButton", "GtkCheckButton")
+                    .replace("<property name=\"can-focus\">0</property>",
+                             "<property name=\"focusable\">0</property>")
                     .replace("<property name=\"shadow-type\">in</property>",
                              "<property name=\"has-frame\">1</property>")
                 )

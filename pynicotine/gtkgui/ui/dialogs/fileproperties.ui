@@ -9,6 +9,12 @@
     <property name="margin-top">18</property>
     <property name="margin-bottom">18</property>
     <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="can-focus">1</property>
+      </object>
+    </child>
+    <child>
       <object class="GtkFlowBox">
         <property name="visible">1</property>
         <property name="row-spacing">6</property>
@@ -17,233 +23,337 @@
         <property name="max-children-per-line">2</property>
         <property name="selection-mode">none</property>
         <child>
-          <object class="GtkLabel" id="filename_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">File Name</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="filename_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">File Name</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="filename_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="filename_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="folder_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Folder</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="folder_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Folder</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="folder_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="folder_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="filesize_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">File Size</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="filesize_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">File Size</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="filesize_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="filesize_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="empty_1">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="length_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Length</property>
+                <property name="margin-top">12</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="empty_2">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="length_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="margin-top">12</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="length_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Length</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="bitrate_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Bitrate</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="length_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="bitrate_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="bitrate_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Bitrate</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="username_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Username</property>
+                <property name="margin-top">12</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="bitrate_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="username_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="margin-top">12</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="immediate_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Immediate Download</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="immediate_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="username_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Username</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="queue_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">In Queue</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="username_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="queue_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="immediate_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Immediate Download</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="speed_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Last Speed</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="immediate_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="speed_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="queue_label">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">In Queue</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="country_label">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Country</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="queue_value">
+          <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="speed_label">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Last Speed</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="speed_value">
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="country_label">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Country</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="country_value">
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkLabel" id="country_value">
+                <property name="visible">1</property>
+                <property name="hexpand">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
