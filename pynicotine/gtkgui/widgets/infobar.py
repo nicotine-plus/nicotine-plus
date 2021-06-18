@@ -30,6 +30,7 @@ class InfoBar:
         self.info_bar.connect("response", self._hide)
 
         self.label = Gtk.Label()
+        self.label.set_selectable(True)
 
         if Gtk.get_major_version() == 4:
             self.label.set_wrap(True)

@@ -1627,10 +1627,7 @@ class NicotineFrame:
 
         config.sections["ui"]["modes_order"] = tab_names
 
-        if main_notebook.get_n_pages() <= 1:
-            main_notebook.set_show_tabs(False)
-        else:
-            main_notebook.set_show_tabs(True)
+        main_notebook.set_visible(main_notebook.get_n_pages())
 
     def on_key_press_event(self, *args):
 
@@ -1681,7 +1678,7 @@ class NicotineFrame:
             self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() <= 1:
-            self.MainNotebook.set_show_tabs(False)
+            self.MainNotebook.hide()
 
     def set_last_session_tab(self):
 

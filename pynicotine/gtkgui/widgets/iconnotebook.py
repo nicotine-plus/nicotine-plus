@@ -278,6 +278,8 @@ class IconNotebook:
         self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
+        self.notebook.hide()
+
     def get_labels(self, page):
         tab_label = self.notebook.get_tab_label(page)
         menu_label = self.notebook.get_menu_label(page)
@@ -389,7 +391,7 @@ class IconNotebook:
             label_tab.set_tooltip_text(fulltext)
 
         self.notebook.set_tab_reorderable(page, self.reorderable)
-        self.notebook.set_show_tabs(True)
+        self.notebook.show()
 
     def remove_page(self, page):
 
@@ -398,7 +400,7 @@ class IconNotebook:
         self.remove_unread_page(page)
 
         if self.notebook.get_n_pages() == 0:
-            self.notebook.set_show_tabs(False)
+            self.notebook.hide()
 
     def remove_all_pages_response(self, dialog, response_id, data):
 
