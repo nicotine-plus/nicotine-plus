@@ -13,7 +13,6 @@
           <object class="GtkCheckButton" id="PluginsEnable">
             <property name="label" translatable="yes">Enable plugins</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
           </object>
@@ -21,7 +20,6 @@
         <child>
           <object class="GtkButton" id="PluginFolder">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="halign">end</property>
             <property name="hexpand">1</property>
             <property name="valign">center</property>
@@ -57,14 +55,12 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="PluginTreeView">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="search-column">1</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection">
@@ -149,7 +145,6 @@
                 <child>
                   <object class="GtkButton" id="PluginProperties">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="sensitive">0</property>
                     <property name="valign">center</property>
                     <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
@@ -179,17 +174,14 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="vexpand">1</property>
                     <property name="shadow-type">in</property>
                     <child>
                       <object class="GtkTextView" id="PluginDescription">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
                         <property name="editable">0</property>
                         <property name="cursor-visible">0</property>

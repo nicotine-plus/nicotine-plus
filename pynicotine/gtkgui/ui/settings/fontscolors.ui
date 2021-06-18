@@ -19,7 +19,6 @@
       <object class="GtkCheckButton" id="DarkMode">
         <property name="label" translatable="yes">Prefer dark mode</property>
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
       </object>
     </child>
@@ -45,7 +44,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Chat username:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -77,7 +75,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Decimal separator:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -125,7 +122,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Global font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -142,7 +138,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectGlobalFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -151,7 +146,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultGlobalFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -185,7 +179,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Chat font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -202,7 +195,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectChatFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -211,7 +203,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultChatFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -245,7 +236,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">List font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -262,7 +252,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectListFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -271,7 +260,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultListFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -305,7 +293,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Transfers font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -322,7 +309,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectTransfersFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -331,7 +317,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultTransfersFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -365,7 +350,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Search font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -382,7 +366,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectSearchFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -391,7 +374,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultSearchFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -425,7 +407,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Browse font:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -442,7 +423,6 @@
                 <child>
                   <object class="GtkFontButton" id="SelectBrowserFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="font">Sans 12</property>
                     <signal name="font-set" handler="on_fonts_changed"/>
@@ -451,7 +431,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultBrowserFont">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_font"/>
                     <child>
                       <object class="GtkBox">
@@ -499,7 +478,6 @@
           <object class="GtkCheckButton" id="UsernameHotspots">
             <property name="label" translatable="yes">Colored and clickable usernames</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
@@ -509,7 +487,6 @@
           <object class="GtkCheckButton" id="DisplayAwayColors">
             <property name="label" translatable="yes">Usernames also indicate away status</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_toggled_away_colors"/>
           </object>
         </child>
@@ -532,7 +509,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Remote text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -551,7 +527,6 @@
             <child>
               <object class="GtkEntry" id="EntryRemote">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -560,7 +535,6 @@
             <child>
               <object class="GtkButton" id="DefaultRemote">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -592,7 +566,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Local text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -611,7 +584,6 @@
             <child>
               <object class="GtkEntry" id="EntryLocal">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -620,7 +592,6 @@
             <child>
               <object class="GtkButton" id="DefaultLocal">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -652,7 +623,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">/me text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -671,7 +641,6 @@
             <child>
               <object class="GtkEntry" id="EntryMe">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -680,7 +649,6 @@
             <child>
               <object class="GtkButton" id="DefaultMe">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -712,7 +680,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Highlighted text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -731,7 +698,6 @@
             <child>
               <object class="GtkEntry" id="EntryHighlight">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -740,7 +706,6 @@
             <child>
               <object class="GtkButton" id="DefaultHighlight">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -772,7 +737,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">URL link text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -791,7 +755,6 @@
             <child>
               <object class="GtkEntry" id="EntryURL">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -800,7 +763,6 @@
             <child>
               <object class="GtkButton" id="DefaultURL">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -832,7 +794,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Online:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -851,7 +812,6 @@
             <child>
               <object class="GtkEntry" id="EntryOnline">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -860,7 +820,6 @@
             <child>
               <object class="GtkButton" id="DefaultOnline">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -892,7 +851,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Offline:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -911,7 +869,6 @@
             <child>
               <object class="GtkEntry" id="EntryOffline">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -920,7 +877,6 @@
             <child>
               <object class="GtkButton" id="DefaultOffline">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -952,7 +908,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Away:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -971,7 +926,6 @@
             <child>
               <object class="GtkEntry" id="EntryAway">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -980,7 +934,6 @@
             <child>
               <object class="GtkButton" id="DefaultAway">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1029,7 +982,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">List text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1048,7 +1000,6 @@
             <child>
               <object class="GtkEntry" id="EntryImmediate">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1057,7 +1008,6 @@
             <child>
               <object class="GtkButton" id="DefaultImmediate">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1089,7 +1039,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">With queue:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1108,7 +1057,6 @@
             <child>
               <object class="GtkEntry" id="EntryQueue">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1117,7 +1065,6 @@
             <child>
               <object class="GtkButton" id="DefaultQueue">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1166,7 +1113,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Background:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1185,7 +1131,6 @@
             <child>
               <object class="GtkEntry" id="EntryBackground">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1194,7 +1139,6 @@
             <child>
               <object class="GtkButton" id="DefaultBackground">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1226,7 +1170,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Text:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1245,7 +1188,6 @@
             <child>
               <object class="GtkEntry" id="EntryInput">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1254,7 +1196,6 @@
             <child>
               <object class="GtkButton" id="DefaultInput">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1303,7 +1244,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Regular:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1322,7 +1262,6 @@
             <child>
               <object class="GtkEntry" id="EntryRegularTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1331,7 +1270,6 @@
             <child>
               <object class="GtkButton" id="DefaultRegularTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1363,7 +1301,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Changed:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1382,7 +1319,6 @@
             <child>
               <object class="GtkEntry" id="EntryChangedTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1391,7 +1327,6 @@
             <child>
               <object class="GtkButton" id="DefaultChangedTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1423,7 +1358,6 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="label" translatable="yes">Highlighted:</property>
                 <property name="selectable">1</property>
                 <property name="xalign">1</property>
@@ -1442,7 +1376,6 @@
             <child>
               <object class="GtkEntry" id="EntryHighlightTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">6</property>
                 <signal name="changed" handler="on_colors_changed"/>
@@ -1451,7 +1384,6 @@
             <child>
               <object class="GtkButton" id="DefaultHighlightTab">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_color"/>
                 <child>
                   <object class="GtkBox">
@@ -1485,7 +1417,6 @@
         <child>
           <object class="GtkButton" id="DefaultColors">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_default_colors"/>
             <child>
               <object class="GtkBox">
@@ -1511,7 +1442,6 @@
         <child>
           <object class="GtkButton" id="ClearAllColors">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_clear_colors"/>
             <child>
               <object class="GtkBox">

@@ -23,7 +23,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationWindowTitle">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -36,7 +35,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationTabIcons">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -49,7 +47,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationTabColors">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -62,7 +59,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupSound">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -92,7 +88,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFile">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -105,7 +100,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFolder">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -118,7 +112,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -131,7 +124,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroom">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -144,7 +136,6 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>

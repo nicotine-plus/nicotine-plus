@@ -27,7 +27,6 @@
         <child>
           <object class="GtkTreeView" id="WishlistView">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="rubber-banding">1</property>
             <child internal-child="selection">
               <object class="GtkTreeSelection">
@@ -54,7 +53,6 @@
             <child>
               <object class="GtkEntry" id="AddWishEntry">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="margin-end">20</property>
                 <property name="placeholder-text" translatable="yes">Add search term...</property>
@@ -68,7 +66,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_remove_wish" swapped="no"/>
             <child>
               <object class="GtkBox">
@@ -94,7 +91,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_clear_wishlist" swapped="no"/>
             <child>
               <object class="GtkBox">

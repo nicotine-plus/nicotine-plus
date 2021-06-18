@@ -24,14 +24,12 @@
               <object class="GtkScrolledWindow">
                 <property name="width-request">250</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTextView" id="Description">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="pixels-above-lines">1</property>
                     <property name="pixels-below-lines">1</property>
                     <property name="left-margin">8</property>
@@ -67,7 +65,6 @@
         <child>
           <object class="GtkButton" id="DefaultImage">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_default_image" swapped="no"/>
             <child>
               <object class="GtkBox">

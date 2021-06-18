@@ -35,7 +35,6 @@
         <child>
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="height-request">0</property>
             <property name="width-chars">15</property>
@@ -49,8 +48,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Configure banned users</property>
             <property name="halign">end</property>
             <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
@@ -71,16 +68,13 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="vexpand">1</property>
             <child>
               <object class="GtkTreeView" id="UserListTree">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="has-tooltip">1</property>
                 <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>

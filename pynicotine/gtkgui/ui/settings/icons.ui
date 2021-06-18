@@ -29,7 +29,6 @@
               <object class="GtkCheckButton" id="TrayiconCheck">
                 <property name="label" translatable="yes">Display tray icon</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_toggle_tray" swapped="no"/>
               </object>
@@ -38,7 +37,6 @@
               <object class="GtkCheckButton" id="StartupHidden">
                 <property name="label" translatable="yes">Minimize to tray on startup</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>
@@ -53,14 +51,12 @@
           <object class="GtkRadioButton" id="DialogOnClose">
             <property name="label" translatable="yes">Show confirmation dialog when closing the main window</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
           <object class="GtkRadioButton" id="SendToTrayOnClose">
             <property name="label" translatable="yes">Always run in the background when main window is closed</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="group">DialogOnClose</property>
           </object>
         </child>
@@ -68,7 +64,6 @@
           <object class="GtkRadioButton" id="QuitOnClose">
             <property name="label" translatable="yes">Always quit when main window is closed</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="group">DialogOnClose</property>
           </object>
         </child>
@@ -108,7 +103,6 @@
             <child>
               <object class="GtkButton" id="DefaultTheme">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_theme" swapped="no"/>
                 <child>
                   <object class="GtkBox">

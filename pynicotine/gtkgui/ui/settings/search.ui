@@ -56,7 +56,6 @@
                 <property name="label" translatable="yes">Respond to search requests from other users</property>
                 <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="toggled" handler="on_enable_search_results" swapped="no"/>
               </object>
             </child>
@@ -74,7 +73,6 @@
                 <child>
                   <object class="GtkSpinButton" id="MinSearchChars">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="width-chars">6</property>
                     <property name="adjustment">adjustment_MinSearchChars</property>
                     <property name="numeric">1</property>
@@ -102,7 +100,6 @@
                 <child>
                   <object class="GtkSpinButton" id="MaxResults">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="width-chars">6</property>
                     <property name="adjustment">adjustment_MaxResults</property>
                     <property name="numeric">1</property>
@@ -139,7 +136,6 @@
           <object class="GtkCheckButton" id="RemoveSpecialChars">
             <property name="label" translatable="yes">Remove special characters from search terms (some clients don&apos;t send search results if they&apos;re included)</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -157,7 +153,6 @@
             <child>
               <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="width-chars">6</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
                 <property name="numeric">1</property>
@@ -172,7 +167,6 @@
             <child>
               <object class="GtkButton" id="ClearSearchHistory">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
                 <child>
@@ -224,7 +218,6 @@
           <object class="GtkCheckButton" id="RegexpFilters">
             <property name="label" translatable="yes">Allow regular expressions for the filter&apos;s include and exclude</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -232,7 +225,6 @@
           <object class="GtkCheckButton" id="EnableFilters">
             <property name="label" translatable="yes">Enable filters by default</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enable_filters_toggled" swapped="no"/>
           </object>
@@ -255,7 +247,6 @@
             <child>
               <object class="GtkEntry" id="FilterIn">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
               </object>
             </child>
@@ -269,7 +260,6 @@
             <child>
               <object class="GtkEntry" id="FilterOut">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
               </object>
             </child>
@@ -286,7 +276,6 @@
                 <child>
                   <object class="GtkEntry" id="FilterType">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                   </object>
                 </child>
@@ -305,7 +294,6 @@
                 <child>
                   <object class="GtkEntry" id="FilterSize">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                   </object>
                 </child>
               </object>
@@ -323,7 +311,6 @@
                 <child>
                   <object class="GtkEntry" id="FilterBR">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                   </object>
                 </child>
               </object>
@@ -341,7 +328,6 @@
                 <child>
                   <object class="GtkEntry" id="FilterCC">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                   </object>
                 </child>
@@ -356,7 +342,6 @@
               <object class="GtkCheckButton" id="FilterFree">
                 <property name="label" translatable="yes">Free Slot</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
                 <property name="use-underline">1</property>
               </object>
@@ -370,7 +355,6 @@
             <child>
               <object class="GtkButton" id="ClearFilterHistory">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <signal name="clicked" handler="on_clear_filter_history" swapped="no"/>
                 <child>

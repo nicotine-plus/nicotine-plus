@@ -26,7 +26,6 @@
               <object class="GtkRadioButton" id="NP_lastfm">
                 <property name="label" translatable="yes">last.fm</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
@@ -35,7 +34,6 @@
               <object class="GtkRadioButton" id="NP_mpris">
                 <property name="label" translatable="yes">MPRIS (v2)</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
@@ -45,7 +43,6 @@
               <object class="GtkRadioButton" id="NP_other">
                 <property name="label" translatable="yes">Other</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
@@ -66,7 +63,6 @@
             <child>
               <object class="GtkEntry" id="NPCommand">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
               </object>
             </child>
@@ -127,10 +123,8 @@
             <property name="visible">1</property>
             <child>
               <object class="GtkButton" id="test_now_playing">
-                <property name="label" translatable="yes">Test the Configuration</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="receives-default">1</property>
+                <property name="label" translatable="yes">Test the Configuration</property>
               </object>
             </child>
           </object>

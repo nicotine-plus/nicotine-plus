@@ -21,7 +21,6 @@
         <child>
           <object class="GtkPaned" id="MainPaned">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkBox" id="FolderPane">
                 <property name="visible">1</property>
@@ -40,6 +39,7 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
+                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -140,6 +140,7 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
+                        <property name="can-focus">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -147,7 +148,6 @@
                             <child>
                               <object class="GtkSearchEntry" id="SearchEntry">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
                                 <property name="width-chars">20</property>
@@ -157,7 +157,6 @@
                             <child>
                               <object class="GtkButton" id="RefreshButton">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="tooltip-text" translatable="yes">Refresh files</property>
                                 <signal name="clicked" handler="on_refresh" swapped="no"/>
                                 <child>
@@ -171,7 +170,6 @@
                             <child>
                               <object class="GtkToggleButton" id="ExpandButton">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="active">1</property>
                                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                 <signal name="clicked" handler="on_expand" swapped="no"/>
@@ -192,17 +190,14 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="FolderTreeView">
                             <property name="visible">1</property>
                             <property name="sensitive">0</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="enable-tree-lines">1</property>
                             <property name="headers-visible">0</property>
@@ -233,18 +228,15 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="width-request">400</property>
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="FileTreeView">
                             <property name="visible">1</property>
                             <property name="sensitive">0</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="rubber-banding">1</property>
                             <signal name="row-activated" handler="on_file_row_activated"/>

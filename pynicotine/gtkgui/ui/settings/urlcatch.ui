@@ -9,7 +9,6 @@
       <object class="GtkCheckButton" id="URLCatching">
         <property name="label" translatable="yes">Enable URL catching</property>
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <property name="use-underline">1</property>
         <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
       </object>
@@ -18,7 +17,6 @@
       <object class="GtkCheckButton" id="HumanizeURLs">
         <property name="label" translatable="yes">Humanize slsk:// URLs</property>
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <property name="use-underline">1</property>
       </object>
     </child>
@@ -38,14 +36,12 @@ Protocols handlers: </property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="ProtocolHandlers">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection">
                     <signal name="changed" handler="on_select" swapped="no"/>
@@ -64,7 +60,6 @@ Protocols handlers: </property>
             <child>
               <object class="GtkButton" id="RemoveHandler">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -90,7 +85,6 @@ Protocols handlers: </property>
             <child>
               <object class="GtkButton" id="ClearHandlers">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_clear" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -144,11 +138,6 @@ Protocols handlers: </property>
               <item>news</item>
               <item>irc</item>
             </items>
-            <child internal-child="entry">
-              <object class="GtkEntry">
-                <property name="can-focus">1</property>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -177,17 +166,11 @@ Protocols handlers: </property>
                   <item>konqueror $</item>
                   <item>&quot;c:\Program Files\Mozilla Firefox\Firefox.exe&quot; $</item>
                 </items>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="can-focus">1</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="addButton">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="halign">start</property>
                 <signal name="clicked" handler="on_add" swapped="no"/>
                 <child>

@@ -18,7 +18,6 @@
             <child>
               <object class="GtkSearchEntry" id="SearchRooms">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">15</property>
                 <signal name="changed" handler="on_search_room" swapped="no"/>
@@ -27,7 +26,6 @@
             <child>
               <object class="GtkButton" id="RefreshButton">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Refresh room list</property>
                 <signal name="clicked" handler="on_refresh" swapped="no"/>
                 <child>
@@ -47,18 +45,15 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="height-request">400</property>
                 <property name="width-request">350</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="RoomsList">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <signal name="row-activated" handler="on_row_activated"/>
                   </object>
@@ -75,7 +70,6 @@
               <object class="GtkCheckButton" id="AcceptPrivateRoom">
                 <property name="label" translatable="yes">_Accept private room invitations</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>

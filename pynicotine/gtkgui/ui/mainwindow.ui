@@ -20,7 +20,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Preferences</property>
             <property name="action-name">app.settings</property>
             <child>
@@ -135,7 +134,6 @@
         <child>
           <object class="GtkButton" id="WishList">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -160,7 +158,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure searches</property>
             <signal name="clicked" handler="on_settings_searches" swapped="no"/>
             <child>
@@ -192,13 +189,14 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Users</property>
+                <property name="mnemonic_widget">DownloadUsersButton</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="DownloadUsersButton">
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
@@ -237,13 +235,14 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Files</property>
+                <property name="mnemonic_widget">DownloadFilesButton</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="DownloadFilesButton">
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
@@ -285,7 +284,6 @@
             <child>
               <object class="GtkToggleButton" id="ExpandDownloads">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                 <child>
                   <object class="GtkImage" id="ExpandDownloadsImage">
@@ -309,7 +307,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure downloads</property>
             <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
             <child>
@@ -341,13 +338,14 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Users</property>
+                <property name="mnemonic_widget">UploadUsersButton</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="UploadUsersButton">
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
@@ -386,13 +384,14 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Files</property>
+                <property name="mnemonic_widget">UploadFilesButton</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
               </object>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="UploadFilesButton">
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
@@ -434,7 +433,6 @@
             <child>
               <object class="GtkToggleButton" id="ExpandUploads">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                 <child>
                   <object class="GtkImage" id="ExpandUploadsImage">
@@ -458,7 +456,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure uploads</property>
             <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
             <child>
@@ -514,7 +511,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure logging</property>
             <signal name="clicked" handler="on_settings_logging" swapped="no"/>
             <child>
@@ -570,7 +566,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure user info</property>
             <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
             <child>
@@ -594,7 +589,6 @@
         <child>
           <object class="GtkButton" id="LoadFromDisk">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
             <child>
               <object class="GtkBox">
@@ -658,7 +652,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure shares</property>
             <signal name="clicked" handler="on_configure_shares" swapped="no"/>
             <child>
@@ -682,7 +675,6 @@
         <child>
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="height-request">0</property>
             <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
@@ -703,8 +695,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="receives-default">1</property>
             <property name="tooltip-text" translatable="yes">Configure banned users</property>
             <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
             <child>
@@ -758,7 +748,6 @@
         <child>
           <object class="GtkEntry" id="JoinRoomEntry">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="height-request">0</property>
             <property name="max-width-chars">40</property>
             <property name="width-chars">5</property>
@@ -779,13 +768,11 @@
         <child>
           <object class="GtkMenuButton" id="RoomList">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Configure logging</property>
             <signal name="clicked" handler="on_settings_logging" swapped="no"/>
             <child>
@@ -809,17 +796,14 @@
         <child>
           <object class="GtkPaned" id="MainPaned">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="orientation">vertical</property>
             <property name="vexpand">1</property>
             <child>
               <object class="GtkPaned" id="NotebooksPane">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <child>
                   <object class="GtkNotebook" id="MainNotebook">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="show-border">0</property>
                     <property name="scrollable">1</property>
                     <signal name="switch-page" handler="on_switch_page" swapped="no"/>
@@ -854,7 +838,6 @@
                             <child>
                               <object class="GtkNotebook" id="SearchNotebookRaw">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -972,7 +955,6 @@
                             <child>
                               <object class="GtkNotebook" id="UserBrowseNotebookRaw">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1016,7 +998,6 @@
                             <child>
                               <object class="GtkNotebook" id="UserInfoNotebookRaw">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1060,7 +1041,6 @@
                             <child>
                               <object class="GtkNotebook" id="PrivatechatNotebookRaw">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1141,11 +1121,9 @@
                             <child>
                               <object class="GtkPaned" id="ChatroomsPane">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <child>
                                   <object class="GtkNotebook" id="ChatNotebookRaw">
                                     <property name="visible">1</property>
-                                    <property name="can-focus">1</property>
                                     <property name="show-border">0</property>
                                     <property name="scrollable">1</property>
                                   </object>
@@ -1196,6 +1174,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
@@ -1213,11 +1192,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Downloads</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugdownloads</property>
                               </object>
                             </child>
@@ -1226,11 +1205,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Uploads</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debuguploads</property>
                               </object>
                             </child>
@@ -1239,11 +1218,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Search</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugsearches</property>
                               </object>
                             </child>
@@ -1252,11 +1231,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Chat</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugchat</property>
                               </object>
                             </child>
@@ -1265,11 +1244,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Connections</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugconnections</property>
                               </object>
                             </child>
@@ -1278,11 +1257,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Messages</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugmessages</property>
                               </object>
                             </child>
@@ -1291,11 +1270,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Transfers</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugtransfers</property>
                               </object>
                             </child>
@@ -1304,11 +1283,11 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
+                            <property name="can-focus">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Miscellaneous</property>
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="action-name">app.debugmiscellaneous</property>
                               </object>
                             </child>
@@ -1329,7 +1308,6 @@
                         <child>
                           <object class="GtkSearchEntry" id="LogSearchEntry">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="max-width-chars">75</property>
                           </object>
                         </child>
@@ -1340,17 +1318,14 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow" id="LogScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="min-content-height">90</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTextView" id="LogWindow">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="editable">0</property>
                             <property name="wrap-mode">word-char</property>
@@ -1517,7 +1492,6 @@
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
                 <property name="action-name">app.altspeedlimit</property>
                 <child>
@@ -1536,7 +1510,6 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Show log history</property>
                 <property name="action-name">win.showlog</property>
                 <child>

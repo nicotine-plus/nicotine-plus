@@ -9,7 +9,6 @@
       <object class="GtkCheckButton" id="TextToSpeech">
         <property name="label" translatable="yes">Enable Text-to-Speech</property>
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <signal name="toggled" handler="on_text_to_speech_toggled" swapped="no"/>
       </object>
     </child>
@@ -40,17 +39,11 @@
                   <item>echo $ | festival --tts</item>
                   <item>flite -t $</item>
                 </items>
-                <child internal-child="entry">
-                  <object class="GtkEntry">
-                    <property name="can-focus">1</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="DefaultTTSCommand">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_tts" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -89,14 +82,12 @@
             <child>
               <object class="GtkEntry" id="RoomMessage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="DefaultRoomMessage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_rooms" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -135,14 +126,12 @@
             <child>
               <object class="GtkEntry" id="PrivateMessage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="DefaultPrivateMessage">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_default_private" swapped="no"/>
                 <child>
                   <object class="GtkBox">

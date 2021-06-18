@@ -26,7 +26,6 @@
         <child>
           <object class="GtkSpinButton" id="AutoAway">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="adjustment">adjustment_AutoAway</property>
           </object>
         </child>
@@ -56,7 +55,6 @@
           <object class="GtkEntry" id="AutoReply">
             <property name="width-request">193</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
           </object>
         </child>

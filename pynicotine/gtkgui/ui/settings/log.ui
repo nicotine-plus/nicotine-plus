@@ -34,7 +34,6 @@
           <object class="GtkCheckButton" id="LogRooms">
             <property name="label" translatable="yes">Log chatrooms by default</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -42,7 +41,6 @@
           <object class="GtkCheckButton" id="LogPrivate">
             <property name="label" translatable="yes">Log private chat by default</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -50,7 +48,6 @@
           <object class="GtkCheckButton" id="LogTransfers">
             <property name="label" translatable="yes">Log transfers to file</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -58,7 +55,6 @@
           <object class="GtkCheckButton" id="LogDebug">
             <property name="label" translatable="yes">Log debug messages to file</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -158,7 +154,6 @@
           <object class="GtkCheckButton" id="ReadRoomLogs">
             <property name="label" translatable="yes">Display logged chat room messages when a room is rejoined</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
@@ -174,7 +169,6 @@
             <child>
               <object class="GtkSpinButton" id="RoomLogLines">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="width-chars">5</property>
                 <property name="adjustment">adjustment_RoomLogLines</property>
                 <property name="numeric">1</property>
@@ -192,7 +186,6 @@
           <object class="GtkCheckButton" id="ReopenPrivateChats">
             <property name="label" translatable="yes">Restore previously open private chats on startup</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -209,7 +202,6 @@
             <child>
               <object class="GtkSpinButton" id="PrivateLogLines">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="width-chars">5</property>
                 <property name="adjustment">adjustment_PrivateLogLines</property>
                 <property name="numeric">1</property>
@@ -244,7 +236,6 @@
           <object class="GtkCheckButton" id="ShowTimeStamps">
             <property name="label" translatable="yes">Display timestamps</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
@@ -270,7 +261,6 @@
                 <child>
                   <object class="GtkEntry" id="ChatRoomFormat">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
@@ -278,7 +268,6 @@
                 <child>
                   <object class="GtkButton" id="RoomDefaultTimestamp">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_room_default_timestamp" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -318,7 +307,6 @@
                 <child>
                   <object class="GtkEntry" id="PrivateChatFormat">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
@@ -326,7 +314,6 @@
                 <child>
                   <object class="GtkButton" id="PrivateDefaultTimestamp">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_private_default_timestamp" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -366,7 +353,6 @@
                 <child>
                   <object class="GtkEntry" id="LogFileFormat">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                   </object>
@@ -374,7 +360,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultTimestamp">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_default_timestamp" swapped="no"/>
                     <child>
                       <object class="GtkBox">

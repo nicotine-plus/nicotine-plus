@@ -24,14 +24,12 @@
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="BannedList">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="headers-visible">0</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
@@ -49,7 +47,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_banned" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -75,7 +72,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_banned" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -101,7 +97,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_clear_banned" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -143,14 +138,12 @@
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="BlockedList">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
                         <property name="mode">multiple</property>
@@ -167,7 +160,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_blocked" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -193,7 +185,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_blocked" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -219,7 +210,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_clear_blocked" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -255,7 +245,6 @@
           <object class="GtkCheckButton" id="UseCustomBan">
             <property name="label" translatable="yes">Use custom ban message:</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
@@ -264,7 +253,6 @@
         <child>
           <object class="GtkEntry" id="CustomBan">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
           </object>
         </child>

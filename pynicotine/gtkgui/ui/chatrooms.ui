@@ -10,11 +10,9 @@
         <child>
           <object class="GtkPaned" id="ChatPaned">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkPaned" id="ChatPanedSecond">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkBox" id="ActivityView">
@@ -31,7 +29,6 @@
                             <child>
                               <object class="GtkSearchEntry" id="LogSearchEntry">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="max-width-chars">75</property>
                               </object>
                             </child>
@@ -42,16 +39,13 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <child>
                           <object class="GtkScrolledWindow" id="RoomLogWindow">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTextView" id="RoomLog">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="editable">0</property>
                                 <property name="wrap-mode">word-char</property>
@@ -85,7 +79,6 @@
                             <child>
                               <object class="GtkSearchEntry" id="ChatSearchEntry">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="max-width-chars">75</property>
                               </object>
                             </child>
@@ -96,16 +89,13 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <child>
                           <object class="GtkScrolledWindow" id="ChatScrollWindow">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTextView" id="ChatScroll">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="editable">0</property>
                                 <property name="wrap-mode">word-char</property>
@@ -133,7 +123,6 @@
                         <child>
                           <object class="GtkEntry" id="ChatEntry">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="width-chars">5</property>
                           </object>
@@ -141,8 +130,6 @@
                         <child>
                           <object class="GtkToggleButton" id="Speech">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="receives-default">1</property>
                             <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
                             <property name="active">1</property>
                             <child>
@@ -159,8 +146,6 @@
                         <child>
                           <object class="GtkButton" id="ShowRoomWall">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="receives-default">1</property>
                             <signal name="clicked" handler="on_show_room_wall" swapped="no"/>
                             <child>
                               <object class="GtkImage">
@@ -176,8 +161,6 @@
                         <child>
                           <object class="GtkMenuButton" id="ShowChatHelp">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
-                            <property name="receives-default">1</property>
                             <property name="tooltip-text" translatable="yes">Chat room command help</property>
                           </object>
                         </child>
@@ -241,17 +224,14 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="width-request">350</property>
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="UserList">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="has-tooltip">1</property>
                             <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
@@ -275,7 +255,6 @@
                       <object class="GtkCheckButton" id="AutoJoin">
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="use-underline">1</property>
                         <signal name="toggled" handler="on_autojoin" swapped="no"/>
                       </object>
@@ -284,7 +263,6 @@
                       <object class="GtkCheckButton" id="Log">
                         <property name="label" translatable="yes">_Log Conversation</property>
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="use-underline">1</property>
                         <signal name="toggled" handler="on_log_toggled" swapped="no"/>
                       </object>

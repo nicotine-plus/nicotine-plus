@@ -9,7 +9,6 @@
       <object class="GtkCheckButton" id="CensorCheck">
         <property name="label" translatable="yes">Enable censoring</property>
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <signal name="toggled" handler="on_censor_check" swapped="no"/>
       </object>
     </child>
@@ -55,14 +54,12 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="CensorList">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
               </object>
             </child>
           </object>
@@ -76,7 +73,6 @@
             <child>
               <object class="GtkButton" id="AddCensor">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_add" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -102,7 +98,6 @@
             <child>
               <object class="GtkButton" id="RemoveCensor">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -128,7 +123,6 @@
             <child>
               <object class="GtkButton" id="ClearCensors">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_clear" swapped="no"/>
                 <child>
                   <object class="GtkBox">

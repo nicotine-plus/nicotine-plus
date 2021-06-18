@@ -30,7 +30,6 @@
                 <property name="label" translatable="yes">Rescan shares on startup</property>
                 <property name="tooltip-text" translatable="yes">Automatically rescans the contents of your shared folders on startup. If disabled, your shares are only updated when you manually initiate a rescan.</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>
@@ -39,8 +38,6 @@
                 <property name="label" translatable="yes">Enable buddy-only shares</property>
                 <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="has-tooltip">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
               </object>
@@ -50,8 +47,6 @@
                 <property name="label" translatable="yes">Mark each shared folder as buddy-only</property>
                 <property name="tooltip-text" translatable="yes">Overrides the per-share option, useful if you temporarily need to prevent public access to shares.</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="has-tooltip">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
               </object>
@@ -61,8 +56,6 @@
                 <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
                 <property name="tooltip-text" translatable="yes">Only users marked as trusted on your buddy list can access your buddy-only shares.</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="has-tooltip">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>
@@ -104,14 +97,12 @@
               <object class="GtkScrolledWindow">
                 <property name="width-request">250</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="Shares">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="rubber-banding">1</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
@@ -131,7 +122,6 @@
                 <child>
                   <object class="GtkButton" id="addSharesButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_shared_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -157,7 +147,6 @@
                 <child>
                   <object class="GtkButton" id="renameVirtualsButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_rename_virtuals" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -183,7 +172,6 @@
                 <child>
                   <object class="GtkButton" id="removeSharesButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_shared_dir" swapped="no"/>
                     <child>
                       <object class="GtkBox">

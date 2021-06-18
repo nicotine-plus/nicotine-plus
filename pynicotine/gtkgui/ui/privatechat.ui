@@ -18,7 +18,6 @@
                 <child>
                   <object class="GtkSearchEntry" id="SearchEntry">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="max-width-chars">75</property>
                   </object>
                 </child>
@@ -29,16 +28,13 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="vexpand">1</property>
                 <child>
                   <object class="GtkTextView" id="ChatScroll">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="hexpand">1</property>
                     <property name="editable">0</property>
                     <property name="wrap-mode">word-char</property>
@@ -66,23 +62,26 @@
             <child>
               <object class="GtkEntry" id="ChatLine">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="PeerPrivateMessages">
+                <property name="label" translatable="yes">Direct Message</property>
+                <property name="visible">1</property>
+                <property name="tooltip-text" translatable="yes">Send the private message directly to the user (not supported on most clients)</property>
               </object>
             </child>
             <child>
               <object class="GtkCheckButton" id="Log">
                 <property name="label" translatable="yes">_Log</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>
             <child>
               <object class="GtkMenuButton" id="ShowChatHelp">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
-                <property name="receives-default">1</property>
                 <property name="tooltip-text" translatable="yes">Private chat command help</property>
               </object>
             </child>

@@ -19,7 +19,6 @@
         <child>
           <object class="GtkLabel" id="filename_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">File Name</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -31,7 +30,6 @@
         <child>
           <object class="GtkLabel" id="filename_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -42,7 +40,6 @@
         <child>
           <object class="GtkLabel" id="folder_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Folder</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -54,7 +51,6 @@
         <child>
           <object class="GtkLabel" id="folder_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -65,7 +61,6 @@
         <child>
           <object class="GtkLabel" id="filesize_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">File Size</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -77,7 +72,6 @@
         <child>
           <object class="GtkLabel" id="filesize_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -98,7 +92,6 @@
         <child>
           <object class="GtkLabel" id="length_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Length</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -110,7 +103,6 @@
         <child>
           <object class="GtkLabel" id="length_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -121,7 +113,6 @@
         <child>
           <object class="GtkLabel" id="bitrate_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Bitrate</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -133,7 +124,6 @@
         <child>
           <object class="GtkLabel" id="bitrate_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -154,7 +144,6 @@
         <child>
           <object class="GtkLabel" id="username_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Username</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -166,7 +155,6 @@
         <child>
           <object class="GtkLabel" id="username_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -177,7 +165,6 @@
         <child>
           <object class="GtkLabel" id="immediate_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Immediate Download</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -189,7 +176,6 @@
         <child>
           <object class="GtkLabel" id="immediate_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -200,7 +186,6 @@
         <child>
           <object class="GtkLabel" id="queue_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">In Queue</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -212,7 +197,6 @@
         <child>
           <object class="GtkLabel" id="queue_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -223,7 +207,6 @@
         <child>
           <object class="GtkLabel" id="speed_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Last Speed</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -235,7 +218,6 @@
         <child>
           <object class="GtkLabel" id="speed_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -246,7 +228,6 @@
         <child>
           <object class="GtkLabel" id="country_label">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Country</property>
             <property name="selectable">1</property>
             <property name="xalign">1</property>
@@ -258,7 +239,6 @@
         <child>
           <object class="GtkLabel" id="country_value">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="selectable">1</property>
             <property name="ellipsize">end</property>
@@ -278,7 +258,6 @@
         <child>
           <object class="GtkButton" id="download">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip-text" translatable="yes">Download file</property>
             <signal name="clicked" handler="on_download_item" swapped="no"/>
             <child>
@@ -300,7 +279,6 @@
             <child>
               <object class="GtkButton" id="previous">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Previous file</property>
                 <signal name="clicked" handler="on_previous" swapped="no"/>
                 <child>
@@ -317,7 +295,6 @@
             <child>
               <object class="GtkButton" id="next">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip-text" translatable="yes">Next file</property>
                 <signal name="clicked" handler="on_next" swapped="no"/>
                 <child>

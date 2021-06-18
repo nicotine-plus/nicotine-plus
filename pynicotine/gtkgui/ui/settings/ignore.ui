@@ -24,14 +24,12 @@
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="IgnoredUsers">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="headers-visible">0</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
@@ -49,7 +47,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_ignored" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -75,7 +72,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_ignored" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -101,7 +97,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_clear_ignored" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -143,14 +138,12 @@
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="vexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="IgnoredIPs">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
                         <property name="mode">multiple</property>
@@ -167,7 +160,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_ignored_ip" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -193,7 +185,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_ignored_ip" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -219,7 +210,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_clear_ignored_ip" swapped="no"/>
                     <child>
                       <object class="GtkBox">

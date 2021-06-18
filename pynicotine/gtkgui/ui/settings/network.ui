@@ -72,7 +72,6 @@
                 <child>
                   <object class="GtkEntry" id="Server">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                   </object>
                 </child>
                 <child>
@@ -86,7 +85,6 @@
                 <child>
                   <object class="GtkEntry" id="Login">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="max-length">28</property>
                   </object>
                 </child>
@@ -105,7 +103,6 @@
                     <child>
                       <object class="GtkEntry" id="Password">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
                         <property name="visibility">0</property>
                       </object>
@@ -114,9 +111,6 @@
                       <object class="GtkButton" id="ChangePassword">
                         <property name="label">Change Password</property>
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
-                        <property name="receives-default">1</property>
-                        <property name="has-tooltip">1</property>
                         <signal name="clicked" handler="on_change_password" swapped="no"/>
                       </object>
                     </child>
@@ -169,7 +163,6 @@
                 <child>
                   <object class="GtkSpinButton" id="FirstPort">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="adjustment">adjustment_FirstPort</property>
                     <property name="numeric">1</property>
                   </object>
@@ -183,7 +176,6 @@
                 <child>
                   <object class="GtkSpinButton" id="LastPort">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="adjustment">adjustment_LastPort</property>
                     <property name="numeric">1</property>
                   </object>
@@ -200,7 +192,6 @@
                   <object class="GtkButton" id="CheckPortButton">
                     <property name="label" translatable="yes">Check Port Status</property>
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_check_port" swapped="no"/>
                   </object>
                 </child>
@@ -210,7 +201,6 @@
               <object class="GtkCheckButton" id="UseUPnP">
                 <property name="label" translatable="yes">Use UPnP to automatically map the port on my router</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
               </object>
@@ -229,7 +219,6 @@
                 <child>
                   <object class="GtkSpinButton" id="UPnPInterval">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="width-chars">6</property>
                     <property name="adjustment">adjustment_UPnPInterval</property>
                     <property name="numeric">1</property>
@@ -296,7 +285,6 @@
               <object class="GtkCheckButton" id="AutoConnectStartup">
                 <property name="label" translatable="yes">Auto-connect to the server on startup</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>
@@ -304,7 +292,6 @@
               <object class="GtkCheckButton" id="ctcptogglebutton">
                 <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
               </object>
             </child>

@@ -9,18 +9,13 @@
     <property name="margin-top">18</property>
     <property name="margin-bottom">18</property>
     <child>
-      <object class="GtkFlowBox">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="row-spacing">6</property>
-        <property name="column-spacing">6</property>
-        <property name="homogeneous">1</property>
-        <property name="min-children-per-line">2</property>
-        <property name="max-children-per-line">2</property>
-        <property name="selection-mode">none</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Current Session</property>
             <property name="selectable">1</property>
             <property name="xalign">0</property>
@@ -30,156 +25,84 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Started Downloads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="started_downloads_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Started Downloads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Completed Downloads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="completed_downloads_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="started_downloads_session">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Completed Downloads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="completed_downloads_session">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Downloaded Size</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="downloaded_size_session">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Started Uploads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="started_uploads_session">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Completed Uploads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="completed_uploads_session">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Uploaded Size</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="uploaded_size_session">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Downloaded Size</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="downloaded_size_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -188,6 +111,87 @@
           </object>
         </child>
         <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Started Uploads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="started_uploads_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Completed Uploads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="completed_uploads_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Uploaded Size</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="uploaded_size_session">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
           </object>
@@ -195,7 +199,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="label" translatable="yes">Total</property>
             <property name="selectable">1</property>
             <property name="xalign">0</property>
@@ -205,156 +208,170 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Started Downloads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="started_downloads_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Completed Downloads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="completed_downloads_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Downloaded Size</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="downloaded_size_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Started Downloads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="started_downloads_total">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Started Uploads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="started_uploads_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Completed Downloads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Completed Uploads</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="completed_uploads_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="completed_downloads_total">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Downloaded Size</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="downloaded_size_total">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Started Uploads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="started_uploads_total">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Completed Uploads</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="completed_uploads_total">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="label" translatable="yes">Uploaded Size</property>
-            <property name="selectable">1</property>
-            <property name="xalign">1</property>
-            <style>
-              <class name="dim-label"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel" id="uploaded_size_total">
-            <property name="visible">1</property>
-            <property name="can-focus">1</property>
-            <property name="hexpand">1</property>
-            <property name="selectable">1</property>
-            <property name="ellipsize">end</property>
-            <property name="max-width-chars">48</property>
-            <property name="xalign">0</property>
+            <property name="spacing">12</property>
+            <property name="homogeneous">1</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Uploaded Size</property>
+                <property name="selectable">1</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="uploaded_size_total">
+                <property name="visible">1</property>
+                <property name="selectable">1</property>
+                <property name="ellipsize">end</property>
+                <property name="max-width-chars">48</property>
+                <property name="xalign">0</property>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -366,7 +383,6 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="clicked" handler="on_reset_statistics" swapped="no"/>
             <child>
               <object class="GtkBox">

@@ -34,7 +34,6 @@
           <object class="GtkCheckButton" id="AutoclearFinished">
             <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -42,7 +41,6 @@
           <object class="GtkCheckButton" id="LockIncoming">
             <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
@@ -50,7 +48,6 @@
           <object class="GtkCheckButton" id="DownloadReverseOrder">
             <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
@@ -65,7 +62,6 @@
               <object class="GtkCheckButton" id="RemoteDownloads">
                 <property name="label" translatable="yes">Allow these users to send you files:</property>
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
               </object>
@@ -119,7 +115,6 @@
             <child>
               <object class="GtkSpinButton" id="DownloadSpeed">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeed</property>
                 <property name="numeric">1</property>
@@ -136,7 +131,6 @@
             <child>
               <object class="GtkSpinButton" id="DownloadSpeedAlternative">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                 <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
                 <property name="numeric">1</property>
@@ -165,7 +159,6 @@
           <object class="GtkCheckButton" id="ShareDownloadDir">
             <property name="label" translatable="yes">Automatically share downloads</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip_text" translatable="yes">The equivalent of adding your download folder as a public share, however files downloaded to this folder will be automatically accessible to others (no rescan required).</property>
             <property name="use-underline">1</property>
           </object>
@@ -174,7 +167,6 @@
           <object class="GtkCheckButton" id="UsernameSubfolders">
             <property name="label" translatable="yes">Store downloads in username subfolders</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="tooltip_text" translatable="yes">Creates subfolders based on the user you are downloading from, and stores the downloaded file / folder there.</property>
             <property name="use-underline">1</property>
           </object>
@@ -250,7 +242,6 @@
           <object class="GtkCheckButton" id="DownloadFilter">
             <property name="label" translatable="yes">Enable filters</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enable_filters_toggle" swapped="no"/>
           </object>
@@ -271,13 +262,11 @@
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="FilterView">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                   </object>
                 </child>
               </object>
@@ -291,7 +280,6 @@
                 <child>
                   <object class="GtkButton" id="AddFilter">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -317,7 +305,6 @@
                 <child>
                   <object class="GtkButton" id="EditFilter">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_edit_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -343,7 +330,6 @@
                 <child>
                   <object class="GtkButton" id="RemoveFilter">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_remove_filter" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -369,8 +355,6 @@
                 <child>
                   <object class="GtkButton" id="DefaultFilters">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
-                    <property name="receives-default">1</property>
                     <signal name="clicked" handler="on_default_filters" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -404,7 +388,6 @@
             <child>
               <object class="GtkButton" id="VerifyFilters">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_verify_filter" swapped="no"/>
                 <child>
                   <object class="GtkBox">

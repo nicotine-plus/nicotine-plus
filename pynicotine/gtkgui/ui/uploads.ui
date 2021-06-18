@@ -8,16 +8,13 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="vexpand">1</property>
             <child>
               <object class="GtkTreeView" id="TransferList">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <property name="has-tooltip">1</property>
                 <property name="enable-tree-lines">1</property>
@@ -50,7 +47,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_abort_transfer"/>
                     <child>
                       <object class="GtkBox">
@@ -78,7 +74,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_abort_user"/>
                     <child>
                       <object class="GtkBox">
@@ -106,7 +101,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_ban"/>
                     <child>
                       <object class="GtkBox">
@@ -142,7 +136,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="tooltip-text">Clear every upload that has either finished transferring, or been cancelled by the remote user.</property>
                     <signal name="clicked" handler="on_clear_finished_aborted"/>
                     <child>
@@ -172,7 +165,6 @@
                 <child>
                   <object class="GtkMenuButton" id="ClearTransfers">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="direction">up</property>
                     <property name="tooltip-text">Clear every upload marked with a specific status.</property>
                     <style>

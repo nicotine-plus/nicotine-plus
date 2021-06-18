@@ -31,7 +31,6 @@
           <object class="GtkEntry" id="AfterDownload">
             <property name="width-request">313</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
@@ -46,7 +45,6 @@
           <object class="GtkEntry" id="AfterFolder">
             <property name="width-request">313</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>

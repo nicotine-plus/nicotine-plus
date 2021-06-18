@@ -25,7 +25,6 @@
             <child>
               <object class="GtkPaned" id="MainPaned">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="hexpand">1</property>
                 <child>
                   <object class="GtkBox" id="InfoVbox">
@@ -54,16 +53,13 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTextView" id="descr">
                                     <property name="visible">1</property>
-                                    <property name="can-focus">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="editable">0</property>
                                     <property name="wrap-mode">word</property>
@@ -194,7 +190,6 @@
                 <child>
                   <object class="GtkPaned" id="SecondPaned">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkBox" id="Interests">
                         <property name="width-request">300</property>
@@ -218,16 +213,13 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTreeView" id="Likes">
                                     <property name="visible">1</property>
-                                    <property name="can-focus">1</property>
                                     <property name="hexpand">1</property>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
@@ -241,16 +233,13 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="vexpand">1</property>
                                 <child>
                                   <object class="GtkTreeView" id="Hates">
                                     <property name="visible">1</property>
-                                    <property name="can-focus">1</property>
                                     <property name="hexpand">1</property>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
@@ -312,7 +301,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_send_message" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -338,7 +326,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_browse_user" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -364,7 +351,6 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_show_ip_address" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -390,7 +376,6 @@
                 <child>
                   <object class="GtkButton" id="AddToList">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_add_to_list" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -416,7 +401,6 @@
                 <child>
                   <object class="GtkButton" id="BanUser">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_ban_user" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -442,7 +426,6 @@
                 <child>
                   <object class="GtkButton" id="IgnoreUser">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_ignore_user" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -468,7 +451,6 @@
                 <child>
                   <object class="GtkButton" id="SavePicture">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <property name="sensitive">0</property>
                     <signal name="clicked" handler="on_save_picture" swapped="no"/>
                     <child>
@@ -501,7 +483,6 @@
                 <child>
                   <object class="GtkButton" id="RefreshUserinfo">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <signal name="clicked" handler="on_refresh" swapped="no"/>
                     <child>
                       <object class="GtkBox">

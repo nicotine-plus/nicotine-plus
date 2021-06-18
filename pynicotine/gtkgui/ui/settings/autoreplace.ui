@@ -8,7 +8,6 @@
     <child>
       <object class="GtkCheckButton" id="ReplaceCheck">
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <signal name="toggled" handler="on_replace_check" swapped="no"/>
         <child>
           <object class="GtkLabel">
@@ -26,14 +25,12 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <property name="hexpand">1</property>
             <property name="vexpand">1</property>
             <property name="shadow-type">in</property>
             <child>
               <object class="GtkTreeView" id="ReplacementList">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
               </object>
             </child>
           </object>
@@ -47,7 +44,6 @@
             <child>
               <object class="GtkButton" id="AddReplacement">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_add" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -73,7 +69,6 @@
             <child>
               <object class="GtkButton" id="RemoveReplacement">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_remove" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -99,7 +94,6 @@
             <child>
               <object class="GtkButton" id="ClearReplacements">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_clear" swapped="no"/>
                 <child>
                   <object class="GtkBox">
@@ -125,7 +119,6 @@
             <child>
               <object class="GtkButton" id="DefaultReplacements">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <signal name="clicked" handler="on_defaults" swapped="no"/>
                 <child>
                   <object class="GtkBox">

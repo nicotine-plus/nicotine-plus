@@ -31,14 +31,12 @@
           <object class="GtkCheckButton" id="SpellCheck">
             <property name="label" translatable="yes">Enable spell checker (requires a restart)</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompletionTabCheck">
             <property name="label" translatable="yes">Enable tab-key completion</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_tab_check"/>
           </object>
         </child>
@@ -46,7 +44,6 @@
           <object class="GtkCheckButton" id="CompletionCycleCheck">
             <property name="label" translatable="yes">Cycle through completions when pressing tab-key</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -71,7 +68,6 @@
           <object class="GtkCheckButton" id="CompleteBuddiesCheck">
             <property name="label" translatable="yes">Complete buddy names</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -79,7 +75,6 @@
           <object class="GtkCheckButton" id="CompleteUsersInRoomsCheck">
             <property name="label" translatable="yes">Complete usernames in chat rooms</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -87,7 +82,6 @@
           <object class="GtkCheckButton" id="CompleteRoomNamesCheck">
             <property name="label" translatable="yes">Complete room names</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -95,7 +89,6 @@
           <object class="GtkCheckButton" id="CompleteCommandsCheck">
             <property name="label" translatable="yes">Complete built-in /commands</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -103,7 +96,6 @@
           <object class="GtkCheckButton" id="CompleteAliasesCheck">
             <property name="label" translatable="yes">Complete alias /commands</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
@@ -128,7 +120,6 @@
           <object class="GtkCheckButton" id="CompletionDropdownCheck">
             <property name="label" translatable="yes">Enable completion drop-down list</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_dropdown_check"/>
           </object>
         </child>
@@ -145,7 +136,6 @@
             <child>
               <object class="GtkSpinButton" id="CharactersCompletion">
                 <property name="visible">1</property>
-                <property name="can-focus">1</property>
                 <property name="adjustment">adjustment_CharactersCompletion</property>
                 <signal name="changed" handler="on_completion_changed"/>
               </object>
@@ -156,7 +146,6 @@
           <object class="GtkCheckButton" id="OneMatchCheck">
             <property name="label" translatable="yes">Hide drop-down when only one matches</property>
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>

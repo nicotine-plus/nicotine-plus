@@ -7,7 +7,6 @@
     <child>
       <object class="GtkPaned" id="InterestsPaned">
         <property name="visible">1</property>
-        <property name="can-focus">1</property>
         <property name="hexpand">1</property>
         <child>
           <object class="GtkBox" id="LikesDislikes">
@@ -36,16 +35,13 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="LikesList">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="enable-search">0</property>
                             <child internal-child="selection">
@@ -63,7 +59,6 @@
                     <child type="center">
                       <object class="GtkEntry" id="AddLikeEntry">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-chars">15</property>
                         <property name="placeholder-text" translatable="yes">Add something you like...</property>
@@ -88,16 +83,13 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="DislikesList">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="enable-search">0</property>
                             <child internal-child="selection">
@@ -115,7 +107,6 @@
                     <child type="center">
                       <object class="GtkEntry" id="AddDislikeEntry">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-chars">15</property>
                         <property name="placeholder-text" translatable="yes">Add something you dislike...</property>
@@ -136,7 +127,6 @@
         <child>
           <object class="GtkPaned" id="InterestsPanedSecond">
             <property name="visible">1</property>
-            <property name="can-focus">1</property>
             <child>
               <object class="GtkBox" id="RecommendationsVbox">
                 <property name="visible">1</property>
@@ -168,7 +158,6 @@
                         <child>
                           <object class="GtkButton" id="GlobalRecommendationsButton">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <signal name="clicked" handler="on_global_recommendations_clicked" swapped="no"/>
                             <child>
                               <object class="GtkBox">
@@ -194,7 +183,6 @@
                         <child>
                           <object class="GtkButton" id="RecommendationsButton">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
                             <child>
                               <object class="GtkBox">
@@ -222,16 +210,13 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTreeView" id="RecommendationsList">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="search-column">1</property>
                                 <child internal-child="selection">
@@ -266,16 +251,13 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTreeView" id="UnrecommendationsList">
                                 <property name="visible">1</property>
-                                <property name="can-focus">1</property>
                                 <property name="hexpand">1</property>
                                 <property name="search-column">1</property>
                                 <child internal-child="selection">
@@ -319,7 +301,6 @@
                     <child>
                       <object class="GtkButton" id="SimilarUsersButton">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="tooltip-text">Show users with similar interests</property>
                         <signal name="clicked" handler="on_similar_users_clicked" swapped="no"/>
                         <child>
@@ -339,16 +320,13 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="can-focus">1</property>
                     <child>
                       <object class="GtkScrolledWindow">
                         <property name="visible">1</property>
-                        <property name="can-focus">1</property>
                         <property name="vexpand">1</property>
                         <child>
                           <object class="GtkTreeView" id="RecommendationUsersList">
                             <property name="visible">1</property>
-                            <property name="can-focus">1</property>
                             <property name="hexpand">1</property>
                             <property name="has-tooltip">1</property>
                             <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
