@@ -3,12 +3,12 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -50,7 +50,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -63,121 +63,166 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel" id="MainTabsLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Main:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="MainTabsLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Main:</property>
+                    <property name="mnemonic_widget">MainPosition</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="MainPosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="ChatRoomsLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Chat rooms:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="MainPosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="ChatRoomsPosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="PrivateChatLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Private chat:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="ChatRoomsLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Chat rooms:</property>
+                    <property name="mnemonic_widget">ChatRoomsPosition</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="PrivateChatPosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="SearchLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Search:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="ChatRoomsPosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="SearchPosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="UserInfoLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">User info:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="PrivateChatLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Private chat:</property>
+                    <property name="mnemonic_widget">PrivateChatPosition</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="UserInfoPosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkLabel" id="UserBrowseLabel">
-                <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">User browse:</property>
-                <property name="width-chars">20</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="PrivateChatPosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkComboBox" id="UserBrowsePosition">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="SearchLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Search:</property>
+                    <property name="mnemonic_widget">SearchPosition</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="SearchPosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="UserInfoLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">User info:</property>
+                    <property name="mnemonic_widget">UserInfoPosition</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="UserInfoPosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="UserBrowseLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">User browse:</property>
+                    <property name="mnemonic_widget">UserBrowsePosition</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBox" id="UserBrowsePosition">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

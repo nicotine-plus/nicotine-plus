@@ -8,6 +8,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">1</property>
+        <property name="homogeneous">1</property>
         <property name="column-spacing">12</property>
         <property name="row-spacing">24</property>
         <property name="max-children-per-line">2</property>
@@ -149,7 +150,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="halign">start</property>
-                    <property name="label" translatable="yes">Ignored IPs</property>
+                    <property name="label" translatable="yes">Ignored IP Addresses</property>
                     <property name="mnemonic_widget">IgnoredIPs</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>

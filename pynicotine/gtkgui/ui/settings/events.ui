@@ -3,12 +3,12 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -21,76 +21,116 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkEntry" id="AfterDownload">
-            <property name="width-request">313</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="width-request">48</property>
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkEntry" id="AfterFolder">
-            <property name="width-request">313</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">File Manager command ($ for file path):</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="FileManagerCombo">
-            <property name="visible">1</property>
-            <property name="has-entry">1</property>
-            <items>
-              <item>xdg-open $</item>
-              <item>explorer $</item>
-              <item>emelfm2 -1 $</item>
-              <item>gentoo -1 $</item>
-              <item>konqueror $</item>
-              <item>krusader --left $</item>
-              <item>nautilus --no-desktop $</item>
-              <item>rox $</item>
-              <item>thunar $</item>
-              <item>xterm -e mc $</item>
-            </items>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Media Player command ($ for file path):</property>
-            <property name="xalign">0</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="audioPlayerCombo">
-            <property name="visible">1</property>
-            <property name="has-entry">1</property>
-            <items>
-              <item>xdg-open $</item>
-              <item>amarok -a $</item>
-              <item>audacious -e $</item>
-              <item>exaile $</item>
-              <item>rhythmbox $</item>
-              <item>xmms2 add -f $</item>
-            </items>
+            <property name="spacing">24</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Run command after file download finishes ($ for file path):</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">AfterDownload</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="AfterDownload">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Run command after folder download finishes ($ for folder path):</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">AfterFolder</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="AfterFolder">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">File Manager command ($ for file path):</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">FileManagerCombo</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="FileManagerCombo">
+                    <property name="visible">1</property>
+                    <property name="has-entry">1</property>
+                    <items>
+                      <item>xdg-open $</item>
+                      <item>explorer $</item>
+                      <item>emelfm2 -1 $</item>
+                      <item>gentoo -1 $</item>
+                      <item>konqueror $</item>
+                      <item>krusader --left $</item>
+                      <item>nautilus --no-desktop $</item>
+                      <item>rox $</item>
+                      <item>thunar $</item>
+                      <item>xterm -e mc $</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Media Player command ($ for file path):</property>
+                    <property name="wrap">1</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">audioPlayerCombo</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="audioPlayerCombo">
+                    <property name="visible">1</property>
+                    <property name="has-entry">1</property>
+                    <items>
+                      <item>xdg-open $</item>
+                      <item>amarok -a $</item>
+                      <item>audacious -e $</item>
+                      <item>exaile $</item>
+                      <item>rhythmbox $</item>
+                      <item>xmms2 add -f $</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -98,12 +138,12 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">When double-clicking on...</property>
+            <property name="label" translatable="yes">Transfer Actions</property>
             <property name="halign">start</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -113,16 +153,16 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">10</property>
-            <property name="column-spacing">10</property>
-            <property name="homogeneous">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Download transfers:</property>
+                <property name="label" translatable="yes">Double-click action for downloads:</property>
                 <property name="xalign">0</property>
+                <property name="mnemonic_widget">DownloadDoubleClick</property>
               </object>
             </child>
             <child>
@@ -142,8 +182,9 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Upload transfers:</property>
+                <property name="label" translatable="yes">Double-click action for uploads:</property>
                 <property name="xalign">0</property>
+                <property name="mnemonic_widget">UploadDoubleClick</property>
               </object>
             </child>
             <child>

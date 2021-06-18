@@ -17,8 +17,8 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">1</property>
-        <property name="row-spacing">6</property>
-        <property name="column-spacing">6</property>
+        <property name="row-spacing">12</property>
+        <property name="column-spacing">12</property>
         <property name="min-children-per-line">2</property>
         <property name="max-children-per-line">2</property>
         <property name="selection-mode">none</property>

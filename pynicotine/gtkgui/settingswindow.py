@@ -891,8 +891,6 @@ class GeoBlockFrame(BuildFrame):
         if config.sections["transfers"]["geoblockcc"] is not None:
             self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
 
-        self.on_geo_block_toggled(self.GeoBlock)
-
     def get_settings(self):
         return {
             "transfers": {
@@ -903,14 +901,6 @@ class GeoBlockFrame(BuildFrame):
                 "customgeoblock": self.CustomGeoBlock.get_text()
             }
         }
-
-    def on_geo_block_toggled(self, widget):
-        sensitive = widget.get_active()
-        self.GeoPanic.set_sensitive(sensitive)
-        self.GeoBlockCC.set_sensitive(sensitive)
-
-        self.UseCustomGeoBlock.set_sensitive(sensitive)
-        self.CustomGeoBlock.set_sensitive(sensitive and self.UseCustomGeoBlock.get_active())
 
     def on_use_custom_geo_block_toggled(self, widget):
         self.CustomGeoBlock.set_sensitive(widget.get_active())
@@ -3085,9 +3075,11 @@ class PluginsFrame(BuildFrame):
 
     def on_plugins_enable(self, widget):
 
-        self.PluginList.set_sensitive(self.PluginsEnable.get_active())
+        active = self.PluginsEnable.get_active()
+        self.PluginTreeView.set_sensitive(active)
+        self.PluginInfo.set_sensitive(active)
 
-        if self.PluginsEnable.get_active():
+        if active:
             # Enable all selected plugins
             for plugin in self.get_enabled_plugins():
                 self.frame.np.pluginhandler.enable_plugin(plugin)

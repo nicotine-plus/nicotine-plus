@@ -28,12 +28,12 @@
                 <child>
                   <object class="GtkFlowBox">
                     <property name="visible">1</property>
-                    <property name="column-spacing">8</property>
-                    <property name="row-spacing">2</property>
-                    <property name="margin-top">4</property>
-                    <property name="margin-bottom">4</property>
-                    <property name="margin-start">5</property>
-                    <property name="margin-end">5</property>
+                    <property name="column-spacing">12</property>
+                    <property name="row-spacing">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="margin-start">8</property>
+                    <property name="margin-end">8</property>
                     <property name="max-children-per-line">2</property>
                     <property name="selection-mode">none</property>
                     <child>

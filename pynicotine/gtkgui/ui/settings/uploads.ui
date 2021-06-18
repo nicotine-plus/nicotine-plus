@@ -33,13 +33,13 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -68,7 +68,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -82,8 +82,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">6</property>
-            <property name="column-spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -91,7 +91,6 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Limit upload speed:</property>
-                <property name="single-line-mode">1</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -99,7 +98,7 @@
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="halign">end</property>
-                <property name="spacing">4</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GtkRadioButton" id="LimitPerTransfer">
                     <property name="label" translatable="yes">Per transfer</property>
@@ -160,7 +159,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -174,8 +173,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">6</property>
-            <property name="column-spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
@@ -261,7 +260,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">8</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkSpinButton" id="MaxUserQueue">
                     <property name="visible">1</property>
@@ -288,7 +287,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">8</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkSpinButton" id="MaxUserFiles">
                     <property name="visible">1</property>

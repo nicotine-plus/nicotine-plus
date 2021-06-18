@@ -3,18 +3,22 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">15</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Self description:</property>
+            <property name="label" translatable="yes">Self Description</property>
+            <property name="mnemonic_widget">Description</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -48,12 +52,13 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">5</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Image:</property>
+            <property name="mnemonic_widget">ImageChooser</property>
           </object>
         </child>
         <child>
