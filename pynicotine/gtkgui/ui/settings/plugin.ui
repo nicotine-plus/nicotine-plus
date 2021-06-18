@@ -23,106 +23,77 @@
                 <property name="spacing">12</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkCheckButton" id="PluginsEnable">
-                        <property name="label" translatable="yes">Enable plugins</property>
-                        <property name="visible">1</property>
-                        <property name="use-underline">1</property>
-                        <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="PluginFolder">
-                        <property name="visible">1</property>
-                        <property name="halign">end</property>
-                        <property name="hexpand">1</property>
-                        <property name="valign">center</property>
-                        <signal name="clicked" handler="on_add_plugins" swapped="no"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">5</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">list-add-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">_Add Plugins</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Plugin List</property>
+                    <property name="halign">start</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="PluginsEnable">
+                    <property name="label" translatable="yes">Enable plugins</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                    <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
                   </object>
                 </child>
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">1</property>
                     <child>
-                      <object class="GtkScrolledWindow">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="vexpand">1</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkTreeView" id="PluginTreeView">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
-                            <property name="search-column">1</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection">
-                                <signal name="changed" handler="on_select_plugin" swapped="no"/>
+                            <property name="hexpand">1</property>
+                            <property name="vexpand">1</property>
+                            <child>
+                              <object class="GtkTreeView" id="PluginTreeView">
+                                <property name="visible">1</property>
+                                <property name="search-column">1</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection">
+                                    <signal name="changed" handler="on_select_plugin" swapped="no"/>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="can-focus">0</property>
-            <child>
-              <object class="GtkBox" id="PluginInfo">
-                <property name="visible">1</property>
-                <property name="spacing">12</property>
-                <property name="orientation">vertical</property>
-                <property name="width-request">320</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">1</property>
-                        <property name="spacing">12</property>
-                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkActionBar">
                             <property name="visible">1</property>
-                            <property name="spacing">6</property>
                             <child>
-                              <object class="GtkLabel" id="PluginName">
+                              <object class="GtkButton" id="PluginFolder">
                                 <property name="visible">1</property>
-                                <property name="halign">start</property>
-                                <property name="hexpand">1</property>
-                                <property name="label" translatable="yes">No Plugin Selected</property>
-                                <attributes>
-                                  <attribute name="weight" value="bold"/>
-                                </attributes>
+                                <signal name="clicked" handler="on_add_plugins" swapped="no"/>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkImage">
+                                        <property name="visible">1</property>
+                                        <property name="icon-name">list-add-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">_Add Plugins</property>
+                                        <property name="use-underline">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -150,6 +121,53 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="flat"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBoxChild">
+            <property name="visible">1</property>
+            <property name="can-focus">0</property>
+            <child>
+              <object class="GtkBox" id="PluginInfo">
+                <property name="visible">1</property>
+                <property name="spacing">18</property>
+                <property name="orientation">vertical</property>
+                <property name="width-request">320</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">12</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel" id="PluginName">
+                                <property name="visible">1</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">No Plugin Selected</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
                               </object>
                             </child>
                           </object>

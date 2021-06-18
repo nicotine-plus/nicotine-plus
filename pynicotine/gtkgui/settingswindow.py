@@ -3085,8 +3085,9 @@ class PluginsFrame(BuildFrame):
     def on_plugins_enable(self, widget):
 
         active = self.PluginsEnable.get_active()
-        self.PluginTreeView.set_sensitive(active)
-        self.PluginInfo.set_sensitive(active)
+
+        for widget in (self.PluginTreeView, self.PluginInfo, self.PluginProperties):
+            widget.set_sensitive(active)
 
         if active:
             # Enable all selected plugins
