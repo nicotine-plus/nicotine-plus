@@ -29,13 +29,13 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -62,7 +62,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel" id="MinSearchCharsL1">
                     <property name="visible">1</property>
@@ -89,7 +89,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel" id="MaxResultsL1">
                     <property name="visible">1</property>
@@ -121,7 +121,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -142,7 +142,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkLabel" id="MaxDisLabel">
                 <property name="visible">1</property>
@@ -163,7 +163,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkButton" id="ClearSearchHistory">
                 <property name="visible">1</property>
@@ -203,7 +203,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
@@ -232,8 +232,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">6</property>
-            <property name="column-spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -351,7 +351,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <child>
               <object class="GtkButton" id="ClearFilterHistory">
                 <property name="visible">1</property>

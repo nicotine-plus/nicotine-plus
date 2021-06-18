@@ -22,70 +22,90 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFrame">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="width-request">250</property>
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="vexpand">1</property>
-                <property name="shadow-type">in</property>
-                <child>
-                  <object class="GtkTextView" id="Description">
-                    <property name="visible">1</property>
-                    <property name="pixels-above-lines">1</property>
-                    <property name="pixels-below-lines">1</property>
-                    <property name="left-margin">8</property>
-                    <property name="right-margin">8</property>
-                    <property name="top-margin">5</property>
-                    <property name="bottom-margin">5</property>
-                    <property name="wrap-mode">word</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Image:</property>
-            <property name="mnemonic_widget">ImageChooser</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="ImageChooser">
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="DefaultImage">
-            <property name="visible">1</property>
-            <signal name="clicked" handler="on_default_image" swapped="no"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">5</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkScrolledWindow">
+                    <property name="width-request">250</property>
                     <property name="visible">1</property>
-                    <property name="icon-name">edit-clear-symbolic</property>
+                    <property name="hexpand">1</property>
+                    <property name="vexpand">1</property>
+                    <child>
+                      <object class="GtkTextView" id="Description">
+                        <property name="visible">1</property>
+                        <property name="pixels-above-lines">1</property>
+                        <property name="pixels-below-lines">1</property>
+                        <property name="left-margin">8</property>
+                        <property name="right-margin">8</property>
+                        <property name="top-margin">5</property>
+                        <property name="bottom-margin">5</property>
+                        <property name="wrap-mode">word</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Clear</property>
-                    <property name="use-underline">1</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-start">6</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Picture:</property>
+                            <property name="mnemonic_widget">ImageChooser</property>
+                            <attributes>
+                              <attribute name="weight" value="bold"/>
+                            </attributes>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="ImageChooser">
+                            <property name="visible">1</property>
+                            <property name="hexpand">1</property>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="DefaultImage">
+                            <property name="visible">1</property>
+                            <signal name="clicked" handler="on_default_image" swapped="no"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">edit-clear-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Clear</property>
+                                    <property name="use-underline">1</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

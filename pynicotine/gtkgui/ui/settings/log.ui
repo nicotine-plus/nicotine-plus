@@ -13,12 +13,12 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">20</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -63,7 +63,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -78,8 +78,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">6</property>
-            <property name="column-spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -138,7 +138,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -220,7 +220,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">10</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -241,8 +241,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="row-spacing">6</property>
-            <property name="column-spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
             <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -250,14 +250,13 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Chat room format:</property>
-                <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkEntry" id="ChatRoomFormat">
                     <property name="visible">1</property>
@@ -296,14 +295,13 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Private room format:</property>
-                <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkEntry" id="PrivateChatFormat">
                     <property name="visible">1</property>
@@ -342,14 +340,13 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Log file format:</property>
-                <property name="width-chars">18</property>
                 <property name="xalign">0</property>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <child>
                   <object class="GtkEntry" id="LogFileFormat">
                     <property name="visible">1</property>
@@ -364,7 +361,7 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>

@@ -28,7 +28,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">15</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -44,7 +44,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">15</property>
+            <property name="spacing">18</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="ServerDescription">
@@ -57,7 +57,7 @@
             <child>
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="row-spacing">6</property>
+                <property name="row-spacing">12</property>
                 <property name="homogeneous">1</property>
                 <property name="max-children-per-line">2</property>
                 <property name="selection-mode">none</property>
@@ -132,7 +132,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">15</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -147,7 +147,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">15</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
@@ -240,7 +240,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">15</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -255,12 +255,12 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkFlowBox" id="InterfaceRow">
                 <property name="visible">1</property>
-                <property name="row-spacing">6</property>
+                <property name="row-spacing">12</property>
                 <property name="homogeneous">1</property>
                 <property name="max-children-per-line">2</property>
                 <property name="selection-mode">none</property>

@@ -2227,17 +2227,26 @@ class CensorListFrame(BuildFrame):
             }
         }
 
+    def on_add_response(self, dialog, response_id, data):
+
+        pattern = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if pattern:
+            self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
+
     def on_add(self, widget):
 
-        iterator = self.censor_list_model.append([""])
-
-        selection = self.CensorList.get_selection()
-        selection.unselect_all()
-        selection.select_iter(iterator)
-
-        col = self.CensorList.get_column(0)
-
-        self.CensorList.set_cursor(self.censor_list_model.get_path(iterator), col, True)
+        entry_dialog(
+            parent=self.p.dialog,
+            title=_("Censor Pattern"),
+            message=_("Enter a pattern you wish to censor. Add spaces around the pattern if you don't "
+                      "wish to match strings inside words (may fail at the beginning and end of lines)."),
+            callback=self.on_add_response
+        )
 
     def on_remove(self, widget):
         selection = self.CensorList.get_selection()

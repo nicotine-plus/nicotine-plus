@@ -52,124 +52,137 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFrame">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="vexpand">1</property>
-                <property name="shadow-type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="ReplacementList">
-                    <property name="visible">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="margin-start">6</property>
-                <property name="spacing">6</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkButton" id="AddReplacement">
+                  <object class="GtkScrolledWindow">
                     <property name="visible">1</property>
-                    <signal name="clicked" handler="on_add" swapped="no"/>
+                    <property name="hexpand">1</property>
+                    <property name="vexpand">1</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkTreeView" id="ReplacementList">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">1</property>
-                            <property name="icon-name">list-add-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Add...</property>
-                            <property name="use-underline">1</property>
-                          </object>
-                        </child>
                       </object>
                     </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="RemoveReplacement">
+                  <object class="GtkActionBar">
                     <property name="visible">1</property>
-                    <signal name="clicked" handler="on_remove" swapped="no"/>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkButton" id="AddReplacement">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <signal name="clicked" handler="on_add" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">list-remove-symbolic</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">list-add-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Add...</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Remove</property>
-                            <property name="use-underline">1</property>
-                          </object>
-                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="ClearReplacements">
-                    <property name="visible">1</property>
-                    <signal name="clicked" handler="on_clear" swapped="no"/>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkButton" id="RemoveReplacement">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <signal name="clicked" handler="on_remove" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">edit-clear-symbolic</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">list-remove-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Remove</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Clear All</property>
-                            <property name="use-underline">1</property>
-                          </object>
-                        </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="DefaultReplacements">
-                    <property name="visible">1</property>
-                    <signal name="clicked" handler="on_defaults" swapped="no"/>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkButton" id="ClearReplacements">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <signal name="clicked" handler="on_clear" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">view-refresh-symbolic</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">edit-clear-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Clear All</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultReplacements">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_defaults" swapped="no"/>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Load Defaults</property>
-                            <property name="use-underline">1</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Load Defaults</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
+                        <style>
+                          <class name="flat"/>
+                        </style>
                       </object>
                     </child>
                   </object>
