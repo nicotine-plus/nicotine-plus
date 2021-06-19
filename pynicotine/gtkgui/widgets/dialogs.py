@@ -87,7 +87,8 @@ def dialog_hide(dialog):
 
 
 def entry_dialog(parent, title, message, callback, callback_data=None, default="",
-                 option=False, optionmessage="", optionvalue=False, droplist=[]):
+                 option=False, optionmessage="", optionvalue=False, visibility=True,
+                 droplist=[]):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
@@ -127,6 +128,7 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
     entry.connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
     entry.set_activates_default(True)
     entry.set_text(default)
+    entry.set_visibility(visibility)
 
     if option:
         self.option = Gtk.CheckButton()

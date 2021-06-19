@@ -79,7 +79,6 @@ class NetworkFrame(BuildFrame):
             "server": {
                 "server": None,
                 "login": self.Login,
-                "passw": self.Password,
                 "portrange": None,
                 "interface": self.Interface,
                 "upnp": self.UseUPnP,
@@ -101,7 +100,8 @@ class NetworkFrame(BuildFrame):
         if self.frame.np.waitport is None:
             self.CurrentPort.set_text(_("Listening port is not set"))
         else:
-            self.CurrentPort.set_markup(_("Active listening port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
+            self.CurrentPort.set_markup(_("Active listening port is <b>%(port)s</b>") %
+                                        {"port": self.frame.np.waitport})
 
         if self.frame.np.ipaddress is None:
             self.YourIP.set_text(_("Your IP address has not been retrieved from the server"))
@@ -149,7 +149,6 @@ class NetworkFrame(BuildFrame):
             "server": {
                 "server": server,
                 "login": self.Login.get_text(),
-                "passw": self.Password.get_text(),
                 "portrange": portrange,
                 "interface": self.Interface.get_active_text(),
                 "upnp": self.UseUPnP.get_active(),
@@ -159,8 +158,37 @@ class NetworkFrame(BuildFrame):
             }
         }
 
-    def on_change_password(self, widget):
-        self.frame.np.queue.append(slskmessages.ChangePassword(self.Password.get_text()))
+    def on_change_password_response(self, dialog, response_id, data):
+
+        password = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not password:
+            self.on_change_password()
+            return
+
+        self.frame.np.queue.append(slskmessages.ChangePassword(password))
+
+    def on_change_password(self, *args):
+
+        if not self.p.frame.np.active_server_conn:
+            message_dialog(
+                parent=self.p.dialog,
+                title=_("Unable to Change Password"),
+                message=_("You need to connect to the server in order to change your password."),
+            )
+            return
+
+        entry_dialog(
+            parent=self.p.dialog,
+            title=_("Change Password"),
+            message=_("Enter a new password for your Soulseek user:"),
+            visibility=False,
+            callback=self.on_change_password_response
+        )
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
