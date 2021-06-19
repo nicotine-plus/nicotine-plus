@@ -99,9 +99,9 @@ class NetworkFrame(BuildFrame):
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
         if self.frame.np.waitport is None:
-            self.CurrentPort.set_text(_("Client port is not set"))
+            self.CurrentPort.set_text(_("Listening port is not set"))
         else:
-            self.CurrentPort.set_markup(_("Client port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
+            self.CurrentPort.set_markup(_("Active listening port is <b>%(port)s</b>") % {"port": self.frame.np.waitport})
 
         if self.frame.np.ipaddress is None:
             self.YourIP.set_text(_("Your IP address has not been retrieved from the server"))
@@ -173,7 +173,6 @@ class NetworkFrame(BuildFrame):
 
         self.UPnPIntervalL1.set_sensitive(active)
         self.UPnPInterval.set_sensitive(active)
-        self.UPnPIntervalL2.set_sensitive(active)
 
     def on_modify_upnp_interval(self, widget, *args):
         self.needportmap = True
