@@ -108,8 +108,8 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">1</property>
-        <property name="column-spacing">10</property>
-        <property name="row-spacing">10</property>
+        <property name="column-spacing">18</property>
+        <property name="row-spacing">18</property>
         <property name="max-children-per-line">2</property>
         <property name="selection-mode">none</property>
         <child>
@@ -120,7 +120,7 @@
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <property name="hexpand">1</property>
                 <child>
                   <object class="GtkLabel">
@@ -151,7 +151,7 @@
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
-                <property name="spacing">10</property>
+                <property name="spacing">12</property>
                 <property name="hexpand">1</property>
                 <child>
                   <object class="GtkLabel">

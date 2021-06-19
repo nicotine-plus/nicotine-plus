@@ -12,17 +12,17 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
-            <property name="margin-start">7</property>
-            <property name="margin-end">7</property>
-            <property name="margin-top">7</property>
-            <property name="margin-bottom">7</property>
+            <property name="margin-start">6</property>
+            <property name="margin-end">6</property>
+            <property name="margin-top">6</property>
+            <property name="margin-bottom">6</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
                 <property name="spacing">6</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -141,10 +141,10 @@
             <child>
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="column-spacing">8</property>
-                <property name="margin-bottom">5</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">5</property>
+                <property name="column-spacing">12</property>
+                <property name="margin-bottom">6</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">6</property>
                 <property name="max-children-per-line">6</property>
                 <property name="selection-mode">none</property>
                 <child>
@@ -294,7 +294,7 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="spacing">10</property>
+                        <property name="spacing">12</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterCountry">
                             <property name="visible">1</property>
@@ -328,7 +328,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="spacing">8</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">1</property>

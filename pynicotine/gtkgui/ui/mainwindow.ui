@@ -184,7 +184,7 @@
             <property name="visible">1</property>
             <property name="spacing">6</property>
             <property name="margin-start">6</property>
-            <property name="margin-end">5</property>
+            <property name="margin-end">6</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -232,8 +232,8 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">15</property>
+            <property name="margin-start">6</property>
+            <property name="margin-end">18</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -339,7 +339,7 @@
             <property name="visible">1</property>
             <property name="spacing">6</property>
             <property name="margin-start">6</property>
-            <property name="margin-end">5</property>
+            <property name="margin-end">6</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -387,8 +387,8 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">6</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">15</property>
+            <property name="margin-start">6</property>
+            <property name="margin-end">18</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
@@ -1178,9 +1178,11 @@
                     <child>
                       <object class="GtkFlowBox">
                         <property name="visible">1</property>
-                        <property name="margin-top">3</property>
-                        <property name="margin-bottom">3</property>
-                        <property name="column-spacing">5</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">6</property>
+                        <property name="margin-start">12</property>
+                        <property name="column-spacing">6</property>
+                        <property name="row-spacing">6</property>
                         <property name="max-children-per-line">9</property>
                         <property name="selection-mode">none</property>
                         <child>
@@ -1192,8 +1194,7 @@
                                 <property name="visible">1</property>
                                 <property name="label" translatable="yes">Debug Logging</property>
                                 <property name="xalign">0</property>
-                                <property name="margin-start">10</property>
-                                <property name="margin-end">10</property>
+                                <property name="margin-end">12</property>
                                 <attributes>
                                   <attribute name="weight" value="bold"/>
                                 </attributes>
@@ -1344,10 +1345,10 @@
                             <property name="cursor-visible">0</property>
                             <property name="pixels-above-lines">1</property>
                             <property name="pixels-below-lines">1</property>
-                            <property name="left-margin">10</property>
-                            <property name="right-margin">10</property>
-                            <property name="top-margin">5</property>
-                            <property name="bottom-margin">5</property>
+                            <property name="left-margin">12</property>
+                            <property name="right-margin">12</property>
+                            <property name="top-margin">6</property>
+                            <property name="bottom-margin">6</property>
                           </object>
                         </child>
                       </object>
@@ -1376,7 +1377,7 @@
                 <property name="visible">1</property>
                 <property name="halign">start</property>
                 <property name="hexpand">1</property>
-                <property name="margin-start">10</property>
+                <property name="margin-start">12</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="ellipsize">end</property>
@@ -1412,7 +1413,7 @@
             <child>
               <object class="GtkLabel" id="SocketStatus">
                 <property name="visible">1</property>
-                <property name="margin-start">8</property>
+                <property name="margin-start">6</property>
                 <property name="margin-top">0</property>
                 <property name="margin-bottom">0</property>
                 <property name="label">0/0</property>
@@ -1430,7 +1431,7 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="spacing">8</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">1</property>
@@ -1460,7 +1461,7 @@
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="spacing">8</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">1</property>

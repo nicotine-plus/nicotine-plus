@@ -40,10 +40,10 @@
                           <object class="GtkLabel">
                             <property name="visible">1</property>
                             <property name="halign">start</property>
-                            <property name="margin-start">10</property>
-                            <property name="margin-end">10</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">10</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
                             <property name="label" translatable="yes">Self Description</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -66,9 +66,9 @@
                                     <property name="cursor-visible">0</property>
                                     <property name="pixels-above-lines">1</property>
                                     <property name="pixels-below-lines">1</property>
-                                    <property name="left-margin">10</property>
-                                    <property name="right-margin">10</property>
-                                    <property name="bottom-margin">5</property>
+                                    <property name="left-margin">12</property>
+                                    <property name="right-margin">12</property>
+                                    <property name="bottom-margin">6</property>
                                   </object>
                                 </child>
                               </object>
@@ -81,8 +81,8 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="halign">start</property>
-                        <property name="margin-start">10</property>
-                        <property name="margin-end">10</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
                         <property name="label" translatable="yes">Information</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
@@ -92,10 +92,10 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
-                        <property name="margin-start">10</property>
-                        <property name="margin-end">10</property>
-                        <property name="margin-top">10</property>
-                        <property name="margin-bottom">10</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <property name="spacing">6</property>
                         <property name="orientation">vertical</property>
                         <child>
@@ -200,10 +200,10 @@
                           <object class="GtkLabel">
                             <property name="visible">1</property>
                             <property name="halign">start</property>
-                            <property name="margin-start">10</property>
-                            <property name="margin-end">10</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">10</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
                             <property name="label" translatable="yes">Interests</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -262,10 +262,10 @@
                           <object class="GtkLabel">
                             <property name="visible">1</property>
                             <property name="halign">start</property>
-                            <property name="margin-start">10</property>
-                            <property name="margin-end">10</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">10</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin-top">12</property>
+                            <property name="margin-bottom">12</property>
                             <property name="label" translatable="yes">Picture</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -292,10 +292,10 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">10</property>
-                <property name="margin-top">10</property>
-                <property name="margin-bottom">10</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
                 <property name="spacing">6</property>
                 <property name="orientation">vertical</property>
                 <child>

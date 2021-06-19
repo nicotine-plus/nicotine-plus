@@ -86,7 +86,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Files and folders containing this text will be shown.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -96,7 +96,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Case is insensitive, but word order is important: &apos;Spears Brittany&apos; will not show any &apos;Brittany Spears&apos;</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -106,7 +106,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">For order-insensitive filtering, as well as filtering several exact phrases, vertical bars can be used to separate phrases and words.
     Example: Spears|Brittany|My beautiful album|hello</property>
                         <property name="selectable">1</property>
@@ -130,7 +130,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">As above, but files and folders are filtered out if the text matches.</property>
                     <property name="selectable">1</property>
                     <property name="wrap">1</property>
@@ -151,7 +151,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Filters files based upon their file extension.</property>
                     <property name="selectable">1</property>
                     <property name="wrap">1</property>
@@ -161,7 +161,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Multiple file extensions can be specified, which in turn will broaden the list of results.
     Example: flac|wav|ape</property>
                     <property name="selectable">1</property>
@@ -172,7 +172,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">It is also possible to invert the filter, specifying file extensions you don&apos;t want in your results.
     Example: !mp3|!jpg</property>
                     <property name="selectable">1</property>
@@ -199,7 +199,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Filters files based upon their file size.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -209,7 +209,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">By default, the unit used is bytes and files greater than or equal to the value will be matched.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -219,7 +219,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Prepend = to a value to specify an exact match:
     =1024 only matches files that are 1024 bytes in size (i.e. 1 kibibyte).</property>
                         <property name="selectable">1</property>
@@ -230,7 +230,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Prepend &lt; or &gt; to find files less-/greater than or equal to the value.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -240,7 +240,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Append b, k, m, or g (alternatively kib, mib, or gib) to specify byte, kibibyte, mebibyte, or gibibyte units:
     &lt;1024k will find files 1024 kibibytes (i.e. 1 mebibyte) or smaller.</property>
                         <property name="selectable">1</property>
@@ -251,7 +251,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">For convenience, the variants kb, mb, and gb for the better-known kilo-, mega-, and gigabyte units can also be used.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -279,7 +279,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Filters files based upon their bitrate.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -289,7 +289,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">VBR files display their average bitrate and are typically lower in bitrate than a compressed 320 kbps CBR file of the same audio quality.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -299,7 +299,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">10</property>
+                        <property name="margin-start">12</property>
                         <property name="label" translatable="yes">Like Size above, =, &lt;, and &gt; can be used.</property>
                         <property name="selectable">1</property>
                         <property name="wrap">1</property>
@@ -322,7 +322,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Filters files based upon users&apos; countries.</property>
                     <property name="selectable">1</property>
                     <property name="wrap">1</property>
@@ -332,7 +332,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Uses country codes defined by ISO 3166-2 (see Wikipedia):
     &apos;US&apos; will only return files from users connected via the United States. Similarly, &apos;GB&apos; returns files from users with IPs in the United Kingdom.</property>
                     <property name="selectable">1</property>
@@ -354,7 +354,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="margin-start">10</property>
+                    <property name="margin-start">12</property>
                     <property name="label" translatable="yes">Show only those results from users which have at least one upload slot free. This filter is applied immediately.</property>
                     <property name="selectable">1</property>
                     <property name="wrap">1</property>

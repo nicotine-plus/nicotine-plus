@@ -32,8 +32,8 @@
                     <property name="row-spacing">6</property>
                     <property name="margin-top">6</property>
                     <property name="margin-bottom">6</property>
-                    <property name="margin-start">8</property>
-                    <property name="margin-end">8</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
                     <property name="max-children-per-line">2</property>
                     <property name="selection-mode">none</property>
                     <child>
@@ -47,8 +47,8 @@
                               <object class="GtkBox">
                                 <property name="visible">1</property>
                                 <property name="spacing">6</property>
-                                <property name="margin-start">4</property>
-                                <property name="margin-end">5</property>
+                                <property name="margin-start">6</property>
+                                <property name="margin-end">6</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
@@ -95,8 +95,8 @@
                               <object class="GtkBox">
                                 <property name="visible">1</property>
                                 <property name="spacing">6</property>
-                                <property name="margin-start">5</property>
-                                <property name="margin-end">5</property>
+                                <property name="margin-start">6</property>
+                                <property name="margin-end">6</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
@@ -219,8 +219,8 @@
                     <property name="valign">center</property>
                     <property name="visible">1</property>
                     <property name="pulse-step">0.10000000149</property>
-                    <property name="margin-start">8</property>
-                    <property name="margin-end">8</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
                     <property name="margin-top">6</property>
                     <property name="margin-bottom">6</property>
                   </object>
