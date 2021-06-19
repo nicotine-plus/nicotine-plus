@@ -3160,16 +3160,11 @@ class Settings:
 
         dialog.set_default_response(Gtk.ResponseType.OK)
         dialog.connect("response", self.on_response)
+        dialog.get_style_context().add_class("preferences")
 
         if Gtk.get_major_version() == 3:
             self.Main.child_set_property(self.SettingsList, "shrink", False)
             self.Main.child_set_property(self.ScrolledWindow, "shrink", False)
-
-            action_area = dialog.get_action_area()
-            action_area.set_margin_top(10)
-            action_area.set_margin_bottom(10)
-            action_area.set_margin_start(10)
-            action_area.set_margin_end(10)
 
             content_area = dialog.get_content_area()
             content_area.set_border_width(0)

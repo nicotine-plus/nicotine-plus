@@ -33,6 +33,11 @@ def set_global_style():
         padding: 0;
     }
 
+    .preferences .dialog-action-box {
+        border-top: 1px solid @borders;
+        padding: 6px;
+    }
+
     .tab-toolbar {
         border-bottom: 1px solid @borders;
     }
