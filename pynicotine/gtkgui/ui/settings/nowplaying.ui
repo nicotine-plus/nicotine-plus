@@ -169,6 +169,7 @@
                 <child>
                   <object class="GtkButton" id="test_now_playing">
                     <property name="visible">1</property>
+                    <property name="halign">start</property>
                     <property name="label" translatable="yes">Test Configuration</property>
                   </object>
                 </child>
