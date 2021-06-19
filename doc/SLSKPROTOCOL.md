@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on June 18, 2021
+Last updated on June 20, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -2679,8 +2679,8 @@ A peer sends this message when it has a file search match. The token/ticket is t
     5.  **bool** <ins>slotfree</ins>
     6.  **int** <ins>avgspeed</ins>
     7.  **off\_t** <ins>queue length</ins>
-    8.  **int** <ins>locked results size</ins> *number of locked results*
-    9.  Iterate for number of locked results
+    8.  **int** <ins>private results size</ins> *number of privately shared results*
+    9.  Iterate for number of privately shared results
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
         3.  **off\_t** <ins>size</ins>
@@ -2707,16 +2707,16 @@ A peer sends this message when it has a file search match. The token/ticket is t
     6.  **bool** <ins>slotfree</ins>
     7.  **int** <ins>avgspeed</ins>
     8.  **off\_t** <ins>queue length</ins>
-    9.  **int** <ins>locked results size</ins> *number of locked results*
-    10.  Iterate for <ins>number of locked results</ins>
-        1.  **string** <ins>filename</ins>
-        2.  **off\_t** <ins>size</ins>
-        3.  **string** <ins>ext</ins>
-        4.  **int** <ins>number of attributes</ins>
-        5.  Iterate <ins>number of attributes</ins>
-            1.  **int** <ins>place in
-                attributes</ins>
-            2.  **int** <ins>attribute</ins>
+    9.  **int** <ins>private results size</ins> *number of privately shared results*
+    10.  Iterate for <ins>number of privately shared results</ins>
+         1.  **string** <ins>filename</ins>
+         2.  **off\_t** <ins>size</ins>
+         3.  **string** <ins>ext</ins>
+         4.  **int** <ins>number of attributes</ins>
+         5.  Iterate <ins>number of attributes</ins>
+             1.  **int** <ins>place in
+                 attributes</ins>
+             2.  **int** <ins>attribute</ins>
 
 ### Peer Code 15
 
