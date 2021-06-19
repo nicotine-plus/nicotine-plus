@@ -360,32 +360,39 @@
                         </style>
                       </object>
                     </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultFilters">
+                    <child type="end">
+                      <object class="GtkBox">
                         <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_filters" swapped="no"/>
+                        <property name="halign">end</property>
+                        <property name="hexpand">1</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkButton" id="DefaultFilters">
                             <property name="visible">1</property>
-                            <property name="spacing">5</property>
+                            <signal name="clicked" handler="on_default_filters" swapped="no"/>
                             <child>
-                              <object class="GtkImage">
+                              <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">view-refresh-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Load Defaults</property>
+                                    <property name="use-underline">1</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Load Defaults</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
+                            <style>
+                              <class name="flat"/>
+                            </style>
                           </object>
                         </child>
-                        <style>
-                          <class name="flat"/>
-                        </style>
                       </object>
                     </child>
                   </object>

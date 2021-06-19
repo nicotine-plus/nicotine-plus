@@ -127,8 +127,8 @@
                 </child>
               </object>
             </child>
-            <child>
-              <object class="GtkBox" id="End">
+            <child type="end">
+              <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="spacing">6</property>
                 <property name="halign">end</property>

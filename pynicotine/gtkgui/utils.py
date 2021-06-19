@@ -62,6 +62,7 @@ def load_ui_elements(ui_class, filename):
                 builder.add_from_string(
                     f.read()
                     .replace("<child type=\"center\">", "<child>")
+                    .replace("<child type=\"end\">", "<child>")
                 )
                 builder.connect_signals(ui_class)
 

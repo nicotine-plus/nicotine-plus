@@ -62,19 +62,16 @@ class TransferList:
         self.type = type
 
         load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
+        getattr(frame, type + "svbox").add(self.Main)
+
         grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
 
         if Gtk.get_major_version() == 4:
-            self.ActionBar.remove(self.End)
-            self.ActionBar.pack_end(self.End)
-
-            getattr(frame, type + "svbox").append(self.Main)
             grouping_button.set_icon_name("view-list-symbolic")
 
             self.ClearTransfers.set_has_frame(False)
             self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
         else:
-            getattr(frame, type + "svbox").add(self.Main)
             grouping_button.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
