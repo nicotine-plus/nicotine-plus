@@ -59,6 +59,10 @@ def set_dialog_properties(dialog, parent, quit_callback=None, type_hint="normal"
         elif type_hint == "dialog":
             dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
 
+        if isinstance(dialog, Gtk.Dialog):
+            content_area = dialog.get_content_area()
+            content_area.set_border_width(0)
+
     dialog.set_modal(modal)
     dialog.set_transient_for(parent)
 

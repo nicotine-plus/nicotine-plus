@@ -3165,9 +3165,6 @@ class Settings:
         if Gtk.get_major_version() == 3:
             self.Main.child_set_property(self.SettingsList, "shrink", False)
             self.Main.child_set_property(self.ScrolledWindow, "shrink", False)
-
-            content_area = dialog.get_content_area()
-            content_area.set_border_width(0)
         else:
             self.Main.set_shrink_start_child(False)
             self.Main.set_shrink_end_child(False)
@@ -3492,24 +3489,24 @@ class Settings:
 
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
-            self.update_visuals(page)
+
+            for obj in page.__dict__.values():
+                if isinstance(obj, Gtk.CheckButton):
+                    if Gtk.get_major_version() == 4:
+                        obj.get_last_child().set_wrap(True)
+                    else:
+                        obj.get_children()[-1].set_line_wrap(True)
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)
             page.Main.set_margin_top(14)
             page.Main.set_margin_bottom(18)
 
-        if Gtk.get_major_version() == 4:
-            for obj in self.pages[page_id].__dict__.values():
-                if isinstance(obj, Gtk.CheckButton):
-                    obj.get_last_child().set_wrap(True)
+            self.update_visuals(page)
 
+        if Gtk.get_major_version() == 4:
             self.viewport1.set_child(self.pages[page_id].Main)
         else:
-            for obj in self.pages[page_id].__dict__.values():
-                if isinstance(obj, Gtk.CheckButton):
-                    obj.get_children()[-1].set_line_wrap(True)
-
             self.viewport1.add(self.pages[page_id].Main)
 
     def on_backup_config_response(self, selected, data):
