@@ -33,17 +33,17 @@ def set_global_style():
         padding: 0;
     }
 
+    .border-top {
+        border-top: 1px solid @borders;
+    }
+
+    .border-bottom {
+        border-bottom: 1px solid @borders;
+    }
+
     .preferences .dialog-action-box {
         border-top: 1px solid @borders;
         padding: 6px;
-    }
-
-    .statusbar {
-        border-top: 1px solid @borders;
-    }
-
-    .tab-toolbar {
-        border-bottom: 1px solid @borders;
     }
     """
 
