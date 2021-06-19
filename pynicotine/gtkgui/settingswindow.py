@@ -3024,6 +3024,7 @@ class PluginsFrame(BuildFrame):
         model, iterator = selection.get_selected()
         if iterator is None:
             self.selected_plugin = None
+            self.check_properties_button(self.selected_plugin)
             return
 
         self.selected_plugin = model.get_value(iterator, 2)
@@ -3106,7 +3107,7 @@ class PluginsFrame(BuildFrame):
 
         active = self.PluginsEnable.get_active()
 
-        for widget in (self.PluginTreeView, self.PluginInfo, self.PluginProperties):
+        for widget in (self.PluginTreeView, self.PluginInfo):
             widget.set_sensitive(active)
 
         if active:
