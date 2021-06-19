@@ -2562,7 +2562,7 @@ class NowPlayingFrame(BuildFrame):
 
         if self.NP_lastfm.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
-            self.player_input.set_text(_("Username;APIKEY :"))
+            self.player_input.set_text(_("Username;APIKEY:"))
 
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
@@ -2570,7 +2570,7 @@ class NowPlayingFrame(BuildFrame):
 
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
-            self.player_input.set_text(_("Command :"))
+            self.player_input.set_text(_("Command:"))
 
         legend = ""
 
@@ -2603,7 +2603,7 @@ class NowPlayingFrame(BuildFrame):
 
             legend += "\n"
 
-        self.Legend.set_text(legend)
+        self.Legend.set_text(legend[:-1])
 
     def set_now_playing_example(self, title):
         self.Example.set_text(title)

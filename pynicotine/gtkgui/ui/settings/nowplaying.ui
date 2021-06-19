@@ -3,30 +3,42 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">15</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Display what your media player is playing in chat with the /now command.</property>
-            <property name="single-line-mode">1</property>
+            <property name="label" translatable="yes">General</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Now Playing allows you to display what your media player is playing by using the /now command in chat.</property>
+            <property name="selectable">1</property>
+            <property name="wrap">1</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="NP_lastfm">
                 <property name="label" translatable="yes">last.fm</property>
                 <property name="visible">1</property>
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
@@ -34,7 +46,7 @@
               <object class="GtkRadioButton" id="NP_mpris">
                 <property name="label" translatable="yes">MPRIS (v2)</property>
                 <property name="visible">1</property>
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
@@ -43,7 +55,7 @@
               <object class="GtkRadioButton" id="NP_other">
                 <property name="label" translatable="yes">Other</property>
                 <property name="visible">1</property>
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
@@ -51,80 +63,133 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel" id="player_input">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Player Command/Username</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="player_input">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">NPCommand</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="NPCommand">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkEntry" id="NPCommand">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">5</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Now playing format:</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="NPFormat">
-                <property name="visible">1</property>
-                <property name="has-entry">1</property>
-                <property name="hexpand">1</property>
-              </object>
-            </child>
-          </object>
-        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Legend:</property>
+            <property name="label" translatable="yes">Now Playing Format</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
           <object class="GtkLabel" id="Legend">
             <property name="visible">1</property>
-            <property name="halign">start</property>
+            <property name="selectable">1</property>
+            <property name="xalign">0</property>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Example:</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Now Playing message format:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">NPFormat</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="Example">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="halign">start</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="NPFormat">
+                    <property name="visible">1</property>
+                    <property name="has-entry">1</property>
+                    <property name="hexpand">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkButton" id="test_now_playing">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Test the Configuration</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkButton" id="test_now_playing">
+                    <property name="visible">1</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Test Configuration</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="can-focus">0</property>
+                <child>
+                  <object class="GtkLabel" id="Example">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="xalign">1</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">test_now_playing</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
