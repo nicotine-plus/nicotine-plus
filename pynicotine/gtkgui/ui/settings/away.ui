@@ -85,7 +85,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="AutoReply">
-                <property name="width-request">193</property>
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
               </object>

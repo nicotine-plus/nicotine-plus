@@ -3145,8 +3145,8 @@ class Settings:
             content_box=self.Main,
             quit_callback=self.on_delete,
             title=_("Preferences"),
-            width=1050,
-            height=700
+            width=960,
+            height=650
         )
 
         dialog.add_buttons(
@@ -3496,6 +3496,11 @@ class Settings:
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
             self.update_visuals(page)
+
+            page.Main.set_margin_start(18)
+            page.Main.set_margin_end(18)
+            page.Main.set_margin_top(14)
+            page.Main.set_margin_bottom(18)
 
         if Gtk.get_major_version() == 4:
             for obj in self.pages[page_id].__dict__.values():

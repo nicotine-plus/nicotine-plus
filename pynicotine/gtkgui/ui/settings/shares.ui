@@ -99,7 +99,6 @@
                 <property name="vexpand">1</property>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="width-request">250</property>
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                     <property name="vexpand">1</property>
