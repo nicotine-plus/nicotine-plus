@@ -23,7 +23,7 @@
         <child>
           <object class="GtkBox" id="TraySettings">
             <property name="visible">1</property>
-            <property name="spacing">10</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkCheckButton" id="TrayiconCheck">
