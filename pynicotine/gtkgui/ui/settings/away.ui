@@ -32,22 +32,37 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="spacing">6</property>
+                <property name="column-spacing">12</property>
+                <property name="row-spacing">12</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
-                    <property name="wrap">1</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic_widget">AutoAway</property>
+                    <property name="can-focus">0</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
+                        <property name="wrap">1</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">AutoAway</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkSpinButton" id="AutoAway">
+                  <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="adjustment">adjustment_AutoAway</property>
+                    <property name="can-focus">0</property>
+                    <child>
+                      <object class="GtkSpinButton" id="AutoAway">
+                        <property name="visible">1</property>
+                        <property name="adjustment">adjustment_AutoAway</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

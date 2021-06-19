@@ -14,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">General</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -23,14 +23,8 @@
         <child>
           <object class="GtkCheckButton" id="ReplaceCheck">
             <property name="visible">1</property>
+            <property name="label" translatable="yes">Enable automatic replacement of chat words you&apos;ve typed incorrectly or as an acronym</property>
             <signal name="toggled" handler="on_replace_check" swapped="no"/>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Enable automatic replacement of chat words you&apos;ve typed incorrectly or as an acronym</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
           </object>
         </child>
       </object>
@@ -44,7 +38,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Replacements</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <property name="mnemonic_widget">ReplacementList</property>
             <attributes>
               <attribute name="weight" value="bold"/>

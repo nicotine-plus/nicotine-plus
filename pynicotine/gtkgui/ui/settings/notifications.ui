@@ -14,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">General</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -23,49 +23,25 @@
         <child>
           <object class="GtkCheckButton" id="NotificationWindowTitle">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Show a notification for private chats and mentions in the window title</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Show a notification for private chats and mentions in the window title</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationTabIcons">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Show notification icons on tabs</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Show notification icons on tabs</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationTabColors">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupSound">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Play a sound for notification popups</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">Play a sound for notification popups</property>
           </object>
         </child>
       </object>
@@ -73,13 +49,13 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">15</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Show a notification popup...</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -88,61 +64,31 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFile">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">When a file has finished downloading</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">When a file has finished downloading</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFolder">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">When a folder has finished downloading</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">When a folder has finished downloading</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">When you receive a private message</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">When you receive a private message</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroom">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">When someone sends a message in a chat room</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">When someone sends a message in a chat room</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
             <property name="visible">1</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">When you&apos;re mentioned in a chat room</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
+            <property name="label" translatable="yes">When you&apos;re mentioned in a chat room</property>
           </object>
         </child>
       </object>

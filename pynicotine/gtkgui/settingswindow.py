@@ -1298,25 +1298,16 @@ class TextToSpeechFrame(BuildFrame):
     def on_default_tts(self, widget):
         self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
-    def on_text_to_speech_toggled(self, widget):
-
-        sensitive = self.TextToSpeech.get_active()
-
-        self.TTSGrid.set_sensitive(sensitive)
-
     def set_settings(self):
 
         self.p.set_widgets_data(self.options)
 
-        for i in ["%(user)s", "%(message)s"]:
-
+        for i in ("%(user)s", "%(message)s"):
             if i not in config.sections["ui"]["speechprivate"]:
                 self.default_private(None)
 
             if i not in config.sections["ui"]["speechrooms"]:
                 self.default_rooms(None)
-
-        self.on_text_to_speech_toggled(self.TextToSpeech)
 
     def get_settings(self):
 
@@ -3480,8 +3471,16 @@ class Settings:
             self.update_visuals(page)
 
         if Gtk.get_major_version() == 4:
+            for obj in self.pages[page_id].__dict__.values():
+                if isinstance(obj, Gtk.CheckButton):
+                    obj.get_last_child().set_wrap(True)
+
             self.viewport1.set_child(self.pages[page_id].Main)
         else:
+            for obj in self.pages[page_id].__dict__.values():
+                if isinstance(obj, Gtk.CheckButton):
+                    obj.get_children()[-1].set_line_wrap(True)
+
             self.viewport1.add(self.pages[page_id].Main)
 
     def on_backup_config_response(self, selected, data):

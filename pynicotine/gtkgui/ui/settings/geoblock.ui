@@ -14,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">General</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -23,7 +23,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Geo Block controls from which countries users are allowed access to your shares.</property>
             <property name="wrap">1</property>
           </object>
@@ -75,7 +75,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Countries</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -84,7 +84,7 @@
         <child>
           <object class="GtkLabel" id="CountryCodesLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Country codes to block (comma separated):</property>
             <property name="mnemonic_widget">GeoBlockCC</property>
           </object>

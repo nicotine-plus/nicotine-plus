@@ -14,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">General</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -24,11 +24,10 @@
           <object class="GtkCheckButton" id="TextToSpeech">
             <property name="label" translatable="yes">Enable Text-to-Speech</property>
             <property name="visible">1</property>
-            <signal name="toggled" handler="on_text_to_speech_toggled" swapped="no"/>
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox" id="TTSGrid">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="column-spacing">12</property>
             <property name="row-spacing">12</property>
@@ -41,7 +40,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Text-to-Speech command:</property>
                     <property name="mnemonic_widget">TTSCommand</property>
                   </object>
@@ -109,7 +108,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Messages</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -129,7 +128,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Chat room message:</property>
                     <property name="mnemonic_widget">RoomMessage</property>
                   </object>
@@ -186,7 +185,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Private chat message:</property>
                     <property name="mnemonic_widget">PrivateMessage</property>
                   </object>
