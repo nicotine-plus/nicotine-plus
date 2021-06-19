@@ -38,9 +38,9 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="GeoPanic">
-            <property name="label" translatable="yes">Block unresolvable IPs</property>
+            <property name="label" translatable="yes">Block unresolvable IP addresses</property>
             <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">If the source country of an IP cannot be determined, it will be blocked.</property>
+            <property name="tooltip_text" translatable="yes">If the source country of an IP address cannot be determined, it will be blocked.</property>
             <property name="use-underline">1</property>
           </object>
         </child>

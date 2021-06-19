@@ -77,7 +77,7 @@
                   <object class="GtkLabel" id="MainTabsLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Main:</property>
+                    <property name="label" translatable="yes">Main tab bar position:</property>
                     <property name="mnemonic_widget">MainPosition</property>
                   </object>
                 </child>
@@ -103,7 +103,7 @@
                   <object class="GtkLabel" id="ChatRoomsLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Chat rooms:</property>
+                    <property name="label" translatable="yes">Chat room tab bar position:</property>
                     <property name="mnemonic_widget">ChatRoomsPosition</property>
                   </object>
                 </child>
@@ -129,7 +129,7 @@
                   <object class="GtkLabel" id="PrivateChatLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Private chat:</property>
+                    <property name="label" translatable="yes">Private chat tab bar position:</property>
                     <property name="mnemonic_widget">PrivateChatPosition</property>
                   </object>
                 </child>
@@ -155,7 +155,7 @@
                   <object class="GtkLabel" id="SearchLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Search:</property>
+                    <property name="label" translatable="yes">Search tab bar position:</property>
                     <property name="mnemonic_widget">SearchPosition</property>
                   </object>
                 </child>
@@ -181,7 +181,7 @@
                   <object class="GtkLabel" id="UserInfoLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">User info:</property>
+                    <property name="label" translatable="yes">User info tab bar position:</property>
                     <property name="mnemonic_widget">UserInfoPosition</property>
                   </object>
                 </child>
@@ -207,7 +207,7 @@
                   <object class="GtkLabel" id="UserBrowseLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">User browse:</property>
+                    <property name="label" translatable="yes">User browse tab bar position:</property>
                     <property name="mnemonic_widget">UserBrowsePosition</property>
                   </object>
                 </child>

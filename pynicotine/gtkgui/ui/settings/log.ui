@@ -83,59 +83,107 @@
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel" id="RoomLogDirLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Chatroom logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">RoomLogDir</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel" id="RoomLogDirLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Chatroom logs folder:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">RoomLogDir</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="RoomLogDir">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkButton" id="RoomLogDir">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="PrivateLogDirLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Private chat logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">PrivateLogDir</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel" id="PrivateLogDirLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Private chat logs folder:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">PrivateLogDir</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="PrivateLogDir">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkButton" id="PrivateLogDir">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="TransfersLogDirLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Transfer logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">TransfersLogDir</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel" id="TransfersLogDirLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Transfer logs folder:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">TransfersLogDir</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="TransfersLogDir">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkButton" id="TransfersLogDir">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="DebugLogDirLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Debug logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">DebugLogDir</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel" id="DebugLogDirLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Debug logs folder:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">DebugLogDir</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="DebugLogDir">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkButton" id="DebugLogDir">
+                    <property name="visible">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -278,44 +326,56 @@
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Chat room format:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">ChatRoomFormat</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Chat room format:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">ChatRoomFormat</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="spacing">12</property>
+                <property name="focusable">0</property>
                 <child>
-                  <object class="GtkEntry" id="ChatRoomFormat">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="RoomDefaultTimestamp">
-                    <property name="visible">1</property>
-                    <signal name="clicked" handler="on_room_default_timestamp" swapped="no"/>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkEntry" id="ChatRoomFormat">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <property name="hexpand">1</property>
+                        <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="RoomDefaultTimestamp">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_room_default_timestamp" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">view-refresh-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Default</property>
-                            <property name="use-underline">1</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -325,44 +385,56 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Private room format:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">PrivateChatFormat</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Private room format:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">PrivateChatFormat</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="spacing">12</property>
+                <property name="focusable">0</property>
                 <child>
-                  <object class="GtkEntry" id="PrivateChatFormat">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="PrivateDefaultTimestamp">
-                    <property name="visible">1</property>
-                    <signal name="clicked" handler="on_private_default_timestamp" swapped="no"/>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkEntry" id="PrivateChatFormat">
                         <property name="visible">1</property>
-                        <property name="spacing">5</property>
+                        <property name="hexpand">1</property>
+                        <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="PrivateDefaultTimestamp">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_private_default_timestamp" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">view-refresh-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Default</property>
-                            <property name="use-underline">1</property>
+                            <property name="spacing">5</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -372,44 +444,56 @@
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Log file format:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">1</property>
-                <property name="mnemonic_widget">LogFileFormat</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Log file format:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">LogFileFormat</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkBox">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="spacing">12</property>
+                <property name="focusable">0</property>
                 <child>
-                  <object class="GtkEntry" id="LogFileFormat">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="DefaultTimestamp">
-                    <property name="visible">1</property>
-                    <signal name="clicked" handler="on_default_timestamp" swapped="no"/>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkEntry" id="LogFileFormat">
                         <property name="visible">1</property>
-                        <property name="spacing">6</property>
+                        <property name="hexpand">1</property>
+                        <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultTimestamp">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_default_timestamp" swapped="no"/>
                         <child>
-                          <object class="GtkImage">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="icon-name">view-refresh-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Default</property>
-                            <property name="use-underline">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
