@@ -39,7 +39,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="halign">start</property>
+                            <property name="xalign">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>
@@ -80,7 +80,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
+                        <property name="xalign">0</property>
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>
                         <property name="label" translatable="yes">Information</property>
@@ -199,7 +199,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="halign">start</property>
+                            <property name="xalign">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>
@@ -261,7 +261,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="halign">start</property>
+                            <property name="xalign">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>

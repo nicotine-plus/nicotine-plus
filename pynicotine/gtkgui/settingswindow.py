@@ -1918,8 +1918,8 @@ class SearchesFrame(BuildFrame):
 
     def on_enable_search_results(self, widget):
         active = widget.get_active()
-        for w in (self.MinSearchCharsL1, self.MinSearchChars, self.MinSearchCharsL2,
-                  self.MaxResults, self.MaxResultsL1, self.MaxResultsL2):
+        for w in (self.MinSearchCharsL1, self.MinSearchChars,
+                  self.MaxResults, self.MaxResultsL1):
             w.set_sensitive(active)
 
 

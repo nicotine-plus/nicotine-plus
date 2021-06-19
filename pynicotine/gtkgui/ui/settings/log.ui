@@ -87,6 +87,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Chatroom logs folder:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">RoomLogDir</property>
               </object>
             </child>
             <child>
@@ -99,6 +101,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Private chat logs folder:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">PrivateLogDir</property>
               </object>
             </child>
             <child>
@@ -111,6 +115,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Transfer logs folder:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">TransfersLogDir</property>
               </object>
             </child>
             <child>
@@ -123,6 +129,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Debug logs folder:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">DebugLogDir</property>
               </object>
             </child>
             <child>
@@ -156,27 +164,39 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Show the last</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Number of recent chat lines to show:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">RoomLogLines</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="RoomLogLines">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="width-chars">5</property>
-                <property name="adjustment">adjustment_RoomLogLines</property>
-                <property name="numeric">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">lines</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkSpinButton" id="RoomLogLines">
+                    <property name="visible">1</property>
+                    <property name="width-chars">5</property>
+                    <property name="adjustment">adjustment_RoomLogLines</property>
+                    <property name="numeric">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -189,27 +209,39 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">5</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Show the last</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Number of recent chat lines to show:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">PrivateLogLines</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkSpinButton" id="PrivateLogLines">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="width-chars">5</property>
-                <property name="adjustment">adjustment_PrivateLogLines</property>
-                <property name="numeric">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">lines</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkSpinButton" id="PrivateLogLines">
+                    <property name="visible">1</property>
+                    <property name="width-chars">5</property>
+                    <property name="adjustment">adjustment_PrivateLogLines</property>
+                    <property name="numeric">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -250,6 +282,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Chat room format:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">ChatRoomFormat</property>
               </object>
             </child>
             <child>
@@ -295,6 +329,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Private room format:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">PrivateChatFormat</property>
               </object>
             </child>
             <child>
@@ -340,6 +376,8 @@
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Log file format:</property>
                 <property name="xalign">0</property>
+                <property name="wrap">1</property>
+                <property name="mnemonic_widget">LogFileFormat</property>
               </object>
             </child>
             <child>

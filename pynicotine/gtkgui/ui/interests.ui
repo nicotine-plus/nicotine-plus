@@ -16,11 +16,11 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="halign">start</property>
-                <property name="margin-start">10</property>
-                <property name="margin-end">10</property>
-                <property name="margin-top">13</property>
-                <property name="margin-bottom">13</property>
+                <property name="xalign">0</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
                 <property name="label" translatable="yes">My Interests</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -146,9 +146,9 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="halign">start</property>
+                            <property name="xalign">0</property>
                             <property name="hexpand">1</property>
-                            <property name="margin-start">5</property>
+                            <property name="margin-start">6</property>
                             <property name="label" translatable="yes">Recommendations</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -237,11 +237,11 @@
                     <child>
                       <object class="GtkLabel" id="UnrecommendationsLabel">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <property name="margin-start">10</property>
-                        <property name="margin-end">10</property>
-                        <property name="margin-top">13</property>
-                        <property name="margin-bottom">13</property>
+                        <property name="xalign">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <property name="label" translatable="yes">Unrecommendations</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
@@ -289,9 +289,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
+                        <property name="xalign">0</property>
                         <property name="hexpand">1</property>
-                        <property name="margin-start">5</property>
+                        <property name="margin-start">6</property>
                         <property name="label" translatable="yes">Similar Users</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>

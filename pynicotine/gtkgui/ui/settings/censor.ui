@@ -14,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="label" translatable="yes">General</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -40,7 +40,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="halign">start</property>
+                    <property name="xalign">0</property>
                     <property name="label" translatable="yes">Replace censored letters with:</property>
                     <property name="wrap">1</property>
                     <property name="mnemonic_widget">CensorReplaceCombo</property>
@@ -85,7 +85,7 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Censored Patterns</property>
-                <property name="halign">start</property>
+                <property name="xalign">0</property>
                 <property name="mnemonic_widget">CensorList</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>

@@ -13,7 +13,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">General</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -71,7 +71,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="halign">start</property>
+            <property name="xalign">0</property>
             <property name="label" translatable="yes">Shared Folders</property>
             <attributes>
               <attribute name="weight" value="bold"/>
