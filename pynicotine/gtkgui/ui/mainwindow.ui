@@ -1188,7 +1188,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
@@ -1205,7 +1205,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Downloads</property>
@@ -1218,7 +1218,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Uploads</property>
@@ -1231,7 +1231,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Search</property>
@@ -1244,7 +1244,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Chat</property>
@@ -1257,7 +1257,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Connections</property>
@@ -1270,7 +1270,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Messages</property>
@@ -1283,7 +1283,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Transfers</property>
@@ -1296,7 +1296,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="can-focus">0</property>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkCheckButton">
                                 <property name="label" translatable="yes">Miscellaneous</property>

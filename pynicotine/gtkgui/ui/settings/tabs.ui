@@ -72,7 +72,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="MainTabsLabel">
                     <property name="visible">1</property>
@@ -86,7 +86,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="MainPosition">
                     <property name="visible">1</property>
@@ -98,7 +98,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="ChatRoomsLabel">
                     <property name="visible">1</property>
@@ -112,7 +112,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="ChatRoomsPosition">
                     <property name="visible">1</property>
@@ -124,7 +124,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="PrivateChatLabel">
                     <property name="visible">1</property>
@@ -138,7 +138,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="PrivateChatPosition">
                     <property name="visible">1</property>
@@ -150,7 +150,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="SearchLabel">
                     <property name="visible">1</property>
@@ -164,7 +164,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="SearchPosition">
                     <property name="visible">1</property>
@@ -176,7 +176,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="UserInfoLabel">
                     <property name="visible">1</property>
@@ -190,7 +190,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="UserInfoPosition">
                     <property name="visible">1</property>
@@ -202,7 +202,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="UserBrowseLabel">
                     <property name="visible">1</property>
@@ -216,7 +216,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBox" id="UserBrowsePosition">
                     <property name="visible">1</property>

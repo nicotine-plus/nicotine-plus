@@ -53,8 +53,6 @@ def load_ui_elements(ui_class, filename):
                 builder.add_from_string(
                     f.read()
                     .replace("GtkRadioButton", "GtkCheckButton")
-                    .replace("<property name=\"can-focus\">0</property>",
-                             "<property name=\"focusable\">0</property>")
                 )
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
@@ -63,6 +61,8 @@ def load_ui_elements(ui_class, filename):
                     f.read()
                     .replace("<child type=\"center\">", "<child>")
                     .replace("<child type=\"end\">", "<child>")
+                    .replace("<property name=\"focusable\">0</property>",
+                             "<property name=\"can-focus\">0</property>")
                 )
                 builder.connect_signals(ui_class)
 

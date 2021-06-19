@@ -25,7 +25,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="filename_label">
                 <property name="visible">1</property>
@@ -42,7 +42,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="filename_value">
                 <property name="visible">1</property>
@@ -58,7 +58,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="folder_label">
                 <property name="visible">1</property>
@@ -75,7 +75,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="folder_value">
                 <property name="visible">1</property>
@@ -91,7 +91,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="filesize_label">
                 <property name="visible">1</property>
@@ -108,7 +108,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="filesize_value">
                 <property name="visible">1</property>
@@ -124,7 +124,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="length_label">
                 <property name="visible">1</property>
@@ -142,7 +142,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="length_value">
                 <property name="visible">1</property>
@@ -159,7 +159,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="bitrate_label">
                 <property name="visible">1</property>
@@ -176,7 +176,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="bitrate_value">
                 <property name="visible">1</property>
@@ -192,7 +192,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="username_label">
                 <property name="visible">1</property>
@@ -210,7 +210,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="username_value">
                 <property name="visible">1</property>
@@ -227,7 +227,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="immediate_label">
                 <property name="visible">1</property>
@@ -244,7 +244,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="immediate_value">
                 <property name="visible">1</property>
@@ -260,7 +260,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="queue_label">
                 <property name="visible">1</property>
@@ -277,7 +277,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="queue_value">
                 <property name="visible">1</property>
@@ -293,7 +293,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="speed_label">
                 <property name="visible">1</property>
@@ -310,7 +310,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="speed_value">
                 <property name="visible">1</property>
@@ -326,7 +326,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="country_label">
                 <property name="visible">1</property>
@@ -343,7 +343,7 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="can-focus">0</property>
+            <property name="focusable">0</property>
             <child>
               <object class="GtkLabel" id="country_value">
                 <property name="visible">1</property>
