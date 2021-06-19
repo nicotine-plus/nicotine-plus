@@ -38,6 +38,10 @@ def set_global_style():
         padding: 6px;
     }
 
+    .statusbar {
+        border-top: 1px solid @borders;
+    }
+
     .tab-toolbar {
         border-bottom: 1px solid @borders;
     }
