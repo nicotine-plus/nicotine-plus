@@ -23,6 +23,35 @@ from gi.repository import Pango
 from pynicotine.config import config
 
 
+""" Global Style """
+
+
+def set_global_style():
+
+    css = b"""
+    flowboxchild {
+        padding: 0;
+    }
+
+    .tab-toolbar {
+        border-bottom: 1px solid @borders;
+    }
+    """
+
+    global_css_provider = Gtk.CssProvider()
+    global_css_provider.load_from_data(css)
+
+    if Gtk.get_major_version() == 4:
+        Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
+        screen = Gdk.Display.get_default()
+    else:
+        screen = Gdk.Screen.get_default()
+
+    Gtk.StyleContext.add_provider_for_screen(
+        screen, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    )
+
+
 """ Widget Fonts and Colors """
 
 

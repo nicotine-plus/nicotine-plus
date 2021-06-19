@@ -73,6 +73,7 @@ from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import clear_entry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
+from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.logfacility import log
@@ -329,6 +330,7 @@ class NicotineFrame:
 
         """ Apply UI Customizations """
 
+        set_global_style()
         self.update_visuals()
 
         """ Show Window """
@@ -560,24 +562,6 @@ class NicotineFrame:
         icon_theme.append_search_path(path)
 
     def update_visuals(self):
-
-        if not hasattr(self, "global_css_provider"):
-
-            self.global_css_provider = Gtk.CssProvider()
-            self.global_css_provider.load_from_data(
-                b".tab-toolbar { border-bottom: 1px solid @borders; } flowboxchild { padding: 0; }"
-            )
-            if Gtk.get_major_version() == 4:
-                display = Gdk.Display.get_default()
-                Gtk.StyleContext.add_provider_for_display(
-                    display, self.global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-                )
-            else:
-                screen = Gdk.Screen.get_default()
-                Gtk.StyleContext.add_provider_for_screen(
-                    screen, self.global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-                )
-
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
