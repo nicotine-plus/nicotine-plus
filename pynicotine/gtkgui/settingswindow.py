@@ -117,8 +117,10 @@ class NetworkFrame(BuildFrame):
 
         self.needportmap = False
 
-        if sys.platform not in ("linux", "darwin"):
-            self.InterfaceRow.hide()
+        if sys.platform in ("linux", "darwin"):
+            for widget in (self.InterfaceLabel, self.Interface):
+                widget.get_parent().hide()
+
             return
 
         self.Interface.remove_all()

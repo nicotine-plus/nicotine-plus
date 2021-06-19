@@ -320,7 +320,7 @@
                     <property name="visible">1</property>
                     <property name="focusable">0</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="InterfaceLabel">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Network interface (requires a restart):</property>
                         <property name="xalign">0</property>
