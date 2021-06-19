@@ -3142,6 +3142,9 @@ class Settings:
         dialog.connect("response", self.on_response)
 
         if Gtk.get_major_version() == 3:
+            self.Main.child_set_property(self.SettingsList, "shrink", False)
+            self.Main.child_set_property(self.ScrolledWindow, "shrink", False)
+
             action_area = dialog.get_action_area()
             action_area.set_margin_top(10)
             action_area.set_margin_bottom(10)
@@ -3150,6 +3153,9 @@ class Settings:
 
             content_area = dialog.get_content_area()
             content_area.set_border_width(0)
+        else:
+            self.Main.set_shrink_start_child(False)
+            self.Main.set_shrink_end_child(False)
 
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
