@@ -156,7 +156,8 @@ class NetworkEventProcessor:
 
         self.has_parent = False
 
-        self.requested_info = {}
+        self.requested_info_times = {}
+        self.requested_share_times = {}
         self.speed = 0
         self.token = 100
 
@@ -1809,6 +1810,15 @@ Error: %(error)s""", {
             # No peer connection
             return
 
+        request_time = time.time()
+
+        if user in self.requested_share_times and request_time < self.requested_share_times[user] + 0.4:
+            # Ignoring request, because it's less than half a second since the
+            # last one by this user
+            return
+
+        self.requested_share_times[user] = request_time
+
         # Check address is spoofed, if possible
         if user == config.sections["server"]["login"]:
             if ip_address is not None and port is not None:
@@ -1915,12 +1925,12 @@ Error: %(error)s""", {
 
         request_time = time.time()
 
-        if user in self.requested_info and not request_time > 10 + self.requested_info[user]:
-            # Ignoring request, because it's 10 or less seconds since the
+        if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
+            # Ignoring request, because it's less than half a second since the
             # last one by this user
             return
 
-        self.requested_info[user] = request_time
+        self.requested_info_times[user] = request_time
 
         # Check address is spoofed, if possible
         if user == config.sections["server"]["login"]:
