@@ -1215,6 +1215,8 @@ class SlskProtoThread(threading.Thread):
         """ Actual networking loop is here."""
 
         # @var p Peer / Listen Port
+        # Listen socket needs to be registered for selection here instead of __init__,
+        # otherwise connections break on certain systems (OpenBSD confirmed)
         listen_socket = self.listen_socket
         self.selector.register(listen_socket, selectors.EVENT_READ)
 
@@ -1293,6 +1295,9 @@ class SlskProtoThread(threading.Thread):
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
+
+                        # Event flags are modified to include 'write' in subsequent loops, if necessary.
+                        # Don't do it here, otherwise connections may break.
                         self.selector.register(incconn, selectors.EVENT_READ)
 
             # Manage Connections
