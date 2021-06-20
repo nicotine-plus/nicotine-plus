@@ -186,7 +186,7 @@ class TransferList:
             ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
-            ("#" + _("_Browse Folder"), self.on_browse_folder),
+            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("File P_roperties"), self.on_file_properties),
             (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
@@ -919,14 +919,17 @@ class TransferList:
 
     def on_browse_folder(self, *args):
 
+        requested_users = set()
         requested_folders = set()
 
         for transfer in self.selected_transfers:
             user = transfer.user
             folder = transfer.filename.rsplit('\\', 1)[0]
 
-            if folder not in requested_folders:
+            if user not in requested_users and folder not in requested_folders:
                 self.frame.browse_user(user, folder)
+
+                requested_users.add(user)
                 requested_folders.add(folder)
 
     def on_retry_transfer(self, *args):

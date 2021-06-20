@@ -404,7 +404,7 @@ class Search:
             ("#" + _("Download File(s) _To..."), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
             ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
-            ("#" + _("_Browse Folder"), self.on_browse_folder),
+            ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("File _Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
@@ -1114,14 +1114,17 @@ class Search:
 
     def on_browse_folder(self, *args):
 
+        requested_users = set()
         requested_folders = set()
 
         for file in self.selected_results:
             user = file[0]
             folder = file[1].rsplit('\\', 1)[0]
 
-            if folder not in requested_folders:
+            if user not in requested_users and folder not in requested_folders:
                 self.frame.browse_user(user, folder)
+
+                requested_users.add(user)
                 requested_folders.add(folder)
 
     def on_file_properties(self, *args):
