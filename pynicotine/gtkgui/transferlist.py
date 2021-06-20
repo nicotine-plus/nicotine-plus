@@ -179,14 +179,15 @@ class TransferList:
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open Folder"), self.on_open_directory),
-            ("#" + _("File P_roperties"), self.on_file_properties),
+            ("#" + _("_Open in File Manager"), self.on_open_directory),
             ("", None),
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
+            ("#" + _("_Browse Folder"), self.on_browse_folder),
+            ("#" + _("File P_roperties"), self.on_file_properties),
             (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
             ("#" + _("_Retry"), self.on_retry_transfer),
@@ -783,7 +784,7 @@ class TransferList:
             # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
             act = False
 
-        for i in (_("Send to _Player"), _("_Open Folder"), _("File P_roperties"),
+        for i in (_("Send to _Player"), _("_Open in File Manager"), _("File P_roperties"),
                   _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
             actions[i].set_enabled(act)
 
@@ -915,6 +916,18 @@ class TransferList:
 
         if transfer:
             copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+
+    def on_browse_folder(self, *args):
+
+        requested_folders = set()
+
+        for transfer in self.selected_transfers:
+            user = transfer.user
+            folder = transfer.filename.rsplit('\\', 1)[0]
+
+            if folder not in requested_folders:
+                self.frame.browse_user(user, folder)
+                requested_folders.add(folder)
 
     def on_retry_transfer(self, *args):
         self.select_transfers()
