@@ -440,7 +440,6 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.selector.register(self.listen_socket, selectors.EVENT_READ)
 
         self.server_socket = None
 
@@ -1217,6 +1216,7 @@ class SlskProtoThread(threading.Thread):
 
         # @var p Peer / Listen Port
         listen_socket = self.listen_socket
+        self.selector.register(listen_socket, selectors.EVENT_READ)
 
         # @var s Server Port
         server_socket = self.server_socket
@@ -1293,7 +1293,7 @@ class SlskProtoThread(threading.Thread):
                     else:
                         conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._ui_callback([IncConn(incconn, incaddr)])
-                        self.selector.register(incconn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+                        self.selector.register(incconn, selectors.EVENT_READ)
 
             # Manage Connections
             curtime = time.time()
