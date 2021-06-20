@@ -64,6 +64,19 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.bitrate, "320")
         self.assertEqual(transfer.length, "4:12")
 
+    def test_save_downloads(self):
+        """ Verify that the order of the download list at the end of the sesson
+        is identical to the one we loaded. Ignore transfer 13, since its missing
+        properties will be added at the end of the session. """
+
+        self.transfers.abort_transfers()
+
+        old_transfers = self.transfers.load_current_transfers_format(
+            self.transfers.downloads_file_name)[:12]
+
+        saved_transfers = self.transfers.get_downloads()[:12]
+        self.assertEqual(old_transfers, saved_transfers)
+
     def test_load_uploads(self):
         """ Test loading a uploads.json file """
 

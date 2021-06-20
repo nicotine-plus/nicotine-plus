@@ -122,6 +122,8 @@ class Transfers:
 
         self.update_limits()
 
+        self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
+        self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
         self.add_stored_transfers("downloads")
         self.add_stored_transfers("uploads")
 
@@ -2349,12 +2351,12 @@ class Transfers:
     def get_downloads(self):
         """ Get a list of downloads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
-                for i in self.downloads]
+                for i in reversed(self.downloads)]
 
     def get_uploads(self):
         """ Get a list of finished uploads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
-                for i in self.uploads if i.status == "Finished"]
+                for i in reversed(self.uploads) if i.status == "Finished"]
 
     def save_downloads_callback(self, filename):
         import json
@@ -2370,10 +2372,10 @@ class Transfers:
         self.config.create_data_folder()
 
         if transfer_type == "uploads":
-            transfers_file = os.path.join(self.config.data_dir, 'uploads.json')
+            transfers_file = self.uploads_file_name
             callback = self.save_uploads_callback
         else:
-            transfers_file = os.path.join(self.config.data_dir, 'downloads.json')
+            transfers_file = self.downloads_file_name
             callback = self.save_downloads_callback
 
         write_file_and_backup(transfers_file, callback)
