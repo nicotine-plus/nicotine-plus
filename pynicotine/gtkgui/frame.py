@@ -656,254 +656,7 @@ class NicotineFrame:
         self.uploads.conn_close()
         self.downloads.conn_close()
 
-    """ Actions """
-
-    def set_up_actions(self):
-
-        # Menu Button
-
-        action = Gio.SimpleAction.new("menu", None)
-        action.connect("activate", self.on_menu)
-        self.application.add_action(action)
-
-        # File
-
-        self.connect_action = Gio.SimpleAction.new("connect", None)
-        self.connect_action.connect("activate", self.on_connect)
-        self.application.add_action(self.connect_action)
-        self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
-
-        self.disconnect_action = Gio.SimpleAction.new("disconnect", None)
-        self.disconnect_action.connect("activate", self.on_disconnect)
-        self.application.add_action(self.disconnect_action)
-        self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
-
-        state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
-        self.away_action.connect("change-state", self.on_away)
-        self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
-
-        self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
-        self.check_privileges_action.connect("activate", self.on_check_privileges)
-        self.application.add_action(self.check_privileges_action)
-
-        self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
-        self.get_privileges_action.connect("activate", self.on_get_privileges)
-        self.application.add_action(self.get_privileges_action)
-
-        action = Gio.SimpleAction.new("fastconfigure", None)
-        action.connect("activate", self.on_fast_configure)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("settings", None)
-        action.connect("activate", self.on_settings)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
-
-        action = Gio.SimpleAction.new("quit", None)
-        action.connect("activate", self.on_quit)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.quit", ["<Primary>q"])
-
-        # View
-
-        state = config.sections["ui"]["dark_mode"]
-        self.dark_mode_action = Gio.SimpleAction.new_stateful("preferdarkmode", None, GLib.Variant.new_boolean(state))
-        self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
-        self.application.add_action(self.dark_mode_action)
-
-        state = config.sections["ui"]["header_bar"]
-        action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_header_bar)
-        self.MainWindow.add_action(action)
-
-        state = not config.sections["logging"]["logcollapsed"]
-        action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_log)
-        self.MainWindow.add_action(action)
-        self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
-
-        state = config.sections["logging"]["debug"]
-        action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_debug)
-        self.MainWindow.add_action(action)
-
-        state = not config.sections["columns"]["hideflags"]
-        action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_flags)
-        self.MainWindow.add_action(action)
-        self.application.set_accels_for_action("win.showflags", ["<Primary>u"])
-
-        state = config.sections["transfers"]["enabletransferbuttons"]
-        action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_transfer_buttons)
-        self.MainWindow.add_action(action)
-        self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
-
-        state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
-        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful(
-            "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
-        self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
-        self.MainWindow.add_action(self.toggle_buddy_list_action)
-
-        # Shares
-
-        action = Gio.SimpleAction.new("configureshares", None)
-        action.connect("activate", self.on_configure_shares)
-        self.application.add_action(action)
-
-        self.rescan_public_action = Gio.SimpleAction.new("publicrescan", None)
-        self.rescan_public_action.connect("activate", self.on_rescan)
-        self.application.add_action(self.rescan_public_action)
-        self.application.set_accels_for_action("app.publicrescan", ["<Shift><Primary>p"])
-
-        self.rescan_buddy_action = Gio.SimpleAction.new("buddyrescan", None)
-        self.rescan_buddy_action.connect("activate", self.on_buddy_rescan)
-        self.application.add_action(self.rescan_buddy_action)
-        self.application.set_accels_for_action("app.buddyrescan", ["<Shift><Primary>b"])
-
-        self.browse_public_shares_action = Gio.SimpleAction.new("browsepublicshares", None)
-        self.browse_public_shares_action.connect("activate", self.on_browse_public_shares)
-        self.application.add_action(self.browse_public_shares_action)
-
-        self.browse_buddy_shares_action = Gio.SimpleAction.new("browsebuddyshares", None)
-        self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
-        self.application.add_action(self.browse_buddy_shares_action)
-
-        # Modes
-
-        action = Gio.SimpleAction.new("chatrooms", None)
-        action.connect("activate", self.on_chat_rooms)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("privatechat", None)
-        action.connect("activate", self.on_private_chat)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("downloads", None)
-        action.connect("activate", self.on_downloads)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("uploads", None)
-        action.connect("activate", self.on_uploads)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("searchfiles", None)
-        action.connect("activate", self.on_search_files)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("userinfo", None)
-        action.connect("activate", self.on_user_info)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("userbrowse", None)
-        action.connect("activate", self.on_user_browse)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("interests", None)
-        action.connect("activate", self.on_interests)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("buddylist", None)
-        action.connect("activate", self.on_buddy_list)
-        self.MainWindow.add_action(action)
-
-        # Help
-
-        action = Gio.SimpleAction.new("keyboardshortcuts", None)
-        action.connect("activate", self.on_keyboard_shortcuts)
-        action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question"])
-
-        action = Gio.SimpleAction.new("transferstatistics", None)
-        action.connect("activate", self.on_transfer_statistics)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("checklatest", None)
-        action.connect("activate", self.on_check_latest)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("reportbug", None)
-        action.connect("activate", self.on_report_bug)
-        self.application.add_action(action)
-
-        action = Gio.SimpleAction.new("about", None)
-        action.connect("activate", self.on_about)
-        self.application.add_action(action)
-
-        # Debug Logging
-
-        state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugdownloads", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_downloads)
-        self.application.add_action(action)
-
-        state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debuguploads", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_uploads)
-        self.application.add_action(action)
-
-        state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_searches)
-        self.application.add_action(action)
-
-        state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugchat", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_chat)
-        self.application.add_action(action)
-
-        state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_connections)
-        self.application.add_action(action)
-
-        state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_messages)
-        self.application.add_action(action)
-
-        state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_transfers)
-        self.application.add_action(action)
-
-        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugmiscellaneous", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_debug_miscellaneous)
-        self.application.add_action(action)
-
-        # Status Bar
-
-        state = config.sections["transfers"]["usealtlimits"]
-        self.alt_speed_action = Gio.SimpleAction.new_stateful("altspeedlimit", None, GLib.Variant.new_boolean(state))
-        self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
-        self.application.add_action(self.alt_speed_action)
-
-    """ Menu """
-
-    def set_up_menu(self):
-
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "mainmenu.ui"))
-
-        self.HeaderMenu.set_menu_model(builder.get_object("mainmenu"))
-
-        builder = Gtk.Builder()
-        builder.set_translation_domain('nicotine')
-        builder.add_from_file(os.path.join(self.gui_dir, "ui", "menus", "menubar.ui"))
-
-        self.application.set_menubar(builder.get_object("menubar"))
-
-    def on_menu(self, *args):
-
-        if Gtk.get_major_version() == 4:
-            self.HeaderMenu.popup()
-        else:
-            self.HeaderMenu.set_active(not self.HeaderMenu.get_active())
+    """ Action Callbacks """
 
     # File
 
@@ -1309,6 +1062,415 @@ class NicotineFrame:
     def on_about_uri(self, widget, uri):
         open_uri(uri, self.MainWindow)
         return True
+
+    """ Actions """
+
+    def set_up_actions(self):
+
+        # Menu Button
+
+        action = Gio.SimpleAction.new("menu", None)
+        action.connect("activate", self.on_menu)
+        self.application.add_action(action)
+
+        # File
+
+        self.connect_action = Gio.SimpleAction.new("connect", None)
+        self.connect_action.connect("activate", self.on_connect)
+        self.application.add_action(self.connect_action)
+        self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
+
+        self.disconnect_action = Gio.SimpleAction.new("disconnect", None)
+        self.disconnect_action.connect("activate", self.on_disconnect)
+        self.application.add_action(self.disconnect_action)
+        self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
+
+        state = config.sections["server"]["away"]
+        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
+        self.away_action.connect("change-state", self.on_away)
+        self.application.add_action(self.away_action)
+        self.application.set_accels_for_action("app.away", ["<Primary>h"])
+
+        self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
+        self.check_privileges_action.connect("activate", self.on_check_privileges)
+        self.application.add_action(self.check_privileges_action)
+
+        self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
+        self.get_privileges_action.connect("activate", self.on_get_privileges)
+        self.application.add_action(self.get_privileges_action)
+
+        action = Gio.SimpleAction.new("fastconfigure", None)
+        action.connect("activate", self.on_fast_configure)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("settings", None)
+        action.connect("activate", self.on_settings)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
+
+        action = Gio.SimpleAction.new("quit", None)
+        action.connect("activate", self.on_quit)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.quit", ["<Primary>q"])
+
+        # View
+
+        state = config.sections["ui"]["dark_mode"]
+        self.dark_mode_action = Gio.SimpleAction.new_stateful("preferdarkmode", None, GLib.Variant.new_boolean(state))
+        self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
+        self.application.add_action(self.dark_mode_action)
+
+        state = config.sections["ui"]["header_bar"]
+        action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_header_bar)
+        self.MainWindow.add_action(action)
+
+        state = not config.sections["logging"]["logcollapsed"]
+        action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_log)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
+
+        state = config.sections["logging"]["debug"]
+        action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_debug)
+        self.MainWindow.add_action(action)
+
+        state = not config.sections["columns"]["hideflags"]
+        action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_flags)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showflags", ["<Primary>u"])
+
+        state = config.sections["transfers"]["enabletransferbuttons"]
+        action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_show_transfer_buttons)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
+
+        state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
+        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful(
+            "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
+        self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
+        self.MainWindow.add_action(self.toggle_buddy_list_action)
+
+        # Shares
+
+        action = Gio.SimpleAction.new("configureshares", None)
+        action.connect("activate", self.on_configure_shares)
+        self.application.add_action(action)
+
+        self.rescan_public_action = Gio.SimpleAction.new("publicrescan", None)
+        self.rescan_public_action.connect("activate", self.on_rescan)
+        self.application.add_action(self.rescan_public_action)
+        self.application.set_accels_for_action("app.publicrescan", ["<Shift><Primary>p"])
+
+        self.rescan_buddy_action = Gio.SimpleAction.new("buddyrescan", None)
+        self.rescan_buddy_action.connect("activate", self.on_buddy_rescan)
+        self.application.add_action(self.rescan_buddy_action)
+        self.application.set_accels_for_action("app.buddyrescan", ["<Shift><Primary>b"])
+
+        self.browse_public_shares_action = Gio.SimpleAction.new("browsepublicshares", None)
+        self.browse_public_shares_action.connect("activate", self.on_browse_public_shares)
+        self.application.add_action(self.browse_public_shares_action)
+
+        self.browse_buddy_shares_action = Gio.SimpleAction.new("browsebuddyshares", None)
+        self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
+        self.application.add_action(self.browse_buddy_shares_action)
+
+        # Modes
+
+        action = Gio.SimpleAction.new("chatrooms", None)
+        action.connect("activate", self.on_chat_rooms)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("privatechat", None)
+        action.connect("activate", self.on_private_chat)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("downloads", None)
+        action.connect("activate", self.on_downloads)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("uploads", None)
+        action.connect("activate", self.on_uploads)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("searchfiles", None)
+        action.connect("activate", self.on_search_files)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("userinfo", None)
+        action.connect("activate", self.on_user_info)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("userbrowse", None)
+        action.connect("activate", self.on_user_browse)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("interests", None)
+        action.connect("activate", self.on_interests)
+        self.MainWindow.add_action(action)
+
+        action = Gio.SimpleAction.new("buddylist", None)
+        action.connect("activate", self.on_buddy_list)
+        self.MainWindow.add_action(action)
+
+        # Help
+
+        action = Gio.SimpleAction.new("keyboardshortcuts", None)
+        action.connect("activate", self.on_keyboard_shortcuts)
+        action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question"])
+
+        action = Gio.SimpleAction.new("transferstatistics", None)
+        action.connect("activate", self.on_transfer_statistics)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("checklatest", None)
+        action.connect("activate", self.on_check_latest)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("reportbug", None)
+        action.connect("activate", self.on_report_bug)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("about", None)
+        action.connect("activate", self.on_about)
+        self.application.add_action(action)
+
+        # Debug Logging
+
+        state = ("download" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugdownloads", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_downloads)
+        self.application.add_action(action)
+
+        state = ("upload" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debuguploads", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_uploads)
+        self.application.add_action(action)
+
+        state = ("search" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_searches)
+        self.application.add_action(action)
+
+        state = ("chat" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugchat", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_chat)
+        self.application.add_action(action)
+
+        state = ("connection" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_connections)
+        self.application.add_action(action)
+
+        state = ("message" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_messages)
+        self.application.add_action(action)
+
+        state = ("transfer" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_transfers)
+        self.application.add_action(action)
+
+        state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
+        action = Gio.SimpleAction.new_stateful("debugmiscellaneous", None, GLib.Variant.new_boolean(state))
+        action.connect("change-state", self.on_debug_miscellaneous)
+        self.application.add_action(action)
+
+        # Status Bar
+
+        state = config.sections["transfers"]["usealtlimits"]
+        self.alt_speed_action = Gio.SimpleAction.new_stateful("altspeedlimit", None, GLib.Variant.new_boolean(state))
+        self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
+        self.application.add_action(self.alt_speed_action)
+
+    """ Primary Menus """
+
+    def add_connect_section(self, menu):
+
+        menu.setup(
+            ("#" + _("_Connect"), "app.connect"),
+            ("#" + _("_Disconnect"), "app.disconnect"),
+            ("", None)
+        )
+
+    def add_away_section(self, menu):
+
+        menu.setup(
+            ("#" + _("_Away"), "app.away"),
+            ("", None)
+        )
+
+    def add_privileges_section(self, menu):
+
+        menu.setup(
+            ("#" + _("_Check _Privileges"), "app.checkprivileges"),
+            ("#" + _("_Get _Privileges"), "app.getprivileges"),
+            ("", None)
+        )
+
+    def add_preferences_item(self, menu):
+        menu.setup(("#" + _("_Preferences"), "app.settings"))
+
+    def add_quit_item(self, menu):
+        menu.setup(("#" + _("_Quit"), "app.quit"))
+
+    def create_file_menu(self):
+
+        menu = PopupMenu(self)
+        self.add_connect_section(menu)
+        self.add_away_section(menu)
+        self.add_privileges_section(menu)
+        self.add_preferences_item(menu)
+
+        menu.setup(("", None))
+
+        self.add_quit_item(menu)
+
+        return menu
+
+    def create_view_menu(self):
+
+        menu = PopupMenu(self)
+        menu.setup(
+            ("$" + _("Prefer Dark _Mode"), "app.preferdarkmode"),
+            ("$" + _("Use _Header Bar"), "win.showheaderbar"),
+            ("$" + _("Show _Flag Columns in User Lists"), "win.showflags"),
+            ("$" + _("Show _Buttons in Transfer Tabs"), "win.showtransferbuttons"),
+            ("", None),
+            ("$" + _("Show _Log Pane"), "win.showlog"),
+            ("$" + _("Show _Debug Log Controls"), "win.showdebug"),
+            ("", None),
+            ("O" + _("Buddylist in Separate Tab"), "win.togglebuddylist", "tab"),
+            ("O" + _("Buddylist in Chatrooms"), "win.togglebuddylist", "chatrooms"),
+            ("O" + _("Buddylist Always Visible"), "win.togglebuddylist", "always")
+        )
+
+        return menu
+
+    def add_public_scan_section(self, menu):
+
+        menu.setup(
+            ("#" + _("_Rescan Public Shares"), "app.publicrescan"),
+            ("#" + _("_Browse Public Shares"), "app.browsepublicshares"),
+            ("", None)
+        )
+
+    def add_buddy_scan_section(self, menu):
+
+        menu.setup(
+            ("#" + _("Rescan B_uddy Shares"), "app.buddyrescan"),
+            ("#" + _("Bro_wse Buddy Shares"), "app.browsebuddyshares"),
+            ("", None)
+        )
+
+    def create_shares_menu(self):
+
+        menu = PopupMenu(self)
+        menu.setup(
+            ("#" + _("_Configure Shares"), "app.configureshares"),
+            ("", None)
+        )
+        self.add_public_scan_section(menu)
+        self.add_buddy_scan_section(menu)
+
+        return menu
+
+    def create_modes_menu(self):
+
+        menu = PopupMenu(self)
+        menu.setup(
+            ("#" + _("_Search Files"), "win.searchfiles"),
+            ("#" + _("_Downloads"), "win.downloads"),
+            ("#" + _("_Uploads"), "win.uploads"),
+            ("#" + _("User _Browse"), "win.userbrowse"),
+            ("#" + _("User I_nfo"), "win.userinfo"),
+            ("#" + _("_Private Chat"), "win.privatechat"),
+            ("#" + _("Buddy _List"), "win.buddylist"),
+            ("#" + _("_Chat Rooms"), "win.chatrooms"),
+            ("#" + _("_Interests"), "win.interests"),
+            ("", None),
+            ("#" + _("_Fast Configure"), "app.fastconfigure"),
+            ("#" + _("_Transfer Statistics"), "app.transferstatistics")
+        )
+
+        return menu
+
+    def add_about_item(self, menu):
+        menu.setup(("#" + _("About _Nicotine+"), "app.about"))
+
+    def create_help_menu(self):
+
+        menu = PopupMenu(self)
+        menu.setup(
+            ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
+            ("#" + _("Check _Latest Version"), "app.checklatest"),
+            ("#" + _("Report a _Bug"), "app.reportbug")
+        )
+
+        return menu
+
+    def create_hamburger_menu(self):
+        """ Menu button menu (header bar enabled) """
+
+        menu = PopupMenu(self)
+        self.add_connect_section(menu)
+        self.add_away_section(menu)
+        self.add_privileges_section(menu)
+
+        menu.setup(
+            (">" + _("_View"), self.create_view_menu()),
+            (">" + _("_Modes"), self.create_modes_menu()),
+            ("", None)
+        )
+
+        self.add_public_scan_section(menu)
+        self.add_buddy_scan_section(menu)
+
+        menu.setup((">" + _("_Help"), self.create_help_menu()))
+        self.add_preferences_item(menu)
+        self.add_about_item(menu)
+        self.add_quit_item(menu)
+
+        return menu
+
+    def create_menu_bar(self):
+        """ Classic menu bar (header bar disabled) """
+
+        help_menu = self.create_help_menu()
+        help_menu.setup(("", None))
+        self.add_about_item(help_menu)
+
+        menu = PopupMenu(self)
+        menu.setup(
+            (">" + _("_File"), self.create_file_menu()),
+            (">" + _("_View"), self.create_view_menu()),
+            (">" + _("_Shares"), self.create_shares_menu()),
+            (">" + _("_Modes"), self.create_modes_menu()),
+            (">" + _("_Help"), help_menu)
+        )
+
+        return menu
+
+    def set_up_menu(self):
+
+        menu = self.create_hamburger_menu()
+        self.HeaderMenu.set_menu_model(menu)
+
+        menu = self.create_menu_bar()
+        self.application.set_menubar(menu)
+
+    def on_menu(self, *args):
+
+        if Gtk.get_major_version() == 4:
+            self.HeaderMenu.popup()
+        else:
+            self.HeaderMenu.set_active(not self.HeaderMenu.get_active())
 
     """ Headerbar/toolbar """
 

@@ -125,29 +125,48 @@ class PopupMenu(Gio.Menu):
         return action
 
     def create_menu_item(self, item):
+        """
+        Types of menu items:
+            > - submenu
+            $ - boolean
+            O - choice
+            # - regular
+        """
 
         submenu = False
-        stateful = False
+        boolean = False
+        choice = False
 
-        if item[0][0] == ">":
+        if item[0][0] in (">", "$", "#", "O"):
             label = item[0][1:]
-            submenu = True
-
-        elif item[0][0] == "$":
-            label = item[0][1:]
-            stateful = True
-
-        elif item[0][0] == "#":
-            label = item[0][1:]
-
         else:
             label = "dummy"
 
-        action_id = (label + self.popup_id).replace(" ", "").lower().translate(
-            str.maketrans(dict.fromkeys(string.punctuation)))
-        action = self.create_action(action_id, stateful)
+        if item[0][0] == ">":
+            submenu = True
 
-        menuitem = Gio.MenuItem.new(label, "win." + action_id)
+        elif item[0][0] == "$":
+            boolean = True
+
+        elif item[0][0] == "O":
+            choice = True
+
+        if isinstance(item[1], str):
+            # Action name provided, don't create action here
+            action_id = item[1]
+            action = None
+
+        else:
+            action_id = "win." + (label + self.popup_id).replace(" ", "").lower().translate(
+                str.maketrans(dict.fromkeys(string.punctuation)))
+
+            action = self.create_action(action_id[4:], (boolean or choice))
+
+        if choice and len(item) > 2 and isinstance(item[2], str):
+            # Choice target name
+            action_id = action_id + "::" + item[2]
+
+        menuitem = Gio.MenuItem.new(label, action_id)
 
         if item[0] == "USER":
             self.useritem = menuitem
@@ -161,8 +180,9 @@ class PopupMenu(Gio.Menu):
                 # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
                 menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
 
-        elif item[1]:
-            action_name = "change-state" if stateful else "activate"
+        elif action and item[1]:
+            # Callback
+            action_name = "change-state" if boolean or choice else "activate"
             action.connect(action_name, *item[1:])
 
         self.items[label] = menuitem
