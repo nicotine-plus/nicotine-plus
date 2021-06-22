@@ -302,22 +302,6 @@ class UserList:
             store.set_value(iterator, 9, comments)
             self.save_user_list()
 
-    def conn_close(self):
-
-        for i in self.usersmodel:
-            iterator = i.iter
-
-            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)))
-            self.usersmodel.set_value(iterator, 3, "")
-            self.usersmodel.set_value(iterator, 4, "")
-            self.usersmodel.set_value(iterator, 10, 0)
-            self.usersmodel.set_value(iterator, 11, 0)
-            self.usersmodel.set_value(iterator, 12, 0)
-
-            if not self.usersmodel.get_value(iterator, 8):
-                user = self.usersmodel.get_value(iterator, 2)
-                self.set_last_seen(user)
-
     def get_selected_username(self, treeview):
 
         model, iterator = treeview.get_selection().get_selected()
@@ -583,3 +567,19 @@ class UserList:
 
     def on_remove_user(self, *args):
         self.remove_from_list(self.popup_menu.get_user())
+
+    def server_disconnect(self):
+
+        for i in self.usersmodel:
+            iterator = i.iter
+
+            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)))
+            self.usersmodel.set_value(iterator, 3, "")
+            self.usersmodel.set_value(iterator, 4, "")
+            self.usersmodel.set_value(iterator, 10, 0)
+            self.usersmodel.set_value(iterator, 11, 0)
+            self.usersmodel.set_value(iterator, 12, 0)
+
+            if not self.usersmodel.get_value(iterator, 8):
+                user = self.usersmodel.get_value(iterator, 2)
+                self.set_last_seen(user)

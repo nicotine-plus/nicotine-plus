@@ -219,8 +219,10 @@ class WishList:
 
         return True
 
-    def conn_close(self):
+    def server_disconnect(self):
+
         self.disconnected = True
+        self.interval = 0
 
         if self.timer is not None:
             GLib.source_remove(self.timer)

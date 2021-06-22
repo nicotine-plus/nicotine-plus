@@ -273,12 +273,12 @@ class PrivateChats(IconNotebook):
             if isinstance(user, str) and user not in self.users:
                 self.send_message(user)
 
-    def conn_close(self):
+    def server_disconnect(self):
 
         self.connected = False
 
         for user in self.users:
-            self.users[user].conn_close()
+            self.users[user].server_disconnect()
             tab = self.users[user]
 
             self.set_user_status(tab.Main, user, 0)
@@ -393,7 +393,7 @@ class PrivateChat:
         append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.update_tags()
 
-    def conn_close(self):
+    def server_disconnect(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1

@@ -158,7 +158,7 @@ class UserTabs(IconNotebook):
             # Get notified of user status
             self.frame.np.watch_user(user)
 
-    def conn_close(self):
+    def server_disconnect(self):
 
         for user in self.users:
             tab = self.users[user]

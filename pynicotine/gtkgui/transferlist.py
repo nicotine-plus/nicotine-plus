@@ -79,7 +79,7 @@ class TransferList:
         self.key_controller = connect_key_press_event(self.TransferList, self.on_key_press_event)
 
         self.last_ui_update = self.last_save = 0
-        self.list = []
+        self.transfer_list = None
         self.users = {}
         self.paths = {}
 
@@ -199,9 +199,9 @@ class TransferList:
 
         self.update_visuals()
 
-    def init_interface(self, list):
+    def init_interface(self, transfer_list):
 
-        self.list = list
+        self.transfer_list = transfer_list
         self.TransferList.set_sensitive(True)
         self.update()
 
@@ -221,10 +221,9 @@ class TransferList:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="transfersfont")
 
-    def conn_close(self):
-
+    def server_disconnect(self):
         self.TransferList.set_sensitive(False)
-        self.list = []
+        self.transfer_list = None
         self.clear()
 
     def select_transfers(self):
@@ -319,8 +318,8 @@ class TransferList:
         if transfer is not None:
             self.update_specific(transfer)
 
-        elif self.list is not None:
-            for transfer in reversed(self.list):
+        elif self.transfer_list is not None:
+            for transfer in reversed(self.transfer_list):
                 self.update_specific(transfer)
 
         if forceupdate or finished or (curtime - self.last_ui_update) > 1:
@@ -663,7 +662,7 @@ class TransferList:
             del self.frame.np.transfers.transfer_request_times[transfer]
 
         if not cleartreeviewonly:
-            self.list.remove(transfer)
+            self.transfer_list.remove(transfer)
 
         if transfer.iterator is not None:
             self.transfersmodel.remove(transfer.iterator)
@@ -672,7 +671,7 @@ class TransferList:
 
     def clear_transfers(self, status):
 
-        for transfer in self.list.copy():
+        for transfer in self.transfer_list.copy():
             if transfer.status in status:
                 self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
                 self.remove_specific(transfer)
@@ -685,8 +684,8 @@ class TransferList:
         self.selected_users = set()
         self.transfersmodel.clear()
 
-        if self.list is not None:
-            for transfer in self.list:
+        if self.transfer_list is not None:
+            for transfer in self.transfer_list:
                 transfer.iterator = None
 
     def add_popup_menu_user(self, popup, user):

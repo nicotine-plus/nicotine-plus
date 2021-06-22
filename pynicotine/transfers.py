@@ -2380,11 +2380,14 @@ class Transfers:
 
         write_file_and_backup(transfers_file, callback)
 
-    def disconnect(self):
+    def server_disconnect(self):
 
         self.abort_transfers()
         self.save_transfers("downloads")
         self.save_transfers("uploads")
+
+        self.downloads.clear()
+        self.uploads.clear()
 
 
 class Statistics:

@@ -570,7 +570,7 @@ class NicotineFrame:
     def network_callback(self, msgs):
         GLib.idle_add(self.np.network_event, msgs)
 
-    def conn_close(self, conn, addr):
+    def server_disconnect(self):
 
         if self.awaytimerid is not None:
             self.remove_away_timer(self.awaytimerid)
@@ -579,10 +579,10 @@ class NicotineFrame:
         if self.autoaway:
             self.autoaway = self.np.away = False
 
-        self.uploads.conn_close()
-        self.downloads.conn_close()
-        self.searches.wish_list.conn_close()
-        self.userlist.conn_close()
+        self.uploads.server_disconnect()
+        self.downloads.server_disconnect()
+        self.searches.server_disconnect()
+        self.userlist.server_disconnect()
 
         if self.np.shutdown:
             # Application is shutting down, stop here
@@ -593,11 +593,10 @@ class NicotineFrame:
 
         self.set_user_status(_("Offline"))
 
-        self.searches.wish_list.interval = 0
-        self.chatrooms.conn_close()
-        self.privatechats.conn_close()
-        self.userinfo.conn_close()
-        self.userbrowse.conn_close()
+        self.chatrooms.server_disconnect()
+        self.privatechats.server_disconnect()
+        self.userinfo.server_disconnect()
+        self.userbrowse.server_disconnect()
 
         # Reset transfer stats (speed, total files/users)
         self.update_bandwidth()
@@ -647,9 +646,6 @@ class NicotineFrame:
         self.tray_icon.set_connected(False)
 
         self.set_user_status(_("Offline"))
-
-        self.uploads.conn_close()
-        self.downloads.conn_close()
 
     """ Action Callbacks """
 

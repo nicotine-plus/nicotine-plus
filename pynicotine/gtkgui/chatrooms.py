@@ -407,12 +407,12 @@ class ChatRooms(IconNotebook):
             for room in self.joinedrooms:
                 self.frame.RoomSearchCombo.append_text(room)
 
-    def conn_close(self):
+    def server_disconnect(self):
 
         self.roomlist.clear()
 
         for room in self.joinedrooms.values():
-            room.conn_close()
+            room.server_disconnect()
 
         self.autojoin = 1
 
@@ -1109,7 +1109,7 @@ class ChatRoom:
     def save_columns(self):
         save_columns("chat_room", self.UserList.get_columns(), subpage=self.room)
 
-    def conn_close(self):
+    def server_disconnect(self):
 
         append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
         self.usersmodel.clear()

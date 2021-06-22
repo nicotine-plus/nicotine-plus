@@ -899,46 +899,47 @@ Error: %(error)s""", {
             }
         )
 
+    def server_disconnect(self, addr):
+
+        log.add(
+            _("Disconnected from server %(host)s:%(port)s"), {
+                'host': addr[0],
+                'port': addr[1]
+            })
+        userchoice = self.manualdisconnect
+
+        # Inform threads we've disconnected
+        self.exit.set()
+
+        if not self.manualdisconnect:
+            self.set_server_timer()
+        else:
+            self.manualdisconnect = False
+
+        self.active_server_conn = None
+
+        # Clean up connections
+        self.peerconns.clear()
+        self.out_indirect_conn_request_times.clear()
+
+        self.watchedusers.clear()
+        self.shares.set_connected(False)
+
+        if self.transfers is not None:
+            self.transfers.server_disconnect()
+
+        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = self.userlist = None
+        self.pluginhandler.server_disconnect_notification(userchoice)
+
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def closed_connection(self, conn, addr, error=None):
 
         if conn == self.active_server_conn:
-
-            log.add(
-                _("Disconnected from server %(host)s:%(port)s"), {
-                    'host': addr[0],
-                    'port': addr[1]
-                }
-            )
-            userchoice = self.manualdisconnect
-
-            # Inform threads we've disconnected
-            self.exit.set()
-
-            if not self.manualdisconnect:
-                self.set_server_timer()
-            else:
-                self.manualdisconnect = False
-
-            self.active_server_conn = None
-
-            # Clean up connections
-            self.peerconns.clear()
-            self.out_indirect_conn_request_times.clear()
-
-            self.watchedusers.clear()
-            self.shares.set_connected(False)
-
-            if self.transfers is not None:
-                self.transfers.disconnect()
-
-            self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = self.userlist = None
-            self.pluginhandler.server_disconnect_notification(userchoice)
-
-            if self.ui_callback:
-                self.ui_callback.conn_close(conn, addr)
+            self.server_disconnect(addr)
 
         else:
-
             """ A peer connection has died, remove it """
 
             for i in self.peerconns:

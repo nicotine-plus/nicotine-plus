@@ -266,6 +266,9 @@ class Searches(IconNotebook):
 
         self.wish_list.update_visuals()
 
+    def server_disconnect(self):
+        self.wish_list.server_disconnect()
+
     def save_columns(self):
         """ Save the treeview state of the currently selected tab """
 
