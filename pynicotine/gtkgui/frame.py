@@ -2273,14 +2273,6 @@ class NicotineFrame:
         else:
             return self.images["offline"]
 
-    def has_user_flag(self, user, country):
-
-        if not self.get_flag_image(country):
-            return
-
-        self.chatrooms.set_user_flag(user, country)
-        self.userlist.set_user_flag(user, country)
-
     def on_settings_downloads(self, *args):
         self.on_settings(page='Downloads')
 

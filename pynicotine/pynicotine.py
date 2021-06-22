@@ -695,8 +695,11 @@ Error: %(error)s""", {
         if country_code == "-":
             country_code = ""
 
-        if self.ui_callback:
-            self.ui_callback.has_user_flag(user, country_code)
+        if self.chatrooms is not None:
+            self.chatrooms.set_user_flag(user, country_code)
+
+        if self.userlist is not None:
+            self.userlist.set_user_flag(user, country_code)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
