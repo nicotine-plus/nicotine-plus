@@ -1260,16 +1260,10 @@ Error: %(error)s""", {
                     self.userlist) = self.ui_callback.init_interface()
                 self.transfers.set_transfer_views(downloads, uploads)
 
-            if msg.banner != "":
+            if msg.banner:
                 log.add(msg.banner)
 
-            for thing in config.sections["interests"]["likes"]:
-                if thing and isinstance(thing, str):
-                    self.queue.append(slskmessages.AddThingILike(thing))
-
-            for thing in config.sections["interests"]["dislikes"]:
-                if thing and isinstance(thing, str):
-                    self.queue.append(slskmessages.AddThingIHate(thing))
+            self.interests.server_login()
 
             self.queue.append(slskmessages.CheckPrivileges())
 

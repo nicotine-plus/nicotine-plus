@@ -28,6 +28,16 @@ class Interests:
         self.queue = queue
         self.ui_callback = ui_callback
 
+    def server_login(self):
+
+        for thing in self.config.sections["interests"]["likes"]:
+            if thing and isinstance(thing, str):
+                self.queue.append(slskmessages.AddThingILike(thing))
+
+        for thing in self.config.sections["interests"]["dislikes"]:
+            if thing and isinstance(thing, str):
+                self.queue.append(slskmessages.AddThingIHate(thing))
+
     def add_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):
