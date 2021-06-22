@@ -152,7 +152,7 @@ class UserTabs(IconNotebook):
         for i in self.users.values():
             i.update_visuals()
 
-    def login(self):
+    def server_login(self):
 
         for user in self.users:
             # Get notified of user status

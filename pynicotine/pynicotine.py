@@ -1244,8 +1244,8 @@ Error: %(error)s""", {
             self.queue.append(slskmessages.SetStatus((not self.away) + 1))
             self.watch_user(config.sections["server"]["login"])
 
-            self.transfers = transfers.Transfers(config, self.peerconns, self.queue, self, self.users,
-                                                 self.network_callback, self.pluginhandler)
+            self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
+                                                 self.network_callback, self.ui_callback, self.pluginhandler)
             self.shares.set_connected(True)
 
             if msg.ip_address is not None:
@@ -1254,9 +1254,7 @@ Error: %(error)s""", {
             self.userlist.server_login()
 
             if self.ui_callback:
-                (self.privatechat, self.chatrooms, self.userinfo,
-                    self.userbrowse, downloads, uploads) = self.ui_callback.init_interface()
-                self.transfers.set_transfer_views(downloads, uploads)
+                (self.privatechat, self.chatrooms, self.userinfo, self.userbrowse) = self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)

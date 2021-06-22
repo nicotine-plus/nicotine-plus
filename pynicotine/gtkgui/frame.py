@@ -402,7 +402,7 @@ class NicotineFrame:
 
     """ Init UI """
 
-    def init_interface(self):
+    def server_login(self):
 
         if not self.np.away:
             self.set_user_status(_("Online"))
@@ -419,15 +419,13 @@ class NicotineFrame:
         self.set_widget_online_status(True)
         self.tray_icon.set_away(self.np.away)
 
-        self.uploads.init_interface(self.np.transfers.uploads)
-        self.downloads.init_interface(self.np.transfers.downloads)
+        self.uploads.server_login()
+        self.downloads.server_login()
+        self.privatechats.server_login()
+        self.userbrowse.server_login()
+        self.userinfo.server_login()
 
-        self.privatechats.login()
-        self.userbrowse.login()
-        self.userinfo.login()
-
-        return (self.privatechats, self.chatrooms, self.userinfo, self.userbrowse,
-                self.downloads, self.uploads)
+        return (self.privatechats, self.chatrooms, self.userinfo, self.userbrowse)
 
     def init_spell_checker(self):
 

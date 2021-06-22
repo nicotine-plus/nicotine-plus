@@ -252,12 +252,12 @@ class PrivateChats(IconNotebook):
 
         self.remove_page(tab.Main)
 
-    def login(self):
+    def server_login(self):
 
         self.connected = True
 
         for user in self.users:
-            self.users[user].login()
+            self.users[user].server_login()
 
             # Get notified of user status
             self.frame.np.watch_user(user)
@@ -384,7 +384,7 @@ class PrivateChat:
                 append_line(self.ChatScroll, line, self.tag_hilite, timestamp_format="", username=self.user,
                             usertag=self.tag_hilite, scroll=False)
 
-    def login(self):
+    def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.update_tags()

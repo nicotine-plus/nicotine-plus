@@ -108,12 +108,13 @@ class TransferTimeout:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, config, peerconns, queue, eventprocessor, users, network_callback, pluginhandler=None):
+    def __init__(self, eventprocessor, config, peerconns, queue, users,
+                 network_callback, ui_callback=None, pluginhandler=None):
 
+        self.eventprocessor = eventprocessor
         self.config = config
         self.peerconns = peerconns
         self.queue = queue
-        self.eventprocessor = eventprocessor
         self.downloads = deque()
         self.uploads = deque()
         self.privilegedusers = set()
@@ -131,6 +132,12 @@ class Transfers:
         self.pluginhandler = pluginhandler
         self.downloadsview = None
         self.uploadsview = None
+
+        if hasattr(ui_callback, "downloads"):
+            self.downloadsview = ui_callback.downloads
+
+        if hasattr(ui_callback, "uploads"):
+            self.uploadsview = ui_callback.uploads
 
         # Check for transfer timeouts
         self.transfer_request_times = {}
@@ -151,10 +158,6 @@ class Transfers:
         thread.name = "UploadQueueTimer"
         thread.daemon = True
         thread.start()
-
-    def set_transfer_views(self, downloads, uploads):
-        self.downloadsview = downloads
-        self.uploadsview = uploads
 
     """ Load Transfers """
 

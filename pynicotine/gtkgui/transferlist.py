@@ -199,11 +199,17 @@ class TransferList:
 
         self.update_visuals()
 
-    def init_interface(self, transfer_list):
+    def server_login(self):
 
-        self.transfer_list = transfer_list
+        self.transfer_list = getattr(self.frame.np.transfers, "%ss" % self.type)
         self.TransferList.set_sensitive(True)
         self.update()
+
+    def server_disconnect(self):
+
+        self.transfer_list = None
+        self.TransferList.set_sensitive(False)
+        self.clear()
 
     def rebuild_transfers(self):
 
@@ -220,11 +226,6 @@ class TransferList:
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="transfersfont")
-
-    def server_disconnect(self):
-        self.TransferList.set_sensitive(False)
-        self.transfer_list = None
-        self.clear()
 
     def select_transfers(self):
 

@@ -36,7 +36,7 @@ class TransfersTest(unittest.TestCase):
 
         self.config.load_config()
 
-        self.transfers = Transfers(self.config, Mock(), deque(), Mock(), {}, Mock())
+        self.transfers = Transfers(Mock(), self.config, Mock(), deque(), {}, Mock())
 
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
