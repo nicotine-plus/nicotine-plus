@@ -108,8 +108,7 @@ class TransferTimeout:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, config, peerconns, queue, eventprocessor, users, network_callback,
-                 notifications=None, pluginhandler=None):
+    def __init__(self, config, peerconns, queue, eventprocessor, users, network_callback, pluginhandler=None):
 
         self.config = config
         self.peerconns = peerconns
@@ -129,7 +128,6 @@ class Transfers:
 
         self.users = users
         self.network_callback = network_callback
-        self.notifications = notifications
         self.pluginhandler = pluginhandler
         self.downloadsview = None
         self.uploadsview = None
@@ -1893,8 +1891,8 @@ class Transfers:
 
         config = self.config.sections
 
-        if self.notifications and config["notifications"]["notification_popup_file"]:
-            self.notifications.new_notification(
+        if config["notifications"]["notification_popup_file"]:
+            self.eventprocessor.notifications.new_text_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     'user': user,
                     'file': filepath.rsplit(os.sep, 1)[1]
@@ -1926,8 +1924,8 @@ class Transfers:
         if not folderpath:
             return
 
-        if self.notifications and config["notifications"]["notification_popup_folder"]:
-            self.notifications.new_notification(
+        if config["notifications"]["notification_popup_folder"]:
+            self.eventprocessor.notifications.new_text_notification(
                 _("%(folder)s downloaded from %(user)s") % {
                     'user': user,
                     'folder': folderpath
@@ -1946,8 +1944,8 @@ class Transfers:
         self.abort_transfer(transfer)
         transfer.status = "Download folder error"
 
-        if self.notifications:
-            self.notifications.new_notification(_("OS error: %s") % error, title=_("Download folder error"))
+        self.eventprocessor.notifications.new_text_notification(
+            _("OS error: %s") % error, title=_("Download folder error"))
 
     def download_finished(self, file, i):
 

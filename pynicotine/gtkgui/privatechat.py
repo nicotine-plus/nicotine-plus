@@ -104,8 +104,7 @@ class PrivateChats(IconNotebook):
                 GLib.idle_add(grab_widget_focus, tab.ChatLine)
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
-                if user in self.frame.hilites["private"]:
-                    self.frame.notifications.clear("private", tab.user)
+                self.frame.notifications.clear("private", tab.user)
 
     def clear_notifications(self):
 
@@ -117,8 +116,7 @@ class PrivateChats(IconNotebook):
         for user, tab in list(self.users.items()):
             if tab.Main == page:
                 # Remove hilite
-                if user in self.frame.hilites["private"]:
-                    self.frame.notifications.clear("private", tab.user)
+                self.frame.notifications.clear("private", tab.user)
 
     def get_user_status(self, msg):
 
@@ -196,7 +194,7 @@ class PrivateChats(IconNotebook):
         self.frame.notifications.add("private", user)
 
         if config.sections["notifications"]["notification_popup_private_message"]:
-            self.frame.notifications.new_notification(
+            self.frame.notifications.new_text_notification(
                 text,
                 title=_("Private message from %s") % user,
                 priority=Gio.NotificationPriority.HIGH
@@ -246,9 +244,7 @@ class PrivateChats(IconNotebook):
 
     def remove_tab(self, tab):
 
-        if tab.user in self.frame.hilites["private"]:
-            self.frame.notifications.clear("private", tab.user)
-
+        self.frame.notifications.clear("private", tab.user)
         del self.users[tab.user]
 
         if tab.user in config.sections["privatechat"]["users"]:
@@ -486,10 +482,10 @@ class PrivateChat:
             self.send_message("[Auto-Message] %s" % autoreply)
             self.autoreplied = True
 
-        self.frame.notifications.new_tts(
-            config.sections["ui"]["speechprivate"] % {
-                "user": self.frame.notifications.tts_clean(self.user),
-                "message": self.frame.notifications.tts_clean(speech)
+        self.frame.np.notifications.new_tts(
+            config.sections["ui"]["speechprivate"], {
+                "user": self.user,
+                "message": speech
             }
         )
 

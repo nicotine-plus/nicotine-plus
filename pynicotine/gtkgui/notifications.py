@@ -30,7 +30,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
-from pynicotine.utils import execute_command
 
 
 class Notifications:
@@ -39,28 +38,16 @@ class Notifications:
 
         self.frame = frame
         self.application = Gio.Application.get_default()
-        self.tts = []
-        self.tts_playing = False
-        self.continue_playing = False
 
         if sys.platform == "win32":
             self.win_notification = WinNotify(self.frame.tray_icon)
 
     def add(self, location, user, room=None):
 
-        if location == "rooms" and room is not None and user is not None:
-            if room not in self.frame.hilites[location]:
-                self.frame.hilites[location].append(room)
-                self.frame.tray_icon.set_image()
+        item = room if location == "rooms" else user
 
-        elif location == "private":
-            if user in self.frame.hilites[location]:
-                self.frame.hilites[location].remove(user)
-                self.frame.hilites[location].append(user)
-
-            elif user not in self.frame.hilites[location]:
-                self.frame.hilites[location].append(user)
-                self.frame.tray_icon.set_image()
+        if self.frame.np.notifications.add_hilite_item(location, item):
+            self.frame.tray_icon.set_image()
 
         if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
                 and not self.frame.MainWindow.is_active()):
@@ -70,25 +57,18 @@ class Notifications:
 
     def clear(self, location, user=None, room=None):
 
-        if location == "rooms" and room is not None:
-            if room in self.frame.hilites["rooms"]:
-                self.frame.hilites["rooms"].remove(room)
+        item = room if location == "rooms" else user
 
-            self.set_title(room)
-
-        elif location == "private":
-            if user in self.frame.hilites["private"]:
-                self.frame.hilites["private"].remove(user)
-
-            self.set_title(user)
-
-        self.frame.tray_icon.set_image()
+        if self.frame.np.notifications.remove_hilite_item(location, item):
+            self.set_title(item)
+            self.frame.tray_icon.set_image()
 
     def set_title(self, user=None):
 
         app_name = GLib.get_application_name()
 
-        if not self.frame.hilites["rooms"] and not self.frame.hilites["private"]:
+        if (not self.frame.np.notifications.chat_hilites["rooms"]
+                and not self.frame.np.notifications.chat_hilites["private"]):
             # Reset Title
             self.frame.MainWindow.set_title(app_name)
             return
@@ -96,17 +76,17 @@ class Notifications:
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if self.frame.hilites["private"]:
+        if self.frame.np.notifications.chat_hilites["private"]:
             # Private Chats have a higher priority
-            user = self.frame.hilites["private"][-1]
+            user = self.frame.np.notifications.chat_hilites["private"][-1]
 
             self.frame.MainWindow.set_title(
                 app_name + " - " + _("Private Message from %(user)s") % {'user': user}
             )
 
-        elif self.frame.hilites["rooms"]:
+        elif self.frame.np.notifications.chat_hilites["rooms"]:
             # Allow for the possibility the username is not available
-            room = self.frame.hilites["rooms"][-1]
+            room = self.frame.np.notifications.chat_hilites["rooms"][-1]
 
             if user is None:
                 self.frame.MainWindow.set_title(
@@ -117,57 +97,7 @@ class Notifications:
                     app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                 )
 
-    def new_tts(self, message):
-
-        if not config.sections["ui"]["speechenabled"]:
-            return
-
-        if message in self.tts:
-            return
-
-        self.tts.append(message)
-
-        if self.tts_playing:
-            # Avoid spinning up useless threads
-            self.continue_playing = True
-            return
-
-        thread = threading.Thread(target=self.play_tts)
-        thread.name = "TTS"
-        thread.daemon = True
-        thread.start()
-
-    def play_tts(self):
-
-        for message in self.tts[:]:
-            self.tts_player(message)
-
-            if message in self.tts:
-                self.tts.remove(message)
-
-        self.tts_playing = False
-        if self.continue_playing:
-            self.continue_playing = False
-            self.play_tts()
-
-    def tts_clean(self, message):
-
-        for i in ["_", "[", "]", "(", ")"]:
-            message = message.replace(i, " ")
-
-        return message
-
-    def tts_player(self, message):
-
-        self.tts_playing = True
-
-        try:
-            execute_command(config.sections["ui"]["speechcommand"], message, background=False)
-
-        except Exception as error:
-            log.add(_("Text-to-speech for message failed: %s"), str(error))
-
-    def new_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
+    def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
         if title is None:
             title = GLib.get_application_name()

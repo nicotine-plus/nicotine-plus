@@ -397,7 +397,9 @@ class TrayIcon:
             self.tray_status["status"] = status
 
         # Check for hilites, and display hilite icon if there is a room or private hilite
-        if self.frame.hilites["rooms"] or self.frame.hilites["private"]:
+        if (self.frame.np.notifications
+                and (self.frame.np.notifications.chat_hilites["rooms"]
+                     or self.frame.np.notifications.chat_hilites["private"])):
             icon_name = "msg"
         else:
             # If there is no hilite, display the status

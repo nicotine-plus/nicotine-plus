@@ -43,6 +43,7 @@ from pynicotine.geoip.geoip import GeoIP
 from pynicotine.interests import Interests
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
+from pynicotine.notifications import Notifications
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pluginsystem import PluginHandler
 from pynicotine.search import Search
@@ -120,6 +121,7 @@ class NetworkEventProcessor:
         self.now_playing = None
         self.protothread = None
         self.geoip = None
+        self.notifications = None
 
         self.chatrooms = None
         self.privatechat = None
@@ -292,6 +294,7 @@ class NetworkEventProcessor:
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.pluginhandler = PluginHandler(self, config)
         self.now_playing = NowPlaying(config)
+        self.notifications = Notifications(config, ui_callback)
 
         self.add_upnp_portmapping()
 
@@ -1240,13 +1243,8 @@ Error: %(error)s""", {
             self.queue.append(slskmessages.SetStatus((not self.away) + 1))
             self.watch_user(config.sections["server"]["login"])
 
-            if self.ui_callback:
-                notifications = self.ui_callback.notifications
-            else:
-                notifications = None
-
             self.transfers = transfers.Transfers(config, self.peerconns, self.queue, self, self.users,
-                                                 self.network_callback, notifications, self.pluginhandler)
+                                                 self.network_callback, self.pluginhandler)
             self.shares.set_connected(True)
 
             if msg.ip_address is not None:

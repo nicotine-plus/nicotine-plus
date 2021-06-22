@@ -383,7 +383,7 @@ class UserList:
                 status_text = _("User %s is offline")
 
             log.add(status_text, user)
-            self.frame.notifications.new_notification(status_text % user)
+            self.frame.notifications.new_text_notification(status_text % user)
 
         img = self.frame.get_status_image(status)
         self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, img))

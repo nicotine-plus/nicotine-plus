@@ -246,11 +246,6 @@ class NicotineFrame:
         self.tray_download_template = _("Downloads: %(speed)s")
         self.tray_upload_template = _("Uploads: %(speed)s")
 
-        self.hilites = {
-            "rooms": [],
-            "private": []
-        }
-
         self.tray_icon = TrayIcon(self)
         self.tray_icon.load(use_trayicon)
 
@@ -1975,6 +1970,11 @@ class NicotineFrame:
             self.MainNotebook.set_current_page(page_num(tab_box))
         else:
             self.show_tab(tab_box)
+
+    """ Notifications """
+
+    def new_text_notification(self, message, title):
+        self.notifications.new_text_notification(message, title)
 
     """ Transfer Statistics """
 

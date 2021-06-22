@@ -789,7 +789,7 @@ class ChatRoom:
             self.chatrooms.request_hilite(self.Main)
 
             if config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                self.frame.notifications.new_notification(
+                self.frame.notifications.new_text_notification(
                     text,
                     title=_("%s mentioned you in the %s room") % (user, self.room),
                     priority=Gio.NotificationPriority.HIGH
@@ -816,7 +816,7 @@ class ChatRoom:
             self.frame.notifications.add("rooms", user, self.room)
 
         elif config.sections["notifications"]["notification_popup_chatroom"]:
-            self.frame.notifications.new_notification(
+            self.frame.notifications.new_text_notification(
                 text,
                 title=_("Message by %s in the %s room") % (user, self.room),
                 priority=Gio.NotificationPriority.HIGH
@@ -880,11 +880,11 @@ class ChatRoom:
 
             if self.Speech.get_active():
 
-                self.frame.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"] % {
+                self.frame.np.notifications.new_tts(
+                    config.sections["ui"]["speechrooms"], {
                         "room": self.room,
-                        "user": self.frame.notifications.tts_clean(user),
-                        "message": self.frame.notifications.tts_clean(speech)
+                        "user": user,
+                        "message": speech
                     }
                 )
         else:
