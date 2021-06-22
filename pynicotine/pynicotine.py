@@ -49,6 +49,7 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
+from pynicotine.userlist import UserList
 from pynicotine.utils import unescape
 
 
@@ -116,7 +117,9 @@ class NetworkEventProcessor:
         self.statistics = None
         self.shares = None
         self.search = None
+        self.transfers = None
         self.interests = None
+        self.userlist = None
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
@@ -127,8 +130,6 @@ class NetworkEventProcessor:
         self.privatechat = None
         self.userinfo = None
         self.userbrowse = None
-        self.transfers = None
-        self.userlist = None
 
         self.shutdown = False
         self.manualdisconnect = False
@@ -292,6 +293,7 @@ class NetworkEventProcessor:
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
+        self.userlist = UserList(self, config, self.queue, ui_callback)
         self.pluginhandler = PluginHandler(self, config)
         self.now_playing = NowPlaying(config)
         self.notifications = Notifications(config, ui_callback)
@@ -703,8 +705,7 @@ Error: %(error)s""", {
         if self.chatrooms is not None:
             self.chatrooms.set_user_flag(user, country_code)
 
-        if self.userlist is not None:
-            self.userlist.set_user_flag(user, country_code)
+        self.userlist.set_user_country(user, country_code)
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
@@ -933,7 +934,7 @@ Error: %(error)s""", {
         if self.transfers is not None:
             self.transfers.server_disconnect()
 
-        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = self.userlist = None
+        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = None
         self.pluginhandler.server_disconnect_notification(userchoice)
 
         if self.ui_callback:
@@ -1250,14 +1251,11 @@ Error: %(error)s""", {
             if msg.ip_address is not None:
                 self.ipaddress = msg.ip_address
 
-            for row in config.sections["server"]["userlist"]:
-                if row and isinstance(row, list):
-                    user = str(row[0])
-                    self.watch_user(user)
+            self.userlist.server_login()
 
             if self.ui_callback:
-                (self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads,
-                    self.userlist) = self.ui_callback.init_interface()
+                (self.privatechat, self.chatrooms, self.userinfo,
+                    self.userbrowse, downloads, uploads) = self.ui_callback.init_interface()
                 self.transfers.set_transfer_views(downloads, uploads)
 
             if msg.banner:
@@ -1331,9 +1329,7 @@ Error: %(error)s""", {
                 self.transfers.remove_from_privileged(msg.user)
 
         self.interests.get_user_status(msg)
-
-        if self.userlist is not None:
-            self.userlist.get_user_status(msg)
+        self.userlist.get_user_status(msg)
 
         if self.transfers is not None:
             self.transfers.get_user_status(msg)
@@ -1431,15 +1427,13 @@ Error: %(error)s""", {
             self.speed = msg.avgspeed
 
         self.interests.get_user_stats(msg)
+        self.userlist.get_user_stats(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.get_user_stats(msg)
 
         if self.userinfo is not None:
             self.userinfo.get_user_stats(msg)
-
-        if self.userlist is not None:
-            self.userlist.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,

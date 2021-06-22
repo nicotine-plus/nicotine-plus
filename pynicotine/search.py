@@ -36,10 +36,13 @@ class Search:
         self.np = np
         self.config = config
         self.queue = queue
-        self.ui_callback = ui_callback
+        self.ui_callback = None
         self.searchid = int(random.random() * (2 ** 31 - 1))
         self.share_dbs = share_dbs
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+
+        if hasattr(ui_callback, "searches"):
+            self.ui_callback = ui_callback.searches
 
     """ Outgoing search requests """
 

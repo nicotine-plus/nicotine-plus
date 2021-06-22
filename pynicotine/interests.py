@@ -26,7 +26,10 @@ class Interests:
         self.np = np
         self.config = config
         self.queue = queue
-        self.ui_callback = ui_callback
+        self.ui_callback = None
+
+        if hasattr(ui_callback, "interests"):
+            self.ui_callback = ui_callback.interests
 
     def server_login(self):
 

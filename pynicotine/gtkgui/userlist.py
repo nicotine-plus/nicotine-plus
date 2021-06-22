@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
@@ -411,7 +410,7 @@ class UserList:
         self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, msg.avgspeed))
         self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, msg.files))
 
-    def set_user_flag(self, user, country):
+    def set_user_country(self, user, country):
 
         iterator = self.user_iterators.get(user)
 
@@ -451,12 +450,7 @@ class UserList:
         )
 
         self.save_user_list()
-
-        # Request user status, speed and number of shared files
-        self.frame.np.watch_user(user, force_update=True)
-
-        # Request user's IP address, so we can get the country
-        self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
+        self.frame.np.userlist.add_user(user)
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
@@ -485,8 +479,7 @@ class UserList:
                 hlast_seen, comments, status, speed, file_count, last_seen, country) = i
             user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
 
-        config.sections["server"]["userlist"] = user_list
-        config.write_configuration()
+        self.frame.np.userlist.save_user_list(user_list)
 
     def save_columns(self):
         save_columns("buddy_list", self.UserListTree.get_columns())

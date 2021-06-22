@@ -27,7 +27,7 @@ class Notifications:
     def __init__(self, config, ui_callback=None):
 
         self.config = config
-        self.ui_callback = ui_callback
+        self.ui_callback = None
 
         self.chat_hilites = {
             "rooms": [],
@@ -37,6 +37,9 @@ class Notifications:
         self.tts = []
         self.tts_playing = False
         self.continue_playing = False
+
+        if hasattr(ui_callback, "notifications"):
+            self.ui_callback = ui_callback.notifications
 
     """ Chat Hilites """
 
