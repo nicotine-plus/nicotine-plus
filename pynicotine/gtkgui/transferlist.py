@@ -212,10 +212,6 @@ class TransferList:
         self.clear()
 
     def rebuild_transfers(self):
-
-        if self.frame.np.transfers is None:
-            return
-
         self.clear()
         self.update()
 

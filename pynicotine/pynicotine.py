@@ -292,6 +292,8 @@ class NetworkEventProcessor:
         self.statistics = Statistics(config, ui_callback)
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
+        self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
+                                             self.network_callback, self.ui_callback, self.pluginhandler)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
         self.pluginhandler = PluginHandler(self, config)
@@ -844,10 +846,10 @@ Error: %(error)s""", {
         """ Request UI to show error messages related to connectivity """
 
         for i in conn.msgs:
-            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest) and self.transfers is not None:
+            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
                 self.transfers.get_cant_connect_request(i.req)
 
-            elif i.__class__ is slskmessages.QueueUpload and self.transfers is not None:
+            elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(conn.username, i.file)
 
             elif i.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
@@ -931,10 +933,9 @@ Error: %(error)s""", {
         self.watchedusers.clear()
         self.shares.set_connected(False)
 
-        if self.transfers is not None:
-            self.transfers.server_disconnect()
+        self.transfers.server_disconnect()
 
-        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = self.transfers = None
+        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = None
         self.pluginhandler.server_disconnect_notification(userchoice)
 
         if self.ui_callback:
@@ -956,8 +957,7 @@ Error: %(error)s""", {
                     if i in self.out_indirect_conn_request_times:
                         del self.out_indirect_conn_request_times[i]
 
-                    if self.transfers is not None:
-                        self.transfers.conn_close(conn, i.username, error)
+                    self.transfers.conn_close(conn, i.username, error)
 
                     if i.conn_type == 'D':
                         self.send_have_no_parent()
@@ -1086,9 +1086,7 @@ Error: %(error)s""", {
     def transfer_timeout(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_timeout(msg)
+        self.transfers.transfer_timeout(msg)
 
     def watch_user(self, user, force_update=False):
         """ Tell the server we want to be notified of status/stat updates
@@ -1189,35 +1187,25 @@ Error: %(error)s""", {
     def check_download_queue(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.check_download_queue()
+        self.transfers.check_download_queue()
 
     def check_upload_queue(self, _msg):
-
-        if self.transfers is not None:
-            self.transfers.check_upload_queue()
+        self.transfers.check_upload_queue()
 
     def file_download(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_download(msg)
+        self.transfers.file_download(msg)
 
     def file_upload(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_upload(msg)
+        self.transfers.file_upload(msg)
 
     def file_error(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_error(msg)
+        self.transfers.file_error(msg)
 
     def set_current_connection_count(self, msg):
         if self.ui_callback:
@@ -1244,8 +1232,7 @@ Error: %(error)s""", {
             self.queue.append(slskmessages.SetStatus((not self.away) + 1))
             self.watch_user(config.sections["server"]["login"])
 
-            self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
-                                                 self.network_callback, self.ui_callback, self.pluginhandler)
+            self.transfers.server_login()
             self.shares.set_connected(True)
 
             if msg.ip_address is not None:
@@ -1319,18 +1306,15 @@ Error: %(error)s""", {
         else:
             self.users[msg.user] = UserAddr(status=msg.status)
 
-        if self.transfers is not None:
-            if msg.privileged == 1:
-                self.transfers.add_to_privileged(msg.user)
+        if msg.privileged == 1:
+            self.transfers.add_to_privileged(msg.user)
 
-            elif msg.privileged == 0:
-                self.transfers.remove_from_privileged(msg.user)
+        elif msg.privileged == 0:
+            self.transfers.remove_from_privileged(msg.user)
 
         self.interests.get_user_status(msg)
         self.userlist.get_user_status(msg)
-
-        if self.transfers is not None:
-            self.transfers.get_user_status(msg)
+        self.transfers.get_user_status(msg)
 
         if self.privatechat is not None:
             self.privatechat.get_user_status(msg)
@@ -1501,19 +1485,15 @@ Error: %(error)s""", {
         """ Server code: 69 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.set_privileged_users(msg.users)
-            log.add(_("%i privileged users"), (len(msg.users)))
+        self.transfers.set_privileged_users(msg.users)
+        log.add(_("%i privileged users"), (len(msg.users)))
 
     def add_to_privileged(self, msg):
         """ Server code: 91 """
         """ DEPRECATED """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.add_to_privileged(msg.user)
+        self.transfers.add_to_privileged(msg.user)
 
     def check_privileges(self, msg):
         """ Server code: 92 """
@@ -1921,19 +1901,17 @@ Error: %(error)s""", {
             pic = None
 
         descr = unescape(config.sections["userinfo"]["descr"])
+        totalupl = self.transfers.get_total_uploads_allowed()
+        queuesize = self.transfers.get_upload_queue_size()
+        slotsavail = self.transfers.allow_new_uploads()
 
-        if self.transfers is not None:
-            totalupl = self.transfers.get_total_uploads_allowed()
-            queuesize = self.transfers.get_upload_queue_size()
-            slotsavail = self.transfers.allow_new_uploads()
+        if config.sections["transfers"]["remotedownloads"]:
+            uploadallowed = config.sections["transfers"]["uploadallowed"]
+        else:
+            uploadallowed = 0
 
-            if config.sections["transfers"]["remotedownloads"]:
-                uploadallowed = config.sections["transfers"]["uploadallowed"]
-            else:
-                uploadallowed = 0
-
-            self.queue.append(
-                slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
+        self.queue.append(
+            slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
         log.add(
             _("%(user)s is making a UserInfo request"), {
@@ -2032,102 +2010,83 @@ Error: %(error)s""", {
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
 
-        if self.transfers is not None:
-            conn = msg.conn.conn
-            file_list = msg.list
+        conn = msg.conn.conn
+        file_list = msg.list
 
-            # Check for a large number of files
-            many = False
-            folder = ""
+        # Check for a large number of files
+        many = False
+        folder = ""
 
-            for i in file_list:
-                for j in file_list[i]:
-                    if os.path.commonprefix([i, j]) == j:
-                        numfiles = len(file_list[i][j])
-                        if numfiles > 100:
-                            many = True
-                            folder = j
+        for i in file_list:
+            for j in file_list[i]:
+                if os.path.commonprefix([i, j]) == j:
+                    numfiles = len(file_list[i][j])
+                    if numfiles > 100:
+                        many = True
+                        folder = j
 
-            if many:
-                for i in self.peerconns:
-                    if i.conn is conn:
-                        username = i.username
-                        break
+        if many:
+            for i in self.peerconns:
+                if i.conn is conn:
+                    username = i.username
+                    break
 
-                self.transfers.downloadsview.download_large_folder(username, folder, numfiles, conn, file_list)
-            else:
-                self.transfers.folder_contents_response(conn, file_list)
+            self.transfers.downloadsview.download_large_folder(username, folder, numfiles, conn, file_list)
+        else:
+            self.transfers.folder_contents_response(conn, file_list)
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_request(msg)
+        self.transfers.transfer_request(msg)
 
     def transfer_response(self, msg):
         """ Peer code: 41 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.transfer_response(msg)
+        self.transfers.transfer_response(msg)
 
     def queue_upload(self, msg):
         """ Peer code: 43 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.queue_upload(msg)
+        self.transfers.queue_upload(msg)
 
     def place_in_queue(self, msg):
         """ Peer code: 44 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.place_in_queue(msg)
+        self.transfers.place_in_queue(msg)
 
     def upload_failed(self, msg):
         """ Peer code: 46 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_failed(msg)
+        self.transfers.upload_failed(msg)
 
     def upload_denied(self, msg):
         """ Peer code: 50 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_denied(msg)
+        self.transfers.upload_denied(msg)
 
     def place_in_queue_request(self, msg):
         """ Peer code: 51 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.place_in_queue_request(msg)
+        self.transfers.place_in_queue_request(msg)
 
     def upload_queue_notification(self, msg):
         """ Peer code: 52 """
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.upload_queue_notification(msg)
+        self.transfers.upload_queue_notification(msg)
 
     def file_request(self, msg):
 
         log.add_msg_contents(msg)
-
-        if self.transfers is not None:
-            self.transfers.file_request(msg)
+        self.transfers.file_request(msg)
 
     """
     Incoming Distributed Messages

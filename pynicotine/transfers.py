@@ -119,13 +119,12 @@ class Transfers:
         self.uploads = deque()
         self.privilegedusers = set()
         self.requested_folders = defaultdict(dict)
+        self.transfer_request_times = {}
 
         self.update_limits()
 
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
-        self.add_stored_transfers("downloads")
-        self.add_stored_transfers("uploads")
 
         self.users = users
         self.network_callback = network_callback
@@ -139,9 +138,12 @@ class Transfers:
         if hasattr(ui_callback, "uploads"):
             self.uploadsview = ui_callback.uploads
 
-        # Check for transfer timeouts
-        self.transfer_request_times = {}
+    def server_login(self):
 
+        self.add_stored_transfers("downloads")
+        self.add_stored_transfers("uploads")
+
+        # Check for transfer timeouts
         thread = threading.Thread(target=self._check_transfer_timeouts)
         thread.name = "TransferTimeoutTimer"
         thread.daemon = True
@@ -394,6 +396,9 @@ class Transfers:
         self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimitalt"]))
 
     def update_limits(self):
+
+        if not self.eventprocessor.active_server_conn:
+            return
 
         if self.config.sections["transfers"]["usealtlimits"]:
             self._update_alt_limits()
@@ -2389,6 +2394,9 @@ class Transfers:
 
         self.downloads.clear()
         self.uploads.clear()
+        self.privilegedusers.clear()
+        self.requested_folders.clear()
+        self.transfer_request_times.clear()
 
 
 class Statistics:

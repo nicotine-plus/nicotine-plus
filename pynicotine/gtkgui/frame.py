@@ -2042,19 +2042,16 @@ class NicotineFrame:
                 msg.pic = None
 
             msg.descr = unescape(config.sections["userinfo"]["descr"])
+            msg.totalupl = self.np.transfers.get_total_uploads_allowed()
+            msg.queuesize = self.np.transfers.get_upload_queue_size()
+            msg.slotsavail = self.np.transfers.allow_new_uploads()
+            ua = config.sections["transfers"]["remotedownloads"]
+            if ua:
+                msg.uploadallowed = config.sections["transfers"]["uploadallowed"]
+            else:
+                msg.uploadallowed = ua
 
-            if self.np.transfers is not None:
-
-                msg.totalupl = self.np.transfers.get_total_uploads_allowed()
-                msg.queuesize = self.np.transfers.get_upload_queue_size()
-                msg.slotsavail = self.np.transfers.allow_new_uploads()
-                ua = config.sections["transfers"]["remotedownloads"]
-                if ua:
-                    msg.uploadallowed = config.sections["transfers"]["uploadallowed"]
-                else:
-                    msg.uploadallowed = ua
-
-                self.userinfo.show_user(user, msg=msg)
+            self.userinfo.show_user(user, msg=msg)
 
         else:
             self.userinfo.show_user(user)
@@ -2431,14 +2428,10 @@ class NicotineFrame:
         def _users(transfers, users):
             return len(users), len(transfers)
 
-        if self.np.transfers is not None:
-            down, active_usersdown = _bandwidth(self.np.transfers.downloads)
-            up, active_usersup = _bandwidth(self.np.transfers.uploads)
-            total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
-            total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
-        else:
-            down = up = human_speed(0.0)
-            filesup = filesdown = total_usersdown = total_usersup = active_usersdown = active_usersup = 0
+        down, active_usersdown = _bandwidth(self.np.transfers.downloads)
+        up, active_usersup = _bandwidth(self.np.transfers.uploads)
+        total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
+        total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
 
         self.DownloadUsers.set_text(str(total_usersdown))
         self.UploadUsers.set_text(str(total_usersup))
@@ -2458,9 +2451,7 @@ class NicotineFrame:
 
         config.sections["transfers"]["usealtlimits"] = not state
 
-        if self.np.transfers is not None:
-            self.np.transfers.update_limits()
-
+        self.np.transfers.update_limits()
         self.tray_icon.set_alternative_speed_limit(not state)
 
     """ Settings """
@@ -2485,8 +2476,7 @@ class NicotineFrame:
             self.np.add_upnp_portmapping()
 
         # Download/upload limits
-        if self.np.transfers:
-            self.np.transfers.update_limits()
+        self.np.transfers.update_limits()
 
         # Modify GUI
         self.downloads.update_download_filters()
@@ -2552,8 +2542,7 @@ class NicotineFrame:
 
         self.set_tab_positions()
 
-        if self.np.transfers is not None:
-            self.np.transfers.check_upload_queue()
+        self.np.transfers.check_upload_queue()
 
         if msg == "ok" and needrescan:
 
@@ -2570,14 +2559,11 @@ class NicotineFrame:
                 self.np.shares.close_shares("buddy")
 
         if config.need_config():
-            if self.np.transfers is not None:
-                self.connect_action.set_enabled(False)
-
+            self.connect_action.set_enabled(False)
             self.on_fast_configure()
 
         else:
-            if self.np.transfers is None:
-                self.connect_action.set_enabled(True)
+            self.connect_action.set_enabled(True)
 
         if msg == "ok" and not config.sections["ui"]["trayicon"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)

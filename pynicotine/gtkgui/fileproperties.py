@@ -48,6 +48,7 @@ class FileProperties:
         self.current_index = 0
 
     def on_previous(self, *args):
+
         self.current_index -= 1
 
         if self.current_index < 0:
@@ -56,6 +57,7 @@ class FileProperties:
         self.update_current_file()
 
     def on_next(self, *args):
+
         self.current_index += 1
 
         if self.current_index >= len(self.properties):
@@ -64,13 +66,15 @@ class FileProperties:
         self.update_current_file()
 
     def on_download_item(self, *args):
-        if not self.frame.np.transfers:
+
+        if not self.frame.np.active_server_conn:
             return
 
         properties = self.properties[self.current_index]
         self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
 
     def update_title(self):
+
         self.dialog.set_title(_("File Properties (%(num)i of %(total)i)") % {
             'num': self.current_index + 1,
             'total': len(self.properties)

@@ -1133,9 +1133,6 @@ class Search:
 
     def on_file_properties(self, *args):
 
-        if not self.frame.np.transfers:
-            return
-
         data = []
         model, paths = self.ResultsList.get_selection().get_selected_rows()
 
@@ -1180,7 +1177,7 @@ class Search:
 
     def on_download_files(self, *args, prefix=""):
 
-        if not self.frame.np.transfers:
+        if not self.frame.np.active_server_conn:
             return
 
         for file in self.selected_results:
@@ -1203,7 +1200,7 @@ class Search:
 
     def on_download_folders(self, *args, download_location=""):
 
-        if not self.frame.np.transfers:
+        if not self.frame.np.active_server_conn:
             return
 
         if download_location:
