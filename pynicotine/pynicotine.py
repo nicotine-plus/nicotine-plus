@@ -40,6 +40,7 @@ from pynicotine import slskproto
 from pynicotine import transfers
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
+from pynicotine.interests import Interests
 from pynicotine.logfacility import log
 from pynicotine.networkfilter import NetworkFilter
 from pynicotine.nowplaying import NowPlaying
@@ -114,6 +115,7 @@ class NetworkEventProcessor:
         self.statistics = None
         self.shares = None
         self.search = None
+        self.interests = None
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
@@ -125,7 +127,6 @@ class NetworkEventProcessor:
         self.userbrowse = None
         self.transfers = None
         self.userlist = None
-        self.interests = None
 
         self.shutdown = False
         self.manualdisconnect = False
@@ -288,6 +289,7 @@ class NetworkEventProcessor:
         self.statistics = Statistics(config, ui_callback)
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
+        self.interests = Interests(self, config, self.queue, ui_callback)
         self.pluginhandler = PluginHandler(self, config)
         self.now_playing = NowPlaying(config)
 
@@ -1257,7 +1259,7 @@ Error: %(error)s""", {
 
             if self.ui_callback:
                 (self.privatechat, self.chatrooms, self.userinfo, self.userbrowse, downloads, uploads,
-                    self.userlist, self.interests) = self.ui_callback.init_interface()
+                    self.userlist) = self.ui_callback.init_interface()
                 self.transfers.set_transfer_views(downloads, uploads)
 
             if msg.banner != "":
@@ -1336,8 +1338,7 @@ Error: %(error)s""", {
             elif msg.privileged == 0:
                 self.transfers.remove_from_privileged(msg.user)
 
-        if self.interests is not None:
-            self.interests.get_user_status(msg)
+        self.interests.get_user_status(msg)
 
         if self.userlist is not None:
             self.userlist.get_user_status(msg)
@@ -1425,9 +1426,8 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        if self.search is not None:
-            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
-            self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
+        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
 
     def get_user_stats(self, msg, log_contents=True):
         """ Server code: 36 """
@@ -1438,8 +1438,7 @@ Error: %(error)s""", {
         if msg.user == config.sections["server"]["login"]:
             self.speed = msg.avgspeed
 
-        if self.interests is not None:
-            self.interests.get_user_stats(msg)
+        self.interests.get_user_stats(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.get_user_stats(msg)
@@ -1470,17 +1469,13 @@ Error: %(error)s""", {
         """ Server code: 54 """
 
         log.add_msg_contents(msg)
-
-        if self.interests is not None:
-            self.interests.recommendations(msg)
+        self.interests.recommendations(msg)
 
     def global_recommendations(self, msg):
         """ Server code: 56 """
 
         log.add_msg_contents(msg)
-
-        if self.interests is not None:
-            self.interests.global_recommendations(msg)
+        self.interests.global_recommendations(msg)
 
     def user_interests(self, msg):
         """ Server code: 57 """
@@ -1601,25 +1596,19 @@ Error: %(error)s""", {
         """ Server code: 104 """
 
         log.add_msg_contents(msg)
-
-        if self.search is not None:
-            self.search.set_wishlist_interval(msg)
+        self.search.set_wishlist_interval(msg)
 
     def similar_users(self, msg):
         """ Server code: 110 and 112 """
 
         log.add_msg_contents(msg)
-
-        if self.interests is not None:
-            self.interests.similar_users(msg)
+        self.interests.similar_users(msg)
 
     def item_recommendations(self, msg):
         """ Server code: 111 """
 
         log.add_msg_contents(msg)
-
-        if self.interests is not None:
-            self.interests.item_recommendations(msg)
+        self.interests.item_recommendations(msg)
 
     def room_ticker_state(self, msg):
         """ Server code: 113 """
@@ -1865,9 +1854,6 @@ Error: %(error)s""", {
 
         conn = msg.conn
         addr = conn.addr
-
-        if self.search is None:
-            return
 
         if addr:
             country = self.geoip.get_country_code(addr[0])
@@ -2168,9 +2154,8 @@ Error: %(error)s""", {
 
         # Verbose: log.add_msg_contents(msg)
 
-        if self.search is not None:
-            self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-            self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
+        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
 
     def get_parent_conn(self):
 

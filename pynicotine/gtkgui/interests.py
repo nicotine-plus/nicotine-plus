@@ -24,7 +24,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -190,41 +189,29 @@ class Interests:
 
     def on_add_thing_i_like(self, widget, *args):
 
-        thing = widget.get_text()
+        thing = widget.get_text().lower()
         widget.set_text("")
 
-        if thing and thing.lower() not in config.sections["interests"]["likes"]:
-            thing = thing.lower()
-            config.sections["interests"]["likes"].append(thing)
+        if self.frame.np.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.AddThingILike(thing))
 
     def on_add_thing_i_dislike(self, widget, *args):
 
-        thing = widget.get_text()
+        thing = widget.get_text().lower()
         widget.set_text("")
 
-        if thing and thing.lower() not in config.sections["interests"]["dislikes"]:
-            thing = thing.lower()
-            config.sections["interests"]["dislikes"].append(thing)
+        if self.frame.np.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.AddThingIHate(thing))
 
     def on_remove_thing_i_like(self, *args):
 
         thing = self.til_popup_menu.get_user()
 
-        if thing not in config.sections["interests"]["likes"]:
+        if not self.frame.np.interests.remove_thing_i_like(thing):
             return
 
         self.likes_model.remove(self.likes[thing])
         del self.likes[thing]
-        config.sections["interests"]["likes"].remove(thing)
-
-        config.write_configuration()
-        self.frame.np.queue.append(slskmessages.RemoveThingILike(thing))
 
     def on_til_recommend_search(self, *args):
         self.recommend_search(self.til_popup_menu.get_user())
@@ -233,15 +220,11 @@ class Interests:
 
         thing = self.tidl_popup_menu.get_user()
 
-        if thing not in config.sections["interests"]["dislikes"]:
+        if not self.frame.np.interests.remove_thing_i_hate(thing):
             return
 
         self.dislikes_model.remove(self.dislikes[thing])
         del self.dislikes[thing]
-        config.sections["interests"]["dislikes"].remove(thing)
-
-        config.write_configuration()
-        self.frame.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
     def on_tidl_recommend_search(self, *args):
         self.recommend_search(self.tidl_popup_menu.get_user())
@@ -251,20 +234,12 @@ class Interests:
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and thing and thing not in config.sections["interests"]["likes"]:
-            config.sections["interests"]["likes"].append(thing)
+        if state.get_boolean() and self.frame.np.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.AddThingILike(thing))
-
-        elif not state and thing and thing in config.sections["interests"]["likes"]:
+        elif not state.get_boolean() and self.frame.np.interests.remove_thing_i_like(thing):
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
-            config.sections["interests"]["likes"].remove(thing)
-
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.RemoveThingILike(thing))
 
         action.set_state(state)
 
@@ -273,46 +248,38 @@ class Interests:
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and thing and thing not in config.sections["interests"]["dislikes"]:
-            config.sections["interests"]["dislikes"].append(thing)
+        if state.get_boolean() and thing and self.frame.np.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.AddThingIHate(thing))
-
-        elif not state and thing and thing in config.sections["interests"]["dislikes"]:
+        elif not state.get_boolean() and self.frame.np.interests.remove_thing_i_hate(thing):
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
-            config.sections["interests"]["dislikes"].remove(thing)
-
-            config.write_configuration()
-            self.frame.np.queue.append(slskmessages.RemoveThingIHate(thing))
 
         action.set_state(state)
 
     def on_recommend_item(self, *args):
 
         thing = self.til_popup_menu.get_user()
-        self.frame.np.queue.append(slskmessages.ItemRecommendations(thing))
-        self.frame.np.queue.append(slskmessages.ItemSimilarUsers(thing))
+        self.frame.np.interests.request_item_recommendations(thing)
+        self.frame.np.interests.request_item_similar_users(thing)
 
     def on_recommend_recommendation(self, *args):
 
         thing = self.r_popup_menu.get_user()
-        self.frame.np.queue.append(slskmessages.ItemRecommendations(thing))
-        self.frame.np.queue.append(slskmessages.ItemSimilarUsers(thing))
+        self.frame.np.interests.request_item_recommendations(thing)
+        self.frame.np.interests.request_item_similar_users(thing)
 
     def on_r_recommend_search(self, *args):
         self.recommend_search(self.r_popup_menu.get_user())
 
     def on_global_recommendations_clicked(self, *args):
-        self.frame.np.queue.append(slskmessages.GlobalRecommendations())
+        self.frame.np.interests.request_global_recommendations()
 
     def on_recommendations_clicked(self, *args):
-        self.frame.np.queue.append(slskmessages.Recommendations())
+        self.frame.np.interests.request_recommendations()
 
     def on_similar_users_clicked(self, *args):
-        self.frame.np.queue.append(slskmessages.SimilarUsers())
+        self.frame.np.interests.request_similar_users()
 
     def set_recommendations(self, title, recom):
         self.recommendations_model.clear()

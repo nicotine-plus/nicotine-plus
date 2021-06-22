@@ -432,7 +432,7 @@ class NicotineFrame:
         self.userinfo.login()
 
         return (self.privatechats, self.chatrooms, self.userinfo, self.userbrowse, self.downloads,
-                self.uploads, self.userlist, self.interests)
+                self.uploads, self.userlist)
 
     def init_spell_checker(self):
 
@@ -1983,6 +1983,26 @@ class NicotineFrame:
 
     def update_stat_value(self, stat_id, stat_value):
         self.statistics.update_stat_value(stat_id, stat_value)
+
+    """ Interests """
+
+    def global_recommendations(self, msg):
+        self.interests.global_recommendations(msg)
+
+    def item_recommendations(self, msg):
+        self.interests.item_recommendations(msg)
+
+    def recommendations(self, msg):
+        self.interests.recommendations(msg)
+
+    def similar_users(self, msg):
+        self.interests.similar_users(msg)
+
+    def get_user_status(self, msg):
+        self.interests.get_user_status(msg)
+
+    def get_user_stats(self, msg):
+        self.interests.get_user_stats(msg)
 
     """ Search """
 
