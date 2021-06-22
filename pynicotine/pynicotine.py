@@ -987,7 +987,7 @@ Error: %(error)s""", {
                 self.active_server_conn = None
 
             if self.ui_callback:
-                self.ui_callback.connect_error(msg)
+                self.ui_callback.server_connect_error()
 
         elif msg.connobj.__class__ is slskmessages.OutConn:
 

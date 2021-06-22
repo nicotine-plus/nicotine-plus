@@ -570,6 +570,13 @@ class NicotineFrame:
     def network_callback(self, msgs):
         GLib.idle_add(self.np.network_event, msgs)
 
+    def server_connect_error(self):
+
+        self.set_widget_online_status(False)
+        self.tray_icon.set_connected(False)
+
+        self.set_user_status(_("Offline"))
+
     def server_disconnect(self):
 
         if self.awaytimerid is not None:
@@ -588,10 +595,7 @@ class NicotineFrame:
             # Application is shutting down, stop here
             return
 
-        self.set_widget_online_status(False)
-        self.tray_icon.set_connected(False)
-
-        self.set_user_status(_("Offline"))
+        self.server_connect_error()
 
         self.chatrooms.server_disconnect()
         self.privatechats.server_disconnect()
@@ -639,13 +643,6 @@ class NicotineFrame:
         self.RoomList.set_sensitive(status)
 
         self.tray_icon.set_server_actions_sensitive(status)
-
-    def connect_error(self, conn):
-
-        self.set_widget_online_status(False)
-        self.tray_icon.set_connected(False)
-
-        self.set_user_status(_("Offline"))
 
     """ Action Callbacks """
 
