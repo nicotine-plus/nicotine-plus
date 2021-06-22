@@ -370,7 +370,7 @@ class NetworkEventProcessor:
             return
 
         server = config.sections["server"]["server"]
-        self.set_status(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
+        log.add(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
         self.queue.append(slskmessages.ServerConn(None, server))
 
         if self.servertimer is not None:
@@ -396,17 +396,6 @@ class NetworkEventProcessor:
     def get_new_token(self):
         self.token += 1
         return self.token
-
-    def set_status(self, msg, msg_args=None):
-
-        if msg_args:
-            msg = msg % msg_args
-
-        if self.ui_callback:
-            self.ui_callback.set_status_text(msg)
-
-        if msg:
-            log.add(msg)
 
     def _check_indirect_connection_timeouts(self):
 
@@ -911,7 +900,7 @@ Error: %(error)s""", {
 
         if conn == self.active_server_conn:
 
-            self.set_status(
+            log.add(
                 _("Disconnected from server %(host)s:%(port)s"), {
                     'host': addr[0],
                     'port': addr[1]
@@ -978,7 +967,7 @@ Error: %(error)s""", {
 
         if msg.connobj.__class__ is slskmessages.ServerConn:
 
-            self.set_status(
+            log.add(
                 _("Can't connect to server %(host)s:%(port)s: %(error)s"), {
                     'host': msg.connobj.addr[0],
                     'port': msg.connobj.addr[1],
@@ -1077,8 +1066,8 @@ Error: %(error)s""", {
         self.servertimer.daemon = True
         self.servertimer.start()
 
-        self.set_status(_("The server seems to be down or not responding, retrying in %i seconds"),
-                        self.server_timeout_value)
+        log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
+                self.server_timeout_value)
 
     def server_timeout(self):
         if not config.need_config():
@@ -1146,7 +1135,7 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        self.set_status(
+        log.add(
             _("Connected to server %(host)s:%(port)s, logging in..."), {
                 'host': msg.addr[0],
                 'port': msg.addr[1]
@@ -1178,7 +1167,7 @@ Error: %(error)s""", {
 
     def inc_port(self, msg):
         self.waitport = msg.port
-        self.set_status(_("Listening on port %i"), msg.port)
+        log.add(_("Listening on port %i"), msg.port)
 
     def peer_transfer(self, msg):
         if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
@@ -1297,8 +1286,6 @@ Error: %(error)s""", {
 
             self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
             self.pluginhandler.server_connect_notification()
-
-            self.set_status("")
 
         else:
             self.manualdisconnect = True
