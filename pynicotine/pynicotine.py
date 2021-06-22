@@ -246,7 +246,6 @@ class NetworkEventProcessor:
             ConnectToPeerTimeout: self.connect_to_peer_timeout,
             transfers.TransferTimeout: self.transfer_timeout,
             str: self.notify,
-            slskmessages.PopupMessage: self.popup_message,
             slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
             slskmessages.GlobalRecommendations: self.global_recommendations,
             slskmessages.Recommendations: self.recommendations,
@@ -280,11 +279,7 @@ class NetworkEventProcessor:
     def start(self, ui_callback=None, network_callback=None):
 
         self.ui_callback = ui_callback
-
-        if network_callback:
-            self.network_callback = network_callback
-        else:
-            self.network_callback = self.network_event
+        self.network_callback = network_callback if network_callback else self.network_event
 
         script_dir = os.path.dirname(__file__)
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
@@ -350,30 +345,28 @@ class NetworkEventProcessor:
         valid_network_interface = self.protothread.validate_network_interface()
 
         if not valid_network_interface:
-            short_message = _("Could not bind to network interface, aborting connection")
-            long_message = _(
+            message = _(
                 "The network interface you specified, '%s', does not exist. Change or remove the specified "
                 "network interface and restart Nicotine+."
-            ) % self.protothread.interface
-            self.network_callback([slskmessages.PopupMessage(short_message, long_message)])
+            )
+            log.add_important_error(message, self.protothread.interface)
             return
 
         valid_listen_port = self.protothread.validate_listen_port()
 
         if not valid_listen_port:
-            short_message = _("Could not bind to a local port, aborting connection")
-            long_message = _(
+            message = _(
                 "The range you specified for client connection ports was "
                 "{}-{}, but none of these were usable. Increase and/or ".format(self.protothread.portrange[0],
                                                                                 self.protothread.portrange[1])
                 + "move the range and restart Nicotine+."
             )
             if self.protothread.portrange[0] < 1024:
-                long_message += "\n\n" + _(
+                message += "\n\n" + _(
                     "Note that part of your range lies below 1024, this is usually not allowed on"
                     " most operating systems with the exception of Windows."
                 )
-            self.network_callback([slskmessages.PopupMessage(short_message, long_message)])
+            log.add_important_error(message)
             return
 
         server = config.sections["server"]["server"]
@@ -1231,10 +1224,6 @@ Error: %(error)s""", {
         if self.ui_callback:
             self.ui_callback.set_socket_status(msg.msg)
 
-    def popup_message(self, msg):
-        if self.ui_callback:
-            self.ui_callback.show_info_message(msg.title, msg.message)
-
     """
     Incoming Server Messages
     """
@@ -1315,10 +1304,7 @@ Error: %(error)s""", {
             self.manualdisconnect = True
             self.queue.append(slskmessages.ConnClose(self.active_server_conn))
 
-            title = _("Connection Refused")
-            message = _("Can not log in, reason: %s") % msg.reason
-            self.network_callback([slskmessages.PopupMessage(title, message)])
-            log.add(message)
+            log.add_important_error(_("Can not log in. Reason: %s"), msg.reason)
 
     def add_user(self, msg):
         """ Server code: 5 """
@@ -1521,10 +1507,11 @@ Error: %(error)s""", {
         if self.chatrooms is not None:
             self.chatrooms.set_room_list(msg)
 
-    def admin_message(self, msg):
+    @staticmethod
+    def admin_message(msg):
         """ Server code: 66 """
 
-        self.network_callback([slskmessages.PopupMessage(_("Server Message"), msg.msg)])
+        log.add_important_info(msg.msg)
 
     def tunneled_message(self, msg):
         """ Server code: 68 """
@@ -1723,7 +1710,8 @@ Error: %(error)s""", {
         if self.chatrooms is not None:
             self.chatrooms.toggle_private_rooms(msg.enabled)
 
-    def change_password(self, msg):
+    @staticmethod
+    def change_password(msg):
         """ Server code: 142 """
 
         log.add_msg_contents(msg)
@@ -1732,8 +1720,8 @@ Error: %(error)s""", {
         config.sections["server"]["passw"] = password
         config.write_configuration()
 
-        self.network_callback([slskmessages.PopupMessage(
-            _("Your password has been changed"), _("Password is %s") % password)])
+        log.add_important_info(
+            _("Your password has been changed. Password is %s"), password)
 
     def private_room_add_operator(self, msg):
         """ Server code: 143 """

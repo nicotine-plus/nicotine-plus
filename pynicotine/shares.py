@@ -111,12 +111,12 @@ class Scanner:
             from traceback import format_exc
 
             self.queue.put((
-                0, _("Serious error occurred while rescanning shares. If this problem persists, "
-                     "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
-                     "report with this stack trace included: %(trace)s"), {
+                _("Serious error occurred while rescanning shares. If this problem persists, "
+                  "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
+                  "report with this stack trace included: %(trace)s"), {
                     "dir": self.config.data_dir,
                     "trace": "\n" + format_exc()
-                }
+                }, None
             ))
             self.queue.put(Exception("Scanning failed"))
 
@@ -146,7 +146,7 @@ class Scanner:
                     database.close()
 
                 except Exception as error:
-                    self.queue.put((0, _("Can't save %s: %s"), (destination + ".db", error)))
+                    self.queue.put((_("Can't save %s: %s"), (destination + ".db", error), None))
                     return
 
     def rescan_dirs(self, shared, oldmtimes, oldfiles, oldstreams, rebuild=False):
@@ -163,7 +163,7 @@ class Scanner:
         except TypeError:
             num_folders = len(list(oldmtimes))
 
-        self.queue.put((0, _("%(num)s folders found before rescan, rebuilding..."), {"num": num_folders}))
+        self.queue.put((_("%(num)s folders found before rescan, rebuilding..."), {"num": num_folders}, None))
 
         newmtimes = {}
 
@@ -176,10 +176,10 @@ class Scanner:
                     newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
 
                 except OSError as errtuple:
-                    self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"), {
+                    self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
                         'path': folder,
                         'error': errtuple
-                    }))
+                    }, None))
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -199,7 +199,7 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(wordindex=wordindex)
-        self.queue.put((0, _("%(num)s folders found after rescan"), {"num": len(newsharedfiles)}))
+        self.queue.put((_("%(num)s folders found after rescan"), {"num": len(newsharedfiles)}, None))
         del wordindex
         del newsharedfiles
         gc.collect()
@@ -266,10 +266,10 @@ class Scanner:
                         mtime = entry.stat().st_mtime
 
                     except OSError as errtuple:
-                        self.queue.put((0, _("Error while scanning %(path)s: %(error)s"), {
+                        self.queue.put((_("Error while scanning %(path)s: %(error)s"), {
                             'path': path,
                             'error': errtuple
-                        }))
+                        }, None))
                         continue
 
                     mtimes[path] = mtime
@@ -279,8 +279,8 @@ class Scanner:
                         mtimes[k] = dircontents[k]
 
         except OSError as errtuple:
-            self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"),
-                           {'path': folder, 'error': errtuple}))
+            self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
+                           {'path': folder, 'error': errtuple}, None))
 
         return mtimes
 
@@ -314,12 +314,12 @@ class Scanner:
                                 streams[virtualdir] = oldstreams[virtualdir]
                                 continue
                             except KeyError:
-                                self.queue.put((6, _("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
+                                self.queue.put((_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
                                     'vdir': virtualdir,
                                     'dir': folder
-                                }))
+                                }, "debug"))
                         else:
-                            self.queue.put((6, _("Dropping missing folder %(dir)s"), {'dir': folder}))
+                            self.queue.put((_("Dropping missing folder %(dir)s"), {'dir': folder}, "debug"))
                             continue
 
                 files[virtualdir] = []
@@ -340,8 +340,8 @@ class Scanner:
                 streams[virtualdir] = self.get_dir_stream(files[virtualdir])
 
             except OSError as errtuple:
-                self.queue.put((0, _("Error while scanning folder %(path)s: %(error)s"),
-                               {'path': folder, 'error': errtuple}))
+                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
+                               {'path': folder, 'error': errtuple}, None))
                 continue
 
         return files, streams
@@ -375,7 +375,7 @@ class Scanner:
                     }
 
                     if queue:
-                        queue.put((0, error, args))
+                        queue.put((error, args, None))
                     else:
                         log.add(error, args)
 
@@ -394,7 +394,7 @@ class Scanner:
             }
 
             if queue:
-                queue.put((0, error, args))
+                queue.put((error, args, None))
             else:
                 log.add(error, args)
 
@@ -959,7 +959,7 @@ class Shares:
                     return True
 
                 if isinstance(item, tuple):
-                    log_level, template, args = item
+                    template, args, log_level = item
                     log.add(template, args, log_level)
 
                 elif isinstance(item, float):

@@ -64,7 +64,8 @@ class Logger:
         else:
             levels = config.sections["logging"]["debugmodes"]
 
-        if level and level not in levels:
+        # Important messages are always visible
+        if level and not level.startswith("important") and level not in levels:
             return
 
         if not msg_args and level in ("chat", "message"):
@@ -85,7 +86,7 @@ class Logger:
 
         for callback in self.listeners:
             try:
-                callback(timestamp_format, msg)
+                callback(timestamp_format, msg, level)
             except Exception as error:
                 print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
 
@@ -114,6 +115,12 @@ class Logger:
 
     def add_debug(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="miscellaneous")
+
+    def add_important_error(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level="important_error")
+
+    def add_important_info(self, msg, msg_args=None):
+        self.add(msg, msg_args=msg_args, level="important_info")
 
     @staticmethod
     def contents(obj):
@@ -180,7 +187,7 @@ class Console:
         logger.add_listener(self.console_logger)
 
     @staticmethod
-    def console_logger(timestamp_format, msg):
+    def console_logger(timestamp_format, msg, _level):
         print("[" + time.strftime(timestamp_format) + "] " + msg)
 
 

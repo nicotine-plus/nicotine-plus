@@ -565,11 +565,6 @@ class NicotineFrame:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    """ General """
-
-    def show_info_message(self, title, message):
-        message_dialog(parent=self.application.get_active_window(), title=title, message=message)
-
     """ Connection """
 
     def network_callback(self, msgs):
@@ -2294,14 +2289,19 @@ class NicotineFrame:
 
     """ Log Window """
 
-    def log_callback(self, timestamp_format, msg):
+    def log_callback(self, timestamp_format, msg, level):
 
         if not self.np.shutdown:
-            GLib.idle_add(self.update_log, msg, priority=GLib.PRIORITY_DEFAULT)
+            GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_DEFAULT)
 
-    def update_log(self, msg):
+    def update_log(self, msg, level):
 
         if self.np.shutdown:
+            return
+
+        if level and level.startswith("important"):
+            title = "Information" if level == "important_info" else "Error"
+            message_dialog(parent=self.application.get_active_window(), title=title, message=msg)
             return
 
         if config.sections["logging"]["logcollapsed"]:

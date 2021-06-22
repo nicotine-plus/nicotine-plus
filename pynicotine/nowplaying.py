@@ -77,7 +77,7 @@ class NowPlaying:
                 result = self.mpris(command)
 
         except RuntimeError:
-            log.add(_("ERROR: Could not execute now playing code. Are you sure you picked the right player?"))
+            log.add_important_error(_("Could not execute now playing code. Are you sure you picked the right player?"))
             return None
 
         if not result:
@@ -131,13 +131,13 @@ class NowPlaying:
         try:
             (user, apikey) = user.split(';')
         except ValueError:
-            log.add(_("ERROR: lastfm: Please provide both your lastfm username and API key"))
+            log.add_important_error(_("lastfm: Please provide both your lastfm username and API key"))
             return None
 
         try:
             conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
         except Exception as error:
-            log.add(_("ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
+            log.add_important_error(_("lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
         conn.request("GET", "/2.0/?method=user.getrecenttracks&user="
@@ -148,7 +148,8 @@ class NowPlaying:
         conn.close()
 
         if resp.status != 200 or resp.reason != "OK":
-            log.add(_("ERROR: lastfm: Could not get recent track from audioscrobbler: %(error)s"), {"error": str(data)})
+            log.add_important_error(_("lastfm: Could not get recent track from audioscrobbler: %(error)s"),
+                                    {"error": str(data)})
             return None
 
         json_api = json.loads(data)
@@ -193,7 +194,7 @@ class NowPlaying:
                     players.append(name[len(dbus_mpris_service):])
 
             if not players:
-                log.add(_("ERROR: MPRIS: Could not find a suitable MPRIS player."))
+                log.add_important_error(_("MPRIS: Could not find a suitable MPRIS player."))
                 return None
 
             player = players[0]
@@ -215,8 +216,8 @@ class NowPlaying:
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 
         except Exception as exception:
-            log.add(_("ERROR: MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
-                    {'player': player, 'exception': exception})
+            log.add_important_error(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
+                                    {'player': player, 'exception': exception})
             return None
 
         self.title['program'] = player
@@ -285,5 +286,6 @@ class NowPlaying:
             self.title["nowplaying"] = output
             return True
         except Exception as error:
-            log.add(_("ERROR: Executing '%(command)s' failed: %(error)s"), {"command": command, "error": error})
+            log.add_important_error(_("Executing '%(command)s' failed: %(error)s"),
+                                    {"command": command, "error": error})
             return None

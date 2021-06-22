@@ -162,11 +162,16 @@ def run_headless(network_processor, ci_mode):
 
     connect_ready = network_processor.start()
 
-    if connect_ready or ci_mode:
-        network_processor.connect()
+    if not connect_ready and not ci_mode:
+        return 1
 
-        while not network_processor.shutdown:
-            time.sleep(0.2)
+    connect_success = network_processor.connect()
+
+    if not connect_success and not ci_mode:
+        return 1
+
+    while not network_processor.shutdown:
+        time.sleep(0.2)
 
     config.write_configuration()
     return 0
