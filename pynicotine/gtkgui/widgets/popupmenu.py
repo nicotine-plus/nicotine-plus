@@ -471,7 +471,7 @@ class PopupMenu(Gio.Menu):
         self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
     def on_get_user_info(self, *args):
-        self.frame.local_user_info_request(self.user)
+        self.frame.np.userinfo.request_user_info(self.user)
 
     def on_browse_user(self, *args):
         self.frame.browse_user(self.user)

@@ -80,7 +80,6 @@ from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import RestrictedUnpickler
-from pynicotine.utils import unescape
 
 
 class NicotineFrame:
@@ -422,9 +421,8 @@ class NicotineFrame:
         self.downloads.server_login()
         self.privatechats.server_login()
         self.userbrowse.server_login()
-        self.userinfo.server_login()
 
-        return (self.privatechats, self.chatrooms, self.userinfo, self.userbrowse)
+        return (self.privatechats, self.chatrooms, self.userbrowse)
 
     def init_spell_checker(self):
 
@@ -2011,51 +2009,13 @@ class NicotineFrame:
 
     def on_get_user_info(self, widget, *args):
 
-        text = widget.get_text()
+        username = widget.get_text()
 
-        if not text:
+        if not username:
             return
 
-        self.local_user_info_request(text)
+        self.np.userinfo.request_user_info(username)
         clear_entry(widget)
-
-    def local_user_info_request(self, user):
-
-        msg = slskmessages.UserInfoRequest(None)
-        self.userinfo.show_user(user)
-
-        # Hack for local userinfo requests, for extra security
-        if user == config.sections["server"]["login"]:
-            try:
-                if config.sections["userinfo"]["pic"] != "":
-                    userpic = config.sections["userinfo"]["pic"]
-                    if os.path.exists(userpic):
-                        msg.has_pic = True
-                        with open(userpic, 'rb') as f:
-                            msg.pic = f.read()
-                    else:
-                        msg.has_pic = False
-                        msg.pic = None
-                else:
-                    msg.has_pic = False
-                    msg.pic = None
-            except Exception:
-                msg.pic = None
-
-            msg.descr = unescape(config.sections["userinfo"]["descr"])
-            msg.totalupl = self.np.transfers.get_total_uploads_allowed()
-            msg.queuesize = self.np.transfers.get_upload_queue_size()
-            msg.slotsavail = self.np.transfers.allow_new_uploads()
-            ua = config.sections["transfers"]["remotedownloads"]
-            if ua:
-                msg.uploadallowed = config.sections["transfers"]["uploadallowed"]
-            else:
-                msg.uploadallowed = ua
-
-            self.userinfo.user_info_reply(user, msg)
-
-        else:
-            self.np.send_message_to_peer(user, msg)
 
     """ User Browse """
 

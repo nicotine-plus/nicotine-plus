@@ -273,7 +273,7 @@ class ChatEntry:
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
-                self.frame.local_user_info_request(arg_self)
+                self.frame.np.userinfo.request_user_info(arg_self)
                 self.frame.change_main_page("userinfo")
 
         elif cmd in ("/b", "/browse"):

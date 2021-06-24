@@ -93,9 +93,9 @@ class UserInfos(IconNotebook):
             page = self.pages[msg.user]
             self.set_user_status(page.Main, msg.user, msg.status)
 
-    def show_interests(self, msg):
+    def user_interests(self, msg):
         if msg.user in self.pages:
-            self.pages[msg.user].show_interests(msg.likes, msg.hates)
+            self.pages[msg.user].user_interests(msg)
 
     def user_info_reply(self, user, msg):
         if user in self.pages:
@@ -110,12 +110,6 @@ class UserInfos(IconNotebook):
     def update_visuals(self):
         for page in self.pages.values():
             page.update_visuals()
-
-    def server_login(self):
-
-        for user in self.pages:
-            # Get notified of user status
-            self.frame.np.watch_user(user)
 
     def server_disconnect(self):
         for user, page in self.pages.items():
@@ -159,11 +153,7 @@ class UserInfo:
                 # GTK <3.24
                 self.ImageViewport.connect("scroll-event", self.on_scroll_event)
 
-        # Request user status, speed and number of shared files
-        self.frame.np.watch_user(user, force_update=True)
-
-        # Request user interests
-        self.frame.np.queue.append(slskmessages.UserInterests(user))
+        self.frame.np.userinfo.add_user(user)
 
         self.user = user
         self.conn = None
@@ -233,15 +223,15 @@ class UserInfo:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def show_interests(self, likes, hates):
+    def user_interests(self, msg):
 
         self.likes_store.clear()
         self.hates_store.clear()
 
-        for like in likes:
+        for like in msg.likes:
             self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
 
-        for hate in hates:
+        for hate in msg.hates:
             self.hates_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
 
     def save_columns(self):
@@ -395,9 +385,11 @@ class UserInfo:
         self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
 
     def on_refresh(self, *args):
+
         self.info_bar.set_visible(False)
         self.progressbar.set_fraction(0.0)
-        self.frame.local_user_info_request(self.user)
+
+        self.frame.np.userinfo.request_user_info(self.user)
 
     def on_browse_user(self, *args):
         self.frame.browse_user(self.user)
@@ -523,6 +515,7 @@ class UserInfo:
 
     def on_close(self, *args):
         del self.userinfos.pages[self.user]
+        self.frame.np.userinfo.remove_user(self.user)
         self.userinfos.remove_page(self.Main)
 
     def on_close_all_tabs(self, *args):

@@ -160,7 +160,7 @@ class TrayIcon:
             return
 
         if user:
-            self.frame.local_user_info_request(user)
+            self.frame.np.userinfo.request_user_info(user)
 
     def on_get_a_users_info(self, *args):
 

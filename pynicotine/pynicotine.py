@@ -49,6 +49,7 @@ from pynicotine.pluginsystem import PluginHandler
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
+from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
 from pynicotine.utils import unescape
 
@@ -119,6 +120,7 @@ class NetworkEventProcessor:
         self.search = None
         self.transfers = None
         self.interests = None
+        self.userinfo = None
         self.userlist = None
         self.pluginhandler = None
         self.now_playing = None
@@ -128,7 +130,6 @@ class NetworkEventProcessor:
 
         self.chatrooms = None
         self.privatechat = None
-        self.userinfo = None
         self.userbrowse = None
 
         self.shutdown = False
@@ -298,6 +299,7 @@ class NetworkEventProcessor:
         self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
                                              self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
+        self.userinfo = UserInfo(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
 
         self.add_upnp_portmapping()
@@ -747,7 +749,7 @@ Error: %(error)s""", {
 
         for j in peerconn.msgs:
 
-            if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
+            if j.__class__ is slskmessages.UserInfoRequest:
                 self.userinfo.set_conn(peerconn.username, conn)
 
             elif j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
@@ -857,7 +859,7 @@ Error: %(error)s""", {
             elif i.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
                 self.userbrowse.show_connection_error(conn.username)
 
-            elif i.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
+            elif i.__class__ is slskmessages.UserInfoRequest:
                 self.userinfo.show_connection_error(conn.username)
 
     def cant_connect_to_peer(self, msg):
@@ -937,7 +939,7 @@ Error: %(error)s""", {
 
         self.transfers.server_disconnect()
 
-        self.privatechat = self.chatrooms = self.userinfo = self.userbrowse = None
+        self.privatechat = self.chatrooms = self.userbrowse = None
         self.pluginhandler.server_disconnect_notification(userchoice)
 
         if self.ui_callback:
@@ -1180,7 +1182,7 @@ Error: %(error)s""", {
         log.add(_("Listening on port %i"), msg.port)
 
     def peer_transfer(self, msg):
-        if self.userinfo is not None and msg.msg is slskmessages.UserInfoReply:
+        if msg.msg is slskmessages.UserInfoReply:
             self.userinfo.update_gauge(msg)
 
         if self.userbrowse is not None and msg.msg is slskmessages.SharedFileList:
@@ -1240,10 +1242,11 @@ Error: %(error)s""", {
             if msg.ip_address is not None:
                 self.ipaddress = msg.ip_address
 
+            self.userinfo.server_login()
             self.userlist.server_login()
 
             if self.ui_callback:
-                (self.privatechat, self.chatrooms, self.userinfo, self.userbrowse) = self.ui_callback.server_login()
+                self.privatechat, self.chatrooms, self.userbrowse = self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)
@@ -1315,14 +1318,12 @@ Error: %(error)s""", {
             self.transfers.remove_from_privileged(msg.user)
 
         self.interests.get_user_status(msg)
+        self.userinfo.get_user_status(msg)
         self.userlist.get_user_status(msg)
         self.transfers.get_user_status(msg)
 
         if self.privatechat is not None:
             self.privatechat.get_user_status(msg)
-
-        if self.userinfo is not None:
-            self.userinfo.get_user_status(msg)
 
         if self.userbrowse is not None:
             self.userbrowse.get_user_status(msg)
@@ -1411,13 +1412,11 @@ Error: %(error)s""", {
             self.speed = msg.avgspeed
 
         self.interests.get_user_stats(msg)
+        self.userinfo.get_user_stats(msg)
         self.userlist.get_user_stats(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.get_user_stats(msg)
-
-        if self.userinfo is not None:
-            self.userinfo.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -1451,9 +1450,7 @@ Error: %(error)s""", {
         """ Server code: 57 """
 
         log.add_msg_contents(msg)
-
-        if self.userinfo is not None:
-            self.userinfo.show_interests(msg)
+        self.userinfo.user_interests(msg)
 
     def room_list(self, msg):
         """ Server code: 64 """
@@ -1928,7 +1925,7 @@ Error: %(error)s""", {
         conn = msg.conn.conn
 
         for i in self.peerconns:
-            if i.conn is conn and self.userinfo is not None:
+            if i.conn is conn:
                 # probably impossible to do this
                 if i.username != config.sections["server"]["login"]:
                     self.userinfo.user_info_reply(i.username, msg)
