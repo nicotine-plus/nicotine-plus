@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -49,6 +50,100 @@ from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
+
+
+class UserBrowses(IconNotebook):
+
+    def __init__(self, frame):
+
+        self.frame = frame
+        self.pages = {}
+
+        IconNotebook.__init__(
+            self,
+            self.frame.images,
+            tabclosers=config.sections["ui"]["tabclosers"],
+            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
+            reorderable=config.sections["ui"]["tab_reorderable"],
+            show_status_image=config.sections["ui"]["tab_status_icons"],
+            notebookraw=self.frame.UserBrowseNotebookRaw
+        )
+
+    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False,
+                  change_page=True, folder=None, local_shares_type=None):
+
+        self.save_columns()
+
+        if user in self.pages:
+            self.pages[user].conn = conn
+
+        elif not change_page:
+            # This tab was closed, but we received a response. Don't reopen it.
+            return
+
+        else:
+            try:
+                status = self.frame.np.users[user].status
+            except Exception:
+                # Offline
+                status = 0
+
+            self.pages[user] = page = UserBrowse(self, user)
+            self.append_page(page.Main, user, page.on_close, status=status)
+            page.set_label(self.get_tab_label_inner(page.Main))
+
+        self.pages[user].show_user(msg, folder, indeterminate_progress, local_shares_type)
+
+        if change_page:
+            self.set_current_page(self.page_num(self.pages[user].Main))
+            self.frame.change_main_page("userbrowse")
+
+    def show_connection_error(self, user):
+        if user in self.pages:
+            self.pages[user].show_connection_error()
+
+    def get_user_status(self, msg):
+
+        if msg.user in self.pages:
+            page = self.pages[msg.user]
+            self.set_user_status(page.Main, msg.user, msg.status)
+
+    def is_new_request(self, user):
+
+        if user in self.pages:
+            return self.pages[user].is_refreshing()
+
+        return True
+
+    def update_gauge(self, msg):
+
+        for page in self.pages.values():
+            if page.conn == msg.conn.conn:
+                page.update_gauge(msg)
+
+    def update_visuals(self):
+        for page in self.pages.values():
+            page.update_visuals()
+
+    def server_login(self):
+
+        for user in self.pages:
+            # Get notified of user status
+            self.frame.np.watch_user(user)
+
+    def server_disconnect(self):
+        for user, page in self.pages.items():
+            self.set_user_status(page.Main, user, 0)
+
+    def save_columns(self):
+        """ Save the treeview state of the currently selected tab """
+
+        current_page = self.get_nth_page(self.get_current_page())
+
+        for page in self.pages.values():
+            if page.Main == current_page:
+                page.save_columns()
+                break
 
 
 class UserBrowse:
@@ -1059,7 +1154,7 @@ class UserBrowse:
         self.user_popup.toggle_user_items()
 
     def on_close(self, *args):
-        del self.userbrowses.users[self.user]
+        del self.userbrowses.pages[self.user]
         self.userbrowses.remove_page(self.Main)
 
     def on_close_all_tabs(self, *args):

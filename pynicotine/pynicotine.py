@@ -1809,8 +1809,7 @@ Error: %(error)s""", {
         for i in self.peerconns:
             if i.conn is conn and self.userbrowse is not None:
                 if i.username != config.sections["server"]["login"]:
-                    indeterminate_progress = change_page = False
-                    self.userbrowse.show_user(i.username, None, msg, indeterminate_progress, change_page)
+                    self.userbrowse.show_user(i.username, msg=msg, indeterminate_progress=False, change_page=False)
                     break
 
     def file_search_result(self, msg):
@@ -1932,8 +1931,7 @@ Error: %(error)s""", {
             if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != config.sections["server"]["login"]:
-                    indeterminate_progress = change_page = False
-                    self.userinfo.show_user(i.username, None, msg, indeterminate_progress, change_page)
+                    self.userinfo.show_user(i.username, msg=msg, change_page=False)
                     break
 
     def p_message_user(self, msg):

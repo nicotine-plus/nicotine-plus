@@ -49,9 +49,8 @@ from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.settingswindow import Settings
 from pynicotine.gtkgui.statistics import Statistics
 from pynicotine.gtkgui.uploads import Uploads
-from pynicotine.gtkgui.userbrowse import UserBrowse
-from pynicotine.gtkgui.userinfo import UserInfo
-from pynicotine.gtkgui.userinfo import UserTabs
+from pynicotine.gtkgui.userbrowse import UserBrowses
+from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import connect_key_press_event
@@ -228,8 +227,8 @@ class NicotineFrame:
         self.uploads = Uploads(self, self.UploadsTabLabel)
         self.userlist = UserList(self)
         self.privatechats = PrivateChats(self)
-        self.userinfo = UserTabs(self, UserInfo, self.UserInfoNotebookRaw, self.UserInfoTabLabel, "userinfo")
-        self.userbrowse = UserTabs(self, UserBrowse, self.UserBrowseNotebookRaw, self.UserBrowseTabLabel, "userbrowse")
+        self.userinfo = UserInfos(self)
+        self.userbrowse = UserBrowses(self)
 
         """ Entry Completion """
 

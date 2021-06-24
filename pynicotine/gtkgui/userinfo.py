@@ -42,12 +42,12 @@ from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-# User Info and User Browse Notebooks
-class UserTabs(IconNotebook):
+class UserInfos(IconNotebook):
 
-    def __init__(self, frame, subwindow, notebookraw, tab_label, tab_name):
+    def __init__(self, frame):
 
         self.frame = frame
+        self.pages = {}
 
         IconNotebook.__init__(
             self,
@@ -56,115 +56,72 @@ class UserTabs(IconNotebook):
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             reorderable=config.sections["ui"]["tab_reorderable"],
             show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=notebookraw
+            notebookraw=self.frame.UserInfoNotebookRaw
         )
 
-        self.subwindow = subwindow
+    def show_user(self, user, conn=None, msg=None, change_page=True):
 
-        self.users = {}
-        self.tab_label = tab_label
-        self.tab_name = tab_name
-
-    def init_window(self, user):
-
-        try:
-            status = self.frame.np.users[user].status
-        except Exception:
-            # Offline
-            status = 0
-
-        w = self.users[user] = self.subwindow(self, user)
-        self.append_page(w.Main, user, w.on_close, status=status)
-        w.set_label(self.get_tab_label_inner(w.Main))
-
-    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False,
-                  change_page=True, folder=None, local_shares_type=None):
-
-        self.save_columns()
-
-        if user in self.users:
-            self.users[user].conn = conn
+        if user in self.pages:
+            self.pages[user].conn = conn
 
         elif not change_page:
             # This tab was closed, but we received a response. Don't reopen it.
             return
 
         else:
-            self.init_window(user)
+            try:
+                status = self.frame.np.users[user].status
+            except Exception:
+                # Offline
+                status = 0
 
-        self.users[user].show_user(msg, folder, indeterminate_progress, local_shares_type)
+            self.pages[user] = page = UserInfo(self, user)
+            self.append_page(page.Main, user, page.on_close, status=status)
+            page.set_label(self.get_tab_label_inner(page.Main))
+
+        self.pages[user].show_user(msg)
 
         if change_page:
-            self.set_current_page(self.page_num(self.users[user].Main))
-            self.frame.change_main_page(self.tab_name)
+            self.set_current_page(self.page_num(self.pages[user].Main))
+            self.frame.change_main_page("userinfo")
 
     def show_connection_error(self, user):
-        if user in self.users:
-            self.users[user].show_connection_error()
-
-    def save_columns(self):
-        """ Save the treeview state of the currently selected tab """
-
-        current_page = self.get_nth_page(self.get_current_page())
-
-        for tab in self.users.values():
-            if tab.Main == current_page:
-                tab.save_columns()
-                break
+        if user in self.pages:
+            self.pages[user].show_connection_error()
 
     def get_user_stats(self, msg):
-
-        if msg.user in self.users:
-            tab = self.users[msg.user]
-            tab.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
-            tab.filesshared.set_text(_("Files: %s") % humanize(msg.files))
-            tab.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
+        if msg.user in self.pages:
+            self.pages[msg.user].get_user_stats(msg)
 
     def get_user_status(self, msg):
 
-        if msg.user in self.users:
-
-            tab = self.users[msg.user]
-            tab.status = msg.status
-
-            self.set_user_status(tab.Main, msg.user, msg.status)
-
-    def is_new_request(self, user):
-
-        if user in self.users:
-            return self.users[user].is_refreshing()
-
-        return True
+        if msg.user in self.pages:
+            page = self.pages[msg.user]
+            self.set_user_status(page.Main, msg.user, msg.status)
 
     def show_interests(self, msg):
-
-        if msg.user in self.users:
-            self.users[msg.user].show_interests(msg.likes, msg.hates)
+        if msg.user in self.pages:
+            self.pages[msg.user].show_interests(msg.likes, msg.hates)
 
     def update_gauge(self, msg):
 
-        for i in self.users.values():
-            if i.conn == msg.conn.conn:
-                i.update_gauge(msg)
+        for page in self.pages.values():
+            if page.conn == msg.conn.conn:
+                page.update_gauge(msg)
 
     def update_visuals(self):
-
-        for i in self.users.values():
-            i.update_visuals()
+        for page in self.pages.values():
+            page.update_visuals()
 
     def server_login(self):
 
-        for user in self.users:
+        for user in self.pages:
             # Get notified of user status
             self.frame.np.watch_user(user)
 
     def server_disconnect(self):
-
-        for user in self.users:
-            tab = self.users[user]
-            tab.status = 0
-
-            self.set_user_status(tab.Main, user, tab.status)
+        for user, page in self.pages.items():
+            self.set_user_status(page.Main, user, 0)
 
 
 class UserInfo:
@@ -216,7 +173,6 @@ class UserInfo:
         self.image_pixbuf = None
         self.zoom_factor = 5
         self.actual_zoom = 0
-        self.status = 0
 
         self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
@@ -361,6 +317,12 @@ class UserInfo:
 
         self.info_bar.set_visible(False)
         self.set_finished()
+
+    def get_user_stats(self, msg):
+
+        self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+        self.filesshared.set_text(_("Files: %s") % humanize(msg.files))
+        self.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
 
     def show_connection_error(self):
 
@@ -562,7 +524,7 @@ class UserInfo:
         gc.collect()
 
     def on_close(self, *args):
-        del self.userinfos.users[self.user]
+        del self.userinfos.pages[self.user]
         self.userinfos.remove_page(self.Main)
 
     def on_close_all_tabs(self, *args):
