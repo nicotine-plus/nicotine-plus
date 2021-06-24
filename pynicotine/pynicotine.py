@@ -365,7 +365,7 @@ class NetworkEventProcessor:
                 "network interface and restart Nicotine+."
             )
             log.add_important_error(message, self.protothread.interface)
-            return
+            return False
 
         valid_listen_port = self.protothread.validate_listen_port()
 
@@ -382,7 +382,7 @@ class NetworkEventProcessor:
                     " most operating systems with the exception of Windows."
                 )
             log.add_important_error(message)
-            return
+            return False
 
         server = config.sections["server"]["server"]
         log.add(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
@@ -391,6 +391,8 @@ class NetworkEventProcessor:
         if self.servertimer is not None:
             self.servertimer.cancel()
             self.servertimer = None
+
+        return True
 
     def disconnect(self):
         self.manualdisconnect = True
