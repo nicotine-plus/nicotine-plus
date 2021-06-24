@@ -351,7 +351,7 @@ class NetworkEventProcessor:
         self.protothread.server_connect()
 
         if self.active_server_conn is not None:
-            return
+            return True
 
         # Clear any potential messages queued up to this point (should not happen)
         while self.queue:
