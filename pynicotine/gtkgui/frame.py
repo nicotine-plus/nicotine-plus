@@ -1934,11 +1934,6 @@ class NicotineFrame:
         else:
             self.show_tab(tab_box)
 
-    """ Transfer Statistics """
-
-    def update_stat_value(self, stat_id, stat_value):
-        self.statistics.update_stat_value(stat_id, stat_value)
-
     """ Search """
 
     def on_settings_searches(self, *args):

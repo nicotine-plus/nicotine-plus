@@ -2403,6 +2403,9 @@ class Statistics:
         self.ui_callback = ui_callback
         self.session_stats = {}
 
+        if hasattr(ui_callback, "statistics"):
+            self.ui_callback = ui_callback.statistics
+
         for stat_id in self.config.defaults["statistics"]:
             self.session_stats[stat_id] = 0
 
