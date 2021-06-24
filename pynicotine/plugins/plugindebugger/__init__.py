@@ -29,6 +29,9 @@ class Plugin(BasePlugin):
     def LoadNotification(self):  # noqa
         self.log('LoadNotification')
 
+    def PublicRoomMessageNotification(self, room, user, line):  # noqa
+        self.log('PublicRoomMessageNotification room=%s, user=%s, line=%s' % (room, user, line))
+
     def IncomingPrivateChatEvent(self, user, line):  # noqa
         self.log('IncomingPrivateChatEvent user=%s, line=%s' % (user, line))
 
@@ -85,6 +88,12 @@ class Plugin(BasePlugin):
 
     def UserLeaveChatroomNotification(self, room, user):  # noqa
         self.log('UserLeaveChatroomNotification, room=%s, user=%s' % (room, user,))
+
+    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
+        self.log('UploadQueuedNotification, user=%s, virtualfile=%s, realfile=%s' % (user, virtualfile, realfile))
+
+    def UserStatsNotification(self, user, stats):  # noqa
+        self.log('UserStatsNotification, user=%s, stats=%s' % (user, stats))
 
     def ShutdownNotification(self):  # noqa
         self.log('ShutdownNotification')

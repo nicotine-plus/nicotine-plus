@@ -288,17 +288,17 @@ class NetworkEventProcessor:
         script_dir = os.path.dirname(__file__)
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
 
+        self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.users, self.queue, self.geoip)
+        self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
+
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
         self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
-                                             self.network_callback, self.ui_callback, self.pluginhandler)
+                                             self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
-        self.pluginhandler = PluginHandler(self, config)
-        self.now_playing = NowPlaying(config)
-        self.notifications = Notifications(config, ui_callback)
 
         self.add_upnp_portmapping()
 
@@ -306,6 +306,8 @@ class NetworkEventProcessor:
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
             self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
+
+        self.pluginhandler = PluginHandler(self, config)
 
         connect_ready = not config.need_config()
 

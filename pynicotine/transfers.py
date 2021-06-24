@@ -109,7 +109,7 @@ class Transfers:
     """ This is the transfers manager """
 
     def __init__(self, eventprocessor, config, peerconns, queue, users,
-                 network_callback, ui_callback=None, pluginhandler=None):
+                 network_callback, ui_callback=None):
 
         self.eventprocessor = eventprocessor
         self.config = config
@@ -128,7 +128,6 @@ class Transfers:
 
         self.users = users
         self.network_callback = network_callback
-        self.pluginhandler = pluginhandler
         self.downloadsview = None
         self.uploadsview = None
 
@@ -693,9 +692,7 @@ class Transfers:
                 if self.uploadsview:
                     self.uploadsview.update(newupload)
 
-                if self.pluginhandler:
-                    self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
-
+                self.eventprocessor.pluginhandler.upload_queued_notification(user, msg.file, realpath)
                 self.check_upload_queue()
 
             else:
@@ -868,8 +865,7 @@ class Transfers:
             return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
 
         # All checks passed, user can queue file!
-        if self.pluginhandler:
-            self.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+        self.eventprocessor.pluginhandler.upload_queued_notification(user, msg.file, realpath)
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
