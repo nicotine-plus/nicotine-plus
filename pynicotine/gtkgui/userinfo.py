@@ -392,7 +392,7 @@ class UserInfo:
         self.frame.np.userbrowse.browse_user(self.user)
 
     def on_add_to_list(self, *args):
-        self.frame.np.userlist.add_to_list(self.user)
+        self.frame.np.userlist.add_user(self.user)
 
     def on_ban_user(self, *args):
         self.frame.np.network_filter.ban_user(self.user)

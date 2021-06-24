@@ -38,6 +38,25 @@ class UserList:
                 user = str(row[0])
                 self.np.watch_user(user)
 
+    def add_user(self, user):
+
+        # Request user status, speed and number of shared files
+        self.np.watch_user(user, force_update=True)
+
+        # Request user's IP address, so we can get the country
+        self.queue.append(slskmessages.GetPeerAddress(user))
+
+        if self.ui_callback:
+            self.ui_callback.add_user(user)
+
+    def remove_user(self, user):
+        if self.ui_callback:
+            self.ui_callback.remove_user(user)
+
+    def save_user_list(self, user_list):
+        self.config.sections["server"]["userlist"] = user_list
+        self.config.write_configuration()
+
     def get_user_status(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
@@ -49,15 +68,3 @@ class UserList:
     def get_user_stats(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)
-
-    def add_user(self, user):
-
-        # Request user status, speed and number of shared files
-        self.np.watch_user(user, force_update=True)
-
-        # Request user's IP address, so we can get the country
-        self.queue.append(slskmessages.GetPeerAddress(user))
-
-    def save_user_list(self, user_list):
-        self.config.sections["server"]["userlist"] = user_list
-        self.config.write_configuration()

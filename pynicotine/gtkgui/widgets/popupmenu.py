@@ -497,9 +497,9 @@ class PopupMenu(Gio.Menu):
             return
 
         if state.get_boolean():
-            self.frame.userlist.add_to_list(self.user)
+            self.frame.np.userlist.add_user(self.user)
         else:
-            self.frame.userlist.remove_from_list(self.user)
+            self.frame.np.userlist.remove_user(self.user)
 
         action.set_state(state)
 

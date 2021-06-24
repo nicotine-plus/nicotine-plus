@@ -239,13 +239,13 @@ class UserList:
 
     def on_add_user(self, widget, *args):
 
-        text = widget.get_text()
+        username = widget.get_text()
 
-        if not text:
+        if not username:
             return
 
         widget.set_text("")
-        self.add_to_list(text)
+        self.frame.np.userlist.add_user(username)
 
     def update_visuals(self):
 
@@ -420,7 +420,7 @@ class UserList:
         self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
         self.usersmodel.set_value(iterator, 14, "flag_" + country)
 
-    def add_to_list(self, user):
+    def add_user(self, user):
 
         if user in self.user_iterators:
             return
@@ -450,7 +450,6 @@ class UserList:
         )
 
         self.save_user_list()
-        self.frame.np.userlist.add_user(user)
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
@@ -458,7 +457,7 @@ class UserList:
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
 
-    def remove_from_list(self, user):
+    def remove_user(self, user):
 
         if user in self.user_iterators:
             self.usersmodel.remove(self.user_iterators[user])
@@ -559,7 +558,7 @@ class UserList:
         )
 
     def on_remove_user(self, *args):
-        self.remove_from_list(self.popup_menu.get_user())
+        self.frame.np.userlist.remove_user(self.popup_menu.get_user())
 
     def server_disconnect(self):
 

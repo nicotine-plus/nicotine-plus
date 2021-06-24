@@ -343,11 +343,11 @@ class ChatEntry:
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
-                self.frame.userlist.add_to_list(args)
+                self.frame.np.userlist.add_user(args)
 
         elif cmd in ("/rem", "/unbuddy"):
             if args:
-                self.frame.userlist.remove_from_list(args)
+                self.frame.np.userlist.remove_user(args)
 
         elif cmd == "/ban":
             if args:
