@@ -205,7 +205,7 @@ class TrayIcon:
             return
 
         if user:
-            self.frame.browse_user(user)
+            self.frame.np.userbrowse.browse_user(user)
 
     def on_get_a_users_shares(self, *args):
 

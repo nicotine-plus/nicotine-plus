@@ -278,7 +278,7 @@ class ChatEntry:
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
-                self.frame.browse_user(arg_self)
+                self.frame.np.userbrowse.browse_user(arg_self)
                 self.frame.change_main_page("userbrowse")
 
         elif cmd == "/ip":

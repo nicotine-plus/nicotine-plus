@@ -923,7 +923,7 @@ class TransferList:
             folder = transfer.filename.rsplit('\\', 1)[0]
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.browse_user(user, folder)
+                self.frame.np.userbrowse.browse_user(user, folder=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)

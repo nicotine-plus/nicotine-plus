@@ -79,7 +79,6 @@ from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
-from pynicotine.utils import RestrictedUnpickler
 
 
 class NicotineFrame:
@@ -420,9 +419,8 @@ class NicotineFrame:
         self.uploads.server_login()
         self.downloads.server_login()
         self.privatechats.server_login()
-        self.userbrowse.server_login()
 
-        return (self.privatechats, self.chatrooms, self.userbrowse)
+        return (self.privatechats, self.chatrooms)
 
     def init_spell_checker(self):
 
@@ -867,41 +865,11 @@ class NicotineFrame:
     def on_buddy_rescan(self, *args, rebuild=False):
         self.np.shares.rescan_buddy_shares(rebuild)
 
-    def on_browse_public_shares(self, *args, folder=None):
-        """ Browse your own public shares """
+    def on_browse_public_shares(self, *args):
+        self.np.userbrowse.browse_local_public_shares()
 
-        login = config.sections["server"]["login"]
-
-        # Deactivate if we only share with buddies
-        if config.sections["transfers"]["friendsonly"]:
-            msg = slskmessages.SharedFileList(None, {})
-        else:
-            msg = self.np.shares.get_compressed_shares_message("normal")
-
-        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "normal"))
-        thread.name = "LocalShareParser"
-        thread.daemon = True
-        thread.start()
-
-        self.userbrowse.show_user(login, indeterminate_progress=True)
-
-    def on_browse_buddy_shares(self, *args, folder=None):
-        """ Browse your own buddy shares """
-
-        login = config.sections["server"]["login"]
-
-        # Show public shares if we don't have specific shares for buddies
-        if not config.sections["transfers"]["enablebuddyshares"]:
-            msg = self.np.shares.get_compressed_shares_message("normal")
-        else:
-            msg = self.np.shares.get_compressed_shares_message("buddy")
-
-        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg, folder, "buddy"))
-        thread.name = "LocalBuddyShareParser"
-        thread.daemon = True
-        thread.start()
-
-        self.userbrowse.show_user(login, indeterminate_progress=True)
+    def on_browse_buddy_shares(self, *args):
+        self.np.userbrowse.browse_local_buddy_shares()
 
     # Modes
 
@@ -2019,74 +1987,26 @@ class NicotineFrame:
 
     """ User Browse """
 
-    def browse_user(self, user, folder=None, local_shares_type=None):
-        """ Browse a user shares """
-
-        login = config.sections["server"]["login"]
-
-        if not user:
-            return
-
-        if user == login:
-            if local_shares_type == "normal" or not config.sections["transfers"]["enablebuddyshares"]:
-                self.on_browse_public_shares(folder=folder)
-                return
-
-            self.on_browse_buddy_shares(folder=folder)
-            return
-
-        self.userbrowse.show_user(user, folder=folder)
-
-        if self.userbrowse.is_new_request(user):
-            self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
-
-    def parse_local_shares(self, username, msg, folder=None, shares_type="normal"):
-        """ Parse our local shares list and show it in the UI """
-
-        built = msg.make_network_message()
-        msg.parse_network_message(built)
-
-        GLib.idle_add(self.userbrowse.shared_file_list, username, msg)
-
     def on_get_shares(self, widget, *args):
 
-        text = widget.get_text()
+        username = widget.get_text()
 
-        if not text:
+        if not username:
             return
 
-        self.browse_user(text)
+        self.np.userbrowse.browse_user(username)
         clear_entry(widget)
 
     def on_load_from_disk_selected(self, selected, data):
 
-        for share in selected:
-            try:
-                try:
-                    # Try legacy format first
-                    import bz2
+        for filename in selected:
+            shares_list = self.np.userbrowse.get_shares_list_from_disk(filename)
 
-                    with bz2.BZ2File(share) as sharefile:
-                        mylist = RestrictedUnpickler(sharefile, encoding='utf-8').load()
+            if shares_list is None:
+                continue
 
-                except Exception:
-                    # Try new format
-
-                    with open(share, encoding="utf-8") as sharefile:
-                        import json
-                        mylist = json.load(sharefile)
-
-                if not isinstance(mylist, (list, dict)):
-                    raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': share})
-
-                username = share.replace('\\', os.sep).split(os.sep)[-1]
-                self.userbrowse.show_user(username)
-
-                if username in self.userbrowse.pages:
-                    self.userbrowse.pages[username].load_shares(mylist)
-
-            except Exception as msg:
-                log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
+            username = filename.replace('\\', os.sep).split(os.sep)[-1]
+            self.np.userbrowse.load_local_shares_list(username, shares_list)
 
     def on_load_from_disk(self, *args):
 

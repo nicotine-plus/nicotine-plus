@@ -122,6 +122,7 @@ class UserInfo:
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
+        self.frame.np.userinfo.add_user(user)
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
@@ -152,8 +153,6 @@ class UserInfo:
             except AttributeError:
                 # GTK <3.24
                 self.ImageViewport.connect("scroll-event", self.on_scroll_event)
-
-        self.frame.np.userinfo.add_user(user)
 
         self.user = user
         self.conn = None
@@ -392,7 +391,7 @@ class UserInfo:
         self.frame.np.userinfo.request_user_info(self.user)
 
     def on_browse_user(self, *args):
-        self.frame.browse_user(self.user)
+        self.frame.np.userbrowse.browse_user(self.user)
 
     def on_add_to_list(self, *args):
         self.frame.np.userlist.add_to_list(self.user)

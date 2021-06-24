@@ -474,7 +474,7 @@ class PopupMenu(Gio.Menu):
         self.frame.np.userinfo.request_user_info(self.user)
 
     def on_browse_user(self, *args):
-        self.frame.browse_user(self.user)
+        self.frame.np.userbrowse.browse_user(self.user)
 
     def on_private_room_add_user(self, *args):
         room = args[-1]

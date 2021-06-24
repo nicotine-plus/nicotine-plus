@@ -25,6 +25,7 @@ import os
 
 from sys import maxsize
 
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -110,16 +111,13 @@ class UserBrowses(IconNotebook):
             page = self.pages[msg.user]
             self.set_user_status(page.Main, msg.user, msg.status)
 
-    def is_new_request(self, user):
-
-        if user in self.pages:
-            return self.pages[user].is_refreshing()
-
-        return True
-
-    def shared_file_list(self, user, msg):
+    def _shared_file_list(self, user, msg):
         if user in self.pages:
             self.pages[user].shared_file_list(msg)
+
+    def shared_file_list(self, user, msg):
+        # We can potentially arrive here from a different thread. Run in main thread.
+        GLib.idle_add(self._shared_file_list, user, msg)
 
     def update_gauge(self, msg):
 
@@ -130,12 +128,6 @@ class UserBrowses(IconNotebook):
     def update_visuals(self):
         for page in self.pages.values():
             page.update_visuals()
-
-    def server_login(self):
-
-        for user in self.pages:
-            # Get notified of user status
-            self.frame.np.watch_user(user)
 
     def server_disconnect(self):
         for user, page in self.pages.items():
@@ -158,6 +150,7 @@ class UserBrowse:
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
+        self.frame.np.userbrowse.add_user(user)
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))
@@ -170,13 +163,9 @@ class UserBrowse:
         else:
             self.MainPaned.child_set_property(self.FolderPane, "resize", True)
 
-        # Monitor user online status
-        self.frame.np.watch_user(user)
-
         self.user = user
         self.conn = None
         self.local_shares_type = None
-        self.refreshing = True
 
         # selected_folder is the current selected folder
         self.selected_folder = None
@@ -673,12 +662,6 @@ class UserBrowse:
 
         self.set_finished()
 
-    def load_shares(self, list):
-        self.make_new_model(list)
-
-    def is_refreshing(self):
-        return self.refreshing
-
     def set_in_progress(self, indeterminate_progress):
 
         if not indeterminate_progress:
@@ -699,8 +682,6 @@ class UserBrowse:
         self.FolderTreeView.set_sensitive(True)
         self.FileTreeView.set_sensitive(True)
         self.RefreshButton.set_sensitive(True)
-
-        self.refreshing = False
 
     def update_gauge(self, msg):
 
@@ -1099,14 +1080,13 @@ class UserBrowse:
 
     def on_refresh(self, *args):
 
-        self.refreshing = True
         self.info_bar.set_visible(False)
 
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
 
         self.set_in_progress(self.indeterminate_progress)
-        self.frame.browse_user(self.user, local_shares_type=self.local_shares_type)
+        self.frame.np.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_copy_folder_path(self, *args):
         self.copy_selected_path()
@@ -1143,6 +1123,7 @@ class UserBrowse:
 
     def on_close(self, *args):
         del self.userbrowses.pages[self.user]
+        self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
 
     def on_close_all_tabs(self, *args):
