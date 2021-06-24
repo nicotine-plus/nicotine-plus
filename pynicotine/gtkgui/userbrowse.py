@@ -69,19 +69,11 @@ class UserBrowses(IconNotebook):
             notebookraw=self.frame.UserBrowseNotebookRaw
         )
 
-    def show_user(self, user, conn=None, msg=None, indeterminate_progress=False,
-                  change_page=True, folder=None, local_shares_type=None):
+    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
 
-        self.save_columns()
+        if user not in self.pages:
+            self.save_columns()
 
-        if user in self.pages:
-            self.pages[user].conn = conn
-
-        elif not change_page:
-            # This tab was closed, but we received a response. Don't reopen it.
-            return
-
-        else:
             try:
                 status = self.frame.np.users[user].status
             except Exception:
@@ -89,14 +81,24 @@ class UserBrowses(IconNotebook):
                 status = 0
 
             self.pages[user] = page = UserBrowse(self, user)
+            page.set_in_progress(indeterminate_progress)
+
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-        self.pages[user].show_user(msg, folder, indeterminate_progress, local_shares_type)
+        page = self.pages[user]
 
-        if change_page:
-            self.set_current_page(self.page_num(self.pages[user].Main))
-            self.frame.change_main_page("userbrowse")
+        page.indeterminate_progress = indeterminate_progress
+        page.local_shares_type = local_shares_type
+        page.queued_folder = folder
+        page.browse_queued_folder()
+
+        self.set_current_page(self.page_num(page.Main))
+        self.frame.change_main_page("userbrowse")
+
+    def set_conn(self, user, conn):
+        if user in self.pages:
+            self.pages[user].conn = conn
 
     def show_connection_error(self, user):
         if user in self.pages:
@@ -114,6 +116,10 @@ class UserBrowses(IconNotebook):
             return self.pages[user].is_refreshing()
 
         return True
+
+    def shared_file_list(self, user, msg):
+        if user in self.pages:
+            self.pages[user].shared_file_list(msg)
 
     def update_gauge(self, msg):
 
@@ -548,16 +554,16 @@ class UserBrowse:
 
         return directory
 
-    def browse_folder(self, folder):
-        """ Browse a specific folder in the share """
+    def browse_queued_folder(self):
+        """ Browse a queued folder in the share """
 
         try:
-            iterator = self.directories[folder]
+            iterator = self.directories[self.queued_folder]
         except KeyError:
             # Folder not found
             return
 
-        if folder:
+        if self.queued_folder:
             sel = self.FolderTreeView.get_selection()
             sel.unselect_all()
 
@@ -642,30 +648,11 @@ class UserBrowse:
     def save_columns(self):
         save_columns("user_browse", self.FileTreeView.get_columns())
 
-    def show_user(self, msg, folder=None, indeterminate_progress=False, local_shares_type=None):
+    def shared_file_list(self, msg):
 
-        self.set_in_progress(indeterminate_progress)
+        self.make_new_model(msg.list)
 
-        if folder:
-            self.queued_folder = folder
-
-        # If this is our own share, remember if it's public or buddy
-        # (needed for refresh button)
-        if local_shares_type:
-            self.local_shares_type = local_shares_type
-
-        """ Update the list model if:
-        1. This is a new user browse tab
-        2. We're refreshing the file list
-        3. This is the list of our own shared files (local_shares_type set)
-        """
-        if self.refreshing or local_shares_type:
-            if msg is None:
-                return
-
-            self.make_new_model(msg.list)
-
-        if msg and not msg.list:
+        if not msg.list:
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
@@ -673,7 +660,7 @@ class UserBrowse:
 
         else:
             self.info_bar.set_visible(False)
-            self.browse_folder(self.queued_folder)
+            self.browse_queued_folder()
 
         self.set_finished()
 
@@ -1118,6 +1105,7 @@ class UserBrowse:
         self.FolderTreeView.set_sensitive(False)
         self.FileTreeView.set_sensitive(False)
 
+        self.set_in_progress(self.indeterminate_progress)
         self.frame.browse_user(self.user, local_shares_type=self.local_shares_type)
 
     def on_copy_folder_path(self, *args):

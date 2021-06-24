@@ -748,10 +748,10 @@ Error: %(error)s""", {
         for j in peerconn.msgs:
 
             if j.__class__ is slskmessages.UserInfoRequest and self.userinfo is not None:
-                self.userinfo.show_user(peerconn.username, conn=conn, change_page=False)
+                self.userinfo.set_conn(peerconn.username, conn)
 
             elif j.__class__ is slskmessages.GetSharedFileList and self.userbrowse is not None:
-                self.userbrowse.show_user(peerconn.username, conn=conn, change_page=False)
+                self.userbrowse.set_conn(peerconn.username, conn)
 
             j.conn = conn
             self.queue.append(j)
@@ -1809,7 +1809,7 @@ Error: %(error)s""", {
         for i in self.peerconns:
             if i.conn is conn and self.userbrowse is not None:
                 if i.username != config.sections["server"]["login"]:
-                    self.userbrowse.show_user(i.username, msg=msg, indeterminate_progress=False, change_page=False)
+                    self.userbrowse.shared_file_list(i.username, msg)
                     break
 
     def file_search_result(self, msg):
@@ -1931,7 +1931,7 @@ Error: %(error)s""", {
             if i.conn is conn and self.userinfo is not None:
                 # probably impossible to do this
                 if i.username != config.sections["server"]["login"]:
-                    self.userinfo.show_user(i.username, msg=msg, change_page=False)
+                    self.userinfo.user_info_reply(i.username, msg)
                     break
 
     def p_message_user(self, msg):

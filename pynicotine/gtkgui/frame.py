@@ -2020,7 +2020,9 @@ class NicotineFrame:
         clear_entry(widget)
 
     def local_user_info_request(self, user):
+
         msg = slskmessages.UserInfoRequest(None)
+        self.userinfo.show_user(user)
 
         # Hack for local userinfo requests, for extra security
         if user == config.sections["server"]["login"]:
@@ -2050,10 +2052,9 @@ class NicotineFrame:
             else:
                 msg.uploadallowed = ua
 
-            self.userinfo.show_user(user, msg=msg)
+            self.userinfo.user_info_reply(user, msg)
 
         else:
-            self.userinfo.show_user(user)
             self.np.send_message_to_peer(user, msg)
 
     """ User Browse """
@@ -2063,17 +2064,21 @@ class NicotineFrame:
 
         login = config.sections["server"]["login"]
 
-        if user is not None:
-            if user == login:
-                if local_shares_type == "normal" or not config.sections["transfers"]["enablebuddyshares"]:
-                    self.on_browse_public_shares(folder=folder)
-                else:
-                    self.on_browse_buddy_shares(folder=folder)
-            else:
-                self.userbrowse.show_user(user, folder=folder)
+        if not user:
+            return
 
-                if self.userbrowse.is_new_request(user):
-                    self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
+        if user == login:
+            if local_shares_type == "normal" or not config.sections["transfers"]["enablebuddyshares"]:
+                self.on_browse_public_shares(folder=folder)
+                return
+
+            self.on_browse_buddy_shares(folder=folder)
+            return
+
+        self.userbrowse.show_user(user, folder=folder)
+
+        if self.userbrowse.is_new_request(user):
+            self.np.send_message_to_peer(user, slskmessages.GetSharedFileList(None))
 
     def parse_local_shares(self, username, msg, folder=None, shares_type="normal"):
         """ Parse our local shares list and show it in the UI """
@@ -2081,9 +2086,7 @@ class NicotineFrame:
         built = msg.make_network_message()
         msg.parse_network_message(built)
 
-        indeterminate_progress = change_page = False
-        GLib.idle_add(self.userbrowse.show_user, username, msg.conn, msg, indeterminate_progress,
-                      change_page, folder, shares_type)
+        GLib.idle_add(self.userbrowse.shared_file_list, username, msg)
 
     def on_get_shares(self, widget, *args):
 
@@ -2119,8 +2122,8 @@ class NicotineFrame:
                 username = share.replace('\\', os.sep).split(os.sep)[-1]
                 self.userbrowse.show_user(username)
 
-                if username in self.userbrowse.users:
-                    self.userbrowse.users[username].load_shares(mylist)
+                if username in self.userbrowse.pages:
+                    self.userbrowse.pages[username].load_shares(mylist)
 
             except Exception as msg:
                 log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})

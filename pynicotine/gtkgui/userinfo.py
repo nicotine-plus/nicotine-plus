@@ -59,16 +59,9 @@ class UserInfos(IconNotebook):
             notebookraw=self.frame.UserInfoNotebookRaw
         )
 
-    def show_user(self, user, conn=None, msg=None, change_page=True):
+    def show_user(self, user):
 
-        if user in self.pages:
-            self.pages[user].conn = conn
-
-        elif not change_page:
-            # This tab was closed, but we received a response. Don't reopen it.
-            return
-
-        else:
+        if user not in self.pages:
             try:
                 status = self.frame.np.users[user].status
             except Exception:
@@ -79,11 +72,12 @@ class UserInfos(IconNotebook):
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-        self.pages[user].show_user(msg)
+        self.set_current_page(self.page_num(self.pages[user].Main))
+        self.frame.change_main_page("userinfo")
 
-        if change_page:
-            self.set_current_page(self.page_num(self.pages[user].Main))
-            self.frame.change_main_page("userinfo")
+    def set_conn(self, user, conn):
+        if user in self.pages:
+            self.pages[user].conn = conn
 
     def show_connection_error(self, user):
         if user in self.pages:
@@ -102,6 +96,10 @@ class UserInfos(IconNotebook):
     def show_interests(self, msg):
         if msg.user in self.pages:
             self.pages[msg.user].show_interests(msg.likes, msg.hates)
+
+    def user_info_reply(self, user, msg):
+        if user in self.pages:
+            self.pages[user].user_info_reply(msg)
 
     def update_gauge(self, msg):
 
@@ -278,7 +276,30 @@ class UserInfo:
                 "error": str(e)
             })
 
-    def show_user(self, msg, *args):
+    def get_user_stats(self, msg):
+
+        self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+        self.filesshared.set_text(_("Files: %s") % humanize(msg.files))
+        self.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
+
+    def show_connection_error(self):
+
+        self.info_bar.show_message(
+            _("Unable to request information from user. Either you both have a closed listening "
+              "port, the user is offline, or there's a temporary connectivity issue.")
+        )
+
+        self.set_finished()
+
+    def set_finished(self):
+
+        # Tab notification
+        self.frame.request_tab_icon(self.frame.UserInfoTabLabel)
+        self.userinfos.request_changed(self.Main)
+
+        self.progressbar.set_fraction(1.0)
+
+    def user_info_reply(self, msg):
 
         if msg is None:
             return
@@ -317,29 +338,6 @@ class UserInfo:
 
         self.info_bar.set_visible(False)
         self.set_finished()
-
-    def get_user_stats(self, msg):
-
-        self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
-        self.filesshared.set_text(_("Files: %s") % humanize(msg.files))
-        self.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
-
-    def show_connection_error(self):
-
-        self.info_bar.show_message(
-            _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
-        )
-
-        self.set_finished()
-
-    def set_finished(self):
-
-        # Tab notification
-        self.frame.request_tab_icon(self.frame.UserInfoTabLabel)
-        self.userinfos.request_changed(self.Main)
-
-        self.progressbar.set_fraction(1.0)
 
     def update_gauge(self, msg):
 
