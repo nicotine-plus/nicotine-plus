@@ -32,7 +32,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import connect_key_press_event
@@ -1222,8 +1221,7 @@ class Search:
 
             requested_folders[user][folder] = download_location
 
-            # First queue the visible search results
-            files = []
+            visible_files = []
             for row in self.all_data:
 
                 # Find the wanted directory
@@ -1234,22 +1232,10 @@ class Search:
                 (counter, user, flag, immediatedl, h_speed, h_queue, directory, filename,
                     h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed,
                     queue, length, color) = row
-                files.append(
+                visible_files.append(
                     (user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
 
-            if config.sections["transfers"]["reverseorder"]:
-                files.sort(key=lambda x: x[1], reverse=True)
-
-            for file in files:
-                user, fullpath, destination, size, bitrate, length = file
-
-                self.frame.np.transfers.get_file(
-                    user, fullpath, destination,
-                    size=size, bitrate=bitrate, length=length, checkduplicate=True
-                )
-
-            # Ask for the rest of the files in the folder
-            self.frame.np.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+            self.frame.np.search.request_folder_download(user, folder, visible_files)
 
     def on_download_folders_to_selected(self, selected, data):
         self.on_download_folders(download_location=selected)

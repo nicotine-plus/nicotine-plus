@@ -283,8 +283,7 @@ class ChatEntry:
 
         elif cmd == "/ip":
             if arg_self:
-                self.frame.np.ip_requested.add(arg_self)
-                self.frame.np.queue.append(slskmessages.GetPeerAddress(arg_self))
+                self.frame.np.request_ip_address(arg_self)
 
         elif cmd == "/pm":
             if args:

@@ -34,7 +34,6 @@ from gi.repository import GdkPixbuf
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -172,7 +171,7 @@ class NetworkFrame(BuildFrame):
             self.on_change_password()
             return
 
-        self.frame.np.queue.append(slskmessages.ChangePassword(password))
+        self.frame.np.request_change_password(password)
 
     def on_change_password(self, *args):
 

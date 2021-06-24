@@ -1094,6 +1094,22 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
         self.transfers.transfer_timeout(msg)
 
+    def request_change_password(self, password):
+        self.queue.append(slskmessages.ChangePassword(password))
+
+    def request_check_privileges(self):
+        self.queue.append(slskmessages.CheckPrivileges())
+
+    def request_give_privileges(self, user, days):
+        self.queue.append(slskmessages.GivePrivileges(user, days))
+
+    def request_ip_address(self, username):
+        self.ip_requested.add(username)
+        self.queue.append(slskmessages.GetPeerAddress(username))
+
+    def request_set_status(self, status):
+        self.queue.append(slskmessages.SetStatus(status))
+
     def watch_user(self, user, force_update=False):
         """ Tell the server we want to be notified of status/stat updates
         for a user """

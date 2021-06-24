@@ -24,7 +24,6 @@ from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
@@ -182,8 +181,7 @@ class TrayIcon:
             return
 
         if user:
-            self.frame.np.ip_requested.add(user)
-            self.frame.np.queue.append(slskmessages.GetPeerAddress(user))
+            self.frame.np.request_ip_address(user)
 
     def on_get_a_users_ip(self, *args):
 

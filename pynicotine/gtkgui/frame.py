@@ -643,11 +643,13 @@ class NicotineFrame:
         self.np.disconnect()
 
     def on_away(self, *args):
+
         self.np.away = not self.np.away
         config.sections["server"]["away"] = self.np.away
         self._apply_away_state()
 
     def _apply_away_state(self):
+
         if not self.np.away:
             self.set_user_status(_("Online"))
             self.on_disable_auto_away()
@@ -656,12 +658,12 @@ class NicotineFrame:
 
         self.tray_icon.set_away(self.np.away)
 
-        self.np.queue.append(slskmessages.SetStatus(self.np.away and 1 or 2))
+        self.np.request_set_status(self.np.away and 1 or 2)
         self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
         self.privatechats.update_visuals()
 
     def on_check_privileges(self, *args):
-        self.np.queue.append(slskmessages.CheckPrivileges())
+        self.np.request_check_privileges()
 
     def on_get_privileges(self, *args):
         import urllib.parse

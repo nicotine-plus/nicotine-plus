@@ -467,8 +467,7 @@ class PopupMenu(Gio.Menu):
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *args):
-        self.frame.np.ip_requested.add(self.user)
-        self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
+        self.frame.np.request_ip_address(self.user)
 
     def on_get_user_info(self, *args):
         self.frame.np.userinfo.request_user_info(self.user)
@@ -568,14 +567,14 @@ class PopupMenu(Gio.Menu):
 
         try:
             days = int(days)
-            self.frame.np.queue.append(slskmessages.GivePrivileges(self.user, days))
+            self.frame.np.request_give_privileges(self.user, days)
 
         except ValueError:
             self.on_give_privileges(error=_("Please enter a whole number!"))
 
     def on_give_privileges(self, *args, error=None):
 
-        self.frame.np.queue.append(slskmessages.CheckPrivileges())
+        self.frame.np.request_check_privileges()
 
         if self.frame.np.privileges_left is None:
             days = _("Unknown")

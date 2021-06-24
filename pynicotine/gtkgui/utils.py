@@ -33,7 +33,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
@@ -197,8 +196,7 @@ def on_soul_seek_uri(url):
         user, file = urllib.parse.unquote(url[7:]).split("/", 1)
 
         if file[-1] == "/":
-            NICOTINE.np.send_message_to_peer(
-                user, slskmessages.FolderContentsRequest(None, file[:-1].replace("/", "\\")))
+            NICOTINE.np.transfers.get_folder(user, file[:-1].replace("/", "\\"))
         else:
             NICOTINE.np.transfers.get_file(user, file.replace("/", "\\"), "")
 

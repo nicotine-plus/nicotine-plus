@@ -44,6 +44,23 @@ class Search:
         if hasattr(ui_callback, "searches"):
             self.ui_callback = ui_callback.searches
 
+    def request_folder_download(self, user, folder, visible_files):
+
+        # First queue the visible search results
+        if self.config.sections["transfers"]["reverseorder"]:
+            visible_files.sort(key=lambda x: x[1], reverse=True)
+
+        for file in visible_files:
+            user, fullpath, destination, size, bitrate, length = file
+
+            self.np.transfers.get_file(
+                user, fullpath, destination,
+                size=size, bitrate=bitrate, length=length, checkduplicate=True
+            )
+
+        # Ask for the rest of the files in the folder
+        self.np.transfers.get_folder(user, folder)
+
     """ Outgoing search requests """
 
     def process_search_term(self, text, mode, room, user):

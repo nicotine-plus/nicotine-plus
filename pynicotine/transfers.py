@@ -1631,6 +1631,9 @@ class Transfers:
 
         self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
 
+    def get_folder(self, user, folder):
+        self.eventprocessor.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+
     def push_file(self, user, filename, path="", transfer=None, size=None, bitrate=None,
                   length=None, locally_queued=False):
         self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, locally_queued)

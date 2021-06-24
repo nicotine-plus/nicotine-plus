@@ -27,7 +27,6 @@ from gi.repository import GdkPixbuf
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -380,8 +379,7 @@ class UserInfo:
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *args):
-        self.frame.np.ip_requested.add(self.user)
-        self.frame.np.queue.append(slskmessages.GetPeerAddress(self.user))
+        self.frame.np.request_ip_address(self.user)
 
     def on_refresh(self, *args):
 
