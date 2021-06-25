@@ -23,7 +23,7 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">30</property>
+    <property name="spacing">36</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">

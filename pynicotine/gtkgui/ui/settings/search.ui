@@ -29,7 +29,7 @@
   </object>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">24</property>
+    <property name="spacing">30</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
@@ -264,7 +264,6 @@
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
-            <property name="homogeneous">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
