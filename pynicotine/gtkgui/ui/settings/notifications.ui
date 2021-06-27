@@ -93,5 +93,44 @@
         </child>
       </object>
     </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Tray</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox" id="TraySettings">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkCheckButton" id="TrayiconCheck">
+                <property name="label" translatable="yes">Display tray icon</property>
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+                <signal name="toggled" handler="on_toggle_tray" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="StartupHidden">
+                <property name="label" translatable="yes">Minimize to tray on startup</property>
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>

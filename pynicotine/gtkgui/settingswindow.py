@@ -1349,24 +1349,50 @@ class TextToSpeechFrame(BuildFrame):
         }
 
 
-class IconsFrame(BuildFrame):
+class UserInterfaceFrame(BuildFrame):
 
     def __init__(self, parent):
 
         self.p = parent
 
-        BuildFrame.__init__(self, "icons")
+        BuildFrame.__init__(self, "userinterface")
+
+        # Define options for each GtkComboBox using a liststore
+        # The first element is the translated string,
+        # the second is a GtkPositionType
+        self.pos_list = Gtk.ListStore(str, str)
+        column_numbers = list(range(self.pos_list.get_n_columns()))
+
+        for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
+            self.pos_list.insert_with_valuesv(-1, column_numbers, item)
+
+        cell = Gtk.CellRendererText()
+
+        self.MainPosition.set_model(self.pos_list)
+        self.MainPosition.pack_start(cell, True)
+        self.MainPosition.add_attribute(cell, 'text', 0)
+
+        self.ChatRoomsPosition.set_model(self.pos_list)
+        self.ChatRoomsPosition.pack_start(cell, True)
+        self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
+
+        self.PrivateChatPosition.set_model(self.pos_list)
+        self.PrivateChatPosition.pack_start(cell, True)
+        self.PrivateChatPosition.add_attribute(cell, 'text', 0)
+
+        self.SearchPosition.set_model(self.pos_list)
+        self.SearchPosition.pack_start(cell, True)
+        self.SearchPosition.add_attribute(cell, 'text', 0)
+
+        self.UserInfoPosition.set_model(self.pos_list)
+        self.UserInfoPosition.pack_start(cell, True)
+        self.UserInfoPosition.add_attribute(cell, 'text', 0)
+
+        self.UserBrowsePosition.set_model(self.pos_list)
+        self.UserBrowsePosition.pack_start(cell, True)
+        self.UserBrowsePosition.add_attribute(cell, 'text', 0)
 
         self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
-
-        self.options = {
-            "ui": {
-                "icontheme": self.ThemeDir,
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden,
-                "exitdialog": None
-            }
-        }
 
         liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
         column_numbers = list(range(liststore.get_n_columns()))
@@ -1394,77 +1420,6 @@ class IconsFrame(BuildFrame):
         ):
             liststore.insert_with_valuesv(-1, column_numbers, row)
 
-    def set_settings(self):
-
-        self.p.set_widgets_data(self.options)
-
-        if config.sections["ui"]["exitdialog"] is not None:
-
-            exitdialog = int(config.sections["ui"]["exitdialog"])
-
-            if exitdialog == 1:
-                self.DialogOnClose.set_active(True)
-            elif exitdialog == 2:
-                self.SendToTrayOnClose.set_active(True)
-            elif exitdialog == 0:
-                self.QuitOnClose.set_active(True)
-
-        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
-            # Tray icons don't work as expected on macOS
-            self.hide_tray_icon_settings()
-            return
-
-        sensitive = self.TrayiconCheck.get_active()
-        self.StartupHidden.set_sensitive(sensitive)
-
-    def hide_tray_icon_settings(self):
-
-        # Hide widgets
-        self.TraySettings.hide()
-
-        # Always exit on close, since there's no tray icon
-        self.QuitOnClose.set_active(True)
-
-    def on_default_theme(self, widget):
-
-        self.ThemeDir.clear()
-
-    def on_toggle_tray(self, widget):
-
-        self.StartupHidden.set_sensitive(widget.get_active())
-
-        if not widget.get_active() and self.StartupHidden.get_active():
-            self.StartupHidden.set_active(widget.get_active())
-
-    def get_settings(self):
-
-        mainwindow_close = 0
-
-        widgets = [self.QuitOnClose, self.DialogOnClose, self.SendToTrayOnClose]
-
-        for i in widgets:
-            if i.get_active():
-                mainwindow_close = widgets.index(i)
-                break
-
-        return {
-            "ui": {
-                "icontheme": self.ThemeDir.get_path(),
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active(),
-                "exitdialog": mainwindow_close
-            }
-        }
-
-
-class FontsColorsFrame(BuildFrame):
-
-    def __init__(self, parent):
-
-        self.p = parent
-
-        BuildFrame.__init__(self, "fontscolors")
-
         self.needcolors = 0
         self.options = {
             "ui": {
@@ -1476,6 +1431,19 @@ class FontsColorsFrame(BuildFrame):
                 "browserfont": self.SelectBrowserFont,
                 "usernamestyle": self.UsernameStyle,
                 "decimalsep": self.DecimalSep,
+
+                "tabmain": self.MainPosition,
+                "tabrooms": self.ChatRoomsPosition,
+                "tabprivate": self.PrivateChatPosition,
+                "tabsearch": self.SearchPosition,
+                "tabinfo": self.UserInfoPosition,
+                "tabbrowse": self.UserBrowsePosition,
+                "tab_select_previous": self.TabSelectPrevious,
+                "tabclosers": self.TabClosers,
+                "tab_reorderable": self.TabReorderable,
+                "tab_status_icons": self.TabStatusIcons,
+
+                "icontheme": self.ThemeDir,
 
                 "chatlocal": self.EntryLocal,
                 "chatremote": self.EntryRemote,
@@ -1494,7 +1462,8 @@ class FontsColorsFrame(BuildFrame):
                 "tab_default": self.EntryRegularTab,
                 "tab_hilite": self.EntryHighlightTab,
                 "tab_changed": self.EntryChangedTab,
-                "dark_mode": self.DarkMode
+                "dark_mode": self.DarkMode,
+                "exitdialog": self.CloseAction
             }
         }
 
@@ -1522,11 +1491,38 @@ class FontsColorsFrame(BuildFrame):
 
         self.p.set_widgets_data(self.options)
 
+        # Function to set the default iter from the value found in the config file
+        def set_active_conf(model, path, iterator, data):
+            if model.get_value(iterator, 1).lower() == data["cfg"].lower():
+                data["combobox"].set_active_iter(iterator)
+
+        # Override settings for the GtkComboBox defining ui positionning
+        for opt in [
+            "tabmain", "tabrooms", "tabprivate",
+            "tabsearch", "tabinfo", "tabbrowse"
+        ]:
+            # Get the value in the config file
+            config_val = config.sections["ui"][opt]
+
+            # Iterate over entries to find which one should be active
+            self.options["ui"][opt].get_model().foreach(set_active_conf, {
+                "cfg": config_val,
+                "combobox": self.options["ui"][opt]
+            })
+
         self.update_color_buttons()
         self.on_toggled_away_colors(self.DisplayAwayColors)
         self.needcolors = 0
 
     def get_settings(self):
+
+        # Get iters from GtkComboBox fields
+        iter_main = self.pos_list.get_iter(self.MainPosition.get_active())
+        iter_rooms = self.pos_list.get_iter(self.ChatRoomsPosition.get_active())
+        iter_private = self.pos_list.get_iter(self.PrivateChatPosition.get_active())
+        iter_search = self.pos_list.get_iter(self.SearchPosition.get_active())
+        iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
+        iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
 
         return {
             "ui": {
@@ -1538,6 +1534,19 @@ class FontsColorsFrame(BuildFrame):
                 "browserfont": self.SelectBrowserFont.get_font(),
                 "usernamestyle": self.UsernameStyle.get_active_text(),
                 "decimalsep": self.DecimalSep.get_active_text(),
+
+                "tabmain": self.pos_list.get_value(iter_main, 1),
+                "tabrooms": self.pos_list.get_value(iter_rooms, 1),
+                "tabprivate": self.pos_list.get_value(iter_private, 1),
+                "tabsearch": self.pos_list.get_value(iter_search, 1),
+                "tabinfo": self.pos_list.get_value(iter_info, 1),
+                "tabbrowse": self.pos_list.get_value(iter_browse, 1),
+                "tab_select_previous": self.TabSelectPrevious.get_active(),
+                "tabclosers": self.TabClosers.get_active(),
+                "tab_reorderable": self.TabReorderable.get_active(),
+                "tab_status_icons": self.TabStatusIcons.get_active(),
+
+                "icontheme": self.ThemeDir.get_path(),
 
                 "chatlocal": self.EntryLocal.get_text(),
                 "chatremote": self.EntryRemote.get_text(),
@@ -1556,9 +1565,15 @@ class FontsColorsFrame(BuildFrame):
                 "tab_hilite": self.EntryHighlightTab.get_text(),
                 "tab_default": self.EntryRegularTab.get_text(),
                 "tab_changed": self.EntryChangedTab.get_text(),
-                "dark_mode": self.DarkMode.get_active()
+                "dark_mode": self.DarkMode.get_active(),
+                "exitdialog": self.CloseAction.get_active()
             }
         }
+
+    """ Icons """
+
+    def on_default_theme(self, widget):
+        self.ThemeDir.clear()
 
     """ Fonts """
 
@@ -1679,113 +1694,6 @@ class FontsColorsFrame(BuildFrame):
             color_button.set_rgba(rgba)
 
         self.needcolors = 1
-
-
-class TabsFrame(BuildFrame):
-
-    def __init__(self, parent):
-
-        self.p = parent
-
-        BuildFrame.__init__(self, "tabs")
-
-        # Define options for each GtkComboBox using a liststore
-        # The first element is the translated string,
-        # the second is a GtkPositionType
-        self.pos_list = Gtk.ListStore(str, str)
-        column_numbers = list(range(self.pos_list.get_n_columns()))
-
-        for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
-            self.pos_list.insert_with_valuesv(-1, column_numbers, item)
-
-        cell = Gtk.CellRendererText()
-
-        self.MainPosition.set_model(self.pos_list)
-        self.MainPosition.pack_start(cell, True)
-        self.MainPosition.add_attribute(cell, 'text', 0)
-
-        self.ChatRoomsPosition.set_model(self.pos_list)
-        self.ChatRoomsPosition.pack_start(cell, True)
-        self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
-
-        self.PrivateChatPosition.set_model(self.pos_list)
-        self.PrivateChatPosition.pack_start(cell, True)
-        self.PrivateChatPosition.add_attribute(cell, 'text', 0)
-
-        self.SearchPosition.set_model(self.pos_list)
-        self.SearchPosition.pack_start(cell, True)
-        self.SearchPosition.add_attribute(cell, 'text', 0)
-
-        self.UserInfoPosition.set_model(self.pos_list)
-        self.UserInfoPosition.pack_start(cell, True)
-        self.UserInfoPosition.add_attribute(cell, 'text', 0)
-
-        self.UserBrowsePosition.set_model(self.pos_list)
-        self.UserBrowsePosition.pack_start(cell, True)
-        self.UserBrowsePosition.add_attribute(cell, 'text', 0)
-
-        self.options = {
-            "ui": {
-                "tabmain": self.MainPosition,
-                "tabrooms": self.ChatRoomsPosition,
-                "tabprivate": self.PrivateChatPosition,
-                "tabsearch": self.SearchPosition,
-                "tabinfo": self.UserInfoPosition,
-                "tabbrowse": self.UserBrowsePosition,
-                "tab_select_previous": self.TabSelectPrevious,
-                "tabclosers": self.TabClosers,
-                "tab_reorderable": self.TabReorderable,
-                "tab_status_icons": self.TabStatusIcons
-            }
-        }
-
-    def set_settings(self):
-
-        self.p.set_widgets_data(self.options)
-
-        # Function to set the default iter from the value found in the config file
-        def set_active_conf(model, path, iterator, data):
-            if model.get_value(iterator, 1).lower() == data["cfg"].lower():
-                data["combobox"].set_active_iter(iterator)
-
-        # Override settings for the GtkComboBox defining ui positionning
-        for opt in [
-            "tabmain", "tabrooms", "tabprivate",
-            "tabsearch", "tabinfo", "tabbrowse"
-        ]:
-            # Get the value in the config file
-            config_val = config.sections["ui"][opt]
-
-            # Iterate over entries to find which one should be active
-            self.options["ui"][opt].get_model().foreach(set_active_conf, {
-                "cfg": config_val,
-                "combobox": self.options["ui"][opt]
-            })
-
-    def get_settings(self):
-
-        # Get iters from GtkComboBox fields
-        iter_main = self.pos_list.get_iter(self.MainPosition.get_active())
-        iter_rooms = self.pos_list.get_iter(self.ChatRoomsPosition.get_active())
-        iter_private = self.pos_list.get_iter(self.PrivateChatPosition.get_active())
-        iter_search = self.pos_list.get_iter(self.SearchPosition.get_active())
-        iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
-        iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
-
-        return {
-            "ui": {
-                "tabmain": self.pos_list.get_value(iter_main, 1),
-                "tabrooms": self.pos_list.get_value(iter_rooms, 1),
-                "tabprivate": self.pos_list.get_value(iter_private, 1),
-                "tabsearch": self.pos_list.get_value(iter_search, 1),
-                "tabinfo": self.pos_list.get_value(iter_info, 1),
-                "tabbrowse": self.pos_list.get_value(iter_browse, 1),
-                "tab_select_previous": self.TabSelectPrevious.get_active(),
-                "tabclosers": self.TabClosers.get_active(),
-                "tab_reorderable": self.TabReorderable.get_active(),
-                "tab_status_icons": self.TabStatusIcons.get_active()
-            }
-        }
 
 
 class LoggingFrame(BuildFrame):
@@ -2647,11 +2555,35 @@ class NotificationsFrame(BuildFrame):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage,
                 "notification_popup_chatroom": self.NotificationPopupChatroom,
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
+            },
+            "ui": {
+                "trayicon": self.TrayiconCheck,
+                "startup_hidden": self.StartupHidden
             }
         }
 
     def set_settings(self):
         self.p.set_widgets_data(self.options)
+
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            # Tray icons don't work as expected on macOS
+            self.hide_tray_icon_settings()
+            return
+
+        sensitive = self.TrayiconCheck.get_active()
+        self.StartupHidden.set_sensitive(sensitive)
+
+    def hide_tray_icon_settings(self):
+
+        # Hide widgets
+        self.TraySettings.hide()
+
+    def on_toggle_tray(self, widget):
+
+        self.StartupHidden.set_sensitive(widget.get_active())
+
+        if not widget.get_active() and self.StartupHidden.get_active():
+            self.StartupHidden.set_active(widget.get_active())
 
     def get_settings(self):
 
@@ -2666,6 +2598,10 @@ class NotificationsFrame(BuildFrame):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
                 "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
+            },
+            "ui": {
+                "trayicon": self.TrayiconCheck.get_active(),
+                "startup_hidden": self.StartupHidden.get_active()
             }
         }
 
@@ -3185,6 +3121,7 @@ class Settings:
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
         self.tree["Network"] = model.append(row, [_("Network"), "Network"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
+        self.tree["UserInterface"] = model.append(row, [_("User Interface"), "UserInterface"])
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
         self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
@@ -3197,11 +3134,6 @@ class Settings:
         self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
         self.tree["GeoBlock"] = model.append(row, [_("Geo Block"), "GeoBlock"])
-
-        self.tree["Interface"] = row = model.append(None, [_("Interface"), "Interface"])
-        self.tree["FontsColors"] = model.append(row, [_("Fonts & Colors"), "FontsColors"])
-        self.tree["Icons"] = model.append(row, [_("Icons"), "Icons"])
-        self.tree["Tabs"] = model.append(row, [_("Tabs"), "Tabs"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
         self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
@@ -3453,7 +3385,7 @@ class Settings:
                 need_rescan = False
 
         try:
-            need_colors = self.pages["FontsColors"].needcolors
+            need_colors = self.pages["UserInterface"].needcolors
 
         except KeyError:
             need_colors = False
