@@ -412,7 +412,7 @@ class UserBrowse:
     def make_new_model(self, shares):
 
         # Temporarily disable sorting for improved performance
-        self.dir_store.set_default_sort_func(lambda *unused: 0)
+        self.dir_store.set_default_sort_func(lambda *args: 0)
         self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.shares = shares
@@ -498,7 +498,7 @@ class UserBrowse:
     def set_directory(self, directory):
 
         # Temporarily disable sorting for improved performance
-        self.file_store.set_default_sort_func(lambda *unused: 0)
+        self.file_store.set_default_sort_func(lambda *args: 0)
         self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.selected_folder = directory

@@ -51,6 +51,18 @@ class RoomList:
 
         self.room_model = Gtk.ListStore(str, int, int)
 
+        self.room_filter = self.room_model.filter_new()
+        self.room_filter.set_visible_func(self.room_match_function)
+
+        try:
+            self.room_model_filtered = Gtk.TreeModelSort.new_with_model(self.room_filter)
+
+        except AttributeError:
+            # Older GTK versions
+            self.room_model_filtered = Gtk.TreeModelSort.sort_new_with_model(self.room_filter)
+
+        self.RoomsList.set_model(self.room_model_filtered)
+
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         self.cols = initialise_columns(
             None, self.RoomsList,
@@ -139,9 +151,13 @@ class RoomList:
     def room_match_function(self, model, iterator, data=None):
 
         query = self.SearchRooms.get_text().lower()
+
+        if not query:
+            return True
+
         value = model.get_value(iterator, 0)
 
-        if query == "" or query in value.lower():
+        if query in value.lower():
             return True
 
         return False
@@ -162,32 +178,21 @@ class RoomList:
 
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
-        self.room_model.clear()
+        # Temporarily disable sorting for improved performance
+        self.room_model.set_sort_func(1, lambda *args: 0)
+        self.room_model.set_default_sort_func(lambda *args: 0)
+        self.room_model.set_sort_column_id(-1, Gtk.SortType.DESCENDING)
+
+        self.clear()
 
         for room, users in rooms:
-            self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, users, 0])
-
-        self.server_rooms = set()
-        for room, users in rooms:
-            self.server_rooms.add(room)
+            self.update_room(room, users)
 
         self.set_private_rooms(owned_rooms, other_private_rooms)
 
         self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
-
-        self.room_filter = self.room_model.filter_new()
-        self.room_filter.set_visible_func(self.room_match_function)
-
-        try:
-            self.room_model_filtered = Gtk.TreeModelSort.new_with_model(self.room_filter)
-
-        except AttributeError:
-            # Older GTK versions
-            self.room_model_filtered = Gtk.TreeModelSort.sort_new_with_model(self.room_filter)
-
-        self.RoomsList.set_model(self.room_model_filtered)
 
     def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
 
@@ -319,14 +324,13 @@ class RoomList:
         self.frame.np.queue.append(slskmessages.RoomList())
 
     def on_toggle_accept_private_room(self, widget):
-
         value = self.AcceptPrivateRoom.get_active()
         self.frame.np.queue.append(slskmessages.PrivateRoomToggle(value))
 
     def update_visuals(self):
-
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
     def clear(self):
         self.room_model.clear()
+        self.server_rooms.clear()
