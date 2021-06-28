@@ -83,7 +83,7 @@ class Plugin(BasePlugin):
             self.log("Provide a user name as parameter.")
 
     def resolve(self, user):
-        self.parent.frame.np.queue.append(slskmessages.GetPeerAddress(user))
+        self.np.queue.append(slskmessages.GetPeerAddress(user))
 
     def checkport(self, ip, port):
         if ip in ('0.0.0.0',) or port in (0,):

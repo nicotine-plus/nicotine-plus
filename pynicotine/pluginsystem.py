@@ -123,7 +123,7 @@ class PluginHandler:
                 "Plugin '%s': top-level disable() function is obsolete, please use BasePlugin.disable() instead",
                 pluginname)
 
-        instance = plugin.Plugin(self, self.np, self.np.ui_callback)
+        instance = plugin.Plugin(self, self.config, self.np)
         self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
 
@@ -553,12 +553,13 @@ class BasePlugin:
     settings = {}
     metasettings = {}
 
-    def __init__(self, parent, np, frame):
+    def __init__(self, parent, config, np):
 
         # Never override this function, override init() instead
         self.parent = parent
+        self.config = config
         self.np = np
-        self.frame = frame
+        self.frame = np.ui_callback
 
     def init(self):
         # Custom enable function for plugins
