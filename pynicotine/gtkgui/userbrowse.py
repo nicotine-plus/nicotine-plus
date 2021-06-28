@@ -187,6 +187,7 @@ class UserBrowse:
         self.totalsize = 0
 
         self.dir_store = Gtk.TreeStore(str, str)
+        self.FolderTreeView.set_model(self.dir_store)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -295,7 +296,6 @@ class UserBrowse:
         cols["size"].set_sort_column_id(4)
         cols["bitrate"].set_sort_column_id(5)
         cols["length"].set_sort_column_id(6)
-        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         self.file_popup_menu = PopupMenu(self.frame, self.FileTreeView, self.on_file_popup_menu)
 
@@ -409,9 +409,13 @@ class UserBrowse:
         menu.set_num_selected_files(num_selected_files)
         self.user_popup.toggle_user_items()
 
-    def make_new_model(self, list):
+    def make_new_model(self, shares):
 
-        self.shares = list
+        # Temporarily disable sorting for improved performance
+        self.dir_store.set_default_sort_func(lambda *unused: 0)
+        self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+
+        self.shares = shares
         self.selected_folder = None
         self.selected_files.clear()
         self.directories.clear()
@@ -421,6 +425,7 @@ class UserBrowse:
 
         # Compute the number of shared dirs and total size
         self.totalsize = 0
+
         for dir, files in self.shares:
             for filedata in files:
                 if filedata[2] < maxsize:
@@ -430,7 +435,14 @@ class UserBrowse:
         self.NumDirectories.set_text(str(len(self.shares)))
 
         # Generate the directory tree and select first directory
-        self.browse_get_dirs()
+        self.create_folder_tree(shares)
+
+        if self.ExpandButton.get_active():
+            self.FolderTreeView.expand_all()
+        else:
+            self.FolderTreeView.collapse_all()
+
+        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         iterator = self.dir_store.get_iter_first()
         sel = self.FolderTreeView.get_selection()
@@ -440,79 +452,28 @@ class UserBrowse:
             path = self.dir_store.get_path(iterator)
             sel.select_path(path)
 
-        if self.ExpandButton.get_active():
-            self.FolderTreeView.expand_all()
-        else:
-            self.FolderTreeView.collapse_all()
-
         self.set_finished()
 
-    def build_dict_tree(self, p, s):
-        """
-            Build recursively a hierarchical dict containing raw subdir
-            'p' is a reference to the parent
-            's' a list of the subdir of a path
+    def create_folder_tree(self, shares):
 
-            ex of 's': ['music', 'rock', 'doors']
-        """
-
-        if s:
-            subdir = s.pop(0)
-
-            if subdir not in p:
-                p[subdir] = {}
-
-            self.build_dict_tree(p[subdir], s)
-
-    def build_gtk_tree(self, dictdir, parent, path):
-        """
-            Build recursively self.directories with iters pointing to directories
-            'dictdir' is a hierarchical dict containing raw subdir
-            'parent' is the iter pointing to the parent
-            'path' is the current raw path
-        """
-
-        # Foreach subdir
-        for subdir in dictdir:
-
-            if parent is None:
-                # The first sudirs are attached to the root (None)
-                current_path = subdir
-            else:
-                # Other sudirs futher down the path are attached to their parent
-                current_path = '\\'.join([path, subdir])
-
-            self.directories[current_path] = self.dir_store.insert_with_values(
-                parent, -1, self.dir_column_numbers,
-                [subdir, current_path]
-            )
-
-            # If there are subdirs futher down the path: recurse
-            if dictdir[subdir]:
-                self.build_gtk_tree(dictdir[subdir], self.directories[current_path], current_path)
-
-    def browse_get_dirs(self):
-
-        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.FolderTreeView.set_model(self.dir_store)
-
-        if not self.shares:
+        if not shares:
             return
 
-        # For each shared dir we will complete the dictionnary
-        dictdir = {}
+        for folder, _ in shares:
+            current_path = ""
 
-        for dirshares, f in self.shares:
+            for subfolder in folder.split('\\'):
+                parent = self.directories.get(current_path)
+                current_path = subfolder if not current_path else '\\'.join([current_path, subfolder])
 
-            # Split the path
-            s = dirshares.split('\\')
+                if current_path in self.directories:
+                    # Folder was already added to tree
+                    continue
 
-            # and build a hierarchical dictionnary containing raw subdir
-            if len(s) >= 1:
-                self.build_dict_tree(dictdir, s)
-
-        # Append data to the DirStore
-        self.build_gtk_tree(dictdir, None, None)
+                self.directories[current_path] = self.dir_store.insert_with_values(
+                    parent, -1, self.dir_column_numbers,
+                    [subfolder, current_path]
+                )
 
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
@@ -535,6 +496,10 @@ class UserBrowse:
             self.queued_folder = None
 
     def set_directory(self, directory):
+
+        # Temporarily disable sorting for improved performance
+        self.file_store.set_default_sort_func(lambda *unused: 0)
+        self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.selected_folder = directory
         self.file_store.clear()
@@ -578,6 +543,8 @@ class UserBrowse:
             except Exception as msg:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"),
                         {'folder': directory, 'error': msg})
+
+        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
     def on_save(self, *args):
 
