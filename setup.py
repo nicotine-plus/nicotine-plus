@@ -60,8 +60,7 @@ class UpdatePot(Command):
             sorted(glob.glob("pynicotine/**/*.py", recursive=True), key=abspath) + \
             sorted(glob.glob("pynicotine/**/*.ui", recursive=True), key=abspath)
 
-        os.system("xgettext -L Python -o po/nicotine.pot nicotine")
-        os.system("xgettext --join-existing -o po/nicotine.pot " + " ".join(files))
+        os.system("xgettext -o po/nicotine.pot " + " ".join(files))
 
 
 def generate_translations():
