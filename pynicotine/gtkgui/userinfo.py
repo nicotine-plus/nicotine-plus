@@ -374,7 +374,7 @@ class UserInfo:
         self.frame.interests.recommend_search(self.interest_popup_menu.get_user())
 
     def on_send_message(self, *args):
-        self.frame.privatechats.send_message(self.user, show_user=True)
+        self.frame.np.privatechats.add_user(self.user)
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *args):

@@ -463,7 +463,7 @@ class PopupMenu(Gio.Menu):
         self.frame.change_main_page("search")
 
     def on_send_message(self, *args):
-        self.frame.privatechats.send_message(self.user, show_user=True)
+        self.frame.np.privatechats.add_user(self.user)
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *args):
@@ -552,7 +552,7 @@ class PopupMenu(Gio.Menu):
         action.set_state(state)
 
     def on_version(self, *args):
-        self.frame.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
+        self.frame.np.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
     def on_copy_user(self, *args):
         copy_text(self.user)

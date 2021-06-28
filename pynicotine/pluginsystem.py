@@ -67,6 +67,14 @@ class PluginHandler:
         else:
             log.add(_("It appears '%s' is not a directory, not loading plugins."), config.plugin_dir)
 
+    def update_completions(self, plugin):
+
+        if self.np.ui_callback and plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
+            self.np.ui_callback.chatrooms.update_completions()
+
+        if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
+            self.np.privatechats.update_completions()
+
     def __findplugin(self, pluginname):
         for directory in self.plugindirs:
             fullpath = os.path.join(directory, pluginname)
@@ -141,7 +149,17 @@ class PluginHandler:
             if not plugin:
                 raise Exception("Error loading plugin '%s'" % pluginname)
 
-            plugin.__enable__()
+            plugin.init()
+
+            if self.np.ui_callback:
+                for trigger, _func in plugin.__publiccommands__:
+                    self.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
+
+            for trigger, _func in plugin.__privatecommands__:
+                self.np.privatechats.CMDS.add('/' + trigger + ' ')
+
+            self.update_completions(plugin)
+
             self.enabled_plugins[pluginname] = plugin
             log.add(_("Enabled plugin %s"), plugin.__name__)
 
@@ -173,6 +191,16 @@ class PluginHandler:
 
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
+
+            if self.np.ui_callback:
+                for trigger, _func in plugin.__publiccommands__:
+                    self.np.ui_callback.chatrooms.CMDS.remove('/' + trigger + ' ')
+
+            for trigger, _func in plugin.__privatecommands__:
+                self.np.privatechats.CMDS.remove('/' + trigger + ' ')
+
+            self.update_completions(plugin)
+
             del self.enabled_plugins[pluginname]
             del plugin
 
@@ -425,27 +453,6 @@ class PluginHandler:
     def shutdown_notification(self):
         self.trigger_event("ShutdownNotification", (),)
 
-    """ Other Functions """
-
-    @staticmethod
-    def log(text):
-        log.add(text)
-
-    def saychatroom(self, room, text):
-        self.np.queue.append(slskmessages.SayChatroom(room, text))
-
-    def sayprivate(self, user, text):
-        """ Send user message in private (showing up in GUI) """
-
-        if self.np.ui_callback:
-            self.np.ui_callback.privatechats.users[user].send_message(text)
-
-    def sendprivate(self, user, text):
-        """ Send user message in private (not showing up in GUI) """
-
-        if self.np.ui_callback:
-            self.np.ui_callback.privatechats.send_message(user, text)
-
 
 class ResponseThrottle:
 
@@ -553,17 +560,6 @@ class BasePlugin:
         self.np = np
         self.frame = frame
 
-    def __enable__(self):
-
-        self.init()
-
-        if self.parent.np.ui_callback:
-            for trigger, _func in self.__publiccommands__:
-                self.parent.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
-
-            for trigger, _func in self.__privatecommands__:
-                self.parent.np.ui_callback.privatechats.CMDS.add('/' + trigger + ' ')
-
     def init(self):
         # Custom enable function for plugins
         pass
@@ -656,18 +652,21 @@ class BasePlugin:
     # The following are functions to make your life easier,
     # you shouldn't override them.
     def log(self, text):
-        self.parent.log(self.__name__ + ": " + text)
+        log.add(self.__name__ + ": " + text)
 
     def saypublic(self, room, text):
-        self.parent.saychatroom(room, text)
+        self.np.queue.append(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
-        """ Send user message in private (shows up in GUI) """
-        self.parent.sayprivate(user, text)
+        """ Send user message in private (showing up in GUI) """
+
+        self.np.privatechats.add_user(user)
+        self.np.privatechats.send_message(user, text)
 
     def sendprivate(self, user, text):
-        """ Send user message in private (doesn't show up in GUI) """
-        self.parent.sendprivate(user, text)
+        """ Send user message in private (not showing up in GUI) """
+
+        self.np.privatechats.send_message(user, text)
 
     def fakepublic(self, room, user, text):
         try:

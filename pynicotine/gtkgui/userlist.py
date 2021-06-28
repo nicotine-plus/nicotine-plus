@@ -331,7 +331,7 @@ class UserList:
         user = self.get_selected_username(treeview)
 
         if user is not None:
-            self.frame.privatechats.send_message(user, show_user=True)
+            self.frame.np.privatechats.add_user(user)
             self.frame.change_main_page("private")
 
     def on_popup_menu(self, menu, widget):

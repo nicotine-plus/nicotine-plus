@@ -46,6 +46,7 @@ from pynicotine.networkfilter import NetworkFilter
 from pynicotine.notifications import Notifications
 from pynicotine.nowplaying import NowPlaying
 from pynicotine.pluginsystem import PluginHandler
+from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
@@ -124,6 +125,7 @@ class NetworkEventProcessor:
         self.userbrowse = None
         self.userinfo = None
         self.userlist = None
+        self.privatechats = None
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
@@ -131,7 +133,6 @@ class NetworkEventProcessor:
         self.notifications = None
 
         self.chatrooms = None
-        self.privatechat = None
 
         self.shutdown = False
         self.manualdisconnect = False
@@ -303,6 +304,7 @@ class NetworkEventProcessor:
         self.userbrowse = UserBrowse(self, config, ui_callback)
         self.userinfo = UserInfo(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
+        self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
 
         self.add_upnp_portmapping()
 
@@ -719,8 +721,7 @@ Error: %(error)s""", {
 
         # From this point on all paths should call
         # self.pluginhandler.user_resolve_notification precisely once
-        if self.privatechat is not None:
-            self.privatechat.private_message_queue_process(user)
+        self.privatechats.private_message_queue_process(user)
 
         if user not in self.ip_requested:
             self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
@@ -943,7 +944,7 @@ Error: %(error)s""", {
 
         self.transfers.server_disconnect()
 
-        self.privatechat = self.chatrooms = None
+        self.chatrooms = None
         self.pluginhandler.server_disconnect_notification(userchoice)
 
         if self.ui_callback:
@@ -1262,9 +1263,10 @@ Error: %(error)s""", {
             self.userbrowse.server_login()
             self.userinfo.server_login()
             self.userlist.server_login()
+            self.privatechats.server_login()
 
             if self.ui_callback:
-                self.privatechat, self.chatrooms = self.ui_callback.server_login()
+                self.chatrooms = self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)
@@ -1340,9 +1342,7 @@ Error: %(error)s""", {
         self.userbrowse.get_user_status(msg)
         self.userinfo.get_user_status(msg)
         self.userlist.get_user_status(msg)
-
-        if self.privatechat is not None:
-            self.privatechat.get_user_status(msg)
+        self.privatechats.get_user_status(msg)
 
         if self.chatrooms is not None:
             self.chatrooms.get_user_status(msg)
@@ -1405,10 +1405,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
         log.add_chat(msg)
 
-        self.queue.append(slskmessages.MessageAcked(msg.msgid))
-
-        if self.privatechat is not None:
-            self.privatechat.show_message(msg, msg.msg, msg.newmessage)
+        self.privatechats.message_user(msg)
 
     def search_request(self, msg):
         """ Server code: 26, 42 and 120 """
@@ -1966,14 +1963,11 @@ Error: %(error)s""", {
             return
 
         if user != msg.user:
-            text = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
+            msg.msg = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
                 "realuser": user, "fakeuser": msg.user} + msg.msg
             msg.user = user
-        else:
-            text = msg.msg
 
-        if self.privatechat is not None:
-            self.privatechat.show_message(msg, text)
+        self.privatechats.message_user(msg)
 
     def folder_contents_request(self, msg):
         """ Peer code: 36 """

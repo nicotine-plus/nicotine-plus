@@ -41,8 +41,6 @@ from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import auto_replace
-from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import grab_widget_focus
@@ -686,7 +684,7 @@ class ChatRoom:
                 line = re.sub(r"\\s\\s+", "  ", line)
 
                 if user != config.sections["server"]["login"]:
-                    append_line(self.ChatScroll, censor_chat(line), tag, username=user,
+                    append_line(self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag, username=user,
                                 usertag=usertag, timestamp_format="", scroll=False)
                 else:
                     append_line(self.ChatScroll, line, tag, username=user, usertag=usertag,
@@ -724,7 +722,7 @@ class ChatRoom:
         user = self.get_selected_username(treeview)
 
         if user is not None:
-            self.frame.privatechats.send_message(user, show_user=True)
+            self.frame.np.privatechats.add_user(user)
             self.frame.change_main_page("private")
 
     def on_popup_menu(self, menu, treeview):
@@ -890,7 +888,7 @@ class ChatRoom:
         if user != login:
 
             append_line(
-                self.ChatScroll, censor_chat(line), tag,
+                self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
@@ -931,7 +929,7 @@ class ChatRoom:
         event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
         if event is not None:
             (r, text) = event
-            self.say(auto_replace(text))
+            self.say(self.frame.np.privatechats.auto_replace(text))
             self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
 
     def say(self, text):

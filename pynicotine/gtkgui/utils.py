@@ -350,33 +350,6 @@ def copy_file_url(user, path):
     copy_text(url)
 
 
-""" Chat """
-
-
-def auto_replace(message):
-
-    if config.sections["words"]["replacewords"]:
-        autoreplaced = config.sections["words"]["autoreplaced"]
-
-        for word, replacement in autoreplaced.items():
-            message = message.replace(str(word), str(replacement))
-
-    return message
-
-
-def censor_chat(message):
-
-    if config.sections["words"]["censorwords"]:
-        filler = config.sections["words"]["censorfill"]
-        censored = config.sections["words"]["censored"]
-
-        for word in censored:
-            word = str(word)
-            message = message.replace(word, filler * len(word))
-
-    return message
-
-
 """ Events """
 
 

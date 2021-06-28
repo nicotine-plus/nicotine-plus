@@ -3054,9 +3054,6 @@ class PluginsFrame(BuildFrame):
         for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
             self.frame.np.pluginhandler.disable_plugin(plugin)
 
-        # Update chat completions for custom commands
-        self.frame.update_completions()
-
     def get_settings(self):
 
         return {

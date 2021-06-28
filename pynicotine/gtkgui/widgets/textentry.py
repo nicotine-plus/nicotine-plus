@@ -24,7 +24,6 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import auto_replace
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import parse_accelerator
@@ -237,7 +236,8 @@ class ChatEntry:
             if new_text[:2] == "//":
                 new_text = new_text[1:]
 
-            self.frame.np.queue.append(self.message_class(self.entity, auto_replace(new_text)))
+            self.frame.np.queue.append(
+                self.message_class(self.entity, self.frame.np.privatechats.auto_replace(new_text)))
             widget.set_text("")
             return
 
@@ -287,7 +287,7 @@ class ChatEntry:
 
         elif cmd == "/pm":
             if args:
-                self.frame.privatechats.send_message(args, show_user=True)
+                self.frame.np.privatechats.add_user(args)
                 self.frame.change_main_page("private")
 
         elif cmd in ("/m", "/msg"):
@@ -298,7 +298,8 @@ class ChatEntry:
                     msg = s[1]
                 else:
                     msg = None
-                self.frame.privatechats.send_message(user, msg, show_user=True)
+                self.frame.np.privatechats.add_user(args)
+                self.frame.np.privatechats.send_message(user, msg)
                 self.frame.change_main_page("private")
 
         elif cmd in ("/s", "/search"):
@@ -371,8 +372,8 @@ class ChatEntry:
 
         elif cmd == "/ctcpversion":
             if arg_self:
-                self.frame.privatechats.send_message(
-                    arg_self, self.frame.privatechats.CTCP_VERSION, show_user=True, bytestring=True)
+                self.frame.np.privatechats.send_message(
+                    arg_self, self.frame.privatechats.CTCP_VERSION, bytestring=True)
 
         elif cmd in ("/clear", "/cl"):
             self.textview.get_buffer().set_text("")
@@ -409,9 +410,6 @@ class ChatEntry:
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
 
-                if config.sections["words"]["commands"]:
-                    self.frame.update_completions()
-
         elif (cmd[:1] == "/" and self.is_chatroom
                 and self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)):
             pass
@@ -424,7 +422,7 @@ class ChatEntry:
             if text[:2] == "//":
                 text = text[1:]
 
-            self.send_message(text)
+            self.send_message(self.entity, text)
 
         self.entry.set_text("")
 

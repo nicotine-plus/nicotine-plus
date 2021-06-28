@@ -419,7 +419,7 @@ class NicotineFrame:
         self.downloads.server_login()
         self.privatechats.server_login()
 
-        return (self.privatechats, self.chatrooms)
+        return self.chatrooms
 
     def init_spell_checker(self):
 
@@ -2030,12 +2030,12 @@ class NicotineFrame:
 
     def on_get_private_chat(self, widget, *args):
 
-        text = widget.get_text()
+        username = widget.get_text()
 
-        if not text:
+        if not username:
             return
 
-        self.privatechats.send_message(text, show_user=True)
+        self.np.privatechats.add_user(username)
         clear_entry(widget)
 
     def on_create_room(self, widget, *args):
@@ -2048,7 +2048,7 @@ class NicotineFrame:
 
     def update_completions(self):
         self.chatrooms.update_completions()
-        self.privatechats.update_completions()
+        self.np.privatechats.update_completions()
 
     """ Away Timer """
 

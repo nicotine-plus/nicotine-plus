@@ -34,8 +34,6 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import append_line
-from pynicotine.gtkgui.utils import auto_replace
-from pynicotine.gtkgui.utils import censor_chat
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import grab_widget_focus
@@ -51,26 +49,15 @@ from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.logfacility import log
-from pynicotine.utils import get_completion_list
 from pynicotine.utils import get_path
 
 
 class PrivateChats(IconNotebook):
 
-    # List of allowed commands. The implementation for them is in the ChatEntry class.
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ",
-        "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ", "/unban ",
-        "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ", "/rescan ",
-        "/info ", "/toggle ", "/ctcpversion "
-    }
-
-    CTCP_VERSION = "\x01VERSION\x01"
-
     def __init__(self, frame):
 
         self.frame = frame
+        self.pages = {}
 
         IconNotebook.__init__(
             self,
@@ -81,16 +68,7 @@ class PrivateChats(IconNotebook):
             notebookraw=self.frame.PrivatechatNotebookRaw
         )
 
-        self.connected = True
-        self.users = {}
-        self.completion_list = []
-        self.private_message_queue = {}
-
         self.notebook.connect("switch-page", self.on_switch_chat)
-
-        # Clear list of previously open chats if we don't want to restore them
-        if not config.sections["privatechat"]["store"]:
-            config.sections["privatechat"]["users"].clear()
 
     def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
 
@@ -98,7 +76,7 @@ class PrivateChats(IconNotebook):
                 self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
             return
 
-        for user, tab in list(self.users.items()):
+        for user, tab in list(self.pages.items()):
             if tab.Main == page:
                 GLib.idle_add(grab_widget_focus, tab.ChatLine)
 
@@ -112,68 +90,48 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in list(self.users.items()):
+        for user, tab in list(self.pages.items()):
             if tab.Main == page:
                 # Remove hilite
                 self.frame.notifications.clear("private", tab.user)
 
     def get_user_status(self, msg):
 
-        if msg.user in self.users:
-            tab = self.users[msg.user]
+        if msg.user in self.pages:
+            page = self.pages[msg.user]
 
-            self.set_user_status(tab.Main, msg.user, msg.status)
-            tab.get_user_status(msg.status)
+            self.set_user_status(page.Main, msg.user, msg.status)
+            page.get_user_status(msg.status)
 
-    def send_message(self, user, text=None, show_user=False, bytestring=False):
+    def set_completion_list(self, completion_list):
+        for user in self.pages.values():
+            user.set_completion_list(list(completion_list))
 
-        if user not in self.users:
+    def add_user(self, user, switch_page=True):
+
+        if user not in self.pages:
             try:
                 status = self.frame.np.users[user].status
             except Exception:
                 # Offline
                 status = 0
 
-            self.users[user] = tab = PrivateChat(self, user, status)
+            self.pages[user] = page = PrivateChat(self, user, status)
 
-            if user not in config.sections["privatechat"]["users"]:
-                config.sections["privatechat"]["users"].append(user)
+            self.append_page(page.Main, user, page.on_close, status=status)
+            page.set_label(self.get_tab_label_inner(page.Main))
 
-            # Get notified of user status
-            self.frame.np.watch_user(user)
+        if switch_page:
+            if self.get_current_page() != self.page_num(self.pages[user].Main):
+                self.set_current_page(self.page_num(self.pages[user].Main))
 
-            self.append_page(tab.Main, user, tab.on_close, status=status)
-            tab.set_label(self.get_tab_label_inner(tab.Main))
-
-        if show_user:
-            if self.get_current_page() != self.page_num(self.users[user].Main):
-                self.set_current_page(self.page_num(self.users[user].Main))
-
-        if text is not None:
-            self.users[user].send_message(text, bytestring=bytestring)
-
-    def private_message_queue_add(self, msg, text):
-
-        user = msg.user
-
-        if user not in self.private_message_queue:
-            self.private_message_queue[user] = [[msg, text]]
-        else:
-            self.private_message_queue[user].append([msg, text])
-
-    def private_message_queue_process(self, user):
-
-        if user not in self.private_message_queue:
-            return
-
-        for data in self.private_message_queue[user][:]:
-            msg, text = data
-            self.private_message_queue[user].remove(data)
-            self.show_message(msg, text)
+    def send_message(self, user, text):
+        if user in self.pages:
+            self.pages[user].send_message(text)
 
     def show_notification(self, user, text):
 
-        chat = self.users[user]
+        chat = self.pages[user]
 
         # Hilight top-level tab label
         self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
@@ -199,91 +157,28 @@ class PrivateChats(IconNotebook):
                 priority=Gio.NotificationPriority.HIGH
             )
 
-    def show_message(self, msg, text, newmessage=True):
+    def message_user(self, msg):
 
-        if self.frame.np.network_filter.is_user_ignored(msg.user):
-            return
+        self.frame.np.privatechats.add_user(msg.user)
+        self.show_notification(msg.user, msg.msg)
 
-        if msg.user in self.frame.np.users and isinstance(self.frame.np.users[msg.user].addr, tuple):
-            ip, port = self.frame.np.users[msg.user].addr
-            if self.frame.np.network_filter.is_ip_ignored(ip):
-                return
-
-        elif newmessage:
-            self.frame.np.queue.append(slskmessages.GetPeerAddress(msg.user))
-            self.private_message_queue_add(msg, text)
-            return
-
-        user_text = self.frame.np.pluginhandler.incoming_private_chat_event(msg.user, text)
-        if user_text is None:
-            return
-
-        (u, text) = user_text
-
-        self.send_message(msg.user, None)
-        self.show_notification(msg.user, text)
-
-        # SEND CLIENT VERSION to user if the following string is sent
-        ctcpversion = 0
-        if text == self.CTCP_VERSION:
-            ctcpversion = 1
-            text = "CTCP VERSION"
-
-        self.users[msg.user].show_message(text, newmessage, msg.timestamp)
-
-        if ctcpversion and config.sections["server"]["ctcpmsgs"] == 0:
-            self.send_message(msg.user, GLib.get_application_name() + " " + config.version)
-
-        self.frame.np.pluginhandler.incoming_private_chat_notification(msg.user, text)
+        self.pages[msg.user].message_user(msg)
 
     def update_visuals(self):
-        for chat in self.users.values():
-            chat.update_visuals()
-            chat.update_tags()
 
-    def remove_tab(self, tab):
-
-        self.frame.notifications.clear("private", tab.user)
-        del self.users[tab.user]
-
-        if tab.user in config.sections["privatechat"]["users"]:
-            config.sections["privatechat"]["users"].remove(tab.user)
-
-        self.remove_page(tab.Main)
+        for page in self.pages.values():
+            page.update_visuals()
+            page.update_tags()
 
     def server_login(self):
-
-        self.connected = True
-
-        for user in self.users:
-            self.users[user].server_login()
-
-            # Get notified of user status
-            self.frame.np.watch_user(user)
-
-        if not config.sections["privatechat"]["store"]:
-            return
-
-        for user in config.sections["privatechat"]["users"]:
-            if isinstance(user, str) and user not in self.users:
-                self.send_message(user)
+        for user, page in self.pages.items():
+            page.server_login()
 
     def server_disconnect(self):
 
-        self.connected = False
-
-        for user in self.users:
-            self.users[user].server_disconnect()
-            tab = self.users[user]
-
-            self.set_user_status(tab.Main, user, 0)
-
-    def update_completions(self):
-
-        self.completion_list = get_completion_list(self.CMDS, self.frame.chatrooms.roomlist.server_rooms)
-
-        for user in self.users.values():
-            user.set_completion_list(list(self.completion_list))
+        for user, page in self.pages.values():
+            page.server_disconnect()
+            self.set_user_status(page.Main, user, 0)
 
 
 class PrivateChat:
@@ -304,7 +199,6 @@ class PrivateChat:
         else:
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
-        self.autoreplied = False
         self.offlinemessage = False
         self.status = status
 
@@ -313,7 +207,8 @@ class PrivateChat:
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
-                               self.send_message, self.chats.CMDS, self.ChatScroll)
+                               self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS,
+                               self.ChatScroll)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
@@ -343,7 +238,7 @@ class PrivateChat:
 
         self.create_tags()
         self.update_visuals()
-        self.set_completion_list(list(self.chats.completion_list))
+        self.set_completion_list(list(self.frame.np.privatechats.completion_list))
 
         self.read_private_log()
 
@@ -433,18 +328,21 @@ class PrivateChat:
     def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
 
-    def show_message(self, text, newmessage=True, timestamp=None):
+    def message_user(self, msg):
+
+        text = msg.msg
+        newmessage = msg.newmessage
+        timestamp = msg.timestamp
 
         if text[:4] == "/me ":
-            line = "* %s %s" % (self.user, censor_chat(text[4:]))
-            speech = line[2:]
+            line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_me
         else:
-            line = "[%s] %s" % (self.user, censor_chat(text))
-            speech = censor_chat(text)
+            line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
+
         if not newmessage and not self.offlinemessage:
             append_line(
                 self.ChatScroll,
@@ -476,44 +374,18 @@ class PrivateChat:
             timestamp_format = config.sections["logging"]["log_timestamp"]
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
-        autoreply = config.sections["server"]["autoreply"]
-        if self.frame.np.away and not self.autoreplied and autoreply:
-            self.send_message("[Auto-Message] %s" % autoreply)
-            self.autoreplied = True
-
-        self.frame.np.notifications.new_tts(
-            config.sections["ui"]["speechprivate"], {
-                "user": self.user,
-                "message": speech
-            }
-        )
-
-    def send_message(self, text, bytestring=False):
-
-        if not self.chats.connected:
-            return
-
-        user_text = self.frame.np.pluginhandler.outgoing_private_chat_event(self.user, text)
-        if user_text is None:
-            return
-
-        (u, text) = user_text
+    def send_message(self, text):
 
         my_username = config.sections["server"]["login"]
 
         if text[:4] == "/me ":
             line = "* %s %s" % (my_username, text[4:])
             usertag = tag = self.tag_me
+
         else:
-
-            if text == self.chats.CTCP_VERSION:
-                line = "CTCP VERSION"
-            else:
-                line = text
-
             tag = self.tag_local
             usertag = self.tag_my_username
-            line = "[%s] %s" % (my_username, line)
+            line = "[%s] %s" % (my_username, text)
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, line, tag, timestamp_format=timestamp_format,
@@ -522,14 +394,6 @@ class PrivateChat:
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
-
-        if bytestring:
-            payload = text
-        else:
-            payload = auto_replace(text)
-
-        self.frame.np.queue.append(slskmessages.MessageUser(self.user, payload))
-        self.frame.np.pluginhandler.outgoing_private_chat_notification(self.user, text)
 
     def update_visuals(self):
 
@@ -554,7 +418,7 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         self.tag_username = self.create_tag(buffer, color)
 
-        if self.chats.connected:
+        if self.frame.np.active_server_conn:
             if self.frame.np.away and config.sections["ui"]["showaway"]:
                 self.tag_my_username = self.create_tag(buffer, "useraway")
             else:
@@ -572,7 +436,7 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         update_tag_visuals(self.tag_username, color)
 
-        if self.chats.connected:
+        if self.frame.np.active_server_conn:
             if self.frame.np.away and config.sections["ui"]["showaway"]:
                 update_tag_visuals(self.tag_my_username, "useraway")
             else:
@@ -591,7 +455,12 @@ class PrivateChat:
         update_tag_visuals(self.tag_username, color)
 
     def on_close(self, *args):
-        self.chats.remove_tab(self)
+
+        self.frame.notifications.clear("private", self.user)
+        del self.chats.pages[self.user]
+        self.frame.np.privatechats.remove_user(self.user)
+
+        self.chats.remove_page(self.Main)
 
     def on_close_all_tabs(self, *args):
         self.chats.remove_all_pages()
