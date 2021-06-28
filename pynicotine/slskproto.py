@@ -1225,6 +1225,7 @@ class SlskProtoThread(threading.Thread):
         conns = self._conns
         connsinprogress = self._connsinprogress
         queue = self._queue
+        numsockets = 0
 
         while not self._want_abort:
 
