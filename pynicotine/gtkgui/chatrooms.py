@@ -491,16 +491,19 @@ class ChatRoom:
             int,                  # (5)  status
             GObject.TYPE_UINT64,  # (6)  avgspeed
             GObject.TYPE_UINT64,  # (7)  files
-            str                   # (8)  country
+            str,                  # (8)  country
+            Pango.Weight,         # (9)  username_weight
+            Pango.Underline       # (10) username_underline
         )
         self.UserList.set_model(self.usersmodel)
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
+        attribute_columns = (9, 10)
         self.cols = cols = initialise_columns(
             ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
-            ["user", _("User"), 100, "text", self.user_column_draw],
+            ["user", _("User"), 100, "text", attribute_columns],
             ["speed", _("Speed"), 100, "number", None],
             ["files", _("Files"), 100, "number", None]
         )
@@ -588,6 +591,18 @@ class ChatRoom:
         hspeed = human_speed(avgspeed)
         hfiles = humanize(files)
 
+        weight = Pango.Weight.NORMAL
+        underline = Pango.Underline.NONE
+
+        if self.room in self.chatrooms.private_rooms:
+            if username == self.chatrooms.private_rooms[self.room]["owner"]:
+                weight = Pango.Weight.BOLD
+                underline = Pango.Underline.SINGLE
+
+            elif username in self.chatrooms.private_rooms[self.room]["operators"]:
+                weight = Pango.Weight.BOLD
+                underline = Pango.Underline.NONE
+
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
@@ -599,7 +614,9 @@ class ChatRoom:
                 status,
                 GObject.Value(GObject.TYPE_UINT64, avgspeed),
                 GObject.Value(GObject.TYPE_UINT64, files),
-                country
+                country,
+                weight,
+                underline
             ]
         )
 
@@ -964,23 +981,6 @@ class ChatRoom:
         user_count = len(self.users)
         self.LabelPeople.set_text(str(user_count))
         self.chatrooms.roomlist.update_room(self.room, user_count)
-
-    def user_column_draw(self, column, cellrenderer, model, iterator, dummy="dummy"):
-
-        if self.room in self.chatrooms.private_rooms:
-            user = self.usersmodel.get_value(iterator, 2)
-
-            if user == self.chatrooms.private_rooms[self.room]["owner"]:
-                cellrenderer.set_property("underline", Pango.Underline.SINGLE)
-                cellrenderer.set_property("weight", Pango.Weight.BOLD)
-
-            elif user in (self.chatrooms.private_rooms[self.room]["operators"]):
-                cellrenderer.set_property("weight", Pango.Weight.BOLD)
-                cellrenderer.set_property("underline", Pango.Underline.NONE)
-
-            else:
-                cellrenderer.set_property("weight", Pango.Weight.NORMAL)
-                cellrenderer.set_property("underline", Pango.Underline.NONE)
 
     def get_user_stats(self, user, avgspeed, files):
 

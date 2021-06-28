@@ -49,7 +49,12 @@ class RoomList:
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
-        self.room_model = Gtk.ListStore(str, int, int)
+        self.room_model = Gtk.ListStore(
+            str,
+            int,
+            Pango.Weight,
+            Pango.Underline
+        )
 
         self.room_filter = self.room_model.filter_new()
         self.room_filter.set_visible_func(self.room_match_function)
@@ -64,10 +69,11 @@ class RoomList:
         self.RoomsList.set_model(self.room_model_filtered)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
+        attribute_columns = (2, 3)
         self.cols = initialise_columns(
             None, self.RoomsList,
-            ["room", _("Room"), 260, "text", self.room_status],
-            ["users", _("Users"), 100, "number", self.room_status]
+            ["room", _("Room"), 260, "text", attribute_columns],
+            ["users", _("Users"), 100, "number", attribute_columns]
         )
         self.cols["room"].set_sort_column_id(0)
         self.cols["users"].set_sort_column_id(1)
@@ -162,20 +168,6 @@ class RoomList:
 
         return False
 
-    def room_status(self, column, cellrenderer, model, iterator, dummy='dummy'):
-
-        if self.room_model_filtered.get_value(iterator, 2) >= 2:
-            cellrenderer.set_property("underline", Pango.Underline.SINGLE)
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-
-        elif self.room_model_filtered.get_value(iterator, 2) >= 1:
-            cellrenderer.set_property("weight", Pango.Weight.BOLD)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
-
-        else:
-            cellrenderer.set_property("weight", Pango.Weight.NORMAL)
-            cellrenderer.set_property("underline", Pango.Underline.NONE)
-
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         # Temporarily disable sorting for improved performance
@@ -239,10 +231,10 @@ class RoomList:
             num = self.private_rooms[room]["joined"]
 
             if self.is_private_room_owned(room):
-                self.room_model.prepend([str(room), num, 2])
+                self.room_model.prepend([str(room), num, Pango.Weight.BOLD, Pango.Underline.SINGLE])
 
             elif self.is_private_room_member(room):
-                self.room_model.prepend([str(room), num, 1])
+                self.room_model.prepend([str(room), num, Pango.Weight.BOLD, Pango.Underline.NONE])
 
     def update_room(self, room, user_count):
 
@@ -257,7 +249,10 @@ class RoomList:
                 iterator = self.room_model.iter_next(iterator)
 
         else:
-            self.room_model.insert_with_valuesv(-1, self.column_numbers, [room, user_count, 0])
+            self.room_model.insert_with_valuesv(
+                -1, self.column_numbers,
+                [room, user_count, Pango.Weight.NORMAL, Pango.Underline.NONE]
+            )
             self.server_rooms.add(room)
 
     def on_row_activated(self, treeview, path, column):

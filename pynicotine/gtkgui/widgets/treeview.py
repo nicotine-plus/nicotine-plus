@@ -200,8 +200,10 @@ def initialise_columns(treeview_name, treeview, *args):
         if isinstance(extra, int):
             column.add_attribute(renderer, "foreground", extra)
 
-        elif callable(extra):
-            column.set_cell_data_func(renderer, extra)
+        elif isinstance(extra, tuple):
+            weight, underline = extra
+            column.add_attribute(renderer, "weight", weight)
+            column.add_attribute(renderer, "underline", underline)
 
         column.set_reorderable(True)
         column.set_min_width(20)
