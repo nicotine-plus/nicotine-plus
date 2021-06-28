@@ -348,13 +348,6 @@ class UserBrowse:
             self.FolderTreeView.collapse_all()
             self.expand.set_property("icon-name", "go-down-symbolic")
 
-            dirs = sorted(self.directories.keys())
-
-            if dirs:
-                self.set_directory(dirs[0])
-            else:
-                self.set_directory(None)
-
     def on_folder_row_activated(self, treeview, path, column):
         if self.user != config.sections["server"]["login"]:
             self.on_download_directory()
@@ -437,15 +430,15 @@ class UserBrowse:
         self.NumDirectories.set_text(str(len(self.shares)))
 
         # Generate the directory tree and select first directory
-        currentdir = self.browse_get_dirs()
+        self.browse_get_dirs()
 
+        iterator = self.dir_store.get_iter_first()
         sel = self.FolderTreeView.get_selection()
         sel.unselect_all()
 
-        if currentdir in self.directories:
-            path = self.dir_store.get_path(self.directories[currentdir])
-            if path is not None:
-                sel.select_path(path)
+        if iterator:
+            path = self.dir_store.get_path(iterator)
+            sel.select_path(path)
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
@@ -454,65 +447,57 @@ class UserBrowse:
 
         self.set_finished()
 
+    def build_dict_tree(self, p, s):
+        """
+            Build recursively a hierarchical dict containing raw subdir
+            'p' is a reference to the parent
+            's' a list of the subdir of a path
+
+            ex of 's': ['music', 'rock', 'doors']
+        """
+
+        if s:
+            subdir = s.pop(0)
+
+            if subdir not in p:
+                p[subdir] = {}
+
+            self.build_dict_tree(p[subdir], s)
+
+    def build_gtk_tree(self, dictdir, parent, path):
+        """
+            Build recursively self.directories with iters pointing to directories
+            'dictdir' is a hierarchical dict containing raw subdir
+            'parent' is the iter pointing to the parent
+            'path' is the current raw path
+        """
+
+        # Foreach subdir
+        for subdir in dictdir:
+
+            if parent is None:
+                # The first sudirs are attached to the root (None)
+                current_path = subdir
+            else:
+                # Other sudirs futher down the path are attached to their parent
+                current_path = '\\'.join([path, subdir])
+
+            self.directories[current_path] = self.dir_store.insert_with_values(
+                parent, -1, self.dir_column_numbers,
+                [subdir, current_path]
+            )
+
+            # If there are subdirs futher down the path: recurse
+            if dictdir[subdir]:
+                self.build_gtk_tree(dictdir[subdir], self.directories[current_path], current_path)
+
     def browse_get_dirs(self):
 
-        directory = ""
-        dirseparator = '\\'
+        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.FolderTreeView.set_model(self.dir_store)
 
-        # If there is no share
         if not self.shares:
-
-            # Set the model of the treeviex
-            self.FolderTreeView.set_model(self.dir_store)
-
-            # Sort the DirStore
-            self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-            return directory
-
-        def builddicttree(p, s):
-            """
-                Build recursively a hierarchical dict containing raw subdir
-                'p' is a reference to the parent
-                's' a list of the subdir of a path
-
-                ex of 's': ['music', 'rock', 'doors']
-            """
-
-            if s:
-                subdir = s.pop(0)
-
-                if subdir not in p:
-                    p[subdir] = {}
-
-                builddicttree(p[subdir], s)
-
-        def buildgtktree(dictdir, parent, path):
-            """
-                Build recursively self.directories with iters pointing to directories
-                'dictdir' is a hierarchical dict containing raw subdir
-                'parent' is the iter pointing to the parent
-                'path' is the current raw path
-            """
-
-            # Foreach subdir
-            for subdir in dictdir:
-
-                if parent is None:
-                    # The first sudirs are attached to the root (None)
-                    current_path = subdir
-                else:
-                    # Other sudirs futher down the path are attached to their parent
-                    current_path = dirseparator.join([path, subdir])
-
-                self.directories[current_path] = self.dir_store.insert_with_values(
-                    parent, -1, self.dir_column_numbers,
-                    [subdir, current_path]
-                )
-
-                # If there are subdirs futher down the path: recurse
-                if dictdir[subdir]:
-                    buildgtktree(dictdir[subdir], self.directories[current_path], current_path)
+            return
 
         # For each shared dir we will complete the dictionnary
         dictdir = {}
@@ -520,27 +505,14 @@ class UserBrowse:
         for dirshares, f in self.shares:
 
             # Split the path
-            s = dirshares.split(dirseparator)
+            s = dirshares.split('\\')
 
             # and build a hierarchical dictionnary containing raw subdir
             if len(s) >= 1:
-                builddicttree(dictdir, s)
+                self.build_dict_tree(dictdir, s)
 
         # Append data to the DirStore
-        buildgtktree(dictdir, None, None)
-
-        # Select the first directory
-        sortlist = sorted(self.directories.keys())
-
-        directory = sortlist[0]
-
-        # Sort the DirStore
-        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
-        # Set the model of the treeviex
-        self.FolderTreeView.set_model(self.dir_store)
-
-        return directory
+        self.build_gtk_tree(dictdir, None, None)
 
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
@@ -1015,67 +987,71 @@ class UserBrowse:
 
     def find_matches(self):
 
-        self.search_list = []
+        self.search_list.clear()
 
         for directory, files in self.shares:
 
             if self.query in directory.lower():
                 if directory not in self.search_list:
                     self.search_list.append(directory)
+                    continue
 
             for file in files:
                 if self.query in file[1].lower():
                     if directory not in self.search_list:
                         self.search_list.append(directory)
+                        continue
 
     def on_search(self, *args):
 
         query = self.SearchEntry.get_text().lower()
+
+        if not query:
+            return
 
         if self.query == query:
             self.search_position += 1
         else:
             self.search_position = 0
             self.query = query
-            if self.query == "":
-                return
+
             self.find_matches()
 
-        if self.search_list:
+        if not self.search_list:
+            return
 
-            if self.search_position not in list(range(len(self.search_list))):
-                self.search_position = 0
-
-            self.search_list.sort()
-            directory = self.search_list[self.search_position]
-
-            path = self.dir_store.get_path(self.directories[directory])
-            self.FolderTreeView.expand_to_path(path)
-            self.FolderTreeView.set_cursor(path)
-
-            # Get matching files in the current directory
-            resultfiles = []
-            for file in self.files:
-                if query in file.lower():
-                    resultfiles.append(file)
-
-            sel = self.FileTreeView.get_selection()
-            sel.unselect_all()
-            not_selected = 1
-            resultfiles.sort()
-
-            for fn in resultfiles:
-                path = self.file_store.get_path(self.files[fn])
-
-                # Select each matching file in directory
-                sel.select_path(path)
-
-                if not_selected:
-                    # Position cursor at first match
-                    self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
-                    not_selected = 0
-        else:
+        if self.search_position >= len(self.search_list):
             self.search_position = 0
+
+        self.search_list = sorted(self.search_list, key=str.casefold)
+        directory = self.search_list[self.search_position]
+
+        path = self.dir_store.get_path(self.directories[directory])
+        self.FolderTreeView.expand_to_path(path)
+        self.FolderTreeView.set_cursor(path)
+
+        # Get matching files in the current directory
+        resultfiles = []
+
+        for file in self.files:
+            if query in file.lower():
+                resultfiles.append(file)
+
+        sel = self.FileTreeView.get_selection()
+        sel.unselect_all()
+        not_selected = 1
+        resultfiles.sort()
+
+        for fn in resultfiles:
+            path = self.file_store.get_path(self.files[fn])
+
+            # Select each matching file in directory
+            sel.select_path(path)
+
+            if not_selected:
+                # Position cursor at first match
+                self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+                not_selected = 0
 
     def on_refresh(self, *args):
 
@@ -1121,6 +1097,7 @@ class UserBrowse:
         self.user_popup.toggle_user_items()
 
     def on_close(self, *args):
+
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)

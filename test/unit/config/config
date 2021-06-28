@@ -175,7 +175,6 @@ tab_default =
 tab_hilite = #497ec2
 tab_changed = #497ec2
 tab_select_previous = True
-tab_reorderable = True
 tabmain = Top
 tabrooms = Top
 tabprivate = Top
