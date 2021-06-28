@@ -22,10 +22,4 @@ jobs:
 
       - name: Run autopkgtest
         run: |
-          set +e
           sudo autopkgtest . -- null
-
-          # autopkgtest exit code 2 signifies skipped tests
-          if [ $? -gt 2 ]; then
-            exit 1
-          fi
