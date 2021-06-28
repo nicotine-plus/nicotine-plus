@@ -40,11 +40,20 @@ class UserBrowse:
             self.np.watch_user(user)  # Get notified of user status
 
     def add_user(self, user):
-        self.np.watch_user(user, force_update=True)
-        self.users.add(user)
+
+        if user not in self.users:
+            self.np.watch_user(user, force_update=True)
+            self.users.add(user)
 
     def remove_user(self, user):
         self.users.remove(user)
+
+    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
+
+        self.add_user(user)
+
+        if self.ui_callback:
+            self.ui_callback.show_user(user, folder, local_shares_type, indeterminate_progress)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
@@ -70,8 +79,7 @@ class UserBrowse:
         thread.daemon = True
         thread.start()
 
-        if self.ui_callback:
-            self.ui_callback.show_user(login, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(login, local_shares_type="normal", indeterminate_progress=True)
 
     def browse_local_buddy_shares(self):
         """ Browse your own buddy shares """
@@ -89,8 +97,7 @@ class UserBrowse:
         thread.daemon = True
         thread.start()
 
-        if self.ui_callback:
-            self.ui_callback.show_user(login, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(login, local_shares_type="buddy", indeterminate_progress=True)
 
     def browse_user(self, username, folder=None, local_shares_type=None, new_request=False):
         """ Browse a user's shares """
@@ -109,8 +116,7 @@ class UserBrowse:
         if username not in self.users or new_request:
             self.np.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
-        if self.ui_callback:
-            self.ui_callback.show_user(username, folder=folder)
+        self.show_user(username, folder=folder)
 
     @staticmethod
     def get_shares_list_from_disk(filename):
@@ -142,8 +148,7 @@ class UserBrowse:
 
     def load_local_shares_list(self, username, shares_list):
 
-        if self.ui_callback:
-            self.ui_callback.show_user(username)
+        self.show_user(username)
 
         msg = slskmessages.GetSharedFileList(None)
         msg.list = shares_list

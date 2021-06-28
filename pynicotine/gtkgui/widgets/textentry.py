@@ -287,7 +287,7 @@ class ChatEntry:
 
         elif cmd == "/pm":
             if args:
-                self.frame.np.privatechats.add_user(args)
+                self.frame.np.privatechats.show_user(args)
                 self.frame.change_main_page("private")
 
         elif cmd in ("/m", "/msg"):
@@ -298,7 +298,7 @@ class ChatEntry:
                     msg = s[1]
                 else:
                     msg = None
-                self.frame.np.privatechats.add_user(args)
+                self.frame.np.privatechats.show_user(args)
                 self.frame.np.privatechats.send_message(user, msg)
                 self.frame.change_main_page("private")
 

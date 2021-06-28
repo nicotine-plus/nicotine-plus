@@ -660,7 +660,7 @@ class BasePlugin:
     def sayprivate(self, user, text):
         """ Send user message in private (showing up in GUI) """
 
-        self.np.privatechats.add_user(user)
+        self.np.privatechats.show_user(user)
         self.np.privatechats.send_message(user, text)
 
     def sendprivate(self, user, text):

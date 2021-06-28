@@ -135,7 +135,7 @@ class TrayIcon:
             return
 
         if user:
-            self.frame.np.privatechats.add_user(user)
+            self.frame.np.privatechats.show_user(user)
             self.frame.change_main_page("private")
             self.show_window()
 

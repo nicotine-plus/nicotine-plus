@@ -2035,7 +2035,7 @@ class NicotineFrame:
         if not username:
             return
 
-        self.np.privatechats.add_user(username)
+        self.np.privatechats.show_user(username)
         clear_entry(widget)
 
     def on_create_room(self, widget, *args):

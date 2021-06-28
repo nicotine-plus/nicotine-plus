@@ -463,7 +463,7 @@ class PopupMenu(Gio.Menu):
         self.frame.change_main_page("search")
 
     def on_send_message(self, *args):
-        self.frame.np.privatechats.add_user(self.user)
+        self.frame.np.privatechats.show_user(self.user)
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *args):

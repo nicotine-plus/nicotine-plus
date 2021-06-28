@@ -149,7 +149,6 @@ class UserBrowse:
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
-        self.frame.np.userbrowse.add_user(user)
 
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))

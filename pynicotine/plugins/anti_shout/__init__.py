@@ -63,5 +63,3 @@ class Plugin(BasePlugin):
             return newline
 
         return newline + " [as]"
-
-    __privatecommands__ = [('port', antishout)]

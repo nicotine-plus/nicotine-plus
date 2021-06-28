@@ -53,28 +53,25 @@ class PrivateChats:
     def server_login(self):
 
         for user in self.users:
-
-            # Get notified of user status
-            self.np.watch_user(user)
+            self.np.watch_user(user)  # Get notified of user status
 
         if not self.config.sections["privatechat"]["store"]:
             return
 
         for user in self.config.sections["privatechat"]["users"]:
             if isinstance(user, str) and user not in self.users:
-                self.add_user(user, switch_page=False)
+                self.show_user(user, switch_page=False)
 
-    def add_user(self, user, switch_page=False):
+    def add_user(self, user):
 
-        if user not in self.users:
-            self.np.watch_user(user)
-            self.users[user] = {"autoreplied": False}
+        if user in self.users:
+            return
+
+        self.np.watch_user(user)
+        self.users[user] = {"autoreplied": False}
 
         if user not in self.config.sections["privatechat"]["users"]:
             self.config.sections["privatechat"]["users"].append(user)
-
-        if self.ui_callback:
-            self.ui_callback.add_user(user, switch_page)
 
     def remove_user(self, user):
 
@@ -82,6 +79,13 @@ class PrivateChats:
             self.config.sections["privatechat"]["users"].remove(user)
 
         del self.users[user]
+
+    def show_user(self, user, switch_page=False):
+
+        self.add_user(user)
+
+        if self.ui_callback:
+            self.ui_callback.show_user(user, switch_page)
 
     def auto_replace(self, message):
 

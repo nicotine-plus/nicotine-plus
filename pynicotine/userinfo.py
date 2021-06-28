@@ -36,12 +36,13 @@ class UserInfo:
             self.ui_callback = ui_callback.userinfo
 
     def server_login(self):
-
-        # Get notified of user status
         for user in self.users:
-            self.np.watch_user(user)
+            self.np.watch_user(user)  # Get notified of user status
 
     def add_user(self, user):
+
+        if user in self.users:
+            return
 
         # Request user status, speed and number of shared files
         self.np.watch_user(user, force_update=True)
@@ -53,6 +54,13 @@ class UserInfo:
 
     def remove_user(self, user):
         self.users.remove(user)
+
+    def show_user(self, user):
+
+        self.add_user(user)
+
+        if self.ui_callback:
+            self.ui_callback.show_user(user)
 
     def request_local_user_info(self, user, msg):
 
@@ -86,8 +94,7 @@ class UserInfo:
 
         msg = slskmessages.UserInfoRequest(None)
 
-        if self.ui_callback:
-            self.ui_callback.show_user(user)
+        self.show_user(user)
 
         if user == self.config.sections["server"]["login"]:
             self.request_local_user_info(user, msg)

@@ -107,7 +107,7 @@ class PrivateChats(IconNotebook):
         for user in self.pages.values():
             user.set_completion_list(list(completion_list))
 
-    def add_user(self, user, switch_page=True):
+    def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
             try:
@@ -159,7 +159,7 @@ class PrivateChats(IconNotebook):
 
     def message_user(self, msg):
 
-        self.frame.np.privatechats.add_user(msg.user)
+        self.frame.np.privatechats.show_user(msg.user)
         self.show_notification(msg.user, msg.msg)
 
         self.pages[msg.user].message_user(msg)
@@ -176,7 +176,7 @@ class PrivateChats(IconNotebook):
 
     def server_disconnect(self):
 
-        for user, page in self.pages.values():
+        for user, page in self.pages.items():
             page.server_disconnect()
             self.set_user_status(page.Main, user, 0)
 
