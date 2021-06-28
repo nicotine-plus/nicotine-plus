@@ -288,9 +288,18 @@ class PluginHandler:
                     continue
 
                 if public_command:
-                    return_value = plugin.PublicCommandEvent(command, source, args)
+                    for trigger, func in plugin.__publiccommands__:
+                        if trigger == command:
+                            return_value = func(plugin, source, args)
+
+                    return_value = None
+
                 else:
-                    return_value = plugin.PrivateCommandEvent(command, source, args)
+                    for trigger, func in plugin.__privatecommands__:
+                        if trigger == command:
+                            return_value = func(plugin, source, args)
+
+                    return_value = None
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
@@ -679,19 +688,3 @@ class BasePlugin:
         msg.user = user
         room.say_chat_room(msg, text)
         return True
-
-    # The following are functions used by the plugin system,
-    # you are not allowed to override these.
-    def PublicCommandEvent(self, command, room, args):  # pylint: disable=invalid-name, # noqa
-        for (trigger, func) in self.__publiccommands__:
-            if trigger == command:
-                return func(self, room, args)
-
-        return None
-
-    def PrivateCommandEvent(self, command, user, args):  # pylint: disable=invalid-name, # noqa
-        for (trigger, func) in self.__privatecommands__:
-            if trigger == command:
-                return func(self, user, args)
-
-        return None
