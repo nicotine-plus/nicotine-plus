@@ -43,7 +43,7 @@ class Plugin(BasePlugin):
                               'type': 'list string'},
     }
 
-    def LoadNotification(self):  # noqa
+    def init(self):
         self.log('A line should be at least %s long with a maximum of %s different characters '
                  'before it\'s considered ASCII spam.' %
                  (self.settings['minlength'], self.settings['maxdiffcharacters']))
