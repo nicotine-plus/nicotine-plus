@@ -56,13 +56,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="TabReorderable">
-            <property name="label" translatable="yes">Tabs can be reordered</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">When disabled, tabs are locked in their current order.</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkCheckButton" id="TabStatusIcons">
             <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
             <property name="visible">1</property>

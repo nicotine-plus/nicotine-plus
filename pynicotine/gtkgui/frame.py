@@ -259,7 +259,6 @@ class NicotineFrame:
         """ Tab Visibility/Order """
 
         self.set_tab_positions()
-        self.set_main_tabs_reorderable()
         self.set_main_tabs_order()
         self.set_main_tabs_visibility()
         self.set_last_session_tab()
@@ -1609,6 +1608,7 @@ class NicotineFrame:
 
             # Replace previous placeholder label
             self.MainNotebook.set_tab_label(page, tab_label)
+            self.MainNotebook.set_tab_reorderable(page, True)
             tab_label.show()
 
             # Set the menu to hide the tab
@@ -1738,14 +1738,6 @@ class NicotineFrame:
 
         return False
 
-    def set_main_tabs_reorderable(self):
-
-        reorderable = config.sections["ui"]["tab_reorderable"]
-
-        for i in range(self.MainNotebook.get_n_pages()):
-            tab_box = self.MainNotebook.get_nth_page(i)
-            self.MainNotebook.set_tab_reorderable(tab_box, reorderable)
-
     def set_main_tabs_order(self):
 
         tab_names = config.sections["ui"]["modes_order"]
@@ -1815,7 +1807,7 @@ class NicotineFrame:
 
         self.MainNotebook.append_page(tab_box, event_box)
         self.set_tab_expand(tab_box)
-        self.MainNotebook.set_tab_reorderable(tab_box, config.sections["ui"]["tab_reorderable"])
+        self.MainNotebook.set_tab_reorderable(tab_box, True)
 
         del self.hidden_tabs[tab_box]
 
@@ -2402,7 +2394,6 @@ class NicotineFrame:
         # Other notebooks
         for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):
             w.set_tab_closers(config.sections["ui"]["tabclosers"])
-            w.set_reorderable(config.sections["ui"]["tab_reorderable"])
             w.show_hilite_images(config.sections["notifications"]["notification_tab_icons"])
             w.set_text_colors(None)
 
@@ -2416,8 +2407,6 @@ class NicotineFrame:
 
             tab_label.show_hilite_image(config.sections["notifications"]["notification_tab_icons"])
             tab_label.set_text_color(0)
-
-            self.MainNotebook.set_tab_reorderable(tab_box, config.sections["ui"]["tab_reorderable"])
 
         self.set_tab_positions()
 

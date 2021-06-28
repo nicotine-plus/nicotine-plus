@@ -234,15 +234,13 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, images, tabclosers=False, show_hilite_image=True, reorderable=True,
-                 show_status_image=False, notebookraw=None):
+    def __init__(self, images, tabclosers=False, show_hilite_image=True, show_status_image=False, notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
         self.notebook.set_show_border(False)
 
         self.tabclosers = tabclosers
-        self.reorderable = reorderable
 
         self.images = images
         self._show_hilite_image = show_hilite_image
@@ -292,14 +290,6 @@ class IconNotebook:
             return self.notebook.get_tab_label(page).get_first_child()
         else:
             return self.notebook.get_tab_label(page).get_children()[0]
-
-    def set_reorderable(self, reorderable):
-
-        self.reorderable = reorderable
-
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
-            self.notebook.set_tab_reorderable(page, self.reorderable)
 
     def set_tab_closers(self, closers):
 
@@ -390,7 +380,7 @@ class IconNotebook:
         else:
             label_tab.set_tooltip_text(fulltext)
 
-        self.notebook.set_tab_reorderable(page, self.reorderable)
+        self.notebook.set_tab_reorderable(page, True)
         self.notebook.show()
 
     def remove_page(self, page):

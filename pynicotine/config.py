@@ -262,7 +262,6 @@ class Config:
                 "tab_hilite": "#497ec2",
                 "tab_changed": "#497ec2",
                 "tab_select_previous": True,
-                "tab_reorderable": True,
                 "tabmain": "Top",
                 "tabrooms": "Top",
                 "tabprivate": "Top",
@@ -708,6 +707,9 @@ class Config:
 
         # Remove max stored search results, only visible search result limit is used now
         self.remove_old_option("searches", "max_stored_results")
+
+        # Remove option to specify if tabs are reorderable, since there's no clear advantage
+        self.remove_old_option("ui", "tab_reorderable")
 
     def remove_old_option(self, section, option):
 

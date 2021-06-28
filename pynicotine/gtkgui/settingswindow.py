@@ -1440,7 +1440,6 @@ class UserInterfaceFrame(BuildFrame):
                 "tabbrowse": self.UserBrowsePosition,
                 "tab_select_previous": self.TabSelectPrevious,
                 "tabclosers": self.TabClosers,
-                "tab_reorderable": self.TabReorderable,
                 "tab_status_icons": self.TabStatusIcons,
 
                 "icontheme": self.ThemeDir,
@@ -1543,7 +1542,6 @@ class UserInterfaceFrame(BuildFrame):
                 "tabbrowse": self.pos_list.get_value(iter_browse, 1),
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
-                "tab_reorderable": self.TabReorderable.get_active(),
                 "tab_status_icons": self.TabStatusIcons.get_active(),
 
                 "icontheme": self.ThemeDir.get_path(),
