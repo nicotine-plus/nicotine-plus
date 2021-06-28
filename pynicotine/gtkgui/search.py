@@ -543,35 +543,15 @@ class Search:
             else:
                 combobox.prepend_text(text)
 
-    def add_user_results(self, msg, user, country):
-
-        if user in self.users:
-            return
-
-        self.users.add(user)
-
-        counter = len(self.all_data) + 1
-
-        inqueue = msg.inqueue
-        ulspeed = msg.ulspeed
-        h_speed = human_speed(ulspeed)
-
-        if msg.freeulslots:
-            imdl = "Y"
-            inqueue = 0
-        else:
-            imdl = "N"
-
-        color_id = (imdl == "Y" and "search" or "searchq")
-        color = config.sections["ui"][color_id] or None
-
-        h_queue = humanize(inqueue)
+    def add_result_list(self, result_list, counter, user, country, inqueue, ulspeed, h_speed,
+                        imdl, h_queue, color, private=False):
+        """ Adds a list of search results to the treeview. Lists can either contain publicly or
+        privately shared files. """
 
         update_ui = False
         max_results = config.sections["searches"]["max_displayed_results"]
 
-        for result in msg.list:
-
+        for result in result_list:
             if counter > max_results:
                 break
 
@@ -595,6 +575,9 @@ class Search:
             size = result[2]
             h_size = human_size(size)
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
+
+            if private:
+                name = "[PRIVATE FILE]  " + name
 
             is_result_visible = self.append(
                 [
@@ -624,6 +607,42 @@ class Search:
                 update_ui = True
 
             counter += 1
+
+        return update_ui, counter
+
+    def add_user_results(self, msg, user, country):
+
+        if user in self.users:
+            return
+
+        self.users.add(user)
+
+        counter = len(self.all_data) + 1
+
+        inqueue = msg.inqueue
+        ulspeed = msg.ulspeed
+        h_speed = human_speed(ulspeed)
+
+        if msg.freeulslots:
+            imdl = "Y"
+            inqueue = 0
+        else:
+            imdl = "N"
+
+        h_queue = humanize(inqueue)
+
+        color_id = (imdl == "Y" and "search" or "searchq")
+        color = config.sections["ui"][color_id] or None
+
+        update_ui, counter = self.add_result_list(
+            msg.list, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color)
+
+        if config.sections["searches"]["show_private_results"] and msg.privatelist:
+            update_ui_private, counter = self.add_result_list(
+                msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color, private=True)
+
+            if not update_ui and update_ui_private:
+                update_ui = True
 
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
@@ -1151,7 +1170,7 @@ class Search:
             bitratestr = model.get_value(iterator, 9)
             length = model.get_value(iterator, 10)
             fn = model.get_value(iterator, 12)
-            directory = fn.rsplit('\\', 1)[0]
+            directory, filename = fn.rsplit('\\', 1)
             cc = model.get_value(iterator, 13)
             country = "%s / %s" % (cc, self.frame.np.geoip.country_code_to_name(cc))
 

@@ -2220,7 +2220,7 @@ class FileSearchResult(PeerMessage):
     token/ticket is taken from original FileSearch, UserSearch or
     RoomSearch message. """
 
-    __slots__ = ("conn", "user", "geoip", "token", "list", "fileindex", "freeulslots",
+    __slots__ = ("conn", "user", "geoip", "token", "list", "privatelist", "fileindex", "freeulslots",
                  "ulspeed", "inqueue", "fifoqueue", "numresults", "pos")
 
     def __init__(self, conn, user=None, token=None, shares=None, fileindex=None, freeulslots=None,
@@ -2229,13 +2229,13 @@ class FileSearchResult(PeerMessage):
         self.user = user
         self.token = token
         self.list = shares
+        self.privatelist = []
         self.fileindex = fileindex
         self.freeulslots = freeulslots
         self.ulspeed = ulspeed
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
         self.numresults = numresults
-        self.pos = 0
 
     def parse_network_message(self, message):
         try:
@@ -2246,34 +2246,40 @@ class FileSearchResult(PeerMessage):
                     {'area': 'FileSearchResult', 'exception': error})
             self.list = {}
 
-    def _parse_network_message(self, message):
-        self.pos, self.user = self.get_object(message, str)
-        self.pos, self.token = self.get_object(message, int, self.pos)
-        self.pos, nfiles = self.get_object(message, int, self.pos)
+    def _parse_result_list(self, message, pos):
+        pos, nfiles = self.get_object(message, int, pos)
 
         shares = []
         for _ in range(nfiles):
-            self.pos, code = self.pos + 1, message[self.pos]
-            self.pos, name = self.get_object(message, str, self.pos)
+            pos, code = pos + 1, message[pos]
+            pos, name = self.get_object(message, str, pos)
 
-            self.pos, size = self.get_object(message, int, self.pos, getunsignedlonglong=True)
-            self.pos, ext = self.get_object(message, str, self.pos)
-            self.pos, numattr = self.get_object(message, int, self.pos)
+            pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, ext = self.get_object(message, str, pos)
+            pos, numattr = self.get_object(message, int, pos)
 
             attrs = []
             if numattr:
                 for _ in range(numattr):
-                    self.pos, _attrnum = self.get_object(message, int, self.pos)
-                    self.pos, attr = self.get_object(message, int, self.pos)
+                    pos, _attrnum = self.get_object(message, int, pos)
+                    pos, attr = self.get_object(message, int, pos)
                     attrs.append(attr)
 
             shares.append((code, name.replace('/', '\\'), size, ext, attrs))
 
-        self.list = shares
+        return pos, shares
 
-        self.pos, self.freeulslots = self.pos + 1, message[self.pos]
-        self.pos, self.ulspeed = self.get_object(message, int, self.pos, getsignedint=True)
-        self.pos, self.inqueue = self.get_object(message, int, self.pos, getunsignedlonglong=True)
+    def _parse_network_message(self, message):
+        pos, self.user = self.get_object(message, str)
+        pos, self.token = self.get_object(message, int, pos)
+        pos, self.list = self._parse_result_list(message, pos)
+
+        pos, self.freeulslots = pos + 1, message[pos]
+        pos, self.ulspeed = self.get_object(message, int, pos, getsignedint=True)
+        pos, self.inqueue = self.get_object(message, int, pos, getunsignedlonglong=True)
+
+        if message[pos:]:
+            pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):
         msg_list = bytearray()
