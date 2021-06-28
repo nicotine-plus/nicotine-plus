@@ -372,6 +372,7 @@ class ChatEntry:
 
         elif cmd == "/ctcpversion":
             if arg_self:
+                self.frame.np.privatechats.show_user(arg_self)
                 self.frame.np.privatechats.send_message(
                     arg_self, self.frame.privatechats.CTCP_VERSION, bytestring=True)
 

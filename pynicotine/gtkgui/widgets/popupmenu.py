@@ -552,6 +552,7 @@ class PopupMenu(Gio.Menu):
         action.set_state(state)
 
     def on_version(self, *args):
+        self.frame.np.privatechats.show_user(self.user)
         self.frame.np.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
 
     def on_copy_user(self, *args):
