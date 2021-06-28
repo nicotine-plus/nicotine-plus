@@ -924,13 +924,13 @@ class ChatRoom:
         header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
         log.add("%s\n%s", (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
 
-    def send_message(self, text):
+    def send_message(self, room, text):
 
-        event = self.frame.np.pluginhandler.outgoing_public_chat_event(self.room, text)
+        event = self.frame.np.pluginhandler.outgoing_public_chat_event(room, text)
         if event is not None:
             (r, text) = event
             self.say(self.frame.np.privatechats.auto_replace(text))
-            self.frame.np.pluginhandler.outgoing_public_chat_notification(self.room, text)
+            self.frame.np.pluginhandler.outgoing_public_chat_notification(room, text)
 
     def say(self, text):
         text = re.sub("\\s\\s+", "  ", text)
