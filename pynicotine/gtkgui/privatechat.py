@@ -125,6 +125,10 @@ class PrivateChats(IconNotebook):
             if self.get_current_page() != self.page_num(self.pages[user].Main):
                 self.set_current_page(self.page_num(self.pages[user].Main))
 
+    def echo_message(self, user, text):
+        if user in self.pages:
+            self.pages[user].echo_message(text)
+
     def send_message(self, user, text):
         if user in self.pages:
             self.pages[user].send_message(text)
@@ -373,6 +377,12 @@ class PrivateChat:
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+
+    def echo_message(self, text):
+
+        tag = self.tag_me
+        timestamp_format = config.sections["logging"]["private_timestamp"]
+        append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
 
     def send_message(self, text):
 

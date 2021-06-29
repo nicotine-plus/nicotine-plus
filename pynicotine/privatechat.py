@@ -127,6 +127,10 @@ class PrivateChats:
             self.private_message_queue[user].remove(msg)
             self.message_user(msg)
 
+    def echo_message(self, user, text):
+        if self.ui_callback:
+            self.ui_callback.echo_message(user, text)
+
     def send_message(self, user, text, bytestring=False):
 
         if not self.np.active_server_conn:

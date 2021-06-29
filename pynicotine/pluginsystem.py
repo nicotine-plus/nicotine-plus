@@ -686,3 +686,9 @@ class BasePlugin:
         msg.user = user
         room.say_chat_room(msg, text)
         return True
+
+    def echo_private(self, user, msg):
+        """ Display a raw message in private (not sent to others) """
+
+        self.np.privatechats.show_user(user)
+        self.np.privatechats.echo_message(user, msg)
