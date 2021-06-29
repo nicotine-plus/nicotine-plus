@@ -187,16 +187,8 @@ class PrivateChats:
             ctcpversion = 1
             msg.msg = "CTCP VERSION"
 
-        self.np.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
-
         if self.ui_callback:
             self.ui_callback.message_user(msg)
-
-        autoreply = self.config.sections["server"]["autoreply"]
-
-        if self.np.away and not self.users[msg.user]["autoreplied"] and autoreply:
-            self.send_message(msg.user, "[Auto-Message] %s" % autoreply)
-            self.users[msg.user]["autoreplied"] = True
 
         self.np.notifications.new_tts(
             self.config.sections["ui"]["speechprivate"], {
@@ -205,8 +197,16 @@ class PrivateChats:
             }
         )
 
+        self.np.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
+
         if ctcpversion and self.config.sections["server"]["ctcpmsgs"] == 0:
             self.send_message(msg.user, "Nicotine+ " + self.config.version)
+
+        autoreply = self.config.sections["server"]["autoreply"]
+
+        if self.np.away and not self.users[msg.user]["autoreplied"] and autoreply:
+            self.send_message(msg.user, "[Auto-Message] %s" % autoreply)
+            self.users[msg.user]["autoreplied"] = True
 
     def update_completions(self):
 
