@@ -415,12 +415,14 @@ class UserBrowse:
         self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.shares = shares
+        self.query = None
         self.selected_folder = None
         self.selected_files.clear()
         self.directories.clear()
         self.files.clear()
         self.dir_store.clear()
         self.file_store.clear()
+        self.search_list.clear()
 
         # Compute the number of shared dirs and total size
         self.totalsize = 0
