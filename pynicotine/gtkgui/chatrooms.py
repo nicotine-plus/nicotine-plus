@@ -805,7 +805,7 @@ class ChatRoom:
             if config.sections["notifications"]["notification_popup_chatroom_mention"]:
                 self.frame.notifications.new_text_notification(
                     text,
-                    title=_("%s mentioned you in the %s room") % (user, self.room),
+                    title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
                     priority=Gio.NotificationPriority.HIGH
                 )
 
@@ -832,7 +832,7 @@ class ChatRoom:
         elif config.sections["notifications"]["notification_popup_chatroom"]:
             self.frame.notifications.new_text_notification(
                 text,
-                title=_("Message by %s in the %s room") % (user, self.room),
+                title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": self.room},
                 priority=Gio.NotificationPriority.HIGH
             )
 

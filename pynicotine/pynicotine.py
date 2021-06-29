@@ -98,7 +98,7 @@ class Timeout:
         try:
             self.callback([self])
         except Exception as error:
-            log.add(_("Exception in callback %s: %s"), (self.callback, error))
+            log.add(_("Exception in callback %(callback)s: %(error)s"), {"callback": self.callback, "error": error})
 
 
 class ConnectToPeerTimeout:

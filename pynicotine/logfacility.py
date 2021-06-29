@@ -167,7 +167,7 @@ class Logger:
             get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp_format, msg))
 
         except Exception as error:
-            print(_("Couldn't write to log file \"%s\": %s") % (filename, error))
+            print(_("Couldn't write to log file \"%(filename)s\": %(error)s") % {"filename": filename, "error": error})
 
     @staticmethod
     def write_log_callback(path, data):

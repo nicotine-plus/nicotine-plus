@@ -146,7 +146,8 @@ class Scanner:
                     database.close()
 
                 except Exception as error:
-                    self.queue.put((_("Can't save %s: %s"), (destination + ".db", error), None))
+                    self.queue.put((_("Can't save %(filename)s: %(error)s"),
+                                    {"filename": destination + ".db", "error": error}, None))
                     return
 
     def rescan_dirs(self, shared, oldmtimes, oldfiles, oldstreams, rebuild=False):

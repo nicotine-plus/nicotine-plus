@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-29 02:48+0300\n"
+"POT-Creation-Date: 2021-06-29 03:21+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1270,14 +1270,14 @@ msgstr ""
 msgid "Room wall"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:808
+#: pynicotine/gtkgui/chatrooms.py:808 pynicotine/gtkgui/notifications.py:97
 #, python-format
-msgid "%s mentioned you in the %s room"
+msgid "%(user)s mentioned you in the %(room)s room"
 msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:835
 #, python-format
-msgid "Message by %s in the %s room"
+msgid "Message by %(user)s in the %(room)s room"
 msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:924
@@ -1860,11 +1860,6 @@ msgstr ""
 #: pynicotine/gtkgui/notifications.py:93
 #, python-format
 msgid "You've been mentioned in the %(room)s room"
-msgstr ""
-
-#: pynicotine/gtkgui/notifications.py:97
-#, python-format
-msgid "%(user)s mentioned you in the %(room)s room"
 msgstr ""
 
 #: pynicotine/gtkgui/notifications.py:132
@@ -3255,7 +3250,7 @@ msgstr ""
 
 #: pynicotine/logfacility.py:170
 #, python-format
-msgid "Couldn't write to log file \"%s\": %s"
+msgid "Couldn't write to log file \"%(filename)s\": %(error)s"
 msgstr ""
 
 #: pynicotine/notifications.py:132
@@ -3370,7 +3365,7 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:101
 #, python-format
-msgid "Exception in callback %s: %s"
+msgid "Exception in callback %(callback)s: %(error)s"
 msgstr ""
 
 #: pynicotine/pynicotine.py:321
@@ -3549,85 +3544,85 @@ msgstr ""
 
 #: pynicotine/shares.py:149
 #, python-format
-msgid "Can't save %s: %s"
+msgid "Can't save %(filename)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:166
+#: pynicotine/shares.py:167
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding..."
 msgstr ""
 
-#: pynicotine/shares.py:179 pynicotine/shares.py:282 pynicotine/shares.py:343
+#: pynicotine/shares.py:180 pynicotine/shares.py:283 pynicotine/shares.py:344
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:202
+#: pynicotine/shares.py:203
 #, python-format
 msgid "%(num)s folders found after rescan"
 msgstr ""
 
-#: pynicotine/shares.py:269
+#: pynicotine/shares.py:270
 #, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:317
+#: pynicotine/shares.py:318
 #, python-format
 msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
 msgstr ""
 
-#: pynicotine/shares.py:322
+#: pynicotine/shares.py:323
 #, python-format
 msgid "Dropping missing folder %(dir)s"
 msgstr ""
 
-#: pynicotine/shares.py:371
+#: pynicotine/shares.py:372
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:390
+#: pynicotine/shares.py:391
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:602 pynicotine/shares.py:945
+#: pynicotine/shares.py:603 pynicotine/shares.py:946
 msgid "Downloaded"
 msgstr ""
 
-#: pynicotine/shares.py:666
+#: pynicotine/shares.py:667
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr ""
 
-#: pynicotine/shares.py:670
+#: pynicotine/shares.py:671
 msgid "Shared files database seems to be corrupted, rescan your shares"
 msgstr ""
 
-#: pynicotine/shares.py:901
+#: pynicotine/shares.py:902
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
 
-#: pynicotine/shares.py:969
+#: pynicotine/shares.py:970
 #, python-format
 msgid "Progress: %s"
 msgstr ""
 
-#: pynicotine/shares.py:982
+#: pynicotine/shares.py:983
 msgid "Rescanning normal shares..."
 msgstr ""
 
-#: pynicotine/shares.py:986
+#: pynicotine/shares.py:987
 msgid "Rescanning buddy shares..."
 msgstr ""
 
-#: pynicotine/shares.py:1032
+#: pynicotine/shares.py:1033
 msgid "Finished rescanning public shares"
 msgstr ""
 
-#: pynicotine/shares.py:1034
+#: pynicotine/shares.py:1035
 msgid "Finished rescanning buddy shares"
 msgstr ""
 
