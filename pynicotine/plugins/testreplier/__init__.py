@@ -35,7 +35,7 @@ class Plugin(BasePlugin):
     }
 
     def init(self):
-        self.throttle = ResponseThrottle(self.np, self.__name__)
+        self.throttle = ResponseThrottle(self.core, self.__name__)
 
     def IncomingPublicChatEvent(self, room, user, line):  # noqa
         if line.lower() == 'test':

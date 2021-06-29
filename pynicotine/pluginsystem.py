@@ -560,13 +560,13 @@ class BasePlugin:
     settings = {}
     metasettings = {}
 
-    def __init__(self, parent, config, np):
+    def __init__(self, parent, config, core):
 
         # Never override this function, override init() instead
         self.parent = parent
         self.config = config
-        self.np = np
-        self.frame = np.ui_callback
+        self.core = core
+        self.frame = core.ui_callback
 
     def init(self):
         # Custom enable function for plugins
@@ -663,22 +663,22 @@ class BasePlugin:
         log.add(self.__name__ + ": " + text)
 
     def saypublic(self, room, text):
-        self.np.queue.append(slskmessages.SayChatroom(room, text))
+        self.core.queue.append(slskmessages.SayChatroom(room, text))
 
     def sayprivate(self, user, text):
         """ Send user message in private (showing up in GUI) """
 
-        self.np.privatechats.show_user(user)
-        self.np.privatechats.send_message(user, text)
+        self.core.privatechats.show_user(user)
+        self.core.privatechats.send_message(user, text)
 
     def sendprivate(self, user, text):
         """ Send user message in private (not showing up in GUI) """
 
-        self.np.privatechats.send_message(user, text)
+        self.core.privatechats.send_message(user, text)
 
     def fakepublic(self, room, user, text):
         try:
-            room = self.np.chatrooms.joinedrooms[room]
+            room = self.core.chatrooms.joinedrooms[room]
         except KeyError:
             return False
 
@@ -690,5 +690,5 @@ class BasePlugin:
     def echo_private(self, user, msg):
         """ Display a raw message in private (not sent to others) """
 
-        self.np.privatechats.show_user(user)
-        self.np.privatechats.echo_message(user, msg)
+        self.core.privatechats.show_user(user)
+        self.core.privatechats.echo_message(user, msg)

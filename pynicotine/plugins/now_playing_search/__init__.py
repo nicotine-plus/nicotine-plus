@@ -38,7 +38,7 @@ class Plugin(BasePlugin):
 
     def get_np(self, text):
         self.np_format = text
-        now_playing = self.np.now_playing.get_np(get_format=self.get_format)
+        now_playing = self.core.now_playing.get_np(get_format=self.get_format)
 
         if now_playing:
             return now_playing
