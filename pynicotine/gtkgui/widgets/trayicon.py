@@ -55,7 +55,7 @@ class TrayIcon:
                 self.gtk = Gtk
 
         self.frame = frame
-        self.trayicon = None
+        self.tray_icon = None
         self.custom_icons = False
         self.final_icon_path = None
         self.tray_status = {
@@ -303,31 +303,31 @@ class TrayIcon:
         elif not use_trayicon:
             return
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             if self.appindicator is not None:
-                trayicon = self.appindicator.Indicator.new(
+                tray_icon = self.appindicator.Indicator.new(
                     GLib.get_application_name(),
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
-                trayicon.set_menu(self.tray_popup_menu)
+                tray_icon.set_menu(self.tray_popup_menu)
 
                 # Action to hide/unhide main window when middle clicking the tray icon
-                trayicon.set_secondary_activate_target(self.hide_show_item)
+                tray_icon.set_secondary_activate_target(self.hide_show_item)
 
                 # If custom icon path was found, use it, otherwise we fall back to system icons
                 self.final_icon_path = self.get_final_icon_path()
 
                 if self.final_icon_path:
-                    trayicon.set_icon_theme_path(self.final_icon_path)
+                    tray_icon.set_icon_theme_path(self.final_icon_path)
 
             else:
                 # GtkStatusIcon fallback
-                trayicon = self.gtk.StatusIcon()
-                trayicon.set_tooltip_text(GLib.get_application_name())
-                trayicon.connect("activate", self.on_hide_unhide_window)
-                trayicon.connect("popup-menu", self.on_status_icon_popup)
+                tray_icon = self.gtk.StatusIcon()
+                tray_icon.set_tooltip_text(GLib.get_application_name())
+                tray_icon.connect("activate", self.on_hide_unhide_window)
+                tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
-            self.trayicon = trayicon
+            self.tray_icon = tray_icon
 
         self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
 
@@ -345,10 +345,10 @@ class TrayIcon:
             return
 
         if self.appindicator is not None:
-            self.trayicon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
+            self.tray_icon.set_status(self.appindicator.IndicatorStatus.ACTIVE)
         else:
             # GtkStatusIcon fallback
-            self.trayicon.set_visible(True)
+            self.tray_icon.set_visible(True)
 
     def hide(self):
 
@@ -356,27 +356,27 @@ class TrayIcon:
             return
 
         if self.appindicator is not None:
-            self.trayicon.set_status(self.appindicator.IndicatorStatus.PASSIVE)
+            self.tray_icon.set_status(self.appindicator.IndicatorStatus.PASSIVE)
         else:
             # GtkStatusIcon fallback
-            self.trayicon.set_visible(False)
+            self.tray_icon.set_visible(False)
 
     def is_visible(self):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return False
 
         if self.appindicator is None:
-            return self.trayicon.get_visible() and self.trayicon.is_embedded()
+            return self.tray_icon.get_visible() and self.tray_icon.is_embedded()
 
-        if self.appindicator is not None and self.trayicon.get_status() != self.appindicator.IndicatorStatus.ACTIVE:
+        if self.appindicator is not None and self.tray_icon.get_status() != self.appindicator.IndicatorStatus.ACTIVE:
             return False
 
         return True
 
     def update_show_hide_label(self):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         if self.frame.MainWindow.get_property("visible"):
@@ -412,21 +412,21 @@ class TrayIcon:
             icon_name = GLib.get_prgname() + "-" + icon_name
 
         if self.appindicator is not None:
-            self.trayicon.set_icon_full(icon_name, GLib.get_application_name())
+            self.tray_icon.set_icon_full(icon_name, GLib.get_application_name())
 
         else:
             # GtkStatusIcon fallback
             if self.custom_icons:
-                self.trayicon.set_from_pixbuf(
+                self.tray_icon.set_from_pixbuf(
                     self.frame.images[icon_name]
                 )
 
             else:
-                self.trayicon.set_from_icon_name(icon_name)
+                self.tray_icon.set_from_icon_name(icon_name)
 
     def set_away(self, enable):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         if enable:
@@ -442,7 +442,7 @@ class TrayIcon:
 
     def set_connected(self, enable):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         if enable:
@@ -454,7 +454,7 @@ class TrayIcon:
 
     def set_server_actions_sensitive(self, status):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         for i in (self.disconnect_item, self.away_item, self.send_message_item, self.lookup_ip_item,
@@ -467,7 +467,7 @@ class TrayIcon:
 
     def set_transfer_status(self, download, upload):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         self.downloads_item.set_label(download)
@@ -475,7 +475,7 @@ class TrayIcon:
 
     def set_alternative_speed_limit(self, enable):
 
-        if self.trayicon is None:
+        if self.tray_icon is None:
             return
 
         with self.alt_speed_item.handler_block(self.alt_speed_handler):

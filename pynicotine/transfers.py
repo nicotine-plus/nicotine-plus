@@ -860,9 +860,11 @@ class Transfers:
         already_downloading = False
 
         for i in self.uploads:
-            if i.user == user:
-                if i.req is not None or i.conn is not None or i.status == "Getting status":
-                    already_downloading = True
+            if i.user != user:
+                continue
+
+            if i.req is not None or i.conn is not None or i.status == "Getting status":
+                already_downloading = True
 
         if not self.allow_new_uploads() or already_downloading:
 
@@ -1759,10 +1761,10 @@ class Transfers:
                 # Everyone can sent files to you
                 return True
 
-            if transfers["uploadallowed"] == 2:
+            if (transfers["uploadallowed"] == 2
+                    and user in (i[0] for i in self.config.sections["server"]["userlist"])):
                 # Users in userlist
-                if user in (i[0] for i in self.config.sections["server"]["userlist"]):
-                    return True
+                return True
 
             if transfers["uploadallowed"] == 3:
                 # Trusted buddies
@@ -2276,9 +2278,11 @@ class Transfers:
         user = transfer.user
 
         for i in self.uploads:
-            if i.user == user:
-                if i.req is not None or i.conn is not None or i.status == "Getting status":
-                    return
+            if i.user != user:
+                continue
+
+            if i.req is not None or i.conn is not None or i.status == "Getting status":
+                return
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"

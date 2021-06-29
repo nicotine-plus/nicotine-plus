@@ -703,22 +703,21 @@ class SlskProtoThread(threading.Thread):
             conn.filereadbytes += addedbyteslen
             msg_buffer = msg_buffer[leftbytes:]
 
-        elif conn.fileupl is not None:
-            if conn.fileupl.offset is None:
-                offset, msg_buffer = self.parse_offset(msg_buffer)
+        elif conn.fileupl is not None and conn.fileupl.offset is None:
+            offset, msg_buffer = self.parse_offset(msg_buffer)
 
-                if offset is not None:
-                    try:
-                        conn.fileupl.file.seek(offset)
-                    except IOError as strerror:
-                        self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
-                        self._core_callback([ConnClose(conn.conn, conn.addr)])
-                        self.close_connection(conns, conn.conn)
-                    except ValueError:
-                        pass
+            if offset is not None:
+                try:
+                    conn.fileupl.file.seek(offset)
+                except IOError as strerror:
+                    self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
+                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self.close_connection(conns, conn.conn)
+                except ValueError:
+                    pass
 
-                    conn.fileupl.offset = offset
-                    self._core_callback([conn.fileupl])
+                conn.fileupl.offset = offset
+                self._core_callback([conn.fileupl])
 
         conn.ibuf = msg_buffer
         return msgs, conn
@@ -800,10 +799,9 @@ class SlskProtoThread(threading.Thread):
                             for line in traceback.format_tb(error.__traceback__):
                                 print(line)
 
-                            if "addr" in conn.__dict__:
-                                if conn.addr is not None:
-                                    host = conn.addr[0]
-                                    port = conn.addr[1]
+                            if hasattr(conn, "addr") and conn.addr is not None:
+                                host = conn.addr[0]
+                                port = conn.addr[1]
 
                             debugmessage = ("There was an error while unpacking Peer message type %(type)s size "
                                             "%(size)i contents %(msg_buffer)s from user: %(user)s, "

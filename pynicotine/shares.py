@@ -305,21 +305,20 @@ class Scanner:
 
                 virtualdir = Shares.real2virtual_cls(folder, self.config)
 
-                if not rebuild and folder in oldmtimes:
-                    if mtimes[folder] == oldmtimes[folder]:
-                        if os.path.exists(folder):
-                            try:
-                                files[virtualdir] = oldfiles[virtualdir]
-                                streams[virtualdir] = oldstreams[virtualdir]
-                                continue
-                            except KeyError:
-                                self.queue.put((_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
-                                    'vdir': virtualdir,
-                                    'dir': folder
-                                }, "debug"))
-                        else:
-                            self.queue.put((_("Dropping missing folder %(dir)s"), {'dir': folder}, "debug"))
+                if not rebuild and folder in oldmtimes and mtimes[folder] == oldmtimes[folder]:
+                    if os.path.exists(folder):
+                        try:
+                            files[virtualdir] = oldfiles[virtualdir]
+                            streams[virtualdir] = oldstreams[virtualdir]
                             continue
+                        except KeyError:
+                            self.queue.put((_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
+                                'vdir': virtualdir,
+                                'dir': folder
+                            }, "debug"))
+                    else:
+                        self.queue.put((_("Dropping missing folder %(dir)s"), {'dir': folder}, "debug"))
+                        continue
 
                 files[virtualdir] = []
 

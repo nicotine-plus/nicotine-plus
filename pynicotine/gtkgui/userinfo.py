@@ -127,9 +127,9 @@ class UserInfo:
 
         if Gtk.get_major_version() == 4:
             self.image = Gtk.Picture()
-            self.UserImage = Gtk.Box()
-            self.UserImage.append(self.image)
-            self.ImageViewport.set_child(self.UserImage)
+            self.image_container = Gtk.Box()
+            self.image_container.append(self.image)
+            self.ImageViewport.set_child(self.image_container)
 
             self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
@@ -137,9 +137,9 @@ class UserInfo:
 
         else:
             self.image = Gtk.Image()
-            self.UserImage = Gtk.EventBox()
-            self.UserImage.add(self.image)
-            self.ImageViewport.add(self.UserImage)
+            self.image_container = Gtk.EventBox()
+            self.image_container.add(self.image)
+            self.ImageViewport.add(self.image_container)
             self.ImageViewport.show_all()
 
             try:
@@ -202,7 +202,7 @@ class UserInfo:
             ("#" + _("_Search for Item"), self.on_interest_recommend_search)
         )
 
-        self.image_menu = popup = PopupMenu(self.frame, self.UserImage, self.on_image_popup_menu)
+        self.image_menu = popup = PopupMenu(self.frame, self.image_container, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),

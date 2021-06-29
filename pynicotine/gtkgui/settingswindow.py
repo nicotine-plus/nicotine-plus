@@ -3036,7 +3036,7 @@ class PluginsFrame(BuildFrame):
 
         return enabled_plugins
 
-    def on_plugins_enable(self, widget):
+    def on_plugins_enable(self, *args):
 
         active = self.PluginsEnable.get_active()
 

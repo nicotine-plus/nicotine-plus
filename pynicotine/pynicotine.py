@@ -1781,10 +1781,9 @@ Error: %(error)s""", {
         conn = msg.conn.conn
 
         for i in self.peerconns:
-            if i.conn is conn:
-                if i.username != config.sections["server"]["login"]:
-                    self.userbrowse.shared_file_list(i.username, msg)
-                    break
+            if i.conn is conn and i.username != config.sections["server"]["login"]:
+                self.userbrowse.shared_file_list(i.username, msg)
+                break
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
@@ -1902,11 +1901,9 @@ Error: %(error)s""", {
         conn = msg.conn.conn
 
         for i in self.peerconns:
-            if i.conn is conn:
-                # probably impossible to do this
-                if i.username != config.sections["server"]["login"]:
-                    self.userinfo.user_info_reply(i.username, msg)
-                    break
+            if i.conn is conn and i.username != config.sections["server"]["login"]:
+                self.userinfo.user_info_reply(i.username, msg)
+                break
 
     def p_message_user(self, msg):
         """ Peer code: 22 """

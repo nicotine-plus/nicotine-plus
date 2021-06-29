@@ -117,9 +117,9 @@ class RoomList:
 
     def is_private_room_owned(self, room):
 
-        if room in self.private_rooms:
-            if self.private_rooms[room]["owner"] == config.sections["server"]["login"]:
-                return True
+        if (room in self.private_rooms
+                and self.private_rooms[room]["owner"] == config.sections["server"]["login"]):
+            return True
 
         return False
 
@@ -132,9 +132,9 @@ class RoomList:
 
     def is_private_room_operator(self, room):
 
-        if room in self.private_rooms:
-            if config.sections["server"]["login"] in self.private_rooms[room]["operators"]:
-                return True
+        if (room in self.private_rooms
+                and config.sections["server"]["login"] in self.private_rooms[room]["operators"]):
+            return True
 
         return False
 

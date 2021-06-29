@@ -966,7 +966,6 @@ class UserBrowse:
             for file in files:
                 if self.query in file[1].lower() and directory not in self.search_list:
                     self.search_list.append(directory)
-                    continue
 
     def on_search(self, *args):
 
