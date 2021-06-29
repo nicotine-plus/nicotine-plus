@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import socket
 import unittest
 
 from pynicotine.config import config
@@ -42,8 +43,13 @@ class VersionTest(unittest.TestCase):
         assert isinstance(local_version, int)
 
         # Validate version of latest release
-        _hlatest_version, latest_version, date = get_latest_version()
-        assert isinstance(latest_version, int)
+        try:
+            _hlatest_version, latest_version, date = get_latest_version()
+            assert isinstance(latest_version, int)
+
+        except socket.gaierror:
+            print("No internet access, skipping update check test!")
+            return
 
         # Validate date of latest release
         date_format = "%Y-%m-%dT%H:%M:%S"
