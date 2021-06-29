@@ -411,13 +411,11 @@ class ChatEntry:
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
 
-        elif (cmd[:1] == "/" and self.is_chatroom
-                and self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)):
-            pass
+        elif cmd[:1] == "/" and self.is_chatroom:
+            self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
 
-        elif (cmd[:1] == "/" and not self.is_chatroom
-                and self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)):
-            pass
+        elif cmd[:1] == "/" and not self.is_chatroom:
+            self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
         else:
             if text[:2] == "//":

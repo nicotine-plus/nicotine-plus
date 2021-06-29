@@ -287,19 +287,17 @@ class PluginHandler:
                 if plugin is None:
                     continue
 
+                return_value = None
+
                 if public_command:
                     for trigger, func in plugin.__publiccommands__:
                         if trigger == command:
                             return_value = func(plugin, source, args)
 
-                    return_value = None
-
                 else:
                     for trigger, func in plugin.__privatecommands__:
                         if trigger == command:
                             return_value = func(plugin, source, args)
-
-                    return_value = None
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
