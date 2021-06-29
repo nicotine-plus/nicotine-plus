@@ -208,9 +208,9 @@ binary package and what you try to run Nicotine+ with).""")
     if rescan:
         return rescan_shares()
 
-    # Initialize network event processor
-    from pynicotine.pynicotine import NetworkEventProcessor
-    network_processor = NetworkEventProcessor(bindip, port)
+    # Initialize core
+    from pynicotine.pynicotine import NicotineCore
+    network_processor = NicotineCore(bindip, port)
 
     # Run without a GUI
     if headless:

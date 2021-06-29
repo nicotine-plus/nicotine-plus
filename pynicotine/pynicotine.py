@@ -87,8 +87,9 @@ class UserAddr:
         self.status = status
 
 
-class NetworkEventProcessor:
-    """ This class contains handlers for various messages from the networking thread """
+class NicotineCore:
+    """ NicotineCore contains handlers for various messages from the networking thread.
+    This class links the networking thread and user interface. """
 
     def __init__(self, bindip, port):
 
@@ -1135,11 +1136,10 @@ Error: %(error)s""", {
         # Ignore received message
         pass
 
-    # notify user of error when recieving or sending a message
-    # @param self NetworkEventProcessor (Class)
-    # @param string a string containing an error message
     @staticmethod
     def notify(string):
+        """ Notify user of error when receiving or sending a message. """
+
         log.add_msg_contents("%s", string)
 
     def server_conn(self, msg):
