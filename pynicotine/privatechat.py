@@ -33,9 +33,9 @@ class PrivateChats:
 
     CTCP_VERSION = "\x01VERSION\x01"
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, core, config, queue, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.completion_list = []
@@ -53,7 +53,7 @@ class PrivateChats:
     def server_login(self):
 
         for user in self.users:
-            self.np.watch_user(user)  # Get notified of user status
+            self.core.watch_user(user)  # Get notified of user status
 
         if not self.config.sections["privatechat"]["store"]:
             return
@@ -67,7 +67,7 @@ class PrivateChats:
         if user in self.users:
             return
 
-        self.np.watch_user(user)
+        self.core.watch_user(user)
         self.users[user] = {"autoreplied": False}
 
         if user not in self.config.sections["privatechat"]["users"]:
@@ -133,10 +133,10 @@ class PrivateChats:
 
     def send_message(self, user, text, bytestring=False):
 
-        if not self.np.active_server_conn:
+        if not self.core.active_server_conn:
             return
 
-        user_text = self.np.pluginhandler.outgoing_private_chat_event(user, text)
+        user_text = self.core.pluginhandler.outgoing_private_chat_event(user, text)
         if user_text is None:
             return
 
@@ -148,7 +148,7 @@ class PrivateChats:
             payload = self.auto_replace(text)
 
         self.queue.append(slskmessages.MessageUser(user, payload))
-        self.np.pluginhandler.outgoing_private_chat_notification(user, text)
+        self.core.pluginhandler.outgoing_private_chat_notification(user, text)
 
         if self.ui_callback:
             self.ui_callback.send_message(user, payload)
@@ -161,12 +161,12 @@ class PrivateChats:
 
         self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
-        if self.np.network_filter.is_user_ignored(msg.user):
+        if self.core.network_filter.is_user_ignored(msg.user):
             return
 
-        if msg.user in self.np.users and isinstance(self.np.users[msg.user].addr, tuple):
-            ip_address, _port = self.np.users[msg.user].addr
-            if self.np.network_filter.is_ip_ignored(ip_address):
+        if msg.user in self.core.users and isinstance(self.core.users[msg.user].addr, tuple):
+            ip_address, _port = self.core.users[msg.user].addr
+            if self.core.network_filter.is_ip_ignored(ip_address):
                 return
 
         elif msg.newmessage:
@@ -174,7 +174,7 @@ class PrivateChats:
             self.private_message_queue_add(msg)
             return
 
-        user_text = self.np.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
+        user_text = self.core.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
         if user_text is None:
             return
 
@@ -190,21 +190,21 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.message_user(msg)
 
-        self.np.notifications.new_tts(
+        self.core.notifications.new_tts(
             self.config.sections["ui"]["speechprivate"], {
                 "user": msg.user,
                 "message": msg.msg
             }
         )
 
-        self.np.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
+        self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
 
         if ctcpversion and self.config.sections["server"]["ctcpmsgs"] == 0:
             self.send_message(msg.user, "Nicotine+ " + self.config.version)
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if self.np.away and not self.users[msg.user]["autoreplied"] and autoreply:
+        if self.core.away and not self.users[msg.user]["autoreplied"] and autoreply:
             self.send_message(msg.user, "[Auto-Message] %s" % autoreply)
             self.users[msg.user]["autoreplied"] = True
 

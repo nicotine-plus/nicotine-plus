@@ -501,9 +501,9 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, np, config, queue, ui_callback=None, connected=False):
+    def __init__(self, core, config, queue, ui_callback=None, connected=False):
 
-        self.np = np
+        self.core = core
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue

@@ -100,10 +100,10 @@ class Transfer:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, eventprocessor, config, peerconns, queue, users,
+    def __init__(self, core, config, peerconns, queue, users,
                  network_callback, ui_callback=None):
 
-        self.eventprocessor = eventprocessor
+        self.core = core
         self.config = config
         self.peerconns = peerconns
         self.queue = queue
@@ -287,7 +287,7 @@ class Transfers:
                 users.add(i[0])
 
         for user in users:
-            self.eventprocessor.watch_user(user)
+            self.core.watch_user(user)
 
     """ Privileges """
 
@@ -388,7 +388,7 @@ class Transfers:
 
     def update_limits(self):
 
-        if not self.eventprocessor.active_server_conn:
+        if not self.core.active_server_conn:
             return
 
         if self.config.sections["transfers"]["usealtlimits"]:
@@ -542,7 +542,7 @@ class Transfers:
         if self.downloadsview:
             self.downloadsview.update(i)
 
-        self.eventprocessor.watch_user(i.user)
+        self.core.watch_user(i.user)
 
     def _get_cant_connect_upload(self, i):
 
@@ -557,7 +557,7 @@ class Transfers:
         if self.uploadsview:
             self.uploadsview.update(i)
 
-        self.eventprocessor.watch_user(i.user)
+        self.core.watch_user(i.user)
         self.check_upload_queue()
 
     def folder_contents_response(self, conn, file_list):
@@ -640,7 +640,7 @@ class Transfers:
                 pass
 
         filename_utf8 = '\\'.join(filename_parts)
-        realpath = self.eventprocessor.shares.virtual2real(filename_utf8)
+        realpath = self.core.shares.virtual2real(filename_utf8)
 
         if not self.file_is_upload_queued(user, msg.file):
 
@@ -652,7 +652,7 @@ class Transfers:
                 if friend:
                     limits = False
 
-            checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
+            checkuser, reason = self.core.network_filter.check_user(user, addr)
 
             if not checkuser:
                 self.queue.append(
@@ -673,7 +673,7 @@ class Transfers:
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
-            elif self.eventprocessor.shares.file_is_shared(user, filename_utf8, realpath):
+            elif self.core.shares.file_is_shared(user, filename_utf8, realpath):
                 newupload = Transfer(
                     user=user, filename=msg.file,
                     path=os.path.dirname(realpath), status="Queued",
@@ -684,7 +684,7 @@ class Transfers:
                 if self.uploadsview:
                     self.uploadsview.update(newupload)
 
-                self.eventprocessor.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+                self.core.pluginhandler.upload_queued_notification(user, msg.file, realpath)
                 self.check_upload_queue()
 
             else:
@@ -750,7 +750,7 @@ class Transfers:
                                  "allowed": response.allowed
                              })
 
-        self.eventprocessor.send_message_to_peer(user, response)
+        self.core.send_message_to_peer(user, response)
 
     def transfer_request_downloads(self, msg, user):
 
@@ -791,7 +791,7 @@ class Transfers:
             )
             self.downloads.appendleft(transfer)
 
-            self.eventprocessor.watch_user(user)
+            self.core.watch_user(user)
 
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
 
@@ -822,15 +822,15 @@ class Transfers:
     def _transfer_request_uploads(self, msg, user, addr):
 
         # Is user allowed to download?
-        checkuser, reason = self.eventprocessor.network_filter.check_user(user, addr)
+        checkuser, reason = self.core.network_filter.check_user(user, addr)
 
         if not checkuser:
             return slskmessages.TransferResponse(None, 0, reason=reason, req=msg.req)
 
         # Do we actually share that file with the world?
-        realpath = self.eventprocessor.shares.virtual2real(msg.file)
+        realpath = self.core.shares.virtual2real(msg.file)
 
-        if not self.eventprocessor.shares.file_is_shared(user, msg.file, realpath):
+        if not self.core.shares.file_is_shared(user, msg.file, realpath):
             return slskmessages.TransferResponse(None, 0, reason="File not shared", req=msg.req)
 
         # Is that file already in the queue?
@@ -857,7 +857,7 @@ class Transfers:
             return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
 
         # All checks passed, user can queue file!
-        self.eventprocessor.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+        self.core.pluginhandler.upload_queued_notification(user, msg.file, realpath)
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
@@ -956,7 +956,7 @@ class Transfers:
                     continue
 
                 i.status = "Establishing connection"
-                self.eventprocessor.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
+                self.core.send_message_to_peer(i.user, slskmessages.FileRequest(None, msg.req))
 
                 if self.uploadsview:
                     self.uploadsview.update(i)
@@ -983,7 +983,7 @@ class Transfers:
         transfer.status = "Cannot connect"
         transfer.req = None
 
-        self.eventprocessor.watch_user(transfer.user)
+        self.core.watch_user(transfer.user)
 
         if transfer in self.downloads and self.downloadsview:
             self.downloadsview.update(transfer)
@@ -1117,7 +1117,7 @@ class Transfers:
                     i.offset = size
                     i.starttime = time.time()
 
-                    self.eventprocessor.statistics.append_stat_value("started_downloads", 1)
+                    self.core.statistics.append_stat_value("started_downloads", 1)
 
                     if i.size > size:
                         i.status = "Transferring"
@@ -1166,7 +1166,7 @@ class Transfers:
 
             try:
                 # Open File
-                realpath = self.eventprocessor.shares.virtual2real(i.filename)
+                realpath = self.core.shares.virtual2real(i.filename)
                 file_handle = open(realpath, "rb")
 
             except IOError as strerror:
@@ -1183,7 +1183,7 @@ class Transfers:
                 if self.is_privileged(i.user):
                     i.modifier = _("privileged")
 
-                self.eventprocessor.statistics.append_stat_value("started_uploads", 1)
+                self.core.statistics.append_stat_value("started_uploads", 1)
 
                 ip_address = None
                 if i.conn is not None:
@@ -1339,7 +1339,7 @@ class Transfers:
                 if curtime > i.starttime and i.currentbytes > i.lastbytes:
 
                     bytesdifference = (i.currentbytes - i.lastbytes)
-                    self.eventprocessor.statistics.append_stat_value("downloaded_size", bytesdifference)
+                    self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
 
                     try:
                         i.speed = max(0, bytesdifference / (curtime - i.lasttime))
@@ -1404,7 +1404,7 @@ class Transfers:
             if curtime > i.starttime and i.currentbytes > i.lastbytes:
 
                 bytesdifference = (i.currentbytes - i.lastbytes)
-                self.eventprocessor.statistics.append_stat_value("uploaded_size", bytesdifference)
+                self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
 
                 try:
                     i.speed = max(0, bytesdifference / (curtime - i.lasttime))
@@ -1478,7 +1478,7 @@ class Transfers:
 
                     """ Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
                     intentionally cancelled, the peer should ignore this message. """
-                    self.eventprocessor.send_message_to_peer(
+                    self.core.send_message_to_peer(
                         i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
 
                 auto_clear = True
@@ -1605,7 +1605,7 @@ class Transfers:
             log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
 
         else:
-            self.eventprocessor.send_automatic_message(username, "You are not allowed to send me files.")
+            self.core.send_automatic_message(username, "You are not allowed to send me files.")
             log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
 
     """ Transfer Actions """
@@ -1624,7 +1624,7 @@ class Transfers:
         self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
 
     def get_folder(self, user, folder):
-        self.eventprocessor.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
     def push_file(self, user, filename, path="", transfer=None, size=None, bitrate=None,
                   length=None, locally_queued=False):
@@ -1680,7 +1680,7 @@ class Transfers:
                 pass
 
         if status is None:
-            self.eventprocessor.watch_user(user)
+            self.core.watch_user(user)
 
         elif self.user_logged_out(user):
             transfer.status = "User logged off"
@@ -1691,7 +1691,7 @@ class Transfers:
                     "filename": filename,
                     "user": user
                 })
-                self.eventprocessor.send_message_to_peer(
+                self.core.send_message_to_peer(
                     user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
 
             elif not locally_queued:
@@ -1701,12 +1701,12 @@ class Transfers:
                                      "request": transfer.req,
                                      "user": user
                                  })
-                transfer.req = self.eventprocessor.get_new_token()
+                transfer.req = self.core.get_new_token()
                 transfer.status = "Getting status"
                 self.transfer_request_times[transfer] = time.time()
 
-                realpath = self.eventprocessor.shares.virtual2real(filename)
-                self.eventprocessor.send_message_to_peer(
+                realpath = self.core.shares.virtual2real(filename)
+                self.core.send_message_to_peer(
                     user, slskmessages.TransferRequest(None, direction, transfer.req, filename,
                                                        self.get_file_size(realpath), realpath))
 
@@ -1891,7 +1891,7 @@ class Transfers:
         config = self.config.sections
 
         if config["notifications"]["notification_popup_file"]:
-            self.eventprocessor.notifications.new_text_notification(
+            self.core.notifications.new_text_notification(
                 _("%(file)s downloaded from %(user)s") % {
                     'user': user,
                     'file': filepath.rsplit(os.sep, 1)[1]
@@ -1918,13 +1918,13 @@ class Transfers:
             """ Folder downloaded and shared. Notify the server of new stats. The
             reason we don't send this message after each download is to reduce traffic from
             the server to room users, since every stat update is relayed by the server. """
-            self.eventprocessor.shares.send_num_shared_folders_files()
+            self.core.shares.send_num_shared_folders_files()
 
         if not folderpath:
             return
 
         if config["notifications"]["notification_popup_folder"]:
-            self.eventprocessor.notifications.new_text_notification(
+            self.core.notifications.new_text_notification(
                 _("%(folder)s downloaded from %(user)s") % {
                     'user': user,
                     'folder': folderpath
@@ -1943,7 +1943,7 @@ class Transfers:
         self.abort_transfer(transfer)
         transfer.status = "Download folder error"
 
-        self.eventprocessor.notifications.new_text_notification(
+        self.core.notifications.new_text_notification(
             _("OS error: %s") % error, title=_("Download folder error"))
 
     def download_finished(self, file, i):
@@ -1987,9 +1987,9 @@ class Transfers:
         i.timeleft = ""
         i.conn = None
 
-        self.eventprocessor.shares.add_file_to_shared(newname)
-        self.eventprocessor.shares.add_file_to_buddy_shared(newname)
-        self.eventprocessor.statistics.append_stat_value("completed_downloads", 1)
+        self.core.shares.add_file_to_shared(newname)
+        self.core.shares.add_file_to_buddy_shared(newname)
+        self.core.statistics.append_stat_value("completed_downloads", 1)
 
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
@@ -2012,7 +2012,7 @@ class Transfers:
 
         if i.speed is not None:
             speedbytes = int(i.speed)
-            self.eventprocessor.speed = speedbytes
+            self.core.speed = speedbytes
             self.queue.append(slskmessages.SendUploadSpeed(speedbytes))
 
         self.close_file(file_handle, i)
@@ -2042,7 +2042,7 @@ class Transfers:
             }
         )
 
-        self.eventprocessor.statistics.append_stat_value("completed_uploads", 1)
+        self.core.statistics.append_stat_value("completed_uploads", 1)
 
         # Autoclear this upload
         if not self.auto_clear_upload(i) and self.uploadsview:
@@ -2083,7 +2083,7 @@ class Transfers:
                     if (curtime - start_time) >= 30:
                         self.network_callback([slskmessages.TransferTimeout(transfer)])
 
-            if self.eventprocessor.exit.wait(1):
+            if self.core.exit.wait(1):
                 # Event set, we're exiting
                 return
 
@@ -2092,7 +2092,7 @@ class Transfers:
         while True:
             self.network_callback([slskmessages.CheckUploadQueue()])
 
-            if self.eventprocessor.exit.wait(10):
+            if self.core.exit.wait(10):
                 # Event set, we're exiting
                 return
 
@@ -2101,7 +2101,7 @@ class Transfers:
         while True:
             self.network_callback([slskmessages.CheckDownloadQueue()])
 
-            if self.eventprocessor.exit.wait(180):
+            if self.core.exit.wait(180):
                 # Event set, we're exiting
                 return
 
@@ -2117,7 +2117,7 @@ class Transfers:
                 self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
             elif transfer.status == "Queued":
-                self.eventprocessor.send_message_to_peer(
+                self.core.send_message_to_peer(
                     transfer.user,
                     slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
                 )
@@ -2250,7 +2250,7 @@ class Transfers:
             if self.uploadsview:
                 self.uploadsview.remove_specific(upload)
 
-        self.eventprocessor.network_filter.ban_user(user)
+        self.core.network_filter.ban_user(user)
 
     def retry_download(self, transfer):
 
@@ -2328,7 +2328,7 @@ class Transfers:
                 )
 
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
-            self.eventprocessor.send_message_to_peer(
+            self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
 
     """ Exit """

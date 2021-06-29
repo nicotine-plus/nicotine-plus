@@ -145,7 +145,7 @@ def rescan_shares():
     return 0
 
 
-def run_headless(network_processor, ci_mode):
+def run_headless(core, ci_mode):
     """ Run Nicotine+ in headless (no GUI) mode """
 
     import signal
@@ -158,19 +158,19 @@ def run_headless(network_processor, ci_mode):
     log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
 
     for signal_type in (signal.SIGINT, signal.SIGTERM):
-        signal.signal(signal_type, network_processor.quit)
+        signal.signal(signal_type, core.quit)
 
-    connect_ready = network_processor.start()
+    connect_ready = core.start()
 
     if not connect_ready and not ci_mode:
         return 1
 
-    connect_success = network_processor.connect()
+    connect_success = core.connect()
 
     if not connect_success and not ci_mode:
         return 1
 
-    while not network_processor.shutdown:
+    while not core.shutdown:
         time.sleep(0.2)
 
     config.write_configuration()
@@ -210,15 +210,15 @@ binary package and what you try to run Nicotine+ with).""")
 
     # Initialize core
     from pynicotine.pynicotine import NicotineCore
-    network_processor = NicotineCore(bindip, port)
+    core = NicotineCore(bindip, port)
 
     # Run without a GUI
     if headless:
-        return run_headless(network_processor, ci_mode)
+        return run_headless(core, ci_mode)
 
     # Initialize GTK-based GUI
     from pynicotine.gtkgui import run_gui
-    return run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode)
+    return run_gui(core, trayicon, hidden, bindip, port, ci_mode)
 
 
 apply_translation()

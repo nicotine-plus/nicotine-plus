@@ -24,9 +24,9 @@ from pynicotine.utils import unescape
 
 class UserInfo:
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, core, config, queue, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.users = set()
@@ -37,7 +37,7 @@ class UserInfo:
 
     def server_login(self):
         for user in self.users:
-            self.np.watch_user(user)  # Get notified of user status
+            self.core.watch_user(user)  # Get notified of user status
 
     def add_user(self, user):
 
@@ -45,7 +45,7 @@ class UserInfo:
             return
 
         # Request user status, speed and number of shared files
-        self.np.watch_user(user, force_update=True)
+        self.core.watch_user(user, force_update=True)
 
         # Request user interests
         self.queue.append(slskmessages.UserInterests(user))
@@ -80,9 +80,9 @@ class UserInfo:
             msg.pic = None
 
         msg.descr = unescape(self.config.sections["userinfo"]["descr"])
-        msg.totalupl = self.np.transfers.get_total_uploads_allowed()
-        msg.queuesize = self.np.transfers.get_upload_queue_size()
-        msg.slotsavail = self.np.transfers.allow_new_uploads()
+        msg.totalupl = self.core.transfers.get_total_uploads_allowed()
+        msg.queuesize = self.core.transfers.get_upload_queue_size()
+        msg.slotsavail = self.core.transfers.allow_new_uploads()
         msg.uploadallowed = self.config.sections["transfers"]["remotedownloads"]
 
         if msg.uploadallowed:
@@ -99,7 +99,7 @@ class UserInfo:
         if user == self.config.sections["server"]["login"]:
             self.request_local_user_info(user, msg)
         else:
-            self.np.send_message_to_peer(user, msg)
+            self.core.send_message_to_peer(user, msg)
 
     def set_conn(self, username, conn):
         if self.ui_callback:

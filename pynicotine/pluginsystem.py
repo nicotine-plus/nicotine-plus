@@ -39,9 +39,9 @@ returncode = {
 
 class PluginHandler:
 
-    def __init__(self, np, config):
+    def __init__(self, core, config):
 
-        self.np = np
+        self.core = core
         self.config = config
 
         log.add(_("Loading plugin handler"))
@@ -69,11 +69,11 @@ class PluginHandler:
 
     def update_completions(self, plugin):
 
-        if self.np.ui_callback and plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
-            self.np.ui_callback.chatrooms.update_completions()
+        if self.core.ui_callback and plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
+            self.core.ui_callback.chatrooms.update_completions()
 
         if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
-            self.np.privatechats.update_completions()
+            self.core.privatechats.update_completions()
 
     def __findplugin(self, pluginname):
         for directory in self.plugindirs:
@@ -123,7 +123,7 @@ class PluginHandler:
                 "Plugin '%s': top-level disable() function is obsolete, please use BasePlugin.disable() instead",
                 pluginname)
 
-        instance = plugin.Plugin(self, self.config, self.np)
+        instance = plugin.Plugin(self, self.config, self.core)
         self.plugin_settings(pluginname, instance)
         instance.LoadNotification()
 
@@ -151,12 +151,12 @@ class PluginHandler:
 
             plugin.init()
 
-            if self.np.ui_callback:
+            if self.core.ui_callback:
                 for trigger, _func in plugin.__publiccommands__:
-                    self.np.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
+                    self.core.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
-                self.np.privatechats.CMDS.add('/' + trigger + ' ')
+                self.core.privatechats.CMDS.add('/' + trigger + ' ')
 
             self.update_completions(plugin)
 
@@ -192,12 +192,12 @@ class PluginHandler:
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
 
-            if self.np.ui_callback:
+            if self.core.ui_callback:
                 for trigger, _func in plugin.__publiccommands__:
-                    self.np.ui_callback.chatrooms.CMDS.remove('/' + trigger + ' ')
+                    self.core.ui_callback.chatrooms.CMDS.remove('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
-                self.np.privatechats.CMDS.remove('/' + trigger + ' ')
+                self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
 
@@ -475,9 +475,9 @@ class ResponseThrottle:
     Some of the throttle logic is guesswork as server code is closed source, but works adequately.
     """
 
-    def __init__(self, np, plugin_name, logging=False):
+    def __init__(self, core, plugin_name, logging=False):
 
-        self.np = np
+        self.core = core
         self.plugin_name = plugin_name
         self.logging = logging
         self.plugin_usage = {}
@@ -504,14 +504,14 @@ class ResponseThrottle:
 
         port = False
         try:
-            _ip_address, port = self.np.users[nick].addr
+            _ip_address, port = self.core.users[nick].addr
         except Exception:
             port = True
 
-        if self.np.network_filter.is_user_ignored(nick):
+        if self.core.network_filter.is_user_ignored(nick):
             willing_to_respond, reason = False, "The nick is ignored"
 
-        elif self.np.network_filter.is_user_ip_ignored(nick):
+        elif self.core.network_filter.is_user_ip_ignored(nick):
             willing_to_respond, reason = False, "The nick's Ip is ignored"
 
         elif not port:

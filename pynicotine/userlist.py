@@ -21,9 +21,9 @@ from pynicotine import slskmessages
 
 class UserList:
 
-    def __init__(self, np, config, queue, ui_callback):
+    def __init__(self, core, config, queue, ui_callback):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.ui_callback = None
@@ -36,12 +36,12 @@ class UserList:
         for row in self.config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
-                self.np.watch_user(user)
+                self.core.watch_user(user)
 
     def add_user(self, user):
 
         # Request user status, speed and number of shared files
-        self.np.watch_user(user, force_update=True)
+        self.core.watch_user(user, force_update=True)
 
         # Request user's IP address, so we can get the country
         self.queue.append(slskmessages.GetPeerAddress(user))

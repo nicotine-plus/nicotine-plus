@@ -21,9 +21,9 @@ from pynicotine import slskmessages
 
 class Interests:
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, core, config, queue, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.ui_callback = None

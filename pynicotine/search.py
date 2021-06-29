@@ -31,9 +31,9 @@ from pynicotine.logfacility import log
 
 class Search:
 
-    def __init__(self, np, config, queue, share_dbs, ui_callback=None):
+    def __init__(self, core, config, queue, share_dbs, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.ui_callback = None
@@ -53,13 +53,13 @@ class Search:
         for file in visible_files:
             user, fullpath, destination, size, bitrate, length = file
 
-            self.np.transfers.get_file(
+            self.core.transfers.get_file(
                 user, fullpath, destination,
                 size=size, bitrate=bitrate, length=length, checkduplicate=True
             )
 
         # Ask for the rest of the files in the folder
-        self.np.transfers.get_folder(user, folder)
+        self.core.transfers.get_folder(user, folder)
 
     """ Outgoing search requests """
 
@@ -69,8 +69,8 @@ class Search:
         feedback = None
 
         if mode == "global":
-            if self.np:
-                feedback = self.np.pluginhandler.outgoing_global_search_event(text)
+            if self.core:
+                feedback = self.core.pluginhandler.outgoing_global_search_event(text)
 
                 if feedback is not None:
                     text = feedback[0]
@@ -81,14 +81,14 @@ class Search:
             if room == _("Joined Rooms ") or room.isspace():
                 room = None
 
-            if self.np:
-                feedback = self.np.pluginhandler.outgoing_room_search_event(room, text)
+            if self.core:
+                feedback = self.core.pluginhandler.outgoing_room_search_event(room, text)
 
                 if feedback is not None:
                     room, text = feedback
 
-        elif mode == "buddies" and self.np:
-            feedback = self.np.pluginhandler.outgoing_buddy_search_event(text)
+        elif mode == "buddies" and self.core:
+            feedback = self.core.pluginhandler.outgoing_buddy_search_event(text)
 
             if feedback is not None:
                 text = feedback[0]
@@ -99,8 +99,8 @@ class Search:
             else:
                 return None
 
-            if self.np:
-                feedback = self.np.pluginhandler.outgoing_user_search_event(users, text)
+            if self.core:
+                feedback = self.core.pluginhandler.outgoing_user_search_event(users, text)
 
                 if feedback is not None:
                     users, text = feedback
@@ -188,7 +188,7 @@ class Search:
         if room is not None:
             self.queue.append(slskmessages.RoomSearch(room, search_id, text))
         else:
-            for joined_room in self.np.chatrooms.joinedrooms:
+            for joined_room in self.core.chatrooms.joinedrooms:
                 self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
 
     def do_buddies_search(self, search_id, text):
@@ -308,7 +308,7 @@ class Search:
             # Don't send search response if search term contains too few characters
             return
 
-        checkuser, _reason = self.np.network_filter.check_user(user, None)
+        checkuser, _reason = self.core.network_filter.check_user(user, None)
 
         if not checkuser:
             return
@@ -328,8 +328,8 @@ class Search:
             return
 
         numresults = min(len(resultlist), maxresults)
-        queuesize = self.np.transfers.get_upload_queue_size()
-        slotsavail = self.np.transfers.allow_new_uploads()
+        queuesize = self.core.transfers.get_upload_queue_size()
+        slotsavail = self.core.transfers.allow_new_uploads()
 
         if checkuser == 2:
             fileindex = self.share_dbs.get("buddyfileindex")
@@ -345,10 +345,10 @@ class Search:
             None,
             self.config.sections["server"]["login"],
             searchid, resultlist, fileindex, slotsavail,
-            self.np.speed, queuesize, fifoqueue, numresults
+            self.core.speed, queuesize, fifoqueue, numresults
         )
 
-        self.np.send_message_to_peer(user, message)
+        self.core.send_message_to_peer(user, message)
 
         if direct:
             log.add_search(

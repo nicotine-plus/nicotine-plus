@@ -22,9 +22,9 @@ from pynicotine import slskmessages
 class NetworkFilter:
     """ Functions related to banning, blocking and ignoring users """
 
-    def __init__(self, network_processor, config, users, queue, geoip):
+    def __init__(self, core, config, users, queue, geoip):
 
-        self.network_processor = network_processor
+        self.core = core
         self.config = config
         self.users = users
         self.queue = queue
@@ -227,7 +227,7 @@ class NetworkFilter:
         self.config.sections["server"]["banlist"].append(user)
         self.config.write_configuration()
 
-        self.network_processor.transfers.ban_user(user)
+        self.core.transfers.ban_user(user)
 
     def unban_user(self, user):
 

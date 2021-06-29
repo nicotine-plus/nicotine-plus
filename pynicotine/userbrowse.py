@@ -25,9 +25,9 @@ from pynicotine.utils import RestrictedUnpickler
 
 class UserBrowse:
 
-    def __init__(self, np, config, ui_callback=None):
+    def __init__(self, core, config, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.users = set()
         self.ui_callback = None
@@ -37,12 +37,12 @@ class UserBrowse:
 
     def server_login(self):
         for user in self.users:
-            self.np.watch_user(user)  # Get notified of user status
+            self.core.watch_user(user)  # Get notified of user status
 
     def add_user(self, user):
 
         if user not in self.users:
-            self.np.watch_user(user, force_update=True)
+            self.core.watch_user(user, force_update=True)
             self.users.add(user)
 
     def remove_user(self, user):
@@ -72,7 +72,7 @@ class UserBrowse:
         if self.config.sections["transfers"]["friendsonly"]:
             msg = slskmessages.SharedFileList(None, {})
         else:
-            msg = self.np.shares.get_compressed_shares_message("normal")
+            msg = self.core.shares.get_compressed_shares_message("normal")
 
         thread = threading.Thread(target=self.parse_local_shares, args=(login, msg))
         thread.name = "LocalShareParser"
@@ -88,9 +88,9 @@ class UserBrowse:
 
         # Show public shares if we don't have specific shares for buddies
         if not self.config.sections["transfers"]["enablebuddyshares"]:
-            msg = self.np.shares.get_compressed_shares_message("normal")
+            msg = self.core.shares.get_compressed_shares_message("normal")
         else:
-            msg = self.np.shares.get_compressed_shares_message("buddy")
+            msg = self.core.shares.get_compressed_shares_message("buddy")
 
         thread = threading.Thread(target=self.parse_local_shares, args=(login, msg))
         thread.name = "LocalBuddyShareParser"
@@ -114,7 +114,7 @@ class UserBrowse:
             return
 
         if username not in self.users or new_request:
-            self.np.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
+            self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
         self.show_user(username, folder=folder)
 
