@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from pynicotine import slskmessages
 from pynicotine.utils import get_completion_list
 
@@ -40,7 +42,8 @@ class PrivateChats:
         self.queue = queue
         self.completion_list = []
         self.private_message_queue = {}
-        self.users = {}
+        self.automatic_message_times = {}
+        self.users = set()
         self.ui_callback = None
 
         if hasattr(ui_callback, "privatechats"):
@@ -68,7 +71,7 @@ class PrivateChats:
             return
 
         self.core.watch_user(user)
-        self.users[user] = {"autoreplied": False}
+        self.users.add(user)
 
         if user not in self.config.sections["privatechat"]["users"]:
             self.config.sections["privatechat"]["users"].append(user)
@@ -78,7 +81,7 @@ class PrivateChats:
         if user in self.config.sections["privatechat"]["users"]:
             self.config.sections["privatechat"]["users"].remove(user)
 
-        del self.users[user]
+        self.users.remove(user)
 
     def show_user(self, user, switch_page=False):
 
@@ -127,28 +130,40 @@ class PrivateChats:
             self.private_message_queue[user].remove(msg)
             self.message_user(msg)
 
-    def echo_message(self, user, text):
-        if self.ui_callback:
-            self.ui_callback.echo_message(user, text)
+    def send_automatic_message(self, user, message):
+        """ Sends a private message with the prefix 'Automatic Message' to a user.
+        No message is sent if less than five seconds have passed since the last one. """
 
-    def send_message(self, user, text, bytestring=False):
+        send_time = time.time()
+
+        if user in self.automatic_message_times and (send_time - self.automatic_message_times[user]) < 5:
+            return
+
+        self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
+        self.automatic_message_times[user] = send_time
+
+    def echo_message(self, user, message):
+        if self.ui_callback:
+            self.ui_callback.echo_message(user, message)
+
+    def send_message(self, user, message, bytestring=False):
 
         if not self.core.active_server_conn:
             return
 
-        user_text = self.core.pluginhandler.outgoing_private_chat_event(user, text)
+        user_text = self.core.pluginhandler.outgoing_private_chat_event(user, message)
         if user_text is None:
             return
 
-        _, text = user_text
+        _, message = user_text
 
         if bytestring:
-            payload = text
+            payload = message
         else:
-            payload = self.auto_replace(text)
+            payload = self.auto_replace(message)
 
         self.queue.append(slskmessages.MessageUser(user, payload))
-        self.core.pluginhandler.outgoing_private_chat_notification(user, text)
+        self.core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         if self.ui_callback:
             self.ui_callback.send_message(user, payload)
@@ -204,9 +219,8 @@ class PrivateChats:
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if self.core.away and not self.users[msg.user]["autoreplied"] and autoreply:
-            self.send_message(msg.user, "[Auto-Message] %s" % autoreply)
-            self.users[msg.user]["autoreplied"] = True
+        if self.core.away and msg.user not in self.automatic_message_times and autoreply:
+            self.send_automatic_message(msg.user, autoreply)
 
     def update_completions(self):
 

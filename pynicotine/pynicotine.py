@@ -127,7 +127,6 @@ class NicotineCore:
         self.ip_requested = set()
         self.users = {}
         self.out_indirect_conn_request_times = {}
-        self.automatic_message_times = {}
 
         self.queue = deque()
 
@@ -1107,18 +1106,6 @@ Error: %(error)s""", {
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
 
-    def send_automatic_message(self, user, message):
-        """ Sends a private message with the prefix 'Automatic Message' to a user.
-        No message is sent if less than five seconds have passed since the last one. """
-
-        send_time = time.time()
-
-        if user in self.automatic_message_times and (send_time - self.automatic_message_times[user]) < 5:
-            return
-
-        self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
-        self.automatic_message_times[user] = send_time
-
     def stop_timers(self):
         if self.servertimer is not None:
             self.servertimer.cancel()
@@ -1769,7 +1756,7 @@ Error: %(error)s""", {
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
-            self.send_automatic_message(user, reason)
+            self.privatechats.send_automatic_message(user, reason)
 
         shares_list = None
 
@@ -1967,7 +1954,7 @@ Error: %(error)s""", {
             return
 
         if not checkuser:
-            self.send_automatic_message(username, reason)
+            self.privatechats.send_automatic_message(username, reason)
 
         normalshares = self.shares.share_dbs.get("streams")
         buddyshares = self.shares.share_dbs.get("buddystreams")
