@@ -274,8 +274,8 @@ class Scanner:
                     mtimes[path] = mtime
                     dircontents = self.get_folder_mtimes(path)
 
-                    for k in dircontents:
-                        mtimes[k] = dircontents[k]
+                    for k, contents in dircontents.items():
+                        mtimes[k] = contents
 
         except OSError as errtuple:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),

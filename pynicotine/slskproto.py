@@ -198,8 +198,8 @@ else:
     try:
         resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
 
-    except Exception as error:
-        log.add("Failed to set RLIMIT_NOFILE: %s", error)
+    except Exception as rlimit_error:
+        log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
 
     """ Set the maximum number of open sockets to a lower value than the hard limit,
     otherwise we just waste resources.
@@ -427,12 +427,12 @@ class SlskProtoThread(threading.Thread):
         self._eventprocessor = eventprocessor
 
         self.serverclasses = {}
-        for i in self.servercodes:
-            self.serverclasses[self.servercodes[i]] = i
+        for code_class, code_id in self.servercodes.items():
+            self.serverclasses[code_id] = code_class
 
         self.peerclasses = {}
-        for i in self.peercodes:
-            self.peerclasses[self.peercodes[i]] = i
+        for code_class, code_id in self.peercodes.items():
+            self.peerclasses[code_id] = code_class
 
         # Select Networking Input and Output sockets
         self.selector = selectors.DefaultSelector()
@@ -792,7 +792,7 @@ class SlskProtoThread(threading.Thread):
 
                         except Exception as error:
                             host = port = "unknown"
-                            msgname = str(self.peerclasses[msgtype]).split(".")[-1]
+                            msgname = str(self.peerclasses[msgtype]).rsplit('.', maxsplit=1)[-1]
                             print("Error parsing %s:" % msgname, error)
 
                             import traceback

@@ -528,8 +528,8 @@ class ResponseThrottle:
         else:
             recent_responses = 0
 
-            for responded_room in self.plugin_usage:
-                if (current_time - self.plugin_usage[responded_room]['last_time']) < seconds_limit_min:
+            for responded_room, room_dict in self.plugin_usage.items():
+                if (current_time - room_dict['last_time']) < seconds_limit_min:
                     recent_responses += 1
 
                     if responded_room == room:
