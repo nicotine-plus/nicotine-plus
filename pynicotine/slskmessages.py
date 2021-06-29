@@ -1126,7 +1126,7 @@ class RoomList(ServerMessage):
             return (pos, rooms)
 
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"), {'area': 'RoomList', 'exception': error})
+            log.add("Exception during parsing %(area)s: %(exception)s", {'area': 'RoomList', 'exception': error})
             return (originalpos, [])
 
 
@@ -2128,7 +2128,7 @@ class SharedFileList(PeerMessage):
             self._parse_network_message(message)
 
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+            log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'SharedFileList', 'exception': error})
             self.list = {}
 
@@ -2258,7 +2258,7 @@ class FileSearchResult(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+            log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'FileSearchResult', 'exception': error})
             self.list = {}
 
@@ -2493,7 +2493,7 @@ class FolderContentsResponse(PeerMessage):
             message = zlib.decompress(message)
             self._parse_network_message(message)
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+            log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'FolderContentsResponse', 'exception': error})
             self.list = {}
 
@@ -2783,7 +2783,7 @@ class DistribSearch(DistribMessage):
             self._parse_network_message(message)
 
         except Exception as error:
-            log.add(_("Exception during parsing %(area)s: %(exception)s"),
+            log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'DistribSearch', 'exception': error})
 
     def _parse_network_message(self, message):
