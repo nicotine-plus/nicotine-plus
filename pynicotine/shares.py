@@ -169,18 +169,17 @@ class Scanner:
         newmtimes = {}
 
         for folder in shared_directories:
-            if not self.is_hidden(folder):
-                # Get mtimes for top-level shared folders, then every subfolder
-                try:
-                    mtime = os.stat(folder).st_mtime
-                    newmtimes[folder] = mtime
-                    newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
+            # Get mtimes for top-level shared folders, then every subfolder
+            try:
+                mtime = os.stat(folder).st_mtime
+                newmtimes[folder] = mtime
+                newmtimes = {**newmtimes, **self.get_folder_mtimes(folder)}
 
-                except OSError as errtuple:
-                    self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
-                        'path': folder,
-                        'error': errtuple
-                    }, None))
+            except OSError as errtuple:
+                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
+                    'path': folder,
+                    'error': errtuple
+                }, None))
 
         # Get list of files
         # returns dict in format { Directory : { File : metadata, ... }, ... }
@@ -209,13 +208,12 @@ class Scanner:
     def is_hidden(folder, filename=None, folder_obj=None):
         """ Stop sharing any dot/hidden directories/files """
 
-        # If any part of the directory structure start with a dot we exclude it
+        # If the last folder in the path starts with a dot, we exclude it
         if filename is None:
-            subfolders = folder.replace('\\', '/').split('/')
+            last_folder = os.path.basename(os.path.normpath(folder.replace('\\', '/')))
 
-            for part in subfolders:
-                if part.startswith("."):
-                    return True
+            if last_folder.startswith("."):
+                return True
 
         # If we're asked to check a file we exclude it if it start with a dot
         if filename is not None and filename.startswith("."):

@@ -24,7 +24,7 @@ from collections import deque
 from pynicotine.config import Config
 from pynicotine.shares import Shares
 
-SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), "sharedfiles")
+SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".sharedfiles")
 
 
 class SharesTest(unittest.TestCase):
