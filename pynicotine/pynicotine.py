@@ -144,7 +144,6 @@ class NicotineCore:
 
         self.requested_info_times = {}
         self.requested_share_times = {}
-        self.speed = 0
         self.token = 100
 
         # Callback handlers for messages
@@ -1400,7 +1399,7 @@ Error: %(error)s""", {
             log.add_msg_contents(msg)
 
         if msg.user == config.sections["server"]["login"]:
-            self.speed = msg.avgspeed
+            self.transfers.upload_speed = msg.avgspeed
 
         self.interests.get_user_stats(msg)
         self.userinfo.get_user_stats(msg)

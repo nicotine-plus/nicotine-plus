@@ -328,6 +328,7 @@ class Search:
             return
 
         numresults = min(len(resultlist), maxresults)
+        uploadspeed = self.core.transfers.upload_speed
         queuesize = self.core.transfers.get_upload_queue_size()
         slotsavail = self.core.transfers.allow_new_uploads()
 
@@ -345,7 +346,7 @@ class Search:
             None,
             self.config.sections["server"]["login"],
             searchid, resultlist, fileindex, slotsavail,
-            self.core.speed, queuesize, fifoqueue, numresults
+            uploadspeed, queuesize, fifoqueue, numresults
         )
 
         self.core.send_message_to_peer(user, message)

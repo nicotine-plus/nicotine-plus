@@ -112,6 +112,7 @@ class Transfers:
         self.privilegedusers = set()
         self.requested_folders = defaultdict(dict)
         self.transfer_request_times = {}
+        self.upload_speed = 0
 
         self.update_limits()
 
@@ -2012,7 +2013,7 @@ class Transfers:
 
         if i.speed is not None:
             speedbytes = int(i.speed)
-            self.core.speed = speedbytes
+            self.upload_speed = speedbytes
             self.queue.append(slskmessages.SendUploadSpeed(speedbytes))
 
         self.close_file(file_handle, i)
