@@ -114,8 +114,6 @@ class Transfers:
         self.transfer_request_times = {}
         self.upload_speed = 0
 
-        self.update_limits()
-
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
 
@@ -131,6 +129,8 @@ class Transfers:
             self.uploadsview = ui_callback.uploads
 
     def server_login(self):
+
+        self.update_limits()
 
         self.add_stored_transfers("downloads")
         self.add_stored_transfers("uploads")
