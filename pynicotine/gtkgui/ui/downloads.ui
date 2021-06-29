@@ -13,7 +13,7 @@
             <property name="visible">1</property>
             <property name="vexpand">1</property>
             <child>
-              <object class="GtkTreeView" id="TransferList">
+              <object class="GtkTreeView" id="Transfers">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
                 <property name="has-tooltip">1</property>

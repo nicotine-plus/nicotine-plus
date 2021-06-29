@@ -319,18 +319,14 @@ class DownloadsFrame(BuildFrame):
         }
 
     def on_choose_download_dir(self):
-        """
-        Function called when the download directory is modified.
-        """
 
         # Get the transfers section
         transfers = config.sections["transfers"]
 
         # This function will be called upon creating the settings window,
         # so only force a scan if the user changes his donwload directory
-        if self.ShareDownloadDir.get_active():
-            if self.DownloadDir.get_path() != transfers["downloaddir"]:
-                self.needrescan = True
+        if self.ShareDownloadDir.get_active() and self.DownloadDir.get_path() != transfers["downloaddir"]:
+            self.needrescan = True
 
     def on_remote_downloads(self, widget):
 

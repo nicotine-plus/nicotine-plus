@@ -959,16 +959,14 @@ class UserBrowse:
 
         for directory, files in self.shares:
 
-            if self.query in directory.lower():
-                if directory not in self.search_list:
-                    self.search_list.append(directory)
-                    continue
+            if self.query in directory.lower() and directory not in self.search_list:
+                self.search_list.append(directory)
+                continue
 
             for file in files:
-                if self.query in file[1].lower():
-                    if directory not in self.search_list:
-                        self.search_list.append(directory)
-                        continue
+                if self.query in file[1].lower() and directory not in self.search_list:
+                    self.search_list.append(directory)
+                    continue
 
     def on_search(self, *args):
 

@@ -76,7 +76,7 @@ class TransferList:
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
 
-        self.key_controller = connect_key_press_event(self.TransferList, self.on_key_press_event)
+        self.key_controller = connect_key_press_event(self.Transfers, self.on_key_press_event)
 
         self.last_ui_update = self.last_save = 0
         self.transfer_list = None
@@ -129,7 +129,7 @@ class TransferList:
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            type, self.TransferList,
+            type, self.Transfers,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -153,7 +153,7 @@ class TransferList:
         cols["time_elapsed"].set_sort_column_id(8)
         cols["time_left"].set_sort_column_id(9)
 
-        self.TransferList.set_model(self.transfersmodel)
+        self.Transfers.set_model(self.transfersmodel)
 
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
@@ -174,7 +174,7 @@ class TransferList:
         self.popup_menu_clear = PopupMenu(frame)
         self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
-        self.popup_menu = PopupMenu(frame, self.TransferList, self.on_popup_menu)
+        self.popup_menu = PopupMenu(frame, self.Transfers, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
@@ -202,13 +202,13 @@ class TransferList:
     def server_login(self):
 
         self.transfer_list = getattr(self.frame.np.transfers, "%ss" % self.type)
-        self.TransferList.set_sensitive(True)
+        self.Transfers.set_sensitive(True)
         self.update()
 
     def server_disconnect(self):
 
         self.transfer_list = None
-        self.TransferList.set_sensitive(False)
+        self.Transfers.set_sensitive(False)
         self.clear()
 
     def rebuild_transfers(self):
@@ -216,7 +216,7 @@ class TransferList:
         self.update()
 
     def save_columns(self):
-        save_columns(self.type, self.TransferList.get_columns())
+        save_columns(self.type, self.Transfers.get_columns())
 
     def update_visuals(self):
 
@@ -228,7 +228,7 @@ class TransferList:
         self.selected_transfers = set()
         self.selected_users = set()
 
-        model, paths = self.TransferList.get_selection().get_selected_rows()
+        model, paths = self.Transfers.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
@@ -287,7 +287,7 @@ class TransferList:
 
     def update(self, transfer=None, forceupdate=False):
 
-        if not self.TransferList.get_sensitive():
+        if not self.Transfers.get_sensitive():
             """ List is not initialized """
             return
 
@@ -719,12 +719,12 @@ class TransferList:
     def expand(self, transfer_path, user_path):
 
         if self.expand_button.get_active():
-            self.TransferList.expand_to_path(transfer_path)
+            self.Transfers.expand_to_path(transfer_path)
 
         elif user_path and self.tree_users == "folder_grouping":
             # Group by folder, show user folders in collapsed mode
 
-            self.TransferList.expand_to_path(user_path)
+            self.Transfers.expand_to_path(user_path)
 
     def on_expand_tree(self, widget):
 
@@ -733,11 +733,11 @@ class TransferList:
 
         if expanded:
             icon_name = "go-up-symbolic"
-            self.TransferList.expand_all()
+            self.Transfers.expand_all()
 
         else:
             icon_name = "go-down-symbolic"
-            collapse_treeview(self.TransferList, self.tree_users)
+            collapse_treeview(self.Transfers, self.tree_users)
 
         expand_button_icon.set_property("icon-name", icon_name)
 
@@ -750,7 +750,7 @@ class TransferList:
         active = mode != "ungrouped"
 
         config.sections["transfers"]["group%ss" % self.type] = mode
-        self.TransferList.set_show_expanders(active)
+        self.Transfers.set_show_expanders(active)
         self.expand_button.set_visible(active)
 
         self.tree_users = mode
@@ -821,8 +821,8 @@ class TransferList:
 
         selected_user = args[-1]
 
-        sel = self.TransferList.get_selection()
-        fmodel = self.TransferList.get_model()
+        sel = self.Transfers.get_selection()
+        fmodel = self.Transfers.get_model()
         sel.unselect_all()
 
         iterator = fmodel.get_iter_first()

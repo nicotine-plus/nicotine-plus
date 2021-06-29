@@ -20,6 +20,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "File Chooser Example"
     settings = {
         'file': '/home/example/file.pdf',

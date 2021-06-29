@@ -23,6 +23,7 @@ from pynicotine.pluginsystem import returncode
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Multi Paste"
     settings = {
         'maxpubliclines': 4,
@@ -34,6 +35,7 @@ class Plugin(BasePlugin):
     }
 
     def OutgoingPrivateChatEvent(self, user, line):  # noqa
+
         lines = [x for x in line.splitlines() if x]
 
         if len(lines) > 1:
@@ -49,6 +51,7 @@ class Plugin(BasePlugin):
         return None
 
     def OutgoingPublicChatEvent(self, room, line):  # noqa
+
         lines = [x for x in line.splitlines() if x]
 
         if len(lines) > 1:

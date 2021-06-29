@@ -434,13 +434,9 @@ class Transfers:
             elif (now - i.laststatuschange) < 30:
                 # Transfer initiating, changed within last 30 seconds
 
-                if i.req is not None:
-                    in_progress_count += 1
-
-                elif i.conn is not None and i.speed is None:
-                    in_progress_count += 1
-
-                elif i.status == "Getting status":
+                if (i.req is not None
+                        or i.conn is not None and i.speed is None
+                        or i.status == "Getting status"):
                     in_progress_count += 1
 
         return in_progress_count >= maxupslots

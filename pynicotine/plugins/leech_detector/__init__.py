@@ -24,6 +24,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Leech detector"
     settings = {
         'message': 'You are not sharing any files, that makes me a sad panda :(',
@@ -39,6 +40,7 @@ class Plugin(BasePlugin):
         self.probed = {}
 
     def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
+
         try:
             self.probed[user]
         except KeyError:
@@ -47,6 +49,7 @@ class Plugin(BasePlugin):
             self.log('New user %s, requesting information...' % user)
 
     def UserStatsNotification(self, user, stats):  # noqa
+
         try:
             status = self.probed[user]
         except KeyError:

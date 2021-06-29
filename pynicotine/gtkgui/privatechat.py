@@ -121,9 +121,8 @@ class PrivateChats(IconNotebook):
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-        if switch_page:
-            if self.get_current_page() != self.page_num(self.pages[user].Main):
-                self.set_current_page(self.page_num(self.pages[user].Main))
+        if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
+            self.set_current_page(self.page_num(self.pages[user].Main))
 
     def echo_message(self, user, text):
         if user in self.pages:

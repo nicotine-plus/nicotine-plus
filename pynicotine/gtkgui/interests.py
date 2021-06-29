@@ -162,7 +162,7 @@ class Interests:
             ("#" + _("_Search for Item"), self.on_til_recommend_search)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_tidl_menu)
+        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_til_menu)
         popup.setup(
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
             ("", None),
@@ -352,14 +352,6 @@ class Interests:
         return model.get_value(iterator, column)
 
     def on_popup_til_menu(self, menu, widget):
-
-        item = self.get_selected_item(widget, column=0)
-        if item is None:
-            return True
-
-        menu.set_user(item)
-
-    def on_popup_tidl_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
         if item is None:

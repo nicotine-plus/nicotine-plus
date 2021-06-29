@@ -23,6 +23,7 @@ from pynicotine.pluginsystem import returncode
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Spamfilter"
     settings = {
         'minlength': 200,

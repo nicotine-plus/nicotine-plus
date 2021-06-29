@@ -576,6 +576,7 @@ class Config:
                             if (isinstance(eval_val, type(default_val))
                                     or (isinstance(default_val, bool)
                                         and isinstance(eval_val, int) and eval_val in (0, 1))):
+                                # Value is valid
                                 pass
 
                             else:

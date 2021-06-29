@@ -25,6 +25,7 @@ from pynicotine.pluginsystem import returncode
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Port Checker"
 
     def init(self):
@@ -34,6 +35,7 @@ class Plugin(BasePlugin):
         self.checkroom = 'nicotine'
 
     def IncomingPublicChatNotification(self, room, user, line):  # noqa
+
         if room != self.checkroom:
             return
         words = line.lower().split()
@@ -51,6 +53,7 @@ class Plugin(BasePlugin):
                 self.log("%s seems to have trouble, but we already performed a port scan" % (user,))
 
     def UserResolveNotification(self, user, ip, port, country):  # noqa
+
         if user in self.checked:
             status = self.checkport(ip, port)
             if status in ('open',):
@@ -75,6 +78,7 @@ class Plugin(BasePlugin):
             self.checked[user] = 3
 
     def my_public_command(self, room, args):
+
         if args:
             self.checked[args] = 1
             self.resolve(args)
@@ -86,6 +90,7 @@ class Plugin(BasePlugin):
         self.core.queue.append(slskmessages.GetPeerAddress(user))
 
     def checkport(self, ip, port):
+
         if ip in ('0.0.0.0',) or port in (0,):
             return 'unknown'
         self.log("Testing port at %s:%s" % (ip, port))

@@ -23,9 +23,11 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Memory Debugger"
 
     def init(self):
+
         self.log("""Tweaking garbage collection. Is it currently turned on? %s
 Current thresholds: %s
 Current counts: %s

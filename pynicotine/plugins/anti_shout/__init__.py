@@ -21,6 +21,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Anti SHOUT"
     settings = {
         'maxscore': 0.6,
@@ -37,9 +38,11 @@ class Plugin(BasePlugin):
 
     @staticmethod
     def capitalize(text):
+
         # Dont alter words that look like protocol links (fe http://, ftp://)
         if text.find('://') > -1:
             return text
+
         return text.capitalize()
 
     def IncomingPrivateChatEvent(self, user, line):  # noqa
@@ -49,16 +52,22 @@ class Plugin(BasePlugin):
         return (room, user, self.antishout(line))
 
     def antishout(self, line):
+
         lowers = len([x for x in line if x.islower()])
         uppers = len([x for x in line if x.isupper()])
         score = -2  # unknown state (could be: no letters at all)
+
         if uppers > 0:
             score = -1  # We have at least some upper letters
+
         if lowers > 0:
             score = uppers / float(lowers)
+
         newline = line
+
         if len(line) > self.settings['minlength'] and (score == -1 or score > self.settings['maxscore']):
             newline = '. '.join([self.capitalize(x) for x in line.split('. ')])
+
         if newline == line:
             return newline
 

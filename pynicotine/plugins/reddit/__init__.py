@@ -34,6 +34,7 @@ from pynicotine.pluginsystem import ResponseThrottle
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Reddit"
     settings = {'reddit_links': 3}
     metasettings = {'reddit_links': {"description": 'Maximum number of links to provide', 'type': 'integer'}}

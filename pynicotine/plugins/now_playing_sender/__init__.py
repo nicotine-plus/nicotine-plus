@@ -23,6 +23,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Now Playing Sender"
     settings = {
         'rooms': ['testroom'],

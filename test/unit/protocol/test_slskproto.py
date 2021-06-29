@@ -73,7 +73,6 @@ class SlskProtoTest(unittest.TestCase):
 
     def test_server_conn(self):
 
-        mock_socket = MockSocket()
         queue = deque()
         proto = SlskProtoThread(
             core_callback=Mock(), queue=queue, interface='', bindip='',
