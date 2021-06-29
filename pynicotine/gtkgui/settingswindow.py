@@ -1409,16 +1409,18 @@ class UserInterfaceFrame(BuildFrame):
         ):
             liststore.insert_with_valuesv(-1, column_numbers, row)
 
-        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
-            return
-
-        for row in (
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_connect"]), _("Connected (Tray)")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_disconnect"]), _("Disconnected (Tray)")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_away"]), _("Away (Tray)")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_msg"]), _("Message (Tray)")]
-        ):
-            liststore.insert_with_valuesv(-1, column_numbers, row)
+        if sys.platform != "darwin" and Gtk.get_major_version() != 4:
+            for row in (
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_connect"]),
+                    _("Connected (Tray)")],
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_disconnect"]),
+                    _("Disconnected (Tray)")],
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_away"]),
+                    _("Away (Tray)")],
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_msg"]),
+                    _("Message (Tray)")]
+            ):
+                liststore.insert_with_valuesv(-1, column_numbers, row)
 
         self.needcolors = 0
         self.options = {
