@@ -89,6 +89,14 @@ class ConnectError(InternalMessage):
         self.err = err
 
 
+class ConnectToPeerTimeout:
+
+    __slots__ = ("conn",)
+
+    def __init__(self, conn):
+        self.conn = conn
+
+
 class IncPort(InternalMessage):
     """ Send by networking thread to tell UI thread the port number client
     listens on."""
@@ -107,6 +115,14 @@ class PeerTransfer(InternalMessage):
         self.bufferlen = bufferlen
         self.total = total
         self.msg = msg
+
+
+class TransferTimeout:
+
+    __slots__ = ("transfer",)
+
+    def __init__(self, transfer):
+        self.transfer = transfer
 
 
 class CheckDownloadQueue(InternalMessage):

@@ -97,14 +97,6 @@ class Transfer:
     status = property(getstatus, setstatus)
 
 
-class TransferTimeout:
-
-    __slots__ = ("transfer",)
-
-    def __init__(self, transfer):
-        self.transfer = transfer
-
-
 class Transfers:
     """ This is the transfers manager """
 
@@ -2089,7 +2081,7 @@ class Transfers:
             if self.transfer_request_times:
                 for transfer, start_time in self.transfer_request_times.copy().items():
                     if (curtime - start_time) >= 30:
-                        self.network_callback([TransferTimeout(transfer)])
+                        self.network_callback([slskmessages.TransferTimeout(transfer)])
 
             if self.eventprocessor.exit.wait(1):
                 # Event set, we're exiting

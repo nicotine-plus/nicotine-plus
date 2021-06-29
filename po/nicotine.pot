@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-06-29 03:21+0300\n"
+"POT-Creation-Date: 2021-06-29 03:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2556,7 +2556,7 @@ msgstr ""
 msgid "File not shared"
 msgstr ""
 
-#: pynicotine/gtkgui/transferlist.py:100 pynicotine/transfers.py:1955
+#: pynicotine/gtkgui/transferlist.py:100 pynicotine/transfers.py:1947
 msgid "Download folder error"
 msgstr ""
 
@@ -3363,152 +3363,147 @@ msgid ""
 "Problem area:%(area)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:101
-#, python-format
-msgid "Exception in callback %(callback)s: %(error)s"
-msgstr ""
-
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:299
 msgid "You need to specify a username and password before connecting..."
 msgstr ""
 
-#: pynicotine/pynicotine.py:366
+#: pynicotine/pynicotine.py:344
 #, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
 "the specified network interface and restart Nicotine+."
 msgstr ""
 
-#: pynicotine/pynicotine.py:376
+#: pynicotine/pynicotine.py:354
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
 msgstr ""
 
-#: pynicotine/pynicotine.py:383
+#: pynicotine/pynicotine.py:361
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
 msgstr ""
 
-#: pynicotine/pynicotine.py:390
+#: pynicotine/pynicotine.py:368
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:740
+#: pynicotine/pynicotine.py:718
 #, python-format
 msgid "IP address of user %s is unknown, since user is offline"
 msgstr ""
 
-#: pynicotine/pynicotine.py:743
+#: pynicotine/pynicotine.py:721
 #, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:922
+#: pynicotine/pynicotine.py:900
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:990
+#: pynicotine/pynicotine.py:968
 #, python-format
 msgid "Can't connect to server %(host)s:%(port)s: %(error)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1088
+#: pynicotine/pynicotine.py:1066
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1172
+#: pynicotine/pynicotine.py:1150
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in..."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1203
+#: pynicotine/pynicotine.py:1181
 #, python-format
 msgid "Listening on port %i"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1300
+#: pynicotine/pynicotine.py:1278
 #, python-format
 msgid "Can not log in. Reason: %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1446
+#: pynicotine/pynicotine.py:1424
 msgid ""
 "Someone else is logging in with the same nickname, server is going to "
 "disconnect us"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1501
+#: pynicotine/pynicotine.py:1479
 #, python-format
 msgid "%i privileged users"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1521
+#: pynicotine/pynicotine.py:1499
 msgid ""
 "You have no privileges left. They are not necessary, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1526
+#: pynicotine/pynicotine.py:1504
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1680
+#: pynicotine/pynicotine.py:1658
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1770
+#: pynicotine/pynicotine.py:1748
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
 "attempt from IP %(ip)s port %(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1778
+#: pynicotine/pynicotine.py:1756
 #, python-format
 msgid ""
 "%(user)s is making a BrowseShares request, blocking possible spoofing "
 "attempt from an unknown IP & port"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1787
+#: pynicotine/pynicotine.py:1765
 #, python-format
 msgid "%(user)s is making a BrowseShares request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1880
+#: pynicotine/pynicotine.py:1858
 #, python-format
 msgid ""
 "Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
 "from IP %(ip)s port %(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1888
+#: pynicotine/pynicotine.py:1866
 #, python-format
 msgid ""
 "Blocking %s from making a UserInfo request, possible spoofing attempt from "
 "an unknown IP & port"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1898
+#: pynicotine/pynicotine.py:1876
 #, python-format
 msgid "%(user)s is banned, but is making a UserInfo request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1928
+#: pynicotine/pynicotine.py:1906
 #, python-format
 msgid "%(user)s is making a UserInfo request"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1966
+#: pynicotine/pynicotine.py:1944
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
@@ -3626,14 +3621,14 @@ msgstr ""
 msgid "Finished rescanning buddy shares"
 msgstr ""
 
-#: pynicotine/slskmessages.py:1113 pynicotine/slskmessages.py:2115
-#: pynicotine/slskmessages.py:2245 pynicotine/slskmessages.py:2480
-#: pynicotine/slskmessages.py:2770
+#: pynicotine/slskmessages.py:1129 pynicotine/slskmessages.py:2131
+#: pynicotine/slskmessages.py:2261 pynicotine/slskmessages.py:2496
+#: pynicotine/slskmessages.py:2786
 #, python-format
 msgid "Exception during parsing %(area)s: %(exception)s"
 msgstr ""
 
-#: pynicotine/slskmessages.py:2295
+#: pynicotine/slskmessages.py:2311
 msgid ""
 "Your shares database is corrupted. Please rescan your shares and report any "
 "potential scanning issues to the developers."
@@ -3648,137 +3643,137 @@ msgstr ""
 msgid "Ignoring connection request from blocked IP Address %(ip)s:%(port)s"
 msgstr ""
 
-#: pynicotine/transfers.py:208 pynicotine/transfers.py:224
+#: pynicotine/transfers.py:200 pynicotine/transfers.py:216
 #, python-format
 msgid "Something went wrong while reading your transfer list: %(error)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1025
+#: pynicotine/transfers.py:1017
 #, python-format
 msgid "I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1088 pynicotine/transfers.py:1955
+#: pynicotine/transfers.py:1080 pynicotine/transfers.py:1947
 #, python-format
 msgid "OS error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1108
+#: pynicotine/transfers.py:1100
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1116 pynicotine/transfers.py:1376
+#: pynicotine/transfers.py:1108 pynicotine/transfers.py:1368
 #, python-format
 msgid "Download I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1135
+#: pynicotine/transfers.py:1127
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1181
+#: pynicotine/transfers.py:1173
 #, python-format
 msgid "Upload I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1192
+#: pynicotine/transfers.py:1184
 msgid "privileged"
 msgstr ""
 
-#: pynicotine/transfers.py:1205
+#: pynicotine/transfers.py:1197
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1613
+#: pynicotine/transfers.py:1605
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
 msgstr ""
 
-#: pynicotine/transfers.py:1617
+#: pynicotine/transfers.py:1609
 #, python-format
 msgid ""
 "%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
 "Sent."
 msgstr ""
 
-#: pynicotine/transfers.py:1875
+#: pynicotine/transfers.py:1867
 #, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
 "download folder. Error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1903
+#: pynicotine/transfers.py:1895
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1907
+#: pynicotine/transfers.py:1899
 msgid "File downloaded"
 msgstr ""
 
-#: pynicotine/transfers.py:1912
+#: pynicotine/transfers.py:1904
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr ""
 
-#: pynicotine/transfers.py:1914
+#: pynicotine/transfers.py:1906
 #, python-format
 msgid "Executed: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1936
+#: pynicotine/transfers.py:1928
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1940
+#: pynicotine/transfers.py:1932
 msgid "Folder downloaded"
 msgstr ""
 
-#: pynicotine/transfers.py:1945
+#: pynicotine/transfers.py:1937
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1947
+#: pynicotine/transfers.py:1939
 #, python-format
 msgid "Executed on folder: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1979
+#: pynicotine/transfers.py:1971
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2013
+#: pynicotine/transfers.py:2005
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2046
+#: pynicotine/transfers.py:2038
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2246 pynicotine/transfers.py:2248
+#: pynicotine/transfers.py:2238 pynicotine/transfers.py:2240
 #, python-format
 msgid "Banned (%s)"
 msgstr ""
 
-#: pynicotine/transfers.py:2250
+#: pynicotine/transfers.py:2242
 msgid "Banned"
 msgstr ""
 
-#: pynicotine/transfers.py:2325
+#: pynicotine/transfers.py:2317
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2332
+#: pynicotine/transfers.py:2324
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""

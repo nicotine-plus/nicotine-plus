@@ -56,15 +56,6 @@ from pynicotine.userlist import UserList
 from pynicotine.utils import unescape
 
 
-class UserAddr:
-
-    __slots__ = ("addr", "status")
-
-    def __init__(self, addr=None, status=None):
-        self.addr = addr
-        self.status = status
-
-
 class PeerConnection:
     """
     Holds information about a peer connection. Not every field may be set
@@ -87,26 +78,13 @@ class PeerConnection:
         self.tryaddr = tryaddr
 
 
-class Timeout:
+class UserAddr:
 
-    __slots__ = ("callback",)
+    __slots__ = ("addr", "status")
 
-    def __init__(self, callback):
-        self.callback = callback
-
-    def timeout(self):
-        try:
-            self.callback([self])
-        except Exception as error:
-            log.add(_("Exception in callback %(callback)s: %(error)s"), {"callback": self.callback, "error": error})
-
-
-class ConnectToPeerTimeout:
-
-    __slots__ = ("conn",)
-
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, addr=None, status=None):
+        self.addr = addr
+        self.status = status
 
 
 class NetworkEventProcessor:
@@ -250,8 +228,8 @@ class NetworkEventProcessor:
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
             slskmessages.DistribEmbeddedMessage: self.embedded_message,
-            ConnectToPeerTimeout: self.connect_to_peer_timeout,
-            transfers.TransferTimeout: self.transfer_timeout,
+            slskmessages.ConnectToPeerTimeout: self.connect_to_peer_timeout,
+            slskmessages.TransferTimeout: self.transfer_timeout,
             str: self.notify,
             slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
             slskmessages.GlobalRecommendations: self.global_recommendations,
@@ -424,7 +402,7 @@ class NetworkEventProcessor:
             if self.out_indirect_conn_request_times:
                 for conn, request_time in self.out_indirect_conn_request_times.copy().items():
                     if (curtime - request_time) >= 20:
-                        self.network_callback([ConnectToPeerTimeout(conn)])
+                        self.network_callback([slskmessages.ConnectToPeerTimeout(conn)])
 
             if self.exit.wait(1):
                 # Event set, we're exiting
