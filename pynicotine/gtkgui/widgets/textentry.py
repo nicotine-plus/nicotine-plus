@@ -390,7 +390,8 @@ class ChatEntry:
             self.frame.privatechats.users[self.entity].on_close()
 
         elif cmd == "/now":
-            self.frame.np.now_playing.display_now_playing(callback=self.send_message)
+            self.frame.np.now_playing.display_now_playing(
+                callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif cmd == "/rescan":
             # Rescan public shares if needed
