@@ -700,9 +700,10 @@ class SlskProtoThread(threading.Thread):
 
         # Server messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
-            msgsize, msgtype = struct.unpack("<ii", msg_buffer[:8])
+            msgsize, msgtype = struct.unpack("<II", msg_buffer[:8])
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
+                # Invalid message size or buffer is being filled
                 break
 
             if msgtype in self.serverclasses:
@@ -842,7 +843,7 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[8:]
 
         conn.ibuf = msg_buffer
-        return msgs, conn
+        return msgs
 
     def process_peer_init_input(self, msgtype, msgsize, msg_buffer, msgs, conns, conn):
 
@@ -897,9 +898,7 @@ class SlskProtoThread(threading.Thread):
 
         # Peer messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
-            msgsize = struct.unpack("<i", msg_buffer[:4])[0]
-
-            msgtype = msg_buffer[4]
+            msgsize, msgtype = struct.unpack("<II", msg_buffer[:8])
             peer_class = self.peerclasses.get(msgtype, None)
 
             if peer_class and peer_class in (SharedFileList, UserInfoReply):
@@ -908,11 +907,12 @@ class SlskProtoThread(threading.Thread):
                     [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, peer_class)])
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
+                # Invalid message size or buffer is being filled
                 break
 
             if conn.init is None:
                 # Unpack Peer Connections
-                if not self.process_peer_init_input(msgtype, msgsize, msg_buffer, msgs, conns, conn):
+                if not self.process_peer_init_input(msg_buffer[4], msgsize, msg_buffer, msgs, conns, conn):
                     break
 
             elif conn.init.conn_type == 'P':
@@ -926,7 +926,7 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
-        return msgs, conn
+        return msgs
 
     def process_distrib_input(self, conns, conn, msg_buffer):
         """ We have a distributed network connection, parent has sent us
@@ -938,9 +938,10 @@ class SlskProtoThread(threading.Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while len(msg_buffer) >= 5:
-            msgsize = struct.unpack("<i", msg_buffer[:4])[0]
+            msgsize = struct.unpack("<I", msg_buffer[:4])[0]
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
+                # Invalid message size or buffer is being filled
                 break
 
             msgtype = msg_buffer[4]
@@ -960,7 +961,7 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
-        return msgs, conn
+        return msgs
 
     def process_peer_output(self, conns, msg_obj):
 
@@ -1016,18 +1017,17 @@ class SlskProtoThread(threading.Thread):
         if connection is self.server_socket:
             msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
             self._core_callback(msgs)
-            return
 
-        if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
-            msgs, conn_obj = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
+        elif conn_obj.init is None or conn_obj.init.conn_type not in ('F', 'D'):
+            msgs = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
             self._core_callback(msgs)
 
-        if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
-            msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
+        elif conn_obj.init is not None and conn_obj.init.conn_type == 'F':
+            msgs = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
             self._core_callback(msgs)
 
-        if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
-            msgs, conn_obj = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
+        elif conn_obj.init is not None and conn_obj.init.conn_type == 'D':
+            msgs = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
             self._core_callback(msgs)
 
     def process_queue(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
