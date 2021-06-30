@@ -702,7 +702,7 @@ class SlskProtoThread(threading.Thread):
         while len(msg_buffer) >= 8:
             msgsize, msgtype = struct.unpack("<ii", msg_buffer[:8])
 
-            if msgsize + 4 > len(msg_buffer):
+            if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 break
 
             if msgtype in self.serverclasses:
@@ -847,11 +847,13 @@ class SlskProtoThread(threading.Thread):
     def process_peer_init_input(self, msgtype, msgsize, msg_buffer, msgs, conns, conn):
 
         if msgtype not in self.peerinitclasses:
-            log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                    {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+            if conn.piercefw is None:
+                log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
 
-            self._core_callback([ConnClose(conn.conn, conn.addr)])
-            self.close_connection(conns, conn)
+                self._core_callback([ConnClose(conn.conn, conn.addr)])
+                self.close_connection(conns, conn)
+
             return False
 
         msg = self.peerinitclasses[msgtype](conn)
@@ -905,7 +907,7 @@ class SlskProtoThread(threading.Thread):
                 self._core_callback(
                     [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, peer_class)])
 
-            if msgsize + 4 > len(msg_buffer):
+            if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 break
 
             if conn.init is None:
@@ -938,7 +940,7 @@ class SlskProtoThread(threading.Thread):
         while len(msg_buffer) >= 5:
             msgsize = struct.unpack("<i", msg_buffer[:4])[0]
 
-            if msgsize + 4 > len(msg_buffer):
+            if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 break
 
             msgtype = msg_buffer[4]
