@@ -688,7 +688,7 @@ class SlskProtoThread(threading.Thread):
                 """ We save resources by not sending data back to the NicotineCore
                 every time a part of a file is downloaded """
 
-                self._core_callback([DownloadFile(conn.conn, addedbyteslen, conn.filedown.file)])
+                self._core_callback([DownloadFile(conn.conn, conn.filedown.file)])
                 conn.lastcallback = curtime
 
             if finished:
@@ -995,6 +995,12 @@ class SlskProtoThread(threading.Thread):
 
                         self._core_callback([msg_obj])
 
+                    elif msg_obj.__class__ is FileOffset:
+                        conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
+
+                        msg = msg_obj.make_network_message()
+                        conns[msg_obj.conn].obuf.extend(msg)
+
                     else:
                         msg = msg_obj.make_network_message()
                         conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
@@ -1037,14 +1043,6 @@ class SlskProtoThread(threading.Thread):
                             self._core_callback([ConnectError(msg_obj, err)])
                             server_socket.close()
 
-                elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
-                    conn = msg_obj.conn
-
-                    if msg_obj.callback:
-                        self._core_callback([ConnClose(conn, conns[conn].addr)])
-
-                    self.close_connection(conns, conn)
-
                 elif msg_obj.__class__ is OutConn:
                     if msg_obj.addr[1] == 0:
                         self._core_callback([ConnectError(msg_obj, "Port cannot be zero")])
@@ -1076,19 +1074,23 @@ class SlskProtoThread(threading.Thread):
                         # Connection limit reached, re-queue
                         queue.append(msg_obj)
 
+                elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
+                    conn = msg_obj.conn
+
+                    if msg_obj.callback:
+                        self._core_callback([ConnClose(conn, conns[conn].addr)])
+
+                    self.close_connection(conns, conn)
+
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj
-
-                    msg = FileOffset(msg_obj.conn, msg_obj.offset).make_network_message()
-                    conns[msg_obj.conn].obuf.extend(msg)
-
-                    conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
-
-                    self._core_callback([DownloadFile(msg_obj.conn, 0, msg_obj.file)])
 
                 elif msg_obj.__class__ is UploadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].fileupl = msg_obj
                     self._reset_counters(conns)
+
+                elif msg_obj.__class__ is SetDownloadLimit:
+                    self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
 
                 elif msg_obj.__class__ is SetUploadLimit:
                     if msg_obj.uselimit:
@@ -1102,9 +1104,6 @@ class SlskProtoThread(threading.Thread):
 
                     self._reset_counters(conns)
                     self._uploadlimit = (callback, msg_obj.limit)
-
-                elif msg_obj.__class__ is SetDownloadLimit:
-                    self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
 
         if needsleep:
             time.sleep(1)

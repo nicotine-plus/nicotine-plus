@@ -137,16 +137,13 @@ class CheckUploadQueue(InternalMessage):
 
 class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
-    Sent by UI to pass the file object to write and offset to resume download
-    from. """
+    Sent by UI to pass the file object to write. """
 
-    __slots__ = ("conn", "offset", "file", "filesize")
+    __slots__ = ("conn", "file")
 
-    def __init__(self, conn=None, offset=None, file=None, filesize=None):
+    def __init__(self, conn=None, file=None):
         self.conn = conn
-        self.offset = offset
         self.file = file
-        self.filesize = filesize
 
 
 class UploadFile(InternalMessage):
@@ -2119,8 +2116,9 @@ class FileOffset(PeerMessage):
     to tell them how many bytes of the file we've previously downloaded. If none,
     the offset is 0. """
 
-    def __init__(self, conn, offset=None):
+    def __init__(self, conn, filesize=None, offset=None):
         self.conn = conn
+        self.filesize = filesize
         self.offset = offset
 
     def make_network_message(self):

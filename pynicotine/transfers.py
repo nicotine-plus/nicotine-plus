@@ -1114,7 +1114,7 @@ class Transfers:
                             pass
 
                     file_handle.seek(0, 2)
-                    size = file_handle.tell()
+                    offset = file_handle.tell()
 
                 except IOError as strerror:
                     log.add(_("Download I/O error: %s"), strerror)
@@ -1123,18 +1123,19 @@ class Transfers:
                     i.status = "Local file error"
 
                 else:
-                    i.currentbytes = size
+                    i.currentbytes = offset
                     i.file = file_handle
                     i.place = 0
-                    i.offset = size
+                    i.offset = offset
                     i.starttime = time.time()
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
 
-                    if i.size > size:
+                    if i.size > offset:
                         i.status = "Transferring"
                         i.legacy_attempt = False
-                        self.queue.append(slskmessages.DownloadFile(i.conn, size, file_handle, i.size))
+                        self.queue.append(slskmessages.DownloadFile(i.conn, file_handle))
+                        self.queue.append(slskmessages.FileOffset(i.conn, i.size, offset))
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
                                 "user": i.user,
