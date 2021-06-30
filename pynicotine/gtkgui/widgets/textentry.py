@@ -412,6 +412,13 @@ class ChatEntry:
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
 
+        elif cmd == "/me":
+            self.send_message(self.entity, text)
+
+        elif text[:2] == "//":
+            text = text[1:]
+            self.send_message(self.entity, text)
+
         elif cmd[:1] == "/" and self.is_chatroom:
             self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
 
@@ -419,9 +426,6 @@ class ChatEntry:
             self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
         else:
-            if text[:2] == "//":
-                text = text[1:]
-
             self.send_message(self.entity, text)
 
         self.entry.set_text("")
