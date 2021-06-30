@@ -2768,7 +2768,6 @@ class DistribMessage(SlskMessage):
 
 class DistribRequest(DistribMessage):
     """ Used to identify a connection attempt to a distributed parent. """
-    pass
 
 
 class DistribAlive(DistribMessage):
