@@ -844,6 +844,47 @@ class SlskProtoThread(threading.Thread):
         conn.ibuf = msg_buffer
         return msgs, conn
 
+    def process_peer_init_input(self, msgtype, msgsize, msg_buffer, msgs, conns, conn):
+
+        if msgtype not in self.peerinitclasses:
+            log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                    {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+
+            self._core_callback([ConnClose(conn.conn, conn.addr)])
+            self.close_connection(conns, conn)
+            return False
+
+        msg = self.peerinitclasses[msgtype](conn)
+        msg.parse_network_message(msg_buffer[5:msgsize + 4])
+
+        if self.peerinitclasses[msgtype] is PierceFireWall:
+            conn.piercefw = msg
+
+        elif self.peerinitclasses[msgtype] is PeerInit:
+            conn.init = msg
+
+        msgs.append(msg)
+        return True
+
+    def process_peer_message_input(self, msgtype, msgsize, msg_buffer, msgs, conn):
+
+        if msgtype not in self.peerclasses:
+            host = port = "unknown"
+
+            if conn.init.conn is not None and conn.addr is not None:
+                host = conn.addr[0]
+                port = conn.addr[1]
+
+            log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
+                     "from user: %(user)s, %(host)s:%(port)s"), {
+                'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(),
+                'user': conn.init.user, 'host': host, 'port': port})
+            return
+
+        msg = self.peerclasses[msgtype](conn)
+        msg.parse_network_message(msg_buffer[8:msgsize + 4])
+        msgs.append(msg)
+
     def process_peer_input(self, conns, conn, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
         something, this function retrieves messages
@@ -869,50 +910,12 @@ class SlskProtoThread(threading.Thread):
 
             if conn.init is None:
                 # Unpack Peer Connections
-
-                if msgtype in self.peerinitclasses:
-                    msg = self.peerinitclasses[msgtype](conn)
-                    msg.parse_network_message(msg_buffer[5:msgsize + 4])
-
-                    if self.peerinitclasses[msgtype] is PierceFireWall:
-                        conn.piercefw = msg
-
-                    elif self.peerinitclasses[msgtype] is PeerInit:
-                        conn.init = msg
-
-                    msgs.append(msg)
-
-                elif conn.piercefw is None:
-                    log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
-
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
-                    self.close_connection(conns, conn)
-                    break
-
-                else:
+                if not self.process_peer_init_input(msgtype, msgsize, msg_buffer, msgs, conns, conn):
                     break
 
             elif conn.init.conn_type == 'P':
                 # Unpack Peer Messages
-                msgtype = struct.unpack("<i", msg_buffer[4:8])[0]
-
-                if msgtype in self.peerclasses:
-                    msg = self.peerclasses[msgtype](conn)
-                    msg.parse_network_message(msg_buffer[8:msgsize + 4])
-                    msgs.append(msg)
-
-                else:
-                    host = port = "unknown"
-
-                    if conn.init.conn is not None and conn.addr is not None:
-                        host = conn.addr[0]
-                        port = conn.addr[1]
-
-                    log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
-                             "from user: %(user)s, %(host)s:%(port)s"), {
-                        'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(),
-                        'user': conn.init.user, 'host': host, 'port': port})
+                self.process_peer_message_input(msgtype, msgsize, msg_buffer, msgs, conn)
 
             else:
                 # Unknown Message type
