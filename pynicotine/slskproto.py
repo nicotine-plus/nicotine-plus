@@ -78,7 +78,6 @@ from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
 from pynicotine.slskmessages import IncPort
-from pynicotine.slskmessages import InternalMessage
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
 from pynicotine.slskmessages import JoinPublicRoom
@@ -881,6 +880,25 @@ class SlskProtoThread(threading.Thread):
         conn.ibuf = msg_buffer
         return msgs, conn
 
+    def process_conn_input(self, conns, connection, conn_obj):
+
+        if connection is self.server_socket:
+            msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
+            self._core_callback(msgs)
+            return
+
+        if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
+            msgs, conn_obj = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
+            self._core_callback(msgs)
+
+        if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
+            msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
+            self._core_callback(msgs)
+
+        if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
+            msgs, conn_obj = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
+            self._core_callback(msgs)
+
     def _reset_counters(self, conns):
         curtime = time.time()
 
@@ -953,6 +971,7 @@ class SlskProtoThread(threading.Thread):
 
             connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
             self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            self.server_socket = server_socket
 
         except socket.error as err:
             self._core_callback([ConnectError(msg_obj, err)])
@@ -962,7 +981,9 @@ class SlskProtoThread(threading.Thread):
 
         return True
 
-    def process_server_output(self, server_socket, conns, msg_obj):
+    def process_server_output(self, conns, msg_obj):
+
+        server_socket = self.server_socket
 
         if server_socket not in conns:
             log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
@@ -1052,10 +1073,10 @@ class SlskProtoThread(threading.Thread):
             conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
             conns[msg_obj.conn].obuf.extend(msg)
 
-    def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXSOCKETS):
-        """ Processes messages sent by the main thread. server_socket is a server
-        connection socket object, queue holds the messages, conns and connsinprogress
-        are dictionaries holding Connection and PeerConnectionInProgress messages. """
+    def process_queue(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
+        """ Processes messages sent by the main thread. queue holds the messages,
+        conns and connsinprogress are dictionaries holding Connection and
+        PeerConnectionInProgress messages. """
 
         msg_list = []
         numsockets = 1 + len(conns) + len(connsinprogress)  # 1 = listen socket
@@ -1065,7 +1086,7 @@ class SlskProtoThread(threading.Thread):
 
         for msg_obj in msg_list:
             if issubclass(msg_obj.__class__, ServerMessage):
-                self.process_server_output(server_socket, conns, msg_obj)
+                self.process_server_output(conns, msg_obj)
 
             elif issubclass(msg_obj.__class__, PeerMessage):
                 self.process_peer_output(conns, msg_obj)
@@ -1117,9 +1138,9 @@ class SlskProtoThread(threading.Thread):
                 self._reset_counters(conns)
                 self._uploadlimit = (callback, msg_obj.limit)
 
-        return conns, connsinprogress, server_socket, numsockets
+        return conns, connsinprogress, numsockets
 
-    def write_data(self, server_socket, conns, i):
+    def write_data(self, conns, i):
 
         if i in self._ulimits:
             limit = self._ulimits[i]
@@ -1142,7 +1163,7 @@ class SlskProtoThread(threading.Thread):
         else:
             bytes_send = 0
 
-        if i is server_socket:
+        if i is self.server_socket:
             return
 
         if conn.fileupl is not None and conn.fileupl.offset is not None:
@@ -1220,14 +1241,9 @@ class SlskProtoThread(threading.Thread):
     def run(self):
         """ Actual networking loop is here."""
 
-        # @var p Peer / Listen Port
         # Listen socket needs to be registered for selection here instead of __init__,
         # otherwise connections break on certain systems (OpenBSD confirmed)
-        listen_socket = self.listen_socket
-        self.selector.register(listen_socket, selectors.EVENT_READ)
-
-        # @var s Server Port
-        server_socket = self.server_socket
+        self.selector.register(self.listen_socket, selectors.EVENT_READ)
 
         conns = self._conns
         connsinprogress = self._connsinprogress
@@ -1242,9 +1258,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             if queue:
-                conns, connsinprogress, server_socket, numsockets = self.process_queue(
-                    queue, conns, connsinprogress, server_socket)
-                self.server_socket = server_socket
+                conns, connsinprogress, numsockets = self.process_queue(queue, conns, connsinprogress)
 
             self._ulimits = {}
             self._dlimits = {}
@@ -1254,7 +1268,7 @@ class SlskProtoThread(threading.Thread):
                     conn = conns[i]
                     event_masks = selectors.EVENT_READ
 
-                    if (conn.obuf or (i is not server_socket
+                    if (conn.obuf or (i is not self.server_socket
                                       and conn.fileupl is not None and conn.fileupl.offset is not None)):
                         event_masks |= selectors.EVENT_WRITE
 
@@ -1287,9 +1301,9 @@ class SlskProtoThread(threading.Thread):
                 self.last_conncount_callback = curtime
 
             # Listen / Peer Port
-            if listen_socket in input_list:
+            if self.listen_socket in input_list:
                 try:
-                    incconn, incaddr = listen_socket.accept()
+                    incconn, incaddr = self.listen_socket.accept()
                 except Exception:
                     time.sleep(0.01)
                 else:
@@ -1341,10 +1355,10 @@ class SlskProtoThread(threading.Thread):
                     if connection_in_progress in output_list:
                         addr = msg_obj.addr
 
-                        if connection_in_progress is server_socket:
-                            conns[server_socket] = Connection(conn=server_socket, addr=addr)
+                        if connection_in_progress is self.server_socket:
+                            conns[self.server_socket] = Connection(conn=self.server_socket, addr=addr)
 
-                            self._core_callback([ServerConn(server_socket, addr)])
+                            self._core_callback([ServerConn(self.server_socket, addr)])
 
                         else:
                             conns[connection_in_progress] = PeerConnection(
@@ -1374,14 +1388,14 @@ class SlskProtoThread(threading.Thread):
                             self._ulimits[connection] = limit
 
                     try:
-                        self.write_data(server_socket, conns, connection)
+                        self.write_data(conns, connection)
 
                     except socket.error as err:
                         self._core_callback([ConnectError(conn_obj, err)])
                         self.close_connection(conns, connection)
                         continue
 
-                if connection is not server_socket:
+                if connection is not self.server_socket:
                     addr = conn_obj.addr
 
                     # Timeout Connections
@@ -1419,22 +1433,7 @@ class SlskProtoThread(threading.Thread):
                         continue
 
                 if conn_obj.ibuf:
-                    if connection is server_socket:
-                        msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
-                        self._core_callback(msgs)
-
-                    else:
-                        if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
-                            msgs, conn_obj = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
-                            self._core_callback(msgs)
-
-                        if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
-                            msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
-                            self._core_callback(msgs)
-
-                        if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
-                            msgs, conn_obj = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
-                            self._core_callback(msgs)
+                    self.process_conn_input(conns, connection, conn_obj)
 
             # Don't exhaust the CPU
             time.sleep(0.2)

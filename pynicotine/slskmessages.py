@@ -45,9 +45,6 @@ class Conn(InternalMessage):
         self.addr = addr
         self.init = init
 
-    def __repr__(self):
-        return '{}: {} {} {}'.format(type(self).__name__, self.conn, self.addr, self.init)
-
 
 class DistribConn(InternalMessage):
     pass
