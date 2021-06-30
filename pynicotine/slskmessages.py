@@ -2111,7 +2111,7 @@ class FileRequest(PeerMessage):
         return msg
 
     def parse_network_message(self, message):
-        pos, self.req = self.get_object(message, int)
+        _pos, self.req = self.get_object(message, int)
 
 
 class FileOffset(PeerMessage):
@@ -2128,7 +2128,7 @@ class FileOffset(PeerMessage):
         return msg
 
     def parse_network_message(self, message):
-        pos, self.offset = self.get_object(message, int, getunsignedlonglong=True)
+        _pos, self.offset = self.get_object(message, int, getunsignedlonglong=True)
 
 
 class GetSharedFileList(PeerMessage):

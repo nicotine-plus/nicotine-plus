@@ -368,6 +368,11 @@ class SlskProtoThread(threading.Thread):
         CantCreateRoom: 1003
     }
 
+    peerinitcodes = {
+        PierceFireWall: 0,
+        PeerInit: 1
+    }
+
     peercodes = {
         GetSharedFileList: 4,
         SharedFileList: 5,
@@ -430,6 +435,10 @@ class SlskProtoThread(threading.Thread):
         self.serverclasses = {}
         for code_class, code_id in self.servercodes.items():
             self.serverclasses[code_id] = code_class
+
+        self.peerinitclasses = {}
+        for code_class, code_id in self.peerinitcodes.items():
+            self.peerinitclasses[code_id] = code_class
 
         self.peerclasses = {}
         for code_class, code_id in self.peercodes.items():
@@ -736,26 +745,24 @@ class SlskProtoThread(threading.Thread):
 
             if conn.init is None:
                 # Unpack Peer Connections
-                if msg_buffer[4] == 0:
-                    msg = PierceFireWall(conn)
+                msgtype = msg_buffer[4]
+
+                if msgtype in self.peerinitclasses:
+                    msg = self.peerinitclasses[msgtype](conn)
 
                     try:
                         msg.parse_network_message(msg_buffer[5:msgsize + 4])
+
                     except Exception as error:
                         log.add("%s", error)
-                    else:
-                        conn.piercefw = msg
-                        msgs.append(msg)
 
-                elif msg_buffer[4] == 1:
-                    msg = PeerInit(conn)
-
-                    try:
-                        msg.parse_network_message(msg_buffer[5:msgsize + 4])
-                    except Exception as error:
-                        log.add("%s", error)
                     else:
-                        conn.init = msg
+                        if self.peerinitclasses[msgtype] is PierceFireWall:
+                            conn.piercefw = msg
+
+                        elif self.peerinitclasses[msgtype] is PeerInit:
+                            conn.init = msg
+
                         msgs.append(msg)
 
                 elif conn.piercefw is None:
@@ -967,16 +974,17 @@ class SlskProtoThread(threading.Thread):
                         msg = msg_obj.make_network_message()
 
                         conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
-                        conns[msg_obj.conn].obuf.extend(bytes([0]))
+                        conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                         conns[msg_obj.conn].obuf.extend(msg)
 
                     elif msg_obj.__class__ is PeerInit:
                         conns[msg_obj.conn].init = msg_obj
+
                         msg = msg_obj.make_network_message()
 
                         if conns[msg_obj.conn].piercefw is None:
                             conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
-                            conns[msg_obj.conn].obuf.extend(bytes([1]))
+                            conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                             conns[msg_obj.conn].obuf.extend(msg)
 
                     elif msg_obj.__class__ is FileRequest:
@@ -989,8 +997,8 @@ class SlskProtoThread(threading.Thread):
 
                     else:
                         msg = msg_obj.make_network_message()
-                        conns[msg_obj.conn].obuf.extend(
-                            struct.pack("<ii", len(msg) + 4, self.peercodes[msg_obj.__class__]))
+                        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
+                        conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
                         conns[msg_obj.conn].obuf.extend(msg)
 
                 else:
