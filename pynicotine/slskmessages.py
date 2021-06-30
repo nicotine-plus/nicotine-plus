@@ -2097,6 +2097,40 @@ class PeerInit(PeerMessage):
             pos, self.token = self.get_object(message, int, pos)
 
 
+class FileRequest(PeerMessage):
+    """ We sent this to a peer via a 'F' connection to tell them that we want to
+    start uploading a file. The token is the same as the one previously included
+    in the TransferRequest message. """
+
+    def __init__(self, conn, req=None):
+        self.conn = conn
+        self.req = req
+
+    def make_network_message(self):
+        msg = self.pack_object(self.req)
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.req = self.get_object(message, int)
+
+
+class FileOffset(PeerMessage):
+    """ We send this to the uploading peer at the beginning of a 'F' connection,
+    to tell them how many bytes of the file we've previously downloaded. If none,
+    the offset is 0. """
+
+    def __init__(self, conn, offset=None):
+        self.conn = conn
+        self.offset = offset
+
+    def make_network_message(self):
+        msg = self.pack_object(self.offset, unsignedlonglong=True)
+        return msg
+
+    def parse_network_message(self, message):
+        pos, self.offset = self.get_object(message, int, getunsignedlonglong=True)
+
+
 class GetSharedFileList(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
@@ -2728,20 +2762,6 @@ class UnknownPeerMessage(PeerMessage):
     def parse_network_message(self, message):
         # Empty message
         pass
-
-
-class FileRequest(PeerMessage):
-    """ Request a file from peer, or tell a peer that we want to send a file to
-    them. """
-
-    def __init__(self, conn, req=None, direction=None):
-        self.conn = conn
-        self.req = req
-        self.direction = direction
-
-    def make_network_message(self):
-        msg = self.pack_object(self.req)
-        return msg
 
 
 """

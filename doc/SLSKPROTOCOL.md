@@ -89,7 +89,7 @@ In Nicotine, these messages are matched to their message number in
 slskproto.py in the SlskProtoThread function, defined in slskmessages.py
 and callbacks for the messages are set in pynicotine.py.
 
-#### The Server Message format
+#### Server Message Format
 
 | Message Length | Code    | Message Contents |
 | -------------- | ------- | ---------------- |
@@ -553,7 +553,7 @@ Order](#peer-connection-message-order)
     2.  **string** <ins>type</ins> *Connection Type (P, F or D)*
     3.  **ip** <ins>ip</ins>
     4.  **uint32** <ins>port</ins>
-    5.  **uint32** <ins>token</ins> *Use this token for [Pierce Firewall](#peer-code-0)*
+    5.  **uint32** <ins>token</ins> *Use this token for [Pierce Firewall](#peer-init-code-0)*
     6.  **bool** <ins>privileged</ins>
     7.  **bool** <ins>use obfuscation</ins>
     8.  **uint32** <ins>obfuscated port</ins>
@@ -2458,7 +2458,7 @@ museekd 0.2, they are defined in museekd/peermessages.h.
 
 In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
-#### The Peer Init Message format
+#### Peer Init Message Format
 
 | Message Length | Code   | Message Contents |
 | -------------- | ------ | ---------------- |
@@ -2466,25 +2466,25 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 #### Peer Init Message Index
 
-| Code | Message                         |
-| ---- | ------------------------------- |
-| 0    | [Pierce Firewall](#peer-code-0) |
-| 1    | [Peer Init](#peer-code-1)       |
+| Code | Message                              |
+| ---- | ------------------------------------ |
+| 0    | [Pierce Firewall](#peer-init-code-0) |
+| 1    | [Peer Init](#peer-init-code-1)       |
 
 ### Peer Connection Message Order
 
-1.  User A sends a [Peer Init](#peer-code-1) to User B.  
+1.  User A sends a [Peer Init](#peer-init-code-1) to User B.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
 If this fails (socket cannot connect), User A proceeds with an indirect connection request (step 2).
 2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
-4.  User B sends a [Pierce Firewall](#peer-code-0) to User A with the same token.  
+4.  User B sends a [Pierce Firewall](#peer-init-code-0) to User A with the same token.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
 If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
 5.  User B sends a [Cannot Connect](#server-code-1001) to the Server.
 6.  The Server sends a [Cannot Connect](#server-code-1001) response to User A.
 
-### Peer Code 0
+### Peer Init Code 0
 
 **Pierce Firewall**
 
@@ -2506,7 +2506,7 @@ Order](#peer-connection-message-order)
   - Receive
       - **uint32** <ins>token</ins> *Unique Number*
 
-### Peer Code 1
+### Peer Init Code 1
 
 **Peer Init**
 
@@ -2518,8 +2518,7 @@ Nicotine: PeerInit
 
 This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
 
-See also: [Peer Connection Message
-Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 #### Data Order
 
@@ -2534,7 +2533,54 @@ Order](#peer-connection-message-order)
         (P, F or D)*
       - **uint32** <ins>token</ins> *Unique Number*
 
-#### The Message format
+#### File Connection Message Format
+
+| Message Contents |
+| ---------------- |
+| ...              |
+
+#### File Connection Message Index
+
+| Message                       |
+| ----------------------------- |
+| [File Request](#file-request) |
+| [File Offset](#file-offset)   |
+
+### File Request
+
+#### Function Names
+
+Nicotine: FileRequest
+
+#### Description
+
+We sent this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
+
+#### Data Order
+
+  - Send
+      - **int** <ins>token</ins>
+  - Receive
+      - **int** <ins>token</ins>
+
+### File Offset
+
+#### Function Names
+
+Nicotine: FileOffset
+
+#### Description
+
+We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+
+#### Data Order
+
+  - Send
+      - **off\_t** <ins>offset</ins>
+  - Receive
+      - **off\_t** <ins>offset</ins>
+
+#### Message Format
 
 | Message Length | Code    | Message Contents |
 | -------------- | ------- | ---------------- |

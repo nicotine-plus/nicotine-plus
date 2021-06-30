@@ -61,6 +61,7 @@ from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileError
+from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileRequest
 from pynicotine.slskmessages import FileSearch
 from pynicotine.slskmessages import FileSearchRequest
@@ -600,28 +601,6 @@ class SlskProtoThread(threading.Thread):
             # Disconnected from server, clean up connections and queue
             self.server_disconnect()
 
-    @staticmethod
-    def parse_file_req(conn, msg_buffer):
-        msg = None
-
-        # File Request messages are 4 bytes or greater in length
-        if len(msg_buffer) >= 4:
-            reqnum = struct.unpack("<i", msg_buffer[:4])[0]
-            msg = FileRequest(conn.conn, reqnum)
-            msg_buffer = msg_buffer[4:]
-
-        return msg, msg_buffer
-
-    @staticmethod
-    def parse_offset(msg_buffer):
-        offset = None
-
-        if len(msg_buffer) >= 8:
-            offset = struct.unpack("<Q", msg_buffer[:8])[0]
-            msg_buffer = msg_buffer[8:]
-
-        return offset, msg_buffer
-
     def process_server_input(self, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
@@ -658,11 +637,18 @@ class SlskProtoThread(threading.Thread):
         msgs = []
 
         if conn.filereq is None:
-            filereq, msg_buffer = self.parse_file_req(conn, msg_buffer)
+            msg = FileRequest(conn.conn)
 
-            if filereq is not None:
-                msgs.append(filereq)
-                conn.filereq = filereq
+            try:
+                msg.parse_network_message(msg_buffer[:4])
+                msg_buffer = msg_buffer[4:]
+
+            except Exception as error:
+                log.add("%s", error)
+
+            if msg.req is not None:
+                msgs.append(msg)
+                conn.filereq = msg
 
         elif conn.filedown is not None:
             leftbytes = conn.bytestoread - conn.filereadbytes
@@ -704,11 +690,18 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[leftbytes:]
 
         elif conn.fileupl is not None and conn.fileupl.offset is None:
-            offset, msg_buffer = self.parse_offset(msg_buffer)
+            msg = FileOffset(conn)
 
-            if offset is not None:
+            try:
+                msg.parse_network_message(msg_buffer[:8])
+                msg_buffer = msg_buffer[8:]
+
+            except Exception as error:
+                log.add("%s", error)
+
+            if msg.offset is not None:
                 try:
-                    conn.fileupl.file.seek(offset)
+                    conn.fileupl.file.seek(msg.offset)
                 except IOError as strerror:
                     self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
                     self._core_callback([ConnClose(conn.conn, conn.addr)])
@@ -716,7 +709,7 @@ class SlskProtoThread(threading.Thread):
                 except ValueError:
                     pass
 
-                conn.fileupl.offset = offset
+                conn.fileupl.offset = msg.offset
                 self._core_callback([conn.fileupl])
 
         conn.ibuf = msg_buffer
@@ -1078,8 +1071,8 @@ class SlskProtoThread(threading.Thread):
                 elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
                     conns[msg_obj.conn].filedown = msg_obj
 
-                    conns[msg_obj.conn].obuf.extend(struct.pack("<Q", msg_obj.offset))
-                    conns[msg_obj.conn].obuf.extend(struct.pack("<i", 0))
+                    msg = FileOffset(msg_obj.conn, msg_obj.offset).make_network_message()
+                    conns[msg_obj.conn].obuf.extend(msg)
 
                     conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
 
