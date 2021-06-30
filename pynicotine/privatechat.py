@@ -83,7 +83,7 @@ class PrivateChats:
 
         self.users.remove(user)
 
-    def show_user(self, user, switch_page=False):
+    def show_user(self, user, switch_page=True):
 
         self.add_user(user)
 

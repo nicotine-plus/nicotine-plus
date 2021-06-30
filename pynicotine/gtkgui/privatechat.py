@@ -162,7 +162,7 @@ class PrivateChats(IconNotebook):
 
     def message_user(self, msg):
 
-        self.frame.np.privatechats.show_user(msg.user)
+        self.frame.np.privatechats.show_user(msg.user, switch_page=False)
         self.show_notification(msg.user, msg.msg)
 
         self.pages[msg.user].message_user(msg)

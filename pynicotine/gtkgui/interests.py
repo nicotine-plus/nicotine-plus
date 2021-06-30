@@ -386,7 +386,7 @@ class Interests:
 
     def on_ru_row_activated(self, treeview, path, column):
 
-        user = self.get_selected_item(treeview)
+        user = self.get_selected_item(treeview, column=1)
 
         if user is not None:
             self.frame.np.privatechats.show_user(user)

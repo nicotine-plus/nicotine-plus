@@ -584,7 +584,7 @@ class Config:
 
                         self.sections[i][j] = eval_val
 
-                    except (TypeError, ValueError):
+                    except Exception:
                         # Value was unexpected, reset option
                         self.sections[i][j] = default_val
 
