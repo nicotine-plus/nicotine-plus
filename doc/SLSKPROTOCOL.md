@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on June 30, 2021
+Last updated on July 1, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -11,7 +11,9 @@ If you find any inconsistencies or errors in the documentation, please report th
 - [Packing](#packing)
 - [Constants](#constants)
 - [Server Messages](#server-messages)
+- [Peer Init Messages](#peer-init-messages)
 - [Peer Messages](#peer-messages)
+- [File Messages](#file-messages)
 - [Distributed Messages](#distributed-messages)
 - [Museek Data Types](#museek-data-types)
 
@@ -2446,7 +2448,7 @@ Server tells us a new room cannot be created. This message only seems to be sent
   - Receive
     1.  **string** <ins>room</ins>
 
-# Peer Messages
+# Peer Init Messages
 
 | Send         | Receive           |
 | ------------ | ----------------- |
@@ -2458,13 +2460,13 @@ museekd 0.2, they are defined in museekd/peermessages.h.
 
 In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
-#### Peer Init Message Format
+#### Message Format
 
 | Message Length | Code   | Message Contents |
 | -------------- | ------ | ---------------- |
 | 4 Bytes        | 1 Byte | ...              |
 
-#### Peer Init Message Index
+#### Message Index
 
 | Code | Message                              |
 | ---- | ------------------------------------ |
@@ -2496,8 +2498,7 @@ Nicotine: PierceFireWall
 
 This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so. The token is taken from the ConnectToPeer server message.
 
-See also: [Peer Connection Message
-Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 #### Data Order
 
@@ -2524,61 +2525,24 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
   - Send
       - **string** <ins>username</ins> *Local Username*
-      - **string** <ins>type</ins> *Connection Type
-        (P, F or D)*
+      - **string** <ins>type</ins> *Connection Type (P, F or D)*
       - **uint32** <ins>token</ins> *Unique Number*
   - Receive
       - **string** <ins>username</ins> *Remote Username*
-      - **string** <ins>type</ins> *Connection Type
-        (P, F or D)*
+      - **string** <ins>type</ins> *Connection Type (P, F or D)*
       - **uint32** <ins>token</ins> *Unique Number*
 
-#### File Connection Message Format
+# Peer Messages
 
-| Message Contents |
-| ---------------- |
-| ...              |
+| Send         | Receive           |
+| ------------ | ----------------- |
+| Send to Peer | Receive from Peer |
 
-#### File Connection Message Index
+In museekd 0.1.13, these messages are sent and received in
+Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh. Since
+museekd 0.2, they are defined in museekd/peermessages.h.
 
-| Message                       |
-| ----------------------------- |
-| [File Request](#file-request) |
-| [File Offset](#file-offset)   |
-
-### File Request
-
-#### Function Names
-
-Nicotine: FileRequest
-
-#### Description
-
-We sent this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
-
-#### Data Order
-
-  - Send
-      - **int** <ins>token</ins>
-  - Receive
-      - **int** <ins>token</ins>
-
-### File Offset
-
-#### Function Names
-
-Nicotine: FileOffset
-
-#### Description
-
-We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
-
-#### Data Order
-
-  - Send
-      - **off\_t** <ins>offset</ins>
-  - Receive
-      - **off\_t** <ins>offset</ins>
+In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
 #### Message Format
 
@@ -3153,11 +3117,66 @@ Nicotine: UploadQueueNotification
   - Receive
       - Empty Message
 
+# File Messages
+
+| Send         | Receive           |
+| ------------ | ----------------- |
+| Send to Peer | Receive from Peer |
+
+These messages are sent to peers over a 'F' connection, and do not have messages codes associated with them.
+
+#### File Connection Message Format
+
+| Message Contents |
+| ---------------- |
+| ...              |
+
+#### File Connection Message Index
+
+| Message                       |
+| ----------------------------- |
+| [File Request](#file-request) |
+| [File Offset](#file-offset)   |
+
+### File Request
+
+#### Function Names
+
+Nicotine: FileRequest
+
+#### Description
+
+We sent this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
+
+#### Data Order
+
+  - Send
+      - **int** <ins>token</ins>
+  - Receive
+      - **int** <ins>token</ins>
+
+### File Offset
+
+#### Function Names
+
+Nicotine: FileOffset
+
+#### Description
+
+We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+
+#### Data Order
+
+  - Send
+      - **off\_t** <ins>offset</ins>
+  - Receive
+      - **off\_t** <ins>offset</ins>
+
 # Distributed Messages
 
-| Send    | Send to Node      |
-| ------- | ----------------- |
-| Receive | Receive from Node |
+| Send         | Receive           |
+| ------------ | ----------------- |
+| Send to Node | Receive from Node |
 
 In museekd 0.1.13, these messages are sent and received in
 Museek/DistribConnection.cc and defined in Museek/DistribMessages.hh.

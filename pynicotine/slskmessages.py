@@ -2043,6 +2043,7 @@ class PeerMessage(SlskMessage):
 
 
 class PierceFireWall(PeerMessage):
+    """ Peer init code: 0 """
     """ This is the very first message sent by the peer that established a
     connection, if it has been asked by the other peer to do so. The token
     is taken from the ConnectToPeer server message. """
@@ -2061,6 +2062,7 @@ class PierceFireWall(PeerMessage):
 
 
 class PeerInit(PeerMessage):
+    """ Peer init code: 1 """
     """ This message is sent by the peer that initiated a connection,
     not necessarily a peer that actually established it. Token apparently
     can be anything. Type is 'P' if it's anything but filetransfer,
@@ -2087,41 +2089,6 @@ class PeerInit(PeerMessage):
         if message[pos:]:
             # A token is not guaranteed to be sent
             pos, self.token = self.get_object(message, int, pos)
-
-
-class FileRequest(PeerMessage):
-    """ We sent this to a peer via a 'F' connection to tell them that we want to
-    start uploading a file. The token is the same as the one previously included
-    in the TransferRequest message. """
-
-    def __init__(self, conn, req=None):
-        self.conn = conn
-        self.req = req
-
-    def make_network_message(self):
-        msg = self.pack_object(self.req)
-        return msg
-
-    def parse_network_message(self, message):
-        _pos, self.req = self.get_object(message, int)
-
-
-class FileOffset(PeerMessage):
-    """ We send this to the uploading peer at the beginning of a 'F' connection,
-    to tell them how many bytes of the file we've previously downloaded. If none,
-    the offset is 0. """
-
-    def __init__(self, conn, filesize=None, offset=None):
-        self.conn = conn
-        self.filesize = filesize
-        self.offset = offset
-
-    def make_network_message(self):
-        msg = self.pack_object(self.offset, unsignedlonglong=True)
-        return msg
-
-    def parse_network_message(self, message):
-        _pos, self.offset = self.get_object(message, int, getunsignedlonglong=True)
 
 
 class GetSharedFileList(PeerMessage):
@@ -2755,6 +2722,50 @@ class UnknownPeerMessage(PeerMessage):
     def parse_network_message(self, message):
         # Empty message
         pass
+
+
+"""
+File Messages
+"""
+
+
+class FileMessage(SlskMessage):
+    pass
+
+
+class FileRequest(FileMessage):
+    """ We sent this to a peer via a 'F' connection to tell them that we want to
+    start uploading a file. The token is the same as the one previously included
+    in the TransferRequest message. """
+
+    def __init__(self, conn, req=None):
+        self.conn = conn
+        self.req = req
+
+    def make_network_message(self):
+        msg = self.pack_object(self.req)
+        return msg
+
+    def parse_network_message(self, message):
+        _pos, self.req = self.get_object(message, int)
+
+
+class FileOffset(FileMessage):
+    """ We send this to the uploading peer at the beginning of a 'F' connection,
+    to tell them how many bytes of the file we've previously downloaded. If none,
+    the offset is 0. """
+
+    def __init__(self, conn, filesize=None, offset=None):
+        self.conn = conn
+        self.filesize = filesize
+        self.offset = offset
+
+    def make_network_message(self):
+        msg = self.pack_object(self.offset, unsignedlonglong=True)
+        return msg
+
+    def parse_network_message(self, message):
+        _pos, self.offset = self.get_object(message, int, getunsignedlonglong=True)
 
 
 """

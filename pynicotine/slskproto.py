@@ -62,6 +62,7 @@ from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
 from pynicotine.slskmessages import FileError
+from pynicotine.slskmessages import FileMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileRequest
 from pynicotine.slskmessages import FileSearch
@@ -767,89 +768,6 @@ class SlskProtoThread(threading.Thread):
 
         return True
 
-    def process_file_input(self, conn, msg_buffer, conns):
-        """ We have a "F" connection (filetransfer), peer has sent us
-        something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them
-        and the rest of the msg_buffer.
-        """
-        msgs = []
-
-        if conn.filereq is None:
-            msg = FileRequest(conn.conn)
-            msg.parse_network_message(msg_buffer[:4])
-
-            if msg.req is not None:
-                msgs.append(msg)
-                conn.filereq = msg
-
-            msg_buffer = msg_buffer[4:]
-
-        elif conn.filedown is not None:
-            leftbytes = conn.bytestoread - conn.filereadbytes
-            addedbytes = msg_buffer[:leftbytes]
-
-            if leftbytes > 0:
-                try:
-                    conn.filedown.file.write(addedbytes)
-
-                except IOError as strerror:
-                    self._core_callback([FileError(conn, conn.filedown.file, strerror)])
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
-                    self.close_connection(conns, conn.conn)
-
-                except ValueError:
-                    pass
-
-            addedbyteslen = len(addedbytes)
-            curtime = time.time()
-
-            """ Depending on the number of active downloads, the cooldown for callbacks
-            can be up to 15 seconds per transfer. We use a bit of randomness to give the
-            illusion that downloads are updated often. """
-
-            finished = ((leftbytes - addedbyteslen) == 0)
-            cooldown = max(1.0, min(self.total_downloads * uniform(0.8, 1.0), 15))
-
-            if finished or (curtime - conn.lastcallback) > cooldown:
-
-                """ We save resources by not sending data back to the NicotineCore
-                every time a part of a file is downloaded """
-
-                self._core_callback([DownloadFile(conn.conn, conn.filedown.file)])
-                conn.lastcallback = curtime
-
-            if finished:
-                self._core_callback([ConnClose(conn.conn, conn.addr)])
-                self.close_connection(conns, conn.conn)
-
-            conn.filereadbytes += addedbyteslen
-            msg_buffer = msg_buffer[leftbytes:]
-
-        elif conn.fileupl is not None and conn.fileupl.offset is None:
-            msg = FileOffset(conn)
-            msg.parse_network_message(msg_buffer[:8])
-
-            if msg.offset is not None:
-                try:
-                    conn.fileupl.file.seek(msg.offset)
-
-                except IOError as strerror:
-                    self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
-                    self.close_connection(conns, conn.conn)
-
-                except ValueError:
-                    pass
-
-                conn.fileupl.offset = msg.offset
-                self._core_callback([conn.fileupl])
-
-            msg_buffer = msg_buffer[8:]
-
-        conn.ibuf = msg_buffer
-        return msgs
-
     def process_peer_init_input(self, msgtype, msgsize, msg_buffer, msgs, conns, conn):
 
         if msgtype not in self.peerinitclasses:
@@ -942,7 +860,7 @@ class SlskProtoThread(threading.Thread):
             })
             return
 
-        # Pack Peer and File and Search Messages
+        # Pack peer messages
         if msg_obj.__class__ is PierceFireWall:
             conns[msg_obj.conn].piercefw = msg_obj
 
@@ -962,7 +880,107 @@ class SlskProtoThread(threading.Thread):
                 conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                 conns[msg_obj.conn].obuf.extend(msg)
 
-        elif msg_obj.__class__ is FileRequest:
+        else:
+            msg = msg_obj.make_network_message()
+
+            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
+            conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
+            conns[msg_obj.conn].obuf.extend(msg)
+
+    def process_file_input(self, conn, msg_buffer, conns):
+        """ We have a "F" connection (filetransfer), peer has sent us
+        something, this function retrieves messages
+        from the msg_buffer, creates message objects and returns them
+        and the rest of the msg_buffer.
+        """
+        msgs = []
+
+        if conn.filereq is None:
+            msg = FileRequest(conn.conn)
+            msg.parse_network_message(msg_buffer[:4])
+
+            if msg.req is not None:
+                msgs.append(msg)
+                conn.filereq = msg
+
+            msg_buffer = msg_buffer[4:]
+
+        elif conn.filedown is not None:
+            leftbytes = conn.bytestoread - conn.filereadbytes
+            addedbytes = msg_buffer[:leftbytes]
+
+            if leftbytes > 0:
+                try:
+                    conn.filedown.file.write(addedbytes)
+
+                except IOError as strerror:
+                    self._core_callback([FileError(conn, conn.filedown.file, strerror)])
+                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self.close_connection(conns, conn.conn)
+
+                except ValueError:
+                    pass
+
+            addedbyteslen = len(addedbytes)
+            curtime = time.time()
+
+            """ Depending on the number of active downloads, the cooldown for callbacks
+            can be up to 15 seconds per transfer. We use a bit of randomness to give the
+            illusion that downloads are updated often. """
+
+            finished = ((leftbytes - addedbyteslen) == 0)
+            cooldown = max(1.0, min(self.total_downloads * uniform(0.8, 1.0), 15))
+
+            if finished or (curtime - conn.lastcallback) > cooldown:
+
+                """ We save resources by not sending data back to the NicotineCore
+                every time a part of a file is downloaded """
+
+                self._core_callback([DownloadFile(conn.conn, conn.filedown.file)])
+                conn.lastcallback = curtime
+
+            if finished:
+                self._core_callback([ConnClose(conn.conn, conn.addr)])
+                self.close_connection(conns, conn.conn)
+
+            conn.filereadbytes += addedbyteslen
+            msg_buffer = msg_buffer[leftbytes:]
+
+        elif conn.fileupl is not None and conn.fileupl.offset is None:
+            msg = FileOffset(conn)
+            msg.parse_network_message(msg_buffer[:8])
+
+            if msg.offset is not None:
+                try:
+                    conn.fileupl.file.seek(msg.offset)
+
+                except IOError as strerror:
+                    self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
+                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self.close_connection(conns, conn.conn)
+
+                except ValueError:
+                    pass
+
+                conn.fileupl.offset = msg.offset
+                self._core_callback([conn.fileupl])
+
+            msg_buffer = msg_buffer[8:]
+
+        conn.ibuf = msg_buffer
+        return msgs
+
+    def process_file_output(self, conns, msg_obj):
+
+        if msg_obj.conn not in conns:
+            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                'type': msg_obj.__class__,
+                'msg_obj': vars(msg_obj)
+            })
+            return
+
+        # Pack file messages
+        if msg_obj.__class__ is FileRequest:
             conns[msg_obj.conn].filereq = msg_obj
 
             msg = msg_obj.make_network_message()
@@ -974,13 +992,6 @@ class SlskProtoThread(threading.Thread):
             conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
 
             msg = msg_obj.make_network_message()
-            conns[msg_obj.conn].obuf.extend(msg)
-
-        else:
-            msg = msg_obj.make_network_message()
-
-            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
-            conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
             conns[msg_obj.conn].obuf.extend(msg)
 
     def process_distrib_input(self, conns, conn, msg_buffer):
@@ -1027,6 +1038,7 @@ class SlskProtoThread(threading.Thread):
             })
             return
 
+        # Pack distributed messages
         msg = msg_obj.make_network_message()
 
         conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
@@ -1068,6 +1080,9 @@ class SlskProtoThread(threading.Thread):
 
             elif issubclass(msg_obj.__class__, PeerMessage):
                 self.process_peer_output(conns, msg_obj)
+
+            elif issubclass(msg_obj.__class__, FileMessage):
+                self.process_file_output(conns, msg_obj)
 
             elif issubclass(msg_obj.__class__, DistribMessage):
                 self.process_distrib_output(conns, msg_obj)
