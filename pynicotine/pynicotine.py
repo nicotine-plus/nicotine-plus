@@ -2134,6 +2134,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         if msg.conn.conn != self.get_parent_conn().conn:
+            # Only accept messages by our current parent
             return
 
         # Inform the server of our branch root
