@@ -482,10 +482,10 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
     if headers is None:
         headers = {}
 
-    if redirect_depth > 15:
-        raise Exception("Redirected too many times, giving up")
-
     import http.client
+
+    if redirect_depth > 15:
+        raise http.client.HTTPException("Redirected too many times, giving up")
 
     if url_scheme == "https":
         conn = http.client.HTTPSConnection(base_url, timeout=timeout)

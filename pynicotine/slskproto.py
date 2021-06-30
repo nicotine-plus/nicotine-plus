@@ -1044,9 +1044,9 @@ class SlskProtoThread(threading.Thread):
                 self.process_peer_output(conns, msg_obj)
 
             elif msg_obj.__class__ is ServerConn:
-                if maxsockets == -1 or numsockets < maxsockets:
-                    if self.init_server_conn(connsinprogress, msg_obj):
-                        numsockets += 1
+                if ((maxsockets == -1 or numsockets < maxsockets)
+                        and self.init_server_conn(connsinprogress, msg_obj)):
+                    numsockets += 1
 
             elif msg_obj.__class__ is OutConn:
                 if msg_obj.addr[1] == 0:

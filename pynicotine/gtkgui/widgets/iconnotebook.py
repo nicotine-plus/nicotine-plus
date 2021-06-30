@@ -546,14 +546,13 @@ class IconNotebook:
         key, codes_w, mods = parse_accelerator("<Primary>w")
         key, codes_f4, mods = parse_accelerator("<Primary>F4")
 
-        if state & mods:
-            if keycode in codes_w or keycode in codes_f4:
-                # Ctrl+W and Ctrl+F4: close current tab
+        if state & mods and (keycode in codes_w or keycode in codes_f4):
+            # Ctrl+W and Ctrl+F4: close current tab
 
-                page = self.get_nth_page(self.get_current_page())
-                tab_label, menu_label = self.get_labels(page)
-                tab_label.onclose(None)
-                return True
+            page = self.get_nth_page(self.get_current_page())
+            tab_label, menu_label = self.get_labels(page)
+            tab_label.onclose(None)
+            return True
 
         return False
 
