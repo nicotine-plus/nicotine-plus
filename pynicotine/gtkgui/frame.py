@@ -2301,8 +2301,8 @@ class NicotineFrame:
 
         down, active_usersdown = _bandwidth(self.np.transfers.downloads)
         up, active_usersup = _bandwidth(self.np.transfers.uploads)
-        total_usersdown, filesdown = _users(self.np.transfers.downloads, self.downloads.users)
-        total_usersup, filesup = _users(self.np.transfers.uploads, self.uploads.users)
+        total_usersdown, filesdown = _users(self.downloads.transfer_list, self.downloads.users)
+        total_usersup, filesup = _users(self.uploads.transfer_list, self.uploads.users)
 
         self.DownloadUsers.set_text(str(total_usersdown))
         self.UploadUsers.set_text(str(total_usersup))

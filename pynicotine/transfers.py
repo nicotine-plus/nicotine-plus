@@ -117,6 +117,9 @@ class Transfers:
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
 
+        self.add_stored_transfers("downloads")
+        self.add_stored_transfers("uploads")
+
         self.users = users
         self.network_callback = network_callback
         self.downloadsview = None
@@ -131,9 +134,7 @@ class Transfers:
     def server_login(self):
 
         self.update_limits()
-
-        self.add_stored_transfers("downloads")
-        self.add_stored_transfers("uploads")
+        self.watch_stored_downloads()
 
         # Check for transfer timeouts
         thread = threading.Thread(target=self._check_transfer_timeouts)
@@ -235,8 +236,6 @@ class Transfers:
 
     def add_stored_transfers(self, transfer_type):
 
-        users = set()
-
         if transfer_type == "uploads":
             transfer_list = self.uploads
         else:
@@ -284,8 +283,22 @@ class Transfers:
                 )
             )
 
-            if transfer_type == "downloads":
-                users.add(i[0])
+    def watch_stored_downloads(self):
+        """ When logging in, we request to watch the status of our downloads """
+
+        users = set()
+
+        for i in self.downloads:
+            users.add(i.user)
+
+            if i.status in ("Aborted", "Paused"):
+                i.status = "Aborted"
+
+            elif i.status in ("Filtered", "Finished"):
+                continue
+
+            else:
+                i.status = "Getting status"
 
         for user in users:
             self.core.watch_user(user)
@@ -2384,8 +2397,10 @@ class Transfers:
         self.save_transfers("downloads")
         self.save_transfers("uploads")
 
-        self.downloads.clear()
-        self.uploads.clear()
+        for i in self.uploads.copy():
+            if i.status != "Finished":
+                self.uploads.remove(i)
+
         self.privilegedusers.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()

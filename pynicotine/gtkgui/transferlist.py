@@ -79,7 +79,7 @@ class TransferList:
         self.key_controller = connect_key_press_event(self.Transfers, self.on_key_press_event)
 
         self.last_ui_update = self.last_save = 0
-        self.transfer_list = None
+        self.transfer_list = []
         self.users = {}
         self.paths = {}
 
@@ -207,9 +207,9 @@ class TransferList:
 
     def server_disconnect(self):
 
-        self.transfer_list = None
         self.Transfers.set_sensitive(False)
         self.clear()
+        self.transfer_list = []
 
     def rebuild_transfers(self):
         self.clear()
@@ -315,7 +315,7 @@ class TransferList:
         if transfer is not None:
             self.update_specific(transfer)
 
-        elif self.transfer_list is not None:
+        elif self.transfer_list:
             for transfer in reversed(self.transfer_list):
                 self.update_specific(transfer)
 
@@ -681,9 +681,8 @@ class TransferList:
         self.selected_users = set()
         self.transfersmodel.clear()
 
-        if self.transfer_list is not None:
-            for transfer in self.transfer_list:
-                transfer.iterator = None
+        for transfer in self.transfer_list:
+            transfer.iterator = None
 
     def add_popup_menu_user(self, popup, user):
 
