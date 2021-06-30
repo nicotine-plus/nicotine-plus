@@ -587,6 +587,18 @@ class SlskProtoThread(threading.Thread):
 
         return limit
 
+    def _reset_counters(self, conns):
+        curtime = time.time()
+
+        for i in conns.values():
+            if self._is_upload(i):
+                i.starttime = curtime
+                i.sentbytes2 = 0
+
+            if self._is_download(i):
+                i.starttime = curtime
+                i.sentbytes2 = 0
+
     def socket_still_active(self, conn):
         try:
             connection = self._conns[conn]
@@ -608,6 +620,76 @@ class SlskProtoThread(threading.Thread):
         if connection is self.server_socket:
             # Disconnected from server, clean up connections and queue
             self.server_disconnect()
+
+    @staticmethod
+    def set_server_socket_keepalive(server_socket, idle=10, interval=4, count=10):
+        """ Ensure we are disconnected from the server in case of connectivity issues,
+        by sending TCP keepalive pings. Assuming default values are used, once we reach
+        10 seconds of idle time, we start sending keepalive pings once every 4 seconds.
+        If 10 failed pings have been sent in a row (40 seconds), the connection is presumed
+        dead. """
+
+        if hasattr(socket, 'SO_KEEPALIVE'):
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=maybe-no-member
+
+        if hasattr(socket, 'TCP_KEEPINTVL'):
+            server_socket.setsockopt(socket.IPPROTO_TCP,
+                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=maybe-no-member
+
+        if hasattr(socket, 'TCP_KEEPCNT'):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=maybe-no-member
+
+        if hasattr(socket, 'TCP_KEEPIDLE'):
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=maybe-no-member
+
+        elif hasattr(socket, 'TCP_KEEPALIVE'):
+            # macOS fallback
+
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=maybe-no-member
+
+        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
+            """ Windows fallback
+            Probe count is set to 10 on a system level, and can't be modified.
+            https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive """
+
+            server_socket.ioctl(
+                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=maybe-no-member
+                (
+                    1,
+                    idle * 1000,
+                    interval * 1000
+                )
+            )
+
+    def init_server_conn(self, connsinprogress, msg_obj):
+
+        try:
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            # Detect if our connection to the server is still alive
+            self.set_server_socket_keepalive(server_socket)
+
+            if self.interface:
+                self.bind_to_network_interface(server_socket, self.interface)
+
+            elif self._bindip:
+                server_socket.bind((self._bindip, 0))
+
+            server_socket.setblocking(0)
+            server_socket.connect_ex(msg_obj.addr)
+            server_socket.setblocking(1)
+
+            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
+            self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            self.server_socket = server_socket
+
+        except socket.error as err:
+            self._core_callback([ConnectError(msg_obj, err)])
+            server_socket.close()
+
+            return False
+
+        return True
 
     def process_server_input(self, msg_buffer):
         """ Server has sent us something, this function retrieves messages
@@ -635,6 +717,49 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize + 4:]
 
         return msgs, msg_buffer
+
+    def process_server_output(self, conns, msg_obj):
+
+        server_socket = self.server_socket
+
+        if server_socket not in conns:
+            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                'type': msg_obj.__class__,
+                'msg_obj': vars(msg_obj)
+            })
+            return
+
+        msg = msg_obj.make_network_message()
+
+        conns[server_socket].obuf.extend(struct.pack("<i", len(msg) + 4))
+        conns[server_socket].obuf.extend(struct.pack("<i", self.servercodes[msg_obj.__class__]))
+        conns[server_socket].obuf.extend(msg)
+
+    def init_peer_conn(self, connsinprogress, msg_obj):
+
+        try:
+            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            if self.interface:
+                self.bind_to_network_interface(conn, self.interface)
+
+            elif self._bindip:
+                conn.bind((self._bindip, 0))
+
+            conn.setblocking(0)
+            conn.connect_ex(msg_obj.addr)
+            conn.setblocking(1)
+
+            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
+            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
+        except socket.error as err:
+            self._core_callback([ConnectError(msg_obj, err)])
+            conn.close()
+
+            return False
+
+        return True
 
     def process_file_input(self, conn, msg_buffer, conns):
         """ We have a "F" connection (filetransfer), peer has sent us
@@ -880,150 +1005,6 @@ class SlskProtoThread(threading.Thread):
         conn.ibuf = msg_buffer
         return msgs, conn
 
-    def process_conn_input(self, conns, connection, conn_obj):
-
-        if connection is self.server_socket:
-            msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
-            self._core_callback(msgs)
-            return
-
-        if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
-            msgs, conn_obj = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
-
-        if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
-            msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
-            self._core_callback(msgs)
-
-        if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
-            msgs, conn_obj = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
-
-    def _reset_counters(self, conns):
-        curtime = time.time()
-
-        for i in conns.values():
-            if self._is_upload(i):
-                i.starttime = curtime
-                i.sentbytes2 = 0
-
-            if self._is_download(i):
-                i.starttime = curtime
-                i.sentbytes2 = 0
-
-    @staticmethod
-    def set_server_socket_keepalive(server_socket, idle=10, interval=4, count=10):
-        """ Ensure we are disconnected from the server in case of connectivity issues,
-        by sending TCP keepalive pings. Assuming default values are used, once we reach
-        10 seconds of idle time, we start sending keepalive pings once every 4 seconds.
-        If 10 failed pings have been sent in a row (40 seconds), the connection is presumed
-        dead. """
-
-        if hasattr(socket, 'SO_KEEPALIVE'):
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=maybe-no-member
-
-        if hasattr(socket, 'TCP_KEEPINTVL'):
-            server_socket.setsockopt(socket.IPPROTO_TCP,
-                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=maybe-no-member
-
-        if hasattr(socket, 'TCP_KEEPCNT'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=maybe-no-member
-
-        if hasattr(socket, 'TCP_KEEPIDLE'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=maybe-no-member
-
-        elif hasattr(socket, 'TCP_KEEPALIVE'):
-            # macOS fallback
-
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=maybe-no-member
-
-        elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-            """ Windows fallback
-            Probe count is set to 10 on a system level, and can't be modified.
-            https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive """
-
-            server_socket.ioctl(
-                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=maybe-no-member
-                (
-                    1,
-                    idle * 1000,
-                    interval * 1000
-                )
-            )
-
-    def init_server_conn(self, connsinprogress, msg_obj):
-
-        try:
-            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            # Detect if our connection to the server is still alive
-            self.set_server_socket_keepalive(server_socket)
-
-            if self.interface:
-                self.bind_to_network_interface(server_socket, self.interface)
-
-            elif self._bindip:
-                server_socket.bind((self._bindip, 0))
-
-            server_socket.setblocking(0)
-            server_socket.connect_ex(msg_obj.addr)
-            server_socket.setblocking(1)
-
-            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
-            self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
-            self.server_socket = server_socket
-
-        except socket.error as err:
-            self._core_callback([ConnectError(msg_obj, err)])
-            server_socket.close()
-
-            return False
-
-        return True
-
-    def process_server_output(self, conns, msg_obj):
-
-        server_socket = self.server_socket
-
-        if server_socket not in conns:
-            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
-                'msg_obj': vars(msg_obj)
-            })
-            return
-
-        msg = msg_obj.make_network_message()
-
-        conns[server_socket].obuf.extend(struct.pack("<i", len(msg) + 4))
-        conns[server_socket].obuf.extend(struct.pack("<i", self.servercodes[msg_obj.__class__]))
-        conns[server_socket].obuf.extend(msg)
-
-    def init_peer_conn(self, connsinprogress, msg_obj):
-
-        try:
-            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            if self.interface:
-                self.bind_to_network_interface(conn, self.interface)
-
-            elif self._bindip:
-                conn.bind((self._bindip, 0))
-
-            conn.setblocking(0)
-            conn.connect_ex(msg_obj.addr)
-            conn.setblocking(1)
-
-            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
-            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-        except socket.error as err:
-            self._core_callback([ConnectError(msg_obj, err)])
-            conn.close()
-
-            return False
-
-        return True
-
     def process_peer_output(self, conns, msg_obj):
 
         if msg_obj.conn not in conns:
@@ -1072,6 +1053,25 @@ class SlskProtoThread(threading.Thread):
             conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
             conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
             conns[msg_obj.conn].obuf.extend(msg)
+
+    def process_conn_input(self, conns, connection, conn_obj):
+
+        if connection is self.server_socket:
+            msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
+            self._core_callback(msgs)
+            return
+
+        if conn_obj.init is None or conn_obj.init.conn_type not in ['F', 'D']:
+            msgs, conn_obj = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
+            self._core_callback(msgs)
+
+        if conn_obj.init is not None and conn_obj.init.conn_type == 'F':
+            msgs, conn_obj = self.process_file_input(conn_obj, conn_obj.ibuf, conns)
+            self._core_callback(msgs)
+
+        if conn_obj.init is not None and conn_obj.init.conn_type == 'D':
+            msgs, conn_obj = self.process_distrib_input(conns, conn_obj, conn_obj.ibuf)
+            self._core_callback(msgs)
 
     def process_queue(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
         """ Processes messages sent by the main thread. queue holds the messages,
@@ -1140,6 +1140,37 @@ class SlskProtoThread(threading.Thread):
 
         return conns, connsinprogress, numsockets
 
+    def read_data(self, conns, i):
+
+        # Check for a download limit
+        if i in self._dlimits:
+            limit = self._dlimits[i]
+        else:
+            limit = None
+
+        conn = conns[i]
+
+        conn.lastactive = time.time()
+
+        if limit is None:
+            # Unlimited download data
+            data = i.recv(conn.lastreadlength)
+            conn.ibuf.extend(data)
+
+            if len(data) >= conn.lastreadlength // 2:
+                conn.lastreadlength = conn.lastreadlength * 2
+
+        else:
+            # Speed Limited Download data (transfers)
+            data = i.recv(conn.lastreadlength)
+            conn.ibuf.extend(data)
+            conn.lastreadlength = limit
+            conn.readbytes2 += len(data)
+
+        if not data and not conn.obuf:  # Make sure we don't have data to send on this connection
+            self._core_callback([ConnClose(i, conn.addr)])
+            self.close_connection(conns, i)
+
     def write_data(self, conns, i):
 
         if i in self._ulimits:
@@ -1207,36 +1238,6 @@ class SlskProtoThread(threading.Thread):
 
                 self._core_callback([conn.fileupl])
                 conn.lastcallback = curtime
-
-    def read_data(self, conns, i):
-        # Check for a download limit
-        if i in self._dlimits:
-            limit = self._dlimits[i]
-        else:
-            limit = None
-
-        conn = conns[i]
-
-        conn.lastactive = time.time()
-
-        if limit is None:
-            # Unlimited download data
-            data = i.recv(conn.lastreadlength)
-            conn.ibuf.extend(data)
-
-            if len(data) >= conn.lastreadlength // 2:
-                conn.lastreadlength = conn.lastreadlength * 2
-
-        else:
-            # Speed Limited Download data (transfers)
-            data = i.recv(conn.lastreadlength)
-            conn.ibuf.extend(data)
-            conn.lastreadlength = limit
-            conn.readbytes2 += len(data)
-
-        if not data and not conn.obuf:  # Make sure we don't have data to send on this connection
-            self._core_callback([ConnClose(i, conn.addr)])
-            self.close_connection(conns, i)
 
     def run(self):
         """ Actual networking loop is here."""
