@@ -2123,7 +2123,7 @@ Error: %(error)s""", {
             else:
                 self.send_have_no_parent()
 
-        else:
+        elif msg.conn.conn == self.get_parent_conn().conn:
             # Our parent sent an update
             self.queue.append(slskmessages.BranchLevel(msg.value + 1))
             log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
@@ -2132,6 +2132,9 @@ Error: %(error)s""", {
         """ Distrib code: 5 """
 
         log.add_msg_contents(msg)
+
+        if msg.conn.conn != self.get_parent_conn().conn:
+            return
 
         # Inform the server of our branch root
         self.queue.append(slskmessages.BranchRoot(msg.user))
