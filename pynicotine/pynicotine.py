@@ -229,7 +229,6 @@ class NicotineCore:
             slskmessages.DistribEmbeddedMessage: self.embedded_message,
             slskmessages.ConnectToPeerTimeout: self.connect_to_peer_timeout,
             slskmessages.TransferTimeout: self.transfer_timeout,
-            str: self.notify,
             slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
             slskmessages.GlobalRecommendations: self.global_recommendations,
             slskmessages.Recommendations: self.recommendations,
@@ -1121,12 +1120,6 @@ Error: %(error)s""", {
     def ignore(self, msg):
         # Ignore received message
         pass
-
-    @staticmethod
-    def notify(string):
-        """ Notify user of error when receiving or sending a message. """
-
-        log.add_msg_contents("%s", string)
 
     def server_conn(self, msg):
 

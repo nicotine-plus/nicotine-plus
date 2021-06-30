@@ -900,11 +900,6 @@ class SlskProtoThread(threading.Thread):
                 if msgtype in self.peerclasses:
                     msg = self.peerclasses[msgtype](conn)
                     msg.parse_network_message(msg_buffer[8:msgsize + 4])
-
-                    """if self.peerclasses[msgtype] in (SharedFileList, UserInfoReply):
-                        self._core_callback(
-                            [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, self.peerclasses[msgtype])])"""
-
                     msgs.append(msg)
 
                 else:
