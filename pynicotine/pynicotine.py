@@ -165,7 +165,7 @@ class NicotineCore:
             slskmessages.CantCreateRoom: self.dummy_message,
             slskmessages.QueuedDownloads: self.dummy_message,
             slskmessages.GetPeerAddress: self.get_peer_address,
-            slskmessages.OutConn: self.out_conn,
+            slskmessages.PeerConn: self.peer_conn,
             slskmessages.UserInfoReply: self.user_info_reply,
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.pierce_fire_wall,
@@ -540,7 +540,7 @@ class NicotineCore:
 
         """ Initiate a connection with a peer directly """
 
-        self.queue.append(slskmessages.OutConn(None, addr, init))
+        self.queue.append(slskmessages.PeerConn(None, addr, init))
 
         log.add_conn("Initialising direct connection of type %(type)s to user %(user)s", {
             'type': message_type,
@@ -745,7 +745,7 @@ Error: %(error)s""", {
     def inc_conn(msg):
         log.add_msg_contents(msg)
 
-    def out_conn(self, msg):
+    def peer_conn(self, msg):
 
         """ Networking thread told us that the connection to the peer was successful.
         If we connected directly to the peer, send a PeerInit message. If we connected
@@ -892,6 +892,40 @@ Error: %(error)s""", {
             }
         )
 
+    def server_conn(self, msg):
+
+        log.add_msg_contents(msg)
+
+        log.add(
+            _("Connected to server %(host)s:%(port)s, logging in..."), {
+                'host': msg.addr[0],
+                'port': msg.addr[1]
+            }
+        )
+
+        self.active_server_conn = msg.conn
+        self.server_timeout_value = -1
+        self.users.clear()
+        self.queue.append(
+            slskmessages.Login(
+                config.sections["server"]["login"],
+                config.sections["server"]["passw"],
+
+                # Soulseek client version; 155, 156, 157
+                # SoulseekQt seems to be using 157
+                # We use a custom version number for Nicotine+
+                160,
+
+                # Soulseek client minor version
+                # 17 stands for 157 ns 13c, 19 for 157 ns 13e
+                # SoulseekQt seems to go higher than this
+                # We use a custom minor version for Nicotine+
+                1,
+            )
+        )
+        if self.waitport is not None:
+            self.queue.append(slskmessages.SetWaitPort(self.waitport))
+
     def server_disconnect(self, addr):
 
         log.add(
@@ -978,7 +1012,7 @@ Error: %(error)s""", {
             if self.ui_callback:
                 self.ui_callback.server_connect_error()
 
-        elif msg.connobj.__class__ is slskmessages.OutConn:
+        elif msg.connobj.__class__ is slskmessages.PeerConn:
 
             addr = msg.connobj.addr
 
@@ -1120,40 +1154,6 @@ Error: %(error)s""", {
     def ignore(self, msg):
         # Ignore received message
         pass
-
-    def server_conn(self, msg):
-
-        log.add_msg_contents(msg)
-
-        log.add(
-            _("Connected to server %(host)s:%(port)s, logging in..."), {
-                'host': msg.addr[0],
-                'port': msg.addr[1]
-            }
-        )
-
-        self.active_server_conn = msg.conn
-        self.server_timeout_value = -1
-        self.users.clear()
-        self.queue.append(
-            slskmessages.Login(
-                config.sections["server"]["login"],
-                config.sections["server"]["passw"],
-
-                # Soulseek client version; 155, 156, 157
-                # SoulseekQt seems to be using 157
-                # We use a custom version number for Nicotine+
-                160,
-
-                # Soulseek client minor version
-                # 17 stands for 157 ns 13c, 19 for 157 ns 13e
-                # SoulseekQt seems to go higher than this
-                # We use a custom minor version for Nicotine+
-                1,
-            )
-        )
-        if self.waitport is not None:
-            self.queue.append(slskmessages.SetWaitPort(self.waitport))
 
     def inc_port(self, msg):
         self.waitport = msg.port

@@ -91,10 +91,10 @@ from pynicotine.slskmessages import MessageUsers
 from pynicotine.slskmessages import MinParentsInCache
 from pynicotine.slskmessages import PossibleParents
 from pynicotine.slskmessages import NotifyPrivileges
-from pynicotine.slskmessages import OutConn
 from pynicotine.slskmessages import ParentInactivityTimeout
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
+from pynicotine.slskmessages import PeerConn
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PeerMessage
 from pynicotine.slskmessages import PeerTransfer
@@ -1053,7 +1053,7 @@ class SlskProtoThread(threading.Thread):
                         and self.init_server_conn(connsinprogress, msg_obj)):
                     numsockets += 1
 
-            elif msg_obj.__class__ is OutConn:
+            elif msg_obj.__class__ is PeerConn:
                 if msg_obj.addr[1] == 0:
                     self._core_callback([ConnectError(msg_obj, "Port cannot be zero")])
 
@@ -1321,7 +1321,8 @@ class SlskProtoThread(threading.Thread):
                         else:
                             conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, init=msg_obj.init)
-                            self._core_callback([OutConn(connection_in_progress, addr)])
+
+                            self._core_callback([PeerConn(connection_in_progress, addr)])
 
                         del connsinprogress[connection_in_progress]
 

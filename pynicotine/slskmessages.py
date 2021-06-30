@@ -46,14 +46,20 @@ class Conn(InternalMessage):
         self.init = init
 
 
+class ServerConn(Conn):
+    """ NicotineCore sends this to make networking thread establish a server connection.
+    When a connection is established, networking thread returns an object of this type
+    to NicotineCore. """
+
+
+class PeerConn(Conn):
+    """ NicotineCore sends this to make networking thread establish a peer connection.
+    When a connection is established, networking thread returns an object of this type
+    to NicotineCore. """
+
+
 class DistribConn(InternalMessage):
     pass
-
-
-class OutConn(Conn):
-    """ UI thread sends this to make networking thread establish a connection,
-    when a connection is established, networking thread returns an object
-    of this type."""
 
 
 class IncConn(Conn):
@@ -69,10 +75,6 @@ class ConnClose(InternalMessage):
         self.conn = conn
         self.addr = addr
         self.callback = callback
-
-
-class ServerConn(OutConn):
-    """ A connection to the server has been established"""
 
 
 class ConnectError(InternalMessage):
