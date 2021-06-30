@@ -2766,7 +2766,7 @@ class DistribMessage(SlskMessage):
     pass
 
 
-class DistribRequest(DistribMessage):
+class DistribRequest(InternalMessage):
     """ Used to identify a connection attempt to a distributed parent. """
 
 
@@ -2775,6 +2775,9 @@ class DistribAlive(DistribMessage):
 
     def __init__(self, conn):
         self.conn = conn
+
+    def make_network_message(self):
+        return b""
 
     def parse_network_message(self, message):
         # Empty message
@@ -2813,9 +2816,15 @@ class DistribSearch(DistribMessage):
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
 
-    def __init__(self, conn):
+    def __init__(self, conn, value=None):
         self.conn = conn
-        self.value = None
+        self.value = value
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.value))
+
+        return msg
 
     def parse_network_message(self, message):
         _pos, self.value = self.get_object(message, int)
@@ -2824,9 +2833,15 @@ class DistribBranchLevel(DistribMessage):
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
 
-    def __init__(self, conn):
+    def __init__(self, conn, user=None):
         self.conn = conn
-        self.user = None
+        self.user = user
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.user))
+
+        return msg
 
     def parse_network_message(self, message):
         _pos, self.user = self.get_object(message, str)
@@ -2835,9 +2850,15 @@ class DistribBranchRoot(DistribMessage):
 class DistribChildDepth(DistribMessage):
     """ Distrib code: 7 """
 
-    def __init__(self, conn):
+    def __init__(self, conn, value=None):
         self.conn = conn
-        self.value = None
+        self.value = value
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.value))
+
+        return msg
 
     def parse_network_message(self, message):
         _pos, self.value = self.get_object(message, int)
@@ -2851,10 +2872,17 @@ class DistribEmbeddedMessage(DistribMessage):
 
     __slots__ = ("conn", "distrib_code", "distrib_message")
 
-    def __init__(self, conn):
+    def __init__(self, conn, distrib_code=None, distrib_message=None):
         self.conn = conn
-        self.distrib_code = None
-        self.distrib_message = None
+        self.distrib_code = distrib_code
+        self.distrib_message = distrib_message
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(bytes([self.distrib_code]))
+        msg.extend(self.distrib_message)
+
+        return msg
 
     def parse_network_message(self, message):
         self.distrib_code = message[3]

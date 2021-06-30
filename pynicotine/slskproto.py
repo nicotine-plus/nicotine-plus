@@ -56,6 +56,7 @@ from pynicotine.slskmessages import DistribBranchLevel
 from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribEmbeddedMessage
+from pynicotine.slskmessages import DistribMessage
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
@@ -394,13 +395,13 @@ class SlskProtoThread(threading.Thread):
         UnknownPeerMessage: 12547
     }
 
-    distribclasses = {
-        0: DistribAlive,
-        3: DistribSearch,
-        4: DistribBranchLevel,
-        5: DistribBranchRoot,
-        7: DistribChildDepth,
-        93: DistribEmbeddedMessage
+    distribcodes = {
+        DistribAlive: 0,
+        DistribSearch: 3,
+        DistribBranchLevel: 4,
+        DistribBranchRoot: 5,
+        DistribChildDepth: 7,
+        DistribEmbeddedMessage: 93
     }
 
     IN_PROGRESS_STALE_AFTER = 2
@@ -442,6 +443,10 @@ class SlskProtoThread(threading.Thread):
         self.peerclasses = {}
         for code_class, code_id in self.peercodes.items():
             self.peerclasses[code_id] = code_class
+
+        self.distribclasses = {}
+        for code_class, code_id in self.distribcodes.items():
+            self.distribclasses[code_id] = code_class
 
         # Select Networking Input and Output sockets
         self.selector = selectors.DefaultSelector()
@@ -928,41 +933,6 @@ class SlskProtoThread(threading.Thread):
         conn.ibuf = msg_buffer
         return msgs
 
-    def process_distrib_input(self, conns, conn, msg_buffer):
-        """ We have a distributed network connection, parent has sent us
-        something, this function retrieves messages
-        from the msg_buffer, creates message objects and returns them
-        and the rest of the msg_buffer.
-        """
-        msgs = []
-
-        # Distributed messages are 5 bytes or greater in length
-        while len(msg_buffer) >= 5:
-            msgsize = struct.unpack("<I", msg_buffer[:4])[0]
-
-            if msgsize < 0 or msgsize + 4 > len(msg_buffer):
-                # Invalid message size or buffer is being filled
-                break
-
-            msgtype = msg_buffer[4]
-
-            if msgtype in self.distribclasses:
-                msg = self.distribclasses[msgtype](conn)
-                msg.parse_network_message(msg_buffer[5:msgsize + 4])
-                msgs.append(msg)
-
-            else:
-                log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
-                self._core_callback([ConnClose(conn.conn, conn.addr)])
-                self.close_connection(conns, conn)
-                break
-
-            msg_buffer = msg_buffer[msgsize + 4:]
-
-        conn.ibuf = msg_buffer
-        return msgs
-
     def process_peer_output(self, conns, msg_obj):
 
         if msg_obj.conn not in conns:
@@ -1008,9 +978,60 @@ class SlskProtoThread(threading.Thread):
 
         else:
             msg = msg_obj.make_network_message()
+
             conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
             conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
             conns[msg_obj.conn].obuf.extend(msg)
+
+    def process_distrib_input(self, conns, conn, msg_buffer):
+        """ We have a distributed network connection, parent has sent us
+        something, this function retrieves messages
+        from the msg_buffer, creates message objects and returns them
+        and the rest of the msg_buffer.
+        """
+        msgs = []
+
+        # Distributed messages are 5 bytes or greater in length
+        while len(msg_buffer) >= 5:
+            msgsize = struct.unpack("<I", msg_buffer[:4])[0]
+
+            if msgsize < 0 or msgsize + 4 > len(msg_buffer):
+                # Invalid message size or buffer is being filled
+                break
+
+            msgtype = msg_buffer[4]
+
+            if msgtype in self.distribclasses:
+                msg = self.distribclasses[msgtype](conn)
+                msg.parse_network_message(msg_buffer[5:msgsize + 4])
+                msgs.append(msg)
+
+            else:
+                log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                self._core_callback([ConnClose(conn.conn, conn.addr)])
+                self.close_connection(conns, conn)
+                break
+
+            msg_buffer = msg_buffer[msgsize + 4:]
+
+        conn.ibuf = msg_buffer
+        return msgs
+
+    def process_distrib_output(self, conns, msg_obj):
+
+        if msg_obj.conn not in conns:
+            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                'type': msg_obj.__class__,
+                'msg_obj': vars(msg_obj)
+            })
+            return
+
+        msg = msg_obj.make_network_message()
+
+        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+        conns[msg_obj.conn].obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
+        conns[msg_obj.conn].obuf.extend(msg)
 
     def process_conn_input(self, conns, connection, conn_obj):
 
@@ -1047,6 +1068,9 @@ class SlskProtoThread(threading.Thread):
 
             elif issubclass(msg_obj.__class__, PeerMessage):
                 self.process_peer_output(conns, msg_obj)
+
+            elif issubclass(msg_obj.__class__, DistribMessage):
+                self.process_distrib_output(conns, msg_obj)
 
             elif msg_obj.__class__ is ServerConn:
                 if ((maxsockets == -1 or numsockets < maxsockets)
