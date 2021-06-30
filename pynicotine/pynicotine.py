@@ -501,7 +501,7 @@ class NicotineCore:
         if message.__class__ is slskmessages.FileRequest:
             message_type = 'F'
 
-        elif message.__class__ is slskmessages.DistribConn:
+        elif message.__class__ is slskmessages.DistribRequest:
             message_type = 'D'
 
         else:
@@ -1522,7 +1522,7 @@ Error: %(error)s""", {
             for user in potential_parents:
                 addr = potential_parents[user]
 
-                self.send_message_to_peer(user, slskmessages.DistribConn(), address=addr)
+                self.send_message_to_peer(user, slskmessages.DistribRequest(), address=addr)
                 log.add_conn("Attempting parent connection to user %s", user)
 
     def wishlist_interval(self, msg):

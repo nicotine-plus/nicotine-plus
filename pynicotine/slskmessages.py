@@ -58,10 +58,6 @@ class PeerConn(Conn):
     to NicotineCore. """
 
 
-class DistribConn(InternalMessage):
-    pass
-
-
 class IncConn(Conn):
     """ Sent by networking thread to indicate an incoming connection."""
 
@@ -2767,6 +2763,11 @@ Distributed Messages
 
 
 class DistribMessage(SlskMessage):
+    pass
+
+
+class DistribRequest(DistribMessage):
+    """ Used to identify a connection attempt to a distributed parent. """
     pass
 
 
