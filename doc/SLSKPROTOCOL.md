@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on June 20, 2021
+Last updated on June 30, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -3234,7 +3234,7 @@ See SChildDepth
 #### Function Names
 
 Museekd: DChildDepth  
-Nicotine: Unimplemented
+Nicotine: DistribChildDepth
 
 #### Data Order
 

@@ -2096,7 +2096,6 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         if not self.has_parent:
-
             for i in self.peerconns[:]:
                 if i.conn_type == 'D':
                     """ We previously attempted to connect to all potential parents. Since we now
@@ -2113,7 +2112,7 @@ Error: %(error)s""", {
 
             parent = self.get_parent_conn()
 
-            if parent is not None:
+            if parent:
                 self.queue.append(slskmessages.HaveNoParent(0))
                 self.queue.append(slskmessages.BranchLevel(msg.value + 1))
                 self.has_parent = True
@@ -2123,8 +2122,14 @@ Error: %(error)s""", {
             else:
                 self.send_have_no_parent()
 
-        elif msg.conn.conn == self.get_parent_conn().conn:
-            # Our parent sent an update
+            return
+
+        parent = self.get_parent_conn()
+
+        if parent and msg.conn.conn == parent.conn:
+            # Only accept messages by our current parent
+            # Inform the server of our new branch level
+
             self.queue.append(slskmessages.BranchLevel(msg.value + 1))
             log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
 
@@ -2133,10 +2138,11 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        if msg.conn.conn != self.get_parent_conn().conn:
-            # Only accept messages by our current parent
-            return
+        parent = self.get_parent_conn()
 
-        # Inform the server of our branch root
-        self.queue.append(slskmessages.BranchRoot(msg.user))
-        log.add_conn("Our branch root is user %s", msg.user)
+        if parent and msg.conn.conn == parent.conn:
+            # Only accept messages by our current parent
+            # Inform the server of our branch root
+
+            self.queue.append(slskmessages.BranchRoot(msg.user))
+            log.add_conn("Our branch root is user %s", msg.user)
