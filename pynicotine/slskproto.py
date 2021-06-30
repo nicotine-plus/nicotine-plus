@@ -933,13 +933,131 @@ class SlskProtoThread(threading.Thread):
                 )
             )
 
+    def init_server_conn(self, connsinprogress, msg_obj):
+
+        try:
+            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            # Detect if our connection to the server is still alive
+            self.set_server_socket_keepalive(server_socket)
+
+            if self.interface:
+                self.bind_to_network_interface(server_socket, self.interface)
+
+            elif self._bindip:
+                server_socket.bind((self._bindip, 0))
+
+            server_socket.setblocking(0)
+            server_socket.connect_ex(msg_obj.addr)
+            server_socket.setblocking(1)
+
+            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
+            self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
+        except socket.error as err:
+            self._core_callback([ConnectError(msg_obj, err)])
+            server_socket.close()
+
+            return False
+
+        return True
+
+    def process_server_output(self, server_socket, conns, msg_obj):
+
+        if server_socket not in conns:
+            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                'type': msg_obj.__class__,
+                'msg_obj': vars(msg_obj)
+            })
+            return
+
+        msg = msg_obj.make_network_message()
+
+        conns[server_socket].obuf.extend(struct.pack("<i", len(msg) + 4))
+        conns[server_socket].obuf.extend(struct.pack("<i", self.servercodes[msg_obj.__class__]))
+        conns[server_socket].obuf.extend(msg)
+
+    def init_peer_conn(self, connsinprogress, msg_obj):
+
+        try:
+            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            if self.interface:
+                self.bind_to_network_interface(conn, self.interface)
+
+            elif self._bindip:
+                conn.bind((self._bindip, 0))
+
+            conn.setblocking(0)
+            conn.connect_ex(msg_obj.addr)
+            conn.setblocking(1)
+
+            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
+            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
+        except socket.error as err:
+            self._core_callback([ConnectError(msg_obj, err)])
+            conn.close()
+
+            return False
+
+        return True
+
+    def process_peer_output(self, conns, msg_obj):
+
+        if msg_obj.conn not in conns:
+            log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
+                'type': msg_obj.__class__,
+                'msg_obj': vars(msg_obj)
+            })
+            return
+
+        # Pack Peer and File and Search Messages
+        if msg_obj.__class__ is PierceFireWall:
+            conns[msg_obj.conn].piercefw = msg_obj
+
+            msg = msg_obj.make_network_message()
+
+            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+            conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
+            conns[msg_obj.conn].obuf.extend(msg)
+
+        elif msg_obj.__class__ is PeerInit:
+            conns[msg_obj.conn].init = msg_obj
+
+            msg = msg_obj.make_network_message()
+
+            if conns[msg_obj.conn].piercefw is None:
+                conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+                conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
+                conns[msg_obj.conn].obuf.extend(msg)
+
+        elif msg_obj.__class__ is FileRequest:
+            conns[msg_obj.conn].filereq = msg_obj
+
+            msg = msg_obj.make_network_message()
+            conns[msg_obj.conn].obuf.extend(msg)
+
+            self._core_callback([msg_obj])
+
+        elif msg_obj.__class__ is FileOffset:
+            conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
+
+            msg = msg_obj.make_network_message()
+            conns[msg_obj.conn].obuf.extend(msg)
+
+        else:
+            msg = msg_obj.make_network_message()
+            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
+            conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
+            conns[msg_obj.conn].obuf.extend(msg)
+
     def process_queue(self, queue, conns, connsinprogress, server_socket, maxsockets=MAXSOCKETS):
         """ Processes messages sent by the main thread. server_socket is a server
         connection socket object, queue holds the messages, conns and connsinprogress
         are dictionaries holding Connection and PeerConnectionInProgress messages. """
 
         msg_list = []
-        needsleep = False
         numsockets = 1 + len(conns) + len(connsinprogress)  # 1 = listen socket
 
         while queue:
@@ -947,166 +1065,57 @@ class SlskProtoThread(threading.Thread):
 
         for msg_obj in msg_list:
             if issubclass(msg_obj.__class__, ServerMessage):
-                try:
-                    msg = msg_obj.make_network_message()
-
-                    if server_socket in conns:
-                        conns[server_socket].obuf.extend(
-                            struct.pack("<ii", len(msg) + 4, self.servercodes[msg_obj.__class__]))
-                        conns[server_socket].obuf.extend(msg)
-                    else:
-                        queue.append(msg_obj)
-                        needsleep = True
-
-                except Exception as error:
-                    print("Error packaging message: %(type)s %(msg_obj)s, %(error)s" %
-                          {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)})
-                    self._core_callback(["Error packaging message: %(type)s %(msg_obj)s, %(error)s" %
-                                        {'type': msg_obj.__class__, 'msg_obj': vars(msg_obj), 'error': str(error)}])
+                self.process_server_output(server_socket, conns, msg_obj)
 
             elif issubclass(msg_obj.__class__, PeerMessage):
-                if msg_obj.conn in conns:
+                self.process_peer_output(conns, msg_obj)
 
-                    # Pack Peer and File and Search Messages
-                    if msg_obj.__class__ is PierceFireWall:
-                        conns[msg_obj.conn].piercefw = msg_obj
+            elif msg_obj.__class__ is ServerConn:
+                if maxsockets == -1 or numsockets < maxsockets:
+                    if self.init_server_conn(connsinprogress, msg_obj):
+                        numsockets += 1
 
-                        msg = msg_obj.make_network_message()
+            elif msg_obj.__class__ is OutConn:
+                if msg_obj.addr[1] == 0:
+                    self._core_callback([ConnectError(msg_obj, "Port cannot be zero")])
 
-                        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
-                        conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
-                        conns[msg_obj.conn].obuf.extend(msg)
+                elif maxsockets == -1 or numsockets < maxsockets:
+                    if self.init_peer_conn(connsinprogress, msg_obj):
+                        numsockets += 1
+                else:
+                    # Connection limit reached, re-queue
+                    queue.append(msg_obj)
 
-                    elif msg_obj.__class__ is PeerInit:
-                        conns[msg_obj.conn].init = msg_obj
+            elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
+                conn = msg_obj.conn
 
-                        msg = msg_obj.make_network_message()
+                if msg_obj.callback:
+                    self._core_callback([ConnClose(conn, conns[conn].addr)])
 
-                        if conns[msg_obj.conn].piercefw is None:
-                            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
-                            conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
-                            conns[msg_obj.conn].obuf.extend(msg)
+                self.close_connection(conns, conn)
 
-                    elif msg_obj.__class__ is FileRequest:
-                        conns[msg_obj.conn].filereq = msg_obj
+            elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
+                conns[msg_obj.conn].filedown = msg_obj
 
-                        msg = msg_obj.make_network_message()
-                        conns[msg_obj.conn].obuf.extend(msg)
+            elif msg_obj.__class__ is UploadFile and msg_obj.conn in conns:
+                conns[msg_obj.conn].fileupl = msg_obj
+                self._reset_counters(conns)
 
-                        self._core_callback([msg_obj])
+            elif msg_obj.__class__ is SetDownloadLimit:
+                self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
 
-                    elif msg_obj.__class__ is FileOffset:
-                        conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
-
-                        msg = msg_obj.make_network_message()
-                        conns[msg_obj.conn].obuf.extend(msg)
-
+            elif msg_obj.__class__ is SetUploadLimit:
+                if msg_obj.uselimit:
+                    if msg_obj.limitby:
+                        callback = self._calc_upload_limit_by_total
                     else:
-                        msg = msg_obj.make_network_message()
-                        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
-                        conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
-                        conns[msg_obj.conn].obuf.extend(msg)
+                        callback = self._calc_upload_limit_by_transfer
 
                 else:
-                    if msg_obj.__class__ not in [PeerInit, PierceFireWall, FileSearchResult]:
-                        log.add_conn("Can't send the message over the closed connection: %(type)s %(msg_obj)s", {
-                            'type': msg_obj.__class__,
-                            'msg_obj': vars(msg_obj)
-                        })
+                    callback = self._calc_upload_limit_none
 
-            elif issubclass(msg_obj.__class__, InternalMessage):
-                if msg_obj.__class__ is ServerConn:
-                    if maxsockets == -1 or numsockets < maxsockets:
-                        try:
-                            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-                            # Detect if our connection to the server is still alive
-                            self.set_server_socket_keepalive(server_socket)
-
-                            if self.interface:
-                                self.bind_to_network_interface(server_socket, self.interface)
-
-                            elif self._bindip:
-                                server_socket.bind((self._bindip, 0))
-
-                            server_socket.setblocking(0)
-                            server_socket.connect_ex(msg_obj.addr)
-                            server_socket.setblocking(1)
-
-                            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
-                            self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-                            numsockets += 1
-
-                        except socket.error as err:
-
-                            self._core_callback([ConnectError(msg_obj, err)])
-                            server_socket.close()
-
-                elif msg_obj.__class__ is OutConn:
-                    if msg_obj.addr[1] == 0:
-                        self._core_callback([ConnectError(msg_obj, "Port cannot be zero")])
-
-                    elif maxsockets == -1 or numsockets < maxsockets:
-                        try:
-                            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-                            if self.interface:
-                                self.bind_to_network_interface(conn, self.interface)
-
-                            elif self._bindip:
-                                conn.bind((self._bindip, 0))
-
-                            conn.setblocking(0)
-                            conn.connect_ex(msg_obj.addr)
-                            conn.setblocking(1)
-
-                            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
-                            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-                            numsockets += 1
-
-                        except socket.error as err:
-
-                            self._core_callback([ConnectError(msg_obj, err)])
-                            conn.close()
-                    else:
-                        # Connection limit reached, re-queue
-                        queue.append(msg_obj)
-
-                elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
-                    conn = msg_obj.conn
-
-                    if msg_obj.callback:
-                        self._core_callback([ConnClose(conn, conns[conn].addr)])
-
-                    self.close_connection(conns, conn)
-
-                elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
-                    conns[msg_obj.conn].filedown = msg_obj
-
-                elif msg_obj.__class__ is UploadFile and msg_obj.conn in conns:
-                    conns[msg_obj.conn].fileupl = msg_obj
-                    self._reset_counters(conns)
-
-                elif msg_obj.__class__ is SetDownloadLimit:
-                    self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
-
-                elif msg_obj.__class__ is SetUploadLimit:
-                    if msg_obj.uselimit:
-                        if msg_obj.limitby:
-                            callback = self._calc_upload_limit_by_total
-                        else:
-                            callback = self._calc_upload_limit_by_transfer
-
-                    else:
-                        callback = self._calc_upload_limit_none
-
-                    self._reset_counters(conns)
-                    self._uploadlimit = (callback, msg_obj.limit)
-
-        if needsleep:
-            time.sleep(1)
+                self._reset_counters(conns)
+                self._uploadlimit = (callback, msg_obj.limit)
 
         return conns, connsinprogress, server_socket, numsockets
 
