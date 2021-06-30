@@ -711,8 +711,8 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown" %
-                            {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
+                log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
@@ -771,17 +771,13 @@ class SlskProtoThread(threading.Thread):
 
         if conn.filereq is None:
             msg = FileRequest(conn.conn)
-
-            try:
-                msg.parse_network_message(msg_buffer[:4])
-                msg_buffer = msg_buffer[4:]
-
-            except Exception as error:
-                log.add("%s", error)
+            msg.parse_network_message(msg_buffer[:4])
 
             if msg.req is not None:
                 msgs.append(msg)
                 conn.filereq = msg
+
+            msg_buffer = msg_buffer[4:]
 
         elif conn.filedown is not None:
             leftbytes = conn.bytestoread - conn.filereadbytes
@@ -790,10 +786,12 @@ class SlskProtoThread(threading.Thread):
             if leftbytes > 0:
                 try:
                     conn.filedown.file.write(addedbytes)
+
                 except IOError as strerror:
                     self._core_callback([FileError(conn, conn.filedown.file, strerror)])
                     self._core_callback([ConnClose(conn.conn, conn.addr)])
                     self.close_connection(conns, conn.conn)
+
                 except ValueError:
                     pass
 
@@ -824,26 +822,24 @@ class SlskProtoThread(threading.Thread):
 
         elif conn.fileupl is not None and conn.fileupl.offset is None:
             msg = FileOffset(conn)
-
-            try:
-                msg.parse_network_message(msg_buffer[:8])
-                msg_buffer = msg_buffer[8:]
-
-            except Exception as error:
-                log.add("%s", error)
+            msg.parse_network_message(msg_buffer[:8])
 
             if msg.offset is not None:
                 try:
                     conn.fileupl.file.seek(msg.offset)
+
                 except IOError as strerror:
                     self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
                     self._core_callback([ConnClose(conn.conn, conn.addr)])
                     self.close_connection(conns, conn.conn)
+
                 except ValueError:
                     pass
 
                 conn.fileupl.offset = msg.offset
                 self._core_callback([conn.fileupl])
+
+            msg_buffer = msg_buffer[8:]
 
         conn.ibuf = msg_buffer
         return msgs, conn
@@ -856,44 +852,39 @@ class SlskProtoThread(threading.Thread):
         """
         msgs = []
 
-        while (conn.init is None or conn.init.conn_type not in ['F', 'D']) and len(msg_buffer) >= 8:
+        # Peer messages are 8 bytes or greater in length
+        while len(msg_buffer) >= 8:
             msgsize = struct.unpack("<i", msg_buffer[:4])[0]
 
-            if len(msg_buffer) >= 8:
-                msgtype = struct.unpack("<i", msg_buffer[4:8])[0]
+            msgtype = msg_buffer[4]
+            peer_class = self.peerclasses.get(msgtype, None)
+
+            if peer_class and peer_class in (SharedFileList, UserInfoReply):
+                # Send progress to the main thread
                 self._core_callback(
-                    [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, self.peerclasses.get(msgtype, None))])
+                    [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, peer_class)])
 
             if msgsize + 4 > len(msg_buffer):
                 break
 
             if conn.init is None:
                 # Unpack Peer Connections
-                msgtype = msg_buffer[4]
 
                 if msgtype in self.peerinitclasses:
                     msg = self.peerinitclasses[msgtype](conn)
+                    msg.parse_network_message(msg_buffer[5:msgsize + 4])
 
-                    try:
-                        msg.parse_network_message(msg_buffer[5:msgsize + 4])
+                    if self.peerinitclasses[msgtype] is PierceFireWall:
+                        conn.piercefw = msg
 
-                    except Exception as error:
-                        log.add("%s", error)
+                    elif self.peerinitclasses[msgtype] is PeerInit:
+                        conn.init = msg
 
-                    else:
-                        if self.peerinitclasses[msgtype] is PierceFireWall:
-                            conn.piercefw = msg
-
-                        elif self.peerinitclasses[msgtype] is PeerInit:
-                            conn.init = msg
-
-                        msgs.append(msg)
+                    msgs.append(msg)
 
                 elif conn.piercefw is None:
-                    msgs.append(_(
-                        "Unknown peer init code: {}, message contents ".format(msg_buffer[4])
-                        + "{}".format(msg_buffer[5:msgsize + 4].__repr__())
-                    ))
+                    log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
 
                     self._core_callback([ConnClose(conn.conn, conn.addr)])
                     self.close_connection(conns, conn)
@@ -907,42 +898,14 @@ class SlskProtoThread(threading.Thread):
                 msgtype = struct.unpack("<i", msg_buffer[4:8])[0]
 
                 if msgtype in self.peerclasses:
-                    try:
-                        msg = self.peerclasses[msgtype](conn)
+                    msg = self.peerclasses[msgtype](conn)
+                    msg.parse_network_message(msg_buffer[8:msgsize + 4])
 
-                        # Parse Peer Message and handle exceptions
-                        try:
-                            msg.parse_network_message(msg_buffer[8:msgsize + 4])
+                    """if self.peerclasses[msgtype] in (SharedFileList, UserInfoReply):
+                        self._core_callback(
+                            [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, self.peerclasses[msgtype])])"""
 
-                        except Exception as error:
-                            host = port = "unknown"
-                            msgname = str(self.peerclasses[msgtype]).rsplit('.', maxsplit=1)[-1]
-                            print("Error parsing %s:" % msgname, error)
-
-                            import traceback
-                            for line in traceback.format_tb(error.__traceback__):
-                                print(line)
-
-                            if hasattr(conn, "addr") and conn.addr is not None:
-                                host = conn.addr[0]
-                                port = conn.addr[1]
-
-                            debugmessage = ("There was an error while unpacking Peer message type %(type)s size "
-                                            "%(size)i contents %(msg_buffer)s from user: %(user)s, "
-                                            "%(host)s:%(port)s") % {
-                                'type': msgname, 'size': msgsize - 4,
-                                'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(), 'user': conn.init.user,
-                                'host': host, 'port': port}
-                            msgs.append(debugmessage)
-
-                            del msg
-
-                        else:
-                            msgs.append(msg)
-
-                    except Exception as error:
-                        debugmessage = "Error in message function:", error, msgtype, conn
-                        msgs.append(debugmessage)
+                    msgs.append(msg)
 
                 else:
                     host = port = "unknown"
@@ -951,20 +914,16 @@ class SlskProtoThread(threading.Thread):
                         host = conn.addr[0]
                         port = conn.addr[1]
 
-                    debugmessage = ("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
-                                    "from user: %(user)s, %(host)s:%(port)s") % {
+                    log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
+                             "from user: %(user)s, %(host)s:%(port)s"), {
                         'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(),
-                        'user': conn.init.user, 'host': host, 'port': port}
-                    msgs.append(debugmessage)
+                        'user': conn.init.user, 'host': host, 'port': port})
 
             else:
                 # Unknown Message type
-                msgs.append("Can't handle connection type %s" % (conn.init.conn_type))
+                log.add("Can't handle connection type %s", conn.init.conn_type)
 
-            if msgsize >= 0:
-                msg_buffer = msg_buffer[msgsize + 4:]
-            else:
-                msg_buffer = bytearray()
+            msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
         return msgs, conn
@@ -977,6 +936,7 @@ class SlskProtoThread(threading.Thread):
         """
         msgs = []
 
+        # Distributed messages are 5 bytes or greater in length
         while len(msg_buffer) >= 5:
             msgsize = struct.unpack("<i", msg_buffer[:4])[0]
 
@@ -991,16 +951,13 @@ class SlskProtoThread(threading.Thread):
                 msgs.append(msg)
 
             else:
-                msgs.append("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown" %
-                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
+                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
                 self._core_callback([ConnClose(conn.conn, conn.addr)])
                 self.close_connection(conns, conn)
                 break
 
-            if msgsize >= 0:
-                msg_buffer = msg_buffer[msgsize + 4:]
-            else:
-                msg_buffer = bytearray()
+            msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
         return msgs, conn
