@@ -419,9 +419,9 @@ class NicotineCore:
         found_conn = False
 
         # We need two connections in our name if we're downloading from ourselves
-        if user != config.sections["server"]["login"]:
+        if user != config.sections["server"]["login"] and conn_type != 'F':
             for i in self.peerconns:
-                if i.username == user and i.conn_type != 'F' and i.conn_type == conn_type:
+                if i.username == user and i.conn_type == conn_type:
                     i.addr = addr
                     i.conn = conn
                     i.token = None
@@ -580,9 +580,9 @@ Error: %(error)s""", {
 
         init = slskmessages.PeerInit(None, user, conn_type, 0)
 
-        if user != config.sections["server"]["login"]:
+        if user != config.sections["server"]["login"] and conn_type != 'F':
             for i in self.peerconns:
-                if i.username == user and i.conn_type != 'F' and i.conn_type == conn_type:
+                if i.username == user and i.conn_type == conn_type:
                     """ Only update existing connection if it hasn't been established yet,
                     otherwise ignore indirect connection request. """
 
