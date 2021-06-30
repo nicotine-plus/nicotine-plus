@@ -362,7 +362,7 @@ class SlskProtoThread(threading.Thread):
         JoinPublicRoom: 150,
         LeavePublicRoom: 151,
         PublicRoomMessage: 152,
-        RelatedSearch: 153,           # Deprecated ?
+        RelatedSearch: 153,           # Deprecated
         CantConnectToPeer: 1001,      # Deprecated
         CantCreateRoom: 1003
     }
@@ -394,7 +394,7 @@ class SlskProtoThread(threading.Thread):
         3: DistribSearch,
         4: DistribBranchLevel,
         5: DistribBranchRoot,
-        7: DistribChildDepth,         # Unimplemented
+        7: DistribChildDepth,
         93: DistribEmbeddedMessage
     }
 

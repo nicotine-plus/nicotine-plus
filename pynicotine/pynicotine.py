@@ -209,7 +209,7 @@ class NicotineCore:
             slskmessages.MinParentsInCache: self.dummy_message,
             slskmessages.WishlistInterval: self.wishlist_interval,
             slskmessages.DistribAliveInterval: self.dummy_message,
-            slskmessages.DistribChildDepth: self.distrib_child_depth,
+            slskmessages.DistribChildDepth: self.dummy_message,
             slskmessages.DistribBranchLevel: self.distrib_branch_level,
             slskmessages.DistribBranchRoot: self.distrib_branch_root,
             slskmessages.AdminMessage: self.admin_message,
@@ -2140,10 +2140,3 @@ Error: %(error)s""", {
         # Inform the server of our branch root
         self.queue.append(slskmessages.BranchRoot(msg.user))
         log.add_conn("Our branch root is user %s", msg.user)
-
-    @staticmethod
-    def distrib_child_depth(msg):
-        """ Distrib code: 7 """
-
-        # TODO: Implement me
-        log.add_msg_contents(msg)

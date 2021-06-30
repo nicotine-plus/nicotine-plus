@@ -2817,7 +2817,6 @@ class DistribBranchRoot(DistribMessage):
 
 class DistribChildDepth(DistribMessage):
     """ Distrib code: 7 """
-    """ TODO: implement fully """
 
     def __init__(self, conn):
         self.conn = conn
