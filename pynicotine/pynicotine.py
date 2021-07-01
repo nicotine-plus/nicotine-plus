@@ -525,7 +525,7 @@ class NicotineCore:
             })
 
         else:
-            self.connect_to_peer_direct(user, addr, message_type)
+            self.connect_to_peer_direct(user, addr, message_type, init)
 
         self.peerconns.append(
             PeerConnection(
