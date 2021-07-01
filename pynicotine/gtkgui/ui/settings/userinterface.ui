@@ -28,40 +28,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="UsernameHotspots">
-            <property name="label" translatable="yes">Colored and clickable usernames</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
-            <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="DisplayAwayColors">
-            <property name="label" translatable="yes">Usernames also indicate away status</property>
-            <property name="visible">1</property>
-            <signal name="toggled" handler="on_toggled_away_colors"/>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabSelectPrevious">
-            <property name="label" translatable="yes">Select previous tab on startup</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabClosers">
-            <property name="label" translatable="yes">Close-buttons on tabs</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabStatusIcons">
-            <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="column-spacing">12</property>
@@ -202,11 +168,29 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Tab Bar Positioning</property>
+            <property name="label" translatable="yes">Tabs</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="TabSelectPrevious">
+            <property name="label" translatable="yes">Select previous tab on startup</property>
+            <property name="visible">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="TabClosers">
+            <property name="label" translatable="yes">Close-buttons on tabs</property>
+            <property name="visible">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="TabStatusIcons">
+            <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
+            <property name="visible">1</property>
           </object>
         </child>
         <child>
@@ -881,6 +865,22 @@
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="UsernameHotspots">
+            <property name="label" translatable="yes">Colored and clickable usernames</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
+            <property name="use-underline">1</property>
+            <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="DisplayAwayColors">
+            <property name="label" translatable="yes">Usernames also indicate away status</property>
+            <property name="visible">1</property>
+            <signal name="toggled" handler="on_toggled_away_colors"/>
           </object>
         </child>
         <child>
