@@ -2128,7 +2128,7 @@ class SharedFileList(PeerMessage):
     def __init__(self, conn, shares=None):
         self.conn = conn
         self.list = shares
-        self.unknown = None
+        self.unknown = 0
         self.privatelist = []
         self.built = None
 
@@ -2218,6 +2218,9 @@ class SharedFileList(PeerMessage):
                     msg.extend(self.list[key])
                 except KeyError:
                     pass
+
+        # Unknown purpose, but official clients always send a value of 0
+        msg.extend(self.pack_object(self.unknown))
 
         self.built = zlib.compress(msg)
         return self.built

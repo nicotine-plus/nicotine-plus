@@ -2633,6 +2633,25 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
                 1.  **int** <ins>place in
                     attributes</ins> (unused by museekd)
                 2.  **int** <ins>attribute</ins>
+    4.  **int** <ins>unknown</ins> *official clients always send a value of 0*
+    5.  **int** <ins>number of private directories</ins>
+    6.  Iterate <ins>number of private directories</ins>
+        1.  **string** <ins>directory</ins>
+        2.  **int** <ins>number of files</ins>
+        3.  Iterate <ins>number of files</ins>
+            1.  **char** ??? (unused)
+            2.  **string** <ins>filename</ins>
+            3.  **off\_t** <ins>size</ins> *File
+                size*
+            4.  **string** <ins>ext</ins>
+                *Extentsion*
+            5.  **int** <ins>number of
+                attributes</ins>
+            6.  Iterate <ins>number of
+                attributes</ins>
+                1.  **int** <ins>place in
+                    attributes</ins> (unused by museekd)
+                2.  **int** <ins>attribute</ins>
 
 ### Peer Code 8
 
