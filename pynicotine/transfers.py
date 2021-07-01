@@ -102,6 +102,7 @@ class Transfers:
         self.transfer_request_times = {}
         self.user_update_times = {}
         self.upload_speed = 0
+        self.token = 100
 
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
@@ -1627,7 +1628,8 @@ class Transfers:
             transfer.status = "User logged off"
 
         elif not locally_queued:
-            transfer.token = self.core.get_new_token()
+            self.token += 1
+            transfer.token = self.token
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
 
@@ -1715,7 +1717,7 @@ class Transfers:
             return True
 
         try:
-            return self.core.users[user].status <= 0
+            return self.core.user_statuses[user] <= 0
 
         except (KeyError, TypeError):
             return False
@@ -2020,7 +2022,7 @@ class Transfers:
                     if (current_time - start_time) >= 30:
                         self.network_callback([slskmessages.TransferTimeout(transfer)])
 
-            if self.core.exit.wait(1):
+            if self.core.protothread.exit.wait(1):
                 # Event set, we're exiting
                 return
 
@@ -2029,7 +2031,7 @@ class Transfers:
         while True:
             self.network_callback([slskmessages.CheckUploadQueue()])
 
-            if self.core.exit.wait(10):
+            if self.core.protothread.exit.wait(10):
                 # Event set, we're exiting
                 return
 
@@ -2041,7 +2043,7 @@ class Transfers:
             self.download_queue_timer_count += 1
             self.network_callback([slskmessages.CheckDownloadQueue()])
 
-            if self.core.exit.wait(180):
+            if self.core.protothread.exit.wait(180):
                 # Event set, we're exiting
                 return
 

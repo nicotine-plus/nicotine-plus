@@ -48,30 +48,25 @@ class InternalMessage:
     pass
 
 
-class Conn(InternalMessage):
+class InitServerConn(InternalMessage):
+    """ NicotineCore sends this to make networking thread establish a server connection. """
 
-    __slots__ = ("conn", "addr", "init")
+    def __init__(self, addr=None, login=None):
+        self.addr = addr
+        self.login = login
 
-    def __init__(self, conn=None, addr=None, init=None):
-        self.conn = conn
+
+class InitPeerConn(InternalMessage):
+
+    __slots__ = ("addr", "init")
+
+    def __init__(self, addr=None, init=None):
         self.addr = addr
         self.init = init
 
 
-class InitServerConn(Conn):
-    """ NicotineCore sends this to make networking thread establish a server connection.
-    When a connection is established, networking thread returns an object of this type
-    to NicotineCore. """
-
-
-class InitPeerConn(Conn):
-    """ NicotineCore sends this to make networking thread establish a peer connection.
-    When a connection is established, networking thread returns an object of this type
-    to NicotineCore. """
-
-
-class IncConn(Conn):
-    """ Sent by networking thread to indicate an incoming connection."""
+class ServerTimeout:
+    pass
 
 
 class ConnClose(InternalMessage):
@@ -93,15 +88,20 @@ class ConnCloseIP(InternalMessage):
         self.addr = addr
 
 
-class ConnectError(InternalMessage):
-    """ Sent when a socket exception occurs. It's up to UI thread to
-    handle this."""
+class SendNetworkMessage(InternalMessage):
 
-    __slots__ = ("connobj", "err")
+    def __init__(self, user=None, message=None, login=None, addr=None):
+        self.user = user
+        self.message = message
+        self.login = login
+        self.addr = addr
 
-    def __init__(self, connobj=None, err=None):
-        self.connobj = connobj
-        self.err = err
+
+class ShowConnectionErrorMessage(InternalMessage):
+
+    def __init__(self, user=None, msgs=None):
+        self.user = user
+        self.msgs = msgs
 
 
 class ConnectToPeerTimeout:
@@ -2120,12 +2120,13 @@ class PeerInit(PeerInitMessage):
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
 
-    def __init__(self, conn=None, init_user=None, target_user=None, conn_type=None, token=None):
+    def __init__(self, conn=None, init_user=None, target_user=None, conn_type=None, token=0):
         self.conn = conn
         self.init_user = init_user      # username of peer who initiated the message
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
         self.token = token
+        self.outgoing_msgs = []
 
     def make_network_message(self):
         msg = bytearray()
@@ -2138,10 +2139,6 @@ class PeerInit(PeerInitMessage):
     def parse_network_message(self, message):
         pos, self.init_user = self.get_object(message, str)
         pos, self.conn_type = self.get_object(message, str, pos)
-
-        if message[pos:]:
-            # A token is not guaranteed to be sent
-            pos, self.token = self.get_object(message, int, pos)
 
         if self.target_user is None:
             # The user we're connecting to initiated the connection. Set them as target user.

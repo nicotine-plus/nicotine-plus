@@ -341,8 +341,8 @@ class IconNotebook:
         if user is not None:
             status = 0
 
-            if user in self.frame.np.users:
-                status = self.frame.np.users[user].status or 0
+            if user in self.frame.np.user_statuses:
+                status = self.frame.np.user_statuses[user] or 0
 
             self.set_user_status(page, text, status)
 

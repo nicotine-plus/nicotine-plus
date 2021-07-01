@@ -22,11 +22,10 @@ from pynicotine import slskmessages
 class NetworkFilter:
     """ Functions related to banning, blocking and ignoring users """
 
-    def __init__(self, core, config, users, queue, geoip):
+    def __init__(self, core, config, queue, geoip):
 
         self.core = core
         self.config = config
-        self.users = users
         self.queue = queue
         self.geoip = geoip
         self.ipblock_requested = {}
@@ -44,7 +43,7 @@ class NetworkFilter:
         else:
             request_list = self.ipignore_requested
 
-        if user not in self.users or not isinstance(self.users[user].addr, tuple):
+        if user not in self.core.protothread.user_addresses:
             if user not in request_list:
                 request_list[user] = action
 
@@ -64,7 +63,8 @@ class NetworkFilter:
         if self._request_ip(user, "add", list_type):
             return None
 
-        ip_address, _port = self.users[user].addr
+        ip_address, _port = self.core.protothread.user_addresses[user]
+
         if ip_address not in ip_list or ip_list[ip_address] != user:
             ip_list[ip_address] = user
             self.config.write_configuration()
@@ -89,7 +89,8 @@ class NetworkFilter:
         if self._request_ip(user, "remove", list_type):
             return
 
-        ip_address, _port = self.users[user].addr
+        ip_address, _port = self.core.protothread.user_addresses[user]
+
         if ip_address in ip_list:
             del ip_list[ip_address]
             self.config.write_configuration()
@@ -196,10 +197,12 @@ class NetworkFilter:
         """ When we know a user's IP address has changed, we call this function to
         update the IP saved in lists. """
 
-        if user not in self.users or not isinstance(self.users[user].addr, tuple):
+        user_address = self.core.protothread.user_addresses.get(user)
+
+        if not user_address:
             return
 
-        new_ip, _new_port = self.users[user].addr
+        new_ip, _new_port = user_address
         cached_blocked_ip = self.get_cached_blocked_user_ip(user)
 
         if cached_blocked_ip is not None and cached_blocked_ip != new_ip:
@@ -314,11 +317,12 @@ class NetworkFilter:
 
     def is_user_ip_ignored(self, user):
 
-        if user not in self.users or not isinstance(self.users[user].addr, tuple):
-            return False
+        user_address = self.core.protothread.user_addresses.get(user)
 
-        ip_address, _port = self.users[user].addr
-        if self.is_ip_ignored(ip_address):
-            return True
+        if user_address:
+            ip_address, _port = user_address
+
+            if self.is_ip_ignored(ip_address):
+                return True
 
         return False

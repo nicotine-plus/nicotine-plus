@@ -190,8 +190,8 @@ class PrivateChat(UserInterface):
         self.offlinemessage = False
         self.status = 0
 
-        if user in self.frame.np.users:
-            self.status = self.frame.np.users[user].status or 0
+        if user in self.frame.np.user_statuses:
+            self.status = self.frame.np.user_statuses[user] or 0
 
         # Text Search
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry,

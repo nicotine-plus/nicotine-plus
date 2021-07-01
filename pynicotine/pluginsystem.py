@@ -559,7 +559,7 @@ class ResponseThrottle:
 
         port = False
         try:
-            _ip_address, port = self.core.users[nick].addr
+            _ip_address, port = self.core.protothread.user_addresses[nick]
         except Exception:
             port = True
 
