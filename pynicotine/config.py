@@ -35,8 +35,6 @@ import sys
 from ast import literal_eval
 from collections import defaultdict
 
-from pynicotine.logfacility import log
-
 
 class Config:
     """
@@ -433,6 +431,8 @@ class Config:
                 os.makedirs(path)
 
         except OSError as msg:
+            from pynicotine.logfacility import log
+
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
                     {'path': path, 'error': msg})
             return False
@@ -448,6 +448,8 @@ class Config:
                 os.makedirs(self.data_dir)
 
         except OSError as msg:
+            from pynicotine.logfacility import log
+
             log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
                     {'path': self.data_dir, 'error': msg})
 
@@ -494,6 +496,8 @@ class Config:
 
         except Exception as error:
             # Miscellaneous failure, default config will be used
+            from pynicotine.logfacility import log
+
             log.add(_("Unable to parse config file: %s"), error)
 
     def convert_config(self):
@@ -531,6 +535,8 @@ class Config:
 
     def set_config(self):
         """ Set config values parsed from file earlier """
+
+        from pynicotine.logfacility import log
 
         for i in self.parser.sections():
             for j, val in self.parser.items(i, raw=True):

@@ -19,6 +19,8 @@
 import os
 import time
 
+from pynicotine.config import config
+
 
 class Logger:
 
@@ -56,8 +58,6 @@ class Logger:
         return msg
 
     def add(self, msg, msg_args=None, level=None):
-
-        from pynicotine.config import config
 
         if self.log_levels:
             levels = self.log_levels
@@ -140,8 +140,6 @@ class Logger:
             self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
 
     def log_transfer(self, msg, msg_args=None):
-
-        from pynicotine.config import config
 
         if not config.sections["logging"]["transfers"]:
             return
