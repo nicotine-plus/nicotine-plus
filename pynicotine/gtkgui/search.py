@@ -637,7 +637,7 @@ class Search:
         update_ui, counter = self.add_result_list(
             msg.list, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color)
 
-        if config.sections["searches"]["show_private_results"] and msg.privatelist:
+        if config.sections["ui"]["private_search_results"] and msg.privatelist:
             update_ui_private, counter = self.add_result_list(
                 msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color, private=True)
 

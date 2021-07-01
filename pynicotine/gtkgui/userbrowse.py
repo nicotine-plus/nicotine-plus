@@ -408,13 +408,14 @@ class UserBrowse:
         menu.set_num_selected_files(num_selected_files)
         self.user_popup.toggle_user_items()
 
-    def make_new_model(self, shares):
+    def make_new_model(self, shares, private_shares=None):
 
         # Temporarily disable sorting for improved performance
         self.dir_store.set_default_sort_func(lambda *args: 0)
         self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.shares = shares
+        private_size = num_private_folders = 0
         self.query = None
         self.selected_folder = None
         self.selected_files.clear()
@@ -424,19 +425,15 @@ class UserBrowse:
         self.file_store.clear()
         self.search_list.clear()
 
-        # Compute the number of shared dirs and total size
-        self.totalsize = 0
-
-        for dir, files in self.shares:
-            for filedata in files:
-                if filedata[2] < maxsize:
-                    self.totalsize += filedata[2]
-
-        self.AmountShared.set_text(human_size(self.totalsize))
-        self.NumDirectories.set_text(str(len(self.shares)))
-
         # Generate the directory tree and select first directory
-        self.create_folder_tree(shares)
+        size, num_folders = self.create_folder_tree(shares)
+
+        if config.sections["ui"]["private_shares"] and private_shares:
+            self.shares = shares + private_shares
+            private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
+
+        self.AmountShared.set_text(human_size(size + private_size))
+        self.NumDirectories.set_text(str(num_folders + num_private_folders))
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
@@ -455,17 +452,23 @@ class UserBrowse:
 
         self.set_finished()
 
-    def create_folder_tree(self, shares):
+    def create_folder_tree(self, shares, private=False):
+
+        size = 0
 
         if not shares:
-            return
+            num_folders = 0
+            return size, num_folders
 
-        for folder, _ in shares:
+        for folder, files in shares:
             current_path = ""
 
             for subfolder in folder.split('\\'):
                 parent = self.directories.get(current_path)
                 current_path = subfolder if not current_path else '\\'.join([current_path, subfolder])
+
+                if private:
+                    subfolder = "[PRIVATE FOLDER]  " + subfolder
 
                 if current_path in self.directories:
                     # Folder was already added to tree
@@ -475,6 +478,12 @@ class UserBrowse:
                     parent, -1, self.dir_column_numbers,
                     [subfolder, current_path]
                 )
+
+            for filedata in files:
+                if filedata[2] < maxsize:
+                    size += filedata[2]
+
+        return size, len(shares)
 
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
@@ -578,17 +587,17 @@ class UserBrowse:
 
     def shared_file_list(self, msg):
 
-        self.make_new_model(msg.list)
+        self.make_new_model(msg.list, msg.privatelist)
+        self.info_bar.set_visible(False)
 
-        if not msg.list:
+        if msg.list or (config.sections["ui"]["private_shares"] and msg.privatelist):
+            self.browse_queued_folder()
+
+        else:
             self.info_bar.show_message(
                 _("User's list of shared files is empty. Either the user is not sharing anything, "
                   "or they are sharing files privately.")
             )
-
-        else:
-            self.info_bar.set_visible(False)
-            self.browse_queued_folder()
 
         self.set_finished()
 

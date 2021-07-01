@@ -2128,6 +2128,8 @@ class SharedFileList(PeerMessage):
     def __init__(self, conn, shares=None):
         self.conn = conn
         self.list = shares
+        self.unknown = None
+        self.privatelist = []
         self.built = None
 
     def parse_network_message(self, message):
@@ -2140,10 +2142,10 @@ class SharedFileList(PeerMessage):
                     {'area': 'SharedFileList', 'exception': error})
             self.list = {}
 
-    def _parse_network_message(self, message):
-        shares = []
-        pos, ndir = self.get_object(message, int)
+    def _parse_result_list(self, message, pos=0):
+        pos, ndir = self.get_object(message, int, pos)
 
+        shares = []
         for _ in range(ndir):
             pos, directory = self.get_object(message, str, pos)
             directory = directory.replace('/', '\\')
@@ -2180,7 +2182,14 @@ class SharedFileList(PeerMessage):
 
             shares.append((directory, files))
 
-        self.list = shares
+        return pos, shares
+
+    def _parse_network_message(self, message):
+        pos, self.list = self._parse_result_list(message)
+
+        if message[pos:]:
+            pos, self.unknown = self.get_object(message, int, pos)
+            pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):
         # Elaborate hack to save CPU

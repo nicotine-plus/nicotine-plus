@@ -1430,6 +1430,9 @@ class UserInterfaceFrame(BuildFrame):
                 "usernamestyle": self.UsernameStyle,
                 "decimalsep": self.DecimalSep,
 
+                "private_search_results": self.ShowPrivateSearchResults,
+                "private_shares": self.ShowPrivateShares,
+
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
                 "tabprivate": self.PrivateChatPosition,
@@ -1531,6 +1534,9 @@ class UserInterfaceFrame(BuildFrame):
                 "browserfont": self.SelectBrowserFont.get_font(),
                 "usernamestyle": self.UsernameStyle.get_active_text(),
                 "decimalsep": self.DecimalSep.get_active_text(),
+
+                "private_search_results": self.ShowPrivateSearchResults.get_active(),
+                "private_shares": self.ShowPrivateShares.get_active(),
 
                 "tabmain": self.pos_list.get_value(iter_main, 1),
                 "tabrooms": self.pos_list.get_value(iter_rooms, 1),
@@ -1780,8 +1786,7 @@ class SearchesFrame(BuildFrame):
                 "search_results": self.ToggleResults,
                 "max_displayed_results": self.MaxDisplayedResults,
                 "min_search_chars": self.MinSearchChars,
-                "remove_special_chars": self.RemoveSpecialChars,
-                "show_private_results": self.ShowPrivateResults
+                "remove_special_chars": self.RemoveSpecialChars
             }
         }
 
@@ -1831,8 +1836,7 @@ class SearchesFrame(BuildFrame):
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
                 "min_search_chars": self.MinSearchChars.get_value_as_int(),
-                "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "show_private_results": self.ShowPrivateResults.get_active()
+                "remove_special_chars": self.RemoveSpecialChars.get_active()
             }
         }
 

@@ -232,8 +232,7 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "remove_special_chars": True,
-                "show_private_results": False
+                "remove_special_chars": True
             },
 
             "ui": {
@@ -319,7 +318,9 @@ class Config:
                 "xposition": -1,
                 "yposition": -1,
                 "maximized": True,
-                "urgencyhint": True
+                "urgencyhint": True,
+                "private_search_results": False,
+                "private_shares": False
             },
 
             "private_rooms": {

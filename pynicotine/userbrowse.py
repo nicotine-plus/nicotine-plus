@@ -150,7 +150,7 @@ class UserBrowse:
 
         self.show_user(username)
 
-        msg = slskmessages.GetSharedFileList(None)
+        msg = slskmessages.SharedFileList(None)
         msg.list = shares_list
 
         self.shared_file_list(username, msg)

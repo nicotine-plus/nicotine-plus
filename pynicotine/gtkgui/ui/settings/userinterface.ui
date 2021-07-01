@@ -76,98 +76,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Text Appearance</property>
-            <property name="wrap">1</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBox">
-            <property name="visible">1</property>
-            <property name="column-spacing">12</property>
-            <property name="row-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Chat username appearance:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">UsernameStyle</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkComboBoxText" id="UsernameStyle">
-                    <property name="visible">1</property>
-                    <signal name="changed" handler="on_colors_changed"/>
-                    <items>
-                      <item translatable="yes">bold</item>
-                      <item translatable="yes">italic</item>
-                      <item translatable="yes">underline</item>
-                      <item translatable="yes">normal</item>
-                    </items>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Decimal separator:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">DecimalSep</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkComboBoxText" id="DecimalSep">
-                    <property name="visible">1</property>
-                    <items>
-                      <item translatable="yes">&lt;None&gt;</item>
-                      <item>,</item>
-                      <item>.</item>
-                      <item translatable="yes">&lt;space&gt;</item>
-                    </items>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
             <property name="label" translatable="yes">Tabs</property>
             <property name="xalign">0</property>
             <attributes>
@@ -352,6 +260,131 @@
                   <object class="GtkComboBox" id="UserBrowsePosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Lists</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ShowPrivateSearchResults">
+            <property name="label" translatable="yes">Show privately shared files in search results</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission, and are .</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ShowPrivateShares">
+            <property name="label" translatable="yes">Show privately shared files in user shares</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files when you browse their shares. Folders containing such files are prefixed with '[PRIVATE FOLDER]', and are not downloadable unless the uploader gives explicit permission.</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Text Appearance</property>
+            <property name="wrap">1</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Chat username appearance:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">UsernameStyle</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="UsernameStyle">
+                    <property name="visible">1</property>
+                    <signal name="changed" handler="on_colors_changed"/>
+                    <items>
+                      <item translatable="yes">bold</item>
+                      <item translatable="yes">italic</item>
+                      <item translatable="yes">underline</item>
+                      <item translatable="yes">normal</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Decimal separator:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">DecimalSep</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="DecimalSep">
+                    <property name="visible">1</property>
+                    <items>
+                      <item translatable="yes">&lt;None&gt;</item>
+                      <item>,</item>
+                      <item>.</item>
+                      <item translatable="yes">&lt;space&gt;</item>
+                    </items>
                   </object>
                 </child>
               </object>
