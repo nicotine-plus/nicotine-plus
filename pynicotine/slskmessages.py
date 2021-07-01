@@ -2034,15 +2034,15 @@ class CantCreateRoom(ServerMessage):
 
 
 """
-Peer Messages
+Peer Init Messages
 """
 
 
-class PeerMessage(SlskMessage):
+class PeerInitMessage(SlskMessage):
     pass
 
 
-class PierceFireWall(PeerMessage):
+class PierceFireWall(PeerInitMessage):
     """ Peer init code: 0 """
     """ This is the very first message sent by the peer that established a
     connection, if it has been asked by the other peer to do so. The token
@@ -2061,7 +2061,7 @@ class PierceFireWall(PeerMessage):
             _pos, self.token = self.get_object(message, int)
 
 
-class PeerInit(PeerMessage):
+class PeerInit(PeerInitMessage):
     """ Peer init code: 1 """
     """ This message is sent by the peer that initiated a connection,
     not necessarily a peer that actually established it. Token apparently
@@ -2089,6 +2089,15 @@ class PeerInit(PeerMessage):
         if message[pos:]:
             # A token is not guaranteed to be sent
             pos, self.token = self.get_object(message, int, pos)
+
+
+"""
+Peer Messages
+"""
+
+
+class PeerMessage(SlskMessage):
+    pass
 
 
 class GetSharedFileList(PeerMessage):
