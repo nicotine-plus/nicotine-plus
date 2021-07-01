@@ -647,6 +647,26 @@ class SlskProtoThread(threading.Thread):
 
         return len(connection.obuf) > 0 or len(connection.ibuf) > 0
 
+    @staticmethod
+    def unpack_network_message(msg_class, msg_buffer, msg_size, conn_type, conn=None):
+
+        try:
+            if conn is not None:
+                msg = msg_class(conn)
+            else:
+                msg = msg_class()
+
+            msg.parse_network_message(msg_buffer)
+            return msg
+
+        except Exception as error:
+            log.add(("Unable to parse %(conn_type)s message type %(msg_type)s size %(size)i "
+                    "contents %(msg_buffer)s: %(error)s"),
+                    {'conn_type': conn_type, 'msg_type': msg_class, 'size': msg_size,
+                     'msg_buffer': msg_buffer, 'error': error})
+
+        return None
+
     def close_connection(self, connection_list, connection):
 
         if connection not in connection_list:
@@ -750,13 +770,15 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack server messages
             if msgtype in self.serverclasses:
-                msg = self.serverclasses[msgtype]()
-                msg.parse_network_message(msg_buffer[8:msgsize + 4])
-                msgs.append(msg)
+                msg = self.unpack_network_message(
+                    self.serverclasses[msgtype], msg_buffer[8:msgsize + 4], msgsize - 4, "server")
+
+                if msg is not None:
+                    msgs.append(msg)
 
             else:
                 log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__()})
+                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4]})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
@@ -797,21 +819,22 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer init messages
             if msgtype in self.peerinitclasses:
-                msg = self.peerinitclasses[msgtype](conn)
-                msg.parse_network_message(msg_buffer[5:msgsize + 4])
+                msg = self.unpack_network_message(
+                    self.peerinitclasses[msgtype], msg_buffer[5:msgsize + 4], msgsize - 1, "peer init", conn)
 
-                if self.peerinitclasses[msgtype] is PierceFireWall:
-                    conn.piercefw = msg
+                if msg is not None:
+                    if self.peerinitclasses[msgtype] is PierceFireWall:
+                        conn.piercefw = msg
 
-                elif self.peerinitclasses[msgtype] is PeerInit:
-                    conn.init = msg
+                    elif self.peerinitclasses[msgtype] is PeerInit:
+                        conn.init = msg
 
-                msgs.append(msg)
+                    msgs.append(msg)
 
             else:
                 if conn.piercefw is None:
                     log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                            {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4]})
 
                     self._core_callback([ConnClose(conn.conn, conn.addr)])
                     self.close_connection(conns, conn)
@@ -904,9 +927,11 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer messages
             if msgtype in self.peerclasses:
-                msg = self.peerclasses[msgtype](conn)
-                msg.parse_network_message(msg_buffer[8:msgsize + 4])
-                msgs.append(msg)
+                msg = self.unpack_network_message(
+                    self.peerclasses[msgtype], msg_buffer[8:msgsize + 4], msgsize - 4, "peer", conn)
+
+                if msg is not None:
+                    msgs.append(msg)
 
             else:
                 host = port = "unknown"
@@ -916,9 +941,9 @@ class SlskProtoThread(threading.Thread):
                     port = conn.addr[1]
 
                 log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
-                         "from user: %(user)s, %(host)s:%(port)s"), {
-                    'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4].__repr__(),
-                    'user': conn.init.user, 'host': host, 'port': port})
+                         "from user: %(user)s, %(host)s:%(port)s"),
+                        {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4],
+                         'user': conn.init.user, 'host': host, 'port': port})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
@@ -952,14 +977,14 @@ class SlskProtoThread(threading.Thread):
         msgs = []
 
         if conn.filereq is None:
-            msg = FileRequest(conn.conn)
-            msg.parse_network_message(msg_buffer[:4])
+            msgsize = 4
+            msg = self.unpack_network_message(FileRequest, msg_buffer[:msgsize], msgsize, "file", conn.conn)
 
-            if msg.req is not None:
+            if msg is not None and msg.req is not None:
                 msgs.append(msg)
                 conn.filereq = msg
 
-            msg_buffer = msg_buffer[4:]
+            msg_buffer = msg_buffer[msgsize:]
 
         elif conn.filedown is not None:
             leftbytes = conn.bytestoread - conn.filereadbytes
@@ -1003,10 +1028,10 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[leftbytes:]
 
         elif conn.fileupl is not None and conn.fileupl.offset is None:
-            msg = FileOffset(conn)
-            msg.parse_network_message(msg_buffer[:8])
+            msgsize = 8
+            msg = self.unpack_network_message(FileOffset, msg_buffer[:msgsize], msgsize, "file", conn)
 
-            if msg.offset is not None:
+            if msg is not None and msg.offset is not None:
                 try:
                     conn.fileupl.file.seek(msg.offset)
 
@@ -1021,7 +1046,7 @@ class SlskProtoThread(threading.Thread):
                 conn.fileupl.offset = msg.offset
                 self._core_callback([conn.fileupl])
 
-            msg_buffer = msg_buffer[8:]
+            msg_buffer = msg_buffer[msgsize:]
 
         conn.ibuf = msg_buffer
         return msgs
@@ -1072,13 +1097,15 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack distributed messages
             if msgtype in self.distribclasses:
-                msg = self.distribclasses[msgtype](conn)
-                msg.parse_network_message(msg_buffer[5:msgsize + 4])
-                msgs.append(msg)
+                msg = self.unpack_network_message(
+                    self.distribclasses[msgtype], msg_buffer[5:msgsize + 4], msgsize - 1, "distrib", conn)
+
+                if msg is not None:
+                    msgs.append(msg)
 
             else:
                 log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
-                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4].__repr__()})
+                        {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4]})
                 self._core_callback([ConnClose(conn.conn, conn.addr)])
                 self.close_connection(conns, conn)
                 break
