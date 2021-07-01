@@ -943,7 +943,7 @@ class SlskProtoThread(threading.Thread):
                 log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
                          "from user: %(user)s, %(host)s:%(port)s"),
                         {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[8:msgsize + 4],
-                         'user': conn.init.user, 'host': host, 'port': port})
+                         'user': conn.init.target_user, 'host': host, 'port': port})
 
             msg_buffer = msg_buffer[msgsize + 4:]
 

@@ -100,12 +100,10 @@ class Transfer:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, core, config, peerconns, queue, users,
-                 network_callback, ui_callback=None):
+    def __init__(self, core, config, queue, users, network_callback, ui_callback=None):
 
         self.core = core
         self.config = config
-        self.peerconns = peerconns
         self.queue = queue
         self.downloads = deque()
         self.uploads = deque()
@@ -574,14 +572,7 @@ class Transfers:
         """ When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders"""
 
-        username = None
-        for i in self.peerconns:
-            if i.conn is conn:
-                username = i.username
-                break
-
-        if username is None:
-            return
+        username = conn.init.target_user
 
         log.add_transfer("Received response for folder content request from user %s", username)
 
@@ -619,15 +610,7 @@ class Transfers:
         a TransferRequest with direction 0 (download request). We will initiate the upload of
         the queued file later. """
 
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
+        user = msg.conn.init.target_user
         addr = msg.conn.addr[0]
 
         """ Under certain conditions, SoulseekQt will send a file name/path containing both
@@ -709,22 +692,9 @@ class Transfers:
 
     def transfer_request(self, msg):
 
-        user = response = None
-
-        if msg.conn is not None:
-            for i in self.peerconns:
-                if i.conn is msg.conn.conn:
-                    user = i.username
-                    addr = msg.conn.addr[0]
-                    break
-
-        elif msg.tunneleduser is not None:  # Deprecated
-            user = msg.tunneleduser
-            addr = "127.0.0.1"
-
-        if user is None:
-            log.add_transfer("Got transfer request %s but cannot determine requestor", vars(msg))
-            return
+        user = msg.conn.init.target_user
+        addr = msg.conn.addr[0]
+        response = None
 
         if msg.direction == 1:
             log.add_transfer("Received upload request %(request)s for file %(filename)s from user %(user)s", {
@@ -1235,14 +1205,7 @@ class Transfers:
 
     def upload_denied(self, msg):
 
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
+        user = msg.conn.init.target_user
 
         for i in self.downloads:
             if i.user != user or i.filename != msg.file:
@@ -1282,14 +1245,7 @@ class Transfers:
 
     def upload_failed(self, msg):
 
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
+        user = msg.conn.init.target_user
 
         for i in self.downloads:
             if i.user != user or i.filename != msg.file:
@@ -1515,15 +1471,7 @@ class Transfers:
 
     def place_in_queue_request(self, msg):
 
-        user = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                user = i.username
-                break
-
-        if user is None:
-            return
-
+        user = msg.conn.init.target_user
         privileged_user = self.is_privileged(user)
         place = 0
 
@@ -1583,14 +1531,7 @@ class Transfers:
     def place_in_queue(self, msg):
         """ The server tells us our place in queue for a particular transfer."""
 
-        username = None
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                username = i.username
-                break
-        else:
-            return
-
+        username = msg.conn.init.target_user
         filename = msg.filename
 
         for i in self.downloads:
@@ -1604,15 +1545,7 @@ class Transfers:
 
     def upload_queue_notification(self, msg):
 
-        username = None
-
-        for i in self.peerconns:
-            if i.conn is msg.conn.conn:
-                username = i.username
-                break
-
-        if username is None:
-            return
+        username = msg.conn.init.target_user
 
         if self.can_upload(username):
             log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)

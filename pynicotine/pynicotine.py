@@ -274,8 +274,7 @@ class NicotineCore:
 
         self.shares = Shares(self, config, self.queue, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
-        self.transfers = transfers.Transfers(self, config, self.peerconns, self.queue, self.users,
-                                             self.network_callback, ui_callback)
+        self.transfers = transfers.Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userbrowse = UserBrowse(self, config, ui_callback)
         self.userinfo = UserInfo(self, config, self.queue, ui_callback)
@@ -412,7 +411,7 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        user = msg.user
+        user = msg.init_user
         addr = msg.conn.addr
         conn = msg.conn.conn
         conn_type = msg.conn_type
@@ -507,7 +506,8 @@ class NicotineCore:
         else:
             message_type = 'P'
 
-        init = slskmessages.PeerInit(None, config.sections["server"]["login"], message_type, 0)
+        init = slskmessages.PeerInit(
+            init_user=config.sections["server"]["login"], target_user=user, conn_type=message_type, token=0)
         addr = None
 
         if user in self.users:
@@ -578,7 +578,7 @@ Error: %(error)s""", {
         found_conn = False
         should_connect = True
 
-        init = slskmessages.PeerInit(None, user, conn_type, 0)
+        init = slskmessages.PeerInit(init_user=user, target_user=user, conn_type=conn_type, token=0)
 
         if user != config.sections["server"]["login"] and conn_type != 'F':
             for i in self.peerconns:
@@ -1694,23 +1694,9 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        user = ip_address = port = None
+        user = msg.conn.init.target_user
+        ip_address = port = msg.conn.addr
         conn = msg.conn.conn
-
-        # Get peer's username, ip and port
-        for i in self.peerconns:
-            if i.conn is conn:
-                user = i.username
-                if i.addr is not None:
-                    if len(i.addr) != 2:
-                        break
-                    ip_address, port = i.addr
-                break
-
-        if user is None:
-            # No peer connection
-            return
-
         request_time = time.time()
 
         if user in self.requested_share_times and request_time < self.requested_share_times[user] + 0.4:
@@ -1771,12 +1757,10 @@ Error: %(error)s""", {
     def shared_file_list(self, msg):
         """ Peer code: 5 """
 
-        conn = msg.conn.conn
+        username = msg.conn.init.target_user
 
-        for i in self.peerconns:
-            if i.conn is conn and i.username != config.sections["server"]["login"]:
-                self.userbrowse.shared_file_list(i.username, msg)
-                break
+        if username != config.sections["server"]["login"]:
+            self.userbrowse.shared_file_list(username, msg)
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
@@ -1804,21 +1788,9 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        user = ip_address = port = None
+        user = msg.conn.init.target_user
+        ip_address = port = msg.conn.addr
         conn = msg.conn.conn
-
-        # Get peer's username, ip and port
-        for i in self.peerconns:
-            if i.conn is conn:
-                user = i.username
-                if i.addr is not None:
-                    ip_address, port = i.addr
-                break
-
-        if user is None:
-            # No peer connection
-            return
-
         request_time = time.time()
 
         if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
@@ -1891,35 +1863,22 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        conn = msg.conn.conn
+        username = msg.conn.init.target_user
 
-        for i in self.peerconns:
-            if i.conn is conn and i.username != config.sections["server"]["login"]:
-                self.userinfo.user_info_reply(i.username, msg)
-                break
+        if username != config.sections["server"]["login"]:
+            self.userinfo.user_info_reply(username, msg)
 
     def p_message_user(self, msg):
         """ Peer code: 22 """
 
         log.add_msg_contents(msg)
 
-        conn = msg.conn.conn
-        user = None
+        username = msg.conn.init.target_user
 
-        # Get peer's username
-        for i in self.peerconns:
-            if i.conn is conn:
-                user = i.username
-                break
-
-        if user is None:
-            # No peer connection
-            return
-
-        if user != msg.user:
+        if username != msg.user:
             msg.msg = _("(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) ") % {
-                "realuser": user, "fakeuser": msg.user} + msg.msg
-            msg.user = user
+                "realuser": username, "fakeuser": msg.user} + msg.msg
+            msg.user = username
 
         self.privatechats.message_user(msg)
 
@@ -1930,18 +1889,8 @@ Error: %(error)s""", {
 
         conn = msg.conn.conn
         ip_address, _port = msg.conn.addr
-        username = None
-        checkuser = None
-        reason = ""
-
-        for i in self.peerconns:
-            if i.conn is conn:
-                username = i.username
-                checkuser, reason = self.network_filter.check_user(username, ip_address)
-                break
-
-        if not username:
-            return
+        username = msg.conn.init.target_user
+        checkuser, reason = self.network_filter.check_user(username, ip_address)
 
         if not checkuser:
             self.privatechats.send_automatic_message(username, reason)
@@ -1987,11 +1936,7 @@ Error: %(error)s""", {
                         folder = j
 
         if many:
-            for i in self.peerconns:
-                if i.conn is conn:
-                    username = i.username
-                    break
-
+            username = msg.conn.init.target_user
             self.transfers.downloadsview.download_large_folder(username, folder, numfiles, conn, file_list)
         else:
             self.transfers.folder_contents_response(conn, file_list)

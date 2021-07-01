@@ -2048,7 +2048,7 @@ class PierceFireWall(PeerInitMessage):
     connection, if it has been asked by the other peer to do so. The token
     is taken from the ConnectToPeer server message. """
 
-    def __init__(self, conn, token=None):
+    def __init__(self, conn=None, token=None):
         self.conn = conn
         self.token = token
 
@@ -2068,27 +2068,32 @@ class PeerInit(PeerInitMessage):
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
 
-    def __init__(self, conn, user=None, conn_type=None, token=None):
+    def __init__(self, conn=None, init_user=None, target_user=None, conn_type=None, token=None):
         self.conn = conn
-        self.user = user
+        self.init_user = init_user      # username of peer who initiated the message
+        self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
         self.token = token
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.user))
+        msg.extend(self.pack_object(self.init_user))
         msg.extend(self.pack_object(self.conn_type))
         msg.extend(self.pack_object(self.token, unsignedint=True))
 
         return msg
 
     def parse_network_message(self, message):
-        pos, self.user = self.get_object(message, str)
+        pos, self.init_user = self.get_object(message, str)
         pos, self.conn_type = self.get_object(message, str, pos)
 
         if message[pos:]:
             # A token is not guaranteed to be sent
             pos, self.token = self.get_object(message, int, pos)
+
+        if self.target_user is None:
+            # The user we're connecting to initiated the connection. Set them as target user.
+            self.target_user = self.init_user
 
 
 """
