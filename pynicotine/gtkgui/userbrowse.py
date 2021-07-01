@@ -468,7 +468,7 @@ class UserBrowse:
                 current_path = subfolder if not current_path else '\\'.join([current_path, subfolder])
 
                 if private:
-                    subfolder = "[PRIVATE FOLDER]  " + subfolder
+                    subfolder = "🔒   " + subfolder
 
                 if current_path in self.directories:
                     # Folder was already added to tree

@@ -577,7 +577,7 @@ class Search:
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
 
             if private:
-                name = "[PRIVATE FILE]  " + name
+                name = "🔒   " + name
 
             is_result_visible = self.append(
                 [
