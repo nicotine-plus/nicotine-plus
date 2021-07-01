@@ -2455,8 +2455,7 @@ Server tells us a new room cannot be created. This message only seems to be sent
 | Send to Peer | Receive from Peer |
 
 In museekd 0.1.13, these messages are sent and received in
-Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh. Since
-museekd 0.2, they are defined in museekd/peermessages.h.
+Museek/BaseConnection.cc and defined in Museek/InitMessages.hh. Since museekd 0.2, they are defined in museekd/handshakemessages.h.
 
 In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
@@ -2492,6 +2491,7 @@ If this fails, User B retries for ~1 minute. If this still fails, no connection 
 
 #### Function Names
 
+Museekd: HPierceFirewall
 Nicotine: PierceFireWall
 
 #### Description
@@ -2513,6 +2513,7 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 #### Function Names
 
+Museekd: HInitiate
 Nicotine: PeerInit
 
 #### Description
