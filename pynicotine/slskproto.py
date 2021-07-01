@@ -473,6 +473,8 @@ class SlskProtoThread(threading.Thread):
         self.daemon = True
         self.start()
 
+    """ General """
+
     def validate_listen_port(self):
 
         if self._listenport is not None:
@@ -522,6 +524,35 @@ class SlskProtoThread(threading.Thread):
                 break
 
         self._listenport = listenport
+
+    def server_connect(self):
+        """ We've connected to the server """
+        self._server_disconnect = False
+
+    def server_disconnect(self):
+        """ We've disconnected from the server, clean up """
+
+        self._server_disconnect = True
+        self.server_socket = None
+
+        for i in self._conns.copy():
+            self.close_connection(self._conns, i)
+
+        for i in self._connsinprogress.copy():
+            self.close_connection(self._conns, i)
+
+        while self._queue:
+            self._queue.popleft()
+
+        if not self._want_abort:
+            self._core_callback([SetCurrentConnectionCount(0)])
+
+    def abort(self):
+        """ Call this to abort the thread """
+        self._want_abort = True
+        self.server_disconnect()
+
+    """ File Transfers """
 
     @staticmethod
     def _is_upload(conn):
@@ -606,6 +637,8 @@ class SlskProtoThread(threading.Thread):
                 i.starttime = curtime
                 i.sentbytes2 = 0
 
+    """ Connections """
+
     def socket_still_active(self, conn):
         try:
             connection = self._conns[conn]
@@ -627,6 +660,8 @@ class SlskProtoThread(threading.Thread):
         if connection is self.server_socket:
             # Disconnected from server, clean up connections and queue
             self.server_disconnect()
+
+    """ Server Connection """
 
     @staticmethod
     def set_server_socket_keepalive(server_socket, idle=10, interval=4, count=10):
@@ -744,31 +779,7 @@ class SlskProtoThread(threading.Thread):
         conns[server_socket].obuf.extend(struct.pack("<i", self.servercodes[msg_obj.__class__]))
         conns[server_socket].obuf.extend(msg)
 
-    def init_peer_conn(self, connsinprogress, msg_obj):
-
-        try:
-            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-            if self.interface:
-                self.bind_to_network_interface(conn, self.interface)
-
-            elif self._bindip:
-                conn.bind((self._bindip, 0))
-
-            conn.setblocking(0)
-            conn.connect_ex(msg_obj.addr)
-            conn.setblocking(1)
-
-            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
-            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
-
-        except socket.error as err:
-            self._core_callback([ConnectError(msg_obj, err)])
-            conn.close()
-
-            return False
-
-        return True
+    """ Peer Init """
 
     def process_peer_init_input(self, conns, conn, msg_buffer):
 
@@ -841,6 +852,34 @@ class SlskProtoThread(threading.Thread):
                 conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                 conns[msg_obj.conn].obuf.extend(msg)
 
+    """ Peer Connection """
+
+    def init_peer_conn(self, connsinprogress, msg_obj):
+
+        try:
+            conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+            if self.interface:
+                self.bind_to_network_interface(conn, self.interface)
+
+            elif self._bindip:
+                conn.bind((self._bindip, 0))
+
+            conn.setblocking(0)
+            conn.connect_ex(msg_obj.addr)
+            conn.setblocking(1)
+
+            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
+            self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
+        except socket.error as err:
+            self._core_callback([ConnectError(msg_obj, err)])
+            conn.close()
+
+            return False
+
+        return True
+
     def process_peer_input(self, conn, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
         something, this function retrieves messages
@@ -901,6 +940,8 @@ class SlskProtoThread(threading.Thread):
         conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
         conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
         conns[msg_obj.conn].obuf.extend(msg)
+
+    """ File Connection """
 
     def process_file_input(self, conns, conn, msg_buffer):
         """ We have a "F" connection (filetransfer), peer has sent us
@@ -1009,6 +1050,8 @@ class SlskProtoThread(threading.Thread):
             msg = msg_obj.make_network_message()
             conns[msg_obj.conn].obuf.extend(msg)
 
+    """ Distributed Connection """
+
     def process_distrib_input(self, conns, conn, msg_buffer):
         """ We have a distributed network connection, parent has sent us
         something, this function retrieves messages
@@ -1061,6 +1104,8 @@ class SlskProtoThread(threading.Thread):
         conns[msg_obj.conn].obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
         conns[msg_obj.conn].obuf.extend(msg)
 
+    """ Connection I/O """
+
     def process_conn_input(self, conns, connection, conn_obj):
 
         if connection is self.server_socket:
@@ -1087,7 +1132,7 @@ class SlskProtoThread(threading.Thread):
             # Unknown message type
             log.add("Can't handle connection type %s", conn_obj.init.conn_type)
 
-    def process_queue(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
+    def process_conn_output(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
         """ Processes messages sent by the main thread. queue holds the messages,
         conns and connsinprogress are dictionaries holding Connection and
         PeerConnectionInProgress messages. """
@@ -1262,8 +1307,9 @@ class SlskProtoThread(threading.Thread):
                 self._core_callback([conn.fileupl])
                 conn.lastcallback = curtime
 
+    """ Networking Loop """
+
     def run(self):
-        """ Actual networking loop is here."""
 
         # Listen socket needs to be registered for selection here instead of __init__,
         # otherwise connections break on certain systems (OpenBSD confirmed)
@@ -1282,7 +1328,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             if queue:
-                conns, connsinprogress, numsockets = self.process_queue(queue, conns, connsinprogress)
+                conns, connsinprogress, numsockets = self.process_conn_output(queue, conns, connsinprogress)
 
             self._ulimits = {}
             self._dlimits = {}
@@ -1464,30 +1510,3 @@ class SlskProtoThread(threading.Thread):
             time.sleep(0.2)
 
         # Networking thread aborted
-
-    def server_connect(self):
-        """ We've connected to the server """
-        self._server_disconnect = False
-
-    def server_disconnect(self):
-        """ We've disconnected from the server, clean up """
-
-        self._server_disconnect = True
-        self.server_socket = None
-
-        for i in self._conns.copy():
-            self.close_connection(self._conns, i)
-
-        for i in self._connsinprogress.copy():
-            self.close_connection(self._conns, i)
-
-        while self._queue:
-            self._queue.popleft()
-
-        if not self._want_abort:
-            self._core_callback([SetCurrentConnectionCount(0)])
-
-    def abort(self):
-        """ Call this to abort the thread """
-        self._want_abort = True
-        self.server_disconnect()
