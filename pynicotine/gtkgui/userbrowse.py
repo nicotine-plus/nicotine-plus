@@ -462,17 +462,27 @@ class UserBrowse:
 
         for folder, files in shares:
             current_path = ""
+            root_processed = False
 
             for subfolder in folder.split('\\'):
                 parent = self.directories.get(current_path)
-                current_path = subfolder if not current_path else '\\'.join([current_path, subfolder])
 
-                if private:
-                    subfolder = "🔒   " + subfolder
+                if not root_processed:
+                    current_path = subfolder
+                    root_processed = True
+                else:
+                    current_path = '\\'.join([current_path, subfolder])
 
                 if current_path in self.directories:
                     # Folder was already added to tree
                     continue
+
+                if not subfolder:
+                    # Most likely a root folder
+                    subfolder = '\\'
+
+                if private:
+                    subfolder = "[PRIVATE FOLDER]  " + subfolder
 
                 self.directories[current_path] = self.dir_store.insert_with_values(
                     parent, -1, self.dir_column_numbers,

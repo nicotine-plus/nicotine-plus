@@ -2189,6 +2189,8 @@ class SharedFileList(PeerMessage):
 
         if message[pos:]:
             pos, self.unknown = self.get_object(message, int, pos)
+
+        if message[pos:]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):
