@@ -568,11 +568,12 @@ class Transfers:
         self.core.watch_user(i.user)
         self.check_upload_queue()
 
-    def folder_contents_response(self, conn, file_list):
+    def folder_contents_response(self, msg):
         """ When we got a contents of a folder, get all the files in it, but
         skip the files in subfolders"""
 
-        username = conn.init.target_user
+        username = msg.conn.init.target_user
+        file_list = msg.list
 
         log.add_transfer("Received response for folder content request from user %s", username)
 

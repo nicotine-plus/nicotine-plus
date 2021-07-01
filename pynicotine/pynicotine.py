@@ -1920,7 +1920,6 @@ Error: %(error)s""", {
     def folder_contents_response(self, msg):
         """ Peer code: 37 """
 
-        conn = msg.conn.conn
         file_list = msg.list
 
         # Check for a large number of files
@@ -1937,9 +1936,9 @@ Error: %(error)s""", {
 
         if many:
             username = msg.conn.init.target_user
-            self.transfers.downloadsview.download_large_folder(username, folder, numfiles, conn, file_list)
+            self.transfers.downloadsview.download_large_folder(username, folder, numfiles, msg)
         else:
-            self.transfers.folder_contents_response(conn, file_list)
+            self.transfers.folder_contents_response(msg)
 
     def transfer_request(self, msg):
         """ Peer code: 40 """
