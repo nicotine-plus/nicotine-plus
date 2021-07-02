@@ -1475,7 +1475,7 @@ Error: %(error)s""", {
 
         if msg.seconds == 0:
             log.add(
-                _("You have no privileges left. They are not necessary, but allow your downloads "
+                _("You have no privileges. Privileges are not required, but allow your downloads "
                   "to be queued ahead of non-privileged users.")
             )
         else:
