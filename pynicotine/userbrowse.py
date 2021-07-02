@@ -63,41 +63,43 @@ class UserBrowse:
 
         self.shared_file_list(username, msg)
 
-    def browse_local_public_shares(self, folder=None):
+    def browse_local_public_shares(self, folder=None, new_request=None):
         """ Browse your own public shares """
 
-        login = self.config.sections["server"]["login"]
+        username = self.config.sections["server"]["login"]
 
-        # Deactivate if we only share with buddies
-        if self.config.sections["transfers"]["friendsonly"]:
-            msg = slskmessages.SharedFileList(None, {})
-        else:
-            msg = self.core.shares.get_compressed_shares_message("normal")
+        if username not in self.users or new_request:
+            # Deactivate if we only share with buddies
+            if self.config.sections["transfers"]["friendsonly"]:
+                msg = slskmessages.SharedFileList(None, {})
+            else:
+                msg = self.core.shares.get_compressed_shares_message("normal")
 
-        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg))
-        thread.name = "LocalShareParser"
-        thread.daemon = True
-        thread.start()
+            thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
+            thread.name = "LocalShareParser"
+            thread.daemon = True
+            thread.start()
 
-        self.show_user(login, folder=folder, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(username, folder=folder, local_shares_type="normal", indeterminate_progress=True)
 
-    def browse_local_buddy_shares(self, folder=None):
+    def browse_local_buddy_shares(self, folder=None, new_request=False):
         """ Browse your own buddy shares """
 
-        login = self.config.sections["server"]["login"]
+        username = self.config.sections["server"]["login"]
 
-        # Show public shares if we don't have specific shares for buddies
-        if not self.config.sections["transfers"]["enablebuddyshares"]:
-            msg = self.core.shares.get_compressed_shares_message("normal")
-        else:
-            msg = self.core.shares.get_compressed_shares_message("buddy")
+        if username not in self.users or new_request:
+            # Show public shares if we don't have specific shares for buddies
+            if not self.config.sections["transfers"]["enablebuddyshares"]:
+                msg = self.core.shares.get_compressed_shares_message("normal")
+            else:
+                msg = self.core.shares.get_compressed_shares_message("buddy")
 
-        thread = threading.Thread(target=self.parse_local_shares, args=(login, msg))
-        thread.name = "LocalBuddyShareParser"
-        thread.daemon = True
-        thread.start()
+            thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
+            thread.name = "LocalBuddyShareParser"
+            thread.daemon = True
+            thread.start()
 
-        self.show_user(login, folder=folder, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(username, folder=folder, local_shares_type="buddy", indeterminate_progress=True)
 
     def browse_user(self, username, folder=None, local_shares_type=None, new_request=False):
         """ Browse a user's shares """
@@ -107,10 +109,10 @@ class UserBrowse:
 
         if username == self.config.sections["server"]["login"]:
             if local_shares_type == "normal" or not self.config.sections["transfers"]["enablebuddyshares"]:
-                self.browse_local_public_shares(folder)
+                self.browse_local_public_shares(folder, new_request)
                 return
 
-            self.browse_local_buddy_shares(folder)
+            self.browse_local_buddy_shares(folder, new_request)
             return
 
         if username not in self.users or new_request:

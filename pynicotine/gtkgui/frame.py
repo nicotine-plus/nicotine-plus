@@ -867,10 +867,10 @@ class NicotineFrame:
         self.np.shares.rescan_buddy_shares(rebuild)
 
     def on_browse_public_shares(self, *args):
-        self.np.userbrowse.browse_local_public_shares()
+        self.np.userbrowse.browse_local_public_shares(new_request=True)
 
     def on_browse_buddy_shares(self, *args):
-        self.np.userbrowse.browse_local_buddy_shares()
+        self.np.userbrowse.browse_local_buddy_shares(new_request=True)
 
     # Modes
 
