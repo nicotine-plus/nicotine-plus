@@ -32,6 +32,10 @@ exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
 
+INT_SIZE = struct.calcsize("<I")
+INT64_SIZE = struct.calcsize("<Q")
+
+
 class InternalMessage:
     pass
 
@@ -198,34 +202,33 @@ class SlskMessage:
         """ Returns object of specified type, extracted from message (which is
         a binary array). start is an offset."""
 
-        intsize = struct.calcsize("<I")
-
         try:
             if obj_type is int:
                 if getsignedint:
                     # little-endian signed integer (4 bytes)
-                    return intsize + start, struct.unpack("<i", message[start:start + intsize])[0]
+                    return INT_SIZE + start, struct.unpack("<i", message[start:start + INT_SIZE])[0]
 
                 if getunsignedlonglong:
                     # little-endian unsigned long long (8 bytes)
                     try:
-                        return (struct.calcsize("<Q") + start,
-                                struct.unpack("<Q", message[start:start + struct.calcsize("<Q")])[0])
+                        return INT64_SIZE + start, struct.unpack("<Q", message[start:start + INT64_SIZE])[0]
+
                     except Exception:
-                        return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
+                        # Fall back to unsigned integer
+                        pass
 
                 # little-endian unsigned integer (4 bytes)
-                return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
+                return INT_SIZE + start, struct.unpack("<I", message[start:start + INT_SIZE])[0]
 
             if obj_type is bytes:
-                length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
-                content = message[start + intsize:start + length + intsize]
+                length = struct.unpack("<I", message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                content = message[start + INT_SIZE:start + length + INT_SIZE]
 
-                return length + intsize + start, content
+                return length + INT_SIZE + start, content
 
             if obj_type is str:
-                length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
-                string = message[start + intsize:start + length + intsize]
+                length = struct.unpack("<I", message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                string = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 try:
                     string = string.decode("utf-8")
@@ -237,7 +240,7 @@ class SlskMessage:
                     except Exception as error:
                         log.add("Error trying to decode string '%s': %s", (string, error))
 
-                return length + intsize + start, string
+                return length + INT_SIZE + start, string
 
             return start, None
 
@@ -2102,7 +2105,7 @@ class PeerMessage(SlskMessage):
 
     def parse_file_size(self, message, pos):
 
-        if message[pos + struct.calcsize("<Q") - 1] == 255:
+        if message[pos + INT64_SIZE - 1] == 255:
             # Soulseek NS bug: >2 GiB files show up as ~16 EiB when unpacking the size
             # as uint64 (8 bytes), due to the first 4 bytes containing the size, and the
             # last 4 bytes containing garbage (a value of 4294967295 bytes, integer limit).
