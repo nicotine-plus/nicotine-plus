@@ -2101,16 +2101,19 @@ Peer Messages
 class PeerMessage(SlskMessage):
 
     def parse_file_size(self, message, pos):
-        pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
 
-        if message[pos - 1] == 255:
+        if message[pos + struct.calcsize("<Q") - 1] == 255:
             # Soulseek NS bug: >2 GiB files show up as ~16 EiB when unpacking the size
             # as uint64 (8 bytes), due to the first 4 bytes containing the size, and the
             # last 4 bytes containing garbage (a value of 4294967295 bytes, integer limit).
             # Only unpack the first 4 bytes to work around this issue.
 
-            pos, size = self.get_object(message, int, pos - struct.calcsize("<Q"))
+            pos, size = self.get_object(message, int, pos)
             pos, _garbage = self.get_object(message, int, pos)
+
+        else:
+            # Everything looks fine, parse size as usual
+            pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
 
         return pos, size
 
