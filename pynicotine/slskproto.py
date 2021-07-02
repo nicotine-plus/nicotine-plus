@@ -726,7 +726,7 @@ class SlskProtoThread(threading.Thread):
     def init_server_conn(self, connsinprogress, msg_obj):
 
         try:
-            server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket = server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
@@ -743,11 +743,11 @@ class SlskProtoThread(threading.Thread):
 
             connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
             self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
-            self.server_socket = server_socket
 
         except socket.error as err:
             self._core_callback([ConnectError(msg_obj, err)])
             server_socket.close()
+            self.server_disconnect()
 
             return False
 
