@@ -1643,7 +1643,6 @@ The server sends us a list of similar users related to a specific item, which is
     2.  **uint** <ins>number of users</ins>
     3.  Iterate for <ins>number of user</ins>
         1.  **string** <ins>username</ins>
-        2.  **uint** 0
 
 ### Server Code 113
 
