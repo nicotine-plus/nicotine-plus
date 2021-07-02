@@ -2429,7 +2429,9 @@ class UserInfoReply(PeerMessage):
         pos, self.queuesize = self.get_object(message, int, pos)
         pos, self.slotsavail = pos + 1, message[pos]
 
-        if message[pos:]:
+        # To prevent errors, ensure that >= 4 bytes are left. Museek+ incorrectly sends
+        # slotsavail as an integer, resulting in 3 bytes of garbage here.
+        if len(message[pos:]) >= 4:
             pos, self.uploadallowed = self.get_object(message, int, pos)
 
     def make_network_message(self):
