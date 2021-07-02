@@ -119,7 +119,7 @@
                                         <child>
                                           <object class="GtkLabel" id="AmountShared">
                                             <property name="visible">1</property>
-                                            <property name="label">0 B</property>
+                                            <property name="label">0.0 B</property>
                                             <property name="margin-start">5</property>
                                             <property name="margin-end">5</property>
                                             <attributes>
