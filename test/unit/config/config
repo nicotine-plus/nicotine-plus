@@ -216,6 +216,8 @@ xposition = 0
 yposition = 0
 maximized = True
 urgencyhint = True
+private_search_results = False
+private_shares = False
 
 [private_rooms]
 rooms = {}

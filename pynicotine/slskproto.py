@@ -797,8 +797,8 @@ class SlskProtoThread(threading.Thread):
 
         msg = msg_obj.make_network_message()
 
-        conns[server_socket].obuf.extend(struct.pack("<i", len(msg) + 4))
-        conns[server_socket].obuf.extend(struct.pack("<i", self.servercodes[msg_obj.__class__]))
+        conns[server_socket].obuf.extend(struct.pack("<I", len(msg) + 4))
+        conns[server_socket].obuf.extend(struct.pack("<I", self.servercodes[msg_obj.__class__]))
         conns[server_socket].obuf.extend(msg)
 
     """ Peer Init """
@@ -861,7 +861,7 @@ class SlskProtoThread(threading.Thread):
 
             msg = msg_obj.make_network_message()
 
-            conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+            conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
             conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
             conns[msg_obj.conn].obuf.extend(msg)
 
@@ -871,7 +871,7 @@ class SlskProtoThread(threading.Thread):
             msg = msg_obj.make_network_message()
 
             if conns[msg_obj.conn].piercefw is None:
-                conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+                conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
                 conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                 conns[msg_obj.conn].obuf.extend(msg)
 
@@ -962,8 +962,8 @@ class SlskProtoThread(threading.Thread):
         # Pack peer messages
         msg = msg_obj.make_network_message()
 
-        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 4))
-        conns[msg_obj.conn].obuf.extend(struct.pack("<i", self.peercodes[msg_obj.__class__]))
+        conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 4))
+        conns[msg_obj.conn].obuf.extend(struct.pack("<I", self.peercodes[msg_obj.__class__]))
         conns[msg_obj.conn].obuf.extend(msg)
 
     """ File Connection """
@@ -1127,7 +1127,7 @@ class SlskProtoThread(threading.Thread):
         # Pack distributed messages
         msg = msg_obj.make_network_message()
 
-        conns[msg_obj.conn].obuf.extend(struct.pack("<i", len(msg) + 1))
+        conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
         conns[msg_obj.conn].obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
         conns[msg_obj.conn].obuf.extend(msg)
 

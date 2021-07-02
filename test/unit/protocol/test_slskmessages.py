@@ -48,15 +48,15 @@ class SlskMessageTest(unittest.TestCase):
         obj = SlskMessage()
 
         # Act
-        int_message = obj.pack_object(123)
-        unsigned_int_message = obj.pack_object(123, unsignedint=True)
+        unsigned_int_message = obj.pack_object(123)
+        signed_int_message = obj.pack_object(123, signedint=True)
         long_long_message = obj.pack_object(123, unsignedlonglong=True)
         bytes_message = obj.pack_object(b'testbytes')
         str_message = obj.pack_object('teststring')
 
         # Assert
-        self.assertEqual(b'{\x00\x00\x00', int_message)
         self.assertEqual(b'{\x00\x00\x00', unsigned_int_message)
+        self.assertEqual(b'{\x00\x00\x00', signed_int_message)
         self.assertEqual(b'{\x00\x00\x00\x00\x00\x00\x00', long_long_message)
         self.assertEqual(b'\n\x00\x00\x00teststring', str_message)
         self.assertEqual(b'\t\x00\x00\x00testbytes', bytes_message)

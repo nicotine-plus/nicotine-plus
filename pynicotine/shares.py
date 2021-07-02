@@ -404,7 +404,7 @@ class Scanner:
 
         message = slskmessages.SlskMessage()
         stream = bytearray()
-        stream.extend(message.pack_object(len(folder), unsignedint=True))
+        stream.extend(message.pack_object(len(folder)))
 
         for fileinfo in folder:
             stream.extend(bytes([1]))
@@ -417,7 +417,7 @@ class Scanner:
 
                 stream.extend(message.pack_object(0))
                 try:
-                    stream.extend(message.pack_object(fileinfo[2][0], unsignedint=True))
+                    stream.extend(message.pack_object(fileinfo[2][0]))
 
                 except Exception:
                     # Invalid bitrate
@@ -425,7 +425,7 @@ class Scanner:
 
                 stream.extend(message.pack_object(1))
                 try:
-                    stream.extend(message.pack_object(fileinfo[3], unsignedint=True))
+                    stream.extend(message.pack_object(fileinfo[3]))
 
                 except Exception:
                     # Invalid length

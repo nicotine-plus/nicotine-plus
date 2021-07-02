@@ -214,17 +214,16 @@ class SlskMessage:
                     except Exception:
                         return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
 
-                else:
-                    # little-endian unsigned integer (4 bytes)
-                    return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
+                # little-endian unsigned integer (4 bytes)
+                return intsize + start, struct.unpack("<I", message[start:start + intsize])[0]
 
-            elif obj_type is bytes:
+            if obj_type is bytes:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 content = message[start + intsize:start + length + intsize]
 
                 return length + intsize + start, content
 
-            elif obj_type is str:
+            if obj_type is str:
                 length = struct.unpack("<I", message[start:start + intsize].ljust(intsize, b'\0'))[0]
                 string = message[start + intsize:start + length + intsize]
 
@@ -240,28 +239,28 @@ class SlskMessage:
 
                 return length + intsize + start, string
 
-            else:
-                return start, None
+            return start, None
 
         except struct.error as error:
             log.add("%s %s trying to unpack %s at '%s' at %s/%s",
                     (self.__class__, error, obj_type, message[start:].__repr__(), start, len(message)))
             raise struct.error(error)
 
-    def pack_object(self, obj, unsignedint=False, unsignedlonglong=False, latin1=False):
+    def pack_object(self, obj, signedint=False, unsignedlonglong=False, latin1=False):
         """ Returns object (integer, long or string packed into a
         binary array."""
 
         if isinstance(obj, int):
-            if unsignedint:
-                return struct.pack("<I", obj)
+            if signedint:
+                return struct.pack("<i", obj)
+
             if unsignedlonglong:
                 return struct.pack("<Q", obj)
 
-            return struct.pack("<i", obj)
+            return struct.pack("<I", obj)
 
         if isinstance(obj, bytes):
-            return struct.pack("<i", len(obj)) + obj
+            return struct.pack("<I", len(obj)) + obj
 
         if isinstance(obj, str):
             if latin1:
@@ -273,7 +272,7 @@ class SlskMessage:
             else:
                 encoded = obj.encode("utf-8", "replace")
 
-            return struct.pack("<i", len(encoded)) + encoded
+            return struct.pack("<I", len(encoded)) + encoded
 
         log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s",
                 {'obj_type': type(obj), 'msg_type': self.__class__})
@@ -559,7 +558,7 @@ class JoinRoom(ServerMessage):
 
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
-            pos, users[i].avgspeed = self.get_object(message, int, pos, getsignedint=True)
+            pos, users[i].avgspeed = self.get_object(message, int, pos)
             pos, users[i].uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
             pos, users[i].files = self.get_object(message, int, pos)
             pos, users[i].dirs = self.get_object(message, int, pos)
@@ -604,7 +603,7 @@ class UserJoinedRoom(ServerMessage):
         self.userdata = UserData()
         pos, self.userdata.username = self.get_object(message, str, pos)
         pos, self.userdata.status = self.get_object(message, int, pos)
-        pos, self.userdata.avgspeed = self.get_object(message, int, pos, getsignedint=True)
+        pos, self.userdata.avgspeed = self.get_object(message, int, pos)
         pos, self.userdata.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
         pos, self.userdata.files = self.get_object(message, int, pos)
         pos, self.userdata.dirs = self.get_object(message, int, pos)
@@ -645,7 +644,7 @@ class ConnectToPeer(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.token, unsignedint=True))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.conn_type))
 
@@ -703,7 +702,7 @@ class MessageAcked(ServerMessage):
         self.msgid = msgid
 
     def make_network_message(self):
-        return self.pack_object(self.msgid, unsignedint=True)
+        return self.pack_object(self.msgid)
 
 
 class FileSearch(ServerMessage):
@@ -727,7 +726,7 @@ class FileSearch(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.searchid, unsignedint=True))
+        msg.extend(self.pack_object(self.searchid))
         msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
@@ -743,8 +742,6 @@ class SetStatus(ServerMessage):
     """ We send our new status to the server. Status is a way to define whether
     you're available or busy.
 
-    -1 = Unknown
-    0 = Offline
     1 = Away
     2 = Online
     """
@@ -798,7 +795,7 @@ class SendDownloadSpeed(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.speed, unsignedint=True))
+        msg.extend(self.pack_object(self.speed))
 
         return msg
 
@@ -814,8 +811,8 @@ class SharedFoldersFiles(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.folders, unsignedint=True))
-        msg.extend(self.pack_object(self.files, unsignedint=True))
+        msg.extend(self.pack_object(self.folders))
+        msg.extend(self.pack_object(self.files))
 
         return msg
 
@@ -839,7 +836,7 @@ class GetUserStats(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.avgspeed = self.get_object(message, int, pos, getsignedint=True)
+        pos, self.avgspeed = self.get_object(message, int, pos)
         pos, self.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
         pos, self.files = self.get_object(message, int, pos)
         pos, self.dirs = self.get_object(message, int, pos)
@@ -884,7 +881,7 @@ class UserSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.searchid, unsignedint=True))
+        msg.extend(self.pack_object(self.searchid))
         msg.extend(self.pack_object(self.searchterm))
 
         return msg
@@ -1026,8 +1023,8 @@ class PlaceInLineResponse(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req, unsignedint=True))
-        msg.extend(self.pack_object(self.place, unsignedint=True))
+        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.place))
 
         return msg
 
@@ -1138,7 +1135,7 @@ class ExactFileSearch(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req, unsignedint=True))
+        msg.extend(self.pack_object(self.req))
         msg.extend(self.pack_object(self.file))
         msg.extend(self.pack_object(self.folder))
         msg.extend(self.pack_object(self.size, unsignedlonglong=True))
@@ -1194,7 +1191,7 @@ class GlobalUserList(ServerMessage):
 
         pos, statslen = self.get_object(message, int, pos)
         for i in range(statslen):
-            pos, users[i].avgspeed = self.get_object(message, int, pos, getsignedint=True)
+            pos, users[i].avgspeed = self.get_object(message, int, pos)
             pos, users[i].uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
             pos, users[i].files = self.get_object(message, int, pos)
             pos, users[i].dirs = self.get_object(message, int, pos)
@@ -1226,8 +1223,8 @@ class TunneledMessage(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req, unsignedint=True))
-        msg.extend(self.pack_object(self.code, unsignedint=True))
+        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.code))
         msg.extend(self.pack_object(self.msg))
 
         return msg
@@ -1611,7 +1608,7 @@ class RoomSearch(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.room))
-        msg.extend(self.pack_object(self.searchid, unsignedint=True))
+        msg.extend(self.pack_object(self.searchid))
         msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
@@ -1632,7 +1629,7 @@ class SendUploadSpeed(ServerMessage):
         self.speed = speed
 
     def make_network_message(self):
-        return self.pack_object(self.speed, unsignedint=True)
+        return self.pack_object(self.speed)
 
 
 class UserPrivileged(ServerMessage):
@@ -1700,7 +1697,7 @@ class AckNotifyPrivileges(ServerMessage):
         _pos, self.token = self.get_object(message, int)
 
     def make_network_message(self):
-        return self.pack_object(self.token, unsignedint=True)
+        return self.pack_object(self.token)
 
 
 class BranchLevel(ServerMessage):
@@ -2010,7 +2007,7 @@ class CantConnectToPeer(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.token, unsignedint=True))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.user))
 
         return msg
@@ -2053,7 +2050,7 @@ class PierceFireWall(PeerInitMessage):
         self.token = token
 
     def make_network_message(self):
-        return self.pack_object(self.token, unsignedint=True)
+        return self.pack_object(self.token)
 
     def parse_network_message(self, message):
         if message:
@@ -2079,7 +2076,7 @@ class PeerInit(PeerInitMessage):
         msg = bytearray()
         msg.extend(self.pack_object(self.init_user))
         msg.extend(self.pack_object(self.conn_type))
-        msg.extend(self.pack_object(self.token, unsignedint=True))
+        msg.extend(self.pack_object(self.token))
 
         return msg
 
@@ -2242,7 +2239,7 @@ class FileSearchRequest(PeerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.requestid, unsignedint=True))
+        msg.extend(self.pack_object(self.requestid))
         msg.extend(self.pack_object(self.text))
 
         return msg
@@ -2313,7 +2310,7 @@ class FileSearchResult(PeerMessage):
         pos, self.list = self._parse_result_list(message, pos)
 
         pos, self.freeulslots = pos + 1, message[pos]
-        pos, self.ulspeed = self.get_object(message, int, pos, getsignedint=True)
+        pos, self.ulspeed = self.get_object(message, int, pos)
         pos, self.inqueue = self.get_object(message, int, pos, getunsignedlonglong=True)
 
         if message[pos:]:
@@ -2350,7 +2347,7 @@ class FileSearchResult(PeerMessage):
 
                 msg_list.extend(self.pack_object(0))
                 try:
-                    msg_list.extend(self.pack_object(fileinfo[2][0], unsignedint=True))
+                    msg_list.extend(self.pack_object(fileinfo[2][0]))
 
                 except Exception:
                     # Invalid bitrate
@@ -2358,7 +2355,7 @@ class FileSearchResult(PeerMessage):
 
                 msg_list.extend(self.pack_object(1))
                 try:
-                    msg_list.extend(self.pack_object(fileinfo[3], unsignedint=True))
+                    msg_list.extend(self.pack_object(fileinfo[3]))
 
                 except Exception:
                     # Invalid duration
@@ -2374,15 +2371,15 @@ class FileSearchResult(PeerMessage):
 
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.token, unsignedint=True))
-        msg.extend(self.pack_object(final_num_results, unsignedint=True))
+        msg.extend(self.pack_object(self.token))
+        msg.extend(self.pack_object(final_num_results))
 
         # We generate the result list early, so we don't send an incorrect result count
         # if something goes wrong when reading the file index database
         msg.extend(msg_list)
 
         msg.extend(bytes([self.freeulslots]))
-        msg.extend(self.pack_object(self.ulspeed, unsignedint=True))
+        msg.extend(self.pack_object(self.ulspeed))
         msg.extend(self.pack_object(self.inqueue, unsignedlonglong=True))
 
         return zlib.compress(msg)
@@ -2444,10 +2441,10 @@ class UserInfoReply(PeerMessage):
         else:
             msg.extend(bytes([0]))
 
-        msg.extend(self.pack_object(self.totalupl, unsignedint=True))
-        msg.extend(self.pack_object(self.queuesize, unsignedint=True))
+        msg.extend(self.pack_object(self.totalupl))
+        msg.extend(self.pack_object(self.queuesize))
         msg.extend(bytes([self.slotsavail]))
-        msg.extend(self.pack_object(self.uploadallowed, unsignedint=True))
+        msg.extend(self.pack_object(self.uploadallowed))
 
         return msg
 
@@ -2627,7 +2624,7 @@ class TransferResponse(PeerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req, unsignedint=True))
+        msg.extend(self.pack_object(self.req))
         msg.extend(bytes([self.allowed]))
 
         if self.reason is not None:
@@ -2684,7 +2681,7 @@ class PlaceInQueue(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.filename))
-        msg.extend(self.pack_object(self.place, unsignedint=True))
+        msg.extend(self.pack_object(self.place))
 
         return msg
 
