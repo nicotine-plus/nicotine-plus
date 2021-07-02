@@ -2099,7 +2099,20 @@ Peer Messages
 
 
 class PeerMessage(SlskMessage):
-    pass
+
+    def parse_file_size(self, message, pos):
+        pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
+
+        if message[pos - 1] == 255:
+            # Soulseek NS bug: >2 GiB files show up as ~16 EiB when unpacking the size
+            # as uint64 (8 bytes), due to the first 4 bytes containing the size, and the
+            # last 4 bytes containing garbage (a value of 4294967295 bytes, integer limit).
+            # Only unpack the first 4 bytes to work around this issue.
+
+            pos, size = self.get_object(message, int, pos - struct.calcsize("<Q"))
+            pos, _garbage = self.get_object(message, int, pos)
+
+        return pos, size
 
 
 class GetSharedFileList(PeerMessage):
@@ -2153,18 +2166,7 @@ class SharedFileList(PeerMessage):
             for _ in range(nfiles):
                 pos, code = pos + 1, message[pos]
                 pos, name = self.get_object(message, str, pos)
-                pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
-
-                if message[pos - 1] == '\xff':
-                    # Buggy SLSK?
-                    # Some file sizes will be huge if unpacked as a signed
-                    # LongType, namely somewhere in the area of 17179869 Terabytes.
-                    # It would seem these files are indeed big, but in the Gigabyte range.
-                    # The following will undo the damage (and if we fuck up it
-                    # doesn't matter, it can never be worse than reporting 17
-                    # exabytes for a single file)
-                    size = struct.unpack("Q", '\xff' * struct.calcsize("Q"))[0] - size
-
+                pos, size = self.parse_file_size(message, pos)
                 pos, ext = self.get_object(message, str, pos)
                 pos, numattr = self.get_object(message, int, pos)
 
@@ -2288,8 +2290,7 @@ class FileSearchResult(PeerMessage):
         for _ in range(nfiles):
             pos, code = pos + 1, message[pos]
             pos, name = self.get_object(message, str, pos)
-
-            pos, size = self.get_object(message, int, pos, getunsignedlonglong=True)
+            pos, size = self.parse_file_size(message, pos)
             pos, ext = self.get_object(message, str, pos)
             pos, numattr = self.get_object(message, int, pos)
 

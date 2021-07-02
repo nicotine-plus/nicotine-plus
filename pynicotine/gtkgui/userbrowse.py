@@ -23,8 +23,6 @@
 
 import os
 
-from sys import maxsize
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -490,8 +488,7 @@ class UserBrowse:
                 )
 
             for filedata in files:
-                if filedata[2] < maxsize:
-                    size += filedata[2]
+                size += filedata[2]
 
         return size, len(shares)
 
@@ -541,9 +538,6 @@ class UserBrowse:
             try:
                 size = int(file[2])
 
-                # Some clients send incorrect file sizes
-                if size < 0 or size > maxsize:
-                    size = 0
             except ValueError:
                 size = 0
 
