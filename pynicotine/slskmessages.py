@@ -32,8 +32,16 @@ exchange. Basically there are three types of messages: internal messages,
 server messages and p2p messages (between clients). """
 
 
-INT_SIZE = struct.calcsize("<I")
-INT64_SIZE = struct.calcsize("<Q")
+INT_SIZE = struct.calcsize("<i")
+INT64_SIZE = struct.calcsize("<q")
+
+INT_UNPACK = struct.Struct("<i").unpack
+UINT_UNPACK = struct.Struct("<I").unpack
+UINT64_UNPACK = struct.Struct("<Q").unpack
+
+INT_PACK = struct.Struct("<i").pack
+UINT_PACK = struct.Struct("<I").pack
+UINT64_PACK = struct.Struct("<Q").pack
 
 
 class InternalMessage:
@@ -206,28 +214,28 @@ class SlskMessage:
             if obj_type is int:
                 if getsignedint:
                     # little-endian signed integer (4 bytes)
-                    return INT_SIZE + start, struct.unpack("<i", message[start:start + INT_SIZE])[0]
+                    return INT_SIZE + start, INT_UNPACK(message[start:start + INT_SIZE])[0]
 
                 if getunsignedlonglong:
                     # little-endian unsigned long long (8 bytes)
                     try:
-                        return INT64_SIZE + start, struct.unpack("<Q", message[start:start + INT64_SIZE])[0]
+                        return INT64_SIZE + start, UINT64_UNPACK(message[start:start + INT64_SIZE])[0]
 
                     except Exception:
                         # Fall back to unsigned integer
                         pass
 
                 # little-endian unsigned integer (4 bytes)
-                return INT_SIZE + start, struct.unpack("<I", message[start:start + INT_SIZE])[0]
+                return INT_SIZE + start, UINT_UNPACK(message[start:start + INT_SIZE])[0]
 
             if obj_type is bytes:
-                length = struct.unpack("<I", message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                length = UINT_UNPACK(message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
                 content = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 return length + INT_SIZE + start, content
 
             if obj_type is str:
-                length = struct.unpack("<I", message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                length = UINT_UNPACK(message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
                 string = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 try:
@@ -255,15 +263,15 @@ class SlskMessage:
 
         if isinstance(obj, int):
             if signedint:
-                return struct.pack("<i", obj)
+                return INT_PACK(obj)
 
             if unsignedlonglong:
-                return struct.pack("<Q", obj)
+                return UINT64_PACK(obj)
 
-            return struct.pack("<I", obj)
+            return UINT_PACK(obj)
 
         if isinstance(obj, bytes):
-            return struct.pack("<I", len(obj)) + obj
+            return UINT_PACK(len(obj)) + obj
 
         if isinstance(obj, str):
             if latin1:
@@ -275,7 +283,7 @@ class SlskMessage:
             else:
                 encoded = obj.encode("utf-8", "replace")
 
-            return struct.pack("<I", len(encoded)) + encoded
+            return UINT_PACK(len(encoded)) + encoded
 
         log.add("Warning: unknown object type %(obj_type)s in message %(msg_type)s",
                 {'obj_type': type(obj), 'msg_type': self.__class__})
