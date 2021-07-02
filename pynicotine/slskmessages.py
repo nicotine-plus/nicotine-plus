@@ -229,13 +229,13 @@ class SlskMessage:
                 return INT_SIZE + start, UINT_UNPACK(message[start:start + INT_SIZE])[0]
 
             if obj_type is bytes:
-                length = UINT_UNPACK(message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                length = UINT_UNPACK(message[start:start + INT_SIZE])[0]
                 content = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 return length + INT_SIZE + start, content
 
             if obj_type is str:
-                length = UINT_UNPACK(message[start:start + INT_SIZE].ljust(INT_SIZE, b'\0'))[0]
+                length = UINT_UNPACK(message[start:start + INT_SIZE])[0]
                 string = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 try:
