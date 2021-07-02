@@ -1,15 +1,17 @@
-.\"
-.TH "NICOTINE+" "1" "May 2021" "" ""
-.SH "NAME"
-.B Nicotine+ - A graphical client for the Soulseek peer-to-peer file sharing network.
+.TH NICOTINE+ 1
 
-.SH "SYNOPSIS"
+.SH NAME
+nicotine - graphical client for the Soulseek peer-to-peer file sharing network
+
+.SH SYNOPSIS
 .B nicotine
 [options]
-.SH "DESCRIPTION"
+
+.SH DESCRIPTION
 .BI Nicotine+
-is a GTK\-based client for the Soulseek peer\-to\-peer file sharing network.
-.SH "OPTIONS"
+is a graphical application that allows users to interact with the Soulseek file sharing network.
+
+.SH OPTIONS
 .TP
 .BI \-c " <file>" "\fR,\fP \-\^\-config=" <file>
 Use <file> as configuration file. If <file> does not exists a new empty configuration file will be created.
@@ -24,16 +26,16 @@ Enable the tray icon.
 Disable the tray icon.
 .TP
 .B \-h, \-\^\-help
-Show help and exit.
+Show command help and exit.
 .TP
 .B \-s, \-\^\-hidden
-Start the program hidden so only the tray icon is shown.
+Start the program without showing window.
 .TP
 .BI \-b " <ip>" "\fR,\fP \-\^\-bindip=" <ip>
 Bind sockets to the given <ip> (useful for VPN).
 .TP
 .BI \-l " <port>" "\fR,\fP \-\^\-port=" <port>
-Listen on the given port. Overrides the portrange configuration.
+Listen on the given port. Overrides the port range configuration.
 .TP
 .B \-r, \-\^\-rescan
 Rescan shared files.
@@ -43,15 +45,21 @@ Start the program in headless mode (no GUI).
 .TP
 .B \-v, \-\^\-version
 Show version number and exit.
-.SH "EXIT STATUS"
-Normally the exit status of the program will be 0.
+
+.SH EXIT STATUS
+The regular exit status of the program is 0.
 .br
-If required dependencies are not present it returns 1.
+If required dependencies are not present, the exit status is 1.
 .br
-If the given list of arguments cannot be parsed it returns 2.
-.SH "FILES"
-Config files are stored in the folder ~/.config/nicotine/, other personal files in ~/.local/share/nicotine/
-.SH "AUTHOR"
-This manual page was initially written by Adam Cecile <gandalf@le\-vert.net> for the Nicotine+ project.
-.br
-Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 3 or any later version published by the Free Software Foundation.
+If the given list of arguments cannot be parsed, the exit status is 2.
+
+.SH FILES
+.TP
+.I ~/.config/nicotine/config
+The configuration file.
+.TP
+.I ~/.local/share/nicotine/
+Other personal files such as downloads, shares and logs.
+
+.SH AUTHOR
+Nicotine+ Team <https://nicotine-plus.org/>
