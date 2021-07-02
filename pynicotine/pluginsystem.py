@@ -44,7 +44,7 @@ class PluginHandler:
         self.core = core
         self.config = config
 
-        log.add(_("Loading plugin handler"))
+        log.add_debug("Loading plugin handler")
 
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
