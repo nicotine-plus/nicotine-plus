@@ -193,6 +193,21 @@ class Downloads(TransferList):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
+    def on_browse_folder(self, *args):
+
+        requested_users = set()
+        requested_folders = set()
+
+        for transfer in self.selected_transfers:
+            user = transfer.user
+            folder = transfer.filename.rsplit('\\', 1)[0]
+
+            if user not in requested_users and folder not in requested_folders:
+                self.frame.np.userbrowse.browse_user(user, folder=folder)
+
+                requested_users.add(user)
+                requested_folders.add(folder)
+
     def on_clear_aborted(self, *args):
         self.clear_transfers(["Aborted", "Cancelled"])
 

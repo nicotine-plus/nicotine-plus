@@ -63,7 +63,7 @@ class UserBrowse:
 
         self.shared_file_list(username, msg)
 
-    def browse_local_public_shares(self):
+    def browse_local_public_shares(self, folder=None):
         """ Browse your own public shares """
 
         login = self.config.sections["server"]["login"]
@@ -79,9 +79,9 @@ class UserBrowse:
         thread.daemon = True
         thread.start()
 
-        self.show_user(login, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(login, folder=folder, local_shares_type="normal", indeterminate_progress=True)
 
-    def browse_local_buddy_shares(self):
+    def browse_local_buddy_shares(self, folder=None):
         """ Browse your own buddy shares """
 
         login = self.config.sections["server"]["login"]
@@ -97,7 +97,7 @@ class UserBrowse:
         thread.daemon = True
         thread.start()
 
-        self.show_user(login, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(login, folder=folder, local_shares_type="buddy", indeterminate_progress=True)
 
     def browse_user(self, username, folder=None, local_shares_type=None, new_request=False):
         """ Browse a user's shares """
@@ -107,10 +107,10 @@ class UserBrowse:
 
         if username == self.config.sections["server"]["login"]:
             if local_shares_type == "normal" or not self.config.sections["transfers"]["enablebuddyshares"]:
-                self.browse_local_public_shares()
+                self.browse_local_public_shares(folder)
                 return
 
-            self.browse_local_buddy_shares()
+            self.browse_local_buddy_shares(folder)
             return
 
         if username not in self.users or new_request:

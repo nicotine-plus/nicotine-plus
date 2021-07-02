@@ -912,21 +912,6 @@ class TransferList:
         if transfer:
             copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
 
-    def on_browse_folder(self, *args):
-
-        requested_users = set()
-        requested_folders = set()
-
-        for transfer in self.selected_transfers:
-            user = transfer.user
-            folder = transfer.filename.rsplit('\\', 1)[0]
-
-            if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, folder=folder)
-
-                requested_users.add(user)
-                requested_folders.add(folder)
-
     def on_retry_transfer(self, *args):
         self.select_transfers()
         self.retry_transfers()

@@ -90,6 +90,18 @@ class Uploads(TransferList):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
+    def on_browse_folder(self, *args):
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if not transfer:
+            return
+
+        user = config.sections["server"]["login"]
+        folder = transfer.filename.rsplit('\\', 1)[0]
+
+        self.frame.np.userbrowse.browse_user(user, folder=folder)
+
     def on_abort_user(self, *args):
 
         self.select_transfers()
