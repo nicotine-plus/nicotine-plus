@@ -67,7 +67,7 @@ class Transfer:
         self.user = user
         self.filename = filename
         self.conn = conn
-        self.path = path  # Used for ???
+        self.path = path
         self.modifier = modifier
         self.req = req
         self.size = size
@@ -634,7 +634,7 @@ class Transfers:
                 pass
 
         filename_utf8 = '\\'.join(filename_parts)
-        realpath = self.core.shares.virtual2real(filename_utf8)
+        real_path = self.core.shares.virtual2real(filename_utf8)
 
         if not self.file_is_upload_queued(user, msg.file):
 
@@ -667,18 +667,18 @@ class Transfers:
                     slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
                 )
 
-            elif self.core.shares.file_is_shared(user, filename_utf8, realpath):
+            elif self.core.shares.file_is_shared(user, filename_utf8, real_path):
                 newupload = Transfer(
                     user=user, filename=msg.file,
-                    path=os.path.dirname(realpath), status="Queued",
-                    timequeued=time.time(), size=self.get_file_size(realpath), place=len(self.uploads)
+                    path=os.path.dirname(real_path), status="Queued",
+                    timequeued=time.time(), size=self.get_file_size(real_path), place=len(self.uploads)
                 )
                 self._append_upload(user, msg.file, newupload)
 
                 if self.uploadsview:
                     self.uploadsview.update(newupload)
 
-                self.core.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+                self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
                 self.check_upload_queue()
 
             else:
@@ -809,9 +809,9 @@ class Transfers:
             return slskmessages.TransferResponse(None, 0, reason=reason, req=msg.req)
 
         # Do we actually share that file with the world?
-        realpath = self.core.shares.virtual2real(msg.file)
+        real_path = self.core.shares.virtual2real(msg.file)
 
-        if not self.core.shares.file_is_shared(user, msg.file, realpath):
+        if not self.core.shares.file_is_shared(user, msg.file, real_path):
             return slskmessages.TransferResponse(None, 0, reason="File not shared", req=msg.req)
 
         # Is that file already in the queue?
@@ -838,7 +838,7 @@ class Transfers:
             return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
 
         # All checks passed, user can queue file!
-        self.core.pluginhandler.upload_queued_notification(user, msg.file, realpath)
+        self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
@@ -855,8 +855,8 @@ class Transfers:
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=msg.req)
             newupload = Transfer(
                 user=user, filename=msg.file,
-                path=os.path.dirname(realpath), status="Queued",
-                timequeued=time.time(), size=self.get_file_size(realpath),
+                path=os.path.dirname(real_path), status="Queued",
+                timequeued=time.time(), size=self.get_file_size(real_path),
                 place=len(self.uploads)
             )
             self._append_upload(user, msg.file, newupload)
@@ -867,12 +867,12 @@ class Transfers:
             return response
 
         # All checks passed, starting a new upload.
-        size = self.get_file_size(realpath)
+        size = self.get_file_size(real_path)
         response = slskmessages.TransferResponse(None, 1, req=msg.req, filesize=size)
 
         transferobj = Transfer(
             user=user, filename=msg.file,
-            path=os.path.dirname(realpath), status="Getting status",
+            path=os.path.dirname(real_path), status="Getting status",
             req=msg.req, size=size, place=len(self.uploads)
         )
 
@@ -1059,9 +1059,9 @@ class Transfers:
                     raise OSError("Download directory %s Permissions error.\nDir Permissions: %s" %
                                   (incompletedir, oct(os.stat(incompletedir)[stat.ST_MODE] & 0o777)))
 
-            except OSError as strerror:
-                log.add(_("OS error: %s"), strerror)
-                self.download_folder_error(i, strerror)
+            except OSError as error:
+                log.add(_("OS error: %s"), error)
+                self.download_folder_error(i, error)
 
             else:
                 file_handle = None
@@ -1070,25 +1070,25 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
-                    fname = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + basename)
-                    file_handle = open(fname, 'ab+')
+                    base_name = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
+                    incomplete_name = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + base_name)
+                    file_handle = open(incomplete_name, 'ab+')
 
                     if self.config.sections["transfers"]["lock"]:
                         try:
                             import fcntl
                             try:
                                 fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                            except IOError as strerror:
-                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), strerror)
+                            except IOError as error:
+                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
                         except ImportError:
                             pass
 
                     file_handle.seek(0, 2)
                     offset = file_handle.tell()
 
-                except IOError as strerror:
-                    log.add(_("Download I/O error: %s"), strerror)
+                except IOError as error:
+                    log.add(_("Download I/O error: %s"), error)
 
                     self.abort_transfer(i)
                     i.status = "Local file error"
@@ -1101,6 +1101,7 @@ class Transfers:
                     i.starttime = time.time()
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
+                    self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_name)
 
                     if i.size > offset:
                         i.status = "Transferring"
@@ -1150,11 +1151,11 @@ class Transfers:
 
             try:
                 # Open File
-                realpath = self.core.shares.virtual2real(i.filename)
-                file_handle = open(realpath, "rb")
+                real_path = self.core.shares.virtual2real(i.filename)
+                file_handle = open(real_path, "rb")
 
-            except IOError as strerror:
-                log.add(_("Upload I/O error: %s"), strerror)
+            except IOError as error:
+                log.add(_("Upload I/O error: %s"), error)
 
                 self.abort_transfer(i)
                 i.status = "Local file error"
@@ -1168,6 +1169,7 @@ class Transfers:
                     i.modifier = _("privileged")
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
+                self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
 
                 ip_address = None
                 if i.conn is not None:
@@ -1334,8 +1336,8 @@ class Transfers:
                     self.download_finished(msg.file, i)
                     needupdate = False
 
-            except IOError as strerror:
-                log.add(_("Download I/O error: %s"), strerror)
+            except IOError as error:
+                log.add(_("Download I/O error: %s"), error)
 
                 self.abort_transfer(i)
                 i.status = "Local file error"
@@ -1652,10 +1654,10 @@ class Transfers:
                 transfer.status = "Getting status"
                 self.transfer_request_times[transfer] = time.time()
 
-                realpath = self.core.shares.virtual2real(filename)
+                real_path = self.core.shares.virtual2real(filename)
                 self.core.send_message_to_peer(
                     user, slskmessages.TransferRequest(None, direction, transfer.req, filename,
-                                                       self.get_file_size(realpath), realpath))
+                                                       self.get_file_size(real_path), real_path))
 
         if shouldupdate:
             if direction == 0 and self.downloadsview:
@@ -1937,6 +1939,7 @@ class Transfers:
         self.core.shares.add_file_to_shared(newname)
         self.core.shares.add_file_to_buddy_shared(newname)
         self.core.statistics.append_stat_value("completed_downloads", 1)
+        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
 
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
@@ -1990,6 +1993,8 @@ class Transfers:
         )
 
         self.core.statistics.append_stat_value("completed_uploads", 1)
+        real_path = self.core.shares.virtual2real(i.filename)
+        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         # Autoclear this upload
         if not self.auto_clear_upload(i) and self.uploadsview:

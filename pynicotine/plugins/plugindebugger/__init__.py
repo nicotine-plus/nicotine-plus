@@ -90,11 +90,25 @@ class Plugin(BasePlugin):
     def UserLeaveChatroomNotification(self, room, user):  # noqa
         self.log('UserLeaveChatroomNotification, room=%s, user=%s' % (room, user,))
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
-        self.log('UploadQueuedNotification, user=%s, virtualfile=%s, realfile=%s' % (user, virtualfile, realfile))
-
     def UserStatsNotification(self, user, stats):  # noqa
         self.log('UserStatsNotification, user=%s, stats=%s' % (user, stats))
+
+    def UploadQueuedNotification(self, user, virtual_path, real_path):  # noqa
+        self.log('UploadQueuedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
+
+    def UploadStartedNotification(self, user, virtual_path, real_path):  # noqa
+        self.log('UploadStartedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
+
+    def UploadFinishedNotification(self, user, virtual_path, real_path):  # noqa
+        self.log('UploadFinishedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
+
+    def DownloadStartedNotification(self, user, virtual_path, real_path):  # noqa
+        self.log('DownloadStartedNotification, user=%s, virtual_path=%s, real_path=%s' %
+                 (user, virtual_path, real_path))
+
+    def DownloadFinishedNotification(self, user, virtual_path, real_path):  # noqa
+        self.log('DownloadFinishedNotification, user=%s, virtual_path=%s, real_path=%s' %
+                 (user, virtual_path, real_path))
 
     def ShutdownNotification(self):  # noqa
         self.log('ShutdownNotification')

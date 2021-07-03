@@ -451,11 +451,23 @@ class PluginHandler:
     def user_leave_chatroom_notification(self, room, user):
         self.trigger_event("UserLeaveChatroomNotification", (room, user,))
 
-    def upload_queued_notification(self, user, virtualfile, realfile):
-        self.trigger_event("UploadQueuedNotification", (user, virtualfile, realfile))
-
     def user_stats_notification(self, user, stats):
         self.trigger_event("UserStatsNotification", (user, stats))
+
+    def upload_queued_notification(self, user, virtual_path, real_path):
+        self.trigger_event("UploadQueuedNotification", (user, virtual_path, real_path))
+
+    def upload_started_notification(self, user, virtual_path, real_path):
+        self.trigger_event("UploadStartedNotification", (user, virtual_path, real_path))
+
+    def upload_finished_notification(self, user, virtual_path, real_path):
+        self.trigger_event("UploadFinishedNotification", (user, virtual_path, real_path))
+
+    def download_started_notification(self, user, virtual_path, real_path):
+        self.trigger_event("DownloadStartedNotification", (user, virtual_path, real_path))
+
+    def download_finished_notification(self, user, virtual_path, real_path):
+        self.trigger_event("DownloadFinishedNotification", (user, virtual_path, real_path))
 
     def shutdown_notification(self):
         self.trigger_event("ShutdownNotification", (),)
@@ -647,10 +659,22 @@ class BasePlugin:
     def UserLeaveChatroomNotification(self, room, user):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):  # pylint: disable=invalid-name, # noqa
+    def UserStatsNotification(self, user, stats):  # pylint: disable=invalid-name, # noqa
         pass
 
-    def UserStatsNotification(self, user, stats):  # pylint: disable=invalid-name, # noqa
+    def UploadQueuedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+        pass
+
+    def UploadStartedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+        pass
+
+    def UploadFinishedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+        pass
+
+    def DownloadStartedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+        pass
+
+    def DownloadFinishedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
         pass
 
     def ShutdownNotification(self):  # pylint: disable=invalid-name, # noqa

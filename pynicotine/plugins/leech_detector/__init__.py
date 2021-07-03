@@ -39,7 +39,7 @@ class Plugin(BasePlugin):
     def init(self):
         self.probed = {}
 
-    def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
+    def UploadQueuedNotification(self, user, virtual_path, real_path):  # noqa
 
         if user in self.probed:
             return
