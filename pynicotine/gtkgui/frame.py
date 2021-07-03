@@ -973,7 +973,7 @@ class NicotineFrame:
         self.checking_update = False
 
     def on_report_bug(self, *args):
-        url = "https://github.com/Nicotine-Plus/nicotine-plus/issues"
+        url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         open_uri(url, self.MainWindow)
 
     def on_about(self, *args):

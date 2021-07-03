@@ -6,7 +6,7 @@ This is not particularly hard, but it may come with some additional required ski
 To run Nicotine+ directly from a folder, run the following:
 
 ```console
-git clone https://github.com/Nicotine-Plus/nicotine-plus.git
+git clone https://github.com/nicotine-plus/nicotine-plus.git
 cd nicotine-plus
 ./nicotine
 ```
@@ -22,7 +22,7 @@ git pull
 To install Nicotine+ locally (no root required), run the following:
 
 ```console
-pip install git+https://github.com/Nicotine-Plus/nicotine-plus.git
+pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
 
 Nicotine+ will now be available in your list of programs.
@@ -30,7 +30,7 @@ Nicotine+ will now be available in your list of programs.
 To update to newer versions of Nicotine+, run the same command as previously:
 
 ```console
-pip install git+https://github.com/Nicotine-Plus/nicotine-plus.git
+pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
 
 To uninstall Nicotine+, run:

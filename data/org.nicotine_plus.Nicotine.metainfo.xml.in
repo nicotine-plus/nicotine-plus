@@ -39,7 +39,7 @@
     </screenshot>
   </screenshots>
   <url type="homepage">https://nicotine-plus.org/</url>
-  <url type="bugtracker">https://github.com/Nicotine-Plus/nicotine-plus/issues</url>
+  <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <developer_name>Nicotine+ Team</developer_name>
   <content_rating type="oars-1.0">
     <content_attribute id="social-chat">intense</content_attribute>

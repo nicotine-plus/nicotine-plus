@@ -6,7 +6,7 @@ Nicotine+ is a graphical client for the [Soulseek](https://www.slsknet.org/news/
 
 Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to the official Soulseek client, providing additional functionality while keeping current with the Soulseek protocol.
 
-Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](https://github.com/Nicotine-Plus/nicotine-plus).
+Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](https://github.com/nicotine-plus/nicotine-plus).
 <br clear="right">
 
 # Download Nicotine+
@@ -91,19 +91,19 @@ If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
 
 Stable Windows installers for Nicotine+ are available for download. Installing Nicotine+ requires administrator privileges.
 
-- [64-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)
-- [32-bit Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)
+- [64-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)
+- [32-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)
 
 Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
 
-- [64-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)
-- [32-bit Portable Package](https://github.com/Nicotine-Plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)
+- [64-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)
+- [32-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)
 
 ### Unstable
 
 Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing. You need to sign in on GitHub in order to download the packages.
 
-- [64/32-bit Installers / Packages](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
+- [64/32-bit Installers / Packages](https://github.com/nicotine-plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
 ## macOS
 
@@ -111,7 +111,7 @@ Unstable Windows packages are generated after every commit to the master branch,
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
-- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/releases/latest/download/macos-installer.zip)
+- [Download Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)
 
 ### Stable (Mojave/10.14)
 
@@ -127,7 +127,7 @@ brew install nicotine-plus
 
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing. You need to sign in on GitHub in order to download the installers.
 
-- [Download Installer](https://github.com/Nicotine-Plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
+- [Download Installer](https://github.com/nicotine-plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
 
 ## Building from git (Unstable)
 
@@ -139,14 +139,14 @@ If you would like to contribute to Nicotine+, you have a couple of options to ge
 
 * If you find a problem or have a feature request you can
   * discuss your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/),
-  * [create a new issue](https://github.com/Nicotine-Plus/nicotine-plus/issues) on GitHub, 
+  * [create a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub, 
   * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
 * If you would like to translate Nicotine+ into another language, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * If you would like to package Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md) for a list of dependencies.
 * Code contributors, developers and maintainers should read [DEVELOPING.md](doc/DEVELOPING.md) for important information about various aspects of Nicotine+ development.
 * For a list of contributors to Nicotine+ and its predecessors, see [AUTHORS.md](AUTHORS.md).
 * For unofficial documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
-* For a current list of things to do, see the [issue tracker](https://github.com/Nicotine-Plus/nicotine-plus/issues).
+* For a current list of things to do, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
 
 # Where did the name Nicotine come from?
 

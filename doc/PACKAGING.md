@@ -70,7 +70,7 @@ Clone the Nicotine+ git repository:
 
 ```console
 pacman -S git
-git clone https://github.com/Nicotine-Plus/nicotine-plus
+git clone https://github.com/nicotine-plus/nicotine-plus
 cd nicotine-plus
 ```
 

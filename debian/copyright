@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: nicotine
 Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
-Source: https://github.com/Nicotine-Plus/nicotine-plus/
+Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
 Copyright: 2001-2003 PySoulSeek Contributors

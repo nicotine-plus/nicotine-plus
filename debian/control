@@ -16,8 +16,8 @@ Build-Depends:
     python3-gdbm,
     python3-gi,
     xvfb
-Vcs-Git: https://github.com/Nicotine-Plus/nicotine-plus.git
-Vcs-browser: https://github.com/Nicotine-Plus/nicotine-plus
+Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
+Vcs-browser: https://github.com/nicotine-plus/nicotine-plus
 X-Python-Version: >= 3.6
 Homepage: https://nicotine-plus.org
 Rules-Requires-Root: no
