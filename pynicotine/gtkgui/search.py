@@ -568,8 +568,19 @@ class Search:
                 log.add_search(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user))
                 continue
 
-            fullpath_split = reversed(fullpath.split('\\'))
-            name = next(fullpath_split)
+            fullpath_split = fullpath.split('\\')
+
+            if config.sections["ui"]["reverse_file_paths"]:
+                # Reverse file path, file name is the first item. next() retrieves the name and removes
+                # it from the iterator.
+                fullpath_split = reversed(fullpath_split)
+                name = next(fullpath_split)
+
+            else:
+                # Regular file path, file name is the last item. Retrieve it and remove it from the list.
+                name = fullpath_split.pop()
+
+            # Join the resulting items into a folder path
             directory = '\\'.join(fullpath_split)
 
             size = result[2]

@@ -292,6 +292,13 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="ReverseFilePaths">
+            <property name="label" translatable="yes">Show reverse file paths in search and transfer views (requires a restart)</property>
+            <property name="visible">1</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkCheckButton" id="ShowPrivateSearchResults">
             <property name="label" translatable="yes">Show privately shared files in search results</property>
             <property name="visible">1</property>

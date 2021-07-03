@@ -500,27 +500,66 @@ class TransferList:
             self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
             self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
             self.transfersmodel.set_value(initer, 17, GObject.Value(GObject.TYPE_UINT64, place))
+            return
 
-        else:
-            fn = transfer.filename
-            user = transfer.user
-            shortfn = fn.split("\\")[-1]
-            filecount = 1
+        fn = transfer.filename
+        user = transfer.user
+        shortfn = fn.split("\\")[-1]
+        filecount = 1
 
-            if self.tree_users != "ungrouped":
-                # Group by folder or user
+        if self.tree_users != "ungrouped":
+            # Group by folder or user
 
-                empty_int = 0
-                empty_str = ""
+            empty_int = 0
+            empty_str = ""
 
-                if user not in self.users:
-                    # Create Parent if it doesn't exist
-                    # ProgressRender not visible (last column sets 4th column)
-                    self.users[user] = self.transfersmodel.insert_with_values(
-                        None, -1, self.column_numbers,
+            if user not in self.users:
+                # Create Parent if it doesn't exist
+                # ProgressRender not visible (last column sets 4th column)
+                self.users[user] = self.transfersmodel.insert_with_values(
+                    None, -1, self.column_numbers,
+                    [
+                        user,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_int,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_str,
+                        empty_int,
+                        empty_int,
+                        empty_int,
+                        empty_int,
+                        filecount,
+                        empty_int,
+                        lambda: None
+                    ]
+                )
+
+            parent = self.users[user]
+
+            if self.tree_users == "folder_grouping":
+                # Group by folder
+
+                """ Paths can be empty if files are downloaded individually, make sure we
+                don't add files to the wrong user in the TreeView """
+                path = transfer.path
+                user_path = user + path
+
+                if config.sections["ui"]["reverse_file_paths"]:
+                    path = '/'.join(reversed(path.split('/')))
+
+                if user_path not in self.paths:
+                    self.paths[user_path] = self.transfersmodel.insert_with_values(
+                        self.users[user], -1, self.column_numbers,
                         [
                             user,
-                            empty_str,
+                            path,
                             empty_str,
                             empty_str,
                             empty_str,
@@ -541,94 +580,60 @@ class TransferList:
                         ]
                     )
 
-                parent = self.users[user]
+                parent = self.paths[user_path]
+        else:
+            # No grouping
+            # We use this list to get the total number of users
+            self.users.setdefault(user, set()).add(transfer)
+            parent = None
 
-                if self.tree_users == "folder_grouping":
-                    # Group by folder
+        # Add a new transfer
+        if self.tree_users == "folder_grouping":
+            # Group by folder, path not visible
+            path = ""
+        else:
+            path = transfer.path
 
-                    """ Paths can be empty if files are downloaded individually, make sure we
-                    don't add files to the wrong user in the TreeView """
-                    path = transfer.path
-                    user_path = user + path
-                    reverse_path = '/'.join(reversed(path.split('/')))
+            if config.sections["ui"]["reverse_file_paths"]:
+                path = '/'.join(reversed(path.split('/')))
 
-                    if user_path not in self.paths:
-                        self.paths[user_path] = self.transfersmodel.insert_with_values(
-                            self.users[user], -1, self.column_numbers,
-                            [
-                                user,
-                                reverse_path,
-                                empty_str,
-                                empty_str,
-                                empty_str,
-                                empty_int,
-                                empty_str,
-                                empty_str,
-                                empty_str,
-                                empty_str,
-                                empty_str,
-                                empty_str,
-                                empty_int,
-                                empty_int,
-                                empty_int,
-                                empty_int,
-                                filecount,
-                                empty_int,
-                                lambda: None
-                            ]
-                        )
-
-                    parent = self.paths[user_path]
-            else:
-                # No grouping
-                # We use this list to get the total number of users
-                self.users.setdefault(user, set()).add(transfer)
-                parent = None
-
-            # Add a new transfer
-            if self.tree_users == "folder_grouping":
-                # Group by folder, path not visible
-                path = ""
-            else:
-                path = '/'.join(reversed(transfer.path.split('/')))
-
-            iterator = self.transfersmodel.insert_with_values(
-                parent, -1, self.column_numbers,
-                (
-                    user,
-                    path,
-                    shortfn,
-                    hstatus,
-                    hplace,
-                    GObject.Value(GObject.TYPE_UINT64, percent),
-                    hsize,
-                    hspeed,
-                    helapsed,
-                    left,
-                    fn,
-                    status,
-                    GObject.Value(GObject.TYPE_UINT64, size),
-                    GObject.Value(GObject.TYPE_UINT64, icurrentbytes),
-                    GObject.Value(GObject.TYPE_UINT64, speed),
-                    GObject.Value(GObject.TYPE_UINT64, elapsed),
-                    GObject.Value(GObject.TYPE_UINT64, filecount),
-                    GObject.Value(GObject.TYPE_UINT64, place),
-                    transfer
-                )
+        iterator = self.transfersmodel.insert_with_values(
+            parent, -1, self.column_numbers,
+            (
+                user,
+                path,
+                shortfn,
+                hstatus,
+                hplace,
+                GObject.Value(GObject.TYPE_UINT64, percent),
+                hsize,
+                hspeed,
+                helapsed,
+                left,
+                fn,
+                status,
+                GObject.Value(GObject.TYPE_UINT64, size),
+                GObject.Value(GObject.TYPE_UINT64, icurrentbytes),
+                GObject.Value(GObject.TYPE_UINT64, speed),
+                GObject.Value(GObject.TYPE_UINT64, elapsed),
+                GObject.Value(GObject.TYPE_UINT64, filecount),
+                GObject.Value(GObject.TYPE_UINT64, place),
+                transfer
             )
-            transfer.iterator = iterator
+        )
+        transfer.iterator = iterator
 
-            # Expand path
-            if parent is not None:
-                transfer_path = self.transfersmodel.get_path(iterator)
+        # Expand path
+        if parent is not None:
+            transfer_path = self.transfersmodel.get_path(iterator)
 
-                if self.tree_users == "folder_grouping":
-                    # Group by folder, we need the user path to expand it
-                    user_path = self.transfersmodel.get_path(self.users[user])
-                else:
-                    user_path = None
+            if self.tree_users == "folder_grouping":
+                # Group by folder, we need the user path to expand it
+                user_path = self.transfersmodel.get_path(self.users[user])
+            else:
+                user_path = None
 
-                self.expand(transfer_path, user_path)
+            self.expand(transfer_path, user_path)
 
     def retry_transfers(self):
         for transfer in self.selected_transfers:

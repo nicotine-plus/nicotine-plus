@@ -321,7 +321,8 @@ class Config:
                 "urgencyhint": True,
                 "private_search_results": False,
                 "private_shares": False,
-                "file_path_tooltips": True
+                "file_path_tooltips": True,
+                "reverse_file_paths": True
             },
 
             "private_rooms": {
