@@ -1430,6 +1430,7 @@ class UserInterfaceFrame(BuildFrame):
                 "usernamestyle": self.UsernameStyle,
                 "decimalsep": self.DecimalSep,
 
+                "file_path_tooltips": self.FilePathTooltips,
                 "private_search_results": self.ShowPrivateSearchResults,
                 "private_shares": self.ShowPrivateShares,
 
@@ -1535,6 +1536,7 @@ class UserInterfaceFrame(BuildFrame):
                 "usernamestyle": self.UsernameStyle.get_active_text(),
                 "decimalsep": self.DecimalSep.get_active_text(),
 
+                "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "private_search_results": self.ShowPrivateSearchResults.get_active(),
                 "private_shares": self.ShowPrivateShares.get_active(),
 

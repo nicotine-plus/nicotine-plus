@@ -284,6 +284,14 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="FilePathTooltips">
+            <property name="label" translatable="yes">Enable file path tooltips in search and transfer views</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Displays the complete file path of a search result or file transfer when you hover a folder path or file name with your cursor.</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkCheckButton" id="ShowPrivateSearchResults">
             <property name="label" translatable="yes">Show privately shared files in search results</property>
             <property name="visible">1</property>

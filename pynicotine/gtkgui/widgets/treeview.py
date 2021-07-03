@@ -467,6 +467,10 @@ def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, strip_prefix='fl
 
 
 def show_file_path_tooltip(treeview, x, y, tooltip, sourcecolumn):
+
+    if not config.sections["ui"]["file_path_tooltips"]:
+        return False
+
     return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("folder", "filename"), get_file_path_tooltip_text)
 
 

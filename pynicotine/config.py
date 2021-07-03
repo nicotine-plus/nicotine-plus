@@ -320,7 +320,8 @@ class Config:
                 "maximized": True,
                 "urgencyhint": True,
                 "private_search_results": False,
-                "private_shares": False
+                "private_shares": False,
+                "file_path_tooltips": True
             },
 
             "private_rooms": {
