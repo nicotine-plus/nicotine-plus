@@ -37,7 +37,6 @@ import time
 
 from collections import defaultdict
 from collections import deque
-from time import sleep
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -1098,7 +1097,6 @@ class Transfers:
                     i.file = file_handle
                     i.place = 0
                     i.offset = offset
-                    i.starttime = time.time()
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
                     self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_name)
@@ -1289,20 +1287,14 @@ class Transfers:
                 continue
 
             try:
-
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
 
                 curtime = time.time()
-
                 i.currentbytes = msg.file.tell()
 
-                if i.lastbytes is None:
-                    i.lastbytes = i.currentbytes
                 if i.starttime is None:
                     i.starttime = curtime
-                if i.lasttime is None:
-                    i.lasttime = curtime - 1
 
                 i.status = "Transferring"
                 oldelapsed = i.timeelapsed
@@ -1313,15 +1305,9 @@ class Transfers:
                     bytesdifference = (i.currentbytes - i.lastbytes)
                     self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
 
-                    try:
-                        i.speed = max(0, bytesdifference / (curtime - i.lasttime))
-                    except ZeroDivisionError:
-                        i.speed = None
+                    i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
 
-                    if i.speed <= 0.0:
-                        i.speed = None
-
-                    if i.speed is None:
+                    if i.speed <= 0:
                         i.timeleft = "∞"
                     else:
                         i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
@@ -1361,15 +1347,13 @@ class Transfers:
                 del self.transfer_request_times[i]
 
             curtime = time.time()
+            i.currentbytes = msg.offset + msg.sentbytes
+
             if i.starttime is None:
                 i.starttime = curtime
                 i.offset = msg.offset
 
-            lastspeed = None
-            if i.speed is not None:
-                lastspeed = i.speed
-
-            i.currentbytes = msg.offset + msg.sentbytes
+            i.status = "Transferring"
             oldelapsed = i.timeelapsed
             i.timeelapsed = curtime - i.starttime
 
@@ -1378,15 +1362,9 @@ class Transfers:
                 bytesdifference = (i.currentbytes - i.lastbytes)
                 self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
 
-                try:
-                    i.speed = max(0, bytesdifference / (curtime - i.lasttime))
-                except ZeroDivisionError:
-                    i.speed = lastspeed  # too fast!
+                i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
 
-                if i.speed <= 0.0:
-                    i.speed = None
-
-                if i.speed is None:
+                if i.speed <= 0:
                     i.timeleft = "∞"
                 else:
                     i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
@@ -1397,12 +1375,6 @@ class Transfers:
             if i.size > i.currentbytes:
                 if oldelapsed == i.timeelapsed:
                     needupdate = False
-                i.status = "Transferring"
-
-            elif i.size is None:
-                # Failed?
-                self.check_upload_queue()
-                sleep(0.01)
             else:
                 self.upload_finished(i, file_handle=msg.file)
                 needupdate = False
