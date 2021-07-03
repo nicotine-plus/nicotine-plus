@@ -41,29 +41,36 @@ class Plugin(BasePlugin):
 
     def UploadQueuedNotification(self, user, virtualfile, realfile):  # noqa
 
-        try:
-            self.probed[user]
-        except KeyError:
-            self.probed[user] = 'requesting'
-            self.core.queue.append(slskmessages.GetUserStats(user))
-            self.log('New user %s, requesting information...' % user)
+        if user in self.probed:
+            return
+
+        self.probed[user] = 'requesting'
+        self.core.queue.append(slskmessages.GetUserStats(user))
+        self.log('New user %s, requesting information...' % user)
 
     def UserStatsNotification(self, user, stats):  # noqa
 
-        try:
-            status = self.probed[user]
-        except KeyError:
-            # we did not trigger this notification
+        if user not in self.probed:
+            # We did not trigger this notification
             return
-        if status == 'requesting':
-            if stats['files'] == 0:
-                for line in self.settings['message'].splitlines():
-                    self.sendprivate(user, line)
 
-                self.log("User %s doesn't share any files, sent complaint." % user)
-            else:
-                self.log('User %s is okay, sharing %s files' % (user, stats['files']))
-            self.probed[user] = 'processed'
-        else:
+        status = self.probed[user]
+
+        if status != 'requesting':
             # We already dealt with this user.
-            pass
+            return
+
+        self.probed[user] = 'processed'
+
+        if stats['files'] > 0:
+            self.log('User %s is okay, sharing %s files' % (user, stats['files']))
+            return
+
+        if not self.settings['message']:
+            self.log("User %s doesn't share any files, but no complaint message is specified." % user)
+            return
+
+        for line in self.settings['message'].splitlines():
+            self.sendprivate(user, line)
+
+        self.log("User %s doesn't share any files, sent complaint." % user)
