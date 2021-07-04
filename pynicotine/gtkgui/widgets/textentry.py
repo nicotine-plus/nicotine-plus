@@ -54,6 +54,7 @@ class ChatEntry:
         self.completion_list = None
 
         entry.connect("activate", self.on_enter)
+        self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
         self.key_controller = connect_key_press_event(entry, self.on_key_press_event)
 
         # Spell Check
@@ -430,22 +431,19 @@ class ChatEntry:
 
         self.entry.set_text("")
 
+    def on_entry_changed(self, *args):
+        # If the entry was modified, and we don't block the handler, we're no longer completing
+        self.midwaycompletion = False
+
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
         key, codes, mods = parse_accelerator("Tab")
 
         if keycode not in codes:
-            key, codes_shift_l, mods = parse_accelerator("Shift_L")
-            key, codes_shift_r, mods = parse_accelerator("Shift_R")
-
-            if keycode not in codes_shift_l and keycode not in codes_shift_r:
-                self.midwaycompletion = False
-
             return False
 
-        config_words = config.sections["words"]
-        if not config_words["tab"]:
+        if not config.sections["words"]["tab"]:
             return False
 
         # "Hello there Miss<tab> how are you doing"
@@ -460,7 +458,7 @@ class ChatEntry:
         text = self.entry.get_text()[:ix].split(" ")[-1]
         preix = ix - len(text)
 
-        if not config_words["cycle"]:
+        if not config.sections["words"]["cycle"]:
             completion, single = self.get_completion(text, self.completion_list)
             if completion:
                 if single and ix == len(text) and text[:1] != "/":
@@ -468,19 +466,22 @@ class ChatEntry:
                 self.entry.delete_text(preix, ix)
                 self.entry.insert_text(completion, preix)
                 self.entry.set_position(preix + len(completion))
+
+            return True
+
+        if not self.midwaycompletion:
+            self.completions['completions'] = self.get_completions(text, self.completion_list)
+
+            if self.completions['completions']:
+                self.midwaycompletion = True
+                self.completions['currentindex'] = -1
+                currentnick = text
         else:
+            currentnick = self.completions['completions'][self.completions['currentindex']]
 
-            if not self.midwaycompletion:
-                self.completions['completions'] = self.get_completions(text, self.completion_list)
-                if self.completions['completions']:
-                    self.midwaycompletion = True
-                    self.completions['currentindex'] = -1
-                    currentnick = text
-            else:
-                currentnick = self.completions['completions'][self.completions['currentindex']]
-
-            if self.midwaycompletion:
-
+        if self.midwaycompletion:
+            # We're still completing, block handler to avoid modifying midwaycompletion value
+            with self.entry.handler_block(self.entry_changed_handler):
                 self.entry.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
