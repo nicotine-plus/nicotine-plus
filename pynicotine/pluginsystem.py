@@ -164,9 +164,9 @@ class PluginHandler:
             log.add(_("Enabled plugin %s"), plugin.__name__)
 
         except Exception:
-            from traceback import print_exc
-            print_exc()
-            log.add(_("Unable to enable plugin %s"), pluginname)
+            from traceback import format_exc
+            log.add(_("Unable to enable plugin %(module)s\n%(exc_trace)s"),
+                    {'module': pluginname, 'exc_trace': format_exc()})
             return False
 
         return True
@@ -205,9 +205,9 @@ class PluginHandler:
             del plugin
 
         except Exception:
-            from traceback import print_exc
-            print_exc()
-            log.add(_("Unable to fully disable plugin %s"), pluginname)
+            from traceback import format_exc
+            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
+                    {'module': pluginname, 'exc_trace': format_exc()})
             return False
 
         return True
