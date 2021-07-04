@@ -75,79 +75,79 @@ class PluginHandler:
         if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
             self.core.privatechats.update_completions()
 
-    def __findplugin(self, pluginname):
+    def __findplugin(self, plugin_name):
         for directory in self.plugindirs:
-            fullpath = os.path.join(directory, pluginname)
+            fullpath = os.path.join(directory, plugin_name)
 
             if os.path.exists(fullpath):
                 return fullpath
 
         return None
 
-    def toggle_plugin(self, pluginname):
+    def toggle_plugin(self, plugin_name):
 
-        enabled = pluginname in self.enabled_plugins
+        enabled = plugin_name in self.enabled_plugins
 
         if enabled:
-            self.disable_plugin(pluginname)
+            self.disable_plugin(plugin_name)
         else:
-            self.enable_plugin(pluginname)
+            self.enable_plugin(plugin_name)
 
-    def load_plugin(self, pluginname):
+    def load_plugin(self, plugin_name):
 
         try:
             # Import builtin plugin
             from importlib import import_module
-            plugin = import_module("pynicotine.plugins." + pluginname)
+            plugin = import_module("pynicotine.plugins." + plugin_name)
 
         except Exception:
             # Import user plugin
-            path = self.__findplugin(pluginname)
+            path = self.__findplugin(plugin_name)
 
             if path is None:
-                log.add(_("Failed to load plugin '%s', could not find it."), pluginname)
+                log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
                 return False
 
             import importlib.util
-            spec = importlib.util.spec_from_file_location(pluginname, os.path.join(path, '__init__.py'))
+            spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(path, '__init__.py'))
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
         if hasattr(plugin, "enable"):
             log.add(
                 "Plugin '%s': top-level enable() function is obsolete, please use BasePlugin.init() instead",
-                pluginname)
+                plugin_name)
 
         if hasattr(plugin, "disable"):
             log.add(
                 "Plugin '%s': top-level disable() function is obsolete, please use BasePlugin.disable() instead",
-                pluginname)
+                plugin_name)
 
         instance = plugin.Plugin(self, self.config, self.core)
-        self.plugin_settings(pluginname, instance)
+        self.plugin_settings(plugin_name, instance)
         instance.LoadNotification()
 
         return instance
 
-    def enable_plugin(self, pluginname):
+    def enable_plugin(self, plugin_name):
 
         # Our config file doesn't play nicely with some characters
-        if "=" in pluginname:
+        if "=" in plugin_name:
             log.add(
                 _("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
-                    "name": pluginname,
+                    "name": plugin_name,
                     "characters": "="
                 })
             return False
 
-        if pluginname in self.enabled_plugins:
+        if plugin_name in self.enabled_plugins:
             return False
 
         try:
-            plugin = self.load_plugin(pluginname)
+            plugin = self.load_plugin(plugin_name)
 
             if not plugin:
-                raise Exception("Error loading plugin '%s'" % pluginname)
+                raise Exception("Error loading plugin '%s'" % plugin_name)
 
             plugin.init()
 
@@ -160,13 +160,13 @@ class PluginHandler:
 
             self.update_completions(plugin)
 
-            self.enabled_plugins[pluginname] = plugin
+            self.enabled_plugins[plugin_name] = plugin
             log.add(_("Enabled plugin %s"), plugin.__name__)
 
         except Exception:
             from traceback import format_exc
             log.add(_("Unable to enable plugin %(module)s\n%(exc_trace)s"),
-                    {'module': pluginname, 'exc_trace': format_exc()})
+                    {'module': plugin_name, 'exc_trace': format_exc()})
             return False
 
         return True
@@ -182,12 +182,12 @@ class PluginHandler:
 
         return pluginlist
 
-    def disable_plugin(self, pluginname):
-        if pluginname not in self.enabled_plugins:
+    def disable_plugin(self, plugin_name):
+        if plugin_name not in self.enabled_plugins:
             return False
 
         try:
-            plugin = self.enabled_plugins[pluginname]
+            plugin = self.enabled_plugins[plugin_name]
 
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
@@ -201,28 +201,28 @@ class PluginHandler:
 
             self.update_completions(plugin)
 
-            del self.enabled_plugins[pluginname]
+            del self.enabled_plugins[plugin_name]
             del plugin
 
         except Exception:
             from traceback import format_exc
             log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
-                    {'module': pluginname, 'exc_trace': format_exc()})
+                    {'module': plugin_name, 'exc_trace': format_exc()})
             return False
 
         return True
 
-    def get_plugin_settings(self, pluginname):
-        if pluginname in self.enabled_plugins:
-            plugin = self.enabled_plugins[pluginname]
+    def get_plugin_settings(self, plugin_name):
+        if plugin_name in self.enabled_plugins:
+            plugin = self.enabled_plugins[plugin_name]
 
             if plugin.metasettings:
                 return plugin.metasettings
 
         return None
 
-    def get_plugin_info(self, pluginname):
-        path = os.path.join(self.__findplugin(pluginname), 'PLUGININFO')
+    def get_plugin_info(self, plugin_name):
+        path = os.path.join(self.__findplugin(plugin_name), 'PLUGININFO')
 
         with open(path) as file_handle:
             infodict = {}
@@ -250,19 +250,19 @@ class PluginHandler:
         for plugin in to_enable:
             self.enable_plugin(plugin)
 
-    def plugin_settings(self, pluginname, plugin):
+    def plugin_settings(self, plugin_name, plugin):
         try:
             if not plugin.settings:
                 return
 
-            if pluginname not in self.config.sections["plugins"]:
-                self.config.sections["plugins"][pluginname] = plugin.settings
+            if plugin_name not in self.config.sections["plugins"]:
+                self.config.sections["plugins"][plugin_name] = plugin.settings
 
             for i in plugin.settings:
-                if i not in self.config.sections["plugins"][pluginname]:
-                    self.config.sections["plugins"][pluginname][i] = plugin.settings[i]
+                if i not in self.config.sections["plugins"][plugin_name]:
+                    self.config.sections["plugins"][plugin_name][i] = plugin.settings[i]
 
-            customsettings = self.config.sections["plugins"][pluginname]
+            customsettings = self.config.sections["plugins"][plugin_name]
 
             for key in customsettings:
                 if key in plugin.settings:
