@@ -390,9 +390,15 @@ def get_key_press_event_args(*args):
 
 def parse_accelerator(accelerator):
 
-    if Gtk.get_major_version() == 4:
-        ok, key, codes, mods = Gtk.accelerator_parse_with_keycode(accelerator)
-    else:
-        key, codes, mods = Gtk.accelerator_parse_with_keycode(accelerator)
+    *args, key, mods = Gtk.accelerator_parse(accelerator)
+    keymap_keys = []
 
-    return key, codes, mods
+    if Gtk.get_major_version() == 4 and key:
+        valid, keymap_keys = Gdk.Display.get_default().map_keyval(key)
+
+    elif key:
+        keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+        valid, keymap_keys = keymap.get_entries_for_keyval(key)
+
+    keycodes = [key.keycode for key in keymap_keys]
+    return keycodes, mods

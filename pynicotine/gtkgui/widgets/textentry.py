@@ -571,9 +571,9 @@ class TextSearchBar:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes, mods = parse_accelerator("<Primary>f")
+        keycodes, mods = parse_accelerator("<Primary>f")
 
-        if state & mods and keycode in codes:
+        if state & mods and keycode in keycodes:
             self.show_search_bar()
             return True
 

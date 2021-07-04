@@ -840,23 +840,32 @@ class TransferList:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_transfers()
 
-        if keycode in parse_accelerator("t")[1]:
+        keycodes, mods = parse_accelerator("t")
+
+        if keycode in keycodes:
             self.abort_transfers()
+            return True
 
-        elif keycode in parse_accelerator("r")[1]:
+        keycodes, mods = parse_accelerator("r")
+
+        if keycode in keycodes:
             self.retry_transfers()
+            return True
 
-        elif state & parse_accelerator("<Primary>")[2] and keycode in parse_accelerator("c")[1]:
+        keycodes, mods = parse_accelerator("<Primary>c")
+
+        if state & mods and keycode in keycodes:
             self.on_copy_file_path()
+            return True
 
-        elif keycode in parse_accelerator("Delete")[1]:
+        keycodes, mods = parse_accelerator("Delete")
+
+        if keycode in keycodes:
             self.abort_transfers(clear=True)
+            return True
 
-        else:
-            # No key match, continue event
-            return False
-
-        return True
+        # No key match, continue event
+        return False
 
     def on_file_properties(self, *args):
 

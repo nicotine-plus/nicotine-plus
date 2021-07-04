@@ -543,10 +543,10 @@ class IconNotebook:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes_w, mods = parse_accelerator("<Primary>w")
-        key, codes_f4, mods = parse_accelerator("<Primary>F4")
+        keycodes_w, mods = parse_accelerator("<Primary>w")
+        keycodes_f4, mods = parse_accelerator("<Primary>F4")
 
-        if state & mods and (keycode in codes_w or keycode in codes_f4):
+        if state & mods and (keycode in keycodes_w or keycode in keycodes_f4):
             # Ctrl+W and Ctrl+F4: close current tab
 
             page = self.get_nth_page(self.get_current_page())

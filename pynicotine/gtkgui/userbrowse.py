@@ -945,9 +945,9 @@ class UserBrowse:
         keyval, keycode, state = get_key_press_event_args(*args)
         self.select_files()
 
-        key, codes, mods = parse_accelerator("<Primary>c")
+        keycodes, mods = parse_accelerator("<Primary>c")
 
-        if state & mods and keycode in codes:
+        if state & mods and keycode in keycodes:
             self.copy_selected_path(is_file=is_file)
         else:
             # No key match, continue event
