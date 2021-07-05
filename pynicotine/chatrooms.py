@@ -43,6 +43,10 @@ class ChatRooms:
         if hasattr(ui_callback, "chatrooms"):
             self.ui_callback = ui_callback.chatrooms
 
+    def echo_message(self, room, message):
+        if self.ui_callback:
+            self.ui_callback.echo_message(room, message)
+
     def get_user_stats(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)
@@ -168,8 +172,8 @@ class Tickers:
 
     def remove_ticker(self, user):
 
-        for i in range(len(self.messages)):
-            if self.messages[i][0] == user:
+        for i, message in enumerate(self.messages):
+            if message[0] == user:
                 del self.messages[i]
                 return
 

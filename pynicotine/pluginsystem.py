@@ -698,18 +698,18 @@ class BasePlugin:
         self.core.privatechats.send_message(user, text)
 
     def fakepublic(self, room, user, text):
-        try:
-            room = self.core.chatrooms.joinedrooms[room]
-        except KeyError:
-            return False
 
         msg = slskmessages.SayChatroom(room, text)
         msg.user = user
-        room.say_chat_room(msg, text)
-        return True
+        self.core.chatrooms.say_chat_room(msg)
 
     def echo_private(self, user, msg):
         """ Display a raw message in private (not sent to others) """
 
         self.core.privatechats.show_user(user)
         self.core.privatechats.echo_message(user, msg)
+
+    def echo_public(self, room, msg):
+        """ Display a raw message in chat rooms (not sent to others) """
+
+        self.core.chatrooms.echo_message(room, msg)

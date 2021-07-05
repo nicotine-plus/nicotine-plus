@@ -343,6 +343,10 @@ class ChatRooms(IconNotebook):
     def ticker_remove(self, msg):
         self.joinedrooms[msg.room].ticker_remove(msg)
 
+    def echo_message(self, room, text):
+        if room in self.joinedrooms:
+            self.joinedrooms[room].echo_message(text)
+
     def say_chat_room(self, msg):
         self.joinedrooms[msg.room].say_chat_room(msg)
 
@@ -889,6 +893,12 @@ class ChatRoom:
                 self.ChatScroll, line, tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
+
+    def echo_message(self, text):
+
+        tag = self.tag_me
+        timestamp_format = config.sections["logging"]["rooms_timestamp"]
+        append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
 
     def get_user_tag(self, user):
 
