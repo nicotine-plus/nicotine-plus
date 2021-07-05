@@ -45,4 +45,4 @@ class Plugin(BasePlugin):
 
         if self.throttle.ok_to_respond(room, user, line, 10):
             self.throttle.responded()
-            self.saypublic(room, choice(self.settings['replies']))
+            self.send_public(room, choice(self.settings['replies']))

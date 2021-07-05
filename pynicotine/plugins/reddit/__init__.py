@@ -69,4 +69,4 @@ class Plugin(BasePlugin):
 
                     for post in islice(response['data']['children'], self.settings['reddit_links']):
                         post_data = post['data']
-                        self.saypublic(room, "/me {}: {}".format(post_data['title'], post_data['url']))
+                        self.send_public(room, "/me {}: {}".format(post_data['title'], post_data['url']))

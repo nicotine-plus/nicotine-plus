@@ -687,11 +687,11 @@ class BasePlugin:
         self.send_public(room, text)
 
     def sayprivate(self, user, text):
-        self.log("sayprivate(user, text) is deprecated, please use send_private(user, text, show_ui=True)")
+        self.log("sayprivate(user, text) is deprecated, please use send_private(user, text)")
         self.send_private(user, text, show_ui=True)
 
     def sendprivate(self, user, text):
-        self.log("sendprivate(user, text) is deprecated, please use send_private(user, text)")
+        self.log("sendprivate(user, text) is deprecated, please use send_private(user, text, show_ui=False)")
         self.send_private(user, text, show_ui=False)
 
     def fakepublic(self, room, user, text):
@@ -708,7 +708,7 @@ class BasePlugin:
     def send_public(self, room, text):
         self.core.queue.append(slskmessages.SayChatroom(room, text))
 
-    def send_private(self, user, text, show_ui=False):
+    def send_private(self, user, text, show_ui=True):
         """ Send user message in private.
         show_ui controls if the UI opens a private chat view for the user. """
 

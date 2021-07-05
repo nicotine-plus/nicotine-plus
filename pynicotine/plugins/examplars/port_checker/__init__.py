@@ -58,19 +58,19 @@ class Plugin(BasePlugin):
             status = self.checkport(ip_address, port)
             if status in ('open',):
                 if self.checked[user] in (1,):
-                    self.saypublic(
+                    self.send_public(
                         self.checkroom,
                         '%s: Your port is accessible, you can blame others in case of problems ;)' % user)
                 else:
                     self.log("%s: Port is accessible, not reporting since this was an unrequested scan." % (user,))
             elif status in ('closed',):
-                self.saypublic(
+                self.send_public(
                     self.checkroom,
                     ('%s: Alas, your firewall and/or router is not configured properly. I could not '
                      'contact you at port %s') % (user, port))
             else:
                 if self.checked[user] in (1,):
-                    self.saypublic(
+                    self.send_public(
                         self.checkroom,
                         '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
                 else:

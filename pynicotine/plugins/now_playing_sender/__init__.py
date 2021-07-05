@@ -100,7 +100,7 @@ class Plugin(BasePlugin):
             playing = self.core.now_playing.get_np()
 
             if playing:
-                self.saypublic(room, playing)
+                self.send_public(room, playing)
 
     def song_change(self, _connection, _sender_name, _object_path, _interface_name, _signal_name, parameters):
 

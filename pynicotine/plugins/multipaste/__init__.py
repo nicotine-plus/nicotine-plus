@@ -44,7 +44,7 @@ class Plugin(BasePlugin):
             else:
                 self.log("Splitting lines.")
             for split_line in lines[:self.settings['maxprivatelines']]:
-                self.sayprivate(user, split_line)
+                self.send_private(user, split_line)
 
             return returncode['zap']
 
@@ -60,7 +60,7 @@ class Plugin(BasePlugin):
             else:
                 self.log("Splitting lines.")
             for split_line in lines[:self.settings['maxpubliclines']]:
-                self.saypublic(room, split_line)
+                self.send_public(room, split_line)
 
             return returncode['zap']
 
