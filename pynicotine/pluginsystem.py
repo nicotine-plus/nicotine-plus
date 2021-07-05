@@ -69,8 +69,8 @@ class PluginHandler:
 
     def update_completions(self, plugin):
 
-        if self.core.ui_callback and plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
-            self.core.ui_callback.chatrooms.update_completions()
+        if plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
+            self.core.chatrooms.update_completions()
 
         if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
             self.core.privatechats.update_completions()
@@ -151,9 +151,8 @@ class PluginHandler:
 
             plugin.init()
 
-            if self.core.ui_callback:
-                for trigger, _func in plugin.__publiccommands__:
-                    self.core.ui_callback.chatrooms.CMDS.add('/' + trigger + ' ')
+            for trigger, _func in plugin.__publiccommands__:
+                self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.add('/' + trigger + ' ')
@@ -192,9 +191,8 @@ class PluginHandler:
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
 
-            if self.core.ui_callback:
-                for trigger, _func in plugin.__publiccommands__:
-                    self.core.ui_callback.chatrooms.CMDS.remove('/' + trigger + ' ')
+            for trigger, _func in plugin.__publiccommands__:
+                self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
 
             for trigger, _func in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')

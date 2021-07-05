@@ -112,28 +112,3 @@ class RoomWall:
                 self.RoomWallEntry.select_region(0, -1)
 
         dialog_show(self.dialog)
-
-
-class Tickers:
-
-    def __init__(self):
-
-        self.messages = []
-
-    def add_ticker(self, user, message):
-
-        message = message.replace("\n", " ")
-        self.messages.insert(0, [user, message])
-
-    def remove_ticker(self, user):
-
-        for i in range(len(self.messages)):
-            if self.messages[i][0] == user:
-                del self.messages[i]
-                return
-
-    def get_tickers(self):
-        return self.messages
-
-    def set_ticker(self, msgs):
-        self.messages = msgs

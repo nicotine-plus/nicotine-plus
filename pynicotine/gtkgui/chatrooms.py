@@ -36,10 +36,10 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
+from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
-from pynicotine.gtkgui.roomwall import Tickers
 from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
@@ -60,7 +60,6 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.logfacility import log
-from pynicotine.utils import get_completion_list
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -68,20 +67,10 @@ from pynicotine.utils import human_speed
 
 class ChatRooms(IconNotebook):
 
-    # List of allowed commands. The implementation for them is in the ChatEntry class.
-    CMDS = {
-        "/al ", "/alias ", "/un ", "/unalias ", "/w ", "/whois ", "/browse ", "/b ", "/ip ", "/pm ", "/m ", "/msg ",
-        "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ",
-        "/leave ", "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ",
-        "/unban ", "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ",
-        "/rescan ", "/tick ", "/t ", "/info ", "/toggle ", "/tickers "
-    }
-
     def __init__(self, frame):
 
         self.frame = frame
 
-        self.completion_list = []
         self.joinedrooms = {}
         self.autojoin = True
         self.private_rooms = config.sections["private_rooms"]["rooms"]
@@ -196,7 +185,7 @@ class ChatRooms(IconNotebook):
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
 
-    def set_room_list(self, msg):
+    def room_list(self, msg):
 
         if self.autojoin:
             self.autojoin = False
@@ -320,9 +309,6 @@ class ChatRooms(IconNotebook):
 
         self.roomlist.set_private_rooms()
 
-    def toggle_private_rooms(self, enabled):
-        config.sections["server"]["private_chatrooms"] = enabled
-
     def private_room_disown(self, msg):
         if msg.room in self.private_rooms and \
                 self.private_rooms[msg.room]["owner"] == config.sections["server"]["login"]:
@@ -336,9 +322,9 @@ class ChatRooms(IconNotebook):
         for room in self.joinedrooms.values():
             room.get_user_status(msg.user, msg.status)
 
-    def set_user_flag(self, user, country):
+    def set_user_country(self, user, country):
         for room in self.joinedrooms.values():
-            room.set_user_flag(user, country)
+            room.set_user_country(user, country)
 
     def user_joined_room(self, msg):
 
@@ -357,21 +343,25 @@ class ChatRooms(IconNotebook):
     def ticker_remove(self, msg):
         self.joinedrooms[msg.room].ticker_remove(msg)
 
-    def say_chat_room(self, msg, text):
-        self.joinedrooms[msg.room].say_chat_room(msg, text)
+    def say_chat_room(self, msg):
+        self.joinedrooms[msg.room].say_chat_room(msg)
 
-    def public_room_message(self, msg, text):
+    def public_room_message(self, msg):
 
         try:
             room = self.joinedrooms['Public ']
         except KeyError:
             return
 
-        room.say_chat_room(msg, text, public=True)
+        room.say_chat_room(msg, public=True)
 
     def toggle_chat_buttons(self):
         for room in self.joinedrooms.values():
             room.toggle_chat_buttons()
+
+    def set_completion_list(self, completion_list):
+        for room in self.joinedrooms.values():
+            room.set_completion_list(list(completion_list))
 
     def update_visuals(self):
 
@@ -412,14 +402,6 @@ class ChatRooms(IconNotebook):
             room.server_disconnect()
 
         self.autojoin = 1
-
-    def update_completions(self):
-
-        self.completion_list = get_completion_list(self.CMDS, self.roomlist.server_rooms)
-
-        for room in self.joinedrooms.values():
-            # We need to create a copy of the completion list, due to unique room usernames
-            room.set_completion_list(list(self.completion_list))
 
 
 class ChatRoom:
@@ -467,7 +449,7 @@ class ChatRoom:
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,
-                               self.send_message, self.chatrooms.CMDS, self.ChatScroll, is_chatroom=True)
+                               self.send_message, self.frame.np.chatrooms.CMDS, self.ChatScroll, is_chatroom=True)
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -563,7 +545,7 @@ class ChatRoom:
         )
 
         self.ChatEntry.grab_focus()
-        self.set_completion_list(list(self.chatrooms.completion_list))
+        self.set_completion_list(list(self.frame.np.chatrooms.completion_list))
 
         self.count_users()
         self.create_tags()
@@ -836,9 +818,10 @@ class ChatRoom:
                 priority=Gio.NotificationPriority.HIGH
             )
 
-    def say_chat_room(self, msg, text, public=False):
+    def say_chat_room(self, msg, public=False):
 
         user = msg.user
+        text = msg.msg
 
         if self.frame.np.network_filter.is_user_ignored(user):
             return
@@ -1015,7 +998,7 @@ class ChatRoom:
         self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(self.users[user], 5, status)
 
-    def set_user_flag(self, user, country):
+    def set_user_country(self, user, country):
 
         if user not in self.users:
             return
@@ -1149,7 +1132,7 @@ class ChatRoom:
         self.count_users()
 
         # Build completion list
-        self.set_completion_list(list(self.chatrooms.completion_list))
+        self.set_completion_list(list(self.frame.np.chatrooms.completion_list))
 
         # Update all username tags in chat log
         for user in self.tag_users:

@@ -419,8 +419,6 @@ class NicotineFrame:
         self.downloads.server_login()
         self.privatechats.server_login()
 
-        return self.chatrooms
-
     def init_spell_checker(self):
 
         try:
@@ -2048,7 +2046,7 @@ class NicotineFrame:
         widget.set_text("")
 
     def update_completions(self):
-        self.chatrooms.update_completions()
+        self.np.chatrooms.update_completions()
         self.np.privatechats.update_completions()
 
     """ Away Timer """

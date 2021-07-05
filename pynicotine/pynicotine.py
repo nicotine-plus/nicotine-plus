@@ -38,6 +38,7 @@ from collections import deque
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine import transfers
+from pynicotine.chatrooms import ChatRooms
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
 from pynicotine.interests import Interests
@@ -105,13 +106,12 @@ class NicotineCore:
         self.userinfo = None
         self.userlist = None
         self.privatechats = None
+        self.chatrooms = None
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
         self.geoip = None
         self.notifications = None
-
-        self.chatrooms = None
 
         self.shutdown = False
         self.manualdisconnect = False
@@ -280,6 +280,7 @@ class NicotineCore:
         self.userinfo = UserInfo(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
         self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
+        self.chatrooms = ChatRooms(self, config, self.queue, ui_callback)
 
         self.add_upnp_portmapping()
 
@@ -690,9 +691,7 @@ Error: %(error)s""", {
         if country_code == "-":
             country_code = ""
 
-        if self.chatrooms is not None:
-            self.chatrooms.set_user_flag(user, country_code)
-
+        self.chatrooms.set_user_country(user, country_code)
         self.userlist.set_user_country(user, country_code)
 
         # From this point on all paths should call
@@ -953,8 +952,6 @@ Error: %(error)s""", {
         self.shares.set_connected(False)
 
         self.transfers.server_disconnect()
-
-        self.chatrooms = None
         self.pluginhandler.server_disconnect_notification(userchoice)
 
         if self.ui_callback:
@@ -1223,7 +1220,7 @@ Error: %(error)s""", {
             self.privatechats.server_login()
 
             if self.ui_callback:
-                self.chatrooms = self.ui_callback.server_login()
+                self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)
@@ -1300,9 +1297,7 @@ Error: %(error)s""", {
         self.userinfo.get_user_status(msg)
         self.userlist.get_user_status(msg)
         self.privatechats.get_user_status(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.get_user_status(msg)
+        self.chatrooms.get_user_status(msg)
 
     def say_chat_room(self, msg):
         """ Server code: 13 """
@@ -1315,35 +1310,27 @@ Error: %(error)s""", {
         if event is not None:
             _room, _user, msg.msg = event
 
-            if self.chatrooms is not None:
-                self.chatrooms.say_chat_room(msg, msg.msg)
-
+            self.chatrooms.say_chat_room(msg)
             self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def join_room(self, msg):
         """ Server code: 14 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.join_room(msg)
+        self.chatrooms.join_room(msg)
 
     def leave_room(self, msg):
         """ Server code: 15 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.leave_room(msg)
+        self.chatrooms.leave_room(msg)
 
     def user_joined_room(self, msg):
         """ Server code: 16 """
 
         log.add_msg_contents(msg)
 
-        if self.chatrooms is not None:
-            self.chatrooms.user_joined_room(msg)
-
+        self.chatrooms.user_joined_room(msg)
         self.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
 
     def user_left_room(self, msg):
@@ -1351,9 +1338,7 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        if self.chatrooms is not None:
-            self.chatrooms.user_left_room(msg)
-
+        self.chatrooms.user_left_room(msg)
         self.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def message_user(self, msg):
@@ -1384,9 +1369,7 @@ Error: %(error)s""", {
         self.interests.get_user_stats(msg)
         self.userinfo.get_user_stats(msg)
         self.userlist.get_user_stats(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.get_user_stats(msg)
+        self.chatrooms.get_user_stats(msg)
 
         stats = {
             'avgspeed': msg.avgspeed,
@@ -1426,9 +1409,7 @@ Error: %(error)s""", {
         """ Server code: 64 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.set_room_list(msg)
+        self.chatrooms.room_list(msg)
 
     @staticmethod
     def admin_message(msg):
@@ -1547,81 +1528,61 @@ Error: %(error)s""", {
         """ Server code: 113 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_set(msg)
+        self.chatrooms.ticker_set(msg)
 
     def room_ticker_add(self, msg):
         """ Server code: 114 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_add(msg)
+        self.chatrooms.ticker_add(msg)
 
     def room_ticker_remove(self, msg):
         """ Server code: 115 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.ticker_remove(msg)
+        self.chatrooms.ticker_remove(msg)
 
     def private_room_users(self, msg):
         """ Server code: 133 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_users(msg)
+        self.chatrooms.private_room_users(msg)
 
     def private_room_add_user(self, msg):
         """ Server code: 134 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_add_user(msg)
+        self.chatrooms.private_room_add_user(msg)
 
     def private_room_remove_user(self, msg):
         """ Server code: 135 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_remove_user(msg)
+        self.chatrooms.private_room_remove_user(msg)
 
     def private_room_disown(self, msg):
         """ Server code: 137 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_disown(msg)
+        self.chatrooms.private_room_disown(msg)
 
     def private_room_added(self, msg):
         """ Server code: 139 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_added(msg)
+        self.chatrooms.private_room_added(msg)
 
     def private_room_removed(self, msg):
         """ Server code: 140 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_removed(msg)
+        self.chatrooms.private_room_removed(msg)
 
     def private_room_toggle(self, msg):
         """ Server code: 141 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.toggle_private_rooms(msg.enabled)
+        self.chatrooms.private_room_toggle(msg)
 
     @staticmethod
     def change_password(msg):
@@ -1640,50 +1601,39 @@ Error: %(error)s""", {
         """ Server code: 143 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_add_operator(msg)
+        self.chatrooms.private_room_add_operator(msg)
 
     def private_room_remove_operator(self, msg):
         """ Server code: 144 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_remove_operator(msg)
+        self.chatrooms.private_room_remove_operator(msg)
 
     def private_room_operator_added(self, msg):
         """ Server code: 145 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_operator_added(msg)
+        self.chatrooms.private_room_operator_added(msg)
 
     def private_room_operator_removed(self, msg):
         """ Server code: 146 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_operator_removed(msg)
+        self.chatrooms.private_room_operator_removed(msg)
 
     def private_room_owned(self, msg):
         """ Server code: 148 """
 
         log.add_msg_contents(msg)
-
-        if self.chatrooms is not None:
-            self.chatrooms.private_room_owned(msg)
+        self.chatrooms.private_room_owned(msg)
 
     def public_room_message(self, msg):
         """ Server code: 152 """
 
         log.add_msg_contents(msg)
 
-        if self.chatrooms is not None:
-            self.chatrooms.public_room_message(msg, msg.msg)
-            self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
+        self.chatrooms.public_room_message(msg)
+        self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     """
     Incoming Peer Messages
