@@ -1363,15 +1363,14 @@ class SlskProtoThread(threading.Thread):
             self._dlimits = {}
 
             try:
-                for i in conns:
-                    conn = conns[i]
+                for connection, conn_obj in conns.items():
                     event_masks = selectors.EVENT_READ
 
-                    if (conn.obuf or (i is not self.server_socket
-                                      and conn.fileupl is not None and conn.fileupl.offset is not None)):
+                    if (conn_obj.obuf or (connection is not self.server_socket
+                                          and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None)):
                         event_masks |= selectors.EVENT_WRITE
 
-                    self.selector.modify(i, event_masks)
+                    self.selector.modify(connection, event_masks)
 
                 key_events = self.selector.select(timeout=-1)
                 input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
