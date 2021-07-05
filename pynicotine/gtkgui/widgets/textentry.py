@@ -388,7 +388,7 @@ class ChatEntry:
             return  # Avoid gsignal warning
 
         elif cmd in ("/c", "/close"):
-            self.frame.privatechats.pages[self.entity].on_close()
+            self.frame.privatechats.users[self.entity].on_close()
 
         elif cmd == "/now":
             self.frame.np.now_playing.display_now_playing(

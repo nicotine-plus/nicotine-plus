@@ -57,7 +57,7 @@ class PrivateChats(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.pages = {}
+        self.users = {}
 
         IconNotebook.__init__(
             self,
@@ -76,7 +76,7 @@ class PrivateChats(IconNotebook):
                 self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
             return
 
-        for user, tab in list(self.pages.items()):
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 GLib.idle_add(grab_widget_focus, tab.ChatLine)
 
@@ -90,51 +90,51 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in list(self.pages.items()):
+        for user, tab in list(self.users.items()):
             if tab.Main == page:
                 # Remove hilite
                 self.frame.notifications.clear("private", tab.user)
 
     def get_user_status(self, msg):
 
-        if msg.user in self.pages:
-            page = self.pages[msg.user]
+        if msg.user in self.users:
+            page = self.users[msg.user]
 
             self.set_user_status(page.Main, msg.user, msg.status)
             page.get_user_status(msg.status)
 
     def set_completion_list(self, completion_list):
-        for user in self.pages.values():
+        for user in self.users.values():
             user.set_completion_list(list(completion_list))
 
     def show_user(self, user, switch_page=True):
 
-        if user not in self.pages:
+        if user not in self.users:
             try:
                 status = self.frame.np.users[user].status
             except Exception:
                 # Offline
                 status = 0
 
-            self.pages[user] = page = PrivateChat(self, user, status)
+            self.users[user] = page = PrivateChat(self, user, status)
 
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-        if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
-            self.set_current_page(self.page_num(self.pages[user].Main))
+        if switch_page and self.get_current_page() != self.page_num(self.users[user].Main):
+            self.set_current_page(self.page_num(self.users[user].Main))
 
     def echo_message(self, user, text):
-        if user in self.pages:
-            self.pages[user].echo_message(text)
+        if user in self.users:
+            self.users[user].echo_message(text)
 
     def send_message(self, user, text):
-        if user in self.pages:
-            self.pages[user].send_message(text)
+        if user in self.users:
+            self.users[user].send_message(text)
 
     def show_notification(self, user, text):
 
-        chat = self.pages[user]
+        chat = self.users[user]
 
         # Hilight top-level tab label
         self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
@@ -165,21 +165,21 @@ class PrivateChats(IconNotebook):
         self.frame.np.privatechats.show_user(msg.user, switch_page=False)
         self.show_notification(msg.user, msg.msg)
 
-        self.pages[msg.user].message_user(msg)
+        self.users[msg.user].message_user(msg)
 
     def update_visuals(self):
 
-        for page in self.pages.values():
+        for page in self.users.values():
             page.update_visuals()
             page.update_tags()
 
     def server_login(self):
-        for user, page in self.pages.items():
+        for user, page in self.users.items():
             page.server_login()
 
     def server_disconnect(self):
 
-        for user, page in self.pages.items():
+        for user, page in self.users.items():
             page.server_disconnect()
             self.set_user_status(page.Main, user, 0)
 
