@@ -31,7 +31,7 @@ from pynicotine.slskproto import SlskProtoThread
 from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
-SLSKPROTO_RUN_TIME = 0.5
+SLSKPROTO_RUN_TIME = 1.5
 LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
 

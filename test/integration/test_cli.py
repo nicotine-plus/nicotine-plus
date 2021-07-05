@@ -25,8 +25,8 @@ class CLITest(unittest.TestCase):
     def test_cli(self):
         """ Verify that CLI-exclusive functionality works """
 
-        output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=1)
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
         self.assertTrue(str(output).find("--help") > -1)
 
-        output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=1)
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
         self.assertTrue(str(output).find("Nicotine+") > -1)
