@@ -23,10 +23,10 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import append_line
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.widgets.textview import append_line
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import expand_alias
