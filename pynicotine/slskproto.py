@@ -1233,85 +1233,87 @@ class SlskProtoThread(threading.Thread):
                 self._reset_counters(conns)
                 self._uploadlimit = (callback, msg_obj.limit)
 
-        return conns, connsinprogress, numsockets
+        return numsockets
 
-    def read_data(self, conns, i):
+    def read_data(self, conn_obj):
+
+        connection = conn_obj.conn
 
         # Check for a download limit
-        if i in self._dlimits:
-            limit = self._dlimits[i]
+        if connection in self._dlimits:
+            limit = self._dlimits[connection]
         else:
             limit = None
 
-        conn = conns[i]
-
-        conn.lastactive = time.time()
+        conn_obj.lastactive = time.time()
 
         if limit is None:
             # Unlimited download data
-            data = i.recv(conn.lastreadlength)
-            conn.ibuf.extend(data)
+            data = connection.recv(conn_obj.lastreadlength)
+            conn_obj.ibuf.extend(data)
 
-            if len(data) >= conn.lastreadlength // 2:
-                conn.lastreadlength = conn.lastreadlength * 2
+            if len(data) >= conn_obj.lastreadlength // 2:
+                conn_obj.lastreadlength = conn_obj.lastreadlength * 2
 
         else:
             # Speed Limited Download data (transfers)
-            data = i.recv(conn.lastreadlength)
-            conn.ibuf.extend(data)
-            conn.lastreadlength = limit
-            conn.readbytes2 += len(data)
+            data = connection.recv(conn_obj.lastreadlength)
+            conn_obj.ibuf.extend(data)
+            conn_obj.lastreadlength = limit
+            conn_obj.readbytes2 += len(data)
 
-        if not data and not conn.obuf:  # Make sure we don't have data to send on this connection
-            self._core_callback([ConnClose(i, conn.addr)])
-            self.close_connection(conns, i)
+        if not data:
+            return False
 
-    def write_data(self, conns, i):
+        return True
 
-        if i in self._ulimits:
-            limit = self._ulimits[i]
+    def write_data(self, conns, conn_obj):
+
+        connection = conn_obj.conn
+
+        if connection in self._ulimits:
+            limit = self._ulimits[connection]
         else:
             limit = None
 
-        conn = conns[i]
-        conn.lastactive = time.time()
+        conn_obj.lastactive = time.time()
 
-        if conn.obuf:
-            i.setblocking(0)
+        if conn_obj.obuf:
+            connection.setblocking(0)
 
             if limit is None:
-                bytes_send = i.send(conn.obuf)
+                bytes_send = connection.send(conn_obj.obuf)
             else:
-                bytes_send = i.send(conn.obuf[:limit])
+                bytes_send = connection.send(conn_obj.obuf[:limit])
 
-            i.setblocking(1)
-            conn.obuf = conn.obuf[bytes_send:]
+            connection.setblocking(1)
+            conn_obj.obuf = conn_obj.obuf[bytes_send:]
         else:
             bytes_send = 0
 
-        if i is self.server_socket:
+        if connection is self.server_socket:
             return
 
-        if conn.fileupl is not None and conn.fileupl.offset is not None:
-            conn.fileupl.sentbytes += bytes_send
-            conn.sentbytes2 += bytes_send
+        if conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
+            conn_obj.fileupl.sentbytes += bytes_send
+            conn_obj.sentbytes2 += bytes_send
 
-            totalsentbytes = conn.fileupl.offset + conn.fileupl.sentbytes + len(conn.obuf)
+            totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
             try:
-                size = conn.fileupl.size
+                size = conn_obj.fileupl.size
 
                 if totalsentbytes < size:
-                    bytestoread = bytes_send * 2 - len(conn.obuf) + 10 * 4024
+                    bytestoread = bytes_send * 2 - len(conn_obj.obuf) + 10 * 4024
 
                     if bytestoread > 0:
-                        read = conn.fileupl.file.read(bytestoread)
-                        conn.obuf.extend(read)
+                        read = conn_obj.fileupl.file.read(bytestoread)
+                        conn_obj.obuf.extend(read)
 
             except IOError as strerror:
-                self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
-                self._core_callback([ConnClose(i, conn.addr)])
-                self.close_connection(conns, i)
+                self._core_callback([FileError(conn_obj, conn_obj.fileupl.file, strerror)])
+                self._core_callback([ConnClose(connection, conn_obj.addr)])
+                self.close_connection(conns, connection)
 
             except ValueError:
                 pass
@@ -1326,13 +1328,13 @@ class SlskProtoThread(threading.Thread):
             illusion that uploads are updated often. """
             cooldown = max(1.0, min(self.total_uploads * uniform(0.8, 1.0), 15))
 
-            if totalsentbytes == size or (curtime - conn.lastcallback) > cooldown:
+            if totalsentbytes == size or (curtime - conn_obj.lastcallback) > cooldown:
 
                 """ We save resources by not sending data back to the NicotineCore
                 every time a part of a file is uploaded """
 
-                self._core_callback([conn.fileupl])
-                conn.lastcallback = curtime
+                self._core_callback([conn_obj.fileupl])
+                conn_obj.lastcallback = curtime
 
     """ Networking Loop """
 
@@ -1355,7 +1357,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             if queue:
-                conns, connsinprogress, numsockets = self.process_conn_output(queue, conns, connsinprogress)
+                numsockets = self.process_conn_output(queue, conns, connsinprogress)
 
             self._ulimits = {}
             self._dlimits = {}
@@ -1475,24 +1477,6 @@ class SlskProtoThread(threading.Thread):
                     # Connection was removed, possibly disconnecting from the server
                     continue
 
-                if connection in output_list:
-                    if self._is_upload(conn_obj):
-                        limit = self._uploadlimit[0](conns)
-
-                        if limit is not None:
-                            limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
-
-                        if limit is None or limit > 0:
-                            self._ulimits[connection] = limit
-
-                    try:
-                        self.write_data(conns, connection)
-
-                    except socket.error as err:
-                        self._core_callback([ConnectError(conn_obj, err)])
-                        self.close_connection(conns, connection)
-                        continue
-
                 if connection is not self.server_socket:
                     addr = conn_obj.addr
 
@@ -1523,7 +1507,11 @@ class SlskProtoThread(threading.Thread):
                             self._dlimits[connection] = limit
 
                     try:
-                        self.read_data(conns, connection)
+                        if not self.read_data(conn_obj):
+                            # No data received, socket was likely closed remotely
+                            self._core_callback([ConnClose(connection, conn_obj.addr)])
+                            self.close_connection(conns, connection)
+                            continue
 
                     except socket.error as err:
                         self._core_callback([ConnectError(conn_obj, err)])
@@ -1532,6 +1520,24 @@ class SlskProtoThread(threading.Thread):
 
                 if conn_obj.ibuf:
                     self.process_conn_input(conns, connection, conn_obj)
+
+                if connection in output_list:
+                    if self._is_upload(conn_obj):
+                        limit = self._uploadlimit[0](conns)
+
+                        if limit is not None:
+                            limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
+
+                        if limit is None or limit > 0:
+                            self._ulimits[connection] = limit
+
+                    try:
+                        self.write_data(conns, conn_obj)
+
+                    except socket.error as err:
+                        self._core_callback([ConnectError(conn_obj, err)])
+                        self.close_connection(conns, connection)
+                        continue
 
             # Don't exhaust the CPU
             time.sleep(0.2)
