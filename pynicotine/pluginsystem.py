@@ -330,18 +330,18 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
+        function_name_camelcase = ''.join(x.capitalize() or '_' for x in function_name.split('_'))
+
         for module, plugin in self.enabled_plugins.items():
             try:
-                function_name_camelcase = ''.join(x.capitalize() or '_' for x in function_name.split('_'))
-
                 if hasattr(plugin, function_name_camelcase):
                     plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
                         "old_function": function_name_camelcase,
                         "new_function": function_name
                     })
-                    function_name = function_name_camelcase
-
-                return_value = getattr(plugin, function_name)(*args)
+                    return_value = getattr(plugin, function_name_camelcase)(*args)
+                else:
+                    return_value = getattr(plugin, function_name)(*args)
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
