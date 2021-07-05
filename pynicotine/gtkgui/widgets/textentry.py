@@ -438,9 +438,9 @@ class ChatEntry:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        key, codes, mods = parse_accelerator("Tab")
+        keycodes, mods = parse_accelerator("Tab")
 
-        if keycode not in codes:
+        if keycode not in keycodes:
             return False
 
         if not config.sections["words"]["tab"]:
