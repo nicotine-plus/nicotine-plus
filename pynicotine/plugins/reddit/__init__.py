@@ -55,7 +55,7 @@ class Plugin(BasePlugin):
 
         return response
 
-    def IncomingPublicChatEvent(self, room, user, line):  # noqa
+    def incoming_public_chat_event(self, room, user, line):
         line = line.lower().strip()
 
         if line.startswith(self.plugin_command) and (" " in line):

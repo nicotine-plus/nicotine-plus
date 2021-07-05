@@ -25,16 +25,16 @@ class Plugin(BasePlugin):
 
     __name__ = "Now Playing Search"
 
-    def OutgoingGlobalSearchEvent(self, text):  # noqa
+    def outgoing_global_search_event(self, text):
         return (self.get_np(text),)
 
-    def OutgoingRoomSearchEvent(self, rooms, text):  # noqa
+    def outgoing_room_search_event(self, rooms, text):
         return (rooms, self.get_np(text))
 
-    def OutgoingBuddySearchEvent(self, text):  # noqa
+    def outgoing_buddy_search_event(self, text):
         return (self.get_np(text),)
 
-    def OutgoingUserSearchEvent(self, users, text):  # noqa
+    def outgoing_user_search_event(self, users, text):
         return (users, self.get_np(text))
 
     def get_np(self, text):

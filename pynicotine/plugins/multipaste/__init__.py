@@ -34,7 +34,7 @@ class Plugin(BasePlugin):
         'maxprivatelines': {"description": 'The maximum number of lines that will be pasted in private', 'type': 'int'},
     }
 
-    def OutgoingPrivateChatEvent(self, user, line):  # noqa
+    def outgoing_private_chat_event(self, user, line):
 
         lines = [x for x in line.splitlines() if x]
 
@@ -50,7 +50,7 @@ class Plugin(BasePlugin):
 
         return None
 
-    def OutgoingPublicChatEvent(self, room, line):  # noqa
+    def outgoing_public_chat_event(self, room, line):
 
         lines = [x for x in line.splitlines() if x]
 

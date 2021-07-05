@@ -45,10 +45,10 @@ class Plugin(BasePlugin):
 
         return text.capitalize()
 
-    def IncomingPrivateChatEvent(self, user, line):  # noqa
+    def incoming_private_chat_event(self, user, line):
         return (user, self.antishout(line))
 
-    def IncomingPublicChatEvent(self, room, user, line):  # noqa
+    def incoming_public_chat_event(self, room, user, line):
         return (room, user, self.antishout(line))
 
     def antishout(self, line):

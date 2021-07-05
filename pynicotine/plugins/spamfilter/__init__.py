@@ -58,7 +58,7 @@ class Plugin(BasePlugin):
 
         return None
 
-    def IncomingPublicChatEvent(self, room, user, line):  # noqa
+    def incoming_public_chat_event(self, room, user, line):
 
         if len(line) >= self.settings['minlength'] and len(set(line)) < self.settings['maxdiffcharacters']:
             self.log('Filtered ASCII spam from "%s" in room "%s"' % (user, room))
@@ -70,5 +70,5 @@ class Plugin(BasePlugin):
 
         return self.check_phrases(user, line)
 
-    def IncomingPrivateChatEvent(self, user, line):  # noqa
+    def incoming_private_chat_event(self, user, line):
         return self.check_phrases(user, line)

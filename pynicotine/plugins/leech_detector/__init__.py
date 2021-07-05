@@ -25,7 +25,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
-    __name__ = "Leech detector"
+    __name__ = "Leech Detector"
     settings = {
         'message': 'You are not sharing any files, that makes me a sad panda :(',
     }
@@ -39,7 +39,7 @@ class Plugin(BasePlugin):
     def init(self):
         self.probed = {}
 
-    def UploadQueuedNotification(self, user, virtual_path, real_path):  # noqa
+    def upload_queued_notification(self, user, virtual_path, real_path):
 
         if user in self.probed:
             return
@@ -48,7 +48,7 @@ class Plugin(BasePlugin):
         self.core.queue.append(slskmessages.GetUserStats(user))
         self.log('New user %s, requesting information...' % user)
 
-    def UserStatsNotification(self, user, stats):  # noqa
+    def user_stats_notification(self, user, stats):
 
         if user not in self.probed:
             # We did not trigger this notification

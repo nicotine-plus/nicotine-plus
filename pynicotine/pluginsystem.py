@@ -113,19 +113,18 @@ class PluginHandler:
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
-        if hasattr(plugin, "enable"):
-            log.add(
-                "Plugin '%s': top-level enable() function is obsolete, please use BasePlugin.init() instead",
-                plugin_name)
-
-        if hasattr(plugin, "disable"):
-            log.add(
-                "Plugin '%s': top-level disable() function is obsolete, please use BasePlugin.disable() instead",
-                plugin_name)
-
         instance = plugin.Plugin(self, self.config, self.core)
         self.plugin_settings(plugin_name, instance)
-        instance.LoadNotification()
+
+        if hasattr(plugin, "enable"):
+            instance.log("top-level enable() function is obsolete, please use BasePlugin.init() instead" % plugin_name)
+
+        if hasattr(plugin, "disable"):
+            instance.log("top-level disable() function is obsolete, please use BasePlugin.disable() instead"
+                         % plugin_name)
+
+        if hasattr(instance, "LoadNotification"):
+            instance.log("LoadNotification() is obsolete, please use init()")
 
         return instance
 
@@ -326,14 +325,23 @@ class PluginHandler:
 
         return False
 
-    def trigger_event(self, function, args):
+    def trigger_event(self, function_name, args):
         """ Triggers an event for the plugins. Since events and notifications
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
         for module, plugin in self.enabled_plugins.items():
             try:
-                return_value = getattr(plugin, function)(*args)
+                function_name_camelcase = ''.join(x.capitalize() or '_' for x in function_name.split('_'))
+
+                if hasattr(plugin, function_name_camelcase):
+                    plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
+                        "old_function": function_name_camelcase,
+                        "new_function": function_name
+                    })
+                    function_name = function_name_camelcase
+
+                return_value = getattr(plugin, function_name)(*args)
 
                 if return_value is None:
                     # Nothing changed, continue to the next plugin
@@ -373,102 +381,102 @@ class PluginHandler:
         return args
 
     def search_request_notification(self, searchterm, user, searchid):
-        self.trigger_event("SearchRequestNotification", (searchterm, user, searchid))
+        self.trigger_event("search_request_notification", (searchterm, user, searchid))
 
     def distrib_search_notification(self, searchterm, user, searchid):
-        self.trigger_event("DistribSearchNotification", (searchterm, user, searchid))
+        self.trigger_event("distrib_search_notification", (searchterm, user, searchid))
 
     def public_room_message_notification(self, room, user, line):
-        self.trigger_event("PublicRoomMessageNotification", (room, user, line))
+        self.trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
         if user != self.my_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
-            return self.trigger_event("IncomingPrivateChatEvent", (user, line))
+            return self.trigger_event("incoming_private_chat_event", (user, line))
 
         return (user, line)
 
     def incoming_private_chat_notification(self, user, line):
-        self.trigger_event("IncomingPrivateChatNotification", (user, line))
+        self.trigger_event("incoming_private_chat_notification", (user, line))
 
     def incoming_public_chat_event(self, room, user, line):
-        return self.trigger_event("IncomingPublicChatEvent", (room, user, line))
+        return self.trigger_event("incoming_public_chat_event", (room, user, line))
 
     def incoming_public_chat_notification(self, room, user, line):
-        self.trigger_event("IncomingPublicChatNotification", (room, user, line))
+        self.trigger_event("incoming_public_chat_notification", (room, user, line))
 
     def outgoing_private_chat_event(self, user, line):
         if line is not None:
             # if line is None nobody actually said anything
-            return self.trigger_event("OutgoingPrivateChatEvent", (user, line))
+            return self.trigger_event("outgoing_private_chat_event", (user, line))
 
         return (user, line)
 
     def outgoing_private_chat_notification(self, user, line):
-        self.trigger_event("OutgoingPrivateChatNotification", (user, line))
+        self.trigger_event("outgoing_private_chat_notification", (user, line))
 
     def outgoing_public_chat_event(self, room, line):
-        return self.trigger_event("OutgoingPublicChatEvent", (room, line))
+        return self.trigger_event("outgoing_public_chat_event", (room, line))
 
     def outgoing_public_chat_notification(self, room, line):
-        self.trigger_event("OutgoingPublicChatNotification", (room, line))
+        self.trigger_event("outgoing_public_chat_notification", (room, line))
 
     def outgoing_global_search_event(self, text):
-        return self.trigger_event("OutgoingGlobalSearchEvent", (text,))
+        return self.trigger_event("outgoing_global_search_event", (text,))
 
     def outgoing_room_search_event(self, rooms, text):
-        return self.trigger_event("OutgoingRoomSearchEvent", (rooms, text))
+        return self.trigger_event("outgoing_room_search_event", (rooms, text))
 
     def outgoing_buddy_search_event(self, text):
-        return self.trigger_event("OutgoingBuddySearchEvent", (text,))
+        return self.trigger_event("outgoing_buddy_search_event", (text,))
 
     def outgoing_user_search_event(self, users, text):
-        return self.trigger_event("OutgoingUserSearchEvent", (users, text))
+        return self.trigger_event("outgoing_user_search_event", (users, text))
 
     def user_resolve_notification(self, user, ip_address, port, country=None):
         """Notification for user IP:Port resolving.
 
         Note that country is only set when the user requested the resolving"""
-        self.trigger_event("UserResolveNotification", (user, ip_address, port, country))
+        self.trigger_event("user_resolve_notification", (user, ip_address, port, country))
 
     def server_connect_notification(self):
-        self.trigger_event("ServerConnectNotification", (),)
+        self.trigger_event("server_connect_notification", (),)
 
     def server_disconnect_notification(self, userchoice):
-        self.trigger_event("ServerDisconnectNotification", (userchoice, ))
+        self.trigger_event("server_disconnect_notification", (userchoice, ))
 
     def join_chatroom_notification(self, room):
-        self.trigger_event("JoinChatroomNotification", (room,))
+        self.trigger_event("join_chatroom_notification", (room,))
 
     def leave_chatroom_notification(self, room):
-        self.trigger_event("LeaveChatroomNotification", (room,))
+        self.trigger_event("leave_chatroom_notification", (room,))
 
     def user_join_chatroom_notification(self, room, user):
-        self.trigger_event("UserJoinChatroomNotification", (room, user,))
+        self.trigger_event("user_join_chatroom_notification", (room, user,))
 
     def user_leave_chatroom_notification(self, room, user):
-        self.trigger_event("UserLeaveChatroomNotification", (room, user,))
+        self.trigger_event("user_leave_chatroom_notification", (room, user,))
 
     def user_stats_notification(self, user, stats):
-        self.trigger_event("UserStatsNotification", (user, stats))
+        self.trigger_event("user_stats_notification", (user, stats))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        self.trigger_event("UploadQueuedNotification", (user, virtual_path, real_path))
+        self.trigger_event("upload_queued_notification", (user, virtual_path, real_path))
 
     def upload_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("UploadStartedNotification", (user, virtual_path, real_path))
+        self.trigger_event("upload_started_notification", (user, virtual_path, real_path))
 
     def upload_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("UploadFinishedNotification", (user, virtual_path, real_path))
+        self.trigger_event("upload_finished_notification", (user, virtual_path, real_path))
 
     def download_started_notification(self, user, virtual_path, real_path):
-        self.trigger_event("DownloadStartedNotification", (user, virtual_path, real_path))
+        self.trigger_event("download_started_notification", (user, virtual_path, real_path))
 
     def download_finished_notification(self, user, virtual_path, real_path):
-        self.trigger_event("DownloadFinishedNotification", (user, virtual_path, real_path))
+        self.trigger_event("download_finished_notification", (user, virtual_path, real_path))
 
     def shutdown_notification(self):
-        self.trigger_event("ShutdownNotification", (),)
+        self.trigger_event("shutdown_notification", (),)
 
 
 class ResponseThrottle:
@@ -585,131 +593,137 @@ class BasePlugin:
         # Custom disable function for plugins
         pass
 
-    def LoadSettings(self, settings):  # pylint: disable=invalid-name, # noqa
-        self.settings = settings
-
-    def LoadNotification(self):  # pylint: disable=invalid-name, # noqa
+    def public_room_message_notification(self, room, user, line):
         pass
 
-    def PublicRoomMessageNotification(self, room, user, line):  # pylint: disable=invalid-name, # noqa
+    def search_request_notification(self, searchterm, user, searchid):
         pass
 
-    def SearchRequestNotification(self, searchterm, user, searchid):  # pylint: disable=invalid-name, # noqa
+    def distrib_search_notification(self, searchterm, user, searchid):
         pass
 
-    def DistribSearchNotification(self, searchterm, user, searchid):  # pylint: disable=invalid-name, # noqa
+    def incoming_private_chat_event(self, user, line):
         pass
 
-    def IncomingPrivateChatEvent(self, user, line):  # pylint: disable=invalid-name, # noqa
+    def incoming_private_chat_notification(self, user, line):
         pass
 
-    def IncomingPrivateChatNotification(self, user, line):  # pylint: disable=invalid-name, # noqa
+    def incoming_public_chat_event(self, room, user, line):
         pass
 
-    def IncomingPublicChatEvent(self, room, user, line):  # pylint: disable=invalid-name, # noqa
+    def incoming_public_chat_notification(self, room, user, line):
         pass
 
-    def IncomingPublicChatNotification(self, room, user, line):  # pylint: disable=invalid-name, # noqa
+    def outgoing_private_chat_event(self, user, line):
         pass
 
-    def OutgoingPrivateChatEvent(self, user, line):  # pylint: disable=invalid-name, # noqa
+    def outgoing_private_chat_notification(self, user, line):
         pass
 
-    def OutgoingPrivateChatNotification(self, user, line):  # pylint: disable=invalid-name, # noqa
+    def outgoing_public_chat_event(self, room, line):
         pass
 
-    def OutgoingPublicChatEvent(self, room, line):  # pylint: disable=invalid-name, # noqa
+    def outgoing_public_chat_notification(self, room, line):
         pass
 
-    def OutgoingPublicChatNotification(self, room, line):  # pylint: disable=invalid-name, # noqa
+    def outgoing_global_search_event(self, text):
         pass
 
-    def OutgoingGlobalSearchEvent(self, text):  # pylint: disable=invalid-name, # noqa
+    def outgoing_room_search_event(self, rooms, text):
         pass
 
-    def OutgoingRoomSearchEvent(self, rooms, text):  # pylint: disable=invalid-name, # noqa
+    def outgoing_buddy_search_event(self, text):
         pass
 
-    def OutgoingBuddySearchEvent(self, text):  # pylint: disable=invalid-name, # noqa
+    def outgoing_user_search_event(self, users, text):
         pass
 
-    def OutgoingUserSearchEvent(self, users, text):  # pylint: disable=invalid-name, # noqa
+    def user_resolve_notification(self, user, ip_address, port, country):
         pass
 
-    def UserResolveNotification(self, user, ip, port, country):  # pylint: disable=invalid-name, # noqa
+    def server_connect_notification(self):
         pass
 
-    def ServerConnectNotification(self):  # pylint: disable=invalid-name, # noqa
+    def server_disconnect_notification(self, userchoice):
         pass
 
-    def ServerDisconnectNotification(self, userchoice):  # pylint: disable=invalid-name, # noqa
+    def join_chatroom_notification(self, room):
         pass
 
-    def JoinChatroomNotification(self, room):  # pylint: disable=invalid-name, # noqa
+    def leave_chatroom_notification(self, room):
         pass
 
-    def LeaveChatroomNotification(self, room):  # pylint: disable=invalid-name, # noqa
+    def user_join_chatroom_notification(self, room, user):
         pass
 
-    def UserJoinChatroomNotification(self, room, user):  # pylint: disable=invalid-name, # noqa
+    def user_leave_chatroom_notification(self, room, user):
         pass
 
-    def UserLeaveChatroomNotification(self, room, user):  # pylint: disable=invalid-name, # noqa
+    def user_stats_notification(self, user, stats):
         pass
 
-    def UserStatsNotification(self, user, stats):  # pylint: disable=invalid-name, # noqa
+    def upload_queued_notification(self, user, virtual_path, real_path):
         pass
 
-    def UploadQueuedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+    def upload_started_notification(self, user, virtual_path, real_path):
         pass
 
-    def UploadStartedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+    def upload_finished_notification(self, user, virtual_path, real_path):
         pass
 
-    def UploadFinishedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+    def download_started_notification(self, user, virtual_path, real_path):
         pass
 
-    def DownloadStartedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
+    def download_finished_notification(self, user, virtual_path, real_path):
         pass
 
-    def DownloadFinishedNotification(self, user, virtual_path, real_path):  # pylint: disable=invalid-name, # noqa
-        pass
-
-    def ShutdownNotification(self):  # pylint: disable=invalid-name, # noqa
+    def shutdown_notification(self):
         pass
 
     # The following are functions to make your life easier,
     # you shouldn't override them.
-    def log(self, text):
-        log.add(self.__name__ + ": " + text)
-
     def saypublic(self, room, text):
-        self.core.queue.append(slskmessages.SayChatroom(room, text))
+        self.log("saypublic(room, text) is deprecated, please use send_public(room, text)")
+        self.send_public(room, text)
 
     def sayprivate(self, user, text):
-        """ Send user message in private (showing up in GUI) """
-
-        self.core.privatechats.show_user(user)
-        self.core.privatechats.send_message(user, text)
+        self.log("sayprivate(user, text) is deprecated, please use send_private(user, text, show_ui=True)")
+        self.send_private(user, text, show_ui=True)
 
     def sendprivate(self, user, text):
-        """ Send user message in private (not showing up in GUI) """
-
-        self.core.privatechats.send_message(user, text)
+        self.log("sendprivate(user, text) is deprecated, please use send_private(user, text)")
+        self.send_private(user, text, show_ui=False)
 
     def fakepublic(self, room, user, text):
+
+        self.log("fakepublic(room, user, text) is deprecated, please use echo_public(room, text)")
 
         msg = slskmessages.SayChatroom(room, text)
         msg.user = user
         self.core.chatrooms.say_chat_room(msg)
 
-    def echo_private(self, user, msg):
+    def log(self, text):
+        log.add(self.__name__ + ": " + text)
+
+    def send_public(self, room, text):
+        self.core.queue.append(slskmessages.SayChatroom(room, text))
+
+    def send_private(self, user, text, show_ui=False):
+        """ Send user message in private.
+        show_ui controls if the UI opens a private chat view for the user. """
+
+        if show_ui:
+            self.core.privatechats.show_user(user)
+
+        self.core.privatechats.send_message(user, text)
+
+    def echo_public(self, room, text):
+        """ Display a raw message in chat rooms (not sent to others) """
+
+        self.core.chatrooms.echo_message(room, text)
+
+    def echo_private(self, user, text):
         """ Display a raw message in private (not sent to others) """
 
         self.core.privatechats.show_user(user)
-        self.core.privatechats.echo_message(user, msg)
-
-    def echo_public(self, room, msg):
-        """ Display a raw message in chat rooms (not sent to others) """
-
-        self.core.chatrooms.echo_message(room, msg)
+        self.core.privatechats.echo_message(user, text)

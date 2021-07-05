@@ -34,7 +34,7 @@ class Plugin(BasePlugin):
         self.checked = {}
         self.checkroom = 'nicotine'
 
-    def IncomingPublicChatNotification(self, room, user, line):  # noqa
+    def incoming_public_chat_notification(self, room, user, line):
 
         if room != self.checkroom:
             return
@@ -52,10 +52,10 @@ class Plugin(BasePlugin):
             else:
                 self.log("%s seems to have trouble, but we already performed a port scan" % (user,))
 
-    def UserResolveNotification(self, user, ip, port, country):  # noqa
+    def user_resolve_notification(self, user, ip_address, port, country):
 
         if user in self.checked:
-            status = self.checkport(ip, port)
+            status = self.checkport(ip_address, port)
             if status in ('open',):
                 if self.checked[user] in (1,):
                     self.saypublic(
@@ -74,7 +74,7 @@ class Plugin(BasePlugin):
                         self.checkroom,
                         '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
                 else:
-                    self.log("%s: Unknown port status on %s:%s" % (user, ip, port))
+                    self.log("%s: Unknown port status on %s:%s" % (user, ip_address, port))
             self.checked[user] = 3
 
     def my_public_command(self, room, args):
@@ -89,19 +89,19 @@ class Plugin(BasePlugin):
     def resolve(self, user):
         self.core.queue.append(slskmessages.GetPeerAddress(user))
 
-    def checkport(self, ip, port):
+    def checkport(self, ip_address, port):
 
-        if ip in ('0.0.0.0',) or port in (0,):
+        if ip_address in ('0.0.0.0',) or port in (0,):
             return 'unknown'
-        self.log("Testing port at %s:%s" % (ip, port))
+        self.log("Testing port at %s:%s" % (ip_address, port))
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(60)
         try:
-            s.connect((ip, port))
-            self.log("%s:%s: Port is open." % (ip, port))
+            s.connect((ip_address, port))
+            self.log("%s:%s: Port is open." % (ip_address, port))
             return 'open'
         except socket.error:
-            self.log("%s:%s: Port is closed." % (ip, port))
+            self.log("%s:%s: Port is closed." % (ip_address, port))
             return 'closed'
         s.close()
 

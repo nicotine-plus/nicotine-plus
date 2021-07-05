@@ -27,88 +27,86 @@ class Plugin(BasePlugin):
     def init(self):
         self.log('init')
 
-    def LoadNotification(self):  # noqa
-        self.log('LoadNotification')
-
-    def PublicRoomMessageNotification(self, room, user, line):  # noqa
+    def public_room_message_notification(self, room, user, line):
         self.log('PublicRoomMessageNotification room=%s, user=%s, line=%s' % (room, user, line))
 
-    def IncomingPrivateChatEvent(self, user, line):  # noqa
+    def incoming_private_chat_event(self, user, line):
         self.log('IncomingPrivateChatEvent user=%s, line=%s' % (user, line))
 
-    def IncomingPrivateChatNotification(self, user, line):  # noqa
+    def incoming_private_chat_notification(self, user, line):
         self.log('IncomingPrivateChatNotification, user=%s, line=%s' % (user, line))
 
-    def IncomingPublicChatEvent(self, room, user, line):  # noqa
+    def incoming_public_chat_event(self, room, user, line):
         self.log('IncomingPublicChatEvent, room=%s, user=%s, line=%s' % (room, user, line))
 
-    def IncomingPublicChatNotification(self, room, user, line):  # noqa
+    def incoming_public_chat_notification(self, room, user, line):
         self.log('IncomingPublicChatNotification, room=%s, user=%s, line=%s' % (room, user, line))
 
-    def OutgoingPrivateChatEvent(self, user, line):  # noqa
+    def outgoing_private_chat_event(self, user, line):
         self.log('OutgoingPrivateChatEvent, user=%s, line=%s' % (user, line))
 
-    def OutgoingPrivateChatNotification(self, user, line):  # noqa
+    def outgoing_private_chat_notification(self, user, line):
         self.log('OutgoingPrivateChatNotification, user=%s, line=%s' % (user, line))
 
-    def OutgoingPublicChatEvent(self, room, line):  # noqa
+    def outgoing_public_chat_event(self, room, line):
         self.log('OutgoingPublicChatEvent, room=%s, line=%s' % (room, line))
 
-    def OutgoingPublicChatNotification(self, room, line):  # noqa
+    def outgoing_public_chat_notification(self, room, line):
         self.log('OutgoingPublicChatNotification, room=%s, line=%s' % (room, line))
 
-    def OutgoingGlobalSearchEvent(self, text):  # noqa
+    def outgoing_global_search_event(self, text):
         self.log('OutgoingGlobalSearchEvent, text=%s' % (text,))
 
-    def OutgoingRoomSearchEvent(self, rooms, text):  # noqa
+    def outgoing_room_search_event(self, rooms, text):
         self.log('OutgoingRoomSearchEvent, rooms=%s, text=%s' % (rooms, text))
 
-    def OutgoingBuddySearchEvent(self, text):  # noqa
+    def outgoing_buddy_search_event(self, text):
         self.log('OutgoingBuddySearchEvent, text=%s' % (text,))
 
-    def OutgoingUserSearchEvent(self, users, text):  # noqa
+    def outgoing_user_search_event(self, users, text):
         self.log('OutgoingUserSearchEvent, users=%s, text=%s' % (users, text))
 
-    def UserResolveNotification(self, user, ip, port, country):  # noqa
-        self.log('UserResolveNotification, user=%s, ip=%s, port=%s, country=%s' % (user, ip, port, country))
+    def user_resolve_notification(self, user, ip_address, port, country):
+        self.log('UserResolveNotification, user=%s, ip_address=%s, port=%s, country=%s' %
+                 (user, ip_address, port, country))
 
-    def ServerConnectNotification(self):  # noqa
+    def server_connect_notification(self):
         self.log('ServerConnectNotification')
 
-    def ServerDisconnectNotification(self, userchoice):  # noqa
+    def server_disconnect_notification(self, userchoice):
         self.log('ServerDisconnectNotification, userchoice=%s' % (userchoice,))
 
-    def JoinChatroomNotification(self, room):  # noqa
+    def join_chatroom_notification(self, room):
         self.log('JoinChatroomNotification, room=%s' % (room,))
 
-    def LeaveChatroomNotification(self, room):  # noqa
+    def leave_chatroom_notification(self, room):
         self.log('LeaveChatroomNotification, room=%s' % (room,))
 
-    def UserJoinChatroomNotification(self, room, user):  # noqa
+    def user_join_chatroom_notification(self, room, user):
         self.log('UserJoinChatroomNotification, room=%s, user=%s' % (room, user,))
 
-    def UserLeaveChatroomNotification(self, room, user):  # noqa
+    def user_leave_chatroom_notification(self, room, user):
         self.log('UserLeaveChatroomNotification, room=%s, user=%s' % (room, user,))
 
-    def UserStatsNotification(self, user, stats):  # noqa
+    def user_stats_notification(self, user, stats):
         self.log('UserStatsNotification, user=%s, stats=%s' % (user, stats))
 
-    def UploadQueuedNotification(self, user, virtual_path, real_path):  # noqa
+    def upload_queued_notification(self, user, virtual_path, real_path):
         self.log('UploadQueuedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
 
-    def UploadStartedNotification(self, user, virtual_path, real_path):  # noqa
+    def upload_started_notification(self, user, virtual_path, real_path):
         self.log('UploadStartedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
 
-    def UploadFinishedNotification(self, user, virtual_path, real_path):  # noqa
+    def upload_finished_notification(self, user, virtual_path, real_path):
         self.log('UploadFinishedNotification, user=%s, virtual_path=%s, real_path=%s' % (user, virtual_path, real_path))
 
-    def DownloadStartedNotification(self, user, virtual_path, real_path):  # noqa
+    def download_started_notification(self, user, virtual_path, real_path):
         self.log('DownloadStartedNotification, user=%s, virtual_path=%s, real_path=%s' %
                  (user, virtual_path, real_path))
 
-    def DownloadFinishedNotification(self, user, virtual_path, real_path):  # noqa
+    def download_finished_notification(self, user, virtual_path, real_path):
         self.log('DownloadFinishedNotification, user=%s, virtual_path=%s, real_path=%s' %
                  (user, virtual_path, real_path))
 
-    def ShutdownNotification(self):  # noqa
+    def shutdown_notification(self):
         self.log('ShutdownNotification')
