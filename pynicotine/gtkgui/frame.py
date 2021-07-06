@@ -54,6 +54,7 @@ from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_all_text
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -2452,9 +2453,12 @@ class NicotineFrame:
 
     """ Exit """
 
-    def on_critical_error_response(self, dialog, response_id, loop):
+    def on_critical_error_response(self, dialog, response_id, data):
+
+        loop, error = data
 
         if response_id == Gtk.ResponseType.REJECT:
+            copy_text(error)
             self.on_report_bug()
             return
 
@@ -2473,17 +2477,17 @@ class NicotineFrame:
 
         from traceback import format_tb
         loop = GLib.MainLoop()
+        error = "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb)))
 
         option_dialog(
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following error and include it in a bug report:")
-            + "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb))),
-            third=_("Report Bug"),
+                      "Please copy the following error and include it in a bug report:") + error,
+            third=_("Copy & Report Bug"),
             cancel=False,
             callback=self.on_critical_error_response,
-            callback_data=loop
+            callback_data=(loop, error)
         )
 
         # Keep dialog open if error occurs on startup
