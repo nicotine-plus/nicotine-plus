@@ -498,6 +498,9 @@ class DownloadsFrame(BuildFrame):
             if escaped:
                 dfilter = re.escape(dfilter)
                 dfilter = dfilter.replace("\\*", ".*")
+            else:
+                # Avoid "Nothing to repeat" error
+                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
 
             try:
                 re.compile("(" + dfilter + ")")

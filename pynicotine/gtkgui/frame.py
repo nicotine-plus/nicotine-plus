@@ -2349,7 +2349,7 @@ class NicotineFrame:
         self.np.transfers.update_limits()
 
         # Modify GUI
-        self.downloads.update_download_filters()
+        self.np.transfers.update_download_filters()
         config.write_configuration()
 
         if not config.sections["ui"]["trayicon"] and self.tray_icon.is_visible():

@@ -24,7 +24,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import re
 
 from gi.repository import Gtk
 
@@ -32,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
-from pynicotine.logfacility import log
 
 
 class Downloads(TransferList):
@@ -53,8 +51,6 @@ class Downloads(TransferList):
             ("", None),
             ("#" + _("Clear All..."), self.on_try_clear_all),
         )
-
-        self.update_download_filters()
 
     def on_try_clear_queued(self, *args):
 
@@ -93,55 +89,6 @@ class Downloads(TransferList):
             callback=self.folder_download_response,
             callback_data=msg
         )
-
-    def update_download_filters(self):
-
-        proccessedfilters = []
-        outfilter = "(\\\\("
-        failed = {}
-        df = sorted(config.sections["transfers"]["downloadfilters"])
-        # Get Filters from config file and check their escaped status
-        # Test if they are valid regular expressions and save error messages
-
-        for item in df:
-            dfilter, escaped = item
-            if escaped:
-                dfilter = re.escape(dfilter)
-                dfilter = dfilter.replace("\\*", ".*")
-
-            try:
-                re.compile("(" + dfilter + ")")
-                outfilter += dfilter
-                proccessedfilters.append(dfilter)
-            except Exception as e:
-                failed[dfilter] = e
-
-            proccessedfilters.append(dfilter)
-
-            if item is not df[-1]:
-                outfilter += "|"
-
-        # Crop trailing pipes
-        while outfilter[-1] == "|":
-            outfilter = outfilter[:-1]
-
-        outfilter += ")$)"
-        try:
-            re.compile(outfilter)
-            config.sections["transfers"]["downloadregexp"] = outfilter
-            # Send error messages for each failed filter to log window
-            if failed:
-                errors = ""
-
-                for dfilter, error in failed.items():
-                    errors += "Filter: %s Error: %s " % (dfilter, error)
-
-                log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
-
-        except Exception as e:
-            # Strange that individual filters _and_ the composite filter both fail
-            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), e)
-            config.sections["transfers"]["downloadregexp"] = ""
 
     def on_open_directory(self, *args):
 

@@ -128,6 +128,8 @@ class Transfers:
         if hasattr(ui_callback, "uploads"):
             self.uploadsview = ui_callback.uploads
 
+        self.update_download_filters()
+
     def server_login(self):
 
         self.update_limits()
@@ -2256,6 +2258,61 @@ class Transfers:
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
+
+    """ Filters """
+
+    def update_download_filters(self):
+
+        proccessedfilters = []
+        outfilter = "(\\\\("
+        failed = {}
+        download_filters = sorted(self.config.sections["transfers"]["downloadfilters"])
+        # Get Filters from config file and check their escaped status
+        # Test if they are valid regular expressions and save error messages
+
+        for item in download_filters:
+            dfilter, escaped = item
+            if escaped:
+                dfilter = re.escape(dfilter)
+                dfilter = dfilter.replace("\\*", ".*")
+            else:
+                # Avoid "Nothing to repeat" error
+                dfilter = dfilter.replace("*", "\\*").replace("+", "\\+")
+
+            try:
+                re.compile("(" + dfilter + ")")
+                outfilter += dfilter
+                proccessedfilters.append(dfilter)
+
+            except Exception as error:
+                failed[dfilter] = error
+
+            proccessedfilters.append(dfilter)
+
+            if item is not download_filters[-1]:
+                outfilter += "|"
+
+        # Crop trailing pipes
+        while outfilter[-1] == "|":
+            outfilter = outfilter[:-1]
+
+        outfilter += ")$)"
+        try:
+            re.compile(outfilter)
+            self.config.sections["transfers"]["downloadregexp"] = outfilter
+            # Send error messages for each failed filter to log window
+            if failed:
+                errors = ""
+
+                for dfilter, error in failed.items():
+                    errors += "Filter: %s Error: %s " % (dfilter, error)
+
+                log.add(_("Error: %(num)d Download filters failed! %(error)s "), {'num': len(failed), 'error': errors})
+
+        except Exception as error:
+            # Strange that individual filters _and_ the composite filter both fail
+            log.add(_("Error: Download Filter failed! Verify your filters. Reason: %s"), error)
+            self.config.sections["transfers"]["downloadregexp"] = ""
 
     """ Exit """
 
