@@ -161,6 +161,19 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkButton" id="SaveButton">
+                                <property name="visible">1</property>
+                                <property name="tooltip-text" translatable="yes">Save shares list to disk</property>
+                                <signal name="clicked" handler="on_save" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">document-save-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkButton" id="RefreshButton">
                                 <property name="visible">1</property>
                                 <property name="tooltip-text" translatable="yes">Refresh files</property>
