@@ -1233,6 +1233,7 @@ class NicotineFrame:
         self.alt_speed_action = Gio.SimpleAction.new_stateful("altspeedlimit", None, GLib.Variant.new_boolean(state))
         self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
         self.application.add_action(self.alt_speed_action)
+        self.update_alternative_speed_icon(state)
 
     """ Primary Menus """
 
@@ -2314,6 +2315,19 @@ class NicotineFrame:
         self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down},
                                            self.tray_upload_template % {'speed': up})
 
+    def update_alternative_speed_icon(self, active):
+
+        if active:
+            icon_name = "media-skip-backward-symbolic"
+        else:
+            icon_name = "media-seek-backward-symbolic"
+
+        if Gtk.get_major_version() == 4:
+            self.AltSpeedButton.set_icon_name(icon_name)
+            return
+
+        self.AltSpeedButton.set_image(Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.BUTTON))
+
     def on_alternative_speed_limit(self, *args):
 
         state = config.sections["transfers"]["usealtlimits"]
@@ -2321,6 +2335,7 @@ class NicotineFrame:
 
         config.sections["transfers"]["usealtlimits"] = not state
 
+        self.update_alternative_speed_icon(not state)
         self.np.transfers.update_limits()
         self.tray_icon.set_alternative_speed_limit(not state)
 

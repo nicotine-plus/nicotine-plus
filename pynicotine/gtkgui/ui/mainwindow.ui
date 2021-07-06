@@ -1517,7 +1517,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton">
+                  <object class="GtkToggleButton" id="AltSpeedButton">
                     <property name="visible">1</property>
                     <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
                     <property name="action-name">app.altspeedlimit</property>
