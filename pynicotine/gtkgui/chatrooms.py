@@ -343,9 +343,9 @@ class ChatRooms(IconNotebook):
     def ticker_remove(self, msg):
         self.joinedrooms[msg.room].ticker_remove(msg)
 
-    def echo_message(self, room, text):
+    def echo_message(self, room, text, message_type):
         if room in self.joinedrooms:
-            self.joinedrooms[room].echo_message(text)
+            self.joinedrooms[room].echo_message(text, message_type)
 
     def say_chat_room(self, msg):
         self.joinedrooms[msg.room].say_chat_room(msg)
@@ -657,7 +657,7 @@ class ChatRoom:
                     if user == config.sections["server"]["login"]:
                         tag = self.tag_local
                     elif line[20] == "*":
-                        tag = self.tag_me
+                        tag = self.tag_action
                     elif line[20 + namepos:].upper().find(config.sections["server"]["login"].upper()) > -1:
                         tag = self.tag_hilite
                     else:
@@ -853,7 +853,7 @@ class ChatRoom:
                 line = "* %s %s" % (user, text[4:])
 
             speech = line[2:]
-            tag = self.tag_me
+            tag = self.tag_action
         else:
 
             if public:
@@ -894,10 +894,14 @@ class ChatRoom:
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
             )
 
-    def echo_message(self, text):
+    def echo_message(self, text, message_type):
 
-        tag = self.tag_me
+        tag = self.tag_action
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
+
+        if hasattr(self, "tag_" + str(message_type)):
+            tag = getattr(self, "tag_" + str(message_type))
+
         append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
 
     def get_user_tag(self, user):
@@ -1061,7 +1065,7 @@ class ChatRoom:
         chat_buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.create_tag(chat_buffer, "chatremote")
         self.tag_local = self.create_tag(chat_buffer, "chatlocal")
-        self.tag_me = self.create_tag(chat_buffer, "chatme")
+        self.tag_action = self.create_tag(chat_buffer, "chatme")
         self.tag_hilite = self.create_tag(chat_buffer, "chathilite")
 
         self.tag_users = {}
@@ -1070,7 +1074,7 @@ class ChatRoom:
 
         update_tag_visuals(self.tag_remote, "chatremote")
         update_tag_visuals(self.tag_local, "chatlocal")
-        update_tag_visuals(self.tag_me, "chatme")
+        update_tag_visuals(self.tag_action, "chatme")
         update_tag_visuals(self.tag_hilite, "chathilite")
         update_tag_visuals(self.tag_log, "chatremote")
 

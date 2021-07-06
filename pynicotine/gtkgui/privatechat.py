@@ -124,9 +124,9 @@ class PrivateChats(IconNotebook):
         if switch_page and self.get_current_page() != self.page_num(self.users[user].Main):
             self.set_current_page(self.page_num(self.users[user].Main))
 
-    def echo_message(self, user, text):
+    def echo_message(self, user, text, message_type):
         if user in self.users:
-            self.users[user].echo_message(text)
+            self.users[user].echo_message(text, message_type)
 
     def send_message(self, user, text):
         if user in self.users:
@@ -339,7 +339,7 @@ class PrivateChat:
 
         if text[:4] == "/me ":
             line = "* %s %s" % (self.user, text[4:])
-            tag = self.tag_me
+            tag = self.tag_action
         else:
             line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
@@ -377,10 +377,14 @@ class PrivateChat:
             timestamp_format = config.sections["logging"]["log_timestamp"]
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
 
-    def echo_message(self, text):
+    def echo_message(self, text, message_type):
 
-        tag = self.tag_me
+        tag = self.tag_action
         timestamp_format = config.sections["logging"]["private_timestamp"]
+
+        if hasattr(self, "tag_" + str(message_type)):
+            tag = getattr(self, "tag_" + str(message_type))
+
         append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
 
     def send_message(self, text):
@@ -389,7 +393,7 @@ class PrivateChat:
 
         if text[:4] == "/me ":
             line = "* %s %s" % (my_username, text[4:])
-            usertag = tag = self.tag_me
+            usertag = tag = self.tag_action
 
         else:
             tag = self.tag_local
@@ -421,7 +425,7 @@ class PrivateChat:
         buffer = self.ChatScroll.get_buffer()
         self.tag_remote = self.create_tag(buffer, "chatremote")
         self.tag_local = self.create_tag(buffer, "chatlocal")
-        self.tag_me = self.create_tag(buffer, "chatme")
+        self.tag_action = self.create_tag(buffer, "chatme")
         self.tag_hilite = self.create_tag(buffer, "chathilite")
 
         color = get_user_status_color(self.status)
@@ -439,7 +443,7 @@ class PrivateChat:
 
         update_tag_visuals(self.tag_remote, "chatremote")
         update_tag_visuals(self.tag_local, "chatlocal")
-        update_tag_visuals(self.tag_me, "chatme")
+        update_tag_visuals(self.tag_action, "chatme")
         update_tag_visuals(self.tag_hilite, "chathilite")
 
         color = get_user_status_color(self.status)

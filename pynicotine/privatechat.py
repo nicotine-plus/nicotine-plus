@@ -142,9 +142,9 @@ class PrivateChats:
         self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
         self.automatic_message_times[user] = send_time
 
-    def echo_message(self, user, message):
+    def echo_message(self, user, message, message_type):
         if self.ui_callback:
-            self.ui_callback.echo_message(user, message)
+            self.ui_callback.echo_message(user, message, message_type)
 
     def send_message(self, user, message, bytestring=False):
 
