@@ -1180,35 +1180,32 @@ class SlskProtoThread(threading.Thread):
             msg_list.append(queue.popleft())
 
         for msg_obj in msg_list:
-            if issubclass(msg_obj.__class__, ServerMessage):
-                self.process_server_output(conns, msg_obj)
+            msg_class = msg_obj.__class__
 
-            elif issubclass(msg_obj.__class__, PeerInitMessage):
+            if issubclass(msg_class, PeerInitMessage):
                 self.process_peer_init_output(conns, msg_obj)
 
-            elif issubclass(msg_obj.__class__, PeerMessage):
+            elif issubclass(msg_class, PeerMessage):
                 self.process_peer_output(conns, msg_obj)
 
-            elif issubclass(msg_obj.__class__, FileMessage):
-                self.process_file_output(conns, msg_obj)
-
-            elif issubclass(msg_obj.__class__, DistribMessage):
-                self.process_distrib_output(conns, msg_obj)
-
-            elif msg_obj.__class__ is ServerConn:
-                if ((maxsockets == -1 or numsockets < maxsockets)
-                        and self.init_server_conn(connsinprogress, msg_obj)):
-                    numsockets += 1
-
-            elif msg_obj.__class__ is PeerConn:
-                if maxsockets == -1 or numsockets < maxsockets:
+            elif msg_class is PeerConn:
+                if numsockets < maxsockets:
                     if self.init_peer_conn(connsinprogress, msg_obj):
                         numsockets += 1
                 else:
                     # Connection limit reached, re-queue
                     queue.append(msg_obj)
 
-            elif msg_obj.__class__ is ConnClose and msg_obj.conn in conns:
+            elif issubclass(msg_class, DistribMessage):
+                self.process_distrib_output(conns, msg_obj)
+
+            elif issubclass(msg_class, FileMessage):
+                self.process_file_output(conns, msg_obj)
+
+            elif issubclass(msg_class, ServerMessage):
+                self.process_server_output(conns, msg_obj)
+
+            elif msg_class is ConnClose and msg_obj.conn in conns:
                 conn = msg_obj.conn
 
                 if msg_obj.callback:
@@ -1216,17 +1213,21 @@ class SlskProtoThread(threading.Thread):
 
                 self.close_connection(conns, conn)
 
-            elif msg_obj.__class__ is DownloadFile and msg_obj.conn in conns:
+            elif msg_class is ServerConn:
+                if numsockets < maxsockets and self.init_server_conn(connsinprogress, msg_obj):
+                    numsockets += 1
+
+            elif msg_class is DownloadFile and msg_obj.conn in conns:
                 conns[msg_obj.conn].filedown = msg_obj
 
-            elif msg_obj.__class__ is UploadFile and msg_obj.conn in conns:
+            elif msg_class is UploadFile and msg_obj.conn in conns:
                 conns[msg_obj.conn].fileupl = msg_obj
                 self._reset_counters(conns)
 
-            elif msg_obj.__class__ is SetDownloadLimit:
+            elif msg_class is SetDownloadLimit:
                 self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
 
-            elif msg_obj.__class__ is SetUploadLimit:
+            elif msg_class is SetUploadLimit:
                 if msg_obj.uselimit:
                     if msg_obj.limitby:
                         callback = self._calc_upload_limit_by_total
