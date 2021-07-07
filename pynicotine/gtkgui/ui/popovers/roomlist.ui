@@ -70,11 +70,32 @@
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkCheckButton" id="AcceptPrivateRoom">
-                <property name="label" translatable="yes">_Accept private room invitations</property>
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="use-underline">1</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="RoomFeed">
+                    <property name="label" translatable="yes">_Show feed of public chat room messages</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                    <signal name="clicked" handler="on_show_chat_feed" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="AcceptPrivateRoom">
+                    <property name="label" translatable="yes">_Accept private room invitations</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

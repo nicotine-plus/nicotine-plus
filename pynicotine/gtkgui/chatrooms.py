@@ -205,7 +205,7 @@ class ChatRooms(IconNotebook):
 
             for room in room_list:
                 if room == 'Public ':
-                    self.roomlist.on_join_public_room(None)
+                    self.roomlist.RoomFeed.set_active(True)
 
                 elif isinstance(room, str):
                     self.frame.np.queue.append(slskmessages.JoinRoom(room))
@@ -391,7 +391,7 @@ class ChatRooms(IconNotebook):
         self.remove_page(room.Main)
         del self.joinedrooms[msg.room]
 
-        if msg.room[-1:] != ' ':  # meta rooms
+        if msg.room != 'Public ':  # meta rooms
             self.frame.RoomSearchCombo.remove_all()
             self.frame.RoomSearchCombo.append_text("Joined Rooms ")
 
@@ -1095,8 +1095,7 @@ class ChatRoom:
             self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
 
         elif self.room == 'Public ':
-            self.frame.np.queue.append(slskmessages.LeavePublicRoom())
-            self.chatrooms.leave_room(slskmessages.LeaveRoom(self.room))  # Faking protocol msg
+            self.chatrooms.roomlist.RoomFeed.set_active(False)
 
         self.frame.np.pluginhandler.leave_chatroom_notification(self.room)
 

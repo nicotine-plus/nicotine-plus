@@ -85,9 +85,7 @@ class RoomList:
             ("#" + _("Leave Room"), self.on_popup_leave),
             ("", None),
             ("#" + _("Disown Private Room"), self.on_popup_private_room_disown),
-            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember),
-            ("", None),
-            ("#" + _("Join Public Room"), self.on_join_public_room)
+            ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
         self.RoomsList.set_headers_clickable(True)
@@ -293,9 +291,15 @@ class RoomList:
     def on_popup_join(self, *args):
         self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))
 
-    def on_join_public_room(self, *args):
-        self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
-        self.frame.np.queue.append(slskmessages.JoinPublicRoom())
+    def on_show_chat_feed(self, *args):
+
+        if self.RoomFeed.get_active():
+            self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
+            self.frame.np.queue.append(slskmessages.JoinPublicRoom())
+            return
+
+        self.frame.np.queue.append(slskmessages.LeavePublicRoom())
+        self.frame.chatrooms.leave_room(slskmessages.LeaveRoom("Public "))  # Faking protocol msg
 
     def on_popup_private_room_disown(self, *args):
 
