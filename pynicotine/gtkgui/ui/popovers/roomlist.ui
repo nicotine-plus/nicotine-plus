@@ -80,7 +80,7 @@
                     <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                     <property name="visible">1</property>
                     <property name="use-underline">1</property>
-                    <signal name="clicked" handler="on_show_chat_feed" swapped="no"/>
+                    <signal name="toggled" handler="on_show_chat_feed" swapped="no"/>
                   </object>
                 </child>
               </object>
