@@ -814,17 +814,6 @@ Error: %(error)s""", {
 
                 break
 
-    def close_peer_connection(self, conn):
-
-        """ Forcibly close a peer connection. Only used after receiving a search result,
-        as we need to get rid of connections before they pile up """
-
-        if conn is None:
-            return
-
-        if not self.protothread.socket_still_active(conn.conn):
-            self.queue.append(slskmessages.ConnClose(conn.conn))
-
     def show_connection_error_message(self, conn):
 
         """ Request UI to show error messages related to connectivity """
@@ -1729,9 +1718,6 @@ Error: %(error)s""", {
             country = ""
 
         self.search.show_search_result(msg, msg.user, country)
-
-        # Close peer connection immediately, otherwise we exhaust our connection limit
-        self.close_peer_connection(conn)
 
     def user_info_request(self, msg):
         """ Peer code: 15 """

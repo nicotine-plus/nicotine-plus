@@ -912,13 +912,14 @@ class SlskProtoThread(threading.Thread):
 
         return True
 
-    def process_peer_input(self, conn, msg_buffer):
+    def process_peer_input(self, conns, conn, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
         something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them
         and the rest of the msg_buffer.
         """
         msgs = []
+        search_result_received = False
 
         # Peer messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
@@ -939,6 +940,9 @@ class SlskProtoThread(threading.Thread):
                 msg = self.unpack_network_message(
                     self.peerclasses[msgtype], msg_buffer[8:msgsize + 4], msgsize - 4, "peer", conn)
 
+                if msg.__class__ is FileSearchResult:
+                    search_result_received = True
+
                 if msg is not None:
                     msgs.append(msg)
 
@@ -957,6 +961,14 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
+
+        if search_result_received and not self.socket_still_active(conn.conn):
+            # Forcibly close peer connection. Only used after receiving a search result,
+            # as we need to get rid of peer connections before they pile up.
+
+            self._core_callback([ConnClose(conn.conn, conn.addr)])
+            self.close_connection(conns, conn.conn)
+
         return msgs
 
     def process_peer_output(self, conns, msg_obj):
@@ -1153,7 +1165,7 @@ class SlskProtoThread(threading.Thread):
             self._core_callback(msgs)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'P':
-            msgs = self.process_peer_input(conn_obj, conn_obj.ibuf)
+            msgs = self.process_peer_input(conns, conn_obj, conn_obj.ibuf)
             self._core_callback(msgs)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'F':
