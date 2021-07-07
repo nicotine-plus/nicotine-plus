@@ -602,6 +602,7 @@ class SlskProtoThread(threading.Thread):
 
     def _calc_upload_limit_none(self, conns):
         self.total_uploads = sum(1 for j in conns.values() if self._is_upload(j))
+        return 0
 
     def _calc_download_limit_by_total(self, conns):
         max_limit = self._downloadlimit[1] * 1024.0
@@ -624,6 +625,14 @@ class SlskProtoThread(threading.Thread):
             limit = int(max(1024, max_limit - bandwidth))  # 1 KB/s is the minimum download speed per transfer
 
         return limit
+
+    @staticmethod
+    def set_conn_speed_limit(connection, conns, limit_callback, limits):
+
+        limit = int(limit_callback(conns) * 0.005)  # limit is per second, we loop 200 times a second
+
+        if limit > 0:
+            limits[connection] = limit
 
     def _reset_counters(self, conns):
         curtime = time.time()
@@ -1192,10 +1201,7 @@ class SlskProtoThread(threading.Thread):
                     numsockets += 1
 
             elif msg_obj.__class__ is PeerConn:
-                if msg_obj.addr[1] == 0:
-                    self._core_callback([ConnectError(msg_obj, "Port cannot be zero")])
-
-                elif maxsockets == -1 or numsockets < maxsockets:
+                if maxsockets == -1 or numsockets < maxsockets:
                     if self.init_peer_conn(connsinprogress, msg_obj):
                         numsockets += 1
                 else:
@@ -1353,7 +1359,7 @@ class SlskProtoThread(threading.Thread):
 
             if self._server_disconnect:
                 # We're not connected to the server at the moment
-                time.sleep(0.2)
+                time.sleep(0.1)
                 continue
 
             if queue:
@@ -1386,7 +1392,7 @@ class SlskProtoThread(threading.Thread):
                 # Possibly opened too many sockets
 
                 log.add("select ValueError: %s", error)
-                time.sleep(0.2)
+                time.sleep(0.005)
                 continue
 
             # Send updated connection count to NicotineCore
@@ -1403,7 +1409,7 @@ class SlskProtoThread(threading.Thread):
                 try:
                     incconn, incaddr = self.listen_socket.accept()
                 except Exception:
-                    time.sleep(0.01)
+                    time.sleep(0.005)
                 else:
                     if self._network_filter.is_ip_blocked(incaddr[0]):
                         log.add_conn(_("Ignoring connection request from blocked IP Address %(ip)s:%(port)s"), {
@@ -1497,13 +1503,7 @@ class SlskProtoThread(threading.Thread):
 
                 if connection in input_list:
                     if self._is_download(conn_obj):
-                        limit = self._downloadlimit[0](conns)
-
-                        if limit is not None:
-                            limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
-
-                        if limit is None or limit > 0:
-                            self._dlimits[connection] = limit
+                        self.set_conn_speed_limit(connection, conns, self._downloadlimit[0], self._dlimits)
 
                     try:
                         if not self.read_data(conn_obj):
@@ -1522,13 +1522,7 @@ class SlskProtoThread(threading.Thread):
 
                 if connection in output_list:
                     if self._is_upload(conn_obj):
-                        limit = self._uploadlimit[0](conns)
-
-                        if limit is not None:
-                            limit = int(limit * 0.2)  # limit is per second, we loop 5 times a second
-
-                        if limit is None or limit > 0:
-                            self._ulimits[connection] = limit
+                        self.set_conn_speed_limit(connection, conns, self._uploadlimit[0], self._ulimits)
 
                     try:
                         self.write_data(conns, conn_obj)
@@ -1539,6 +1533,6 @@ class SlskProtoThread(threading.Thread):
                         continue
 
             # Don't exhaust the CPU
-            time.sleep(0.2)
+            time.sleep(0.005)
 
         # Networking thread aborted
