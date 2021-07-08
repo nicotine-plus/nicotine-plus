@@ -33,6 +33,7 @@ COMMANDS = (
 class StartupTest(unittest.TestCase):
 
     def test_startup(self):
+        """ Verify that regular startup works """
 
         for command in COMMANDS:
             # Assume failure by default
@@ -46,3 +47,20 @@ class StartupTest(unittest.TestCase):
                 is_success = True
 
             self.assertTrue(is_success)
+
+    def test_cli(self):
+        """ Verify that CLI-exclusive functionality works """
+
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
+        self.assertTrue(str(output).find("--help") > -1)
+
+        # Check for " 0 folders found after rescan" in output. Text strings are translatable,
+        # so we can't match them directly.
+        output = subprocess.check_output(
+            ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--rescan"],
+            timeout=10
+        )
+        self.assertTrue(str(output).find(" 0 ") > -1)
+
+        output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
+        self.assertTrue(str(output).find("Nicotine+") > -1)
