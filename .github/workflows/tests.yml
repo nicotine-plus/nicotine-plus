@@ -57,6 +57,11 @@ jobs:
           msystem: MINGW64
           update: true
 
+      - name: Rank mirror list
+        run: |
+          cp /etc/pacman.d/mirrorlist.mingw64 /etc/pacman.d/mirrorlist.backup
+          rankmirrors -v /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist.mingw64
+
       - name: Install dependencies
         run: |
           export ARCH=x86_64
