@@ -1633,7 +1633,6 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         user = msg.conn.init.target_user
-        ip_address = _port = msg.conn.addr
         conn = msg.conn.conn
         request_time = time.time()
 
