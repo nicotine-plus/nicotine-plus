@@ -1706,6 +1706,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         conn = msg.conn
+        username = conn.init.target_user
         addr = conn.addr
 
         if addr:
@@ -1716,7 +1717,7 @@ Error: %(error)s""", {
         if country == "-":
             country = ""
 
-        self.search.show_search_result(msg, msg.user, country)
+        self.search.show_search_result(msg, username, country)
 
     def user_info_request(self, msg):
         """ Peer code: 15 """
