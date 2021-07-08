@@ -2563,13 +2563,16 @@ class NicotineFrame:
 
 class Application(Gtk.Application):
 
-    def __init__(self, network_processor, tray_icon, start_hidden, bindip, port, ci_mode):
+    def __init__(self, network_processor, tray_icon, start_hidden, bindip, port, ci_mode, multi_instance):
 
         application_id = "org.nicotine_plus.Nicotine"
 
         super().__init__(application_id=application_id)
         GLib.set_application_name("Nicotine+")
         GLib.set_prgname(application_id)
+
+        if multi_instance:
+            self.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
 
         self.network_processor = network_processor
         self.tray_icon = tray_icon

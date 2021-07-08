@@ -46,7 +46,7 @@ You should install GTK %s or newer.""") % "3.18"
     return None
 
 
-def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode):
+def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
     error = check_gui_dependencies()
@@ -56,4 +56,4 @@ def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode):
         return 1
 
     from pynicotine.gtkgui.frame import Application
-    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode).run()
+    return Application(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_instance).run()

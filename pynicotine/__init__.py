@@ -84,9 +84,13 @@ def check_arguments():
 
     args = parser.parse_args()
     trayicon = None
+    multi_instance = False
 
     if args.config:
         config.filename = args.config
+
+        # Since a custom config was specified, allow another instance of Nicotine+ to open
+        multi_instance = True
 
     if args.user_data:
         config.data_dir = args.user_data
@@ -100,7 +104,7 @@ def check_arguments():
     if args.disable_trayicon:
         trayicon = False
 
-    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan
+    return trayicon, args.headless, args.hidden, args.bindip, args.port, args.ci_mode, args.rescan, multi_instance
 
 
 def check_core_dependencies():
@@ -205,7 +209,7 @@ binary package and what you try to run Nicotine+ with).""")
     from pynicotine.utils import rename_process
     rename_process(b'nicotine')
 
-    trayicon, headless, hidden, bindip, port, ci_mode, rescan = check_arguments()
+    trayicon, headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
     error = check_core_dependencies()
 
     if error:
@@ -225,7 +229,7 @@ binary package and what you try to run Nicotine+ with).""")
 
     # Initialize GTK-based GUI
     from pynicotine.gtkgui import run_gui
-    return run_gui(core, trayicon, hidden, bindip, port, ci_mode)
+    return run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
 
 
 apply_translation()
