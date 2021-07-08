@@ -14,6 +14,7 @@
 # Temporary test files
 test/**/*temp_config*
 test/**/*.db
+test/**/*.json
 test/**/*.old
 
 # Ignore venv files

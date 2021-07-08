@@ -19,46 +19,45 @@
 import os
 import unittest
 
-from pynicotine.config import Config
+from pynicotine.config import config
 
 
 class ConfigTest(unittest.TestCase):
 
     def setUp(self):
 
-        self.config = Config()
-        self.config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        self.config.filename = os.path.join(self.config.data_dir, "config")
+        config.data_dir = os.path.dirname(os.path.realpath(__file__))
+        config.filename = os.path.join(config.data_dir, "config")
 
-        self.config.load_config()
+        config.load_config()
 
     def test_load_config(self):
         """ Test loading a config file """
 
-        self.assertEqual(self.config.defaults["server"]["login"], "")
-        self.assertEqual(self.config.defaults["server"]["passw"], "")
+        self.assertEqual(config.defaults["server"]["login"], "")
+        self.assertEqual(config.defaults["server"]["passw"], "")
 
-        self.assertEqual(self.config.sections["server"]["login"], "user123")
-        self.assertEqual(self.config.sections["server"]["passw"], "pass123")
-        self.assertEqual(self.config.sections["server"]["autoreply"], "ääääääää")
+        self.assertEqual(config.sections["server"]["login"], "user123")
+        self.assertEqual(config.sections["server"]["passw"], "pass123")
+        self.assertEqual(config.sections["server"]["autoreply"], "ääääääää")
 
     def test_write_config(self):
         """ Test writing to a config file """
 
         # Verify that changes are saved
-        self.config.sections["server"]["login"] = "newname"
-        self.config.write_configuration()
+        config.sections["server"]["login"] = "newname"
+        config.write_configuration()
 
-        with open(self.config.filename, encoding="utf-8") as file_handle:
+        with open(config.filename, encoding="utf-8") as file_handle:
             self.assertIn("newname", file_handle.read())
 
         # Verify that the backup is valid
-        old_config = self.config.filename + ".old"
+        old_config = config.filename + ".old"
         self.assertTrue(os.path.exists(old_config))
 
         with open(old_config, encoding="utf-8") as file_handle:
             self.assertIn("user123", file_handle.read())
 
         # Reset
-        self.config.sections["server"]["login"] = "user123"
-        self.config.write_configuration()
+        config.sections["server"]["login"] = "user123"
+        config.write_configuration()

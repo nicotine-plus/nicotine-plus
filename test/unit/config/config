@@ -149,7 +149,6 @@ search_results = True
 max_displayed_results = 1000
 min_search_chars = 3
 remove_special_chars = True
-show_private_results = False
 
 [ui]
 dark_mode = False

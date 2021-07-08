@@ -39,6 +39,10 @@ def check_arguments():
         help=_("use non-default configuration file")
     )
     parser.add_argument(
+        "-u", "--user-data", metavar=_("dir"),
+        help=_("use non-default user data directory for e.g. list of downloads")
+    )
+    parser.add_argument(
         "-p", "--plugins", metavar=_("dir"),
         help=_("use non-default directory for plugins")
     )
@@ -83,6 +87,9 @@ def check_arguments():
 
     if args.config:
         config.filename = args.config
+
+    if args.user_data:
+        config.data_dir = args.user_data
 
     if args.plugins:
         config.plugin_dir = args.plugins

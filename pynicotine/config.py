@@ -58,6 +58,81 @@ class Config:
         self.version = "3.1.0.dev1"
 
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
+        self.sections = defaultdict(dict)
+        self.defaults = {}
+
+    @staticmethod
+    def get_user_directories():
+        """ Returns a tuple:
+        - the config directory
+        - the data directory """
+
+        if sys.platform == "win32":
+            try:
+                data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
+            except KeyError:
+                data_dir, _filename = os.path.split(sys.argv[0])
+
+            config_dir = os.path.join(data_dir, "config")
+            return config_dir, data_dir
+
+        home = os.path.expanduser("~")
+
+        legacy_dir = os.path.join(home, '.nicotine')
+
+        if os.path.isdir(legacy_dir):
+            return legacy_dir, legacy_dir
+
+        def xdg_path(xdg, default):
+            path = os.environ.get(xdg)
+
+            path = path.split(':')[0] if path else default
+
+            return os.path.join(path, 'nicotine')
+
+        config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+        data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
+
+        return config_dir, data_dir
+
+    def create_config_folder(self):
+        """ Create the folder for storing the config file in, if the folder
+        doesn't exist """
+
+        path, _filename = os.path.split(self.filename)
+
+        if not path:
+            # Only file name specified, use current folder
+            return True
+
+        try:
+            if not os.path.isdir(path):
+                os.makedirs(path)
+
+        except OSError as msg:
+            from pynicotine.logfacility import log
+
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+                    {'path': path, 'error': msg})
+            return False
+
+        return True
+
+    def create_data_folder(self):
+        """ Create the folder for storing data in (aliases, shared files etc.),
+        if the folder doesn't exist """
+
+        try:
+            if not os.path.isdir(self.data_dir):
+                os.makedirs(self.data_dir)
+
+        except OSError as msg:
+            from pynicotine.logfacility import log
+
+            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
+                    {'path': self.data_dir, 'error': msg})
+
+    def load_config(self):
 
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
@@ -380,83 +455,8 @@ class Config:
             self.defaults['players']['npplayer'] = 'other'
 
         # Initialize config with default values
-        self.sections = defaultdict(dict)
-
         for key, value in self.defaults.items():
             self.sections[key] = value.copy()
-
-    @staticmethod
-    def get_user_directories():
-        """ Returns a tuple:
-        - the config directory
-        - the data directory """
-
-        if sys.platform == "win32":
-            try:
-                data_dir = os.path.join(os.environ['APPDATA'], 'nicotine')
-            except KeyError:
-                data_dir, _filename = os.path.split(sys.argv[0])
-
-            config_dir = os.path.join(data_dir, "config")
-            return config_dir, data_dir
-
-        home = os.path.expanduser("~")
-
-        legacy_dir = os.path.join(home, '.nicotine')
-
-        if os.path.isdir(legacy_dir):
-            return legacy_dir, legacy_dir
-
-        def xdg_path(xdg, default):
-            path = os.environ.get(xdg)
-
-            path = path.split(':')[0] if path else default
-
-            return os.path.join(path, 'nicotine')
-
-        config_dir = xdg_path('XDG_CONFIG_HOME', os.path.join(home, '.config'))
-        data_dir = xdg_path('XDG_DATA_HOME', os.path.join(home, '.local', 'share'))
-
-        return config_dir, data_dir
-
-    def create_config_folder(self):
-        """ Create the folder for storing the config file in, if the folder
-        doesn't exist """
-
-        path, _filename = os.path.split(self.filename)
-
-        if not path:
-            # Only file name specified, use current folder
-            return True
-
-        try:
-            if not os.path.isdir(path):
-                os.makedirs(path)
-
-        except OSError as msg:
-            from pynicotine.logfacility import log
-
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {'path': path, 'error': msg})
-            return False
-
-        return True
-
-    def create_data_folder(self):
-        """ Create the folder for storing data in (aliases, shared files etc.),
-        if the folder doesn't exist """
-
-        try:
-            if not os.path.isdir(self.data_dir):
-                os.makedirs(self.data_dir)
-
-        except OSError as msg:
-            from pynicotine.logfacility import log
-
-            log.add(_("Can't create directory '%(path)s', reported error: %(error)s"),
-                    {'path': self.data_dir, 'error': msg})
-
-    def load_config(self):
 
         self.create_config_folder()
         self.create_data_folder()

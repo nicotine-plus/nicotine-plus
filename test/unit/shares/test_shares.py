@@ -21,7 +21,7 @@ import unittest
 
 from collections import deque
 
-from pynicotine.config import Config
+from pynicotine.config import config
 from pynicotine.shares import Shares
 
 SHARES_DIR = os.path.join(os.path.dirname(os.path.realpath(__file__)), ".sharedfiles")
@@ -31,19 +31,18 @@ class SharesTest(unittest.TestCase):
 
     def setUp(self):
 
-        self.config = Config()
-        self.config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
-        self.config.filename = os.path.join(self.config.data_dir, "temp_config")
+        config.data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "dbs")
+        config.filename = os.path.join(config.data_dir, "temp_config")
 
-        self.config.load_config()
+        config.load_config()
 
     def test_shares_scan(self):
         """ Test a full shares scan """
 
-        self.config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
-        self.config.sections["transfers"]["rescanonstartup"] = False
+        config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+        config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, self.config, deque())
+        shares = Shares(None, config, deque())
         shares.rescan_public_shares(thread=False)
 
         # Verify that modification time was saved for shares folder
@@ -77,10 +76,10 @@ class SharesTest(unittest.TestCase):
     def test_hidden_file_folder_scan(self):
         """ Test that hidden files and folders are excluded """
 
-        self.config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
-        self.config.sections["transfers"]["rescanonstartup"] = False
+        config.sections["transfers"]["shared"] = [("Shares", SHARES_DIR)]
+        config.sections["transfers"]["rescanonstartup"] = False
 
-        shares = Shares(None, self.config, deque())
+        shares = Shares(None, config, deque())
         shares.rescan_public_shares(thread=False)
 
         # Check folders
@@ -108,11 +107,11 @@ class SharesTest(unittest.TestCase):
     def test_shares_add_downloaded(self):
         """ Test that downloaded files are added to shared files """
 
-        self.config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
-        self.config.sections["transfers"]["rescanonstartup"] = False
-        self.config.sections["transfers"]["sharedownloaddir"] = True
+        config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
+        config.sections["transfers"]["rescanonstartup"] = False
+        config.sections["transfers"]["sharedownloaddir"] = True
 
-        shares = Shares(None, self.config, deque(), None)
+        shares = Shares(None, config, deque(), None)
         shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
         self.assertIn(('nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["files"]["Downloaded"])

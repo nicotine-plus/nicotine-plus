@@ -20,10 +20,13 @@ import os
 import subprocess
 import unittest
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.realpath(__file__)), "temp_config")
+USER_DATA = os.path.dirname(os.path.realpath(__file__))
+CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
 COMMANDS = (
-    ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--ci-mode"],               # GUI
-    ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--ci-mode", "--headless"]  # Headless
+    ["python3", "-m", "pynicotine",
+        "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--ci-mode"],               # GUI
+    ["python3", "-m", "pynicotine",
+        "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--ci-mode", "--headless"]  # Headless
 )
 
 

@@ -22,7 +22,7 @@ import unittest
 from collections import deque
 from unittest.mock import Mock
 
-from pynicotine.config import Config
+from pynicotine.config import config
 from pynicotine.transfers import Transfers
 
 
@@ -30,13 +30,12 @@ class TransfersTest(unittest.TestCase):
 
     def setUp(self):
 
-        self.config = Config()
-        self.config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        self.config.filename = os.path.join(self.config.data_dir, "temp_config")
+        config.data_dir = os.path.dirname(os.path.realpath(__file__))
+        config.filename = os.path.join(config.data_dir, "temp_config")
 
-        self.config.load_config()
+        config.load_config()
 
-        self.transfers = Transfers(Mock(), self.config, deque(), {}, Mock())
+        self.transfers = Transfers(Mock(), config, deque(), {}, Mock())
         self.transfers.server_login()
 
     def test_load_downloads(self):
