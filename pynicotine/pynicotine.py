@@ -1633,7 +1633,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         user = msg.conn.init.target_user
-        ip_address = port = msg.conn.addr
+        ip_address = _port = msg.conn.addr
         conn = msg.conn.conn
         request_time = time.time()
 
@@ -1643,27 +1643,6 @@ Error: %(error)s""", {
             return
 
         self.requested_share_times[user] = request_time
-
-        # Check address is spoofed, if possible
-        if user == config.sections["server"]["login"]:
-            if ip_address is not None and port is not None:
-                log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt "
-                      "from IP %(ip)s port %(port)s"), {
-                        'user': user,
-                        'ip': ip_address,
-                        'port': port
-                    })
-            else:
-                log.add(
-                    _("%(user)s is making a BrowseShares request, blocking possible spoofing attempt "
-                      "from an unknown IP & port"), {
-                        'user': user
-                    })
-
-            if conn is not None:
-                self.queue.append(slskmessages.ConnClose(conn))
-            return
 
         log.add(_("%(user)s is making a BrowseShares request"), {
             'user': user
@@ -1696,9 +1675,7 @@ Error: %(error)s""", {
         """ Peer code: 5 """
 
         username = msg.conn.init.target_user
-
-        if username != config.sections["server"]["login"]:
-            self.userbrowse.shared_file_list(username, msg)
+        self.userbrowse.shared_file_list(username, msg)
 
     def file_search_result(self, msg):
         """ Peer message: 9 """
@@ -1725,7 +1702,6 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         user = msg.conn.init.target_user
-        ip_address = port = msg.conn.addr
         conn = msg.conn.conn
         request_time = time.time()
 
@@ -1735,27 +1711,6 @@ Error: %(error)s""", {
             return
 
         self.requested_info_times[user] = request_time
-
-        # Check address is spoofed, if possible
-        if user == config.sections["server"]["login"]:
-
-            if ip_address is not None and port is not None:
-                log.add(
-                    _("Blocking %(user)s from making a UserInfo request, possible spoofing attempt "
-                      "from IP %(ip)s port %(port)s"), {
-                        'user': user,
-                        'ip': ip_address,
-                        'port': port
-                    }
-                )
-            else:
-                log.add(_("Blocking %s from making a UserInfo request, possible spoofing attempt from "
-                          "an unknown IP & port"), user)
-
-            if conn is not None:
-                self.queue.append(slskmessages.ConnClose(conn))
-
-            return
 
         if self.network_filter.is_user_banned(user):
             log.add(
@@ -1800,9 +1755,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         username = msg.conn.init.target_user
-
-        if username != config.sections["server"]["login"]:
-            self.userinfo.user_info_reply(username, msg)
+        self.userinfo.user_info_reply(username, msg)
 
     def p_message_user(self, msg):
         """ Peer code: 22 """

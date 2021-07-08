@@ -16,10 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from pynicotine import slskmessages
-from pynicotine.utils import unescape
 
 
 class UserInfo:
@@ -62,44 +59,12 @@ class UserInfo:
         if self.ui_callback:
             self.ui_callback.show_user(user)
 
-    def request_local_user_info(self, user, msg):
-
-        try:
-            msg.has_pic = False
-            msg.pic = None
-
-            userpic = self.config.sections["userinfo"]["pic"]
-
-            if userpic and os.path.exists(userpic):
-                with open(userpic, 'rb') as file_handle:
-                    msg.pic = file_handle.read()
-
-                msg.has_pic = True
-
-        except OSError:
-            msg.pic = None
-
-        msg.descr = unescape(self.config.sections["userinfo"]["descr"])
-        msg.totalupl = self.core.transfers.get_total_uploads_allowed()
-        msg.queuesize = self.core.transfers.get_upload_queue_size()
-        msg.slotsavail = self.core.transfers.allow_new_uploads()
-        msg.uploadallowed = self.config.sections["transfers"]["remotedownloads"]
-
-        if msg.uploadallowed:
-            msg.uploadallowed = self.config.sections["transfers"]["uploadallowed"]
-
-        self.user_info_reply(user, msg)
-
     def request_user_info(self, user):
 
         msg = slskmessages.UserInfoRequest(None)
 
         self.show_user(user)
-
-        if user == self.config.sections["server"]["login"]:
-            self.request_local_user_info(user, msg)
-        else:
-            self.core.send_message_to_peer(user, msg)
+        self.core.send_message_to_peer(user, msg)
 
     def set_conn(self, username, conn):
         if self.ui_callback:
