@@ -16,8 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import subprocess
 import unittest
+
+USER_DATA = os.path.dirname(os.path.realpath(__file__))
+CONFIG_FILE = os.path.join(USER_DATA, "temp_config")
 
 
 class CLITest(unittest.TestCase):
@@ -27,6 +31,14 @@ class CLITest(unittest.TestCase):
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--help"], timeout=3)
         self.assertTrue(str(output).find("--help") > -1)
+
+        # Check for " 0 folders found after rescan" in output. Text strings are translatable,
+        # so we can't match them directly.
+        output = subprocess.check_output(
+            ["python3", "-m", "pynicotine", "--config=" + CONFIG_FILE, "--user-data=" + USER_DATA, "--rescan"],
+            timeout=10
+        )
+        self.assertTrue(str(output).find(" 0 ") > -1)
 
         output = subprocess.check_output(["python3", "-m", "pynicotine", "--version"], timeout=3)
         self.assertTrue(str(output).find("Nicotine+") > -1)
