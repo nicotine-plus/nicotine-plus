@@ -1647,7 +1647,7 @@ Error: %(error)s""", {
             'user': user
         })
 
-        ip_address, port = msg.conn.addr
+        ip_address, _port = msg.conn.addr
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
