@@ -1220,9 +1220,7 @@ class SlskProtoThread(threading.Thread):
             elif msg_class is ConnClose and msg_obj.conn in conns:
                 conn = msg_obj.conn
 
-                if msg_obj.callback:
-                    self._core_callback([ConnClose(conn, conns[conn].addr)])
-
+                self._core_callback([ConnClose(conn, conns[conn].addr)])
                 self.close_connection(conns, conn)
 
             elif msg_class is ServerConn:

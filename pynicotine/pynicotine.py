@@ -132,14 +132,13 @@ class NicotineCore:
 
         self.away = False
         self.active_server_conn = None
+        self.parent_conn = None
         self.waitport = None
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
         self.upnp_timer = None
         self.server_timeout_value = -1
-
-        self.has_parent = False
 
         self.requested_info_times = {}
         self.requested_share_times = {}
@@ -964,7 +963,7 @@ Error: %(error)s""", {
 
                     self.transfers.conn_close(conn, i.username, error)
 
-                    if i.conn_type == 'D':
+                    if i.conn == self.parent_conn:
                         self.send_have_no_parent()
 
                     self.peerconns.remove(i)
@@ -1487,7 +1486,7 @@ Error: %(error)s""", {
         potential_parents = msg.list
         log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
 
-        if not self.has_parent and potential_parents:
+        if self.parent_conn is None and potential_parents:
 
             for user in potential_parents:
                 addr = potential_parents[user]
@@ -1941,19 +1940,11 @@ Error: %(error)s""", {
         self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
         self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
 
-    def get_parent_conn(self):
-
-        for i in self.peerconns:
-            if i.conn_type == 'D':
-                return i
-
-        return None
-
     def send_have_no_parent(self):
         """ Inform the server we have no parent. The server should either send
         us a PossibleParents message, or start sending us search requests. """
 
-        self.has_parent = False
+        self.parent_conn = None
         log.add_conn("We have no parent, requesting a new one")
 
         self.queue.append(slskmessages.HaveNoParent(1))
@@ -1967,55 +1958,38 @@ Error: %(error)s""", {
         parent. Tell the server who our parent is, and stop requesting new potential parents. """
 
         log.add_msg_contents(msg)
+        conn = msg.conn.conn
 
-        if not self.has_parent:
-            for i in self.peerconns[:]:
-                if i.conn_type == 'D':
-                    """ We previously attempted to connect to all potential parents. Since we now
-                    have a parent, stop connecting to the others. """
+        if self.parent_conn is None:
+            self.parent_conn = conn
 
-                    if i.conn != msg.conn.conn:
-                        if i.conn is not None:
-                            self.queue.append(slskmessages.ConnClose(i.conn, callback=False))
+            self.queue.append(slskmessages.HaveNoParent(0))
+            self.queue.append(slskmessages.BranchLevel(msg.value + 1))
 
-                        if i in self.out_indirect_conn_request_times:
-                            del self.out_indirect_conn_request_times[i]
-
-                        self.peerconns.remove(i)
-
-            parent = self.get_parent_conn()
-
-            if parent:
-                self.queue.append(slskmessages.HaveNoParent(0))
-                self.queue.append(slskmessages.BranchLevel(msg.value + 1))
-                self.has_parent = True
-
-                log.add_conn("Adopting user %s as parent", parent.username)
-                log.add_conn("Our branch level is %s", msg.value + 1)
-            else:
-                self.send_have_no_parent()
-
+            log.add_conn("Adopting user %s as parent", msg.conn.init.target_user)
+            log.add_conn("Our branch level is %s", msg.value + 1)
             return
 
-        parent = self.get_parent_conn()
+        if conn != self.parent_conn:
+            # Unwanted connection, close it
+            self.queue.append(slskmessages.ConnClose(conn))
+            return
 
-        if parent and msg.conn.conn == parent.conn:
-            # Only accept messages by our current parent
-            # Inform the server of our new branch level
-
-            self.queue.append(slskmessages.BranchLevel(msg.value + 1))
-            log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
+        # Inform the server of our new branch level
+        self.queue.append(slskmessages.BranchLevel(msg.value + 1))
+        log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
 
     def distrib_branch_root(self, msg):
         """ Distrib code: 5 """
 
         log.add_msg_contents(msg)
+        conn = msg.conn.conn
 
-        parent = self.get_parent_conn()
+        if conn != self.parent_conn:
+            # Unwanted connection, close it
+            self.queue.append(slskmessages.ConnClose(conn))
+            return
 
-        if parent and msg.conn.conn == parent.conn:
-            # Only accept messages by our current parent
-            # Inform the server of our branch root
-
-            self.queue.append(slskmessages.BranchRoot(msg.user))
-            log.add_conn("Our branch root is user %s", msg.user)
+        # Inform the server of our branch root
+        self.queue.append(slskmessages.BranchRoot(msg.user))
+        log.add_conn("Our branch root is user %s", msg.user)
