@@ -34,14 +34,6 @@ from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
 SLSKPROTO_RUN_TIME = 1.5
 LOGIN_DATAFILE = 'socket_localhost_22420.log'
 
-try:
-    import pytest
-    PYTEST_SKIP = pytest.mark.skip(reason="currently non-functional under pytest")
-
-except ImportError:
-    # Not using pytest
-    PYTEST_SKIP = lambda *args: None
-
 
 class MockSocket(Mock):
 
@@ -79,8 +71,17 @@ class MockSocket(Mock):
 
 class SlskProtoTest(unittest.TestCase):
 
+    try:
+        import pytest
+        pytest_skip = pytest.mark.skip(reason="currently non-functional under pytest")
+
+    except ImportError:
+        # Not using pytest
+        def pytest_skip(self):
+            pass
+
     # TODO: This test works fine in PyUnit, but shows selector permission errors in pytest. Figure out why.
-    @PYTEST_SKIP
+    @pytest_skip
     def test_server_conn(self):
 
         queue = deque()
