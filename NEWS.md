@@ -3,6 +3,112 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.1.0 (unstable)
+-----------------------------
+
+Changes
+
+ * Added alternative transfer speed limits for downloads and uploads, toggleable using a quick access button in the status bar
+ * Added an option to save downloads to subfolders based on the uploader's username
+ * Added a dropdown menu in file transfer views to clear various types of file transfers
+ * Added an option to disable reverse file paths in search results and file transfer views
+ * Added an option to show private/locked search results and shared files from SoulseekQt clients
+ * Added an option to limit access of buddy shares to trusted buddies
+ * Added a context menu item in file transfer views to browse folders of file transfers, similar to search results
+ * Added check boxes to easily specify whether a shared folder should be buddy-only or not
+ * Added a menu item to quickly toggle dark mode/theme, available under Menu -> View -> Prefer Dark Mode
+ * Added debug logging categories for downloads, uploads and chats
+ * The GUI is now accessible to blind users using screen readers
+ * Finished downloads are no longer cleared on disconnect/exit
+ * Finished uploads are now restored on startup, unless previously cleared
+ * Spamfilter plugin now filters phrases in chat rooms in addition to private chats
+ * Unified preferences related to the GUI, such as colors, icons and tabs, under a single "User Interface" page
+ * A single preference now controls the maximum number of visible search results, instead of the previous two
+ * macOS: minor UX improvements to better align with macOS conventions
+ * Minor performance improvements
+ * Added a basic 'headless' mode to run Nicotine+ without a GUI, available through the --headless command line flag
+ * Added the ability to start multiple instances of Nicotine+ when a custom config file is specified with the --config command line flag
+ * Added the option to specify a custom user data folder location (used for storing e.g. the list of shared files) with the --user-data command line flag
+ * Various deprecations related to plugins, listed in pluginsystem.py and logged on startup
+ * Removed 'direct private message' toggle, since the official Soulseek clients do not understand such messages
+ * Removed option to rotate tab labels, due to various issues with its implementation
+ * Removed support for Ubuntu 16.04 and Python 3.5
+
+Corrections
+
+ * Fixed an issue where file transfers did not reach maximum speeds on slow connections
+ * Fixed an issue where failed downloads were marked as finished in cases where the download folder is not accessible
+ * Fixed an issue where double-clicking treeview column headers activated the first row
+ * Fixed an issue where the 'unread tabs' menu caused a crash if tabs were closed
+ * Fixed an issue where adding finished downloads to shared files could result in a crash
+ * Fixed an issue where searching a user's share could result in a crash after a refresh
+ * Fixed a crash when attempting to show file properties for a user/folder row
+ * Added a workaround for cases where Soulseek NS clients send incorrect file sizes for large files
+ * Various GUI-related changes and improvements to reduce the number of inconsistencies
+ * macOS: keyboard shortcuts now use the Command key instead of Ctrl
+ * Windows: improvements to notifications to avoid duplicate status icons
+ * Windows: fixed an issue where closed windows would appear in window peek
+ * Windows: fixed an issue where minimized windows were not displayed when restoring Nicotine+ from tray
+
+Issues closed on GitHub
+
+ * Is there a way to exclude a file/directory from a share? + Some feedback ([#924](https://github.com/nicotine-plus/nicotine-plus/issues/924))
+ * Feature Request: Improve folder folding behavior + Add Collapse/Expand All ([#981](https://github.com/nicotine-plus/nicotine-plus/issues/981))
+ * Suggestion: Room wall improvements ([#985](https://github.com/nicotine-plus/nicotine-plus/issues/985))
+ * Practical: change share from public to buddy and vice versa. ([#991](https://github.com/nicotine-plus/nicotine-plus/issues/991))
+ * Version 3.0.1 and 3.0.2's Nicotine+.exe detected as a virus by Malwarebytes ([#1012](https://github.com/nicotine-plus/nicotine-plus/issues/1012))
+ * Quicker access to speed throttling? ([#1031](https://github.com/nicotine-plus/nicotine-plus/issues/1031))
+ * Copy/Paste keyboard shortcuts broken on Mac ([#1342](https://github.com/nicotine-plus/nicotine-plus/issues/1342))
+ * Don't automatically clear downloads/uploads on quit ([#1343](https://github.com/nicotine-plus/nicotine-plus/issues/1343))
+ * Notifications tray icons aren't removed automatically ([#1354](https://github.com/nicotine-plus/nicotine-plus/issues/1354))
+ * Download to a \*username\* / subfolder ([#1355](https://github.com/nicotine-plus/nicotine-plus/issues/1355))
+ * Drop official support for Ubuntu 16.04 ([#1360](https://github.com/nicotine-plus/nicotine-plus/issues/1360))
+ * Headless support ([#1362](https://github.com/nicotine-plus/nicotine-plus/issues/1362))
+ * Support for macOS High Sierra ([#1366](https://github.com/nicotine-plus/nicotine-plus/issues/1366))
+ * Prevent Downloads from Displaying in the Debug Logging Window ([#1371](https://github.com/nicotine-plus/nicotine-plus/issues/1371))
+ * Malware detection ([#1373](https://github.com/nicotine-plus/nicotine-plus/issues/1373))
+ * Minimized window app won't show up when called from the system tray ([#1374](https://github.com/nicotine-plus/nicotine-plus/issues/1374))
+ * Change close button position on macOS ([#1376](https://github.com/nicotine-plus/nicotine-plus/issues/1376))
+ * Change menu action on macOS ([#1377](https://github.com/nicotine-plus/nicotine-plus/issues/1377))
+ * Limit Buddy Shares to Trusted Buddies ([#1382](https://github.com/nicotine-plus/nicotine-plus/issues/1382))
+ * Critical errors ([#1383](https://github.com/nicotine-plus/nicotine-plus/issues/1383))
+ * Option to disable popup ([#1386](https://github.com/nicotine-plus/nicotine-plus/issues/1386))
+ * Prevent notification balloon crashes on 32-bit Windows ([#1393](https://github.com/nicotine-plus/nicotine-plus/issues/1393))
+ * ", line 127 ([#1395](https://github.com/nicotine-plus/nicotine-plus/issues/1395))
+ * Auto-Size Columns Opens File in Player ([#1396](https://github.com/nicotine-plus/nicotine-plus/issues/1396))
+ * Window Preview Shows Preferences Window ([#1397](https://github.com/nicotine-plus/nicotine-plus/issues/1397))
+ * Crash report ([#1398](https://github.com/nicotine-plus/nicotine-plus/issues/1398))
+ * Windows Defender / Trojan:Win32/Zpevdo.B ...False Positive? ([#1401](https://github.com/nicotine-plus/nicotine-plus/issues/1401))
+ * Nicotine+ encountered a critical error and needs to exit ([#1402](https://github.com/nicotine-plus/nicotine-plus/issues/1402))
+ * Middle-clicking user/share/room does not close it anymore ([#1404](https://github.com/nicotine-plus/nicotine-plus/issues/1404))
+ * problem with access to some users. ([#1405](https://github.com/nicotine-plus/nicotine-plus/issues/1405))
+ * Critical Error on master ([#1406](https://github.com/nicotine-plus/nicotine-plus/issues/1406))
+ * Config error: can't decode 'searches' section 'group_searches' value ([#1407](https://github.com/nicotine-plus/nicotine-plus/issues/1407))
+ * Transfer lists are cleared upon disconnection ([#1409](https://github.com/nicotine-plus/nicotine-plus/issues/1409))
+ * Wishlists aren't being searched ([#1410](https://github.com/nicotine-plus/nicotine-plus/issues/1410))
+ * Every downloaded file remains as "INCOMPLETE[number]Filename" ([#1411](https://github.com/nicotine-plus/nicotine-plus/issues/1411))
+ * Exclamation point in the chat tab bar i have not seen before ([#1413](https://github.com/nicotine-plus/nicotine-plus/issues/1413))
+ * Tried unpacking zip, scanner shows Gen:Variant.Bulz.495404 ([#1414](https://github.com/nicotine-plus/nicotine-plus/issues/1414))
+ * Crash on getting File Properties at user or directory entry level in Download tab ([#1415](https://github.com/nicotine-plus/nicotine-plus/issues/1415))
+ * in Download tab, the Queue Position column is empty ([#1416](https://github.com/nicotine-plus/nicotine-plus/issues/1416))
+ * Windows Defender quarantined nicotine+ because of "Trojan:Win32/Zpevdo.B" ([#1417](https://github.com/nicotine-plus/nicotine-plus/issues/1417))
+ * Tabs go out off the screen where there are many, they should use several lines instead. ([#1420](https://github.com/nicotine-plus/nicotine-plus/issues/1420))
+ * Search main tab: wish tabs always extra. ([#1422](https://github.com/nicotine-plus/nicotine-plus/issues/1422))
+ * Can't click anything when in fullscreen ([#1423](https://github.com/nicotine-plus/nicotine-plus/issues/1423))
+ * 'GeoIP' object has no attribute 'get_all' ([#1426](https://github.com/nicotine-plus/nicotine-plus/issues/1426))
+ * Finished Downloads Autoclearing ([#1427](https://github.com/nicotine-plus/nicotine-plus/issues/1427))
+ * 'NetworkFrame' object has no attribute 'InterfaceRow' ([#1430](https://github.com/nicotine-plus/nicotine-plus/issues/1430))
+ * Browse Folder via Downloads tab ([#1432](https://github.com/nicotine-plus/nicotine-plus/issues/1432))
+ * Leech detector logs not showing up ([#1433](https://github.com/nicotine-plus/nicotine-plus/issues/1433))
+ * Crash when adding to buddy list from User info tab ([#1434](https://github.com/nicotine-plus/nicotine-plus/issues/1434))
+ * How to access option to close only window (keep sharing files)? ([#1435](https://github.com/nicotine-plus/nicotine-plus/issues/1435))
+ * error ([#1436](https://github.com/nicotine-plus/nicotine-plus/issues/1436))
+ * DownloadQueuedNotification on end of downloaded file ([#1438](https://github.com/nicotine-plus/nicotine-plus/issues/1438))
+ * Convert organization URL to lowercase ([#1441](https://github.com/nicotine-plus/nicotine-plus/issues/1441))
+ * random crash? ([#1442](https://github.com/nicotine-plus/nicotine-plus/issues/1442))
+ * Crash when closing private Chat tab ([#1445](https://github.com/nicotine-plus/nicotine-plus/issues/1445))
+ * Critical error upon attempted chat ([#1446](https://github.com/nicotine-plus/nicotine-plus/issues/1446))
+
 Version 3.0.6 (May 1, 2021)
 -----------------------------
 
