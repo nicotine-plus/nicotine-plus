@@ -40,7 +40,7 @@ try:
 
 except ImportError:
     # Not using pytest
-    PYTEST_SKIP = None
+    PYTEST_SKIP = lambda *args: None
 
 
 class MockSocket(Mock):
