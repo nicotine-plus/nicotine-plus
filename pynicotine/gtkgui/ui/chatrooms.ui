@@ -43,6 +43,7 @@
                           <object class="GtkScrolledWindow" id="RoomLogWindow">
                             <property name="visible">1</property>
                             <property name="vexpand">1</property>
+                            <property name="height-request">48</property>
                             <child>
                               <object class="GtkTextView" id="RoomLog">
                                 <property name="visible">1</property>
