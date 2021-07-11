@@ -94,7 +94,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="TraySettings">
         <property name="visible">1</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
@@ -109,7 +109,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox" id="TraySettings">
+          <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">12</property>
             <property name="orientation">vertical</property>
