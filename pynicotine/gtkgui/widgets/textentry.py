@@ -228,19 +228,13 @@ class ChatEntry:
             return
 
         if is_alias(text):
-            new_text = expand_alias(text)
+            alias_text = expand_alias(text)
 
-            if not new_text:
+            if not alias_text:
                 log.add(_('Alias "%s" returned nothing'), text)
                 return
 
-            if new_text[:2] == "//":
-                new_text = new_text[1:]
-
-            self.frame.np.queue.append(
-                self.message_class(self.entity, self.frame.np.privatechats.auto_replace(new_text)))
-            widget.set_text("")
-            return
+            text = alias_text
 
         s = text.split(" ", 1)
         cmd = s[0]
