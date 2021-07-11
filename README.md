@@ -11,9 +11,7 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 # Download Nicotine+
 
-The current stable version of Nicotine+ is 3.0.6, released on May 1, 2021. See the [release notes](NEWS.md).
-
-Windows packages have been replaced on June 11, 2021, to reduce the number of false positives.
+The current stable version of Nicotine+ is 3.1.0, released on July 23, 2021. See the [release notes](NEWS.md).
 
 ## GNU/Linux, *BSD, Solaris
 
