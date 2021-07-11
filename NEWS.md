@@ -22,13 +22,16 @@ Changes
  * Finished downloads are no longer cleared on disconnect/exit
  * Finished uploads are now restored on startup, unless previously cleared
  * Spamfilter plugin now filters phrases in chat rooms in addition to private chats
+ * Command aliases now run chat commands, e.g. '/alias hello /away' will create a '/hello' command that runs '/away'
  * Unified preferences related to the GUI, such as colors, icons and tabs, under a single "User Interface" page
  * A single preference now controls the maximum number of visible search results, instead of the previous two
  * macOS: minor UX improvements to better align with macOS conventions
+ * GNU/Linux and macOS: added an option to enforce a specific network interface, useful for virtual private networks (VPN)
  * Minor performance improvements
  * Added a basic 'headless' mode to run Nicotine+ without a GUI, available through the --headless command line flag
  * Added the ability to start multiple instances of Nicotine+ when a custom config file is specified with the --config command line flag
  * Added the option to specify a custom user data folder location (used for storing e.g. the list of shared files) with the --user-data command line flag
+ * Added plugin notifications for started/finished transfers
  * Various deprecations related to plugins, listed in pluginsystem.py and logged on startup
  * Removed 'direct private message' toggle, since the official Soulseek clients do not understand such messages
  * Removed option to rotate tab labels, due to various issues with its implementation
