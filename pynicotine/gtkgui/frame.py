@@ -1726,10 +1726,10 @@ class NicotineFrame:
     def on_key_press_event(self, *args):
 
         keyval, keycode, state = get_key_press_event_args(*args)
-        kaycodes, mods = parse_accelerator("<Primary>")
+        kaycodes, mods = parse_accelerator("<Alt>")
         self.on_disable_auto_away()
 
-        if not state & mods:
+        if state != mods:
             return False
 
         for i in range(1, 10):
