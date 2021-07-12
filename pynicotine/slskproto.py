@@ -667,12 +667,27 @@ class SlskProtoThread(threading.Thread):
     """ Connections """
 
     def socket_still_active(self, conn):
+
         try:
             connection = self._conns[conn]
+
         except KeyError:
             return False
 
         return len(connection.obuf) > 0 or len(connection.ibuf) > 0
+
+    @staticmethod
+    def pack_network_message(msg_obj):
+
+        try:
+            return msg_obj.make_network_message()
+
+        except Exception:
+            from traceback import format_exc
+            log.add(("Unable to pack message type %(msg_type)s. %(error)s"),
+                    {'msg_type': msg_obj.__class__, 'error': format_exc()})
+
+        return None
 
     @staticmethod
     def unpack_network_message(msg_class, msg_buffer, msg_size, conn_type, conn=None):
@@ -822,7 +837,10 @@ class SlskProtoThread(threading.Thread):
             })
             return
 
-        msg = msg_obj.make_network_message()
+        msg = self.pack_network_message(msg_obj)
+
+        if msg is None:
+            return
 
         conns[server_socket].obuf.extend(struct.pack("<I", len(msg) + 4))
         conns[server_socket].obuf.extend(struct.pack("<I", self.servercodes[msg_obj.__class__]))
@@ -884,18 +902,24 @@ class SlskProtoThread(threading.Thread):
 
         # Pack peer init messages
         if msg_obj.__class__ is PierceFireWall:
-            conns[msg_obj.conn].piercefw = msg_obj
+            msg = self.pack_network_message(msg_obj)
 
-            msg = msg_obj.make_network_message()
+            if msg is None:
+                return
+
+            conns[msg_obj.conn].piercefw = msg_obj
 
             conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
             conns[msg_obj.conn].obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
             conns[msg_obj.conn].obuf.extend(msg)
 
         elif msg_obj.__class__ is PeerInit:
-            conns[msg_obj.conn].init = msg_obj
+            msg = self.pack_network_message(msg_obj)
 
-            msg = msg_obj.make_network_message()
+            if msg is None:
+                return
+
+            conns[msg_obj.conn].init = msg_obj
 
             if conns[msg_obj.conn].piercefw is None:
                 conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
@@ -999,7 +1023,10 @@ class SlskProtoThread(threading.Thread):
             return
 
         # Pack peer messages
-        msg = msg_obj.make_network_message()
+        msg = self.pack_network_message(msg_obj)
+
+        if msg is None:
+            return
 
         conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 4))
         conns[msg_obj.conn].obuf.extend(struct.pack("<I", self.peercodes[msg_obj.__class__]))
@@ -1102,17 +1129,23 @@ class SlskProtoThread(threading.Thread):
 
         # Pack file messages
         if msg_obj.__class__ is FileRequest:
-            conns[msg_obj.conn].filereq = msg_obj
+            msg = self.pack_network_message(msg_obj)
 
-            msg = msg_obj.make_network_message()
+            if msg is None:
+                return
+
+            conns[msg_obj.conn].filereq = msg_obj
             conns[msg_obj.conn].obuf.extend(msg)
 
             self._core_callback([msg_obj])
 
         elif msg_obj.__class__ is FileOffset:
-            conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
+            msg = self.pack_network_message(msg_obj)
 
-            msg = msg_obj.make_network_message()
+            if msg is None:
+                return
+
+            conns[msg_obj.conn].bytestoread = msg_obj.filesize - msg_obj.offset
             conns[msg_obj.conn].obuf.extend(msg)
 
     """ Distributed Connection """
@@ -1165,7 +1198,10 @@ class SlskProtoThread(threading.Thread):
             return
 
         # Pack distributed messages
-        msg = msg_obj.make_network_message()
+        msg = self.pack_network_message(msg_obj)
+
+        if msg is None:
+            return
 
         conns[msg_obj.conn].obuf.extend(struct.pack("<I", len(msg) + 1))
         conns[msg_obj.conn].obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
