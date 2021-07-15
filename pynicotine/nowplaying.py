@@ -263,19 +263,15 @@ class NowPlaying:
     def get_length_time(length):
         """ Function used to normalize tracks duration """
 
-        if length != '' and length is not None:
+        minutes, seconds = divmod(length, 60)
+        hours, minutes = divmod(minutes, 60)
 
-            minutes = int(length) // 60
-            seconds = str(int(length) - (60 * minutes))
-
-            if len(seconds) < 2:
-                seconds = '0' + seconds
-
-            length = str(minutes) + ":" + str(seconds)
+        if hours > 0:
+            ret = '{}:{:02}:{:02}'.format(hours, minutes, seconds)
         else:
-            length = "0:00"
+            ret = '{}:{:02}'.format(minutes, seconds)
 
-        return length
+        return ret
 
     def other(self, command):
         try:
