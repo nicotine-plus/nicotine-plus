@@ -260,10 +260,10 @@ class NowPlaying:
         return True
 
     @staticmethod
-    def get_length_time(length):
+    def get_length_time(seconds):
         """ Function used to normalize tracks duration """
 
-        minutes, seconds = divmod(length, 60)
+        minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
 
         if hours > 0:
