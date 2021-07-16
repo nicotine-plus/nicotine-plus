@@ -520,14 +520,13 @@ class SlskProtoThread(threading.Thread):
         for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
                 self.listen_socket.bind((ip_address, listenport))
-            except socket.error:
-                listenport = None
-            else:
                 self.listen_socket.listen(1)
                 self._core_callback([IncPort(listenport)])
+                self._listenport = listenport
                 break
 
-        self._listenport = listenport
+            except socket.error:
+                continue
 
     def server_connect(self):
         """ We've connected to the server """
