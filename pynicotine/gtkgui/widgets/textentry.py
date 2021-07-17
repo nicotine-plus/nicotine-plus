@@ -111,7 +111,7 @@ class ChatEntry:
     def get_completions(self, part, list):
 
         lowerpart = part.lower()
-        matches = [x for x in set(list) if x.lower().startswith(lowerpart) and len(x) >= len(part)]
+        matches = [x for x in list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
         return matches
 
     def remove_completion(self, item):
