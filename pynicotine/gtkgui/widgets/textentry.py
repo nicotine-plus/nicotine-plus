@@ -52,6 +52,7 @@ class ChatEntry:
         self.is_chatroom = is_chatroom
 
         self.completion_list = None
+        self.completion_iters = {}
 
         entry.connect("activate", self.on_enter)
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
@@ -94,7 +95,7 @@ class ChatEntry:
 
         if config.sections["words"]["dropdown"]:
             model = self.entry.get_completion().get_model()
-            model.insert_with_valuesv(-1, self.column_numbers, [item])
+            self.completion_iters[item] = model.insert_with_valuesv(-1, self.column_numbers, [item])
 
     def get_completion(self, part, list):
 
@@ -128,16 +129,9 @@ class ChatEntry:
             return
 
         model = self.entry.get_completion().get_model()
-        iterator = model.get_iter_first()
-
-        while iterator is not None:
-            name = model.get_value(iterator, 0)
-
-            if name == item:
-                model.remove(iterator)
-                break
-
-            iterator = model.iter_next(iterator)
+        iterator = self.completion_iters[item]
+        model.remove(iterator)
+        del self.completion_iters[item]
 
     def set_completion_list(self, completion_list):
 
@@ -150,6 +144,7 @@ class ChatEntry:
 
         model = completion.get_model()
         model.clear()
+        self.completion_iters.clear()
 
         if not config_words["tab"]:
             return
@@ -157,15 +152,17 @@ class ChatEntry:
         if completion_list is None:
             completion_list = []
 
-        completion.set_popup_completion(False)
-
-        if config_words["dropdown"]:
-            for word in completion_list:
-                model.insert_with_valuesv(-1, self.column_numbers, [str(word)])
-
-            completion.set_popup_completion(True)
-
         self.completion_list = completion_list
+
+        if not config_words["dropdown"]:
+            completion.set_popup_completion(False)
+            return
+
+        for word in completion_list:
+            word = str(word)
+            self.completion_iters[word] = model.insert_with_valuesv(-1, self.column_numbers, [word])
+
+        completion.set_popup_completion(True)
 
     def entry_completion_find_match(self, completion, entry_text, iterator):
 
