@@ -1302,27 +1302,27 @@ class Transfers:
                 oldelapsed = i.timeelapsed
                 i.timeelapsed = curtime - i.starttime
 
-                if curtime > i.starttime and i.currentbytes > i.lastbytes:
-
-                    bytesdifference = (i.currentbytes - i.lastbytes)
-                    self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
-
-                    i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
-
-                    if i.speed <= 0:
-                        i.timeleft = "∞"
-                    else:
-                        i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
-
-                i.lastbytes = i.currentbytes
-                i.lasttime = curtime
-
                 if i.size > i.currentbytes:
+                    if curtime > i.starttime and i.currentbytes > i.lastbytes:
+
+                        bytesdifference = (i.currentbytes - i.lastbytes)
+                        self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
+
+                        i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+
+                        if i.speed <= 0:
+                            i.timeleft = "∞"
+                        else:
+                            i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
+
                     if oldelapsed == i.timeelapsed:
                         needupdate = False
                 else:
                     self.download_finished(msg.file, i)
                     needupdate = False
+
+                i.lastbytes = i.currentbytes
+                i.lasttime = curtime
 
             except IOError as error:
                 log.add(_("Download I/O error: %s"), error)
@@ -1359,27 +1359,26 @@ class Transfers:
             oldelapsed = i.timeelapsed
             i.timeelapsed = curtime - i.starttime
 
-            if curtime > i.starttime and i.currentbytes > i.lastbytes:
-
-                bytesdifference = (i.currentbytes - i.lastbytes)
-                self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
-
-                i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
-
-                if i.speed <= 0:
-                    i.timeleft = "∞"
-                else:
-                    i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
-
-            i.lastbytes = i.currentbytes
-            i.lasttime = curtime
-
             if i.size > i.currentbytes:
+                if curtime > i.starttime and i.currentbytes > i.lastbytes:
+                    bytesdifference = (i.currentbytes - i.lastbytes)
+                    self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
+
+                    i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+
+                    if i.speed <= 0:
+                        i.timeleft = "∞"
+                    else:
+                        i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
+
                 if oldelapsed == i.timeelapsed:
                     needupdate = False
             else:
                 self.upload_finished(i, file_handle=msg.file)
                 needupdate = False
+
+            i.lastbytes = i.currentbytes
+            i.lasttime = curtime
 
             if needupdate and self.uploadsview:
                 self.uploadsview.update(i)
@@ -1935,9 +1934,10 @@ class Transfers:
     def upload_finished(self, i, file_handle=None):
 
         if i.speed is not None:
-            speedbytes = int(i.speed)
-            self.upload_speed = speedbytes
-            self.queue.append(slskmessages.SendUploadSpeed(speedbytes))
+            # Inform the server about the last upload speed for this transfer
+            speed = int(i.speed)
+            self.upload_speed = speed
+            self.queue.append(slskmessages.SendUploadSpeed(speed))
 
         self.close_file(file_handle, i)
 

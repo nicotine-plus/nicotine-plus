@@ -40,6 +40,7 @@ Changes
 Corrections
 
  * Fixed an issue where file transfers did not reach maximum speeds on slow connections
+ * Fixed an issue where incorrect upload speeds were sent to the server
  * Fixed an issue where failed downloads were marked as finished in cases where the download folder is not accessible
  * Fixed an issue where double-clicking treeview column headers activated the first row
  * Fixed an issue where the 'unread tabs' menu caused a crash if tabs were closed
@@ -111,6 +112,7 @@ Issues closed on GitHub
  * random crash? ([#1442](https://github.com/nicotine-plus/nicotine-plus/issues/1442))
  * Crash when closing private Chat tab ([#1445](https://github.com/nicotine-plus/nicotine-plus/issues/1445))
  * Critical error upon attempted chat ([#1446](https://github.com/nicotine-plus/nicotine-plus/issues/1446))
+ * Incorrectly reported upload speed ([#1449](https://github.com/nicotine-plus/nicotine-plus/issues/1449))
 
 Version 3.0.6 (May 1, 2021)
 -----------------------------

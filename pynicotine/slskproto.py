@@ -1394,9 +1394,11 @@ class SlskProtoThread(threading.Thread):
             """ Depending on the number of active uploads, the cooldown for callbacks
             can be up to 15 seconds per transfer. We use a bit of randomness to give the
             illusion that uploads are updated often. """
+
+            finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
             cooldown = max(1.0, min(self.total_uploads * uniform(0.8, 1.0), 15))
 
-            if totalsentbytes == size or (curtime - conn_obj.lastcallback) > cooldown:
+            if finished or (curtime - conn_obj.lastcallback) > cooldown:
 
                 """ We save resources by not sending data back to the NicotineCore
                 every time a part of a file is uploaded """
