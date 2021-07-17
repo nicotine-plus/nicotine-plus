@@ -2875,12 +2875,12 @@ class DistribBranchLevel(DistribMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.value))
+        msg.extend(self.pack_object(self.value, signedint=True))
 
         return msg
 
     def parse_network_message(self, message):
-        _pos, self.value = self.get_object(message, int)
+        _pos, self.value = self.get_object(message, int, getsignedint=True)
 
 
 class DistribBranchRoot(DistribMessage):
