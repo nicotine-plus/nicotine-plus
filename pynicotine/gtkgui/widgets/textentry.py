@@ -161,7 +161,7 @@ class ChatEntry:
 
         if config_words["dropdown"]:
             for word in completion_list:
-                model.insert_with_valuesv(-1, self.column_numbers, [word])
+                model.insert_with_valuesv(-1, self.column_numbers, [str(word)])
 
             completion.set_popup_completion(True)
 
@@ -169,52 +169,50 @@ class ChatEntry:
 
     def entry_completion_find_match(self, completion, entry_text, iterator):
 
-        entry = completion.get_entry()
-        model = completion.get_model()
-        item_text = model.get_value(iterator, 0)
-        ix = entry.get_position()
-
-        if entry_text is None or entry_text == "" or entry_text.isspace() or item_text is None:
+        if not entry_text:
             return False
 
         # Get word to the left of current position
         if " " in entry_text:
+            ix = self.entry.get_position()
             split_key = entry_text[:ix].split(" ")[-1]
         else:
             split_key = entry_text
 
-        if split_key.isspace() or split_key == "" or len(split_key) < config.sections["words"]["characters"]:
+        if not split_key or len(split_key) < config.sections["words"]["characters"]:
             return False
 
-        # case-insensitive matching
-        if item_text.lower().startswith(split_key) and item_text.lower() != split_key:
+        # Case-insensitive matching
+        item_text = completion.get_model().get_value(iterator, 0).lower()
+
+        if item_text.startswith(split_key) and item_text != split_key:
             return True
 
         return False
 
     def entry_completion_found_match(self, completion, model, iterator):
 
-        entry = completion.get_entry()
-        current_text = entry.get_text()
-        ix = entry.get_position()
+        current_text = self.entry.get_text()
+        completion_value = model.get_value(iterator, 0)
+
         # if more than a word has been typed, we throw away the
         # one to the left of our current position because we want
         # to replace it with the matching word
 
         if " " in current_text:
+            ix = self.entry.get_position()
             prefix = " ".join(current_text[:ix].split(" ")[:-1])
             suffix = " ".join(current_text[ix:].split(" "))
 
             # add the matching word
-            new_text = "%s %s%s" % (prefix, model[iterator][0], suffix)
+            new_text = "%s %s%s" % (prefix, completion_value, suffix)
             # set back the whole text
-            entry.set_text(new_text)
+            self.entry.set_text(new_text)
             # move the cursor at the end
-            entry.set_position(len(prefix) + len(model[iterator][0]) + 1)
+            self.entry.set_position(len(prefix) + len(completion_value) + 1)
         else:
-            new_text = "%s" % (model[iterator][0])
-            entry.set_text(new_text)
-            entry.set_position(-1)
+            self.entry.set_text(completion_value)
+            self.entry.set_position(-1)
 
         # stop the event propagation
         return True
