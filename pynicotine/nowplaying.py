@@ -274,10 +274,11 @@ class NowPlaying:
         return ret
 
     def other(self, command):
-        try:
-            if command == "":
-                return None
 
+        if not command:
+            return None
+
+        try:
             output = execute_command(command, returnoutput=True)
             self.title["nowplaying"] = output
             return True
