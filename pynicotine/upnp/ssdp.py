@@ -72,6 +72,7 @@ class SSDP:
     multicast_port = 1900
     buffer_size = 4096
     response_time_secs = 2
+    sleep_time_secs = 0.01
 
     @classmethod
     def list(cls):
@@ -116,7 +117,7 @@ class SSDP:
         time_end = time.time() + SSDP.response_time_secs
 
         while time.time() < time_end:
-            _timeout = 1
+            _timeout = 0
             readable, writable, _ = select.select(inputs, outputs, inputs, _timeout)
 
             for _sock in readable:
@@ -161,7 +162,7 @@ class SSDP:
                     wan_igd2_sent = True
 
             # Cooldown
-            time.sleep(0.4)
+            time.sleep(cls.sleep_time_secs)
 
         for router in routers:
             serial_number, control_url, uuid, svc_type = SSDP._get_router_service_description(
