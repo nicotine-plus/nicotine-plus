@@ -30,6 +30,7 @@
 import glob
 import os
 import sys
+import warnings
 
 from distutils.core import setup
 from distutils.cmd import Command
@@ -98,6 +99,11 @@ def generate_translations():
 
 if __name__ == '__main__':
 
+    # Suppress distutils 'Unknown distribution option' for python_requires and install_requires.
+    # The aforementioned options are only used by pip and PyPi, distutils doesn't understand them.
+    warnings.filterwarnings("ignore", message="Unknown distribution option")
+
+    # Specify a description for the PyPi project page
     LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
 file sharing network.
 
