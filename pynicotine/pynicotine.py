@@ -133,6 +133,7 @@ class NicotineCore:
         self.away = False
         self.active_server_conn = None
         self.parent_conn = None
+        self.potential_parents = {}
         self.waitport = None
         self.ipaddress = None
         self.privileges_left = None
@@ -1483,13 +1484,13 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
 
-        potential_parents = msg.list
+        self.potential_parents = msg.list
         log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
 
-        if self.parent_conn is None and potential_parents:
+        if self.parent_conn is None and self.potential_parents:
 
-            for user in potential_parents:
-                addr = potential_parents[user]
+            for user in self.potential_parents:
+                addr = self.potential_parents[user]
 
                 self.send_message_to_peer(user, slskmessages.DistribRequest(), address=addr)
                 log.add_conn("Attempting parent connection to user %s", user)
@@ -1912,14 +1913,15 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
         conn = msg.conn.conn
+        username = msg.conn.init.target_user
 
-        if self.parent_conn is None:
+        if self.parent_conn is None and username in self.potential_parents:
             self.parent_conn = conn
 
             self.queue.append(slskmessages.HaveNoParent(0))
             self.queue.append(slskmessages.BranchLevel(msg.value + 1))
 
-            log.add_conn("Adopting user %s as parent", msg.conn.init.target_user)
+            log.add_conn("Adopting user %s as parent", username)
             log.add_conn("Our branch level is %s", msg.value + 1)
             return
 
