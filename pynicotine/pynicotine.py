@@ -1915,6 +1915,13 @@ Error: %(error)s""", {
         conn = msg.conn.conn
         username = msg.conn.init.target_user
 
+        if msg.value < 0:
+            # There are rare cases of parents sending a branch level value of -1, presumably buggy clients
+            log.add_conn("Received an invalid branch level value %(level)s from user %(user)s. Closing connection." %
+                         {"level": msg.value, "user": username})
+            self.queue.append(slskmessages.ConnClose(conn))
+            return
+
         if self.parent_conn is None and username in self.potential_parents:
             self.parent_conn = conn
 
