@@ -651,8 +651,7 @@ class ChatRoom:
 
                     if end > start:
                         user = line[start + 1:end].strip()
-                        self.get_user_tag(user)
-                        usertag = self.tag_users[user]
+                        usertag = self.get_user_tag(user)
 
                         if user == login:
                             tag = self.tag_local
@@ -863,14 +862,13 @@ class ChatRoom:
             timestamp_format = config.sections["logging"]["log_timestamp"]
             log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
 
-        self.get_user_tag(user)
-
+        usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
         if user != login:
             append_line(
                 self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag,
-                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
             if self.Speech.get_active():
@@ -885,7 +883,7 @@ class ChatRoom:
         else:
             append_line(
                 self.ChatScroll, line, tag,
-                username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
+                username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
     def echo_message(self, text, message_type):
@@ -897,18 +895,6 @@ class ChatRoom:
             tag = getattr(self, "tag_" + str(message_type))
 
         append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
-
-    def get_user_tag(self, user):
-
-        if user in self.tag_users:
-            return
-
-        if user not in self.users:
-            color = "useroffline"
-        else:
-            color = get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
-
-        self.tag_users[user] = self.create_tag(self.ChatScroll.get_buffer(), color, user)
 
     def show_tickers(self):
         tickers = self.tickers.get_tickers()
@@ -942,7 +928,7 @@ class ChatRoom:
 
         self.add_user_row(userdata)
 
-        self.get_user_tag(username)
+        self.update_user_tag(username)
         self.count_users()
 
     def user_left_room(self, username):
@@ -961,7 +947,7 @@ class ChatRoom:
         self.usersmodel.remove(self.users[username])
         del self.users[username]
 
-        self.get_user_tag(username)
+        self.update_user_tag(username)
         self.count_users()
 
     def count_users(self):
@@ -998,12 +984,11 @@ class ChatRoom:
                 not self.frame.np.network_filter.is_user_ip_ignored(user):
             append_line(self.RoomLog, action % user, self.tag_log)
 
-        if user in self.tag_users:
-            color = get_user_status_color(status)
-            update_tag_visuals(self.tag_users[user], color)
-
         self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(self.users[user], 5, status)
+
+        if user in self.tag_users:
+            self.update_user_tag(user)
 
     def set_user_country(self, user, country):
 
@@ -1040,10 +1025,12 @@ class ChatRoom:
 
         return True
 
-    def create_tag(self, buffer, color, username=None):
+    def create_tag(self, buffer, color=None, username=None):
 
         tag = buffer.create_tag()
-        update_tag_visuals(tag, color)
+
+        if color:
+            update_tag_visuals(tag, color)
 
         if username and Gtk.get_major_version() == 3:
             tag.connect("event", self.user_name_event, username)
@@ -1063,6 +1050,27 @@ class ChatRoom:
 
         self.tag_users = {}
 
+    def get_user_tag(self, username):
+
+        if username not in self.tag_users:
+            self.tag_users[username] = self.create_tag(self.ChatScroll.get_buffer(), username=username)
+            self.update_user_tag(username)
+
+        return self.tag_users[username]
+
+    def update_user_tag(self, username):
+
+        if username not in self.tag_users:
+            return
+
+        if username not in self.users:
+            color = "useroffline"
+        else:
+            status = self.usersmodel.get_value(self.users[username], 5)
+            color = get_user_status_color(status)
+
+        update_tag_visuals(self.tag_users[username], color)
+
     def update_tags(self):
 
         update_tag_visuals(self.tag_remote, "chatremote")
@@ -1071,8 +1079,8 @@ class ChatRoom:
         update_tag_visuals(self.tag_hilite, "chathilite")
         update_tag_visuals(self.tag_log, "chatremote")
 
-        for user in self.tag_users:
-            self.get_user_tag(user)
+        for username in self.tag_users:
+            self.update_user_tag(username)
 
     def on_leave(self, *args):
 
@@ -1106,8 +1114,8 @@ class ChatRoom:
         if not self.AutoJoin.get_active() and self.room in config.sections["columns"]["chat_room"]:
             del config.sections["columns"]["chat_room"][self.room]
 
-        for tag in self.tag_users.values():
-            update_tag_visuals(tag, "useroffline")
+        for username in self.tag_users:
+            self.update_user_tag(username)
 
         self.tickers.set_ticker([])
 
@@ -1141,8 +1149,8 @@ class ChatRoom:
         self.set_completion_list(list(self.frame.np.chatrooms.completion_list))
 
         # Update all username tags in chat log
-        for user in self.tag_users:
-            self.get_user_tag(user)
+        for username in self.tag_users:
+            self.update_user_tag(username)
 
     def on_autojoin(self, widget):
 
