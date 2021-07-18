@@ -47,7 +47,7 @@ class Router:
 
     @classmethod
     def parse_ssdp_response(cls, ssdp_response, sender):
-        response_headers = dict(ssdp_response.headers)
+        response_headers = {k.upper(): v for k, v in ssdp_response.headers}
 
         if 'LOCATION' not in response_headers:
             log.add_debug('The M-SEARCH response from %s:%d did not contain a Location header.', (sender[0], sender[1]))
