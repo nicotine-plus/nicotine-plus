@@ -71,6 +71,6 @@ class Plugin(BasePlugin):
             return
 
         for line in self.settings['message'].splitlines():
-            self.send_private(user, line)
+            self.send_private(user, line, show_ui=False)
 
         self.log("User %s doesn't share any files, sent complaint." % user)
