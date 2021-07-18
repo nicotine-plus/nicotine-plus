@@ -77,12 +77,6 @@ class UPnPPortMapping:
 
         log.add_debug('Creating Port Mapping rule via UPnP...')
 
-        # Find router
-        router = UPnp.find_router()
-
-        if not router:
-            raise RuntimeError('UPnP does not work on this network')
-
         # Create a UDP socket
         local_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -95,6 +89,12 @@ class UPnPPortMapping:
 
         # Close the socket
         local_socket.close()
+
+        # Find router
+        router = UPnp.find_router(self.internalipaddress)
+
+        if not router:
+            raise RuntimeError('UPnP does not work on this network')
 
         # Store the Local LAN port
         self.internallanport = np.protothread.listen_socket.getsockname()[1]

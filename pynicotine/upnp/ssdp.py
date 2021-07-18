@@ -75,7 +75,7 @@ class SSDP:
     sleep_time_secs = 0.01
 
     @classmethod
-    def list(cls):
+    def list(cls, private_ip=None):
         """ list finds all devices responding to an SSDP search """
 
         log.add_debug('UPnP: Discovering... delay=%s seconds', SSDP.response_time_secs)
@@ -84,6 +84,9 @@ class SSDP:
         sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
         sock.setblocking(False)
+
+        if private_ip:
+            sock.bind((private_ip, 0))
 
         # Create the WANIPConnection:1 and WANIPConnection:2 request objects
         headers = {

@@ -256,8 +256,8 @@ class UPnp:
         return portmaps
 
     @classmethod
-    def find_router(cls):
-        routers = SSDP.list()
+    def find_router(cls, private_ip=None):
+        routers = SSDP.list(private_ip)
         router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
 
         if not router:
