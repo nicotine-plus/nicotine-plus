@@ -52,8 +52,9 @@ class UPnPPortMapping:
         try:
             self._add_port_mapping(np)
 
-        except Exception as error:
-            log.add(_('UPnP exception: %(error)s'), {'error': error})
+        except Exception:
+            from traceback import format_exc
+            log.add(_('UPnP exception: %(error)s'), {'error': format_exc()})
             log.add(_('Failed to automate the creation of UPnP Port Mapping rule.'))
             return
 
