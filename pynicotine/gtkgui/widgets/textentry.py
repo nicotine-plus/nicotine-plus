@@ -216,10 +216,9 @@ class ChatEntry:
 
     def on_enter(self, widget):
 
-        text = widget.get_text()
+        text = self.entry.get_text()
 
         if not text:
-            widget.set_text("")
             return
 
         if is_alias(text):
@@ -231,12 +230,14 @@ class ChatEntry:
 
             text = alias_text
 
-        s = text.split(" ", 1)
-        cmd = s[0]
+        split = text.split(" ", 1)
+        cmd = split[0]
+        is_double_slash_cmd = (cmd[:2] == "//")
+        is_single_slash_cmd = (cmd[:1] == "/" and not is_double_slash_cmd)
 
         # Remove empty items created by split, if command ended with a space, e.g. '/ctcpversion '
-        if len([i for i in s if i]) == 2:
-            arg_self = args = s[1]
+        if len([i for i in split if i]) == 2:
+            arg_self = args = split[1]
         else:
             if not self.is_chatroom:
                 arg_self = self.entity
@@ -245,8 +246,21 @@ class ChatEntry:
 
             args = ""
 
-        if cmd[:1] == "/" and cmd[:2] != "//" and cmd + " " not in self.command_list:
+        if is_single_slash_cmd and cmd + " " not in self.command_list:
             log.add(_("Command %s is not recognized"), text)
+            return
+
+        # Clear chat entry
+        self.entry.set_text("")
+
+        if not is_single_slash_cmd or cmd == "/me":
+            # Regular chat message (/me is sent as plain text)
+
+            if is_double_slash_cmd:
+                # Remove first slash and send the rest of the command as plain text
+                text = text[1:]
+
+            self.send_message(self.entity, text)
             return
 
         if cmd in ("/alias", "/al"):
@@ -402,23 +416,11 @@ class ChatEntry:
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)
 
-        elif cmd == "/me":
-            self.send_message(self.entity, text)
-
-        elif text[:2] == "//":
-            text = text[1:]
-            self.send_message(self.entity, text)
-
-        elif cmd[:1] == "/" and self.is_chatroom:
+        elif self.is_chatroom:
             self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
 
-        elif cmd[:1] == "/" and not self.is_chatroom:
+        elif not self.is_chatroom:
             self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
-
-        else:
-            self.send_message(self.entity, text)
-
-        self.entry.set_text("")
 
     def on_entry_changed(self, *args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
