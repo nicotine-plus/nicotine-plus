@@ -83,15 +83,15 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     def _usertag(buffer, section):
 
         # Tag usernames with popup menu creating tag, and away/online/offline colors
-        if username is not None and usertag is not None and config.sections["ui"]["usernamehotspots"]:
-            np = re.compile(re.escape(str(username)))
-            match = np.search(section)
+        if (username is not None and usertag is not None and config.sections["ui"]["usernamehotspots"]
+                and username in section):
+            start = section.find(username)
+            end = start + len(username)
 
-            if match is not None:
-                _append(buffer, section[:match.start()], tag)
-                _append(buffer, match.group(), usertag)
-                _append(buffer, section[match.end():], tag)
-                return
+            _append(buffer, section[:start], tag)
+            _append(buffer, username, usertag)
+            _append(buffer, section[end:], tag)
+            return
 
         _append(buffer, section, tag)
 

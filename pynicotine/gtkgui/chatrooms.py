@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import re
 import threading
 
 from collections import deque
@@ -639,37 +638,35 @@ class ChatRoom:
         with open(path, 'r', encoding=encoding) as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
+            login = config.sections["server"]["login"]
 
             for line in lines:
+                user = None
+                tag = None
+                usertag = None
 
-                # Try to parse line for username
-                if len(line) > 20 and line[10].isspace() and line[11].isdigit() and line[20] in ("[", "*"):
+                if "[" in line and "] " in line:
+                    start = line.find("[")
+                    end = line.find("] ")
 
-                    if line[20] == "[" and line[20:].find("] ") != -1:
-                        namepos = line[20:].find("] ")
-                        user = line[21:20 + namepos].strip()
+                    if end > start:
+                        user = line[start + 1:end].strip()
                         self.get_user_tag(user)
                         usertag = self.tag_users[user]
-                    else:
-                        user = None
-                        usertag = None
 
-                    if user == config.sections["server"]["login"]:
-                        tag = self.tag_local
-                    elif line[20] == "*":
-                        tag = self.tag_action
-                    elif line[20 + namepos:].upper().find(config.sections["server"]["login"].upper()) > -1:
-                        tag = self.tag_hilite
-                    else:
-                        tag = self.tag_remote
-                else:
-                    user = None
-                    tag = None
-                    usertag = None
+                        if user == login:
+                            tag = self.tag_local
 
-                line = re.sub(r"\\s\\s+", "  ", line)
+                        elif login.lower() in line[end:].lower():
+                            tag = self.tag_hilite
 
-                if user != config.sections["server"]["login"]:
+                        else:
+                            tag = self.tag_remote
+
+                elif "* " in line:
+                    tag = self.tag_action
+
+                if user != login:
                     append_line(self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag, username=user,
                                 usertag=usertag, timestamp_format="", scroll=False)
                 else:
@@ -833,7 +830,6 @@ class ChatRoom:
         if self.frame.np.network_filter.is_user_ip_ignored(user):
             return
 
-        text = re.sub("\\s\\s+", "  ", text)
         login = config.sections["server"]["login"]
 
         if user == login:
@@ -872,7 +868,6 @@ class ChatRoom:
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
         if user != login:
-
             append_line(
                 self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=self.tag_users[user], timestamp_format=timestamp_format
@@ -929,7 +924,6 @@ class ChatRoom:
             self.frame.np.pluginhandler.outgoing_public_chat_notification(room, text)
 
     def say(self, text):
-        text = re.sub("\\s\\s+", "  ", text)
         self.frame.np.queue.append(slskmessages.SayChatroom(self.room, text))
 
     def user_joined_room(self, userdata):
