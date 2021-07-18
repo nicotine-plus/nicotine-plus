@@ -905,15 +905,15 @@ class ChatRoom:
 
     def get_user_tag(self, user):
 
+        if user in self.tag_users:
+            return
+
         if user not in self.users:
             color = "useroffline"
         else:
             color = get_user_status_color(self.usersmodel.get_value(self.users[user], 5))
 
-        if user not in self.tag_users:
-            self.tag_users[user] = self.create_tag(self.ChatScroll.get_buffer(), color, user)
-        else:
-            update_tag_visuals(self.tag_users[user], color)
+        self.tag_users[user] = self.create_tag(self.ChatScroll.get_buffer(), color, user)
 
     def show_tickers(self):
         tickers = self.tickers.get_tickers()
