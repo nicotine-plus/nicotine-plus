@@ -208,7 +208,14 @@ class SSDP:
         response = http_request(url_scheme, base_url, root_url)
 
         # Parse the returned XML and find the <URLBase> and <controlURL> elements
-        xml = ElementTree.fromstring(response)
+        try:
+            xml = ElementTree.fromstrsing(response)
+
+        except Exception:
+            # Invalid XML response
+            log.add_debug('UPnP: Invalid router description response from %s://%s%s: %s',
+                          (url_scheme, base_url, root_url, response.encode()))
+            return (None, None, None, None)
 
         serial_number = next(
             (x.text for x in xml.findall(".//{urn:schemas-upnp-org:device-1-0}serialNumber")),
