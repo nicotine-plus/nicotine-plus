@@ -59,21 +59,13 @@ def url_event(tag, widget, event, iterator, url):
 def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S",
                 username=None, usertag=None, scroll=True, find_urls=True):
 
-    def _makeurltag(buffer, url):
-
-        color = config.sections["ui"]["urlcolor"] or None
-        tag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
-        tag.last_event_type = -1
-
-        if Gtk.get_major_version() == 3:
-            tag.connect("event", url_event, url)
-
-        return tag
-
     def _append(buffer, text, tag):
 
         iterator = buffer.get_end_iter()
-        start_offset = iterator.get_offset()
+
+        if tag is not None:
+            start_offset = iterator.get_offset()
+
         buffer.insert(iterator, text)
 
         if tag is not None:
@@ -99,18 +91,18 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
     buffer = textview.get_buffer()
     linenr = buffer.get_line_count()
 
-    if buffer.get_char_count() > 0:
-        _append(buffer, "\n", None)
-
     if showstamp and timestamp_format and config.sections["logging"]["timestamps"]:
         if timestamp:
             final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp)) + " "
         else:
             final_timestamp = time.strftime(timestamp_format) + " "
 
-        _append(buffer, final_timestamp, tag)
+        line = final_timestamp + line
 
-    if find_urls and config.sections["urls"]["urlcatching"]:
+    if buffer.get_char_count() > 0:
+        line = "\n" + line
+
+    if find_urls and config.sections["urls"]["urlcatching"] and ("://" in line or "www." in line or "mailto:" in line):
         # Match first url
         match = URL_RE.search(line)
 
@@ -119,7 +111,12 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
             _usertag(buffer, line[:match.start()])
 
             url = match.group()
-            urltag = _makeurltag(buffer, url)
+            color = config.sections["ui"]["urlcolor"] or None
+            urltag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
+            urltag.last_event_type = -1
+
+            if Gtk.get_major_version() == 3:
+                urltag.connect("event", url_event, url)
 
             if url.startswith("slsk://") and config.sections["urls"]["humanizeurls"]:
                 import urllib.parse
