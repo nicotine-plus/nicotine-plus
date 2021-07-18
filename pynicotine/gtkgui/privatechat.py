@@ -337,7 +337,7 @@ class PrivateChat:
         newmessage = msg.newmessage
         timestamp = msg.timestamp
 
-        if text[:4] == "/me ":
+        if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_action
         else:

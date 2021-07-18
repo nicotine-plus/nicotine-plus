@@ -845,8 +845,7 @@ class ChatRoom:
 
         self.show_notification(login, user, text, tag)
 
-        if text[:4] == "/me ":
-
+        if text.startswith("/me "):
             if public:
                 line = "%s | * %s %s" % (msg.room, user, text[4:])
             else:
@@ -854,8 +853,8 @@ class ChatRoom:
 
             speech = line[2:]
             tag = self.tag_action
-        else:
 
+        else:
             if public:
                 line = "%s | [%s] %s" % (msg.room, user, text)
             else:

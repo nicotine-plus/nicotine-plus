@@ -787,7 +787,7 @@ class Search:
     def check_digit(self, sfilter, value, factorize=True):
 
         op = ">="
-        if sfilter[:1] in (">", "<", "="):
+        if sfilter.startswith((">", "<", "=")):
             op, sfilter = sfilter[:1] + "=", sfilter[1:]
 
         if not sfilter:

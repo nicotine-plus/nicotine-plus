@@ -232,8 +232,8 @@ class ChatEntry:
 
         split = text.split(" ", 1)
         cmd = split[0]
-        is_double_slash_cmd = (cmd[:2] == "//")
-        is_single_slash_cmd = (cmd[:1] == "/" and not is_double_slash_cmd)
+        is_double_slash_cmd = cmd.startswith("//")
+        is_single_slash_cmd = (cmd.startswith("/") and not is_double_slash_cmd)
 
         # Remove empty items created by split, if command ended with a space, e.g. '/ctcpversion '
         if len([i for i in split if i]) == 2:
@@ -452,7 +452,7 @@ class ChatEntry:
         if not config.sections["words"]["cycle"]:
             completion, single = self.get_completion(text, self.completion_list)
             if completion:
-                if single and ix == len(text) and text[:1] != "/":
+                if single and ix == len(text) and not text.startswith("/"):
                     completion += ": "
                 self.entry.delete_text(preix, ix)
                 self.entry.insert_text(completion, preix)
