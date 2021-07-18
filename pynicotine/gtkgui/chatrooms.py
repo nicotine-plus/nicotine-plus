@@ -802,7 +802,7 @@ class ChatRoom:
         # Don't show notifications if the chat is open and the window
         # is in use
         if self.chatrooms.get_current_page() == \
-           self.chatrooms.page_num(self.chatrooms.joinedrooms[self.room].Main) and \
+           self.chatrooms.page_num(self.Main) and \
            self.frame.MainNotebook.get_current_page() == \
            self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and \
            self.frame.MainWindow.is_active():

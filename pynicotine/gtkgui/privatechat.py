@@ -132,39 +132,7 @@ class PrivateChats(IconNotebook):
         if user in self.users:
             self.users[user].send_message(text)
 
-    def show_notification(self, user, text):
-
-        chat = self.users[user]
-
-        # Hilight top-level tab label
-        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
-
-        # Highlight sub-level tab label
-        self.request_changed(chat.Main)
-
-        # Don't show notifications if the private chat is open and the window
-        # is in use
-        if self.get_current_page() == self.page_num(chat.Main) and \
-           self.frame.MainNotebook.get_current_page() == \
-           self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
-           self.frame.MainWindow.is_active():
-            return
-
-        # Update tray icon and show urgency hint
-        self.frame.notifications.add("private", user)
-
-        if config.sections["notifications"]["notification_popup_private_message"]:
-            self.frame.notifications.new_text_notification(
-                text,
-                title=_("Private message from %s") % user,
-                priority=Gio.NotificationPriority.HIGH
-            )
-
     def message_user(self, msg):
-
-        self.frame.np.privatechats.show_user(msg.user, switch_page=False)
-        self.show_notification(msg.user, msg.msg)
-
         self.users[msg.user].message_user(msg)
 
     def update_visuals(self):
@@ -331,11 +299,39 @@ class PrivateChat:
     def on_clear_messages(self, *args):
         self.ChatScroll.get_buffer().set_text("")
 
+    def show_notification(self, text):
+
+        # Hilight top-level tab label
+        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
+
+        # Highlight sub-level tab label
+        self.chats.request_changed(self.Main)
+
+        # Don't show notifications if the private chat is open and the window
+        # is in use
+        if self.chats.get_current_page() == self.chats.page_num(self.Main) and \
+           self.frame.MainNotebook.get_current_page() == \
+           self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
+           self.frame.MainWindow.is_active():
+            return
+
+        # Update tray icon and show urgency hint
+        self.frame.notifications.add("private", self.user)
+
+        if config.sections["notifications"]["notification_popup_private_message"]:
+            self.frame.notifications.new_text_notification(
+                text,
+                title=_("Private message from %s") % self.user,
+                priority=Gio.NotificationPriority.HIGH
+            )
+
     def message_user(self, msg):
 
         text = msg.msg
         newmessage = msg.newmessage
         timestamp = msg.timestamp
+
+        self.show_notification(msg.msg)
 
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])

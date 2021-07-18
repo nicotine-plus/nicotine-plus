@@ -193,6 +193,8 @@ class PrivateChats:
         if user_text is None:
             return
 
+        self.show_user(msg.user, switch_page=False)
+
         _, msg.msg = user_text
         msg.msg = self.censor_chat(msg.msg)
 
