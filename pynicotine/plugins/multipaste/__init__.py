@@ -40,7 +40,7 @@ class Plugin(BasePlugin):
 
         if len(lines) > 1:
             if len(lines) > self.settings['maxprivatelines']:
-                self.log("Posting " + str(self.settings['maxprivatelines']) + " of " + str(len(lines)) + " lines.")
+                self.log("Posting %s of %s lines.", (self.settings['maxprivatelines'], len(lines)))
             else:
                 self.log("Splitting lines.")
             for split_line in lines[:self.settings['maxprivatelines']]:
@@ -56,7 +56,7 @@ class Plugin(BasePlugin):
 
         if len(lines) > 1:
             if len(lines) > self.settings['maxpubliclines']:
-                self.log("Posting " + str(self.settings['maxpubliclines']) + " of " + str(len(lines)) + " lines.")
+                self.log("Posting %s of %s lines.", (self.settings['maxpubliclines'], len(lines)))
             else:
                 self.log("Splitting lines.")
             for split_line in lines[:self.settings['maxpubliclines']]:

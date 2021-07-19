@@ -702,8 +702,8 @@ class BasePlugin:
         msg.user = user
         self.core.chatrooms.say_chat_room(msg)
 
-    def log(self, text):
-        log.add(self.__name__ + ": " + text)
+    def log(self, msg, msg_args=None):
+        log.add(self.__name__ + ": " + msg, msg_args)
 
     def send_public(self, room, text):
         self.core.queue.append(slskmessages.SayChatroom(room, text))

@@ -46,7 +46,7 @@ class Plugin(BasePlugin):
 
         self.probed[user] = 'requesting'
         self.core.queue.append(slskmessages.GetUserStats(user))
-        self.log('New user %s, requesting information...' % user)
+        self.log('New user %s, requesting information...', user)
 
     def user_stats_notification(self, user, stats):
 
@@ -63,14 +63,14 @@ class Plugin(BasePlugin):
         self.probed[user] = 'processed'
 
         if stats['files'] > 0:
-            self.log('User %s is okay, sharing %s files' % (user, stats['files']))
+            self.log('User %s is okay, sharing %s files', (user, stats['files']))
             return
 
         if not self.settings['message']:
-            self.log("User %s doesn't share any files, but no complaint message is specified." % user)
+            self.log("User %s doesn't share any files, but no complaint message is specified.", user)
             return
 
         for line in self.settings['message'].splitlines():
             self.send_private(user, line, show_ui=False)
 
-        self.log("User %s doesn't share any files, sent complaint." % user)
+        self.log("User %s doesn't share any files, sent complaint.", user)

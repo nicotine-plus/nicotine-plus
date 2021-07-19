@@ -40,17 +40,17 @@ class Plugin(BasePlugin):
             return
         words = line.lower().split()
         if 'portscan' in words:
-            self.log("%s requested a port scan" % (user,))
+            self.log("%s requested a port scan", (user,))
             self.checked[user] = 1
             self.resolve(user)
         elif (('cant' in words or "can't" in words or 'can someone' in words or 'can anyone' in words)
               and ('browse' in words or 'download' in words or 'connect' in words)):
             if user not in self.checked:
-                self.log("%s seems to have trouble, performing a port scan" % (user,))
+                self.log("%s seems to have trouble, performing a port scan", (user,))
                 self.checked[user] = 2
                 self.resolve(user)
             else:
-                self.log("%s seems to have trouble, but we already performed a port scan" % (user,))
+                self.log("%s seems to have trouble, but we already performed a port scan", (user,))
 
     def user_resolve_notification(self, user, ip_address, port, country):
 
@@ -62,7 +62,7 @@ class Plugin(BasePlugin):
                         self.checkroom,
                         '%s: Your port is accessible, you can blame others in case of problems ;)' % user)
                 else:
-                    self.log("%s: Port is accessible, not reporting since this was an unrequested scan." % (user,))
+                    self.log("%s: Port is accessible, not reporting since this was an unrequested scan.", (user,))
             elif status in ('closed',):
                 self.send_public(
                     self.checkroom,
@@ -74,7 +74,7 @@ class Plugin(BasePlugin):
                         self.checkroom,
                         '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
                 else:
-                    self.log("%s: Unknown port status on %s:%s" % (user, ip_address, port))
+                    self.log("%s: Unknown port status on %s:%s", (user, ip_address, port))
             self.checked[user] = 3
 
     def my_public_command(self, room, args):
@@ -93,15 +93,15 @@ class Plugin(BasePlugin):
 
         if ip_address in ('0.0.0.0',) or port in (0,):
             return 'unknown'
-        self.log("Testing port at %s:%s" % (ip_address, port))
+        self.log("Testing port at %s:%s", (ip_address, port))
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(60)
         try:
             s.connect((ip_address, port))
-            self.log("%s:%s: Port is open." % (ip_address, port))
+            self.log("%s:%s: Port is open.", (ip_address, port))
             return 'open'
         except socket.error:
-            self.log("%s:%s: Port is closed." % (ip_address, port))
+            self.log("%s:%s: Port is closed.", (ip_address, port))
             return 'closed'
         s.close()
 
