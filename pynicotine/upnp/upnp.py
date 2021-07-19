@@ -277,10 +277,6 @@ class UPnp:
                 (r for r in routers if r.search_target == "urn:schemas-upnp-org:device:InternetGatewayDevice:1"), None)
 
         if not router:
-            router = next(
-                (r for r in routers if r.search_target == "upnp:rootdevice"), None)
-
-        if not router:
             router = next((r for r in routers), None)
 
         return router

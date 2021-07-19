@@ -113,9 +113,6 @@ class SSDP:
         wan_igd2_sent = False
         wan_igd2 = SSDP._create_msearch_request('urn:schemas-upnp-org:device:InternetGatewayDevice:2', headers=headers)
 
-        wan_rootdevice_sent = False
-        wan_rootdevice = SSDP._create_msearch_request('upnp:rootdevice', headers=headers)
-
         inputs = [sock]
         outputs = [sock]
 
@@ -166,12 +163,6 @@ class SSDP:
                     log.add_debug('UPnP: Sent M-SEARCH IGD request 2')
                     time_end = time.time() + SSDP.response_time_secs
                     wan_igd2_sent = True
-
-                if not wan_rootdevice_sent:
-                    wan_rootdevice.sendto(_sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug('UPnP: Sent M-SEARCH root device request')
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_rootdevice_sent = True
 
             # Cooldown
             time.sleep(cls.sleep_time_secs)
