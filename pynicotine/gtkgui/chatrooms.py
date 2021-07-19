@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import threading
 
 from collections import deque
 
@@ -71,9 +70,9 @@ class ChatRooms(IconNotebook):
         self.frame = frame
 
         self.joinedrooms = {}
-        self.autojoin = True
+        self.autojoin_rooms = set()
         self.private_rooms = config.sections["private_rooms"]["rooms"]
-        self.switch_tab = True
+        self.autojoin = True
 
         # Config cleanup
         for room, data in self.private_rooms.items():
@@ -151,10 +150,6 @@ class ChatRooms(IconNotebook):
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
 
-    def enable_tab_switch(self):
-        # Room tabs will be opened when joining rooms
-        self.switch_tab = True
-
     def clear_notifications(self):
 
         if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox):
@@ -179,7 +174,10 @@ class ChatRooms(IconNotebook):
         self.append_page(tab.Main, msg.room, tab.on_leave)
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
-        if self.switch_tab:
+        if msg.room in self.autojoin_rooms:
+            self.autojoin_rooms.remove(msg.room)
+        else:
+            # Did not auto-join room, switch to tab
             page_num = self.page_num(tab.Main)
             self.set_current_page(page_num)
 
@@ -198,20 +196,13 @@ class ChatRooms(IconNotebook):
                 room_list = list(self.joinedrooms.keys())
             else:
                 room_list = config.sections["server"]["autojoin"]
-                if room_list:
-                    # Disable tab focusing while joining rooms
-                    self.switch_tab = False
-
-                    timer = threading.Timer(4.0, self.enable_tab_switch)
-                    timer.name = "ChatroomTabSwitchTimer"
-                    timer.daemon = True
-                    timer.start()
 
             for room in room_list:
                 if room == 'Public ':
                     self.roomlist.RoomFeed.set_active(True)
 
                 elif isinstance(room, str):
+                    self.autojoin_rooms.add(room)
                     self.frame.np.queue.append(slskmessages.JoinRoom(room))
 
         self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
@@ -409,7 +400,8 @@ class ChatRooms(IconNotebook):
         for room in self.joinedrooms.values():
             room.server_disconnect()
 
-        self.autojoin = 1
+        self.autojoin_rooms.clear()
+        self.autojoin = True
 
 
 class ChatRoom:
