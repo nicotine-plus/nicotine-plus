@@ -144,6 +144,7 @@ class ChatRooms(IconNotebook):
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not room.opened:
+                    GLib.idle_add(scroll_bottom, room.RoomLog.get_parent())
                     GLib.idle_add(scroll_bottom, room.ChatScroll.get_parent())
                     room.opened = True
 
