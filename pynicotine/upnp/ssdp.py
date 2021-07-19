@@ -167,10 +167,15 @@ class SSDP:
             # Cooldown
             time.sleep(cls.sleep_time_secs)
 
-        for router in routers:
+        for router in list(routers):
             serial_number, control_url, uuid, svc_type = SSDP._get_router_service_description(
                 router.url_scheme, router.base_url, router.root_url
             )
+
+            if svc_type is None:
+                # Invalid entry
+                routers.remove(router)
+                continue
 
             router.serial_number = serial_number
             router.control_url = control_url
@@ -235,6 +240,7 @@ class SSDP:
     @classmethod
     def _is_wanip_service(cls, svc_type):
         return svc_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                            "urn:schemas-upnp-org:service:WANPPPConnection:1",
                             "urn:schemas-upnp-org:service:WANIPConnection:2")
 
 
