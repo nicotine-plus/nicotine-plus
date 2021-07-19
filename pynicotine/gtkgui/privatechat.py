@@ -80,6 +80,11 @@ class PrivateChats(IconNotebook):
             if tab.Main == page:
                 GLib.idle_add(grab_widget_focus, tab.ChatLine)
 
+                # If the tab hasn't been opened previously, scroll chat to bottom
+                if not tab.opened:
+                    GLib.idle_add(scroll_bottom, tab.ChatScroll.get_parent())
+                    tab.opened = True
+
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 self.frame.notifications.clear("private", tab.user)
 
@@ -170,6 +175,7 @@ class PrivateChat:
         else:
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
+        self.opened = False
         self.offlinemessage = False
         self.status = status
 
@@ -229,8 +235,6 @@ class PrivateChat:
         except IOError:
             pass
 
-        GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
-
     def append_log_lines(self, path, numlines):
 
         try:
@@ -250,11 +254,13 @@ class PrivateChat:
                             usertag=self.tag_hilite, scroll=False)
 
     def server_login(self):
+
         timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.update_tags()
 
     def server_disconnect(self):
+
         timestamp_format = config.sections["logging"]["private_timestamp"]
         append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1

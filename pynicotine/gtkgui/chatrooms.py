@@ -143,6 +143,11 @@ class ChatRooms(IconNotebook):
             if room.Main == page:
                 GLib.idle_add(grab_widget_focus, room.ChatEntry)
 
+                # If the tab hasn't been opened previously, scroll chat to bottom
+                if not room.opened:
+                    GLib.idle_add(scroll_bottom, room.ChatScroll.get_parent())
+                    room.opened = True
+
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
 
@@ -441,6 +446,7 @@ class ChatRoom:
         self.tickers = Tickers()
         self.room_wall = RoomWall(self.frame, self)
         self.leaving = False
+        self.opened = False
 
         self.users = {}
 
@@ -623,8 +629,6 @@ class ChatRoom:
         except IOError:
             pass
 
-        GLib.idle_add(scroll_bottom, self.ChatScroll.get_parent())
-
     def append_log_lines(self, path, numlines):
 
         try:
@@ -673,7 +677,7 @@ class ChatRoom:
                                 timestamp_format="", scroll=False)
 
             if lines:
-                append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite)
+                append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite, scroll=False)
 
     def populate_user_menu(self, user):
 
