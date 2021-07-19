@@ -717,14 +717,14 @@ class BasePlugin:
 
         self.core.privatechats.send_message(user, text)
 
-    def echo_public(self, room, text, message_type="action"):
+    def echo_public(self, room, text, message_type="local"):
         """ Display a raw message in chat rooms (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """
 
         self.core.chatrooms.echo_message(room, text, message_type)
 
-    def echo_private(self, user, text, message_type="action"):
+    def echo_private(self, user, text, message_type="local"):
         """ Display a raw message in private (not sent to others).
         message_type changes the type (and color) of the message in the UI.
         available message_type values: action, remote, local, hilite """

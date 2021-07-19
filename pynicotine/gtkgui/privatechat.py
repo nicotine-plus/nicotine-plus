@@ -184,8 +184,7 @@ class PrivateChat:
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
-                               self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS,
-                               self.ChatScroll)
+                               self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 

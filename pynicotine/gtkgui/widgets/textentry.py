@@ -26,7 +26,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import parse_accelerator
-from pynicotine.gtkgui.widgets.textview import append_line
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import expand_alias
@@ -40,7 +39,7 @@ from pynicotine.utils import unalias
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, frame, entry, entity, message_class, send_message, command_list, textview, is_chatroom=False):
+    def __init__(self, frame, entry, entity, message_class, send_message, command_list, is_chatroom=False):
 
         self.frame = frame
         self.entry = entry
@@ -48,7 +47,6 @@ class ChatEntry:
         self.message_class = message_class
         self.send_message = send_message
         self.command_list = command_list
-        self.textview = textview
         self.is_chatroom = is_chatroom
 
         self.completion_list = None
@@ -264,13 +262,15 @@ class ChatEntry:
             return
 
         if cmd in ("/alias", "/al"):
-            append_line(self.textview, add_alias(args), None, "")
+            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent.echo_message(self.entity, add_alias(args))
 
             if config.sections["words"]["aliases"]:
                 self.frame.update_completions()
 
         elif cmd in ("/unalias", "/un"):
-            append_line(self.textview, unalias(args), None, "")
+            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent.echo_message(self.entity, unalias(args))
 
             if config.sections["words"]["aliases"]:
                 self.frame.update_completions()
@@ -381,7 +381,12 @@ class ChatEntry:
                     arg_self, self.frame.privatechats.CTCP_VERSION, bytestring=True)
 
         elif cmd in ("/clear", "/cl"):
-            self.textview.get_buffer().set_text("")
+            if self.is_chatroom:
+                parent = self.frame.chatrooms.joinedrooms[self.entity]
+            else:
+                parent = self.frame.privatechats.users[self.entity]
+
+            parent.on_clear_messages()
 
         elif cmd in ("/a", "/away"):
             self.frame.on_away()
