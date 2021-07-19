@@ -2042,8 +2042,11 @@ class NicotineFrame:
     def on_create_room(self, widget, *args):
 
         room = widget.get_text()
-        private = self.RoomType.get_active()
 
+        if not room:
+            return
+
+        private = self.RoomType.get_active()
         self.np.queue.append(slskmessages.JoinRoom(room, private))
         widget.set_text("")
 
