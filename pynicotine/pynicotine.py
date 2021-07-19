@@ -1294,13 +1294,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
         log.add_chat(msg)
 
-        event = self.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
-
-        if event is not None:
-            _room, _user, msg.msg = event
-
-            self.chatrooms.say_chat_room(msg)
-            self.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
+        self.chatrooms.say_chat_room(msg)
 
     def join_room(self, msg):
         """ Server code: 14 """
@@ -1318,17 +1312,13 @@ Error: %(error)s""", {
         """ Server code: 16 """
 
         log.add_msg_contents(msg)
-
         self.chatrooms.user_joined_room(msg)
-        self.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
 
     def user_left_room(self, msg):
         """ Server code: 17 """
 
         log.add_msg_contents(msg)
-
         self.chatrooms.user_left_room(msg)
-        self.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def message_user(self, msg):
         """ Server code: 22 """
@@ -1620,9 +1610,7 @@ Error: %(error)s""", {
         """ Server code: 152 """
 
         log.add_msg_contents(msg)
-
         self.chatrooms.public_room_message(msg)
-        self.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     """
     Incoming Peer Messages

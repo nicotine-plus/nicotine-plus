@@ -111,16 +111,28 @@ class ChatRooms:
             self.ui_callback.private_room_owned(msg)
 
     def public_room_message(self, msg):
+
         if self.ui_callback:
             self.ui_callback.public_room_message(msg)
+
+        self.np.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def room_list(self, msg):
         if self.ui_callback:
             self.ui_callback.room_list(msg)
 
     def say_chat_room(self, msg):
+
+        event = self.np.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+        if event is None:
+            return
+
+        _room, _user, msg.msg = event
+
         if self.ui_callback:
             self.ui_callback.say_chat_room(msg)
+
+        self.np.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def set_user_country(self, user, country):
         if self.ui_callback:
@@ -139,12 +151,18 @@ class ChatRooms:
             self.ui_callback.ticker_set(msg)
 
     def user_joined_room(self, msg):
+
         if self.ui_callback:
             self.ui_callback.user_joined_room(msg)
 
+        self.np.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
+
     def user_left_room(self, msg):
+
         if self.ui_callback:
             self.ui_callback.user_left_room(msg)
+
+        self.np.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def update_completions(self):
 
