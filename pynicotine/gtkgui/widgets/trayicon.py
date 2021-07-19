@@ -50,9 +50,7 @@ class TrayIcon:
 
             except (ImportError, ValueError):
                 # No AppIndicator support, fall back to GtkStatusIcon
-                from gi.repository import Gtk
                 self.appindicator = None
-                self.gtk = Gtk
 
         self.frame = frame
         self.tray_icon = None
@@ -322,7 +320,7 @@ class TrayIcon:
 
             else:
                 # GtkStatusIcon fallback
-                tray_icon = self.gtk.StatusIcon()
+                tray_icon = Gtk.StatusIcon()
                 tray_icon.set_tooltip_text(GLib.get_application_name())
                 tray_icon.connect("activate", self.on_hide_unhide_window)
                 tray_icon.connect("popup-menu", self.on_status_icon_popup)
