@@ -209,7 +209,7 @@ class SSDP:
 
         # Parse the returned XML and find the <URLBase> and <controlURL> elements
         try:
-            xml = ElementTree.fromstrsing(response)
+            xml = ElementTree.fromstring(response)
 
         except Exception:
             # Invalid XML response
