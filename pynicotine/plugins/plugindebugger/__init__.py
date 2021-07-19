@@ -28,10 +28,10 @@ class Plugin(BasePlugin):
         self.log('init')
 
     def public_room_message_notification(self, room, user, line):
-        self.log('PublicRoomMessageNotification room=%s, user=%s, line=%s', (room, user, line))
+        self.log('PublicRoomMessageNotification, room=%s, user=%s, line=%s', (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        self.log('IncomingPrivateChatEvent user=%s, line=%s', (user, line))
+        self.log('IncomingPrivateChatEvent, user=%s, line=%s', (user, line))
 
     def incoming_private_chat_notification(self, user, line):
         self.log('IncomingPrivateChatNotification, user=%s, line=%s', (user, line))
