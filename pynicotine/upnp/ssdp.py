@@ -205,16 +205,15 @@ class SSDP:
 
         from xml.etree import ElementTree
 
-        response = http_request(url_scheme, base_url, root_url)
-
         # Parse the returned XML and find the <URLBase> and <controlURL> elements
         try:
+            response = http_request(url_scheme, base_url, root_url, timeout=2)
             xml = ElementTree.fromstring(response)
 
-        except Exception:
-            # Invalid XML response
+        except Exception as error:
+            # Invalid response
             log.add_debug('UPnP: Invalid router description response from %s://%s%s: %s',
-                          (url_scheme, base_url, root_url, response.encode()))
+                          (url_scheme, base_url, root_url, error))
             return (None, None, None, None)
 
         serial_number = next(
