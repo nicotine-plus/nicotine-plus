@@ -47,6 +47,7 @@ Corrections
  * Fixed an issue where adding finished downloads to shared files could result in a crash
  * Fixed an issue where searching a user's share could result in a crash after a refresh
  * Fixed a crash when attempting to show file properties for a user/folder row
+ * Fixed various UPnP port forwarding issues with certain routers
  * Added a workaround for cases where Soulseek NS clients send incorrect file sizes for large files
  * Various GUI-related changes and improvements to reduce the number of inconsistencies
  * macOS: keyboard shortcuts now use the Command key instead of Ctrl
@@ -108,11 +109,13 @@ Issues closed on GitHub
  * How to access option to close only window (keep sharing files)? ([#1435](https://github.com/nicotine-plus/nicotine-plus/issues/1435))
  * error ([#1436](https://github.com/nicotine-plus/nicotine-plus/issues/1436))
  * DownloadQueuedNotification on end of downloaded file ([#1438](https://github.com/nicotine-plus/nicotine-plus/issues/1438))
+ * Shift + Mouse wheel a fall ([#1440](https://github.com/nicotine-plus/nicotine-plus/issues/1440))
  * Convert organization URL to lowercase ([#1441](https://github.com/nicotine-plus/nicotine-plus/issues/1441))
  * random crash? ([#1442](https://github.com/nicotine-plus/nicotine-plus/issues/1442))
  * Crash when closing private Chat tab ([#1445](https://github.com/nicotine-plus/nicotine-plus/issues/1445))
  * Critical error upon attempted chat ([#1446](https://github.com/nicotine-plus/nicotine-plus/issues/1446))
  * Incorrectly reported upload speed ([#1449](https://github.com/nicotine-plus/nicotine-plus/issues/1449))
+ * UPnP does not work on this network (Windows) ([#1453](https://github.com/nicotine-plus/nicotine-plus/issues/1453))
 
 Version 3.0.6 (May 1, 2021)
 -----------------------------
