@@ -6,7 +6,7 @@
     <property name="vexpand">1</property>
     <child>
       <object class="GtkScrolledWindow" id="SettingsList">
-        <property name="width-request">230</property>
+        <property name="width-request">250</property>
         <property name="visible">1</property>
         <property name="vexpand">1</property>
         <child>
@@ -30,7 +30,7 @@
         <child>
           <object class="GtkViewport" id="viewport1">
             <property name="visible">1</property>
-            <property name="width-request">360</property>
+            <property name="width-request">380</property>
           </object>
         </child>
       </object>
