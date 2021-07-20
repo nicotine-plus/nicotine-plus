@@ -226,7 +226,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Users</property>
+                    <property name="label" translatable="yes">User</property>
                     <property name="selectable">1</property>
                     <property name="xalign">0</property>
                     <attributes>
@@ -242,7 +242,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/add /ad &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/add /ad</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -253,7 +253,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add user &apos;user&apos; to your user list</property>
+                        <property name="label" translatable="yes">Add user to your user list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -268,7 +268,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/rem /unbuddy &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/rem /unbuddy</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -279,7 +279,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove user &apos;user&apos; from your user list</property>
+                        <property name="label" translatable="yes">Remove user from your user list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -294,7 +294,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/ban &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/ban</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -305,7 +305,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add user &apos;user&apos; to your ban list</property>
+                        <property name="label" translatable="yes">Add user to your ban list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -320,7 +320,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/unban &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/unban</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -331,7 +331,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove user &apos;user&apos; from your ban list</property>
+                        <property name="label" translatable="yes">Remove user from your ban list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -346,7 +346,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/ignore &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/ignore</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -357,7 +357,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Add user &apos;user&apos; to your ignore list</property>
+                        <property name="label" translatable="yes">Add user to your ignore list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -372,7 +372,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/unignore &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/unignore</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -383,7 +383,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Remove user &apos;user&apos; from your ignore list</property>
+                        <property name="label" translatable="yes">Remove user from your ignore list</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -398,7 +398,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/browse /b &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/browse /b</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -409,7 +409,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Browse files of user &apos;user&apos;</property>
+                        <property name="label" translatable="yes">Browse files of user</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -424,7 +424,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/whois /w &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/whois /w</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -435,7 +435,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Request user info for user &apos;user&apos;</property>
+                        <property name="label" translatable="yes">Request user info for user</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
@@ -450,7 +450,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">/ip &apos;user&apos;</property>
+                        <property name="label" translatable="yes">/ip</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                         <attributes>
@@ -461,7 +461,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Show IP for user &apos;user&apos;</property>
+                        <property name="label" translatable="yes">Show IP for user</property>
                         <property name="selectable">1</property>
                         <property name="xalign">0</property>
                       </object>
