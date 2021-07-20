@@ -1477,7 +1477,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             # Listen / Peer Port
-            if self.listen_socket in input_list:
+            if self._numsockets < MAXSOCKETS and not self._server_disconnect and self.listen_socket in input_list:
                 try:
                     incconn, incaddr = self.listen_socket.accept()
                 except Exception:
@@ -1488,9 +1488,6 @@ class SlskProtoThread(threading.Thread):
                             'ip': incaddr[0],
                             'port': incaddr[1]
                         })
-                        incconn.close()
-
-                    elif self._numsockets >= MAXSOCKETS or self._server_disconnect:
                         incconn.close()
 
                     else:
