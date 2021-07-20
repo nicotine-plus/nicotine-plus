@@ -185,7 +185,7 @@ if sys.platform == "win32":
     """ For Windows, FD_SETSIZE is set to 512 in the Python source.
     This limit is hardcoded, so we'll have to live with it for now. """
 
-    MAXSOCKETS = int(512 * 0.9)
+    MAXSOCKETS = 512
 else:
     import resource
 
@@ -782,8 +782,8 @@ class SlskProtoThread(threading.Thread):
             server_socket.connect_ex(msg_obj.addr)
             server_socket.setblocking(1)
 
-            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
             self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
 
         except socket.error as err:
             self._core_callback([ConnectError(msg_obj, err)])
@@ -942,8 +942,8 @@ class SlskProtoThread(threading.Thread):
             conn.connect_ex(msg_obj.addr)
             conn.setblocking(1)
 
-            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
             self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
 
         except socket.error as err:
             self._core_callback([ConnectError(msg_obj, err)])
@@ -1234,13 +1234,12 @@ class SlskProtoThread(threading.Thread):
             # Unknown message type
             log.add("Can't handle connection type %s", conn_obj.init.conn_type)
 
-    def process_conn_output(self, queue, conns, connsinprogress, maxsockets=MAXSOCKETS):
+    def process_conn_output(self, queue, conns, connsinprogress, numsockets):
         """ Processes messages sent by the main thread. queue holds the messages,
         conns and connsinprogress are dictionaries holding Connection and
         PeerConnectionInProgress messages. """
 
         msg_list = []
-        numsockets = 1 + len(conns) + len(connsinprogress)  # 1 = listen socket
 
         while queue:
             msg_list.append(queue.popleft())
@@ -1255,7 +1254,7 @@ class SlskProtoThread(threading.Thread):
                 self.process_peer_output(conns, msg_obj)
 
             elif msg_class is PeerConn:
-                if numsockets < maxsockets:
+                if numsockets < MAXSOCKETS:
                     if self.init_peer_conn(connsinprogress, msg_obj):
                         numsockets += 1
                 else:
@@ -1278,7 +1277,7 @@ class SlskProtoThread(threading.Thread):
                 self.close_connection(conns, conn)
 
             elif msg_class is ServerConn:
-                if numsockets < maxsockets and self.init_server_conn(connsinprogress, msg_obj):
+                if numsockets < MAXSOCKETS and self.init_server_conn(connsinprogress, msg_obj):
                     numsockets += 1
 
             elif msg_class is DownloadFile and msg_obj.conn in conns:
@@ -1417,7 +1416,6 @@ class SlskProtoThread(threading.Thread):
         conns = self._conns
         connsinprogress = self._connsinprogress
         queue = self._queue
-        numsockets = 0
 
         while not self._want_abort:
 
@@ -1426,12 +1424,21 @@ class SlskProtoThread(threading.Thread):
                 time.sleep(0.1)
                 continue
 
-            if queue:
-                numsockets = self.process_conn_output(queue, conns, connsinprogress)
-
             self._ulimits = {}
             self._dlimits = {}
             self._calc_loops_per_second()
+
+            curtime = time.time()
+            numsockets = 1 + len(conns) + len(connsinprogress)  # 1 = listen socket
+
+            if queue:
+                numsockets = self.process_conn_output(queue, conns, connsinprogress, numsockets)
+
+            # Send updated connection count to NicotineCore. Avoid sending too many
+            # updates at once,if there are a lot of connections
+            if (curtime - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
+                self._core_callback([SetCurrentConnectionCount(numsockets)])
+                self.last_conncount_callback = curtime
 
             try:
                 for connection, conn_obj in conns.items():
@@ -1459,14 +1466,6 @@ class SlskProtoThread(threading.Thread):
                 log.add("select ValueError: %s", error)
                 time.sleep(0.005)
                 continue
-
-            curtime = time.time()
-
-            # Send updated connection count to NicotineCore. Avoid sending too many
-            # updates at once,if there are a lot of connections
-            if (curtime - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
-                self._core_callback([SetCurrentConnectionCount(numsockets)])
-                self.last_conncount_callback = curtime
 
             # Listen / Peer Port
             if self.listen_socket in input_list:
