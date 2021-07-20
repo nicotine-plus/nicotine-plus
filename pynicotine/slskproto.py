@@ -185,7 +185,7 @@ if sys.platform == "win32":
     """ For Windows, FD_SETSIZE is set to 512 in the Python source.
     This limit is hardcoded, so we'll have to live with it for now. """
 
-    MAXSOCKETS = 512
+    MAXSOCKETS = 500
 else:
     import resource
 
