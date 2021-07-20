@@ -1423,6 +1423,10 @@ class SlskProtoThread(threading.Thread):
 
             if self._server_disconnect:
                 # We're not connected to the server at the moment
+                self._conns.clear()
+                self._connsinprogress.clear()
+                self._numsockets = 1
+
                 time.sleep(0.1)
                 continue
 
