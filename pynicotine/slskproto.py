@@ -793,10 +793,6 @@ class SlskProtoThread(threading.Thread):
             server_socket.close()
             self.server_disconnect()
 
-            return False
-
-        return True
-
     def process_server_input(self, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
@@ -953,10 +949,6 @@ class SlskProtoThread(threading.Thread):
         except socket.error as err:
             self._core_callback([ConnectError(msg_obj, err)])
             conn.close()
-
-            return False
-
-        return True
 
     def process_peer_input(self, conn, msg_buffer):
         """ We have a "P" connection (p2p exchange), peer has sent us
@@ -1427,10 +1419,6 @@ class SlskProtoThread(threading.Thread):
 
             if self._server_disconnect:
                 # We're not connected to the server at the moment
-                self._conns.clear()
-                self._connsinprogress.clear()
-                self._numsockets = 1
-
                 time.sleep(0.1)
                 continue
 
