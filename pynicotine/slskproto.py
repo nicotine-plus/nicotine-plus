@@ -543,7 +543,7 @@ class SlskProtoThread(threading.Thread):
             self.close_connection(self._conns, i)
 
         for i in self._connsinprogress.copy():
-            self.close_connection(self._conns, i)
+            self.close_connection(self._connsinprogress, i)
 
         while self._queue:
             self._queue.popleft()
@@ -1254,6 +1254,10 @@ class SlskProtoThread(threading.Thread):
             msg_list.append(self._queue.popleft())
 
         for msg_obj in msg_list:
+            if self._server_disconnect:
+                # Disconnected from server, stop processing queue
+                return
+
             msg_class = msg_obj.__class__
 
             if issubclass(msg_class, PeerInitMessage):
