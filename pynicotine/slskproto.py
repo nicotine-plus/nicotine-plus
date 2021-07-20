@@ -1489,6 +1489,10 @@ class SlskProtoThread(threading.Thread):
                             'port': incaddr[1]
                         })
                         incconn.close()
+
+                    elif self._numsockets >= MAXSOCKETS or self._server_disconnect:
+                        incconn.close()
+
                     else:
                         self._conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._numsockets += 1
