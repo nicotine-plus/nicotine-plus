@@ -27,12 +27,14 @@ class Plugin(BasePlugin):
     __name__ = "Memory Debugger"
 
     def init(self):
-
         self.log(
             "Tweaking garbage collection. Is it currently turned on? %s\n"
             "Current thresholds: %s\n"
-            "Current counts: %s",
+            "Current counts: %s\n"
+            "Enabling GB debug output (check stderr)",
             (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))
+
+        gc.set_debug(gc.DEBUG_STATS)
 
         for i in range(3):
             self.log("Forcing collection of generation %s...", str(i))
@@ -45,3 +47,6 @@ class Plugin(BasePlugin):
 
         self.log('\n'.join(unclaimed))
         self.log("Done.")
+
+    def disable(self):
+        gc.set_debug(0)
