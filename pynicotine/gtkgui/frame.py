@@ -89,6 +89,7 @@ class NicotineFrame:
         if not ci_mode:
             # Show errors in the GUI from here on
             sys.excepthook = self.on_critical_error
+            threading.excepthook = self.on_critical_error_threading  # Python >= 3.8 only
 
         self.application = application
         self.np = network_processor
@@ -2476,11 +2477,11 @@ class NicotineFrame:
             in that case. """
             pass
 
-    def on_critical_error(self, exc_type, value, tb):
+    def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         from traceback import format_tb
         loop = GLib.MainLoop()
-        error = "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, value, ''.join(format_tb(tb)))
+        error = "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, exc_value, ''.join(format_tb(exc_traceback)))
 
         option_dialog(
             parent=self.application.get_active_window(),
@@ -2496,7 +2497,13 @@ class NicotineFrame:
         # Keep dialog open if error occurs on startup
         loop.run()
 
-        raise value
+        raise exc_value
+
+    def on_critical_error_threading(self, args):
+        """ Exception that originated in a thread.
+        Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
+
+        raise args.exc_value
 
     def on_quit_response(self, dialog, response_id, data):
 
