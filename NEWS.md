@@ -116,6 +116,8 @@ Issues closed on GitHub
  * Critical error upon attempted chat ([#1446](https://github.com/nicotine-plus/nicotine-plus/issues/1446))
  * Incorrectly reported upload speed ([#1449](https://github.com/nicotine-plus/nicotine-plus/issues/1449))
  * UPnP does not work on this network (Windows) ([#1453](https://github.com/nicotine-plus/nicotine-plus/issues/1453))
+ * select ValueError: too many file descriptors in select() (Windows) ([#1456](https://github.com/nicotine-plus/nicotine-plus/issues/1456))
+ * UPnP not working ([#1457](https://github.com/nicotine-plus/nicotine-plus/issues/1457))
 
 Version 3.0.6 (May 1, 2021)
 -----------------------------
