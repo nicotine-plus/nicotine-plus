@@ -97,10 +97,7 @@ class WishList:
         wish = self.AddWishEntry.get_text()
         self.AddWishEntry.set_text("")
 
-        search_id = self.add_wish(wish)
-
-        if search_id:
-            self.frame.np.search.do_wishlist_search(search_id, wish)
+        self.add_wish(wish)
 
     def on_remove_wish(self, *args):
 
@@ -146,8 +143,6 @@ class WishList:
             "remember": True,
             "ignore": True
         }
-
-        return search_id
 
     def remove_wish(self, wish):
 
