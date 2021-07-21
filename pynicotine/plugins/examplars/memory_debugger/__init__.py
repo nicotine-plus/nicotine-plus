@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gc
+import tracemalloc
 
 from pynicotine.pluginsystem import BasePlugin
 
@@ -27,14 +28,17 @@ class Plugin(BasePlugin):
     __name__ = "Memory Debugger"
 
     def init(self):
+
         self.log(
             "Tweaking garbage collection. Is it currently turned on? %s\n"
             "Current thresholds: %s\n"
             "Current counts: %s\n"
-            "Enabling GB debug output (check stderr)",
+            "Enabling GB debug output (check stderr)\n"
+            "Enabling tracemalloc",
             (str(gc.isenabled()), repr(gc.get_threshold()), repr(gc.get_count())))
 
-        gc.set_debug(gc.DEBUG_STATS)
+        gc.set_debug(gc.DEBUG_STATS | gc.DEBUG_COLLECTABLE | gc.DEBUG_UNCOLLECTABLE)
+        tracemalloc.start()
 
         for i in range(3):
             self.log("Forcing collection of generation %s...", str(i))
@@ -49,4 +53,21 @@ class Plugin(BasePlugin):
         self.log("Done.")
 
     def disable(self):
+
         gc.set_debug(0)
+        snapshot = tracemalloc.take_snapshot()
+
+        self.log("[ Top 50 memory allocations ]\n")
+
+        for i in range(50):
+            memory_stat = snapshot.statistics('lineno')[i]
+            self.log(str(memory_stat))
+
+            tb_stat = snapshot.statistics('traceback')[i]
+            self.log("%s memory blocks: %.1f KiB", (tb_stat.count, tb_stat.size / 1024))
+            for line in tb_stat.traceback.format():
+                self.log(line)
+
+            self.log("")
+
+        tracemalloc.stop()

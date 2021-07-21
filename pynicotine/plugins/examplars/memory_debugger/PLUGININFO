@@ -1,0 +1,4 @@
+Version = "2021-07-21r00"
+Authors = ['Nicotine+ Team']
+Name = "Memory Debugger"
+Description = "Plugin to trace memory allocations and find memory leaks.\n\nThis plugin is slow, do NOT use it unless debugging is necessary!"
