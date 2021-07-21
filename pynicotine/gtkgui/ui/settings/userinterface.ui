@@ -908,7 +908,7 @@
             <property name="visible">1</property>
             <property name="xalign">0</property>
             <property name="margin-top">12</property>
-            <property name="label" translatable="yes">Text View Colors</property>
+            <property name="label" translatable="yes">Chat Colors</property>
             <property name="wrap">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>

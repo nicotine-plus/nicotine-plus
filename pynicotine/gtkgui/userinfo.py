@@ -182,8 +182,6 @@ class UserInfo:
 
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
-        self.tag_local = self.descr.get_buffer().create_tag()
-
         self.update_visuals()
 
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
@@ -294,7 +292,7 @@ class UserInfo:
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
-        append_line(self.descr, msg.descr, self.tag_local, showstamp=False, scroll=False)
+        append_line(self.descr, msg.descr, showstamp=False, scroll=False)
 
         self.uploads.set_text(_("Upload slots: %i") % msg.totalupl)
         self.queuesize.set_text(_("Queued uploads: %i") % msg.queuesize)
