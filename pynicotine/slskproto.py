@@ -545,8 +545,7 @@ class SlskProtoThread(threading.Thread):
         for i in self._connsinprogress.copy():
             self.close_connection(self._connsinprogress, i)
 
-        while self._queue:
-            self._queue.popleft()
+        self._queue.clear()
 
         if not self._want_abort:
             self._core_callback([SetCurrentConnectionCount(0)])
@@ -1240,13 +1239,12 @@ class SlskProtoThread(threading.Thread):
         conns and connsinprogress are dictionaries holding Connection and
         PeerConnectionInProgress messages. """
 
-        msg_list = []
-
-        while self._queue:
-            msg_list.append(self._queue.popleft())
+        msg_list = self._queue.copy()
+        server_disconnected = self.server_disconnected
+        self._queue.clear()
 
         for msg_obj in msg_list:
-            if self.server_disconnected:
+            if server_disconnected:
                 # Disconnected from server, stop processing queue
                 return
 

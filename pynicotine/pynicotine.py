@@ -332,8 +332,7 @@ class NicotineCore:
         self.protothread.server_connect()
 
         # Clear any potential messages queued up to this point (should not happen)
-        while self.queue:
-            self.queue.popleft()
+        self.queue.clear()
 
         valid_network_interface = self.protothread.validate_network_interface()
 
