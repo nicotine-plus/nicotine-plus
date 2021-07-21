@@ -426,7 +426,7 @@ class UserBrowse:
         # Generate the directory tree and select first directory
         size, num_folders = self.create_folder_tree(shares)
 
-        if config.sections["ui"]["private_shares"] and private_shares:
+        if private_shares:
             self.shares = shares + private_shares
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
 

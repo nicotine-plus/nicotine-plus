@@ -37,7 +37,7 @@ class SearchTest(unittest.TestCase):
         self.config.filename = os.path.join(self.config.data_dir, "temp_config")
         self.config.load_config()
 
-        self.search = Search(None, self.config, deque(), None)
+        self.search = Search(None, self.config, deque(), None, None)
 
     def test_do_search(self):
         """ Test the do_search function, including the outgoing search term and search history """

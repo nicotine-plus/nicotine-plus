@@ -31,7 +31,7 @@ from pynicotine.logfacility import log
 
 class Search:
 
-    def __init__(self, core, config, queue, share_dbs, ui_callback=None):
+    def __init__(self, core, config, queue, share_dbs, geoip, ui_callback=None):
 
         self.core = core
         self.config = config
@@ -39,6 +39,7 @@ class Search:
         self.ui_callback = None
         self.searchid = int(random.random() * (2 ** 31 - 1))
         self.share_dbs = share_dbs
+        self.geoip = geoip
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
         if hasattr(ui_callback, "searches"):
@@ -62,6 +63,16 @@ class Search:
         self.core.transfers.get_folder(user, folder)
 
     """ Outgoing search requests """
+
+    @staticmethod
+    def add_allowed_search_id(search_id):
+        """ Allow parsing search result messages for a search ID """
+        slskmessages.SEARCH_TOKENS_ALLOWED.add(search_id)
+
+    @staticmethod
+    def remove_allowed_search_id(search_id):
+        """ Disallow parsing search result messages for a search ID """
+        slskmessages.SEARCH_TOKENS_ALLOWED.discard(search_id)
 
     def process_search_term(self, text, mode, room, user):
 
@@ -173,6 +184,7 @@ class Search:
         elif mode == "user":
             self.do_peer_search(self.searchid, searchterm_without_excluded, users)
 
+        self.add_allowed_search_id(self.searchid)
         return (self.searchid, searchterm_with_excluded, searchterm_without_excluded)
 
     def do_global_search(self, search_id, text):
@@ -203,6 +215,7 @@ class Search:
             self.queue.append(slskmessages.UserSearch(user, search_id, text))
 
     def do_wishlist_search(self, search_id, text):
+        self.add_allowed_search_id(search_id)
         self.queue.append(slskmessages.WishlistSearch(search_id, text))
 
     def get_current_search_id(self):
@@ -223,6 +236,7 @@ class Search:
         if wish not in self.config.sections["server"]["autosearch"]:
             self.config.sections["server"]["autosearch"].append(wish)
 
+        self.add_allowed_search_id(self.searchid)
         return self.searchid
 
     def set_wishlist_interval(self, msg):
@@ -232,9 +246,24 @@ class Search:
 
         log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
-    def show_search_result(self, msg, username, country):
-        if self.ui_callback:
-            self.ui_callback.show_search_result(msg, username, country)
+    def file_search_result(self, msg):
+
+        if not self.ui_callback or msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+            return
+
+        conn = msg.conn
+        username = conn.init.target_user
+        addr = conn.addr
+
+        if addr:
+            country = self.geoip.get_country_code(addr[0])
+        else:
+            country = ""
+
+        if country == "-":
+            country = ""
+
+        self.ui_callback.show_search_result(msg, username, country)
 
     """ Incoming search requests """
 

@@ -273,7 +273,7 @@ class NicotineCore:
         self.statistics = Statistics(config, ui_callback)
 
         self.shares = Shares(self, config, self.queue, ui_callback)
-        self.search = Search(self, config, self.queue, self.shares.share_dbs, ui_callback)
+        self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
         self.transfers = transfers.Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userbrowse = UserBrowse(self, config, ui_callback)
@@ -1669,20 +1669,7 @@ Error: %(error)s""", {
         """ Peer message: 9 """
 
         log.add_msg_contents(msg)
-
-        conn = msg.conn
-        username = conn.init.target_user
-        addr = conn.addr
-
-        if addr:
-            country = self.geoip.get_country_code(addr[0])
-        else:
-            country = ""
-
-        if country == "-":
-            country = ""
-
-        self.search.show_search_result(msg, username, country)
+        self.search.file_search_result(msg)
 
     def user_info_request(self, msg):
         """ Peer code: 15 """

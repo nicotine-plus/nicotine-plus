@@ -24,6 +24,7 @@ import zlib
 
 from itertools import islice
 
+from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
 
@@ -42,6 +43,8 @@ UINT64_UNPACK = struct.Struct("<Q").unpack
 INT_PACK = struct.Struct("<i").pack
 UINT_PACK = struct.Struct("<I").pack
 UINT64_PACK = struct.Struct("<Q").pack
+
+SEARCH_TOKENS_ALLOWED = set()
 
 
 class InternalMessage:
@@ -2203,7 +2206,7 @@ class SharedFileList(PeerMessage):
         if message[pos:]:
             pos, self.unknown = self.get_object(message, int, pos)
 
-        if message[pos:]:
+        if message[pos:] and config.sections["ui"]["private_shares"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):
@@ -2322,13 +2325,18 @@ class FileSearchResult(PeerMessage):
     def _parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.token = self.get_object(message, int, pos)
+
+        if self.token not in SEARCH_TOKENS_ALLOWED:
+            # Results are no longer accepted for this search token, stop parsing message
+            return
+
         pos, self.list = self._parse_result_list(message, pos)
 
         pos, self.freeulslots = pos + 1, message[pos]
         pos, self.ulspeed = self.get_object(message, int, pos)
         pos, self.inqueue = self.get_object(message, int, pos, getunsignedlonglong=True)
 
-        if message[pos:]:
+        if message[pos:] and config.sections["ui"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):

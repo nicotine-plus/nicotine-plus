@@ -238,6 +238,7 @@ class Searches(IconNotebook):
 
         # No more things to add because we've reached the result limit
         if counter > config.sections["searches"]["max_displayed_results"]:
+            self.frame.np.search.remove_allowed_search_id(msg.token)
             return
 
         search["tab"].add_user_results(msg, username, country)
@@ -252,6 +253,8 @@ class Searches(IconNotebook):
             else:
                 search["tab"] = None
                 search["ignore"] = True
+
+            self.frame.np.search.remove_allowed_search_id(tab.id)
 
         self.remove_page(tab.Main)
 
@@ -648,7 +651,7 @@ class Search:
         update_ui, counter = self.add_result_list(
             msg.list, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color)
 
-        if config.sections["ui"]["private_search_results"] and msg.privatelist:
+        if msg.privatelist:
             update_ui_private, counter = self.add_result_list(
                 msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color, private=True)
 
@@ -1405,6 +1408,9 @@ class Search:
         self.directoryiters.clear()
         self.resultsmodel.clear()
         self.numvisibleresults = 0
+
+        # Allow parsing search result messages again
+        self.frame.np.search.add_allowed_search_id(self.id)
 
         # Update number of visible results
         self.update_result_counter()
