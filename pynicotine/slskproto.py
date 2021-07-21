@@ -1240,11 +1240,10 @@ class SlskProtoThread(threading.Thread):
         PeerConnectionInProgress messages. """
 
         msg_list = self._queue.copy()
-        server_disconnected = self.server_disconnected
         self._queue.clear()
 
         for msg_obj in msg_list:
-            if server_disconnected:
+            if self.server_disconnected:
                 # Disconnected from server, stop processing queue
                 return
 
