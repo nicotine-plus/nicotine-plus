@@ -26,6 +26,7 @@ class Plugin(BasePlugin):
     __name__ = "Memory Debugger"
 
     def init(self):
+
         self.log(
             "Tweaking garbage collection. Is it currently turned on? %s\n"
             "Current thresholds: %s\n"
@@ -40,10 +41,13 @@ class Plugin(BasePlugin):
             gc.collect(i)
 
         unclaimed = ['A total of %s objects that could not be freed:' % (len(gc.garbage),)]
+        
         for i in gc.garbage:
             unclaimed.append('%s: %s (%s)' % (type(i), str(i), repr(i)))
+            
         self.log('\n'.join(unclaimed))
         self.log("Done.")
 
     def disable(self):
+
         gc.set_debug(0)
