@@ -8,31 +8,31 @@ Version 3.1.0 (unstable)
 
 Changes
 
- * Added alternative transfer speed limits for downloads and uploads, toggleable using a quick access button in the status bar
+ * Added alternative transfer speed limits for downloads and uploads, toggleable with a quick access button in the status bar
  * Added an option to save downloads to subfolders based on the uploader's username
- * Added a dropdown menu in file transfer views to clear various types of file transfers
+ * Added a dropdown menu in file transfer views to clear various types of file transfers from the list
  * Added an option to disable reverse file paths in search results and file transfer views
  * Added an option to show private/locked search results and shared files from SoulseekQt clients
- * Added an option to limit access of buddy shares to trusted buddies
+ * Added an option to only allow trusted buddies to access buddy shares
  * Added a context menu item in file transfer views to browse folders of file transfers, similar to search results
- * Added check boxes to easily specify whether a shared folder should be buddy-only or not
+ * Added checkboxes to 'Shares' preferences to easily specify whether a shared folder should be buddy-only or not
  * Added a menu item to quickly toggle dark mode/theme, available under Menu -> View -> Prefer Dark Mode
  * Added debug logging categories for downloads, uploads and chats
- * The GUI is now accessible to blind users using screen readers
+ * Improved GUI accessibility for blind users using screen readers
  * Finished downloads are no longer cleared on disconnect/exit
  * Finished uploads are now restored on startup, unless previously cleared
- * Spamfilter plugin now filters phrases in chat rooms in addition to private chats
- * Command aliases now run chat commands, e.g. '/alias hello /away' will create a '/hello' command that runs '/away'
- * Unified preferences related to the GUI, such as colors, icons and tabs, under a single "User Interface" page
- * A single preference now controls the maximum number of visible search results, instead of the previous two
- * macOS: minor UX improvements to better align with macOS conventions
- * GNU/Linux and macOS: added an option to enforce a specific network interface, useful for virtual private networks (VPN)
- * Minor performance improvements
+ * Spam filter plugin now filters phrases in chat rooms in addition to private chats
+ * Command aliases can now run chat commands, e.g. '/alias hello /away' will create a '/hello' command that runs '/away'
+ * Unified preferences related to the GUI, such as colors, icons and tabs, under a single 'User Interface' page
+ * A single preference now controls the maximum number of visible search results, instead of two separate preferences
  * Added a basic 'headless' mode to run Nicotine+ without a GUI, available through the --headless command line flag
  * Added the ability to start multiple instances of Nicotine+ when a custom config file is specified with the --config command line flag
  * Added the option to specify a custom user data folder location (used for storing e.g. the list of shared files) with the --user-data command line flag
  * Added plugin notifications for started/finished transfers
  * Various deprecations related to plugins, listed in pluginsystem.py and logged on startup
+ * Various performance improvements
+ * macOS: minor UX improvements to better align with macOS conventions
+ * GNU/Linux and macOS: added an option to enforce a specific network interface, useful for virtual private networks (VPN)
  * Removed 'direct private message' toggle, since the official Soulseek clients do not understand such messages
  * Removed option to rotate tab labels, due to various issues with its implementation
  * Removed support for Ubuntu 16.04 and Python 3.5
@@ -51,7 +51,7 @@ Corrections
  * Added a workaround for cases where Soulseek NS clients send incorrect file sizes for large files
  * Various GUI-related changes and improvements to reduce the number of inconsistencies
  * macOS: keyboard shortcuts now use the Command key instead of Ctrl
- * Windows: improvements to notifications to avoid duplicate status icons
+ * Windows: improvements to notifications to prevent duplicate tray icons
  * Windows: fixed an issue where closed windows would appear in window peek
  * Windows: fixed an issue where minimized windows were not displayed when restoring Nicotine+ from tray
 
