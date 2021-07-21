@@ -426,7 +426,7 @@ class SlskProtoThread(threading.Thread):
         self._core_callback = core_callback
         self._queue = queue
         self._want_abort = False
-        self._server_disconnect = True
+        self.server_disconnected = True
         self._bindip = bindip
         self._listenport = None
         self.portrange = (port, port) if port else port_range
@@ -531,12 +531,12 @@ class SlskProtoThread(threading.Thread):
 
     def server_connect(self):
         """ We've connected to the server """
-        self._server_disconnect = False
+        self.server_disconnected = False
 
     def server_disconnect(self):
         """ We've disconnected from the server, clean up """
 
-        self._server_disconnect = True
+        self.server_disconnected = True
         self.server_socket = None
 
         for i in self._conns.copy():
@@ -1246,7 +1246,7 @@ class SlskProtoThread(threading.Thread):
             msg_list.append(self._queue.popleft())
 
         for msg_obj in msg_list:
-            if self._server_disconnect:
+            if self.server_disconnected:
                 # Disconnected from server, stop processing queue
                 return
 
@@ -1417,7 +1417,7 @@ class SlskProtoThread(threading.Thread):
 
         while not self._want_abort:
 
-            if self._server_disconnect:
+            if self.server_disconnected:
                 # We're not connected to the server at the moment
                 time.sleep(0.1)
                 continue
@@ -1465,7 +1465,7 @@ class SlskProtoThread(threading.Thread):
                 continue
 
             # Listen / Peer Port
-            if self._numsockets < MAXSOCKETS and not self._server_disconnect and self.listen_socket in input_list:
+            if self._numsockets < MAXSOCKETS and not self.server_disconnected and self.listen_socket in input_list:
                 try:
                     incconn, incaddr = self.listen_socket.accept()
                 except Exception:

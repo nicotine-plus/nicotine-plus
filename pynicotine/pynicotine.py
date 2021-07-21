@@ -326,10 +326,10 @@ class NicotineCore:
 
     def connect(self):
 
-        self.protothread.server_connect()
-
-        if self.active_server_conn is not None:
+        if not self.protothread.server_disconnected:
             return True
+
+        self.protothread.server_connect()
 
         # Clear any potential messages queued up to this point (should not happen)
         while self.queue:
