@@ -23,6 +23,7 @@ from pynicotine.pluginsystem import BasePlugin
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Memory Debugger"
 
     def init(self):
