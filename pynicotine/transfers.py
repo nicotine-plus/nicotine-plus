@@ -175,21 +175,22 @@ class Transfers:
             # Nicotine <=1.4.1
             return downloads_file_1_4_1
 
-        return None
+        # Fall back to new file format
+        return downloads_file_json
 
     def get_upload_list_file_name(self):
 
         data_dir = self.config.data_dir
         uploads_file_json = os.path.join(data_dir, 'uploads.json')
 
-        if os.path.exists(uploads_file_json):
-            return uploads_file_json
-
-        return None
+        return uploads_file_json
 
     @staticmethod
     def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
+
+        if not os.path.isfile(transfers_file):
+            return None
 
         with open(transfers_file, encoding="utf-8") as handle:
             import json
@@ -199,21 +200,21 @@ class Transfers:
     def load_legacy_transfers_file(transfers_file):
         """ Loads a download queue file in pickle format (legacy) """
 
+        if not os.path.isfile(transfers_file):
+            return None
+
         with open(transfers_file, "rb") as handle:
             from pynicotine.utils import RestrictedUnpickler
             return RestrictedUnpickler(handle, encoding="utf-8").load()
 
     def load_transfers(self, transfer_type):
 
+        load_func = self.load_transfers_file
+
         if transfer_type == "uploads":
             transfers_file = self.get_upload_list_file_name()
         else:
             transfers_file = self.get_download_queue_file_name()
-
-        if not transfers_file:
-            return None
-
-        load_func = self.load_transfers_file
 
         if transfer_type == "downloads" and not transfers_file.endswith("downloads.json"):
             load_func = self.load_legacy_transfers_file
