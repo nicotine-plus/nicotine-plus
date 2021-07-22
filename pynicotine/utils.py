@@ -431,6 +431,30 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     return procs[-1].communicate()[0]
 
 
+def load_file(path, load_func, use_old_file=False):
+
+    if use_old_file:
+        path = path + ".old"
+
+    try:
+        if os.path.isfile(path) and os.path.getsize(path) == 0:
+            # Empty files should be considered broken/corrupted
+            raise OSError("File is empty")
+
+        return load_func(path)
+
+    except Exception as error:
+        log.add(_("Something went wrong while reading file %(filename)s: %(error)s"),
+                {"filename": path, "error": error})
+
+        if not use_old_file:
+            # Attempt to load data from an .old file
+            log.add(_("Attempting to load backup of file %s"), path)
+            return load_file(path, load_func, use_old_file=True)
+
+    return None
+
+
 def write_file_and_backup(path, callback, protect=False):
 
     # Back up old file to path.old

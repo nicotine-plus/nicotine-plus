@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-21 21:44+0300\n"
+"POT-Creation-Date: 2021-07-22 06:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -144,17 +144,12 @@ msgstr ""
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr ""
 
-#: pynicotine/config.py:504
-#, python-format
-msgid "Unable to parse config file: %s"
-msgstr ""
-
-#: pynicotine/config.py:549
+#: pynicotine/config.py:540
 #, python-format
 msgid "Unknown config section '%s'"
 msgstr ""
 
-#: pynicotine/config.py:553
+#: pynicotine/config.py:544
 #, python-format
 msgid "Unknown config option '%(option)s' in section '%(section)s'"
 msgstr ""
@@ -2546,7 +2541,7 @@ msgstr ""
 msgid "File not shared"
 msgstr ""
 
-#: pynicotine/gtkgui/transferlist.py:100 pynicotine/transfers.py:1869
+#: pynicotine/gtkgui/transferlist.py:100 pynicotine/transfers.py:1861
 msgid "Download folder error"
 msgstr ""
 
@@ -3589,152 +3584,147 @@ msgid ""
 "potential scanning issues to the developers."
 msgstr ""
 
-#: pynicotine/slskproto.py:1473
+#: pynicotine/slskproto.py:1472
 #, python-format
 msgid "Ignoring connection request from blocked IP Address %(ip)s:%(port)s"
 msgstr ""
 
-#: pynicotine/transfers.py:201 pynicotine/transfers.py:217
-#, python-format
-msgid "Something went wrong while reading your transfer list: %(error)s"
-msgstr ""
-
-#: pynicotine/transfers.py:1001
+#: pynicotine/transfers.py:993
 #, python-format
 msgid "I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1064 pynicotine/transfers.py:1869
+#: pynicotine/transfers.py:1056 pynicotine/transfers.py:1861
 #, python-format
 msgid "OS error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1084
+#: pynicotine/transfers.py:1076
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1092 pynicotine/transfers.py:1328
+#: pynicotine/transfers.py:1084 pynicotine/transfers.py:1320
 #, python-format
 msgid "Download I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1112
+#: pynicotine/transfers.py:1104
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1158
+#: pynicotine/transfers.py:1150
 #, python-format
 msgid "Upload I/O error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1169
+#: pynicotine/transfers.py:1161
 msgid "privileged"
 msgstr ""
 
-#: pynicotine/transfers.py:1183
+#: pynicotine/transfers.py:1175
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1527
+#: pynicotine/transfers.py:1519
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
 msgstr ""
 
-#: pynicotine/transfers.py:1531
+#: pynicotine/transfers.py:1523
 #, python-format
 msgid ""
 "%s is not allowed to send you file(s), but is attempting to, anyway. Warning "
 "Sent."
 msgstr ""
 
-#: pynicotine/transfers.py:1789
+#: pynicotine/transfers.py:1781
 #, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
 "download folder. Error: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1817
+#: pynicotine/transfers.py:1809
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1821
+#: pynicotine/transfers.py:1813
 msgid "File downloaded"
 msgstr ""
 
-#: pynicotine/transfers.py:1826
+#: pynicotine/transfers.py:1818
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr ""
 
-#: pynicotine/transfers.py:1828
+#: pynicotine/transfers.py:1820
 #, python-format
 msgid "Executed: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1850
+#: pynicotine/transfers.py:1842
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1854
+#: pynicotine/transfers.py:1846
 msgid "Folder downloaded"
 msgstr ""
 
-#: pynicotine/transfers.py:1859
+#: pynicotine/transfers.py:1851
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1861
+#: pynicotine/transfers.py:1853
 #, python-format
 msgid "Executed on folder: %s"
 msgstr ""
 
-#: pynicotine/transfers.py:1893
+#: pynicotine/transfers.py:1885
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1928
+#: pynicotine/transfers.py:1920
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:1962
+#: pynicotine/transfers.py:1954
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2164 pynicotine/transfers.py:2166
+#: pynicotine/transfers.py:2156 pynicotine/transfers.py:2158
 #, python-format
 msgid "Banned (%s)"
 msgstr ""
 
-#: pynicotine/transfers.py:2168
+#: pynicotine/transfers.py:2160
 msgid "Banned"
 msgstr ""
 
-#: pynicotine/transfers.py:2245
+#: pynicotine/transfers.py:2237
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2252
+#: pynicotine/transfers.py:2244
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr ""
 
-#: pynicotine/transfers.py:2310
+#: pynicotine/transfers.py:2302
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr ""
 
-#: pynicotine/transfers.py:2314
+#: pynicotine/transfers.py:2306
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
@@ -3765,36 +3755,46 @@ msgstr ""
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr ""
 
-#: pynicotine/utils.py:446
+#: pynicotine/utils.py:447
+#, python-format
+msgid "Something went wrong while reading file %(filename)s: %(error)s"
+msgstr ""
+
+#: pynicotine/utils.py:452
+#, python-format
+msgid "Attempting to load backup of file %s"
+msgstr ""
+
+#: pynicotine/utils.py:470
 #, python-format
 msgid "Unable to back up file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/utils.py:460
+#: pynicotine/utils.py:484
 #, python-format
 msgid "Unable to save file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/utils.py:471
+#: pynicotine/utils.py:495
 #, python-format
 msgid "Unable to restore previous file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/utils.py:545
+#: pynicotine/utils.py:569
 #, python-format
 msgid "No such alias (%s)"
 msgstr ""
 
-#: pynicotine/utils.py:547
+#: pynicotine/utils.py:571
 msgid "Aliases:"
 msgstr ""
 
-#: pynicotine/utils.py:563
+#: pynicotine/utils.py:587
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
 msgstr ""
 
-#: pynicotine/utils.py:565
+#: pynicotine/utils.py:589
 #, python-format
 msgid "No such alias (%(alias)s)\n"
 msgstr ""

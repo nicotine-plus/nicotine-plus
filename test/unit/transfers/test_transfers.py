@@ -71,8 +71,7 @@ class TransfersTest(unittest.TestCase):
 
         self.transfers.abort_transfers()
 
-        old_transfers = self.transfers.load_current_transfers_format(
-            self.transfers.downloads_file_name)[:12]
+        old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
 
         saved_transfers = self.transfers.get_downloads()[:12]
         self.assertEqual(old_transfers, saved_transfers)

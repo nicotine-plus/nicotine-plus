@@ -134,6 +134,8 @@ class Config:
 
     def load_config(self):
 
+        from pynicotine.utils import load_file
+
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
             "server": {
@@ -461,12 +463,7 @@ class Config:
         self.create_config_folder()
         self.create_data_folder()
 
-        try:
-            self.parse_config()
-
-        except UnicodeDecodeError:
-            self.convert_config()
-            self.parse_config()
+        load_file(self.filename, self.parse_config)
 
         # Clean up old config options
         self.remove_old_options()
@@ -485,23 +482,17 @@ class Config:
         except Exception:
             return
 
-    def parse_config(self):
+    def parse_config(self, filename):
         """ Parses the config file """
 
         try:
-            with open(self.filename, 'a+', encoding="utf-8") as file_handle:
+            with open(filename, 'a+', encoding="utf-8") as file_handle:
                 file_handle.seek(0)
                 self.parser.read_file(file_handle)
 
-        except configparser.ParsingError:
-            # Ignore parsing errors, the offending lines are removed later
-            pass
-
-        except Exception as error:
-            # Miscellaneous failure, default config will be used
-            from pynicotine.logfacility import log
-
-            log.add(_("Unable to parse config file: %s"), error)
+        except UnicodeDecodeError:
+            self.convert_config()
+            self.parse_config(filename)
 
     def convert_config(self):
         """ Converts the config to utf-8.

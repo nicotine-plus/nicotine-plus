@@ -44,6 +44,7 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
 
@@ -187,36 +188,20 @@ class Transfers:
         return None
 
     @staticmethod
-    def load_current_transfers_format(transfers_file):
+    def load_transfers_file(transfers_file):
         """ Loads a file of transfers in json format """
 
-        transfers = []
-
-        try:
-            with open(transfers_file, encoding="utf-8") as handle:
-                import json
-                transfers = json.load(handle)
-
-        except Exception as inst:
-            log.add(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
-
-        return transfers
+        with open(transfers_file, encoding="utf-8") as handle:
+            import json
+            return json.load(handle)
 
     @staticmethod
-    def load_legacy_transfers_format(downloads_file):
+    def load_legacy_transfers_file(transfers_file):
         """ Loads a download queue file in pickle format (legacy) """
 
-        download_queue = []
-
-        try:
-            with open(downloads_file, "rb") as handle:
-                from pynicotine.utils import RestrictedUnpickler
-                download_queue = RestrictedUnpickler(handle, encoding='utf-8').load()
-
-        except Exception as inst:
-            log.add(_("Something went wrong while reading your transfer list: %(error)s"), {'error': str(inst)})
-
-        return download_queue
+        with open(transfers_file, "rb") as handle:
+            from pynicotine.utils import RestrictedUnpickler
+            return RestrictedUnpickler(handle, encoding="utf-8").load()
 
     def load_transfers(self, transfer_type):
 
@@ -226,21 +211,28 @@ class Transfers:
             transfers_file = self.get_download_queue_file_name()
 
         if not transfers_file:
-            return []
+            return None
+
+        load_func = self.load_transfers_file
 
         if transfer_type == "downloads" and not transfers_file.endswith("downloads.json"):
-            return self.load_legacy_transfers_format(transfers_file)
+            load_func = self.load_legacy_transfers_file
 
-        return self.load_current_transfers_format(transfers_file)
+        return load_file(transfers_file, load_func)
 
     def add_stored_transfers(self, transfer_type):
+
+        transfers = self.load_transfers(transfer_type)
+
+        if not transfers:
+            return
 
         if transfer_type == "uploads":
             transfer_list = self.uploads
         else:
             transfer_list = self.downloads
 
-        for i in self.load_transfers(transfer_type):
+        for i in transfers:
             size = currentbytes = bitrate = length = None
 
             try:
