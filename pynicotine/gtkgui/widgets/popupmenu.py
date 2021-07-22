@@ -553,7 +553,7 @@ class PopupMenu(Gio.Menu):
 
     def on_version(self, *args):
         self.frame.np.privatechats.show_user(self.user)
-        self.frame.np.privatechats.send_message(self.user, "\x01VERSION\x01", bytestring=True)
+        self.frame.np.privatechats.send_message(self.user, self.frame.np.privatechats.CTCP_VERSION)
 
     def on_copy_user(self, *args):
         copy_text(self.user)

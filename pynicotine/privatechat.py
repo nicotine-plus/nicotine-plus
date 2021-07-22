@@ -146,7 +146,7 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.echo_message(user, message, message_type)
 
-    def send_message(self, user, message, bytestring=False):
+    def send_message(self, user, message):
 
         if not self.core.active_server_conn:
             return
@@ -157,16 +157,16 @@ class PrivateChats:
 
         _, message = user_text
 
-        if bytestring:
-            payload = message
+        if message == self.CTCP_VERSION:
+            ui_message = "CTCP VERSION"
         else:
-            payload = self.auto_replace(message)
+            message = ui_message = self.auto_replace(message)
 
-        self.queue.append(slskmessages.MessageUser(user, payload))
+        self.queue.append(slskmessages.MessageUser(user, message))
         self.core.pluginhandler.outgoing_private_chat_notification(user, message)
 
         if self.ui_callback:
-            self.ui_callback.send_message(user, payload)
+            self.ui_callback.send_message(user, ui_message)
 
     def get_user_status(self, msg):
         if self.ui_callback:
@@ -199,9 +199,9 @@ class PrivateChats:
         msg.msg = self.censor_chat(msg.msg)
 
         # SEND CLIENT VERSION to user if the following string is sent
-        ctcpversion = 0
+        ctcpversion = False
         if msg.msg == self.CTCP_VERSION:
-            ctcpversion = 1
+            ctcpversion = True
             msg.msg = "CTCP VERSION"
 
         if self.ui_callback:
@@ -216,7 +216,7 @@ class PrivateChats:
 
         self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
 
-        if ctcpversion and self.config.sections["server"]["ctcpmsgs"] == 0:
+        if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
             self.send_message(msg.user, "Nicotine+ " + self.config.version)
 
         autoreply = self.config.sections["server"]["autoreply"]
