@@ -21,7 +21,7 @@ import unittest
 
 from collections import deque
 
-from pynicotine.config import Config
+from pynicotine.config import config
 from pynicotine.search import Search
 
 SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ [[ @@ auto -no yes'
@@ -32,12 +32,12 @@ class SearchTest(unittest.TestCase):
 
     def setUp(self):
 
-        self.config = Config()
-        self.config.data_dir = os.path.dirname(os.path.realpath(__file__))
-        self.config.filename = os.path.join(self.config.data_dir, "temp_config")
-        self.config.load_config()
+        config.data_dir = os.path.dirname(os.path.realpath(__file__))
+        config.filename = os.path.join(config.data_dir, "temp_config")
 
-        self.search = Search(None, self.config, deque(), None, None)
+        config.load_config()
+
+        self.search = Search(None, config, deque(), None, None)
 
     def test_do_search(self):
         """ Test the do_search function, including the outgoing search term and search history """
@@ -46,7 +46,7 @@ class SearchTest(unittest.TestCase):
 
         # Try a search with special characters removed
 
-        self.config.sections["searches"]["remove_special_chars"] = True
+        config.sections["searches"]["remove_special_chars"] = True
         searchid, searchterm_with_excluded, searchterm_without_excluded = self.search.do_search(SEARCH_TEXT,
                                                                                                 SEARCH_MODE)
 
@@ -54,18 +54,18 @@ class SearchTest(unittest.TestCase):
         self.assertEqual(searchid, old_searchid + 1)
         self.assertEqual(searchterm_with_excluded, "70 gwen test a b c d auto yes -mp3 -nothanks -no")
         self.assertEqual(searchterm_without_excluded, "70 gwen test a b c d auto yes")
-        self.assertEqual(self.config.sections["searches"]["history"][0], searchterm_with_excluded)
+        self.assertEqual(config.sections["searches"]["history"][0], searchterm_with_excluded)
 
         # Try a search without special characters removed
 
-        self.config.sections["searches"]["remove_special_chars"] = False
+        config.sections["searches"]["remove_special_chars"] = False
         searchid, searchterm_with_excluded, searchterm_without_excluded = self.search.do_search(SEARCH_TEXT,
                                                                                                 SEARCH_MODE)
 
         self.assertEqual(searchterm_with_excluded, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks -no')
         self.assertEqual(searchterm_without_excluded, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
-        self.assertEqual(self.config.sections["searches"]["history"][0], searchterm_with_excluded)
-        self.assertEqual(self.config.sections["searches"]["history"][1],
+        self.assertEqual(config.sections["searches"]["history"][0], searchterm_with_excluded)
+        self.assertEqual(config.sections["searches"]["history"][1],
                          "70 gwen test a b c d auto yes -mp3 -nothanks -no")
 
     def test_search_id_increment(self):
@@ -85,7 +85,7 @@ class SearchTest(unittest.TestCase):
         # First item
 
         searchid = self.search.add_wish(SEARCH_TEXT)
-        self.assertEqual(self.config.sections["server"]["autosearch"][0], SEARCH_TEXT)
+        self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
         self.assertEqual(searchid, old_searchid + 1)
         self.assertEqual(searchid, self.search.get_current_search_id())
 
@@ -93,5 +93,5 @@ class SearchTest(unittest.TestCase):
 
         new_item = SEARCH_TEXT + "1"
         self.search.add_wish(new_item)
-        self.assertEqual(self.config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(self.config.sections["server"]["autosearch"][1], new_item)
+        self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
+        self.assertEqual(config.sections["server"]["autosearch"][1], new_item)
