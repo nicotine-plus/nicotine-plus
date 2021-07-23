@@ -919,7 +919,7 @@ class Transfers:
 
                     self.upload_finished(i)
 
-                elif msg.reason == "Cancelled":
+                elif msg.reason in ("Cancelled", "Disallowed extension"):
 
                     self.auto_clear_upload(i)
 

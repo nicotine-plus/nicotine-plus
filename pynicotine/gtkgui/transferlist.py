@@ -92,6 +92,7 @@ class TransferList:
         self.statuses["Cannot connect"] = _("Cannot connect")
         self.statuses["User logged off"] = _("User logged off")
         self.statuses["Connection closed by peer"] = _("Connection closed by peer")
+        self.statuses["Disallowed extension"] = _("Disallowed extension")  # Sent by Soulseek NS for filtered extensions
         self.statuses["Aborted"] = _("Aborted")
         self.statuses["Finished"] = _("Finished")
         self.statuses["Filtered"] = _("Filtered")
