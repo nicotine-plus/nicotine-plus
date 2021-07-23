@@ -137,7 +137,7 @@ class Logger:
         try:
             self.listeners.remove(callback)
         except KeyError:
-            self.add("Failed to remove listener %s, does not exist." % (callback,), 1)
+            self.add("Failed to remove listener %s, does not exist.", callback)
 
     def log_transfer(self, msg, msg_args=None):
 
