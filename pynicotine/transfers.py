@@ -120,6 +120,7 @@ class Transfers:
 
         self.users = users
         self.network_callback = network_callback
+        self.download_queue_timer_count = -1
         self.downloadsview = None
         self.uploadsview = None
 
@@ -486,8 +487,10 @@ class Transfers:
         """ We get a status of a user and if he's online, we request a file from him """
 
         for i in self.downloads.copy():
-            if msg.user == i.user and i.status in ("Queued", "Getting status", "Establishing connection",
-                                                   "User logged off", "Connection closed by peer", "Cannot connect"):
+            if (msg.user == i.user
+                    and (i.status in ("Queued", "Getting status", "Establishing connection", "Too many files",
+                                      "Too many megabytes", "User logged off", "Connection closed by peer",
+                                      "Cannot connect", "Remote file error") or i.status.startswith("User limit of"))):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i)
@@ -500,7 +503,7 @@ class Transfers:
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in self.uploads.copy():
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection",
+            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Disallowed extension",
                                                    "User logged off", "Cannot connect", "Cancelled"):
                 if msg.status <= 0:
                     i.status = "User logged off"
@@ -1487,7 +1490,8 @@ class Transfers:
                     if not privileged_user or self.is_privileged(i.user):
                         place += 1
 
-        self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
+        if place > 0:
+            self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
 
     def place_in_queue(self, msg):
         """ The server tells us our place in queue for a particular transfer."""
@@ -2009,7 +2013,10 @@ class Transfers:
 
     def _check_download_queue_timer(self):
 
+        self.download_queue_timer_count = -1
+
         while True:
+            self.download_queue_timer_count += 1
             self.network_callback([slskmessages.CheckDownloadQueue()])
 
             if self.core.exit.wait(180):
@@ -2020,18 +2027,47 @@ class Transfers:
     # Also ask for the queue position of downloads.
     def check_download_queue(self):
 
-        statuslist = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
+        statuslist_failed = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
+        statuslist_queued = ("Queued", "Too many files", "Too many megabytes")
+        reset_count = False
 
         for transfer in self.downloads:
-            if transfer.status in statuslist:
+            status = transfer.status
+
+            if (self.download_queue_timer_count >= 1
+                    and (status in statuslist_queued or status.startswith("User limit of"))):
+                # Re-queue downloads every 12 minutes
+
+                log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
+                    "filename": transfer.filename,
+                    "user": transfer.user
+                })
+                transfer.status = "Queued"
+                reset_count = True
+
+                if self.downloadsview:
+                    self.downloadsview.update(transfer)
+
+                self.core.send_message_to_peer(
+                    transfer.user,
+                    slskmessages.QueueUpload(None, transfer.filename, transfer.legacy_attempt))
+
+            if status in statuslist_failed:
+                # Retry failed downloads every 3 minutes
+
                 self.abort_transfer(transfer)
                 self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
-            elif transfer.status == "Queued":
+            if status == "Queued":
+                # Request queue position every 3 minutes
+
                 self.core.send_message_to_peer(
                     transfer.user,
                     slskmessages.PlaceInQueueRequest(None, transfer.filename, transfer.legacy_attempt)
                 )
+
+        if reset_count:
+            self.download_queue_timer_count = 0
 
     def get_queued_uploads(self):
 
