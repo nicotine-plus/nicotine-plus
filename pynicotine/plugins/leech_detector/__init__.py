@@ -27,13 +27,25 @@ class Plugin(BasePlugin):
 
     __name__ = "Leech Detector"
     settings = {
-        'message': 'You are not sharing any files, that makes me a sad panda :(',
+        'message': 'Please consider sharing more files before downloading from me. Thanks :)',
+        'num_files': 0,
+        'num_folders': 0,
+        'open_private_chat': True
     }
     metasettings = {
         'message': {
-            'description': 'Message to send to leechers (new lines are sent as separate messages, '
-                           + 'too many lines may get you tempbanned for spam)',
+            'description': 'Message to send to leechers. New lines are sent as separate messages, '
+                           + 'too many lines may get you tempbanned for spam!',
             'type': 'textview'},
+        'num_files': {
+            'description': 'Maximum shared file count to trigger message',
+            'type': 'int'},
+        'num_folders': {
+            'description': 'Maximum shared folder count to trigger message',
+            'type': 'int'},
+        'open_private_chat': {
+            'description': 'Open private chat tabs when sending messages to leechers',
+            'type': 'bool'},
     }
 
     def init(self):
@@ -62,15 +74,20 @@ class Plugin(BasePlugin):
 
         self.probed[user] = 'processed'
 
-        if stats['files'] > 0:
-            self.log('User %s is okay, sharing %s files', (user, stats['files']))
+        if stats['files'] > self.settings['num_files'] and stats['dirs'] > self.settings['num_folders']:
+            self.log('User %s is okay, sharing %s files and %s folders', (user, stats['files'], stats['dirs']))
             return
 
         if not self.settings['message']:
-            self.log("User %s doesn't share any files, but no complaint message is specified.", user)
+            self.log("User %s doesn't share enough files, but no complaint message is specified.", user)
             return
 
-        for line in self.settings['message'].splitlines():
-            self.send_private(user, line, show_ui=False)
+        show_ui = False
 
-        self.log("User %s doesn't share any files, sent complaint.", user)
+        if self.settings['open_private_chat']:
+            show_ui = True
+
+        for line in self.settings['message'].splitlines():
+            self.send_private(user, line, show_ui=show_ui, switch_page=False)
+
+        self.log("User %s doesn't share enough files, sent complaint.", user)

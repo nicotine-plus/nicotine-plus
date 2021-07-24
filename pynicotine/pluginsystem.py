@@ -708,12 +708,13 @@ class BasePlugin:
     def send_public(self, room, text):
         self.core.queue.append(slskmessages.SayChatroom(room, text))
 
-    def send_private(self, user, text, show_ui=True):
+    def send_private(self, user, text, show_ui=True, switch_page=True):
         """ Send user message in private.
-        show_ui controls if the UI opens a private chat view for the user. """
+        show_ui controls if the UI opens a private chat view for the user.
+        switch_page controls whether the user's private chat view should be opened. """
 
         if show_ui:
-            self.core.privatechats.show_user(user)
+            self.core.privatechats.show_user(user, switch_page)
 
         self.core.privatechats.send_message(user, text)
 
