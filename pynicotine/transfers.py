@@ -2034,7 +2034,7 @@ class Transfers:
         for transfer in self.downloads:
             status = transfer.status
 
-            if (self.download_queue_timer_count >= 1
+            if (self.download_queue_timer_count >= 4
                     and (status in statuslist_queued or status.startswith("User limit of"))):
                 # Re-queue downloads every 12 minutes
 
