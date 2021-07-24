@@ -486,11 +486,15 @@ class Transfers:
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
+        download_statuses = ("Queued", "Getting status", "Establishing connection", "Too many files",
+                             "Too many megabytes", "Pending shutdown.", "User logged off", "Connection closed by peer",
+                             "Cannot connect", "Remote file error")
+
+        upload_statuses = ("Getting status", "Establishing connection", "Disallowed extension",
+                           "User logged off", "Cannot connect", "Cancelled")
+
         for i in self.downloads.copy():
-            if (msg.user == i.user
-                    and (i.status in ("Queued", "Getting status", "Establishing connection", "Too many files",
-                                      "Too many megabytes", "User logged off", "Connection closed by peer",
-                                      "Cannot connect", "Remote file error") or i.status.startswith("User limit of"))):
+            if msg.user == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i)
@@ -503,8 +507,7 @@ class Transfers:
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in self.uploads.copy():
-            if msg.user == i.user and i.status in ("Getting status", "Establishing connection", "Disallowed extension",
-                                                   "User logged off", "Cannot connect", "Cancelled"):
+            if msg.user == i.user and i.status in upload_statuses:
                 if msg.status <= 0:
                     i.status = "User logged off"
                     self.abort_transfer(i)

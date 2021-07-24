@@ -90,6 +90,7 @@ class TransferList:
         self.statuses["Establishing connection"] = _("Establishing connection")
         self.statuses["Transferring"] = _("Transferring")
         self.statuses["Cannot connect"] = _("Cannot connect")
+        self.statuses["Pending shutdown."] = _("Pending shutdown")
         self.statuses["User logged off"] = _("User logged off")
         self.statuses["Connection closed by peer"] = _("Connection closed by peer")
         self.statuses["Disallowed extension"] = _("Disallowed extension")  # Sent by Soulseek NS for filtered extensions
@@ -97,6 +98,7 @@ class TransferList:
         self.statuses["Finished"] = _("Finished")
         self.statuses["Filtered"] = _("Filtered")
         self.statuses["Banned"] = _("Banned")
+        self.statuses["Blocked country"] = _("Blocked country")
         self.statuses["Too many files"] = _("Too many files")
         self.statuses["Too many megabytes"] = _("Too many megabytes")
         self.statuses["File not shared"] = _("File not shared")
