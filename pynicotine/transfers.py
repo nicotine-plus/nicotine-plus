@@ -2028,29 +2028,24 @@ class Transfers:
     def check_download_queue(self):
 
         statuslist_failed = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
-        statuslist_queued = ("Queued", "Too many files", "Too many megabytes")
+        statuslist_limited = ("Too many files", "Too many megabytes")
         reset_count = False
 
         for transfer in self.downloads:
             status = transfer.status
 
             if (self.download_queue_timer_count >= 4
-                    and (status in statuslist_queued or status.startswith("User limit of"))):
-                # Re-queue downloads every 12 minutes
+                    and (status in statuslist_limited or status.startswith("User limit of"))):
+                # Re-queue limited downloads every 12 minutes
 
                 log.add_transfer("Re-queuing file %(filename)s from user %(user)s in download queue", {
                     "filename": transfer.filename,
                     "user": transfer.user
                 })
-                transfer.status = "Queued"
                 reset_count = True
 
-                if self.downloadsview:
-                    self.downloadsview.update(transfer)
-
-                self.core.send_message_to_peer(
-                    transfer.user,
-                    slskmessages.QueueUpload(None, transfer.filename, transfer.legacy_attempt))
+                self.abort_transfer(transfer)
+                self.get_file(transfer.user, transfer.filename, transfer.path, transfer)
 
             if status in statuslist_failed:
                 # Retry failed downloads every 3 minutes
