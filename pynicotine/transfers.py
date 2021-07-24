@@ -648,17 +648,13 @@ class Transfers:
                 )
 
             elif limits and self.queue_limit_reached(user):
-                uploadslimit = self.config.sections["transfers"]["queuelimit"]
-                limitmsg = "User limit of %i megabytes exceeded" % (uploadslimit)
                 self.queue.append(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="Too many megabytes")
                 )
 
             elif limits and self.file_limit_reached(user):
-                filelimit = self.config.sections["transfers"]["filelimit"]
-                limitmsg = "User limit of %i files exceeded" % (filelimit)
                 self.queue.append(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason=limitmsg)
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="Too many files")
                 )
 
             elif self.core.shares.file_is_shared(user, filename_utf8, real_path):
@@ -677,7 +673,7 @@ class Transfers:
 
             else:
                 self.queue.append(
-                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared")
+                    slskmessages.UploadDenied(conn=msg.conn.conn, file=msg.file, reason="File not shared.")
                 )
 
         log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
@@ -806,7 +802,7 @@ class Transfers:
         real_path = self.core.shares.virtual2real(msg.file)
 
         if not self.core.shares.file_is_shared(user, msg.file, real_path):
-            return slskmessages.TransferResponse(None, 0, reason="File not shared", req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="File not shared.", req=msg.req)
 
         # Is that file already in the queue?
         if self.file_is_upload_queued(user, msg.file):
@@ -822,14 +818,10 @@ class Transfers:
                 limits = False
 
         if limits and self.queue_limit_reached(user):
-            uploadslimit = self.config.sections["transfers"]["queuelimit"]
-            return slskmessages.TransferResponse(None, 0, reason="User limit of %i megabytes exceeded" % (uploadslimit),
-                                                 req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="Too many megabytes", req=msg.req)
 
         if limits and self.file_limit_reached(user):
-            filelimit = self.config.sections["transfers"]["filelimit"]
-            limitmsg = "User limit of %i files exceeded" % (filelimit)
-            return slskmessages.TransferResponse(None, 0, reason=limitmsg, req=msg.req)
+            return slskmessages.TransferResponse(None, 0, reason="Too many files", req=msg.req)
 
         # All checks passed, user can queue file!
         self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
@@ -2154,11 +2146,11 @@ class Transfers:
         """
 
         if ban_message:
-            banmsg = _("Banned (%s)") % ban_message
+            banmsg = "Banned (%s)" % ban_message
         elif self.config.sections["transfers"]["usecustomban"]:
-            banmsg = _("Banned (%s)") % self.config.sections["transfers"]["customban"]
+            banmsg = "Banned (%s)" % self.config.sections["transfers"]["customban"]
         else:
-            banmsg = _("Banned")
+            banmsg = "Banned"
 
         for upload in self.uploads.copy():
             if upload.user != user:

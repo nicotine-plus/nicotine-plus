@@ -96,8 +96,11 @@ class TransferList:
         self.statuses["Aborted"] = _("Aborted")
         self.statuses["Finished"] = _("Finished")
         self.statuses["Filtered"] = _("Filtered")
+        self.statuses["Banned"] = _("Banned")
+        self.statuses["Too many files"] = _("Too many files")
+        self.statuses["Too many megabytes"] = _("Too many megabytes")
         self.statuses["File not shared"] = _("File not shared")
-        self.statuses["File not shared."] = _("File not shared")  # The official client sends a variant containing a dot
+        self.statuses["File not shared."] = _("File not shared")  # Newer variant containing a dot
         self.statuses["Download folder error"] = _("Download folder error")
         self.statuses["Local file error"] = _("Local file error")
         self.statuses["Remote file error"] = _("Remote file error")
