@@ -22,6 +22,7 @@
 
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
+from pynicotine.utils import http_request
 
 
 class NowPlaying:
@@ -125,41 +126,39 @@ class NowPlaying:
     def lastfm(self, user):
         """ Function to get the last song played via lastfm api """
 
-        import http.client
         import json
 
         try:
             (user, apikey) = user.split(';')
+
         except ValueError:
             log.add_important_error(_("lastfm: Please provide both your lastfm username and API key"))
             return None
 
         try:
-            conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
+            response = http_request(
+                "https", "ws.audioscrobbler.com",
+                "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json",
+                headers={"User-Agent": "Nicotine+"})
+
         except Exception as error:
             log.add_important_error(_("lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
-        conn.request("GET", "/2.0/?method=user.getrecenttracks&user="
-                     + user + "&api_key=" + apikey + "&limit=1&format=json",
-                     headers={"User-Agent": "Nicotine+"})
-        resp = conn.getresponse()
-        data = resp.read().decode("utf-8")
-        conn.close()
+        try:
+            json_api = json.loads(response)
+            lastplayed = json_api["recenttracks"]["track"][0]
 
-        if resp.status != 200 or resp.reason != "OK":
+            self.title["artist"] = lastplayed["artist"]["#text"]
+            self.title["title"] = lastplayed["name"]
+            self.title["album"] = lastplayed["album"]["#text"]
+            self.title["nowplaying"] = "%s: %s - %s - %s" % (
+                _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
+
+        except Exception:
             log.add_important_error(_("lastfm: Could not get recent track from audioscrobbler: %(error)s"),
-                                    {"error": str(data)})
+                                    {"error": str(response)})
             return None
-
-        json_api = json.loads(data)
-        lastplayed = json_api["recenttracks"]["track"][0]
-
-        self.title["artist"] = lastplayed["artist"]["#text"]
-        self.title["title"] = lastplayed["name"]
-        self.title["album"] = lastplayed["album"]["#text"]
-        self.title["nowplaying"] = "%s: %s - %s - %s" % (
-            _("Last played"), self.title["artist"], self.title["album"], self.title["title"])
 
         return True
 
