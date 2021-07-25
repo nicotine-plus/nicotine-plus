@@ -520,22 +520,26 @@ def http_request(url_scheme, base_url, path, request_type="GET", body="", header
     else:
         conn = http.client.HTTPConnection(base_url, timeout=timeout)
 
-    conn.request(request_type, path, body=body, headers=headers)
-    response = conn.getresponse()
-    redirect = response.getheader('Location')
+    try:
+        conn.request(request_type, path, body=body, headers=headers)
+        response = conn.getresponse()
+        redirect = response.getheader('Location')
 
-    if redirect:
-        from urllib.parse import urlparse
-        parsed_url = urlparse(redirect)
-        redirect_depth += 1
+        if redirect:
+            from urllib.parse import urlparse
+            parsed_url = urlparse(redirect)
+            redirect_depth += 1
 
-        return http_request(
-            parsed_url.scheme, parsed_url.netloc, parsed_url.path,
-            request_type, body, headers, timeout, redirect_depth
-        )
+            return http_request(
+                parsed_url.scheme, parsed_url.netloc, parsed_url.path,
+                request_type, body, headers, timeout, redirect_depth
+            )
 
-    contents = response.read().decode("utf-8")
-    conn.close()
+        contents = response.read().decode("utf-8")
+
+    finally:
+        # Always close connection, even when errors occur
+        conn.close()
 
     return contents
 
