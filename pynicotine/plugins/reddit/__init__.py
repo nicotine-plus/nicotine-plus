@@ -31,6 +31,7 @@ from itertools import islice
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.pluginsystem import ResponseThrottle
+from pynicotine.utils import http_request
 
 
 class Plugin(BasePlugin):
@@ -43,30 +44,35 @@ class Plugin(BasePlugin):
         self.plugin_command = "!reddit"
         self.responder = ResponseThrottle(self.core, self.__name__)
 
-    @staticmethod
-    def get_feed(domain, path):
-        import http.client
-        import json
-
-        conn = http.client.HTTPSConnection(domain)
-        conn.request("GET", path, headers={"User-Agent": "Nicotine+"})
-        response = json.loads(conn.getresponse().read().decode("utf-8"))
-        conn.close()
-
-        return response
-
-    def incoming_public_chat_event(self, room, user, line):
+    def incoming_public_chat_notification(self, room, user, line):
         line = line.lower().strip()
 
-        if line.startswith(self.plugin_command) and (" " in line):
-            subreddit = line.split(" ")[1].strip("/")
+        if not line.startswith(self.plugin_command) or " " not in line:
+            return
 
-            if self.responder.ok_to_respond(room, user, subreddit):
-                response = self.get_feed('www.reddit.com', '/r/' + subreddit + '/.json')
+        subreddit = line.split(" ")[1].strip("/")
 
-                if response:
-                    self.responder.responded()
+        if not self.responder.ok_to_respond(room, user, subreddit):
+            return
 
-                    for post in islice(response['data']['children'], self.settings['reddit_links']):
-                        post_data = post['data']
-                        self.send_public(room, "/me {}: {}".format(post_data['title'], post_data['url']))
+        try:
+            response = http_request('https', 'www.reddit.com', '/r/' + subreddit + '/.json',
+                                    headers={"User-Agent": "Nicotine+"})
+
+        except Exception as error:
+            self.log("Could not connect to Reddit: %(error)s", {"error": error})
+            return
+
+        try:
+            import json
+            response = json.loads(response)
+
+            for post in islice(response['data']['children'], self.settings['reddit_links']):
+                post_data = post['data']
+                self.send_public(room, "/me {}: {}".format(post_data['title'], post_data['url']))
+
+        except Exception as error:
+            self.log("Failed to parse response from Reddit: %(error)s", {"error": error})
+            return
+
+        self.responder.responded()
