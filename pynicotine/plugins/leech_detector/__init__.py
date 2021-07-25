@@ -28,8 +28,8 @@ class Plugin(BasePlugin):
     __name__ = "Leech Detector"
     settings = {
         'message': 'Please consider sharing more files before downloading from me. Thanks :)',
-        'num_files': 0,
-        'num_folders': 0,
+        'num_files': 1,
+        'num_folders': 1,
         'open_private_chat': True
     }
     metasettings = {
@@ -38,11 +38,11 @@ class Plugin(BasePlugin):
                            + 'too many lines may get you tempbanned for spam!',
             'type': 'textview'},
         'num_files': {
-            'description': 'Maximum shared file count to trigger message',
-            'type': 'int'},
+            'description': 'Least required number of shared files',
+            'type': 'int', 'minimum': 1},
         'num_folders': {
-            'description': 'Maximum shared folder count to trigger message',
-            'type': 'int'},
+            'description': 'Least required number of shared folders',
+            'type': 'int', 'minimum': 1},
         'open_private_chat': {
             'description': 'Open private chat tabs when sending messages to leechers',
             'type': 'bool'},
@@ -50,6 +50,15 @@ class Plugin(BasePlugin):
 
     def init(self):
         self.probed = {}
+
+        min_num_files = self.metasettings['num_files']['minimum']
+        min_num_folders = self.metasettings['num_folders']['minimum']
+
+        if self.settings['num_files'] < min_num_files:
+            self.settings['num_files'] = min_num_files
+
+        if self.settings['num_folders'] < min_num_folders:
+            self.settings['num_folders'] = min_num_folders
 
     def upload_queued_notification(self, user, virtual_path, real_path):
 
@@ -74,7 +83,7 @@ class Plugin(BasePlugin):
 
         self.probed[user] = 'processed'
 
-        if stats['files'] > self.settings['num_files'] and stats['dirs'] > self.settings['num_folders']:
+        if stats['files'] >= self.settings['num_files'] and stats['dirs'] >= self.settings['num_folders']:
             self.log('User %s is okay, sharing %s files and %s folders', (user, stats['files'], stats['dirs']))
             return
 

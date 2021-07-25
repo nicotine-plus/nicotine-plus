@@ -2761,7 +2761,17 @@ class PluginsFrame(BuildFrame):
                 if data["type"] in ("integer", "int", "float"):
                     container = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = Gtk.SpinButton.new(Gtk.Adjustment.new(0, 0, 99999, 1, 10, 0), 1, 2)
+                    minimum = data.get("minimum") or 0
+                    maximum = data.get("maximum") or 99999
+                    stepsize = data.get("stepsize") or 1
+                    decimals = 2
+
+                    if data["type"] in ("integer", "int"):
+                        decimals = 0
+
+                    self.tw[name] = Gtk.SpinButton.new(
+                        Gtk.Adjustment.new(0, minimum, maximum, stepsize, 10, 0),
+                        1, decimals)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
 
                     container.add(self.tw[name])
