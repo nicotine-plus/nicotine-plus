@@ -129,21 +129,21 @@ class NowPlaying:
         import json
 
         try:
-            (user, apikey) = user.split(';')
+            user, apikey = user.split(';')
         except ValueError:
             log.add_important_error(_("lastfm: Please provide both your lastfm username and API key"))
             return None
 
         try:
             conn = http.client.HTTPSConnection("ws.audioscrobbler.com")
+            conn.request("GET", "/2.0/?method=user.getrecenttracks&user="
+                         + user + "&api_key=" + apikey + "&limit=1&format=json",
+                         headers={"User-Agent": "Nicotine+"})
+            resp = conn.getresponse()
         except Exception as error:
             log.add_important_error(_("lastfm: Could not connect to audioscrobbler: %(error)s"), {"error": error})
             return None
 
-        conn.request("GET", "/2.0/?method=user.getrecenttracks&user="
-                     + user + "&api_key=" + apikey + "&limit=1&format=json",
-                     headers={"User-Agent": "Nicotine+"})
-        resp = conn.getresponse()
         data = resp.read().decode("utf-8")
         conn.close()
 
