@@ -199,8 +199,9 @@ class Search:
 
         if room is not None:
             self.queue.append(slskmessages.RoomSearch(room, search_id, text))
-        else:
-            for joined_room in self.core.chatrooms.joinedrooms:
+
+        elif self.core.chatrooms.ui_callback is not None:
+            for joined_room in self.core.chatrooms.ui_callback.joinedrooms:
                 self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
 
     def do_buddies_search(self, search_id, text):

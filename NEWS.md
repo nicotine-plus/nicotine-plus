@@ -14,6 +14,7 @@ Changes
 Corrections
 
  * IMPORTANT: Fixed an issue where recently queued files were uploaded before older files (LIFO queue behavior)
+ * Fixed a crash when attempting to search files in joined rooms
  * Queue positions are now properly updated for queued uploads
  * Certain special characters needed to receive proper search results are no longer removed from search terms
  * Fixed an issue where decimals were truncated before being saved (e.g. in the 'Anti SHOUT' plugin)
