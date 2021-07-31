@@ -597,6 +597,16 @@ def unalias(rest):
     return _("No such alias (%(alias)s)\n") % {'alias': rest}
 
 
+def alias_replace(text):
+
+    cmd = text[1:]
+
+    if cmd in config.sections["server"]["command_aliases"]:
+        return config.sections["server"]["command_aliases"][cmd]
+
+    return text
+
+
 def is_alias(cmd):
 
     if not cmd:
