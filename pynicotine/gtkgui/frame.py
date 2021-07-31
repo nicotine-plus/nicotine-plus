@@ -2449,7 +2449,7 @@ class NicotineFrame:
             self.connect_action.set_enabled(False)
             self.on_fast_configure()
 
-        else:
+        elif not self.np.active_server_conn:
             self.connect_action.set_enabled(True)
 
         if msg == "ok" and not config.sections["ui"]["trayicon"]:
