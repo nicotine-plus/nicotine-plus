@@ -1375,23 +1375,20 @@ class Transfers:
 
             break
 
-    def conn_close(self, conn, user, error):
+    def conn_close(self, conn):
         """ The remote user has closed the connection either because
         he logged off, or because there's a network problem. """
 
         for i in self.downloads:
             if i.conn == conn:
                 self._conn_close(i, "download")
+                return
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in self.uploads.copy():
-            if not isinstance(error, ConnectionRefusedError) and i.conn != conn:
-                continue
-
-            if i.user != user:
-                continue
-
-            self._conn_close(i, "upload")
+            if i.conn == conn:
+                self._conn_close(i, "upload")
+                return
 
     def _conn_close(self, i, transfer_type):
 

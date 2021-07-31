@@ -961,7 +961,8 @@ Error: %(error)s""", {
                     if i in self.out_indirect_conn_request_times:
                         del self.out_indirect_conn_request_times[i]
 
-                    self.transfers.conn_close(conn, i.username, error)
+                    if i.init.conn_type == 'F':
+                        self.transfers.conn_close(conn)
 
                     if i.conn == self.parent_conn:
                         self.send_have_no_parent()
