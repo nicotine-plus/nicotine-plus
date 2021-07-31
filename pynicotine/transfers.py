@@ -493,7 +493,7 @@ class Transfers:
         upload_statuses = ("Getting status", "Establishing connection", "Disallowed extension",
                            "User logged off", "Cannot connect", "Cancelled")
 
-        for i in self.downloads.copy():
+        for i in reversed(self.downloads.copy()):
             if msg.user == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
                 if msg.status <= 0:
                     i.status = "User logged off"
@@ -506,7 +506,7 @@ class Transfers:
                     self.get_file(i.user, i.filename, i.path, i)
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
-        for i in self.uploads.copy():
+        for i in reversed(self.uploads.copy()):
             if msg.user == i.user and i.status in upload_statuses:
                 if msg.status <= 0:
                     i.status = "User logged off"
@@ -667,7 +667,7 @@ class Transfers:
                 newupload = Transfer(
                     user=user, filename=msg.file,
                     path=os.path.dirname(real_path), status="Queued",
-                    timequeued=time.time(), size=self.get_file_size(real_path), place=len(self.uploads)
+                    timequeued=time.time(), size=self.get_file_size(real_path)
                 )
                 self._append_upload(user, msg.file, newupload)
 
@@ -848,8 +848,7 @@ class Transfers:
             newupload = Transfer(
                 user=user, filename=msg.file,
                 path=os.path.dirname(real_path), status="Queued",
-                timequeued=time.time(), size=self.get_file_size(real_path),
-                place=len(self.uploads)
+                timequeued=time.time(), size=self.get_file_size(real_path)
             )
             self._append_upload(user, msg.file, newupload)
 
@@ -865,7 +864,7 @@ class Transfers:
         transferobj = Transfer(
             user=user, filename=msg.file,
             path=os.path.dirname(real_path), status="Getting status",
-            req=msg.req, size=size, place=len(self.uploads)
+            req=msg.req, size=size
         )
 
         self.transfer_request_times[transferobj] = time.time()
@@ -1441,6 +1440,7 @@ class Transfers:
         user = msg.conn.init.target_user
         privileged_user = self.is_privileged(user)
         place = 0
+        transfer = None
 
         if self.config.sections["transfers"]["fifoqueue"]:
             for i in reversed(self.uploads):
@@ -1453,6 +1453,7 @@ class Transfers:
 
                 # Stop counting on the matching file
                 if i.user == user and i.filename == msg.file:
+                    transfer = i
                     break
 
         else:
@@ -1477,6 +1478,7 @@ class Transfers:
                     # Stop counting on the matching file
                     if i.filename == msg.file:
                         should_count = False
+                        transfer = i
 
                     continue
 
@@ -1495,6 +1497,15 @@ class Transfers:
 
         if place > 0:
             self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
+
+        if transfer is None:
+            return
+
+        # Update queue position in our list of uploads
+        transfer.place = place
+
+        if self.uploadsview:
+            self.uploadsview.update(transfer)
 
     def place_in_queue(self, msg):
         """ The server tells us our place in queue for a particular transfer."""
@@ -2034,7 +2045,7 @@ class Transfers:
         statuslist_limited = ("Too many files", "Too many megabytes")
         reset_count = False
 
-        for transfer in self.downloads:
+        for transfer in reversed(self.downloads):
             status = transfer.status
 
             if (self.download_queue_timer_count >= 4
@@ -2081,7 +2092,7 @@ class Transfers:
         queued_users = {}
 
         # Check users
-        for i in self.uploads:
+        for i in reversed(self.uploads):
             # some file is being transferred
             if i.req is not None or i.conn is not None or i.status == "Getting status":
                 if i.user not in uploading_users:
@@ -2091,7 +2102,7 @@ class Transfers:
                 queued_users[i.user] = self.is_privileged(i.user)
 
         # Check queued uploads
-        for i in self.uploads:
+        for i in reversed(self.uploads):
             if i.status == "Queued" and i.user not in uploading_users:
                 if queued_users[i.user]:  # check if user is privileged
                     list_privileged.append(i)
