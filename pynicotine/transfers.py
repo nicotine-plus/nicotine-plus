@@ -1154,6 +1154,7 @@ class Transfers:
                 self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
                 i.status = "Transferring"
                 i.file = file_handle
+                i.place = 0
 
                 if self.is_privileged(i.user):
                     i.modifier = _("privileged")
@@ -2253,7 +2254,7 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.req = None
         transfer.speed = None
-        transfer.place = None
+        transfer.place = 0
         transfer.timeleft = ""
 
         if transfer.conn is not None:
