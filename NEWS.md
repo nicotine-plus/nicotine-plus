@@ -21,6 +21,7 @@ Corrections
 
 Issues closed on GitHub
 
+ * non US locale float type variables in plugins cannot be filled ([#1462](https://github.com/nicotine-plus/nicotine-plus/issues/1462))
  * Files uploaded in a random order ([#1463](https://github.com/nicotine-plus/nicotine-plus/issues/1463))
 
 Version 3.1.0 (July 23, 2021)

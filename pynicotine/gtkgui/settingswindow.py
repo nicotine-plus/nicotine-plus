@@ -3240,7 +3240,10 @@ class Settings:
     def get_widget_data(self, widget):
 
         if isinstance(widget, Gtk.SpinButton):
-            return widget.get_value()
+            if widget.get_digits() > 0:
+                return widget.get_value()
+
+            return widget.get_value_as_int()
 
         elif isinstance(widget, Gtk.Entry):
             return widget.get_text()
