@@ -3240,7 +3240,7 @@ class Settings:
     def get_widget_data(self, widget):
 
         if isinstance(widget, Gtk.SpinButton):
-            return int(widget.get_value())
+            return widget.get_value()
 
         elif isinstance(widget, Gtk.Entry):
             return widget.get_text()
@@ -3310,7 +3310,12 @@ class Settings:
     def set_widget(self, widget, value):
 
         if isinstance(widget, Gtk.SpinButton):
-            widget.set_value(int(value))
+            try:
+                widget.set_value(value)
+
+            except TypeError:
+                # Not a numerical value
+                pass
 
         elif isinstance(widget, Gtk.Entry):
             if isinstance(value, (str, int)):
