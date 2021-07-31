@@ -3,6 +3,25 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.1.1 (unreleased)
+-----------------------------
+
+Changes
+
+ * Downloads denied with 'Too many files' or 'Too many megabytes' are now re-queued every 12 minutes
+ * Leech detector plugin opens private chat user tabs by default when sending complaints
+
+Corrections
+
+ * IMPORTANT: Fixed an issue where recently queued files were uploaded before older files (LIFO queue behavior)
+ * Queue positions are now properly updated for queued uploads
+ * Certain special characters needed to receive proper search results are no longer removed from search terms
+ * Fixed an issue where decimals were truncated before being saved (e.g. in the 'Anti SHOUT' plugin)
+
+Issues closed on GitHub
+
+ * Files uploaded in a random order ([#1463](https://github.com/nicotine-plus/nicotine-plus/issues/1463))
+
 Version 3.1.0 (July 23, 2021)
 -----------------------------
 
