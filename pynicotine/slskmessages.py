@@ -2277,7 +2277,7 @@ class FileSearchResult(PeerMessage):
     __slots__ = ("conn", "user", "geoip", "token", "list", "privatelist", "fileindex", "freeulslots",
                  "ulspeed", "inqueue", "fifoqueue", "numresults", "pos")
 
-    def __init__(self, conn, user=None, token=None, shares=None, fileindex=None, freeulslots=None,
+    def __init__(self, conn=None, user=None, token=None, shares=None, fileindex=None, freeulslots=None,
                  ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
         self.conn = conn
         self.user = user
@@ -2339,6 +2339,35 @@ class FileSearchResult(PeerMessage):
         if message[pos:] and config.sections["ui"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
+    def pack_file_info(self, fileinfo):
+        msg = bytearray()
+        msg.extend(bytes([1]))
+        msg.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
+        msg.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
+
+        if fileinfo[2] is None or fileinfo[3] is None:
+            # No metadata
+            msg.extend(self.pack_object(''))
+            msg.extend(self.pack_object(0))
+        else:
+            # FileExtension, NumAttributes
+            msg.extend(self.pack_object("mp3"))
+            msg.extend(self.pack_object(3))
+
+            # Length
+            msg.extend(self.pack_object(0))
+            msg.extend(self.pack_object(fileinfo[2][0] or 0))
+
+            # Duration
+            msg.extend(self.pack_object(1))
+            msg.extend(self.pack_object(fileinfo[3] or 0))
+
+            # VBR
+            msg.extend(self.pack_object(2))
+            msg.extend(self.pack_object(fileinfo[2][1] or 0))
+
+        return msg
+
     def make_network_message(self):
         msg_list = bytearray()
         final_num_results = 0
@@ -2355,42 +2384,7 @@ class FileSearchResult(PeerMessage):
                 )
                 break
 
-            msg_list.extend(bytes([1]))
-            msg_list.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
-            msg_list.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
-
-            if fileinfo[2] is None:
-                # No metadata
-                msg_list.extend(self.pack_object(''))
-                msg_list.extend(self.pack_object(0))
-            else:
-                # FileExtension, NumAttributes,
-                msg_list.extend(self.pack_object("mp3"))
-                msg_list.extend(self.pack_object(3))
-
-                msg_list.extend(self.pack_object(0))
-                try:
-                    msg_list.extend(self.pack_object(fileinfo[2][0]))
-
-                except Exception:
-                    # Invalid bitrate
-                    msg_list.extend(self.pack_object(0))
-
-                msg_list.extend(self.pack_object(1))
-                try:
-                    msg_list.extend(self.pack_object(fileinfo[3]))
-
-                except Exception:
-                    # Invalid duration
-                    msg_list.extend(self.pack_object(0))
-
-                msg_list.extend(self.pack_object(2))
-                try:
-                    msg_list.extend(self.pack_object(fileinfo[2][1]))
-
-                except Exception:
-                    # Invalid VBR value
-                    msg_list.extend(self.pack_object(0))
+            msg_list.extend(self.pack_file_info(fileinfo))
 
         msg = bytearray()
         msg.extend(self.pack_object(self.user))

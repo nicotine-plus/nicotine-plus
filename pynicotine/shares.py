@@ -402,46 +402,12 @@ class Scanner:
     def get_dir_stream(folder):
         """ Pack all files and metadata in directory """
 
-        message = slskmessages.SlskMessage()
+        message = slskmessages.FileSearchResult()
         stream = bytearray()
         stream.extend(message.pack_object(len(folder)))
 
         for fileinfo in folder:
-            stream.extend(bytes([1]))
-            stream.extend(message.pack_object(fileinfo[0]))
-            stream.extend(message.pack_object(fileinfo[1], unsignedlonglong=True))
-
-            if fileinfo[2] is not None and fileinfo[3] is not None:
-                stream.extend(message.pack_object('mp3'))
-                stream.extend(message.pack_object(3))
-
-                stream.extend(message.pack_object(0))
-                try:
-                    stream.extend(message.pack_object(fileinfo[2][0]))
-
-                except Exception:
-                    # Invalid bitrate
-                    stream.extend(message.pack_object(0))
-
-                stream.extend(message.pack_object(1))
-                try:
-                    stream.extend(message.pack_object(fileinfo[3]))
-
-                except Exception:
-                    # Invalid length
-                    stream.extend(message.pack_object(0))
-
-                stream.extend(message.pack_object(2))
-                try:
-                    stream.extend(message.pack_object(fileinfo[2][1]))
-
-                except Exception:
-                    # Invalid VBR value
-                    stream.extend(message.pack_object(0))
-
-            else:
-                stream.extend(message.pack_object(''))
-                stream.extend(message.pack_object(0))
+            stream.extend(message.pack_file_info(fileinfo))
 
         return stream
 
