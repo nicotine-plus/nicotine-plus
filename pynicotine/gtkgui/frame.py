@@ -95,7 +95,7 @@ class NicotineFrame:
         self.np = network_processor
         self.gui_dir = os.path.dirname(os.path.realpath(__file__))
         self.ci_mode = ci_mode
-        self.current_page_id = "Default"
+        self.current_page_id = ""
         self.current_tab_label = None
         self.checking_update = False
         self.autoaway = False
@@ -1448,10 +1448,7 @@ class NicotineFrame:
         else:
             self.HeaderMenu.set_image(self.HeaderMenuIcon)
 
-            if page_id == "Default":
-                header_bar.set_has_subtitle(False)
-
-            header_bar.set_title(GLib.get_application_name())
+            header_bar.set_has_subtitle(False)
             header_bar.set_show_close_button(True)
 
         header_bar.remove(end_widget)
@@ -1469,7 +1466,7 @@ class NicotineFrame:
         # Don't override builtin accelerator for menu bar
         self.application.set_accels_for_action("app.menu", [])
 
-        if page_id == "Default":
+        if not hasattr(self, page_id + "Toolbar"):
             # No toolbar needed for this page
             return
 
@@ -1517,7 +1514,7 @@ class NicotineFrame:
         """ Move the GtkBox toolbar widgets back to the headerbar, and hide
         the toolbar """
 
-        if self.current_page_id == "Default":
+        if not hasattr(self, self.current_page_id + "Toolbar"):
             # No toolbar on this page
             return
 
@@ -1580,7 +1577,7 @@ class NicotineFrame:
             self.UserInfoTabLabel: (_("User Info"), "avatar-default-symbolic"),
             self.PrivateChatTabLabel: (_("Private Chat"), "mail-send-symbolic"),
             self.UserListTabLabel: (_("Buddy List"), "contact-new-symbolic"),
-            self.ChatTabLabel: (_("Chat Rooms"), "user-available-symbolic"),
+            self.ChatroomsTabLabel: (_("Chat Rooms"), "user-available-symbolic"),
             self.InterestsTabLabel: (_("Interests"), "emblem-default-symbolic")
         }
 
@@ -1660,7 +1657,7 @@ class NicotineFrame:
             tab_label.set_hilite_image(None)
             tab_label.set_text_color(0)
 
-        if tab_label == self.ChatTabLabel:
+        if tab_label == self.ChatroomsTabLabel:
             self.set_active_header_bar("Chatrooms")
 
             curr_page_num = self.chatrooms.get_current_page()
@@ -1695,8 +1692,8 @@ class NicotineFrame:
         elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
 
-        else:
-            self.set_active_header_bar("Default")
+        elif tab_label == self.InterestsTabLabel:
+            self.set_active_header_bar("Interests")
 
     def on_page_removed(self, main_notebook, child, page_num):
 

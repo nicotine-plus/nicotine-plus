@@ -776,7 +776,7 @@ class ChatRoom:
         if tag == self.tag_hilite:
 
             # Hilight top-level tab label
-            self.frame.request_tab_icon(self.frame.ChatTabLabel, status=1)
+            self.frame.request_tab_icon(self.frame.ChatroomsTabLabel, status=1)
 
             # Hilight sub-level tab label
             self.chatrooms.request_hilite(self.Main)
@@ -790,7 +790,7 @@ class ChatRoom:
 
         else:
             # Hilight top-level tab label
-            self.frame.request_tab_icon(self.frame.ChatTabLabel, status=0)
+            self.frame.request_tab_icon(self.frame.ChatroomsTabLabel, status=0)
 
             # Hilight sub-level tab label
             self.chatrooms.request_changed(self.Main)

@@ -9,30 +9,6 @@
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
   </object>
-  <object class="GtkHeaderBar" id="HeaderDefault">
-    <property name="visible">1</property>
-    <property name="height-request">42</property>
-    <child>
-      <object class="GtkBox" id="DefaultEnd">
-        <property name="visible">1</property>
-        <property name="spacing">6</property>
-        <property name="valign">center</property>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Preferences</property>
-            <property name="action-name">app.settings</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
   <object class="GtkHeaderBar" id="HeaderSearch">
     <property name="visible">1</property>
     <property name="height-request">42</property>
@@ -798,6 +774,25 @@
       </object>
     </child>
   </object>
+  <object class="GtkHeaderBar" id="HeaderInterests">
+    <property name="visible">1</property>
+    <property name="height-request">42</property>
+    <child type="title">
+      <object class="GtkLabel" id="InterestsTitle">
+        <property name="visible">1</property>
+        <property name="label" translatable="yes">Interests</property>
+        <style>
+          <class name="title"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="InterestsEnd">
+        <property name="visible">1</property>
+        <property name="valign">center</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkApplicationWindow" id="MainWindow">
     <signal name="notify::is-active" handler="on_window_active_changed" swapped="no"/>
     <signal name="notify::visible" handler="on_window_visible_changed" swapped="no"/>
@@ -1147,7 +1142,7 @@
                       </object>
                     </child>
                     <child type="tab">
-                      <object class="GtkBox" id="ChatTabLabel">
+                      <object class="GtkBox" id="ChatroomsTabLabel">
                         <property name="visible">1</property>
                       </object>
                     </child>
