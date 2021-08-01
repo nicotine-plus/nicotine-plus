@@ -247,7 +247,7 @@ class ChatEntry:
         cmd = cmd_split[0]
 
         if cmd + " " not in self.command_list:
-            log.add(_("Command %s is not recognized"), text)
+            log.add(_("Command %s is not recognized"), cmd)
             return
 
         # Clear chat entry
