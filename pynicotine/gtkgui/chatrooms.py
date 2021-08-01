@@ -996,8 +996,12 @@ class ChatRoom:
             # Country didn't change, no need to update
             return
 
-        self.usersmodel.set_value(self.users[user], 1,
-                                  GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
+        flag_image = self.frame.get_flag_image(country)
+
+        if not flag_image:
+            return
+
+        self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, flag_image))
         self.usersmodel.set_value(self.users[user], 8, country)
 
     def update_visuals(self):

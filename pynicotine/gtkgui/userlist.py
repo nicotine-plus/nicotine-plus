@@ -417,7 +417,12 @@ class UserList:
         if iterator is None:
             return
 
-        self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)))
+        flag_image = self.frame.get_flag_image(country)
+
+        if not flag_image:
+            return
+
+        self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, flag_image))
         self.usersmodel.set_value(iterator, 14, "flag_" + country)
 
     def add_user(self, user):
