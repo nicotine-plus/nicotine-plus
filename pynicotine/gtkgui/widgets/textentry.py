@@ -318,8 +318,8 @@ class ChatEntry:
 
             if len(args_split) == 2:
                 self.frame.SearchMethod.set_active(3)
-                self.frame.SearchEntry.set_text(s[1])
-                self.frame.UserSearchEntry.set_text(s[0])
+                self.frame.SearchEntry.set_text(args_split[1])
+                self.frame.UserSearchEntry.set_text(args_split[0])
                 self.frame.on_search(self.frame.SearchEntry)
                 self.frame.change_main_page("search")
 
