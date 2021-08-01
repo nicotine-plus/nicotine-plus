@@ -246,7 +246,7 @@ class ChatEntry:
         cmd_split = text.split(maxsplit=1)
         cmd = cmd_split[0]
 
-        if is_single_slash_cmd and cmd + " " not in self.command_list:
+        if cmd + " " not in self.command_list:
             log.add(_("Command %s is not recognized"), text)
             return
 
