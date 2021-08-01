@@ -294,15 +294,17 @@ class ChatEntry:
 
         elif cmd in ("/m", "/msg"):
             if args:
-                s = args.split(" ", 1)
-                user = s[0]
-                if len(s) == 2:
-                    msg = s[1]
-                else:
-                    msg = None
-                self.frame.np.privatechats.show_user(args)
-                self.frame.np.privatechats.send_message(user, msg)
-                self.frame.change_main_page("private")
+                args_split = args.split(" ", maxsplit=1)
+                user = args_split[0]
+                msg = None
+
+                if len(args_split) == 2:
+                    msg = args_split[1]
+
+                if msg:
+                    self.frame.np.privatechats.show_user(user)
+                    self.frame.np.privatechats.send_message(user, msg)
+                    self.frame.change_main_page("private")
 
         elif cmd in ("/s", "/search"):
             if args:
@@ -312,8 +314,9 @@ class ChatEntry:
                 self.frame.change_main_page("search")
 
         elif cmd in ("/us", "/usearch"):
-            s = args.split(" ", 1)
-            if len(s) == 2:
+            args_split = args.split(" ", maxsplit=1)
+
+            if len(args_split) == 2:
                 self.frame.SearchMethod.set_active(3)
                 self.frame.SearchEntry.set_text(s[1])
                 self.frame.UserSearchEntry.set_text(s[0])

@@ -18,6 +18,7 @@ Corrections
  * Queue positions are now properly updated for queued uploads
  * Certain special characters needed to receive proper search results are no longer removed from search terms
  * Fixed an issue where decimals were truncated before being saved (e.g. in the 'Anti SHOUT' plugin)
+ * Fixed an issue where an incorrect user tab was opened when issuing the /msg command
 
 Issues closed on GitHub
 
