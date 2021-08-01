@@ -639,6 +639,7 @@ def get_alias(command):
     try:
         command = command[1:].split(" ")
         alias = config.sections["server"]["command_aliases"][command[0]]
+        param_string_found = False
         ret = ""
         i = 0
 
@@ -680,12 +681,13 @@ def get_alias(command):
                     value = default
 
                 ret = ret + value
+                param_string_found = True
 
             else:
                 ret = ret + alias[i]
                 i = i + 1
 
-                if i == len(alias) and alias.startswith("/"):
+                if not param_string_found and i == len(alias) and alias.startswith("/"):
                     # Reached the end of alias contents, append potential arguments passed to the command
                     args = " ".join(command[1:])
 
