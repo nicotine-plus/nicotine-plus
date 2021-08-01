@@ -29,7 +29,6 @@ import sys
 import threading
 import time
 
-from itertools import islice
 from random import uniform
 
 from pynicotine.logfacility import log
@@ -233,7 +232,7 @@ class Connection:
 class PeerConnection(Connection):
 
     __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw",
-                 "lastcallback", "starttime", "sentbytes2", "readbytes2")
+                 "lastcallback")
 
     def __init__(self, conn=None, addr=None, init=None):
         Connection.__init__(self, conn, addr)
@@ -246,11 +245,6 @@ class PeerConnection(Connection):
         self.piercefw = None
         self.lastactive = time.time()
         self.lastcallback = time.time()
-
-        # Used for transfer bandwidth management
-        self.starttime = time.time()
-        self.sentbytes2 = 0
-        self.readbytes2 = 0
 
 
 class PeerConnectionInProgress:
@@ -463,7 +457,7 @@ class SlskProtoThread(threading.Thread):
         self._conns = {}
         self._connsinprogress = {}
         self._uploadlimit = (self._calc_upload_limit_none, 0)
-        self._downloadlimit = (self._calc_download_limit_by_total, 0)
+        self._downloadlimit = (self._calc_download_limit, 0)
         self._ulimits = {}
         self._dlimits = {}
         self.total_uploads = 0
@@ -566,63 +560,38 @@ class SlskProtoThread(threading.Thread):
     def _is_download(conn):
         return conn.__class__ is PeerConnection and conn.filedown is not None
 
-    @staticmethod
-    def _calc_transfer_speed(connection, totalbytes):
+    def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
-        curtime = time.time()
-        elapsed = curtime - connection.starttime
+        limit = self._uploadlimit[1] * 1024.0
+        self.total_uploads = sum(1 for connection in self._conns.values() if self._is_upload(connection))
 
-        if elapsed == 0:
-            return totalbytes
+        if limit_disabled:
+            return 0
 
-        return totalbytes / elapsed
+        if not limit_per_transfer and self.total_uploads > 1:
+            limit = limit / self.total_uploads
+
+        return int(max(1024, limit))  # 1 KB/s is the minimum upload speed per transfer
 
     def _calc_upload_limit_by_transfer(self):
-        self.total_uploads = sum(1 for j in self._conns.values() if self._is_upload(j))
-
-        return int(self._uploadlimit[1] * 1024.0)
-
-    def _calc_upload_limit_by_total(self):
-
-        max_limit = self._uploadlimit[1] * 1024.0
-        bandwidth = 0.0
-        self.total_uploads = 1
-
-        """ Skip first upload
-        If we have 2 or more uploads, we start reducing their individual speeds to
-        stay below the total limit """
-
-        uploads = islice((j for j in self._conns.values() if self._is_upload(j)), 1, None)
-        for j in uploads:
-            bandwidth += self._calc_transfer_speed(j, j.sentbytes2)
-            self.total_uploads += 1
-
-        return int(max(1024, max_limit - bandwidth))  # 1 KB/s is the minimum upload speed per transfer
+        return self._calc_upload_limit(limit_per_transfer=True)
 
     def _calc_upload_limit_none(self):
-        self.total_uploads = sum(1 for j in self._conns.values() if self._is_upload(j))
-        return 0
+        return self._calc_upload_limit(limit_disabled=True)
 
-    def _calc_download_limit_by_total(self):
+    def _calc_download_limit(self):
 
-        max_limit = self._downloadlimit[1] * 1024.0
-        bandwidth = 0.0
-        self.total_downloads = 1
+        limit = self._downloadlimit[1] * 1024.0
+        self.total_downloads = sum(1 for connection in self._conns.values() if self._is_download(connection))
 
-        """ Skip first download
-        If we have 2 or more downloads, we start reducing their individual speeds to
-        stay below the total limit """
-
-        downloads = islice((j for j in self._conns.values() if self._is_download(j)), 1, None)
-        for j in downloads:
-            bandwidth += self._calc_transfer_speed(j, j.readbytes2)
-            self.total_downloads += 1
-
-        if max_limit == 0:
+        if limit == 0:
             # Download limit disabled
-            return max_limit
+            return limit
 
-        return int(max(1024, max_limit - bandwidth))  # 1 KB/s is the minimum download speed per transfer
+        if self.total_downloads > 1:
+            limit = limit / self.total_downloads
+
+        return int(max(1024, limit))  # 1 KB/s is the minimum download speed per transfer
 
     def _calc_loops_per_second(self):
         """ Calculate number of loops per second. This value is used to split the
@@ -645,24 +614,6 @@ class SlskProtoThread(threading.Thread):
 
         if limit > 0:
             limits[connection] = limit
-
-    def _reset_upload_counters(self):
-
-        curtime = time.time()
-
-        for connection in self._conns.values():
-            if self._is_upload(connection):
-                connection.starttime = curtime
-                connection.sentbytes2 = 0
-
-    def _reset_download_counters(self):
-
-        curtime = time.time()
-
-        for connection in self._conns.values():
-            if self._is_download(connection):
-                connection.starttime = curtime
-                connection.readbytes2 = 0
 
     """ Connections """
 
@@ -1284,27 +1235,23 @@ class SlskProtoThread(threading.Thread):
 
             elif msg_class is DownloadFile and msg_obj.conn in self._conns:
                 self._conns[msg_obj.conn].filedown = msg_obj
-                self._reset_download_counters()
 
             elif msg_class is UploadFile and msg_obj.conn in self._conns:
                 self._conns[msg_obj.conn].fileupl = msg_obj
-                self._reset_upload_counters()
 
             elif msg_class is SetDownloadLimit:
-                self._reset_download_counters()
-                self._downloadlimit = (self._calc_download_limit_by_total, msg_obj.limit)
+                self._downloadlimit = (self._calc_download_limit, msg_obj.limit)
 
             elif msg_class is SetUploadLimit:
                 if msg_obj.uselimit:
                     if msg_obj.limitby:
-                        callback = self._calc_upload_limit_by_total
+                        callback = self._calc_upload_limit
                     else:
                         callback = self._calc_upload_limit_by_transfer
 
                 else:
                     callback = self._calc_upload_limit_none
 
-                self._reset_upload_counters()
                 self._uploadlimit = (callback, msg_obj.limit)
 
     def read_data(self, conn_obj):
@@ -1329,7 +1276,6 @@ class SlskProtoThread(threading.Thread):
         else:
             # Speed Limited Download data (transfers)
             conn_obj.lastreadlength = limit
-            conn_obj.readbytes2 += len(data)
 
         if not data:
             return False
@@ -1365,7 +1311,6 @@ class SlskProtoThread(threading.Thread):
 
         if conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
-            conn_obj.sentbytes2 += bytes_send
 
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
