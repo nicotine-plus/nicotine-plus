@@ -28,7 +28,7 @@ from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
-from pynicotine.utils import expand_alias
+from pynicotine.utils import get_alias
 from pynicotine.utils import is_alias
 from pynicotine.utils import unalias
 
@@ -220,7 +220,7 @@ class ChatEntry:
             return
 
         if is_alias(text):
-            alias_text = expand_alias(text)
+            alias_text = get_alias(text)
 
             if not alias_text:
                 log.add(_('Alias "%s" returned nothing'), text)
@@ -228,21 +228,23 @@ class ChatEntry:
 
             text = alias_text
 
-        split = text.split(" ", 1)
-        cmd = split[0]
-        is_double_slash_cmd = cmd.startswith("//")
-        is_single_slash_cmd = (cmd.startswith("/") and not is_double_slash_cmd)
+        is_double_slash_cmd = text.startswith("//")
+        is_single_slash_cmd = (text.startswith("/") and not is_double_slash_cmd)
 
-        # Remove empty items created by split, if command ended with a space, e.g. '/ctcpversion '
-        if len([i for i in split if i]) == 2:
-            arg_self = args = split[1]
-        else:
-            if not self.is_chatroom:
-                arg_self = self.entity
-            else:
-                arg_self = ""
+        if not is_single_slash_cmd or text.startswith("/me"):
+            # Regular chat message (/me is sent as plain text)
 
-            args = ""
+            self.entry.set_text("")
+
+            if is_double_slash_cmd:
+                # Remove first slash and send the rest of the command as plain text
+                text = text[1:]
+
+            self.send_message(self.entity, text)
+            return
+
+        cmd_split = text.split(maxsplit=1)
+        cmd = cmd_split[0]
 
         if is_single_slash_cmd and cmd + " " not in self.command_list:
             log.add(_("Command %s is not recognized"), text)
@@ -251,15 +253,11 @@ class ChatEntry:
         # Clear chat entry
         self.entry.set_text("")
 
-        if not is_single_slash_cmd or cmd == "/me":
-            # Regular chat message (/me is sent as plain text)
-
-            if is_double_slash_cmd:
-                # Remove first slash and send the rest of the command as plain text
-                text = text[1:]
-
-            self.send_message(self.entity, text)
-            return
+        if len(cmd_split) == 2:
+            args = arg_self = cmd_split[1]
+        else:
+            args = ""
+            arg_self = "" if self.is_chatroom else self.entity
 
         if cmd in ("/alias", "/al"):
             parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats

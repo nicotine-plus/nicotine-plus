@@ -597,67 +597,70 @@ def unalias(rest):
     return _("No such alias (%(alias)s)\n") % {'alias': rest}
 
 
-def is_alias(cmd):
+def is_alias(command):
 
-    if not cmd:
+    if not command.startswith("/"):
         return False
 
-    if cmd[0] != "/":
-        return False
+    base_command = command[1:].split(" ")[0]
 
-    cmd = cmd[1:].split(" ")
-
-    if cmd[0] in config.sections["server"]["command_aliases"]:
+    if base_command in config.sections["server"]["command_aliases"]:
         return True
 
     return False
 
 
-def expand_alias(cmd):
-    output = _expand_alias(config.sections["server"]["command_aliases"], cmd)
-    return output
-
-
-def _expand_alias(aliases, cmd):
+def get_alias(command):
 
     def getpart(line):
+
         if line[0] != "(":
             return ""
+
         i = 1
         ret = ""
         level = 0
+
         while i < len(line):
             if line[i] == "(":
                 level = level + 1
+
             if line[i] == ")":
                 if level == 0:
                     return ret
+
                 level = level - 1
+
             ret = ret + line[i]
             i = i + 1
+
         return ""
 
-    if not is_alias(cmd):
-        return None
     try:
-        cmd = cmd[1:].split(" ")
-        alias = aliases[cmd[0]]
+        command = command[1:].split(" ")
+        alias = config.sections["server"]["command_aliases"][command[0]]
         ret = ""
         i = 0
+
         while i < len(alias):
             if alias[i:i + 2] == "$(":
                 arg = getpart(alias[i + 1:])
+
                 if not arg:
                     ret = ret + "$"
                     i = i + 1
                     continue
+
                 i = i + len(arg) + 3
                 args = arg.split("=", 1)
+
                 if len(args) > 1:
                     default = args[1]
                 else:
                     default = ""
+
                 args = args[0].split(":")
+
                 if len(args) == 1:
                     first = last = int(args[0])
                 else:
@@ -665,18 +668,32 @@ def _expand_alias(aliases, cmd):
                         first = int(args[0])
                     else:
                         first = 1
+
                     if args[1]:
                         last = int(args[1])
                     else:
-                        last = len(cmd)
-                value = " ".join(cmd[first:last + 1])
+                        last = len(command)
+
+                value = " ".join(command[first:last + 1])
+
                 if not value:
                     value = default
+
                 ret = ret + value
+
             else:
                 ret = ret + alias[i]
                 i = i + 1
+
+                if i == len(alias) and alias.startswith("/"):
+                    # Reached the end of alias contents, append potential arguments passed to the command
+                    args = " ".join(command[1:])
+
+                    if args:
+                        ret = ret + " " + args
+
         return ret
+
     except Exception as error:
         log.add("%s", error)
 
