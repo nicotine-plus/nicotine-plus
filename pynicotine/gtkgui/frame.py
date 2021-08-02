@@ -166,6 +166,7 @@ class NicotineFrame:
         """ Window Properties """
 
         self.application.add_window(self.MainWindow)
+        self.MainWindow.set_title(GLib.get_application_name())
 
         # Set up event controllers
         self.key_controller = connect_key_press_event(self.MainWindow, self.on_key_press_event)
@@ -1447,6 +1448,9 @@ class NicotineFrame:
 
         else:
             self.HeaderMenu.set_image(self.HeaderMenuIcon)
+
+            # Avoid "Untitled window" in certain desktop environments
+            header_bar.set_title(self.MainWindow.get_title())
 
             header_bar.set_has_subtitle(False)
             header_bar.set_show_close_button(True)
