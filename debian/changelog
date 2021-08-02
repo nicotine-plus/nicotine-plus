@@ -1,8 +1,8 @@
-nicotine (3.1.1-dev1) hirsute; urgency=medium
+nicotine (3.1.1-1) hirsute; urgency=medium
 
-  * Development version.
+  * Latest upstream.
 
- -- Mat <mail@mathias.is>  Sat, 24 Jul 2021 06:31:43 +0300
+ -- Mat <mail@mathias.is>  Mon, 02 Aug 2021 06:55:39 +0300
 
 nicotine (3.1.0-1) hirsute; urgency=medium
 
