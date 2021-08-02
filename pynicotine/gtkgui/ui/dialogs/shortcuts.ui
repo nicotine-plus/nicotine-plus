@@ -3,6 +3,7 @@
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkShortcutsWindow" id="KeyboardShortcutsDialog">
     <property name="modal">1</property>
+    <property name="title" translatable="yes">Keyboard Shortcuts</property>
     <child>
       <object class="GtkShortcutsSection">
         <property name="visible">1</property>
