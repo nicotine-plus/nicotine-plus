@@ -331,10 +331,12 @@ class TrayIcon:
 
         if use_trayicon or config.sections["ui"]["trayicon"]:
             self.show()
-            self.set_image(self.tray_status["status"])
+
+            # Gtk.StatusIcon.is_embedded() may not be true yet (observed in LXDE), force an icon update
+            self.set_image(self.tray_status["status"], force_update=True)
             return
 
-        self.set_image("msg")
+        self.set_image("msg", force_update=True)
         self.hide()
 
     def show(self):
@@ -384,9 +386,9 @@ class TrayIcon:
 
         self.hide_show_item.set_label(text)
 
-    def set_image(self, status=None):
+    def set_image(self, status=None, force_update=False):
 
-        if not self.is_visible():
+        if not force_update and not self.is_visible():
             return
 
         if status is not None:
