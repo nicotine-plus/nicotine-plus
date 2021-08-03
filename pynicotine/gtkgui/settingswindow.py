@@ -175,7 +175,7 @@ class NetworkFrame(BuildFrame):
 
     def on_change_password(self, *args):
 
-        if not self.p.frame.np.active_server_conn:
+        if not self.p.frame.np.logged_in:
             message_dialog(
                 parent=self.p.dialog,
                 title=_("Unable to Change Password"),

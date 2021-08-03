@@ -1208,9 +1208,6 @@ class Search:
 
     def on_download_files(self, *args, prefix=""):
 
-        if not self.frame.np.active_server_conn:
-            return
-
         for file in self.selected_results:
             # Make sure the selected result is not a directory
             if not file[1].endswith('\\'):
@@ -1230,9 +1227,6 @@ class Search:
         )
 
     def on_download_folders(self, *args, download_location=""):
-
-        if not self.frame.np.active_server_conn:
-            return
 
         if download_location:
             """ Custom download location specified, remember it when peer sends a folder

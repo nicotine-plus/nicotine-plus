@@ -134,6 +134,7 @@ class Transfers:
 
     def server_login(self):
 
+        self.requested_folders.clear()
         self.update_limits()
         self.watch_stored_downloads()
 
@@ -394,9 +395,6 @@ class Transfers:
         self.queue.append(slskmessages.SetDownloadLimit(self.config.sections["transfers"]["downloadlimitalt"]))
 
     def update_limits(self):
-
-        if not self.core.active_server_conn:
-            return
 
         if self.config.sections["transfers"]["usealtlimits"]:
             self._update_alt_limits()
@@ -1558,6 +1556,9 @@ class Transfers:
 
         """ Get a single file. path is a local path. if transfer object is
         not None, update it, otherwise create a new one."""
+
+        if not self.core.logged_in:
+            return
 
         if transfer is None:
             transfer = Transfer(

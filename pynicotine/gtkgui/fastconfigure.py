@@ -272,8 +272,7 @@ class FastConfigureAssistant(object):
         if config.sections["transfers"]["enablebuddyshares"]:
             self.frame.on_buddy_rescan()
 
-        if not self.frame.np.active_server_conn:
-            self.frame.on_connect()
+        self.frame.on_connect()
 
     def on_cancel(self, *args):
         dialog_hide(self.FastConfigureDialog)

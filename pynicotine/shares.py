@@ -466,13 +466,12 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, ui_callback=None, connected=False):
+    def __init__(self, core, config, queue, ui_callback=None):
 
         self.core = core
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.connected = connected
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
         self.share_dbs = {}
         self.public_rescanning = False
@@ -506,9 +505,6 @@ class Shares:
             timer.start()
         else:
             self.init_shares()
-
-    def set_connected(self, connected):
-        self.connected = connected
 
     """ Shares-related actions """
 
@@ -1001,7 +997,7 @@ class Shares:
         self.compress_shares(sharestype)
 
         if not error:
-            if self.connected:
+            if self.core.logged_in:
                 """ Don't attempt to send file stats to the server before we're connected. If we skip the
                 step here, it will be done once we log in instead ("login" function in pynicotine.py). """
 

@@ -432,7 +432,7 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         self.tag_username = self.create_tag(buffer, color)
 
-        if self.frame.np.active_server_conn:
+        if self.frame.np.logged_in:
             if self.frame.np.away and config.sections["ui"]["showaway"]:
                 self.tag_my_username = self.create_tag(buffer, "useraway")
             else:
@@ -450,7 +450,7 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         update_tag_visuals(self.tag_username, color)
 
-        if self.frame.np.active_server_conn:
+        if self.frame.np.logged_in:
             if self.frame.np.away and config.sections["ui"]["showaway"]:
                 update_tag_visuals(self.tag_my_username, "useraway")
             else:

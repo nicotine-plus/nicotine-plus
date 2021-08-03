@@ -66,10 +66,6 @@ class FileProperties:
         self.update_current_file()
 
     def on_download_item(self, *args):
-
-        if not self.frame.np.active_server_conn:
-            return
-
         properties = self.properties[self.current_index]
         self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
 

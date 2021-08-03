@@ -727,7 +727,7 @@ class UserBrowse:
 
     def download_directory(self, folder, prefix="", recurse=False):
 
-        if not self.frame.np.active_server_conn or folder is None:
+        if folder is None:
             return
 
         # Remember custom download location
@@ -762,9 +762,6 @@ class UserBrowse:
                 self.download_directory(subdir, prefix=os.path.join(destination, ""))
 
     def on_download_files(self, *args, prefix=""):
-
-        if not self.frame.np.active_server_conn:
-            return
 
         folder = self.selected_folder
 
@@ -861,9 +858,6 @@ class UserBrowse:
 
     def upload_directory_to(self, user, folder, recurse=False):
 
-        if not self.frame.np.active_server_conn:
-            return
-
         if folder == "" or folder is None or user is None or user == "":
             return
 
@@ -912,9 +906,6 @@ class UserBrowse:
             locally_queued = True
 
     def on_upload_files(self, *args):
-
-        if not self.frame.np.active_server_conn:
-            return
 
         users = []
 

@@ -131,6 +131,7 @@ class NicotineCore:
         self.queue = deque()
 
         self.away = False
+        self.logged_in = False
         self.active_server_conn = None
         self.parent_conn = None
         self.potential_parents = {}
@@ -331,8 +332,9 @@ class NicotineCore:
 
         self.protothread.server_connect()
 
-        # Clear any potential messages queued up to this point (should not happen)
+        # Clear any potential messages queued up while offline
         self.queue.clear()
+        self.peerconns.clear()
 
         valid_network_interface = self.protothread.validate_network_interface()
 
@@ -931,13 +933,13 @@ Error: %(error)s""", {
             self.manualdisconnect = False
 
         self.active_server_conn = None
+        self.logged_in = False
 
         # Clean up connections
         self.peerconns.clear()
         self.out_indirect_conn_request_times.clear()
 
         self.watchedusers.clear()
-        self.shares.set_connected(False)
 
         self.transfers.server_disconnect()
         self.pluginhandler.server_disconnect_notification(userchoice)
@@ -1193,16 +1195,15 @@ Error: %(error)s""", {
             thread.daemon = True
             thread.start()
 
+            self.logged_in = True
             self.away = config.sections["server"]["away"]
             self.queue.append(slskmessages.SetStatus((not self.away) + 1))
             self.watch_user(config.sections["server"]["login"])
 
-            self.transfers.server_login()
-            self.shares.set_connected(True)
-
             if msg.ip_address is not None:
                 self.ipaddress = msg.ip_address
 
+            self.transfers.server_login()
             self.userbrowse.server_login()
             self.userinfo.server_login()
             self.userlist.server_login()

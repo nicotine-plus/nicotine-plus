@@ -148,9 +148,6 @@ class PrivateChats:
 
     def send_message(self, user, message):
 
-        if not self.core.active_server_conn:
-            return
-
         user_text = self.core.pluginhandler.outgoing_private_chat_event(user, message)
         if user_text is None:
             return
