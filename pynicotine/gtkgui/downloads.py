@@ -114,27 +114,22 @@ class Downloads(TransferList):
 
     def on_play_files(self, *args):
 
-        downloaddir = config.sections["transfers"]["downloaddir"]
-
         for transfer in self.selected_transfers:
 
             playfile = None
 
             if transfer.file is not None and os.path.exists(transfer.file.name):
                 playfile = transfer.file.name
+
             else:
-                # If this file doesn't exist anymore, it may have finished downloading and have been renamed
-                # try looking in the download directory and match the original filename.
-                basename = str.split(transfer.filename, '\\')[-1]
+                # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
+                # Try looking in the download directory and match the original filename and size.
 
-                if transfer.path:
-                    # Custom download path specified
-                    path = os.sep.join([transfer.path, basename])
-                else:
-                    path = os.sep.join([downloaddir, basename])
+                download_path = self.frame.np.transfers.get_existing_download_path(
+                    transfer.user, transfer.filename, transfer.path, transfer.size)
 
-                if os.path.exists(path):
-                    playfile = path
+                if download_path:
+                    playfile = download_path
 
             if playfile:
                 command = config.sections["players"]["default"]

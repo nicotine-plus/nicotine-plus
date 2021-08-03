@@ -1617,10 +1617,9 @@ class Transfers:
 
         if transfer.status not in ("Filtered", "User logged off"):
             if direction == 0:
-                folder, basename = self.get_download_destination(user, filename, path)
-                download_path = os.path.join(folder, basename)
+                download_path = self.get_existing_download_path(user, filename, path, size)
 
-                if os.path.isfile(download_path) and os.stat(download_path).st_size == size:
+                if download_path:
                     transfer.status = "Finished"
                     transfer.size = transfer.currentbytes = size
 
@@ -1807,6 +1806,25 @@ class Transfers:
         basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
 
         return folder_path, basename
+
+    def get_existing_download_path(self, user, virtual_path, target_path, size):
+        """ Returns the download path of a previous download, if available """
+
+        folder, basename = self.get_download_destination(user, virtual_path, target_path)
+        basename_root, extension = os.path.splitext(basename)
+        download_path = os.path.join(folder, basename)
+        counter = 1
+
+        while os.path.isfile(download_path):
+            if os.stat(download_path).st_size == size:
+                # Found a previous download with a matching file size
+                return download_path
+
+            basename = basename_root + " (" + str(counter) + ")" + extension
+            download_path = os.path.join(folder, basename)
+            counter += 1
+
+        return None
 
     @staticmethod
     def get_renamed(name):
