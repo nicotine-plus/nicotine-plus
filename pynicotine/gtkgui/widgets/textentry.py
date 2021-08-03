@@ -214,6 +214,9 @@ class ChatEntry:
 
     def on_enter(self, widget):
 
+        if not self.frame.np.logged_in:
+            return
+
         text = self.entry.get_text()
 
         if not text:
