@@ -1717,11 +1717,10 @@ class Transfers:
     def get_folder_destination(self, user, directory):
 
         # Check if a custom download location was specified
-        custom_destination = (user in self.requested_folders and directory in self.requested_folders[user]
-                              and self.requested_folders[user][directory])
-
-        if custom_destination:
+        if (user in self.requested_folders and directory in self.requested_folders[user]
+                and self.requested_folders[user][directory]):
             download_location = self.requested_folders[user][directory]
+
         else:
             download_location = self.get_default_download_folder(user)
 
@@ -1731,15 +1730,14 @@ class Transfers:
         # Merge download path with target folder name
         destination = os.path.join(download_location, target_name)
 
-        # If no custom folder is set, ensure the target folder doesn't exist
+        # Make sure the target folder doesn't exist
         # If it exists, append a number to the folder name
-        if not custom_destination:
-            orig_destination = destination
-            counter = 1
+        orig_destination = destination
+        counter = 1
 
-            while os.path.exists(destination):
-                destination = orig_destination + " (" + str(counter) + ")"
-                counter += 1
+        while os.path.exists(destination):
+            destination = orig_destination + " (" + str(counter) + ")"
+            counter += 1
 
         return destination
 
