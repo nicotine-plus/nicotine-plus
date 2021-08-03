@@ -1617,12 +1617,22 @@ class Transfers:
 
         if transfer.status not in ("Filtered", "User logged off"):
             if direction == 0:
-                log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
-                    "filename": filename,
-                    "user": user
-                })
-                self.core.send_message_to_peer(
-                    user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+                folder, basename = self.get_download_destination(user, filename, path)
+                download_path = os.path.join(folder, basename)
+
+                if os.path.isfile(download_path) and os.stat(download_path).st_size == size:
+                    transfer.status = "Finished"
+                    transfer.size = transfer.currentbytes = size
+
+                    log.add_transfer("File %s is already downloaded", download_path)
+
+                else:
+                    log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
+                        "filename": filename,
+                        "user": user
+                    })
+                    self.core.send_message_to_peer(
+                        user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
 
             elif not locally_queued:
                 log.add_transfer("Requesting to upload file %(filename)s with transfer "
@@ -1730,15 +1740,6 @@ class Transfers:
         # Merge download path with target folder name
         destination = os.path.join(download_location, target_name)
 
-        # Make sure the target folder doesn't exist
-        # If it exists, append a number to the folder name
-        orig_destination = destination
-        counter = 1
-
-        while os.path.exists(destination):
-            destination = orig_destination + " (" + str(counter) + ")"
-            counter += 1
-
         return destination
 
     def get_total_uploads_allowed(self):
@@ -1798,6 +1799,14 @@ class Transfers:
                           "to default download folder. Error: %s") % error)
 
         return downloaddir
+
+    def get_download_destination(self, user, virtual_path, target_path):
+        """ Returns the download destination of a virtual file path """
+
+        folder_path = target_path if target_path else self.get_default_download_folder(user)
+        basename = clean_file(virtual_path.replace('/', '\\').split('\\')[-1])
+
+        return folder_path, basename
 
     @staticmethod
     def get_renamed(name):
@@ -1880,13 +1889,7 @@ class Transfers:
 
         self.close_file(file, i)
 
-        basename = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
-
-        if i.path:
-            folder = i.path
-        else:
-            folder = self.get_default_download_folder(i.user)
-
+        folder, basename = self.get_download_destination(i.user, i.filename, i.path)
         newname = self.get_renamed(os.path.join(folder, basename))
 
         try:
