@@ -1106,19 +1106,21 @@ class ChatRoom:
 
     def server_disconnect(self):
 
-        append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
         self.usersmodel.clear()
-        self.UserList.set_sensitive(False)
         self.users.clear()
         self.count_users()
 
-        if not self.AutoJoin.get_active() and self.room in config.sections["columns"]["chat_room"]:
+        if (self.room not in config.sections["server"]["autojoin"]
+                and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
+
+        self.tickers.set_ticker([])
+
+        append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
+        self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
             self.update_user_tag(username)
-
-        self.tickers.set_ticker([])
 
     def rejoined(self, users):
 

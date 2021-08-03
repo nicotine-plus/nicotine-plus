@@ -78,7 +78,8 @@ disable=missing-class-docstring,
         too-many-instance-attributes,
         cyclic-import,
         consider-using-with,
-        no-member
+        no-member,
+        duplicate-code
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

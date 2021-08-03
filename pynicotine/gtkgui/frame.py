@@ -418,10 +418,6 @@ class NicotineFrame:
         self.set_widget_online_status(True)
         self.tray_icon.set_away(self.np.away)
 
-        self.uploads.server_login()
-        self.downloads.server_login()
-        self.privatechats.server_login()
-
     def init_spell_checker(self):
 
         try:
@@ -558,13 +554,6 @@ class NicotineFrame:
     def network_callback(self, msgs):
         GLib.idle_add(self.np.network_event, msgs)
 
-    def server_connect_error(self):
-
-        self.set_widget_online_status(False)
-        self.tray_icon.set_connected(False)
-
-        self.set_user_status(_("Offline"))
-
     def server_disconnect(self):
 
         if self.awaytimerid is not None:
@@ -574,21 +563,10 @@ class NicotineFrame:
         if self.autoaway:
             self.autoaway = self.np.away = False
 
-        self.uploads.server_disconnect()
-        self.downloads.server_disconnect()
-        self.searches.server_disconnect()
-        self.userlist.server_disconnect()
+        self.set_widget_online_status(False)
+        self.tray_icon.set_connected(False)
 
-        if self.np.shutdown:
-            # Application is shutting down, stop here
-            return
-
-        self.server_connect_error()
-
-        self.chatrooms.server_disconnect()
-        self.privatechats.server_disconnect()
-        self.userinfo.server_disconnect()
-        self.userbrowse.server_disconnect()
+        self.set_user_status(_("Offline"))
 
         # Reset transfer stats (speed, total files/users)
         self.update_bandwidth()
@@ -2136,9 +2114,7 @@ class NicotineFrame:
     """ Log Window """
 
     def log_callback(self, timestamp_format, msg, level):
-
-        if not self.np.shutdown:
-            GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_DEFAULT)
+        GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_DEFAULT)
 
     def update_log(self, msg, level):
 
@@ -2305,8 +2281,8 @@ class NicotineFrame:
         def _users(transfers, users):
             return len(users), len(transfers)
 
-        down, active_usersdown = _bandwidth(self.np.transfers.downloads)
-        up, active_usersup = _bandwidth(self.np.transfers.uploads)
+        down, active_usersdown = _bandwidth(self.downloads.transfer_list)
+        up, active_usersup = _bandwidth(self.uploads.transfer_list)
         total_usersdown, filesdown = _users(self.downloads.transfer_list, self.downloads.users)
         total_usersup, filesup = _users(self.uploads.transfer_list, self.uploads.users)
 

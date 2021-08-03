@@ -156,6 +156,12 @@ class Transfers:
         thread.daemon = True
         thread.start()
 
+        if self.downloadsview:
+            self.downloadsview.server_login()
+
+        if self.uploadsview:
+            self.uploadsview.server_login()
+
     """ Load Transfers """
 
     def get_download_queue_file_name(self):
@@ -2402,6 +2408,12 @@ class Transfers:
         self.privilegedusers.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()
+
+        if self.downloadsview:
+            self.downloadsview.server_disconnect()
+
+        if self.uploadsview:
+            self.uploadsview.server_disconnect()
 
 
 class Statistics:

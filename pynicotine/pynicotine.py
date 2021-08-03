@@ -941,8 +941,15 @@ Error: %(error)s""", {
 
         self.watchedusers.clear()
 
-        self.transfers.server_disconnect()
         self.pluginhandler.server_disconnect_notification(userchoice)
+
+        self.transfers.server_disconnect()
+        self.search.server_disconnect()
+        self.userlist.server_disconnect()
+        self.chatrooms.server_disconnect()
+        self.privatechats.server_disconnect()
+        self.userinfo.server_disconnect()
+        self.userbrowse.server_disconnect()
 
         if self.ui_callback:
             self.ui_callback.server_disconnect()
@@ -996,9 +1003,6 @@ Error: %(error)s""", {
 
             if self.active_server_conn is not None:
                 self.active_server_conn = None
-
-            if self.ui_callback:
-                self.ui_callback.server_connect_error()
 
         elif msg.connobj.__class__ is slskmessages.PeerConn:
 

@@ -39,6 +39,10 @@ class UserBrowse:
         for user in self.users:
             self.core.watch_user(user)  # Get notified of user status
 
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def add_user(self, user):
 
         if user not in self.users:

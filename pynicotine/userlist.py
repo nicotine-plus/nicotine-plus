@@ -38,6 +38,10 @@ class UserList:
                 user = str(row[0])
                 self.core.watch_user(user)
 
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def add_user(self, user):
 
         # Request user status, speed and number of shared files

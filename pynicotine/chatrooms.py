@@ -43,6 +43,10 @@ class ChatRooms:
         if hasattr(ui_callback, "chatrooms"):
             self.ui_callback = ui_callback.chatrooms
 
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def echo_message(self, room, message, message_type="local"):
         if self.ui_callback:
             self.ui_callback.echo_message(room, message, message_type)

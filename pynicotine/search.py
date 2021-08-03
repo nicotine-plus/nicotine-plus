@@ -45,6 +45,10 @@ class Search:
         if hasattr(ui_callback, "searches"):
             self.ui_callback = ui_callback.searches
 
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def request_folder_download(self, user, folder, visible_files):
 
         # First queue the visible search results

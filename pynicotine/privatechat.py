@@ -58,12 +58,17 @@ class PrivateChats:
         for user in self.users:
             self.core.watch_user(user)  # Get notified of user status
 
-        if not self.config.sections["privatechat"]["store"]:
-            return
+        if self.config.sections["privatechat"]["store"]:
+            for user in self.config.sections["privatechat"]["users"]:
+                if isinstance(user, str) and user not in self.users:
+                    self.show_user(user, switch_page=False)
 
-        for user in self.config.sections["privatechat"]["users"]:
-            if isinstance(user, str) and user not in self.users:
-                self.show_user(user, switch_page=False)
+        if self.ui_callback:
+            self.ui_callback.server_login()
+
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
 
     def add_user(self, user):
 

@@ -997,7 +997,7 @@ class Shares:
         self.compress_shares(sharestype)
 
         if not error:
-            if self.core.logged_in:
+            if self.core and self.core.logged_in:
                 """ Don't attempt to send file stats to the server before we're connected. If we skip the
                 step here, it will be done once we log in instead ("login" function in pynicotine.py). """
 
