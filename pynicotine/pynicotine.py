@@ -1772,14 +1772,20 @@ Error: %(error)s""", {
             shares = {}
 
         if checkuser:
-            if msg.dir in shares:
-                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
+            try:
+                if msg.dir in shares:
+                    self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir]))
+                    return
 
-            elif msg.dir.rstrip('\\') in shares:
-                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
+                if msg.dir.rstrip('\\') in shares:
+                    self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, shares[msg.dir.rstrip('\\')]))
+                    return
 
-            else:
-                self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, None))
+            except Exception as error:
+                log.add(_("Failed to fetch folder contents of shared folder %(folder)s: %(error)s"),
+                        {"folder": msg.dir, "error": error})
+
+            self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, None))
 
     def folder_contents_response(self, msg):
         """ Peer code: 37 """

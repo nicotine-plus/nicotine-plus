@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.1.1"
+        self.version = "3.1.2.dev1"
 
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)

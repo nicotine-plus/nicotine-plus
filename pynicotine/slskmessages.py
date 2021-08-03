@@ -2216,24 +2216,30 @@ class SharedFileList(PeerMessage):
             return self.built
 
         msg = bytearray()
+        msg_list = bytearray()
 
         if self.list is None:
             # DB is closed
-            msg.extend(self.pack_object(0))
+            msg_list = self.pack_object(0)
 
         else:
             try:
-                msg.extend(self.pack_object(len(self.list)))
-
-            except TypeError:
-                msg.extend(self.pack_object(len(list(self.list))))
-
-            for key in self.list:
                 try:
-                    msg.extend(self.pack_object(key.replace('/', '\\')))
-                    msg.extend(self.list[key])
-                except KeyError:
-                    pass
+                    msg_list.extend(self.pack_object(len(self.list)))
+
+                except TypeError:
+                    msg_list.extend(self.pack_object(len(list(self.list))))
+
+                for key in self.list:
+                    msg_list.extend(self.pack_object(key.replace('/', '\\')))
+                    msg_list.extend(self.list[key])
+
+            except Exception as error:
+                msg_list = self.pack_object(0)
+                log.add(_("Your shares database is corrupted. Please rescan your shares and report "
+                          "any potential scanning issues to the developers. Error: %s"), error)
+
+        msg.extend(msg_list)
 
         # Unknown purpose, but official clients always send a value of 0
         msg.extend(self.pack_object(self.unknown))
@@ -2377,11 +2383,9 @@ class FileSearchResult(PeerMessage):
                 fileinfo = self.fileindex[repr(index)]
                 final_num_results += 1
 
-            except Exception:
-                log.add(
-                    _("Your shares database is corrupted. Please rescan your shares and report "
-                      "any potential scanning issues to the developers.")
-                )
+            except Exception as error:
+                log.add(_("Your shares database is corrupted. Please rescan your shares and report "
+                          "any potential scanning issues to the developers. Error: %s"), error)
                 break
 
             msg_list.extend(self.pack_file_info(fileinfo))

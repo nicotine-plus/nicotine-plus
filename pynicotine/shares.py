@@ -654,23 +654,28 @@ class Shares:
         shared = self.share_dbs.get("files")
         bshared = self.share_dbs.get("buddyfiles")
 
-        if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
-            for row in self.config.sections["server"]["userlist"]:
-                if row[0] != user:
-                    continue
+        try:
+            if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
+                for row in self.config.sections["server"]["userlist"]:
+                    if row[0] != user:
+                        continue
 
-                # Check if buddy is trusted
-                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                    break
+                    # Check if buddy is trusted
+                    if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                        break
 
-                for i in bshared.get(str(folder), ''):
+                    for i in bshared.get(str(folder), ''):
+                        if file == i[0]:
+                            return True
+
+            if shared is not None:
+                for i in shared.get(str(folder), ''):
                     if file == i[0]:
                         return True
 
-        if shared is not None:
-            for i in shared.get(str(folder), ''):
-                if file == i[0]:
-                    return True
+        except Exception as error:
+            log.add(_("Your shares database is corrupted. Please rescan your shares and report "
+                      "any potential scanning issues to the developers. Error: %s"), error)
 
         log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
             "virtual_name": virtualfilename,
@@ -689,35 +694,40 @@ class Shares:
         if shared is None:
             return
 
-        shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
-        shareddirs.append(self.config.sections["transfers"]["downloaddir"])
+        try:
+            shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
+            shareddirs.append(self.config.sections["transfers"]["downloaddir"])
 
-        rdir = str(os.path.expanduser(os.path.dirname(name)))
-        vdir = self.real2virtual(rdir)
-        file = str(os.path.basename(name))
+            rdir = str(os.path.expanduser(os.path.dirname(name)))
+            vdir = self.real2virtual(rdir)
+            file = str(os.path.basename(name))
 
-        if not shared.get(vdir):
-            shared[vdir] = []
+            if not shared.get(vdir):
+                shared[vdir] = []
 
-        if file not in (i[0] for i in shared[vdir]):
-            from pynicotine.metadata.tinytag import TinyTag
-            fileinfo = Scanner.get_file_info(file, name, TinyTag())
-            shared[vdir] += [fileinfo]
+            if file not in (i[0] for i in shared[vdir]):
+                from pynicotine.metadata.tinytag import TinyTag
+                fileinfo = Scanner.get_file_info(file, name, TinyTag())
+                shared[vdir] += [fileinfo]
 
-            self.share_dbs["streams"][vdir] = Scanner.get_dir_stream(shared[vdir])
+                self.share_dbs["streams"][vdir] = Scanner.get_dir_stream(shared[vdir])
 
-            fileindex = self.share_dbs["fileindex"]
+                fileindex = self.share_dbs["fileindex"]
 
-            try:
-                index = len(fileindex)
-            except TypeError:
-                index = len(list(fileindex))
+                try:
+                    index = len(fileindex)
+                except TypeError:
+                    index = len(list(fileindex))
 
-            Scanner.add_file_to_index(
-                index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
+                Scanner.add_file_to_index(
+                    index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
 
-            self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
-            self.newnormalshares = True
+                self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
+                self.newnormalshares = True
+
+        except Exception as error:
+            log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
+                    {"filename": name, "error": error})
 
     def add_file_to_buddy_shared(self, name):
         """ Add a file to the buddy shares database """
@@ -733,38 +743,43 @@ class Shares:
         if bshared is None:
             return
 
-        bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
-        bshareddirs += [path for _name, path in self.config.sections["transfers"]["buddyshared"]]
-        bshareddirs.append(self.config.sections["transfers"]["downloaddir"])
+        try:
+            bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
+            bshareddirs += [path for _name, path in self.config.sections["transfers"]["buddyshared"]]
+            bshareddirs.append(self.config.sections["transfers"]["downloaddir"])
 
-        rdir = str(os.path.expanduser(os.path.dirname(name)))
-        vdir = self.real2virtual(rdir)
-        file = str(os.path.basename(name))
+            rdir = str(os.path.expanduser(os.path.dirname(name)))
+            vdir = self.real2virtual(rdir)
+            file = str(os.path.basename(name))
 
-        if not bshared.get(vdir):
-            bshared[vdir] = []
+            if not bshared.get(vdir):
+                bshared[vdir] = []
 
-        if file not in (i[0] for i in bshared[vdir]):
-            from pynicotine.metadata.tinytag import TinyTag
-            fileinfo = Scanner.get_file_info(file, name, TinyTag())
-            bshared[vdir] += [fileinfo]
+            if file not in (i[0] for i in bshared[vdir]):
+                from pynicotine.metadata.tinytag import TinyTag
+                fileinfo = Scanner.get_file_info(file, name, TinyTag())
+                bshared[vdir] += [fileinfo]
 
-            self.share_dbs["buddystreams"][vdir] = Scanner.get_dir_stream(bshared[vdir])
+                self.share_dbs["buddystreams"][vdir] = Scanner.get_dir_stream(bshared[vdir])
 
-            bfileindex = self.share_dbs["buddyfileindex"]
+                bfileindex = self.share_dbs["buddyfileindex"]
 
-            try:
-                index = len(bfileindex)
-            except TypeError:
-                index = len(list(bfileindex))
+                try:
+                    index = len(bfileindex)
+                except TypeError:
+                    index = len(list(bfileindex))
 
-            Scanner.add_file_to_index(
-                index, file, vdir, fileinfo,
-                self.share_dbs["buddywordindex"], bfileindex, self.translatepunctuation
-            )
+                Scanner.add_file_to_index(
+                    index, file, vdir, fileinfo,
+                    self.share_dbs["buddywordindex"], bfileindex, self.translatepunctuation
+                )
 
-            self.share_dbs["buddymtimes"][vdir] = os.path.getmtime(rdir)
-            self.newbuddyshares = True
+                self.share_dbs["buddymtimes"][vdir] = os.path.getmtime(rdir)
+                self.newbuddyshares = True
+
+        except Exception as error:
+            log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
+                    {"filename": name, "error": error})
 
     def create_compressed_shares_message(self, sharestype):
         """ Create a message that will later contain a compressed list of our shares """
