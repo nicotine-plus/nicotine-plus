@@ -422,8 +422,8 @@ class SlskProtoThread(threading.Thread):
         self._queue = queue
         self._want_abort = False
         self.server_disconnected = True
-        self._bindip = bindip
-        self._listenport = None
+        self.bindip = bindip
+        self.listenport = None
         self.portrange = (port, port) if port else port_range
         self.interface = interface
         self._network_filter = network_filter
@@ -477,7 +477,7 @@ class SlskProtoThread(threading.Thread):
 
     def validate_listen_port(self):
 
-        if self._listenport is not None:
+        if self.listenport is not None:
             return True
 
         return False
@@ -507,7 +507,7 @@ class SlskProtoThread(threading.Thread):
         if not self.validate_network_interface():
             return
 
-        ip_address = self._bindip or ''
+        ip_address = self.bindip or ''
 
         if self.interface:
             self.bind_to_network_interface(self.listen_socket, self.interface)
@@ -518,7 +518,7 @@ class SlskProtoThread(threading.Thread):
                 self.listen_socket.bind((ip_address, listenport))
                 self.listen_socket.listen(1)
                 self._core_callback([IncPort(listenport)])
-                self._listenport = listenport
+                self.listenport = listenport
                 break
 
             except socket.error:
@@ -728,8 +728,8 @@ class SlskProtoThread(threading.Thread):
             if self.interface:
                 self.bind_to_network_interface(server_socket, self.interface)
 
-            elif self._bindip:
-                server_socket.bind((self._bindip, 0))
+            elif self.bindip:
+                server_socket.bind((self.bindip, 0))
 
             server_socket.setblocking(0)
             server_socket.connect_ex(msg_obj.addr)
@@ -886,8 +886,8 @@ class SlskProtoThread(threading.Thread):
             if self.interface:
                 self.bind_to_network_interface(conn, self.interface)
 
-            elif self._bindip:
-                conn.bind((self._bindip, 0))
+            elif self.bindip:
+                conn.bind((self.bindip, 0))
 
             conn.setblocking(0)
             conn.connect_ex(msg_obj.addr)
