@@ -514,7 +514,7 @@ class NicotineCore:
 
         if user == config.sections["server"]["login"]:
             # Bypass public IP address request if we connect to ourselves
-            addr = (self.protothread.bindip or '', self.protothread.listenport)
+            addr = (self.protothread.bindip or '127.0.0.1', self.protothread.listenport)
 
         elif user in self.users:
             addr = self.users[user].addr
