@@ -1097,7 +1097,11 @@ class Search:
     def on_row_activated(self, treeview, path, column):
 
         self.select_results()
-        self.on_download_files()
+
+        if self.selected_files_count:
+            self.on_download_files()
+        else:
+            self.on_download_folders()
 
         treeview.get_selection().unselect_all()
 
@@ -1135,15 +1139,12 @@ class Search:
         actions[_("User(s)")].set_enabled(users)
         self.populate_popup_menu_users()
 
-        for result in self.selected_results:
-            if not result[1].endswith('\\'):
-                # At least one selected result is a file, activate file-related items
+        if self.selected_files_count:
+            # At least one selected result is a file, activate file-related items
 
-                for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
-                          _("Copy _URL")):
-                    actions[i].set_enabled(True)
-
-                break
+            for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
+                      _("Copy _URL")):
+                actions[i].set_enabled(True)
 
         menu.set_num_selected_files(self.selected_files_count)
 
