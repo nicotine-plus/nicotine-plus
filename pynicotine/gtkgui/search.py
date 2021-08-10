@@ -77,29 +77,20 @@ class Searches(IconNotebook):
             notebookraw=self.frame.SearchNotebookRaw
         )
 
-        self.load_config()
-
         self.wish_list = WishList(frame, self)
 
+        self.populate_search_history()
         self.update_visuals()
 
-    def load_config(self):
-        """
-        Add search history to SearchCombo later and connect Wishlist,
-        after widgets have been created.
-        """
-        items = config.sections["searches"]["history"]
-        templist = []
+    def populate_search_history(self):
 
-        for i in items:
-            if not isinstance(i, str):
-                continue
+        self.frame.SearchCombo.remove_all()
 
-            if i not in templist:
-                templist.append(i)
+        if not config.sections["searches"]["enable_history"]:
+            return
 
-        for i in templist:
-            self.frame.SearchCombo.append_text(i)
+        for term in config.sections["searches"]["history"]:
+            self.frame.SearchCombo.append_text(str(term))
 
     def on_search(self):
 
@@ -130,15 +121,7 @@ class Searches(IconNotebook):
             self.set_current_page(self.page_num(search["tab"].Main))
 
         # Repopulate the combo list
-        self.frame.SearchCombo.remove_all()
-
-        items = config.sections["searches"]["history"]
-
-        for i in items:
-            if not isinstance(i, str):
-                continue
-
-            self.frame.SearchCombo.append_text(i)
+        self.populate_search_history()
 
     def set_wishlist_interval(self, msg):
         self.wish_list.set_interval(msg)

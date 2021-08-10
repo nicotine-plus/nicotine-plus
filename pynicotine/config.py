@@ -296,6 +296,7 @@ class Config:
                 "group_searches": "folder_grouping",
                 "maxresults": 50,
                 "re_filter": False,
+                "enable_history": True,
                 "history": [],
                 "enablefilters": False,
                 "filters_visible": False,

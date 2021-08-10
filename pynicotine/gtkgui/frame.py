@@ -2386,6 +2386,7 @@ class NicotineFrame:
             self.update_visuals()
 
         self.chatrooms.toggle_chat_buttons()
+        self.searches.populate_search_history()
 
         # Other notebooks
         for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):

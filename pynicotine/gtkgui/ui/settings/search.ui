@@ -39,7 +39,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Network Searches</property>
+            <property name="label" translatable="yes">General</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -47,102 +47,9 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkCheckButton" id="EnableSearchHistory">
+            <property name="label" translatable="yes">Enable search history</property>
             <property name="visible">1</property>
-            <property name="spacing">12</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkCheckButton" id="ToggleResults">
-                <property name="label" translatable="yes">Respond to search requests from other users</property>
-                <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
-                <property name="visible">1</property>
-                <signal name="toggled" handler="on_enable_search_results" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBox">
-                <property name="visible">1</property>
-                <property name="row-spacing">12</property>
-                <property name="column-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkLabel" id="MinSearchCharsL1">
-                        <property name="visible">1</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Respond to search requests containing minimum character count:</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">MinSearchChars</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkSpinButton" id="MinSearchChars">
-                        <property name="visible">1</property>
-                        <property name="width-chars">6</property>
-                        <property name="adjustment">adjustment_MinSearchChars</property>
-                        <property name="numeric">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkLabel" id="MaxResultsL1">
-                        <property name="visible">1</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Maximum search results to send per search request:</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">MaxResults</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkSpinButton" id="MaxResults">
-                        <property name="visible">1</property>
-                        <property name="width-chars">6</property>
-                        <property name="adjustment">adjustment_MaxResults</property>
-                        <property name="numeric">1</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Your Searches</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
           </object>
         </child>
         <child>
@@ -505,6 +412,105 @@
             <child>
               <object class="GtkImage" id="ClearFilterHistorySuccess">
                 <property name="icon-name">object-select-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Network Searches</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkCheckButton" id="ToggleResults">
+                <property name="label" translatable="yes">Respond to search requests from other users</property>
+                <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
+                <property name="visible">1</property>
+                <signal name="toggled" handler="on_enable_search_results" swapped="no"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBox">
+                <property name="visible">1</property>
+                <property name="row-spacing">12</property>
+                <property name="column-spacing">12</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkLabel" id="MinSearchCharsL1">
+                        <property name="visible">1</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Respond to search requests containing minimum character count:</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">MinSearchChars</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkSpinButton" id="MinSearchChars">
+                        <property name="visible">1</property>
+                        <property name="width-chars">6</property>
+                        <property name="adjustment">adjustment_MinSearchChars</property>
+                        <property name="numeric">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkLabel" id="MaxResultsL1">
+                        <property name="visible">1</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Maximum search results to send per search request:</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">MaxResults</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkSpinButton" id="MaxResults">
+                        <property name="visible">1</property>
+                        <property name="width-chars">6</property>
+                        <property name="adjustment">adjustment_MaxResults</property>
+                        <property name="numeric">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

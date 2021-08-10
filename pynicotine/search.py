@@ -165,16 +165,17 @@ class Search:
         for word in searchterm_words_ignore:
             searchterm_with_excluded += " -" + word
 
-        items = self.config.sections["searches"]["history"]
+        if self.config.sections["searches"]["enable_history"]:
+            items = self.config.sections["searches"]["history"]
 
-        if searchterm_with_excluded in items:
-            items.remove(searchterm_with_excluded)
+            if searchterm_with_excluded in items:
+                items.remove(searchterm_with_excluded)
 
-        items.insert(0, searchterm_with_excluded)
+            items.insert(0, searchterm_with_excluded)
 
-        # Clear old items
-        del items[15:]
-        self.config.write_configuration()
+            # Clear old items
+            del items[15:]
+            self.config.write_configuration()
 
         if mode == "global":
             self.do_global_search(self.searchid, searchterm_without_excluded)
