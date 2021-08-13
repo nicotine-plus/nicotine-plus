@@ -149,6 +149,7 @@ search_results = True
 max_displayed_results = 1000
 min_search_chars = 3
 remove_special_chars = True
+enable_history = True
 
 [ui]
 dark_mode = False
