@@ -50,6 +50,7 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.transfers import Transfer
+from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
@@ -415,10 +416,10 @@ class TransferList:
 
         if speed > 0:
             hspeed = human_speed(speed)
-            left = self.frame.np.transfers.get_time((totalsize - position) / speed)
+            left = human_length((totalsize - position) / speed)
 
         if elapsed > 0:
-            helapsed = self.frame.np.transfers.get_time(elapsed)
+            helapsed = human_length(elapsed)
 
         if not extensions:
             extensions = ""
@@ -479,7 +480,7 @@ class TransferList:
             hspeed = human_speed(speed)
 
         if elapsed > 0:
-            helapsed = self.frame.np.transfers.get_time(elapsed)
+            helapsed = human_length(elapsed)
 
         try:
             icurrentbytes = int(currentbytes)

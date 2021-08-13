@@ -44,6 +44,7 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import human_length
 from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
@@ -1308,7 +1309,7 @@ class Transfers:
                         if i.speed <= 0:
                             i.timeleft = "∞"
                         else:
-                            i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
+                            i.timeleft = human_length((i.size - i.currentbytes) / i.speed)
 
                     if oldelapsed == i.timeelapsed:
                         needupdate = False
@@ -1364,7 +1365,7 @@ class Transfers:
                     if i.speed <= 0:
                         i.timeleft = "∞"
                     else:
-                        i.timeleft = self.get_time((i.size - i.currentbytes) / i.speed)
+                        i.timeleft = human_length((i.size - i.currentbytes) / i.speed)
 
                 if oldelapsed == i.timeelapsed:
                     needupdate = False
@@ -1753,20 +1754,6 @@ class Transfers:
             return lstlen + 1
 
         return lstlen
-
-    @staticmethod
-    def get_time(seconds):
-
-        sec = int(seconds % 60)
-        minutes = int(seconds / 60 % 60)
-        hours = int(seconds / 3600 % 24)
-        days = int(seconds / 86400)
-
-        time_string = "%02d:%02d:%02d" % (hours, minutes, sec)
-        if days > 0:
-            time_string = str(days) + "." + time_string
-
-        return time_string
 
     def get_upload_queue_size(self, username=None):
 

@@ -22,6 +22,8 @@ import re
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.utils import http_request
+from pynicotine.utils import human_length
+from pynicotine.utils import humanize
 
 
 class Plugin(BasePlugin):
@@ -166,11 +168,11 @@ class Plugin(BasePlugin):
             return None
 
         if likes != 'LIKES':
-            likes = '{:,}'.format(int(likes))
-            dislikes = '{:,}'.format(int(dislikes))
+            likes = humanize(int(likes))
+            dislikes = humanize(int(dislikes))
 
         if views != 'RESTRICTED':
-            views = '{:,}'.format(int(views))
+            views = humanize(int(views))
 
         if live in ('live', 'upcoming'):
             duration = live.upper()
@@ -200,12 +202,4 @@ class Plugin(BasePlugin):
         for num, designator in re.findall(r'(\d+)([DHMS])', iso_8601_duration):
             seconds += intervals[designator] * int(num)
 
-        minutes, seconds = divmod(seconds, 60)
-        hours, minutes = divmod(minutes, 60)
-
-        if hours > 0:
-            ret = '{}:{:02}:{:02}'.format(hours, minutes, seconds)
-        else:
-            ret = '{}:{:02}'.format(minutes, seconds)
-
-        return ret
+        return human_length(seconds)

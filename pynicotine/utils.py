@@ -150,6 +150,22 @@ def make_version(version):
     return (major << 24) + (minor << 16) + (patch << 8) + stable
 
 
+def human_length(seconds):
+
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+
+    if days > 0:
+        ret = '%i:%02i:%02i:%02i' % (days, hours, minutes, seconds)
+    elif hours > 0:
+        ret = '%i:%02i:%02i' % (hours, minutes, seconds)
+    else:
+        ret = '%i:%02i' % (minutes, seconds)
+
+    return ret
+
+
 def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
@@ -177,7 +193,7 @@ def get_result_bitrate_length(filesize, attributes):
             h_bitrate = str(bitrate) + h_bitrate
 
             length = second
-            h_length = '%i:%02i' % (second / 60, second % 60)
+            h_length = human_length(second)
 
         # Sometimes the vbr indicator is in second position
         elif second in (0, 1):
@@ -189,7 +205,7 @@ def get_result_bitrate_length(filesize, attributes):
             h_bitrate = str(bitrate) + h_bitrate
 
             length = third
-            h_length = '%i:%02i' % (third / 60, third % 60)
+            h_length = human_length(third)
 
         # Lossless audio, length is in first position
         elif third > 1:
@@ -200,7 +216,7 @@ def get_result_bitrate_length(filesize, attributes):
             h_bitrate = str(bitrate)
 
             length = first
-            h_length = '%i:%02i' % (first / 60, first % 60)
+            h_length = human_length(first)
 
         else:
 
@@ -236,7 +252,7 @@ def get_result_bitrate_length(filesize, attributes):
                     # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
                     length = filesize / (bitrate / 8 * 1000)
 
-                h_length = '%i:%02i' % (length / 60, length % 60)
+                h_length = human_length(length)
 
         # Sometimes the bitrate is in first position and the length in second position
         else:
@@ -245,7 +261,7 @@ def get_result_bitrate_length(filesize, attributes):
             h_bitrate = str(bitrate) + h_bitrate
 
             length = second
-            h_length = '%i:%02i' % (second / 60, second % 60)
+            h_length = human_length(second)
 
     return h_bitrate, bitrate, h_length, length
 
