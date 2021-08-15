@@ -23,6 +23,7 @@
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import http_request
+from pynicotine.utils import human_length
 
 
 class NowPlaying:
@@ -246,7 +247,7 @@ class NowPlaying:
 
         # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            self.title['length'] = self.get_length_time(metadata['mpris:length'] // 1000000)
+            self.title['length'] = human_length(metadata['mpris:length'] // 1000000)
         except KeyError:
             self.title['length'] = '?'
 
@@ -257,20 +258,6 @@ class NowPlaying:
             self.title['nowplaying'] += " - " + self.title['title']
 
         return True
-
-    @staticmethod
-    def get_length_time(seconds):
-        """ Function used to normalize tracks duration """
-
-        minutes, seconds = divmod(seconds, 60)
-        hours, minutes = divmod(minutes, 60)
-
-        if hours > 0:
-            ret = '{}:{:02}:{:02}'.format(hours, minutes, seconds)
-        else:
-            ret = '{}:{:02}'.format(minutes, seconds)
-
-        return ret
 
     def other(self, command):
 
