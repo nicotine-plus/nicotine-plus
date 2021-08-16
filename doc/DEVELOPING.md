@@ -163,7 +163,7 @@ python3 setup.py sdist
 
  8. Create a new release on [PyPI](https://pypi.org/) by running
 ```
-packaging/pip/upload_pypi_release.sh
+python3 packaging/pypi/upload_pypi_release.py
 ```
 
  9. Create a new release on [Flathub](https://github.com/flathub/org.nicotine_plus.Nicotine).

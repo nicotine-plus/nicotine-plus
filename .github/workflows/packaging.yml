@@ -88,13 +88,14 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          packaging/windows/dependencies-core.sh
-          packaging/windows/dependencies-packaging.sh
+          pacman --noconfirm -S --needed mingw-w64-$ARCH-python
+          python3 packaging/windows/dependencies_core.py
+          python3 packaging/windows/dependencies_packaging.py
 
       - name: Build installer
         run: |
           pyinstaller packaging/windows/nicotine.spec
-          packaging/windows/create-installer.sh
+          python3 packaging/windows/create_installer.py
           mkdir installer
           cp -r packaging/windows/Nicotine*.exe installer/
 
@@ -122,8 +123,8 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          packaging/macos/dependencies-core.sh
-          packaging/macos/dependencies-packaging.sh
+          python3 packaging/macos/dependencies_core.py
+          python3 packaging/macos/dependencies_packaging.py
 
       - name: Freeze application
         run: |
@@ -136,7 +137,7 @@ jobs:
 
       - name: Generate .dmg
         run: |
-          packaging/macos/create-dmg.sh
+          python3 packaging/macos/create_dmg.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2

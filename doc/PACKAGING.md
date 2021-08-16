@@ -14,7 +14,7 @@ The dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.m
 To build source distribution files (.tar.bz2 & .tar.gz) from the git repository run:
 
 ```console
-python setup.py sdist --formats=bztar,gztar
+python3 setup.py sdist --formats=bztar,gztar
 ```
 
 The source distribution files will be located in the `dist` subdirectory of your git repository.
@@ -32,7 +32,7 @@ sudo apt build-dep .
 Generate the "upstream" tarball:
 
 ```console
-python setup.py sdist
+python3 setup.py sdist
 mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 
@@ -62,8 +62,9 @@ Then, install dependencies:
 ```console
 export NICOTINE_GTK_VERSION=3
 export ARCH=x86_64
-packaging/windows/dependencies-core.sh
-packaging/windows/dependencies-packaging.sh
+pacman --noconfirm -S --needed mingw-w64-$ARCH-python
+python3 packaging/windows/dependencies_core.py
+python3 packaging/windows/dependencies_packaging.py
 ```
 
 Clone the Nicotine+ git repository:
@@ -77,7 +78,7 @@ cd nicotine-plus
 Run PyInstaller:
 
 ```console
-pyinstaller packaging/windows/nicotine.spec
+python3 -m pyinstaller packaging/windows/nicotine.spec
 ```
 
 After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
@@ -89,7 +90,7 @@ If you want to run the frozen application you can launch the executable `dist\Ni
 Run the following:
 
 ```console
-packaging/windows/create-installer.sh
+python3 packaging/windows/create_installer.py
 ```
 
 You should now find a `Nicotine+-$(version).exe` installer in the `packaging/windows` directory.
