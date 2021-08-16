@@ -59,8 +59,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          export ARCH=x86_64
-          packaging/windows/dependencies-core.sh
+          pacman --noconfirm -S --needed mingw-w64-x86_64-python
+          python3 packaging/windows/dependencies_core.py
 
       - name: Linter
         run: |
@@ -85,7 +85,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          packaging/macos/dependencies-core.sh
+          python3 packaging/macos/dependencies_core.py
 
       - name: Linter
         run: |

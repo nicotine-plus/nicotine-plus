@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/usr/bin/env python3
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -18,19 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### This script is used to install core dependencies in MinGW ###
+import os
+import subprocess
+import sys
 
-# Install dependencies from the main MinGW repos
-pacman --noconfirm -S --needed \
-  mingw-w64-$ARCH-gspell \
-  mingw-w64-$ARCH-gtk$NICOTINE_GTK_VERSION \
-  mingw-w64-$ARCH-python \
-  mingw-w64-$ARCH-python-flake8 \
-  mingw-w64-$ARCH-python-pip \
-  mingw-w64-$ARCH-python-pylint \
-  mingw-w64-$ARCH-python-gobject \
-  mingw-w64-$ARCH-python-setuptools
+""" Script used to create a Windows installer with NSIS """
 
-# Install dependencies with pip
-pip3 install \
-  semidbm
+
+def create_nsis_installer():
+
+    arch = os.environ.get("ARCH") or "x86_64"
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    version = subprocess.check_call([sys.executable,
+                                     os.path.join(current_dir, "..", "..", "setup.py"),
+                                     "--version"])
+
+    subprocess.check_call(["makensis", "-DARCH=" + str(arch), "-DPRODUCT_VERSION=" + str(version),
+                           os.path.join(current_dir, "nicotine.nsi")])
+
+
+if __name__ == '__main__':
+    create_nsis_installer()

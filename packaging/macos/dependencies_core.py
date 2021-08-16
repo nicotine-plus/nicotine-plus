@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/usr/bin/env python3
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -18,24 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### This script is used to install packaging dependencies in MinGW ###
+import os
+import subprocess
+import sys
 
-# Install dependencies from the main MinGW repos
-pacman --noconfirm -S --needed \
-  unzip \
-  mingw-w64-$ARCH-nsis \
-  mingw-w64-$ARCH-python-certifi
+""" Script used to install core dependencies in Homebrew """
 
-# Install PyInstaller dependency
-# Rebuild bootloader to reduce false positives in anti-malware software
-wget https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.1.zip
-unzip v4.1.zip
-cd pyinstaller-4.1/bootloader/
 
-if [ $ARCH == "i686" ]; then
-  python3 ./waf all --target-arch=32bit
-else
-  python3 ./waf all --target-arch=64bit
-fi
+def install_brew():
+    """ Install dependencies from the main Homebrew repos """
 
-pip3 install ..
+    gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or 3
+    packages = ["adwaita-icon-theme",
+                "gtk+" + str(gtk_version)]
+
+    subprocess.check_call(["brew", "install"] + packages)
+
+
+def install_pypi():
+    """ Install dependencies from PyPi """
+
+    packages = ["flake8",
+                "pygobject",
+                "pylint"]
+    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
+
+
+if __name__ == '__main__':
+    install_brew()
+    install_pypi()

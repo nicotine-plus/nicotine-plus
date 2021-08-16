@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/usr/bin/env python3
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -18,15 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### This script is used to install core dependencies in Homebrew ###
+import subprocess
+import sys
 
-# Install dependencies from the main Homebrew repos
-brew install \
-  adwaita-icon-theme \
-  gtk+$NICOTINE_GTK_VERSION
+""" Script used to install packaging dependencies in Homebrew """
 
-# Install dependencies with pip
-pip3 install \
-  flake8 \
-  pygobject \
-  pylint
+
+def install_brew():
+    """ Install dependencies from the main Homebrew repos """
+
+    packages = ["create-dmg"]
+    subprocess.check_call(["brew", "install"] + packages)
+
+
+def install_pypi():
+    """ Install dependencies from PyPi """
+
+    packages = ["certifi",
+                "pyinstaller==4.3"]
+    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
+
+
+if __name__ == '__main__':
+    install_brew()
+    install_pypi()

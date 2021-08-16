@@ -1,6 +1,5 @@
-#!/bin/sh
-
-# COPYRIGHT (C) 2020 Nicotine+ Team
+#!/usr/bin/env python3
+# COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -18,14 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Get directory of script
-DIR=$(cd "$(dirname "$0")"; pwd -P)
+import os
+import subprocess
 
-mkdir dmg
-cd dmg
-create-dmg \
-    --volname "Nicotine+" \
-    --window-size 600 400 \
-    --app-drop-link 450 185 \
-    "Nicotine+.dmg" \
-    "$DIR/../../dist/"
+""" Script used to create a macOS DMG package """
+
+
+def create_dmg():
+
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+
+    os.mkdir("dmg")
+    os.chdir("dmg")
+
+    subprocess.check_call(["create-dmg",
+                           "--volname", "Nicotine+",
+                           "--window-size", "600", "400",
+                           "--app-drop-link", "450", "185",
+                           "Nicotine+.dmg",
+                           os.path.join(current_dir, "..", "..", "dist")])
+
+
+if __name__ == '__main__':
+    create_dmg()
