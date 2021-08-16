@@ -2484,7 +2484,7 @@ If this fails, User B retries for ~1 minute. If this still fails, no connection 
 
 #### Function Names
 
-Museekd: HPierceFirewall
+Museekd: HPierceFirewall  
 Nicotine: PierceFireWall
 
 #### Description
@@ -2506,7 +2506,7 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 #### Function Names
 
-Museekd: HInitiate
+Museekd: HInitiate  
 Nicotine: PeerInit
 
 #### Description
