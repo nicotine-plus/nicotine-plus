@@ -209,6 +209,11 @@ else:
 
     MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 1024)
 
+UINT_UNPACK = struct.Struct("<I").unpack
+DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
+
+UINT_PACK = struct.Struct("<I").pack
+
 
 class Connection:
     """
@@ -753,7 +758,7 @@ class SlskProtoThread(threading.Thread):
 
         # Server messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
-            msgsize, msgtype = struct.unpack("<II", msg_buffer[:8])
+            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer[:8])
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 # Invalid message size or buffer is being filled
@@ -790,8 +795,8 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[self.server_socket]
-        conn_obj.obuf.extend(struct.pack("<I", len(msg) + 4))
-        conn_obj.obuf.extend(struct.pack("<I", self.servercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(UINT_PACK(len(msg) + 4))
+        conn_obj.obuf.extend(UINT_PACK(self.servercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
     """ Peer Init """
@@ -800,7 +805,7 @@ class SlskProtoThread(threading.Thread):
 
         # Peer init messages are 8 bytes or greater in length
         while conn.init is None and len(msg_buffer) >= 8:
-            msgsize = struct.unpack("<I", msg_buffer[:4])[0]
+            msgsize = UINT_UNPACK(msg_buffer[:4])[0]
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 # Invalid message size or buffer is being filled
@@ -855,7 +860,7 @@ class SlskProtoThread(threading.Thread):
 
             conn_obj.piercefw = msg_obj
 
-            conn_obj.obuf.extend(struct.pack("<I", len(msg) + 1))
+            conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
             conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
             conn_obj.obuf.extend(msg)
 
@@ -869,7 +874,7 @@ class SlskProtoThread(threading.Thread):
             conn_obj.init = msg_obj
 
             if conn_obj.piercefw is None:
-                conn_obj.obuf.extend(struct.pack("<I", len(msg) + 1))
+                conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
                 conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
                 conn_obj.obuf.extend(msg)
 
@@ -909,7 +914,7 @@ class SlskProtoThread(threading.Thread):
 
         # Peer messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
-            msgsize, msgtype = struct.unpack("<II", msg_buffer[:8])
+            msgsize, msgtype = DOUBLE_UINT_UNPACK(msg_buffer[:8])
             peer_class = self.peerclasses.get(msgtype, None)
 
             if peer_class and peer_class in (SharedFileList, UserInfoReply):
@@ -970,8 +975,8 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[msg_obj.conn]
-        conn_obj.obuf.extend(struct.pack("<I", len(msg) + 4))
-        conn_obj.obuf.extend(struct.pack("<I", self.peercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(UINT_PACK(len(msg) + 4))
+        conn_obj.obuf.extend(UINT_PACK(self.peercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
     """ File Connection """
@@ -1101,7 +1106,7 @@ class SlskProtoThread(threading.Thread):
 
         # Distributed messages are 5 bytes or greater in length
         while len(msg_buffer) >= 5:
-            msgsize = struct.unpack("<I", msg_buffer[:4])[0]
+            msgsize = UINT_UNPACK(msg_buffer[:4])[0]
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 # Invalid message size or buffer is being filled
@@ -1144,7 +1149,7 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[msg_obj.conn]
-        conn_obj.obuf.extend(struct.pack("<I", len(msg) + 1))
+        conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
         conn_obj.obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
         conn_obj.obuf.extend(msg)
 
