@@ -88,6 +88,14 @@ class ConnClose(InternalMessage):
         self.callback = callback
 
 
+class ConnCloseIP(InternalMessage):
+    """ Sent by the main thread to the networking thread in order to close any connections
+    using a certain IP address. """
+
+    def __init__(self, addr=None):
+        self.addr = addr
+
+
 class ConnectError(InternalMessage):
     """ Sent when a socket exception occurs. It's up to UI thread to
     handle this."""

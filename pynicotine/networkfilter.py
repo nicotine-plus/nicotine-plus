@@ -62,12 +62,14 @@ class NetworkFilter:
             ip_list = self.config.sections["server"]["ipignorelist"]
 
         if self._request_ip(user, "add", list_type):
-            return
+            return None
 
         ip_address, _port = self.users[user].addr
         if ip_address not in ip_list or ip_list[ip_address] != user:
             ip_list[ip_address] = user
             self.config.write_configuration()
+
+        return ip_address
 
     def _remove_user_ip_from_list(self, user, list_type):
         """ Attempt to remove the previously saved IP address of a user from a list. """
@@ -197,6 +199,12 @@ class NetworkFilter:
 
         return 1, ""
 
+    def close_blocked_ip_connections(self):
+        """ Close all connections whose IP address exists in the block list """
+
+        for ip_address in self.config.sections["server"]["ipblocklist"]:
+            self.queue.append(slskmessages.ConnCloseIP(ip_address))
+
     def update_saved_user_ip_filters(self, user):
         """ When we know a user's IP address has changed, we call this function to
         update the IP saved in lists. """
@@ -236,7 +244,10 @@ class NetworkFilter:
             self.config.write_configuration()
 
     def block_user_ip(self, user):
-        self._add_user_ip_to_list(user, "block")
+        ip_address = self._add_user_ip_to_list(user, "block")
+
+        if ip_address:
+            self.queue.append(slskmessages.ConnCloseIP(ip_address))
 
     def unblock_user_ip(self, user):
         self._remove_user_ip_from_list(user, "block")

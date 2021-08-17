@@ -1178,6 +1178,7 @@ class BanListFrame(BuildFrame):
 
     def set_settings(self):
 
+        self.need_ip_block = False
         server = config.sections["server"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
@@ -1273,6 +1274,7 @@ class BanListFrame(BuildFrame):
         if ip not in self.blocked_list:
             self.blocked_list[ip] = ""
             self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip, ""])
+            self.need_ip_block = True
 
     def on_add_blocked(self, widget):
 
@@ -3422,7 +3424,13 @@ class Settings:
         except KeyError:
             need_completion = False
 
-        return need_portmap, need_rescan, need_colors, need_completion, config
+        try:
+            need_ip_block = self.pages["BanList"].need_ip_block
+
+        except KeyError:
+            need_ip_block = False
+
+        return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, config
 
     def on_switch_page(self, selection):
 

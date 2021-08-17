@@ -47,6 +47,7 @@ from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import ChildDepth
 from pynicotine.slskmessages import ConnClose
+from pynicotine.slskmessages import ConnCloseIP
 from pynicotine.slskmessages import ConnectError
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribAlive
@@ -681,6 +682,24 @@ class SlskProtoThread(threading.Thread):
             # Disconnected from server, clean up connections and queue
             self.server_disconnect()
 
+    def close_connection_by_ip(self, ip_address):
+
+        for connection in self._conns.copy():
+            conn_obj = self._conns.get(connection)
+
+            if not conn_obj or connection is self.server_socket:
+                continue
+
+            addr = conn_obj.addr
+
+            if ip_address == addr[0]:
+                log.add_conn("Blocking peer connection to IP address %(ip)s:%(port)s", {
+                    "ip": addr[0],
+                    "port": addr[1]
+                })
+                self._callback_msgs.append(ConnClose(connection, addr))
+                self.close_connection(self._conns, connection)
+
     """ Server Connection """
 
     @staticmethod
@@ -1219,6 +1238,9 @@ class SlskProtoThread(threading.Thread):
                 self._callback_msgs.append(ConnClose(conn, self._conns[conn].addr))
                 self.close_connection(self._conns, conn)
 
+            elif msg_class is ConnCloseIP:
+                self.close_connection_by_ip(msg_obj.addr)
+
             elif msg_class is ServerConn:
                 if self._numsockets < MAXSOCKETS:
                     self.init_server_conn(msg_obj)
@@ -1408,7 +1430,7 @@ class SlskProtoThread(threading.Thread):
                     time.sleep(0.01)
                 else:
                     if self._network_filter.is_ip_blocked(incaddr[0]):
-                        log.add_conn(_("Ignoring connection request from blocked IP Address %(ip)s:%(port)s"), {
+                        log.add_conn("Ignoring connection request from blocked IP address %(ip)s:%(port)s", {
                             'ip': incaddr[0],
                             'port': incaddr[1]
                         })
@@ -1463,6 +1485,15 @@ class SlskProtoThread(threading.Thread):
                             self._callback_msgs.append(ServerConn(self.server_socket, addr))
 
                         else:
+                            if self._network_filter.is_ip_blocked(addr[0]):
+                                log.add_conn("Ignoring connection request from blocked IP address %(ip)s:%(port)s", {
+                                    "ip": addr[0],
+                                    "port": addr[1]
+                                })
+                                self._callback_msgs.append(ConnectError(msg_obj, "Blocked IP address"))
+                                self.close_connection(self._connsinprogress, connection_in_progress)
+                                continue
+
                             self._conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, init=msg_obj.init)
 
@@ -1486,15 +1517,6 @@ class SlskProtoThread(threading.Thread):
                     # Timeout Connections
 
                     if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
-                        self._callback_msgs.append(ConnClose(connection, addr))
-                        self.close_connection(self._conns, connection)
-                        continue
-
-                    if self._network_filter.is_ip_blocked(addr[0]):
-                        log.add_conn("Blocking peer connection to IP: %(ip)s Port: %(port)s", {
-                            "ip": addr[0],
-                            "port": addr[1]
-                        })
                         self._callback_msgs.append(ConnClose(connection, addr))
                         self.close_connection(self._conns, connection)
                         continue

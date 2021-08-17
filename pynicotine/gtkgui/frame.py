@@ -2330,7 +2330,7 @@ class NicotineFrame:
         if not isinstance(output, tuple):
             return
 
-        needportmap, needrescan, needcolors, needcompletion, new_config = output
+        needportmap, needrescan, needcolors, needcompletion, need_ip_block, new_config = output
 
         for key, data in new_config.items():
             config.sections[key].update(data)
@@ -2341,6 +2341,9 @@ class NicotineFrame:
 
         if needportmap:
             self.np.add_upnp_portmapping()
+
+        if need_ip_block:
+            self.np.network_filter.close_blocked_ip_connections()
 
         # Download/upload limits
         self.np.transfers.update_limits()
