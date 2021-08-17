@@ -420,6 +420,7 @@ class SlskProtoThread(threading.Thread):
 
         self._core_callback = core_callback
         self._queue = queue
+        self._callback_msgs = []
         self._want_abort = False
         self.server_disconnected = True
         self.bindip = bindip
@@ -517,7 +518,7 @@ class SlskProtoThread(threading.Thread):
             try:
                 self.listen_socket.bind((ip_address, listenport))
                 self.listen_socket.listen()
-                self._core_callback([IncPort(listenport)])
+                self._callback_msgs.append(IncPort(listenport))
                 self.listenport = listenport
                 break
 
@@ -543,7 +544,7 @@ class SlskProtoThread(threading.Thread):
         self._queue.clear()
 
         if not self._want_abort:
-            self._core_callback([SetCurrentConnectionCount(0)])
+            self._callback_msgs.append(SetCurrentConnectionCount(0))
 
     def abort(self):
         """ Call this to abort the thread """
@@ -740,16 +741,15 @@ class SlskProtoThread(threading.Thread):
             self._numsockets += 1
 
         except socket.error as err:
-            self._core_callback([ConnectError(msg_obj, err)])
+            self._callback_msgs.append(ConnectError(msg_obj, err))
             server_socket.close()
             self.server_disconnect()
 
-    def process_server_input(self, msg_buffer):
+    def process_server_input(self, conn, msg_buffer):
         """ Server has sent us something, this function retrieves messages
         from the msg_buffer, creates message objects and returns them and the rest
         of the msg_buffer.
         """
-        msgs = []
 
         # Server messages are 8 bytes or greater in length
         while len(msg_buffer) >= 8:
@@ -765,7 +765,7 @@ class SlskProtoThread(threading.Thread):
                     self.serverclasses[msgtype], msg_buffer[8:msgsize + 4], msgsize - 4, "server")
 
                 if msg is not None:
-                    msgs.append(msg)
+                    self._callback_msgs.append(msg)
 
             else:
                 log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
@@ -773,7 +773,7 @@ class SlskProtoThread(threading.Thread):
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
-        return msgs, msg_buffer
+        conn.ibuf = msg_buffer
 
     def process_server_output(self, msg_obj):
 
@@ -798,8 +798,6 @@ class SlskProtoThread(threading.Thread):
 
     def process_peer_init_input(self, conn, msg_buffer):
 
-        msgs = []
-
         # Peer init messages are 8 bytes or greater in length
         while conn.init is None and len(msg_buffer) >= 8:
             msgsize = struct.unpack("<I", msg_buffer[:4])[0]
@@ -822,14 +820,14 @@ class SlskProtoThread(threading.Thread):
                     elif self.peerinitclasses[msgtype] is PeerInit:
                         conn.init = msg
 
-                    msgs.append(msg)
+                    self._callback_msgs.append(msg)
 
             else:
                 if conn.piercefw is None:
                     log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
                             {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4]})
 
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
                     self.close_connection(self._conns, conn)
 
                 break
@@ -837,7 +835,6 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
-        return msgs
 
     def process_peer_init_output(self, msg_obj):
 
@@ -898,7 +895,7 @@ class SlskProtoThread(threading.Thread):
             self._numsockets += 1
 
         except socket.error as err:
-            self._core_callback([ConnectError(msg_obj, err)])
+            self._callback_msgs.append(ConnectError(msg_obj, err))
             conn.close()
 
     def process_peer_input(self, conn, msg_buffer):
@@ -907,7 +904,7 @@ class SlskProtoThread(threading.Thread):
         from the msg_buffer, creates message objects and returns them
         and the rest of the msg_buffer.
         """
-        msgs = []
+
         search_result_received = False
 
         # Peer messages are 8 bytes or greater in length
@@ -917,8 +914,7 @@ class SlskProtoThread(threading.Thread):
 
             if peer_class and peer_class in (SharedFileList, UserInfoReply):
                 # Send progress to the main thread
-                self._core_callback(
-                    [PeerTransfer(conn, msgsize, len(msg_buffer) - 4, peer_class)])
+                self._callback_msgs.append(PeerTransfer(conn, msgsize, len(msg_buffer) - 4, peer_class))
 
             if msgsize < 0 or msgsize + 4 > len(msg_buffer):
                 # Invalid message size or buffer is being filled
@@ -933,7 +929,7 @@ class SlskProtoThread(threading.Thread):
                     search_result_received = True
 
                 if msg is not None:
-                    msgs.append(msg)
+                    self._callback_msgs.append(msg)
 
             else:
                 host = port = "unknown"
@@ -955,10 +951,8 @@ class SlskProtoThread(threading.Thread):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
-            self._core_callback([ConnClose(conn.conn, conn.addr)])
+            self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
             self.close_connection(self._conns, conn.conn)
-
-        return msgs
 
     def process_peer_output(self, msg_obj):
 
@@ -988,14 +982,13 @@ class SlskProtoThread(threading.Thread):
         from the msg_buffer, creates message objects and returns them
         and the rest of the msg_buffer.
         """
-        msgs = []
 
         if conn.filereq is None:
             msgsize = 4
             msg = self.unpack_network_message(FileRequest, msg_buffer[:msgsize], msgsize, "file", conn.conn)
 
             if msg is not None and msg.req is not None:
-                msgs.append(msg)
+                self._callback_msgs.append(msg)
                 conn.filereq = msg
 
             msg_buffer = msg_buffer[msgsize:]
@@ -1009,8 +1002,8 @@ class SlskProtoThread(threading.Thread):
                     conn.filedown.file.write(addedbytes)
 
                 except IOError as strerror:
-                    self._core_callback([FileError(conn, conn.filedown.file, strerror)])
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self._callback_msgs.append(FileError(conn, conn.filedown.file, strerror))
+                    self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
                     self.close_connection(self._conns, conn.conn)
 
                 except ValueError:
@@ -1032,11 +1025,11 @@ class SlskProtoThread(threading.Thread):
                 """ We save resources by not sending data back to the NicotineCore
                 every time a part of a file is downloaded """
 
-                self._core_callback([DownloadFile(conn.conn, conn.filedown.file)])
+                self._callback_msgs.append(DownloadFile(conn.conn, conn.filedown.file))
                 conn.lastcallback = curtime
 
             if finished:
-                self._core_callback([ConnClose(conn.conn, conn.addr)])
+                self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
                 self.close_connection(self._conns, conn.conn)
 
             conn.filereadbytes += addedbyteslen
@@ -1051,20 +1044,19 @@ class SlskProtoThread(threading.Thread):
                     conn.fileupl.file.seek(msg.offset)
 
                 except IOError as strerror:
-                    self._core_callback([FileError(conn, conn.fileupl.file, strerror)])
-                    self._core_callback([ConnClose(conn.conn, conn.addr)])
+                    self._callback_msgs.append(FileError(conn, conn.fileupl.file, strerror))
+                    self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
                     self.close_connection(self._conns, conn.conn)
 
                 except ValueError:
                     pass
 
                 conn.fileupl.offset = msg.offset
-                self._core_callback([conn.fileupl])
+                self._callback_msgs.append(conn.fileupl)
 
             msg_buffer = msg_buffer[msgsize:]
 
         conn.ibuf = msg_buffer
-        return msgs
 
     def process_file_output(self, msg_obj):
 
@@ -1086,7 +1078,7 @@ class SlskProtoThread(threading.Thread):
             conn_obj.filereq = msg_obj
             conn_obj.obuf.extend(msg)
 
-            self._core_callback([msg_obj])
+            self._callback_msgs.append(msg_obj)
 
         elif msg_obj.__class__ is FileOffset:
             msg = self.pack_network_message(msg_obj)
@@ -1106,7 +1098,6 @@ class SlskProtoThread(threading.Thread):
         from the msg_buffer, creates message objects and returns them
         and the rest of the msg_buffer.
         """
-        msgs = []
 
         # Distributed messages are 5 bytes or greater in length
         while len(msg_buffer) >= 5:
@@ -1124,19 +1115,18 @@ class SlskProtoThread(threading.Thread):
                     self.distribclasses[msgtype], msg_buffer[5:msgsize + 4], msgsize - 1, "distrib", conn)
 
                 if msg is not None:
-                    msgs.append(msg)
+                    self._callback_msgs.append(msg)
 
             else:
                 log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
                         {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[5:msgsize + 4]})
-                self._core_callback([ConnClose(conn.conn, conn.addr)])
+                self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
                 self.close_connection(self._conns, conn)
                 break
 
             msg_buffer = msg_buffer[msgsize + 4:]
 
         conn.ibuf = msg_buffer
-        return msgs
 
     def process_distrib_output(self, msg_obj):
 
@@ -1163,34 +1153,19 @@ class SlskProtoThread(threading.Thread):
     def process_conn_input(self, connection, conn_obj):
 
         if connection is self.server_socket:
-            msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
-
-            if msgs:
-                self._core_callback(msgs)
+            self.process_server_input(conn_obj, conn_obj.ibuf)
 
         elif conn_obj.init is None:
-            msgs = self.process_peer_init_input(conn_obj, conn_obj.ibuf)
-
-            if msgs:
-                self._core_callback(msgs)
+            self.process_peer_init_input(conn_obj, conn_obj.ibuf)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'P':
-            msgs = self.process_peer_input(conn_obj, conn_obj.ibuf)
-
-            if msgs:
-                self._core_callback(msgs)
+            self.process_peer_input(conn_obj, conn_obj.ibuf)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'F':
-            msgs = self.process_file_input(conn_obj, conn_obj.ibuf)
-
-            if msgs:
-                self._core_callback(msgs)
+            self.process_file_input(conn_obj, conn_obj.ibuf)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'D':
-            msgs = self.process_distrib_input(conn_obj, conn_obj.ibuf)
-
-            if msgs:
-                self._core_callback(msgs)
+            self.process_distrib_input(conn_obj, conn_obj.ibuf)
 
         else:
             # Unknown message type
@@ -1236,7 +1211,7 @@ class SlskProtoThread(threading.Thread):
             elif msg_class is ConnClose and msg_obj.conn in self._conns:
                 conn = msg_obj.conn
 
-                self._core_callback([ConnClose(conn, self._conns[conn].addr)])
+                self._callback_msgs.append(ConnClose(conn, self._conns[conn].addr))
                 self.close_connection(self._conns, conn)
 
             elif msg_class is ServerConn:
@@ -1335,8 +1310,8 @@ class SlskProtoThread(threading.Thread):
                         conn_obj.obuf.extend(read)
 
             except IOError as strerror:
-                self._core_callback([FileError(conn_obj, conn_obj.fileupl.file, strerror)])
-                self._core_callback([ConnClose(connection, conn_obj.addr)])
+                self._callback_msgs.append(FileError(conn_obj, conn_obj.fileupl.file, strerror))
+                self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
                 self.close_connection(self._conns, connection)
 
             except ValueError:
@@ -1359,7 +1334,7 @@ class SlskProtoThread(threading.Thread):
                 """ We save resources by not sending data back to the NicotineCore
                 every time a part of a file is uploaded """
 
-                self._core_callback([conn_obj.fileupl])
+                self._callback_msgs.append(conn_obj.fileupl)
                 conn_obj.lastcallback = curtime
 
     """ Networking Loop """
@@ -1386,7 +1361,7 @@ class SlskProtoThread(threading.Thread):
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once,if there are a lot of connections
             if (curtime - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
-                self._core_callback([SetCurrentConnectionCount(self._numsockets)])
+                self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
                 self.last_conncount_callback = curtime
 
             if self._queue:
@@ -1436,7 +1411,7 @@ class SlskProtoThread(threading.Thread):
                     else:
                         self._conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
                         self._numsockets += 1
-                        self._core_callback([IncConn(incconn, incaddr)])
+                        self._callback_msgs.append(IncConn(incconn, incaddr))
 
                         # Event flags are modified to include 'write' in subsequent loops, if necessary.
                         # Don't do it here, otherwise connections may break.
@@ -1456,7 +1431,7 @@ class SlskProtoThread(threading.Thread):
 
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
 
-                    self._core_callback([ConnectError(msg_obj, "Timed out")])
+                    self._callback_msgs.append(ConnectError(msg_obj, "Timed out"))
                     self.close_connection(self._connsinprogress, connection_in_progress)
                     continue
 
@@ -1469,7 +1444,7 @@ class SlskProtoThread(threading.Thread):
 
                 except socket.error as err:
 
-                    self._core_callback([ConnectError(msg_obj, err)])
+                    self._callback_msgs.append(ConnectError(msg_obj, err))
                     self.close_connection(self._connsinprogress, connection_in_progress)
 
                 else:
@@ -1479,13 +1454,13 @@ class SlskProtoThread(threading.Thread):
                         if connection_in_progress is self.server_socket:
                             self._conns[self.server_socket] = Connection(conn=self.server_socket, addr=addr)
 
-                            self._core_callback([ServerConn(self.server_socket, addr)])
+                            self._callback_msgs.append(ServerConn(self.server_socket, addr))
 
                         else:
                             self._conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, init=msg_obj.init)
 
-                            self._core_callback([PeerConn(connection_in_progress, addr)])
+                            self._callback_msgs.append(PeerConn(connection_in_progress, addr))
 
                         del self._connsinprogress[connection_in_progress]
 
@@ -1505,7 +1480,7 @@ class SlskProtoThread(threading.Thread):
                     # Timeout Connections
 
                     if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
-                        self._core_callback([ConnClose(connection, addr)])
+                        self._callback_msgs.append(ConnClose(connection, addr))
                         self.close_connection(self._conns, connection)
                         continue
 
@@ -1514,7 +1489,7 @@ class SlskProtoThread(threading.Thread):
                             "ip": addr[0],
                             "port": addr[1]
                         })
-                        self._core_callback([ConnClose(connection, addr)])
+                        self._callback_msgs.append(ConnClose(connection, addr))
                         self.close_connection(self._conns, connection)
                         continue
 
@@ -1525,12 +1500,12 @@ class SlskProtoThread(threading.Thread):
                     try:
                         if not self.read_data(conn_obj):
                             # No data received, socket was likely closed remotely
-                            self._core_callback([ConnClose(connection, conn_obj.addr)])
+                            self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
                             self.close_connection(self._conns, connection)
                             continue
 
                     except socket.error as err:
-                        self._core_callback([ConnectError(conn_obj, err)])
+                        self._callback_msgs.append(ConnectError(conn_obj, err))
                         self.close_connection(self._conns, connection)
                         continue
 
@@ -1545,9 +1520,14 @@ class SlskProtoThread(threading.Thread):
                         self.write_data(conn_obj)
 
                     except socket.error as err:
-                        self._core_callback([ConnectError(conn_obj, err)])
+                        self._callback_msgs.append(ConnectError(conn_obj, err))
                         self.close_connection(self._conns, connection)
                         continue
+
+            if self._callback_msgs:
+                # Tell the main thread what we've done
+                self._core_callback(list(self._callback_msgs))
+                self._callback_msgs.clear()
 
             # Don't exhaust the CPU
             time.sleep(0.005)
