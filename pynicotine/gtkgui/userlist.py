@@ -345,10 +345,10 @@ class UserList:
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
         actions = menu.get_actions()
+        private_rooms_enabled = (self.popup_menu_private_rooms.items
+                                 and status > 0 and menu.user != config.sections["server"]["login"])
 
-        actions[_("Private Rooms")].set_enabled(
-            status and menu.user != config.sections["server"]["login"]
-        )
+        actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
         actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
         actions[_("_Privileged")].set_state(GLib.Variant.new_boolean(privileged))

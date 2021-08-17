@@ -676,10 +676,12 @@ class ChatRoom:
 
         self.popup_menu.set_user(user)
         self.popup_menu.toggle_user_items()
-
-        me = (self.popup_menu.user is None or self.popup_menu.user == config.sections["server"]["login"])
-        self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(not me)
         self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
+
+        private_rooms_enabled = (self.popup_menu_private_rooms.items
+                                 and self.popup_menu.user != config.sections["server"]["login"])
+
+        self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *args):
         self.LogSearchBar.set_search_mode(True)
