@@ -1379,21 +1379,19 @@ class SlskProtoThread(threading.Thread):
                 time.sleep(0.1)
                 continue
 
-            self._ulimits = {}
-            self._dlimits = {}
-            self._calc_loops_per_second()
-
             curtime = time.time()
 
             # Send updated connection count to NicotineCore. Avoid sending too many
-            # updates at once,if there are a lot of connections
+            # updates at once, if there are a lot of connections.
             if (curtime - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
                 self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
                 self.last_conncount_callback = curtime
 
+            # Process outgoing messages
             if self._queue:
                 self.process_conn_output()
 
+            # Check which connections are ready to send/receive data
             try:
                 for connection, conn_obj in self._conns.items():
                     event_masks = selectors.EVENT_READ
@@ -1412,17 +1410,19 @@ class SlskProtoThread(threading.Thread):
             except OSError as error:
                 # Error recieved; terminate networking loop
 
-                self._want_abort = True
                 log.add("Major Socket Error: Networking terminated! %s", error)
+                self._want_abort = True
 
             except ValueError as error:
                 # Possibly opened too many sockets
 
                 log.add("select ValueError: %s", error)
                 time.sleep(0.1)
+
+                self._callback_msgs.clear()
                 continue
 
-            # Listen / Peer Port
+            # Manage incoming connections to listen socket
             if self._numsockets < MAXSOCKETS and not self.server_disconnected and self.listen_socket in input_list:
                 try:
                     incconn, incaddr = self.listen_socket.accept()
@@ -1445,9 +1445,7 @@ class SlskProtoThread(threading.Thread):
                         # Don't do it here, otherwise connections may break.
                         self.selector.register(incconn, selectors.EVENT_READ)
 
-            # Manage Connections
-            curtime = time.time()
-
+            # Manage outgoing connections in progress
             for connection_in_progress in self._connsinprogress.copy():
                 conn_obj = self._connsinprogress.get(connection_in_progress)
 
@@ -1458,6 +1456,7 @@ class SlskProtoThread(threading.Thread):
                 msg_obj = conn_obj.msg_obj
 
                 if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
+                    # Connection failed
 
                     self._callback_msgs.append(ConnectError(msg_obj, "Timed out"))
                     self.close_connection(self._connsinprogress, connection_in_progress)
@@ -1477,11 +1476,12 @@ class SlskProtoThread(threading.Thread):
 
                 else:
                     if connection_in_progress in output_list:
+                        # Connection has been established
+
                         addr = msg_obj.addr
 
                         if connection_in_progress is self.server_socket:
                             self._conns[self.server_socket] = Connection(conn=self.server_socket, addr=addr)
-
                             self._callback_msgs.append(ServerConn(self.server_socket, addr))
 
                         else:
@@ -1501,9 +1501,7 @@ class SlskProtoThread(threading.Thread):
 
                         del self._connsinprogress[connection_in_progress]
 
-            # Process Data
-            curtime = time.time()
-
+            # Process read/write for active connections
             for connection in self._conns.copy():
                 conn_obj = self._conns.get(connection)
 
@@ -1511,15 +1509,13 @@ class SlskProtoThread(threading.Thread):
                     # Connection was removed, possibly disconnecting from the server
                     continue
 
-                if connection is not self.server_socket:
-                    addr = conn_obj.addr
+                if (connection is not self.server_socket
+                        and (curtime - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
+                    # No recent activity, peer connection is stale
 
-                    # Timeout Connections
-
-                    if curtime - conn_obj.lastactive > self.CONNECTION_MAX_IDLE:
-                        self._callback_msgs.append(ConnClose(connection, addr))
-                        self.close_connection(self._conns, connection)
-                        continue
+                    self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
+                    self.close_connection(self._conns, connection)
+                    continue
 
                 if connection in input_list:
                     if self._is_download(conn_obj):
@@ -1552,10 +1548,16 @@ class SlskProtoThread(threading.Thread):
                         self.close_connection(self._conns, connection)
                         continue
 
+            # Inform the main thread
             if self._callback_msgs:
-                # Tell the main thread what we've done
                 self._core_callback(list(self._callback_msgs))
                 self._callback_msgs.clear()
+
+            # Reset transfer speed limits
+            self._ulimits = {}
+            self._dlimits = {}
+
+            self._calc_loops_per_second()
 
             # Don't exhaust the CPU
             time.sleep(0.005)
