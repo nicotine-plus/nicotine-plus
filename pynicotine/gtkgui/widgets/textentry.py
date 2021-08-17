@@ -19,6 +19,7 @@
 from os.path import commonprefix
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -585,14 +586,13 @@ class TextSearchBar:
 
 def clear_entry(entry):
 
-    if Gtk.get_major_version() == 4:
-        completion = entry.get_completion()
-        completion.set_minimum_key_length(1)
-        entry.set_text("")
-        completion.set_minimum_key_length(0)
+    completion = entry.get_completion()
+    model = completion.get_model()
 
-    else:
-        completion = entry.get_completion()
-        entry.set_completion(None)
-        entry.set_text("")
-        entry.set_completion(completion)
+    # Temporarily specify dummy model to avoid completion popup
+    completion.set_model(Gtk.ListStore())
+    entry.set_text("")
+
+    # Add slight delay before restoring model, otherwise popup will appear
+    if model.get_iter_first():
+        GLib.timeout_add(100, completion.set_model, model)
