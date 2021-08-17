@@ -30,7 +30,7 @@ def create_nsis_installer():
     current_dir = os.path.dirname(os.path.realpath(__file__))
     version = subprocess.check_output([sys.executable,
                                        os.path.join(current_dir, "..", "..", "setup.py"),
-                                       "--version"])
+                                       "--version"], universal_newlines=True).rstrip()
 
     subprocess.check_call(["makensis", "-DARCH=" + str(arch), "-DPRODUCT_VERSION=" + str(version),
                            os.path.join(current_dir, "nicotine.nsi")])
