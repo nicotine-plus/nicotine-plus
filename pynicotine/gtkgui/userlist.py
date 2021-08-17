@@ -347,7 +347,7 @@ class UserList:
         actions = menu.get_actions()
 
         actions[_("Private Rooms")].set_enabled(
-            status or menu.user != config.sections["server"]["login"]
+            status and menu.user != config.sections["server"]["login"]
         )
 
         actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
