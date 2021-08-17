@@ -1164,23 +1164,33 @@ class SlskProtoThread(threading.Thread):
 
         if connection is self.server_socket:
             msgs, conn_obj.ibuf = self.process_server_input(conn_obj.ibuf)
-            self._core_callback(msgs)
+
+            if msgs:
+                self._core_callback(msgs)
 
         elif conn_obj.init is None:
             msgs = self.process_peer_init_input(conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
+
+            if msgs:
+                self._core_callback(msgs)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'P':
             msgs = self.process_peer_input(conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
+
+            if msgs:
+                self._core_callback(msgs)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'F':
             msgs = self.process_file_input(conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
+
+            if msgs:
+                self._core_callback(msgs)
 
         elif conn_obj.init is not None and conn_obj.init.conn_type == 'D':
             msgs = self.process_distrib_input(conn_obj, conn_obj.ibuf)
-            self._core_callback(msgs)
+
+            if msgs:
+                self._core_callback(msgs)
 
         else:
             # Unknown message type
