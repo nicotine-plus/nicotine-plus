@@ -1380,7 +1380,8 @@ class SlskProtoThread(threading.Thread):
                                           and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None)):
                         event_masks |= selectors.EVENT_WRITE
 
-                    self.selector.modify(connection, event_masks)
+                    if self.selector.get_key(connection).events != event_masks:
+                        self.selector.modify(connection, event_masks)
 
                 key_events = self.selector.select(timeout=-1)
                 input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
