@@ -275,39 +275,20 @@ class Search:
 
     @staticmethod
     def create_search_result_list(searchterm, wordindex):
+        """ Returns a list of common file indices for each word in a search term """
 
         try:
-            """ Stage 1: Check if each word in the search term is included in our word index.
-            If this is the case, we select the word that has the most file matches in our
-            word index. If not, exit, since we don't have relevant results. """
-
-            largest = 0
             words = searchterm.split()
+            results = set(wordindex[words.pop()])
 
             for word in words:
-                if word not in wordindex:
-                    return None
-
-                list_size = len(wordindex[word])
-
-                if list_size > largest:
-                    largest = list_size
-                    largest_key = word
-
-            """ Stage 2: Start with the word that has the most file matches, which we selected
-            in the previous step, and gradually remove matches that other words in the search
-            term don't have. Return the remaining matches, if any. """
-
-            results = wordindex[largest_key]
-            words.remove(largest_key)
-
-            for word in words:
-                results = set(results).intersection(wordindex[word])
+                results.intersection_update(wordindex[word])
 
             return results
 
-        except ValueError:
-            # DB is closed, perhaps when rescanning share or closing Nicotine+
+        except (KeyError, ValueError):
+            # Search word does not exist in our word index database. There are no results.
+            # Alternatively, the DB is closed, perhaps due to rescanning shares or closing Nicotine+
             return None
 
     def process_search_request(self, searchterm, user, searchid, direct=False):
@@ -315,11 +296,11 @@ class Search:
         several times a second, please keep it as optimized and memory
         sparse as possible! """
 
-        if not self.config.sections["searches"]["search_results"]:
-            # Don't return _any_ results when this option is disabled
+        if not searchterm:
             return
 
-        if searchterm is None:
+        if not self.config.sections["searches"]["search_results"]:
+            # Don't return _any_ results when this option is disabled
             return
 
         if not direct and user == self.config.sections["server"]["login"]:
@@ -380,7 +361,7 @@ class Search:
         message = slskmessages.FileSearchResult(
             None,
             self.config.sections["server"]["login"],
-            searchid, resultlist, fileindex, slotsavail,
+            searchid, sorted(resultlist), fileindex, slotsavail,
             uploadspeed, queuesize, fifoqueue, numresults
         )
 
