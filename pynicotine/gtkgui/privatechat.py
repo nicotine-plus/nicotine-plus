@@ -380,7 +380,7 @@ class PrivateChat:
 
     def echo_message(self, text, message_type):
 
-        tag = self.tag_action
+        tag = self.tag_local
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
         if hasattr(self, "tag_" + str(message_type)):
