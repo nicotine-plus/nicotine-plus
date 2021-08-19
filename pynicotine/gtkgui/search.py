@@ -628,17 +628,17 @@ class Search:
 
         counter = len(self.all_data) + 1
 
-        inqueue = msg.inqueue
-        ulspeed = msg.ulspeed
-        h_speed = human_speed(ulspeed)
-
         if msg.freeulslots:
             imdl = "Y"
             inqueue = 0
+            h_queue = ""
         else:
             imdl = "N"
+            inqueue = msg.inqueue
+            h_queue = humanize(inqueue)
 
-        h_queue = humanize(inqueue)
+        ulspeed = msg.ulspeed
+        h_speed = human_speed(ulspeed)
 
         color_id = (imdl == "Y" and "search" or "searchq")
         color = config.sections["ui"][color_id] or None
