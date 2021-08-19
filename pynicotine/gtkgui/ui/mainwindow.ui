@@ -86,7 +86,7 @@
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Search term...</property>
-                <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term</property>
+                <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
                 <property name="completion">SearchCompletion</property>
                 <signal name="activate" handler="on_search" swapped="no"/>

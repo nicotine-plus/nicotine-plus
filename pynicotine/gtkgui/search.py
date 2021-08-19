@@ -110,12 +110,12 @@ class Searches(IconNotebook):
         if not search_response:
             return
 
-        search_id, searchterm_with_excluded, searchterm_without_excluded = search_response
+        search_id, searchterm, _searchterm_without_special = search_response
 
         if mode == "user" and user:
             self.usersearches[search_id] = [user]
 
-        search = self.create_tab(search_id, searchterm_with_excluded, mode, showtab=True)
+        search = self.create_tab(search_id, searchterm, mode, showtab=True)
 
         if search["tab"] is not None:
             self.set_current_page(self.page_num(search["tab"].Main))
@@ -289,8 +289,20 @@ class Search:
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
         self.text = text
-        self.searchterm_words_include = [p for p in text.lower().split() if not p.startswith('-')]
-        self.searchterm_words_ignore = [p[1:] for p in text.lower().split() if p.startswith('-') and len(p) > 1]
+        self.searchterm_words_include = []
+        self.searchterm_words_ignore = []
+
+        for word in text.lower().split():
+            if word.startswith('*'):
+                if len(word) > 1:
+                    self.searchterm_words_include.append(word[1:])
+
+            elif word.startswith('-'):
+                if len(word) > 1:
+                    self.searchterm_words_ignore.append(word[1:])
+
+            else:
+                self.searchterm_words_include.append(word)
 
         self.id = id
         self.mode = mode

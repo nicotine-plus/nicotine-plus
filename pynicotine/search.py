@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import re
 import string
 
 from pynicotine import slskmessages
@@ -140,57 +139,55 @@ class Search:
 
         # Get excluded words (starting with "-")
         searchterm_words = text.split()
-        searchterm_words_ignore = (p[1:] for p in searchterm_words if p.startswith('-') and len(p) > 1)
+        searchterm_words_special = (p for p in searchterm_words if p.startswith(('-', '*')) and len(p) > 1)
 
         # Remove words starting with "-", results containing these are excluded by us later
-        searchterm_without_excluded = ' '.join(p for p in searchterm_words if not p.startswith('-'))
+        searchterm_without_special = ' '.join(p for p in searchterm_words if not p.startswith(('-', '*')))
 
         if self.config.sections["searches"]["remove_special_chars"]:
             """
             Remove special characters from search term
             SoulseekQt doesn't seem to send search results if special characters are included (July 7, 2020)
             """
-            stripped_searchterm = ' '.join(searchterm_without_excluded.translate(self.translatepunctuation).split())
+            stripped_searchterm = ' '.join(searchterm_without_special.translate(self.translatepunctuation).split())
 
             # Only modify search term if string also contains non-special characters
             if stripped_searchterm:
-                searchterm_without_excluded = stripped_searchterm
+                searchterm_without_special = stripped_searchterm
 
         # Remove trailing whitespace
-        searchterm_without_excluded = searchterm_without_excluded.strip()
+        searchterm = searchterm_without_special.strip()
 
         # Append excluded words
-        searchterm_with_excluded = searchterm_without_excluded
-
-        for word in searchterm_words_ignore:
-            searchterm_with_excluded += " -" + word
+        for word in searchterm_words_special:
+            searchterm += " " + word
 
         if self.config.sections["searches"]["enable_history"]:
             items = self.config.sections["searches"]["history"]
 
-            if searchterm_with_excluded in items:
-                items.remove(searchterm_with_excluded)
+            if searchterm in items:
+                items.remove(searchterm)
 
-            items.insert(0, searchterm_with_excluded)
+            items.insert(0, searchterm)
 
             # Clear old items
             del items[15:]
             self.config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(self.searchid, searchterm_without_excluded)
+            self.do_global_search(self.searchid, searchterm)
 
         elif mode == "rooms":
-            self.do_rooms_search(self.searchid, searchterm_without_excluded, room)
+            self.do_rooms_search(self.searchid, searchterm, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(self.searchid, searchterm_without_excluded)
+            self.do_buddies_search(self.searchid, searchterm)
 
         elif mode == "user":
-            self.do_peer_search(self.searchid, searchterm_without_excluded, users)
+            self.do_peer_search(self.searchid, searchterm, users)
 
         self.add_allowed_search_id(self.searchid)
-        return (self.searchid, searchterm_with_excluded, searchterm_without_excluded)
+        return (self.searchid, searchterm, searchterm_without_special)
 
     def do_global_search(self, search_id, text):
         self.queue.append(slskmessages.FileSearch(search_id, text))
@@ -274,21 +271,79 @@ class Search:
     """ Incoming search requests """
 
     @staticmethod
-    def create_search_result_list(searchterm, wordindex):
+    def update_search_results(results, word_indices, exclude_word=False):
+        """ Updates the search result list with indices for a new word """
+
+        if word_indices is None:
+            if exclude_word:
+                # We don't care if an excluded word doesn't exist in our DB
+                return results
+
+            # Included word does not exist in our DB, no results
+            return None
+
+        if results is None:
+            if exclude_word:
+                # No results yet, but word is excluded. Bail.
+                return set()
+
+            # First match for included word, return results
+            return set(word_indices)
+
+        if exclude_word:
+            return results - set(word_indices)
+
+        # Return common elements for result list and indices for word
+        results.intersection_update(word_indices)
+        return results
+
+    def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
         """ Returns a list of common file indices for each word in a search term """
 
         try:
             words = searchterm.split()
-            results = set(wordindex[words.pop()])
+            original_length = len(words)
+            results = None
+            i = 0
 
-            for word in words:
-                results.intersection_update(wordindex[word])
+            while i < len(words):
+                word = words[i]
+                exclude_word = False
+                i += 1
+
+                if word in excluded_words:
+                    # Excluded search words (e.g. -hello)
+
+                    if results is None and i < original_length:
+                        # Re-append the word so we can re-process it once we've found a match
+                        words.append(word)
+                        continue
+
+                    exclude_word = True
+
+                elif word in partial_words:
+                    # Partial search words (e.g. *ello)
+
+                    partial_results = set()
+
+                    for complete_word, indices in wordindex.items():
+                        if complete_word.endswith(word):
+                            partial_results.update(indices)
+
+                    if partial_results:
+                        results = self.update_search_results(results, partial_results)
+                        continue
+
+                results = self.update_search_results(results, wordindex.get(word), exclude_word)
+
+                if results is None:
+                    # No matches found
+                    break
 
             return results
 
-        except (KeyError, ValueError):
-            # Search word does not exist in our word index database. There are no results.
-            # Alternatively, the DB is closed, perhaps due to rescanning shares or closing Nicotine+
+        except ValueError:
+            # DB is closed, perhaps due to rescanning shares or closing Nicotine+
             return None
 
     def process_search_request(self, searchterm, user, searchid, direct=False):
@@ -313,11 +368,25 @@ class Search:
         if maxresults == 0:
             return
 
-        # Don't count excluded words as matches (words starting with -)
-        if '-' in searchterm:
-            searchterm = re.sub(r'(\s)-\w+', '', searchterm)
+        # Remember excluded/partial words for later
+        excluded_words = []
+        partial_words = []
+
+        if '-' in searchterm or '*' in searchterm:
+            for word in searchterm.split():
+                if len(word) < 1:
+                    continue
+
+                if word.startswith('-'):
+                    for subword in word.translate(self.translatepunctuation).split():
+                        excluded_words.append(subword)
+
+                elif word.startswith('*'):
+                    for subword in word.translate(self.translatepunctuation).split():
+                        partial_words.append(subword)
 
         # Strip punctuation
+        searchterm_old = searchterm
         searchterm = searchterm.lower().translate(self.translatepunctuation).strip()
 
         if len(searchterm) < self.config.sections["searches"]["min_search_chars"]:
@@ -338,7 +407,7 @@ class Search:
             return
 
         # Find common file matches for each word in search term
-        resultlist = self.create_search_result_list(searchterm, wordindex)
+        resultlist = self.create_search_result_list(searchterm, wordindex, excluded_words, partial_words)
 
         if not resultlist:
             return
@@ -371,13 +440,13 @@ class Search:
             log.add_search(
                 _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
                     'user': user,
-                    'query': searchterm,
+                    'query': searchterm_old,
                     'num': numresults
                 })
         else:
             log.add_search(
                 _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
                     'user': user,
-                    'query': searchterm,
+                    'query': searchterm_old,
                     'num': numresults
                 })

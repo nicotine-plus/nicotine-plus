@@ -24,7 +24,7 @@ from collections import deque
 from pynicotine.config import config
 from pynicotine.search import Search
 
-SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ [[ @@ auto -no yes'
+SEARCH_TEXT = '70 gwen "test" -mp3 -nothanks a:b;c+d +++---}[ *ello [[ @@ auto -no yes'
 SEARCH_MODE = 'global'
 
 
@@ -47,26 +47,24 @@ class SearchTest(unittest.TestCase):
         # Try a search with special characters removed
 
         config.sections["searches"]["remove_special_chars"] = True
-        searchid, searchterm_with_excluded, searchterm_without_excluded = self.search.do_search(SEARCH_TEXT,
-                                                                                                SEARCH_MODE)
+        searchid, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
         self.assertEqual(searchid, self.search.get_current_search_id())
         self.assertEqual(searchid, old_searchid + 1)
-        self.assertEqual(searchterm_with_excluded, "70 gwen test a b c d auto yes -mp3 -nothanks -no")
-        self.assertEqual(searchterm_without_excluded, "70 gwen test a b c d auto yes")
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm_with_excluded)
+        self.assertEqual(searchterm, "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
+        self.assertEqual(searchterm_without_special, "70 gwen test a b c d auto yes")
+        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
 
         # Try a search without special characters removed
 
         config.sections["searches"]["remove_special_chars"] = False
-        searchid, searchterm_with_excluded, searchterm_without_excluded = self.search.do_search(SEARCH_TEXT,
-                                                                                                SEARCH_MODE)
+        searchid, searchterm, searchterm_without_special = self.search.do_search(SEARCH_TEXT, SEARCH_MODE)
 
-        self.assertEqual(searchterm_with_excluded, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks -no')
-        self.assertEqual(searchterm_without_excluded, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
-        self.assertEqual(config.sections["searches"]["history"][0], searchterm_with_excluded)
+        self.assertEqual(searchterm, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes -mp3 -nothanks *ello -no')
+        self.assertEqual(searchterm_without_special, '70 gwen "test" a:b;c+d +++---}[ [[ @@ auto yes')
+        self.assertEqual(config.sections["searches"]["history"][0], searchterm)
         self.assertEqual(config.sections["searches"]["history"][1],
-                         "70 gwen test a b c d auto yes -mp3 -nothanks -no")
+                         "70 gwen test a b c d auto yes -mp3 -nothanks *ello -no")
 
     def test_search_id_increment(self):
         """ Test that search ID increments work properly """
