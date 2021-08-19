@@ -330,7 +330,7 @@ class PluginHandler:
         are precisely the same except for how n+ responds to them, both can be
         triggered by this function. """
 
-        function_name_camelcase = ''.join(x.capitalize() or '_' for x in function_name.split('_'))
+        function_name_camelcase = function_name.title().replace('_', '')
 
         for module, plugin in self.enabled_plugins.items():
             try:
