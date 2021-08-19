@@ -291,10 +291,12 @@ class Search:
             return set(word_indices)
 
         if exclude_word:
-            return results - set(word_indices)
+            # Remove results for excluded word
+            results.difference_update(word_indices)
+        else:
+            # Only retain common results for all words so far
+            results.intersection_update(word_indices)
 
-        # Return common elements for result list and indices for word
-        results.intersection_update(word_indices)
         return results
 
     def create_search_result_list(self, searchterm, wordindex, excluded_words, partial_words):
