@@ -212,7 +212,7 @@ def get_result_bitrate_length(filesize, attributes):
 
             # Bitrate = sample rate (Hz) * word length (bits) * channel count
             # Bitrate = 44100 * 16 * 2
-            bitrate = (second * third * 2) / 1000
+            bitrate = (second * third * 2) // 1000
             h_bitrate = str(bitrate)
 
             length = first
