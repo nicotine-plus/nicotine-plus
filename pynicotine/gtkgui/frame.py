@@ -1936,9 +1936,9 @@ class NicotineFrame:
 
         self.RoomSearchCombo.set_sensitive(act)
 
-    def on_search(self, widget, *args):
+    def on_search(self, *args):
         self.searches.on_search()
-        clear_entry(widget)
+        clear_entry(self.SearchEntry)
 
     """ User Info """
 

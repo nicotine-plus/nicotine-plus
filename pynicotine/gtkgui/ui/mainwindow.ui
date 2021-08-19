@@ -46,6 +46,7 @@
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Room...</property>
                 <property name="completion">RoomSearchCompletion</property>
+                <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
             <child internal-child="button">
@@ -66,6 +67,7 @@
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username...</property>
                 <property name="completion">UserSearchCompletion</property>
+                <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
             <child internal-child="button">
