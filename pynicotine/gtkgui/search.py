@@ -338,33 +338,31 @@ class Search:
             GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
             GObject.TYPE_OBJECT,  # (2)  flag
-            str,                  # (3)  immediatedl
-            str,                  # (4)  h_speed
-            str,                  # (5)  h_queue
-            str,                  # (6)  directory
-            str,                  # (7)  filename
-            str,                  # (8)  h_size
-            str,                  # (9)  h_bitrate
-            str,                  # (10) h_length
-            GObject.TYPE_UINT64,  # (11) bitrate
-            str,                  # (12) fullpath
-            str,                  # (13) country
-            GObject.TYPE_UINT64,  # (14) size
-            GObject.TYPE_UINT64,  # (15) speed
-            GObject.TYPE_UINT64,  # (16) queue
-            GObject.TYPE_UINT64,  # (17) length
-            str                   # (18) color
+            str,                  # (3)  h_speed
+            str,                  # (4)  h_queue
+            str,                  # (5)  directory
+            str,                  # (6)  filename
+            str,                  # (7)  h_size
+            str,                  # (8)  h_bitrate
+            str,                  # (9)  h_length
+            GObject.TYPE_UINT64,  # (10) bitrate
+            str,                  # (11) fullpath
+            str,                  # (12) country
+            GObject.TYPE_UINT64,  # (13) size
+            GObject.TYPE_UINT64,  # (14) speed
+            GObject.TYPE_UINT64,  # (15) queue
+            GObject.TYPE_UINT64,  # (16) length
+            str                   # (17) color
         )
 
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
-        color_col = 18
+        color_col = 17
         self.cols = cols = initialise_columns(
             "file_search", self.ResultsList,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "pixbuf", None],
-            ["immediate_download", _("Immediate Download"), 50, "center", color_col],
-            ["speed", _("Speed"), 90, "number", color_col],
+            ["speed", _("Speed"), 100, "number", color_col],
             ["in_queue", _("In Queue"), 90, "center", color_col],
             ["folder", _("Folder"), 400, "text", color_col],
             ["filename", _("Filename"), 400, "text", color_col],
@@ -375,15 +373,14 @@ class Search:
 
         cols["id"].set_sort_column_id(0)
         cols["user"].set_sort_column_id(1)
-        cols["country"].set_sort_column_id(13)
-        cols["immediate_download"].set_sort_column_id(3)
-        cols["speed"].set_sort_column_id(15)
-        cols["in_queue"].set_sort_column_id(16)
-        cols["folder"].set_sort_column_id(6)
-        cols["filename"].set_sort_column_id(7)
-        cols["size"].set_sort_column_id(14)
-        cols["bitrate"].set_sort_column_id(11)
-        cols["length"].set_sort_column_id(17)
+        cols["country"].set_sort_column_id(12)
+        cols["speed"].set_sort_column_id(14)
+        cols["in_queue"].set_sort_column_id(15)
+        cols["folder"].set_sort_column_id(5)
+        cols["filename"].set_sort_column_id(6)
+        cols["size"].set_sort_column_id(13)
+        cols["bitrate"].set_sort_column_id(10)
+        cols["length"].set_sort_column_id(16)
 
         cols["country"].get_widget().hide()
 
@@ -440,8 +437,8 @@ class Search:
 
     def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
 
-        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 13, strip_prefix="")
-        file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 12)
+        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 12, strip_prefix="")
+        file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 11)
 
         if country_tooltip:
             return country_tooltip
@@ -542,7 +539,7 @@ class Search:
                 combobox.prepend_text(text)
 
     def add_result_list(self, result_list, counter, user, country, inqueue, ulspeed, h_speed,
-                        imdl, h_queue, color, private=False):
+                        h_queue, color, private=False):
         """ Adds a list of search results to the treeview. Lists can either contain publicly or
         privately shared files. """
 
@@ -593,7 +590,6 @@ class Search:
                     GObject.Value(GObject.TYPE_UINT64, counter),
                     user,
                     GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
-                    imdl,
                     h_speed,
                     h_queue,
                     directory,
@@ -629,26 +625,24 @@ class Search:
         counter = len(self.all_data) + 1
 
         if msg.freeulslots:
-            imdl = "Y"
             inqueue = 0
             h_queue = ""
         else:
-            imdl = "N"
-            inqueue = msg.inqueue
+            inqueue = msg.inqueue or 1  # Ensure value is always >= 1
             h_queue = humanize(inqueue)
 
         ulspeed = msg.ulspeed
         h_speed = human_speed(ulspeed)
 
-        color_id = (imdl == "Y" and "search" or "searchq")
+        color_id = (msg.freeulslots and "search" or "searchq")
         color = config.sections["ui"][color_id] or None
 
         update_ui, counter = self.add_result_list(
-            msg.list, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color)
+            msg.list, counter, user, country, inqueue, ulspeed, h_speed, h_queue, color)
 
         if msg.privatelist:
             update_ui_private, counter = self.add_result_list(
-                msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, imdl, h_queue, color, private=True)
+                msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, h_queue, color, private=True)
 
             if not update_ui and update_ui_private:
                 update_ui = True
@@ -692,7 +686,7 @@ class Search:
         return True
 
     def add_row_to_model(self, row):
-        (counter, user, flag, immediatedl, h_speed, h_queue, directory, filename, h_size, h_bitrate,
+        (counter, user, flag, h_speed, h_queue, directory, filename, h_size, h_bitrate,
             h_length, bitrate, fullpath, country, size, speed, queue, length, color) = row
 
         if self.grouping_mode != "ungrouped":
@@ -708,7 +702,6 @@ class Search:
                         empty_int,
                         user,
                         flag,
-                        immediatedl,
                         h_speed,
                         h_queue,
                         empty_str,
@@ -739,7 +732,6 @@ class Search:
                             empty_int,
                             user,
                             flag,
-                            immediatedl,
                             h_speed,
                             h_queue,
                             directory,
@@ -759,7 +751,7 @@ class Search:
                     )
 
                 row = row[:]
-                row[6] = ""  # Directory not visible for file row if "group by folder" is enabled
+                row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
 
                 parent = self.directoryiters[directory]
         else:
@@ -878,27 +870,27 @@ class Search:
         if self.active_filter_count == 0:
             return True
 
-        # "Included text"-filter, check full file path (located at index 12 in row)
-        if filters["include"] and not filters["include"].search(row[12].lower()):
+        # "Included text"-filter, check full file path (located at index 11 in row)
+        if filters["include"] and not filters["include"].search(row[11].lower()):
             return False
 
-        # "Excluded text"-filter, check full file path (located at index 12 in row)
-        if filters["exclude"] and filters["exclude"].search(row[12].lower()):
+        # "Excluded text"-filter, check full file path (located at index 11 in row)
+        if filters["exclude"] and filters["exclude"].search(row[11].lower()):
             return False
 
-        if filters["size"] and not self.check_digit(filters["size"], row[14].get_uint64()):
+        if filters["size"] and not self.check_digit(filters["size"], row[13].get_uint64()):
             return False
 
-        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[11].get_uint64(), False):
+        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[10].get_uint64(), False):
             return False
 
-        if filters["freeslot"] and row[3] != "Y":
+        if filters["freeslot"] and not row[16]:
             return False
 
-        if filters["country"] and not self.check_country(filters["country"], row[13]):
+        if filters["country"] and not self.check_country(filters["country"], row[12]):
             return False
 
-        if filters["type"] and not self.check_file_type(filters["type"], row[12]):
+        if filters["type"] and not self.check_file_type(filters["type"], row[11]):
             return False
 
         return True
@@ -1061,19 +1053,19 @@ class Search:
             if user not in self.selected_users:
                 self.selected_users.append(user)
 
-            filepath = model.get_value(iterator, 12)
+            filepath = model.get_value(iterator, 11)
 
             if not filepath:
                 # Result is not a file or directory, don't add it
                 continue
 
-            bitrate = model.get_value(iterator, 9)
-            length = model.get_value(iterator, 10)
-            size = model.get_value(iterator, 14)
+            bitrate = model.get_value(iterator, 8)
+            length = model.get_value(iterator, 9)
+            size = model.get_value(iterator, 13)
 
             self.selected_results.append((user, filepath, size, bitrate, length))
 
-            filename = model.get_value(iterator, 7)
+            filename = model.get_value(iterator, 6)
 
             if filename:
                 self.selected_files_count += 1
@@ -1165,7 +1157,7 @@ class Search:
 
         for path in paths:
             iterator = model.get_iter(path)
-            filename = model.get_value(iterator, 7)
+            filename = model.get_value(iterator, 6)
 
             # We only want to see the metadata of files, not directories
             if not filename:
@@ -1173,15 +1165,14 @@ class Search:
 
             num = model.get_value(iterator, 0)
             user = model.get_value(iterator, 1)
-            immediate = model.get_value(iterator, 3)
-            speed = model.get_value(iterator, 4)
-            queue = model.get_value(iterator, 5)
-            size = model.get_value(iterator, 8)
-            bitratestr = model.get_value(iterator, 9)
-            length = model.get_value(iterator, 10)
-            fn = model.get_value(iterator, 12)
+            speed = model.get_value(iterator, 3)
+            queue = model.get_value(iterator, 4)
+            size = model.get_value(iterator, 7)
+            bitratestr = model.get_value(iterator, 8)
+            length = model.get_value(iterator, 9)
+            fn = model.get_value(iterator, 11)
             directory, filename = fn.rsplit('\\', 1)
-            cc = model.get_value(iterator, 13)
+            cc = model.get_value(iterator, 12)
             country = "%s / %s" % (cc, self.frame.np.geoip.country_code_to_name(cc))
 
             data.append({
@@ -1193,7 +1184,7 @@ class Search:
                 "size": size,
                 "speed": speed,
                 "queue": queue,
-                "immediate": immediate,
+                "immediate": "Y",
                 "bitrate": bitratestr,
                 "length": length,
                 "country": country
@@ -1247,7 +1238,7 @@ class Search:
             for row in self.all_data:
 
                 # Find the wanted directory
-                if folder != row[12].rsplit('\\', 1)[0]:
+                if folder != row[11].rsplit('\\', 1)[0]:
                     continue
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
