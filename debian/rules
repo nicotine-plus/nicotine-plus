@@ -15,3 +15,7 @@ export DH_OPTIONS=-v
 # Use Xvfb to test startup without requiring an actual X server...
 override_dh_auto_test:
 	xvfb-run dh_auto_test
+
+# Enforce xz compression format for increased compatibility with older systems...
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
