@@ -1686,6 +1686,7 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
 
         user = msg.conn.init.target_user
+        login_user = config.sections["server"]["login"]
         conn = msg.conn.conn
         request_time = time.time()
 
@@ -1696,13 +1697,12 @@ Error: %(error)s""", {
 
         self.requested_info_times[user] = request_time
 
-        if self.network_filter.is_user_banned(user):
+        if login_user != user and self.network_filter.is_user_banned(user):
             log.add(
                 _("%(user)s is banned, but is making a UserInfo request"), {
                     'user': user
                 }
             )
-            log.add_msg_contents(msg)
             return
 
         try:
@@ -1727,11 +1727,12 @@ Error: %(error)s""", {
         self.queue.append(
             slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
 
-        log.add(
-            _("%(user)s is making a UserInfo request"), {
-                'user': user
-            }
-        )
+        if login_user != user:
+            log.add(
+                _("%(user)s is making a UserInfo request"), {
+                    'user': user
+                }
+            )
 
     def user_info_reply(self, msg):
         """ Peer code: 16 """
