@@ -573,7 +573,7 @@ class SlskProtoThread(threading.Thread):
         limit = self._uploadlimit[1] * 1024.0
         self.total_uploads = sum(1 for connection in self._conns.values() if self._is_upload(connection))
 
-        if limit_disabled:
+        if limit_disabled or limit == 0:
             return 0
 
         if not limit_per_transfer and self.total_uploads > 1:
