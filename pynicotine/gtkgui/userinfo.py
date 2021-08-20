@@ -262,7 +262,9 @@ class UserInfo:
 
     def get_user_stats(self, msg):
 
-        self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+        if msg.avgspeed > 0:
+            self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+
         self.filesshared.set_text(_("Files: %s") % humanize(msg.files))
         self.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
 

@@ -630,8 +630,11 @@ class Search:
             inqueue = msg.inqueue or 1  # Ensure value is always >= 1
             h_queue = humanize(inqueue)
 
+        h_speed = ""
         ulspeed = msg.ulspeed
-        h_speed = human_speed(ulspeed)
+
+        if ulspeed > 0:
+            h_speed = human_speed(ulspeed)
 
         color_id = (msg.freeulslots and "search" or "searchq")
         color = config.sections["ui"][color_id] or None

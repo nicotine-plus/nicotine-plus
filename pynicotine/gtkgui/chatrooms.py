@@ -568,10 +568,14 @@ class ChatRoom:
         # Request user's IP address, so we can get the country
         self.frame.np.queue.append(slskmessages.GetPeerAddress(username))
 
+        h_speed = ""
         avgspeed = userdata.avgspeed
+
+        if avgspeed > 0:
+            h_speed = human_speed(avgspeed)
+
         files = userdata.files
-        hspeed = human_speed(avgspeed)
-        hfiles = humanize(files)
+        h_files = humanize(files)
 
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
@@ -591,8 +595,8 @@ class ChatRoom:
                 GObject.Value(GObject.TYPE_OBJECT, status_image),
                 GObject.Value(GObject.TYPE_OBJECT, flag_image),
                 username,
-                hspeed,
-                hfiles,
+                h_speed,
+                h_files,
                 status,
                 GObject.Value(GObject.TYPE_UINT64, avgspeed),
                 GObject.Value(GObject.TYPE_UINT64, files),
@@ -960,7 +964,12 @@ class ChatRoom:
         if user not in self.users:
             return
 
-        self.usersmodel.set_value(self.users[user], 3, human_speed(avgspeed))
+        h_speed = ""
+
+        if avgspeed > 0:
+            h_speed = human_speed(avgspeed)
+
+        self.usersmodel.set_value(self.users[user], 3, h_speed)
         self.usersmodel.set_value(self.users[user], 4, humanize(files))
         self.usersmodel.set_value(self.users[user], 6, GObject.Value(GObject.TYPE_UINT64, avgspeed))
         self.usersmodel.set_value(self.users[user], 7, GObject.Value(GObject.TYPE_UINT64, files))

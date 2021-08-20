@@ -314,13 +314,14 @@ class Interests:
         self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
 
     def similar_users(self, msg):
+
         self.recommendation_users_model.clear()
         self.recommendation_users = {}
 
         for user in msg.users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, human_speed(0), "0", 0, 0, 0]
+                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, "", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 
@@ -328,6 +329,7 @@ class Interests:
             self.frame.np.watch_user(user, force_update=True)
 
     def get_user_status(self, msg):
+
         if msg.user not in self.recommendation_users:
             return
 
@@ -335,12 +337,21 @@ class Interests:
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, img, 4, msg.status)
 
     def get_user_stats(self, msg):
+
         if msg.user not in self.recommendation_users:
             return
 
+        h_speed = ""
+        avgspeed = msg.avgspeed
+
+        if avgspeed > 0:
+            h_speed = human_speed(avgspeed)
+
+        files = msg.files
+        h_files = humanize(msg.files)
+
         self.recommendation_users_model.set(
-            self.recommendation_users[msg.user],
-            2, human_speed(msg.avgspeed), 3, humanize(msg.files), 5, msg.avgspeed, 6, msg.files)
+            self.recommendation_users[msg.user], 2, h_speed, 3, h_files, 5, avgspeed, 6, files)
 
     def get_selected_item(self, treeview, column=0):
 

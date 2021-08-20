@@ -402,13 +402,19 @@ class UserList:
         if iterator is None:
             return
 
-        hspeed = human_speed(msg.avgspeed)
-        hfiles = humanize(msg.files)
+        h_speed = ""
+        avgspeed = msg.avgspeed
 
-        self.usersmodel.set_value(iterator, 3, hspeed)
-        self.usersmodel.set_value(iterator, 4, hfiles)
-        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, msg.avgspeed))
-        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, msg.files))
+        if avgspeed > 0:
+            h_speed = human_speed(avgspeed)
+
+        files = msg.files
+        h_files = humanize(files)
+
+        self.usersmodel.set_value(iterator, 3, h_speed)
+        self.usersmodel.set_value(iterator, 4, h_files)
+        self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, avgspeed))
+        self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, files))
 
     def set_user_country(self, user, country):
 
