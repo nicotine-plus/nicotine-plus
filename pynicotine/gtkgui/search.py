@@ -724,8 +724,10 @@ class Search:
             if self.grouping_mode == "folder_grouping":
                 # Group by folder
 
-                if directory not in self.directoryiters:
-                    self.directoryiters[directory] = self.resultsmodel.insert_with_values(
+                user_directory = user + directory
+
+                if user_directory not in self.directoryiters:
+                    self.directoryiters[user_directory] = self.resultsmodel.insert_with_values(
                         self.usersiters[user], -1, self.column_numbers,
                         [
                             empty_int,
@@ -752,7 +754,7 @@ class Search:
                 row = row[:]
                 row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
 
-                parent = self.directoryiters[directory]
+                parent = self.directoryiters[user_directory]
         else:
             parent = None
 
@@ -766,8 +768,10 @@ class Search:
 
         except Exception as e:
             types = []
+
             for i in row:
                 types.append(type(i))
+
             log.add("Search row error: %(exception)s %(row)s", {'exception': e, 'row': row})
             iterator = None
 
