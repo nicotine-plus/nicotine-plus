@@ -27,6 +27,7 @@
     <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_QueueSlots">
+    <property name="lower">1</property>
     <property name="upper">1000000</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>

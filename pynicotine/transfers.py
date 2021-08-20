@@ -434,6 +434,10 @@ class Transfers:
     def slot_limit_reached(self):
 
         maxupslots = self.config.sections["transfers"]["uploadslots"]
+
+        if maxupslots <= 0:
+            maxupslots = 1
+
         in_progress_count = 0
         now = time.time()
 
@@ -1746,6 +1750,10 @@ class Transfers:
 
         if self.config.sections["transfers"]["useupslots"]:
             maxupslots = self.config.sections["transfers"]["uploadslots"]
+
+            if maxupslots <= 0:
+                maxupslots = 1
+
             return maxupslots
 
         lstlen = sum(1 for i in self.uploads if i.conn is not None)
