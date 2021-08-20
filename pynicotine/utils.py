@@ -263,6 +263,15 @@ def get_result_bitrate_length(filesize, attributes):
             length = second
             h_length = human_length(second)
 
+    # Hide invalid values
+    if bitrate <= 0:
+        h_bitrate = ""
+        bitrate = 0
+
+    if length <= 0:
+        h_length = ""
+        length = 0
+
     return h_bitrate, bitrate, h_length, length
 
 
