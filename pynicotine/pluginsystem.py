@@ -117,11 +117,10 @@ class PluginHandler:
         self.plugin_settings(plugin_name, instance)
 
         if hasattr(plugin, "enable"):
-            instance.log("top-level enable() function is obsolete, please use BasePlugin.init() instead" % plugin_name)
+            instance.log("top-level enable() function is obsolete, please use BasePlugin.init() instead")
 
         if hasattr(plugin, "disable"):
-            instance.log("top-level disable() function is obsolete, please use BasePlugin.disable() instead"
-                         % plugin_name)
+            instance.log("top-level disable() function is obsolete, please use BasePlugin.disable() instead")
 
         if hasattr(instance, "LoadNotification"):
             instance.log("LoadNotification() is obsolete, please use init()")
@@ -221,7 +220,7 @@ class PluginHandler:
     def get_plugin_info(self, plugin_name):
         path = os.path.join(self.__findplugin(plugin_name), 'PLUGININFO')
 
-        with open(path) as file_handle:
+        with open(path, 'r', encoding="utf-8") as file_handle:
             infodict = {}
 
             for line in file_handle:
