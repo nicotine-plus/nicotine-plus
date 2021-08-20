@@ -91,7 +91,7 @@ class FileProperties:
 
         bitrate = properties["bitrate"]
         length = properties["length"]
-        immediate = properties["immediate"]
+        queue = properties["queue"]
         speed = properties["speed"]
         country = properties["country"]
 
@@ -111,16 +111,8 @@ class FileProperties:
             self.length_label.get_parent().hide()
             self.length_value.get_parent().hide()
 
-        if immediate:
-            self.immediate_value.set_text(immediate)
-            self.immediate_label.get_parent().show()
-            self.immediate_value.get_parent().show()
-        else:
-            self.immediate_label.get_parent().hide()
-            self.immediate_value.get_parent().hide()
-
-        if immediate == "N":
-            self.queue_value.set_text(properties["queue"])
+        if queue:
+            self.queue_value.set_text(queue)
             self.queue_label.get_parent().show()
             self.queue_value.get_parent().show()
         else:

@@ -229,39 +229,6 @@
             <property name="visible">1</property>
             <property name="focusable">0</property>
             <child>
-              <object class="GtkLabel" id="immediate_label">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Immediate Download</property>
-                <property name="selectable">1</property>
-                <property name="xalign">1</property>
-                <style>
-                  <class name="dim-label"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="focusable">0</property>
-            <child>
-              <object class="GtkLabel" id="immediate_value">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="selectable">1</property>
-                <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="focusable">0</property>
-            <child>
               <object class="GtkLabel" id="queue_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">In Queue</property>

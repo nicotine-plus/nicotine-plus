@@ -882,14 +882,14 @@ class TransferList:
             user = transfer.user
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
-            size = speed = length = queue = immediate = num = country = bitratestr = ""
+            size = speed = length = num = bitrate = None
 
             size = str(human_size(transfer.size))
 
             if transfer.speed:
                 speed = str(human_speed(transfer.speed))
 
-            bitratestr = str(transfer.bitrate)
+            bitrate = str(transfer.bitrate)
             length = str(transfer.length)
 
             directory = fullname.rsplit("\\", 1)[0]
@@ -902,11 +902,10 @@ class TransferList:
                 "directory": directory,
                 "size": size,
                 "speed": speed,
-                "queue": queue,
-                "immediate": immediate,
-                "bitrate": bitratestr,
+                "queue": None,
+                "bitrate": bitrate,
                 "length": length,
-                "country": country
+                "country": None
             })
 
         if data:

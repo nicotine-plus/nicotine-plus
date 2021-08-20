@@ -689,7 +689,7 @@ class UserBrowse:
                 "size": size,
                 "bitrate": bitratestr,
                 "length": length,
-                "immediate": None,
+                "queue": None,
                 "speed": None,
                 "country": None
             })

@@ -314,7 +314,6 @@ class Search:
         self.all_data = []
         self.filters = None
         self.clearing_filters = False
-        self.resultslimit = 2000
         self.numvisibleresults = 0
         self.active_filter_count = 0
 
@@ -786,18 +785,23 @@ class Search:
         factor = 1
         if factorize:
             base = 1024  # Default to binary for "k", "m", "g" suffixes
+
             if sfilter[-1:].lower() == 'b':
                 base = 1000  # Byte suffix detected, prepare to use decimal if necessary
                 sfilter = sfilter[:-1]
+
             if sfilter[-1:].lower() == 'i':
                 base = 1024  # Binary requested, stop using decimal
                 sfilter = sfilter[:-1]
+
             if sfilter.lower()[-1:] == "g":
                 factor = pow(base, 3)
                 sfilter = sfilter[:-1]
+
             elif sfilter.lower()[-1:] == "m":
                 factor = pow(base, 2)
                 sfilter = sfilter[:-1]
+
             elif sfilter.lower()[-1:] == "k":
                 factor = base
                 sfilter = sfilter[:-1]
@@ -884,7 +888,7 @@ class Search:
         if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[10].get_uint64(), False):
             return False
 
-        if filters["freeslot"] and not row[16]:
+        if filters["freeslot"] and row[15].get_uint64() > 0:
             return False
 
         if filters["country"] and not self.check_country(filters["country"], row[12]):
@@ -1184,7 +1188,6 @@ class Search:
                 "size": size,
                 "speed": speed,
                 "queue": queue,
-                "immediate": "Y",
                 "bitrate": bitratestr,
                 "length": length,
                 "country": country
@@ -1242,7 +1245,7 @@ class Search:
                     continue
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
-                (counter, user, flag, immediatedl, h_speed, h_queue, directory, filename,
+                (counter, user, flag, h_speed, h_queue, directory, filename,
                     h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed,
                     queue, length, color) = row
                 visible_files.append(
