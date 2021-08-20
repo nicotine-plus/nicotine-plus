@@ -1497,9 +1497,12 @@ class SlskProtoThread(threading.Thread):
                         # Connection has been established
 
                         addr = msg_obj.addr
+                        events = selectors.EVENT_READ | selectors.EVENT_WRITE
 
                         if connection_in_progress is self.server_socket:
-                            self._conns[self.server_socket] = Connection(conn=self.server_socket, addr=addr)
+                            self._conns[self.server_socket] = Connection(
+                                conn=self.server_socket, addr=addr, events=events)
+
                             self._callback_msgs.append(ServerConn(self.server_socket, addr))
 
                         else:
@@ -1511,8 +1514,6 @@ class SlskProtoThread(threading.Thread):
                                 self._callback_msgs.append(ConnectError(msg_obj, "Blocked IP address"))
                                 self.close_connection(self._connsinprogress, connection_in_progress)
                                 continue
-
-                            events = selectors.EVENT_READ | selectors.EVENT_WRITE
 
                             self._conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, events=events, init=msg_obj.init)
