@@ -223,11 +223,12 @@ class Connection:
     init is a PeerInit object (see slskmessages docstrings).
     """
 
-    __slots__ = "conn", "addr", "ibuf", "obuf", "init", "lastactive", "lastreadlength"
+    __slots__ = ("conn", "addr", "ibuf", "obuf", "events", "init", "lastactive", "lastreadlength")
 
-    def __init__(self, conn=None, addr=None):
+    def __init__(self, conn=None, addr=None, events=None):
         self.conn = conn
         self.addr = addr
+        self.events = events
         self.ibuf = bytearray()
         self.obuf = bytearray()
         self.init = None
@@ -240,8 +241,8 @@ class PeerConnection(Connection):
     __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw",
                  "lastcallback")
 
-    def __init__(self, conn=None, addr=None, init=None):
-        Connection.__init__(self, conn, addr)
+    def __init__(self, conn=None, addr=None, events=None, init=None):
+        Connection.__init__(self, conn, addr, events)
         self.filereq = None
         self.filedown = None
         self.fileupl = None
@@ -258,7 +259,7 @@ class PeerConnectionInProgress:
     hold data about a connection that is not yet established. msgObj is
     a message to be sent after the connection has been established.
     """
-    __slots__ = "conn", "msg_obj", "lastactive"
+    __slots__ = ("conn", "msg_obj", "lastactive")
 
     def __init__(self, conn=None, msg_obj=None):
         self.conn = conn
@@ -667,6 +668,12 @@ class SlskProtoThread(threading.Thread):
 
         return None
 
+    def modify_connection_events(self, conn_obj, events):
+
+        if conn_obj.events != events:
+            self.selector.modify(conn_obj.conn, events)
+            conn_obj.events = events
+
     def close_connection(self, connection_list, connection):
 
         if connection not in connection_list:
@@ -818,6 +825,8 @@ class SlskProtoThread(threading.Thread):
         conn_obj.obuf.extend(UINT_PACK(self.servercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
+        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
     """ Peer Init """
 
     def process_peer_init_input(self, conn, msg_buffer):
@@ -892,10 +901,14 @@ class SlskProtoThread(threading.Thread):
 
             conn_obj.init = msg_obj
 
-            if conn_obj.piercefw is None:
-                conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
-                conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
-                conn_obj.obuf.extend(msg)
+            if conn_obj.piercefw is not None:
+                return
+
+            conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
+            conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
+            conn_obj.obuf.extend(msg)
+
+        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ Peer Connection """
 
@@ -998,6 +1011,8 @@ class SlskProtoThread(threading.Thread):
         conn_obj.obuf.extend(UINT_PACK(self.peercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
+        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
     """ File Connection """
 
     def process_file_input(self, conn, msg_buffer):
@@ -1066,6 +1081,7 @@ class SlskProtoThread(threading.Thread):
             if msg is not None and msg.offset is not None:
                 try:
                     conn.fileupl.file.seek(msg.offset)
+                    self.modify_connection_events(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
                 except IOError as strerror:
                     self._callback_msgs.append(FileError(conn, conn.fileupl.file, strerror))
@@ -1113,6 +1129,8 @@ class SlskProtoThread(threading.Thread):
             conn_obj = self._conns[msg_obj.conn]
             conn_obj.bytestoread = msg_obj.filesize - msg_obj.offset
             conn_obj.obuf.extend(msg)
+
+        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ Distributed Connection """
 
@@ -1171,6 +1189,8 @@ class SlskProtoThread(threading.Thread):
         conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
         conn_obj.obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
         conn_obj.obuf.extend(msg)
+
+        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
     """ Connection I/O """
 
@@ -1336,6 +1356,8 @@ class SlskProtoThread(threading.Thread):
                         read = conn_obj.fileupl.file.read(bytestoread)
                         conn_obj.obuf.extend(read)
 
+                        self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
+
             except IOError as strerror:
                 self._callback_msgs.append(FileError(conn_obj, conn_obj.fileupl.file, strerror))
                 self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
@@ -1363,6 +1385,10 @@ class SlskProtoThread(threading.Thread):
 
                 self._callback_msgs.append(conn_obj.fileupl)
                 conn_obj.lastcallback = curtime
+
+        if not conn_obj.obuf:
+            # Nothing else to send, stop watching connection for writes
+            self.modify_connection_events(conn_obj, selectors.EVENT_READ)
 
     """ Networking Loop """
 
@@ -1393,16 +1419,6 @@ class SlskProtoThread(threading.Thread):
 
             # Check which connections are ready to send/receive data
             try:
-                for connection, conn_obj in self._conns.items():
-                    event_masks = selectors.EVENT_READ
-
-                    if (conn_obj.obuf or (connection is not self.server_socket
-                                          and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None)):
-                        event_masks |= selectors.EVENT_WRITE
-
-                    if self.selector.get_key(connection).events != event_masks:
-                        self.selector.modify(connection, event_masks)
-
                 key_events = self.selector.select(timeout=-1)
                 input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
                 output_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
@@ -1437,13 +1453,15 @@ class SlskProtoThread(threading.Thread):
                         incconn.close()
 
                     else:
-                        self._conns[incconn] = PeerConnection(conn=incconn, addr=incaddr)
+                        events = selectors.EVENT_READ
+
+                        self._conns[incconn] = PeerConnection(conn=incconn, addr=incaddr, events=events)
                         self._numsockets += 1
                         self._callback_msgs.append(IncConn(incconn, incaddr))
 
                         # Event flags are modified to include 'write' in subsequent loops, if necessary.
                         # Don't do it here, otherwise connections may break.
-                        self.selector.register(incconn, selectors.EVENT_READ)
+                        self.selector.register(incconn, events)
 
             # Manage outgoing connections in progress
             for connection_in_progress in self._connsinprogress.copy():
@@ -1494,8 +1512,10 @@ class SlskProtoThread(threading.Thread):
                                 self.close_connection(self._connsinprogress, connection_in_progress)
                                 continue
 
+                            events = selectors.EVENT_READ | selectors.EVENT_WRITE
+
                             self._conns[connection_in_progress] = PeerConnection(
-                                conn=connection_in_progress, addr=addr, init=msg_obj.init)
+                                conn=connection_in_progress, addr=addr, events=events, init=msg_obj.init)
 
                             self._callback_msgs.append(PeerConn(connection_in_progress, addr))
 
