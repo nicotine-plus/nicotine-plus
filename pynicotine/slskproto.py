@@ -458,6 +458,7 @@ class SlskProtoThread(threading.Thread):
 
         self.listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.listen_socket.setblocking(0)
 
         self.server_socket = None
         self._numsockets = 1
@@ -753,6 +754,7 @@ class SlskProtoThread(threading.Thread):
 
         try:
             self.server_socket = server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server_socket.setblocking(0)
 
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
@@ -763,9 +765,7 @@ class SlskProtoThread(threading.Thread):
             elif self.bindip:
                 server_socket.bind((self.bindip, 0))
 
-            server_socket.setblocking(0)
             server_socket.connect_ex(msg_obj.addr)
-            server_socket.setblocking(1)
 
             self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
             self._connsinprogress[server_socket] = PeerConnectionInProgress(server_socket, msg_obj)
@@ -916,6 +916,7 @@ class SlskProtoThread(threading.Thread):
 
         try:
             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            conn.setblocking(0)
 
             if self.interface:
                 self.bind_to_network_interface(conn, self.interface)
@@ -923,9 +924,7 @@ class SlskProtoThread(threading.Thread):
             elif self.bindip:
                 conn.bind((self.bindip, 0))
 
-            conn.setblocking(0)
             conn.connect_ex(msg_obj.addr)
-            conn.setblocking(1)
 
             self.selector.register(conn, selectors.EVENT_READ | selectors.EVENT_WRITE)
             self._connsinprogress[conn] = PeerConnectionInProgress(conn, msg_obj)
@@ -1326,14 +1325,11 @@ class SlskProtoThread(threading.Thread):
         conn_obj.lastactive = time.time()
 
         if conn_obj.obuf:
-            connection.setblocking(0)
-
             if limit is None:
                 bytes_send = connection.send(conn_obj.obuf)
             else:
                 bytes_send = connection.send(conn_obj.obuf[:limit])
 
-            connection.setblocking(1)
             conn_obj.obuf = conn_obj.obuf[bytes_send:]
         else:
             bytes_send = 0
@@ -1454,6 +1450,7 @@ class SlskProtoThread(threading.Thread):
 
                     else:
                         events = selectors.EVENT_READ
+                        incconn.setblocking(0)
 
                         self._conns[incconn] = PeerConnection(conn=incconn, addr=incaddr, events=events)
                         self._numsockets += 1
@@ -1483,9 +1480,7 @@ class SlskProtoThread(threading.Thread):
                 try:
                     if connection_in_progress in input_list:
                         # Check if the socket has any data for us
-                        connection_in_progress.setblocking(0)
                         connection_in_progress.recv(1, socket.MSG_PEEK)
-                        connection_in_progress.setblocking(1)
 
                 except socket.error as err:
 
