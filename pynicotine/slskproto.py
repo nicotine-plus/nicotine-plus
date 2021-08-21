@@ -572,7 +572,6 @@ class SlskProtoThread(threading.Thread):
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
         limit = self._uploadlimit[1] * 1024.0
-        self.total_uploads = sum(1 for connection in self._conns.values() if self._is_upload(connection))
 
         if limit_disabled or limit == 0:
             return 0
@@ -591,7 +590,6 @@ class SlskProtoThread(threading.Thread):
     def _calc_download_limit(self):
 
         limit = self._downloadlimit[1] * 1024.0
-        self.total_downloads = sum(1 for connection in self._conns.values() if self._is_download(connection))
 
         if limit == 0:
             # Download limit disabled
@@ -680,6 +678,14 @@ class SlskProtoThread(threading.Thread):
         if connection not in connection_list:
             # Already removed
             return
+
+        conn_obj = connection_list[connection]
+
+        if self._is_download(conn_obj):
+            self.total_downloads -= 1
+
+        elif self._is_upload(conn_obj):
+            self.total_uploads -= 1
 
         self.selector.unregister(connection)
         connection.close()
@@ -1266,9 +1272,11 @@ class SlskProtoThread(threading.Thread):
 
             elif msg_class is DownloadFile and msg_obj.conn in self._conns:
                 self._conns[msg_obj.conn].filedown = msg_obj
+                self.total_downloads += 1
 
             elif msg_class is UploadFile and msg_obj.conn in self._conns:
                 self._conns[msg_obj.conn].fileupl = msg_obj
+                self.total_uploads += 1
 
             elif msg_class is SetDownloadLimit:
                 self._downloadlimit = (self._calc_download_limit, msg_obj.limit)
