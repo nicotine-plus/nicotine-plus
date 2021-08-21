@@ -107,7 +107,7 @@ class SlskProtoTest(unittest.TestCase):
                 self.assertEqual(proto.server_socket.ioctl.call_count, 1)
                 self.assertEqual(proto.server_socket.setsockopt.call_count, 1)
 
-            self.assertEqual(proto.server_socket.setblocking.call_count, 2)
+            self.assertEqual(proto.server_socket.setblocking.call_count, 1)
             self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
 
             proto.abort()
