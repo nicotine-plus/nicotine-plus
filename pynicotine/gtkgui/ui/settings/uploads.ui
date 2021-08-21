@@ -196,7 +196,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Upload Queue</property>
+            <property name="label" translatable="yes">Queue Behavior</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -313,6 +313,39 @@
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="PreferFriends">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Privilege all users in buddy list</property>
+            <property name="tooltip-text" translatable="yes">Buddies will have higher priority in the queue, the same as globally privileged users.</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Queue Limits</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
@@ -400,14 +433,7 @@
         <child>
           <object class="GtkCheckButton" id="FriendsNoLimits">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Queue size limit does not apply to friends</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="PreferFriends">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Privilege all my friends</property>
-            <property name="tooltip-text" translatable="yes">Friends will have higher priority in the queue, the same as globally privileged users.</property>
+            <property name="label" translatable="yes">Queue limits do not apply to users in buddy list</property>
           </object>
         </child>
       </object>
