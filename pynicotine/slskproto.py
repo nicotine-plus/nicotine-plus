@@ -1462,9 +1462,10 @@ class SlskProtoThread(threading.Thread):
 
             # Manage outgoing connections in progress
             for connection_in_progress in self._connsinprogress.copy():
-                conn_obj = self._connsinprogress.get(connection_in_progress)
+                try:
+                    conn_obj = self._connsinprogress[connection_in_progress]
 
-                if not conn_obj:
+                except KeyError:
                     # Connection was removed, possibly disconnecting from the server
                     continue
 
@@ -1519,9 +1520,10 @@ class SlskProtoThread(threading.Thread):
 
             # Process read/write for active connections
             for connection in self._conns.copy():
-                conn_obj = self._conns.get(connection)
+                try:
+                    conn_obj = self._conns[connection]
 
-                if not conn_obj:
+                except KeyError:
                     # Connection was removed, possibly disconnecting from the server
                     continue
 
