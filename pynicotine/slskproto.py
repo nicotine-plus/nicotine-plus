@@ -1586,6 +1586,6 @@ class SlskProtoThread(threading.Thread):
             self._calc_loops_per_second()
 
             # Don't exhaust the CPU
-            time.sleep(0.005)
+            time.sleep(1 / 60)
 
         # Networking thread aborted
