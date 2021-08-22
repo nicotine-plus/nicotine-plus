@@ -155,7 +155,6 @@ class UserInfo:
 
         self.user = user
         self.conn = None
-        self._descr = ""
         self.image_pixbuf = None
         self.zoom_factor = 5
         self.actual_zoom = 0
@@ -248,12 +247,23 @@ class UserInfo:
                 f.write(data)
                 del data
 
-                self.image_pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
+                self.image_pixbuf = pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
+                image_width = self.image_pixbuf.get_width()
+                image_height = self.image_pixbuf.get_height()
+
+                allocation = self.ImageViewport.get_allocation()
+                max_width = allocation.width - 24
+                max_height = allocation.height - 24
+
+                # Resize pixbuf to fit container
+                ratio = min(max_width / image_width, max_height / image_height)
+                pixbuf = self.image_pixbuf.scale_simple(
+                    ratio * image_width, ratio * image_height, GdkPixbuf.InterpType.BILINEAR)
 
                 if Gtk.get_major_version() == 4:
-                    self.image.set_pixbuf(self.image_pixbuf)
+                    self.image.set_pixbuf(pixbuf)
                 else:
-                    self.image.set_from_pixbuf(self.image_pixbuf)
+                    self.image.set_from_pixbuf(pixbuf)
 
             gc.collect()
 
@@ -271,10 +281,10 @@ class UserInfo:
     def get_user_stats(self, msg):
 
         if msg.avgspeed > 0:
-            self.speed.set_text(_("Speed: %s") % human_speed(msg.avgspeed))
+            self.speed.set_text(_("Upload Speed: %s") % human_speed(msg.avgspeed))
 
-        self.filesshared.set_text(_("Files: %s") % humanize(msg.files))
-        self.dirsshared.set_text(_("Directories: %s") % humanize(msg.dirs))
+        self.filesshared.set_text(_("Shared Files: %s") % humanize(msg.files))
+        self.dirsshared.set_text(_("Shared Folders: %s") % humanize(msg.dirs))
 
     def show_connection_error(self):
 
@@ -298,21 +308,20 @@ class UserInfo:
         if msg is None:
             return
 
-        self._descr = msg.descr
         self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
 
         append_line(self.descr, msg.descr, showstamp=False, scroll=False)
 
-        self.uploads.set_text(_("Upload slots: %i") % msg.totalupl)
-        self.queuesize.set_text(_("Queued uploads: %i") % msg.queuesize)
+        self.uploads.set_text(_("Upload Slots: %i") % msg.totalupl)
+        self.queuesize.set_text(_("Queued Uploads: %i") % msg.queuesize)
 
         if msg.slotsavail:
             slots = _("Yes")
         else:
             slots = _("No")
 
-        self.slotsavail.set_text(_("Free upload slots: %s") % slots)
+        self.slotsavail.set_text(_("Free Upload Slots: %s") % slots)
 
         if msg.uploadallowed == 0:
             allowed = _("No one")
@@ -325,7 +334,7 @@ class UserInfo:
         else:
             allowed = _("unknown")
 
-        self.AcceptUploads.set_text(_("%s") % allowed)
+        self.AcceptUploads.set_text(_("Accepts Uploads From: %s") % allowed)
 
         self.load_picture(msg.pic)
 
@@ -471,10 +480,12 @@ class UserInfo:
 
         if zoom:
             self.actual_zoom = 0
+            pixbuf_zoomed = self.image_pixbuf
+
         else:
             self.actual_zoom += self.zoom_factor
-
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.TILES)
+            pixbuf_zoomed = self.image_pixbuf.scale_simple(
+                calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
             self.image.set_pixbuf(pixbuf_zoomed)
@@ -504,7 +515,8 @@ class UserInfo:
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.TILES)
+        pixbuf_zoomed = self.image_pixbuf.scale_simple(
+            calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
             self.image.set_pixbuf(pixbuf_zoomed)
