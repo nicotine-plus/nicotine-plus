@@ -250,12 +250,12 @@ class SlskMessage:
                 string = message[start + INT_SIZE:start + length + INT_SIZE]
 
                 try:
-                    string = string.decode("utf-8")
+                    string = str(string, "utf-8")
                 except Exception:
                     # Older clients (Soulseek NS)
 
                     try:
-                        string = string.decode("latin-1")
+                        string = str(string, "latin-1")
                     except Exception as error:
                         log.add("Error trying to decode string '%s': %s", (string, error))
 
@@ -288,11 +288,11 @@ class SlskMessage:
             if latin1:
                 try:
                     # Try to encode in latin-1 first for older clients (Soulseek NS)
-                    encoded = obj.encode("latin-1")
+                    encoded = bytes(obj, "latin-1")
                 except Exception:
-                    encoded = obj.encode("utf-8", "replace")
+                    encoded = bytes(obj, "utf-8", "replace")
             else:
-                encoded = obj.encode("utf-8", "replace")
+                encoded = bytes(obj, "utf-8", "replace")
 
             return UINT_PACK(len(encoded)) + encoded
 
@@ -312,18 +312,6 @@ class SlskMessage:
         in an object"""
 
         log.add("Can't parse incoming messages, class %s", self.__class__)
-
-    @staticmethod
-    def strrev(string):
-        strlist = list(string)
-        strlist.reverse()
-        return ''.join(strlist)
-
-    @staticmethod
-    def strunreverse(string):
-        strlist = string.split(".")
-        strlist.reverse()
-        return '.'.join(strlist)
 
     def debug(self, message=None):
         debug(type(self).__name__, self.__dict__, message.__repr__())
@@ -382,7 +370,7 @@ class Login(ServerMessage):
             return
 
         try:
-            pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+            pos, self.ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
 
         except Exception as error:
             log.add("Error unpacking IP address: %s", error)
@@ -419,7 +407,7 @@ class GetPeerAddress(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+        pos, self.ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
         pos, self.port = self.get_object(message, int, pos, 1)
 
 
@@ -675,7 +663,7 @@ class ConnectToPeer(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.conn_type = self.get_object(message, str, pos)
-        pos, self.ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+        pos, self.ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
         pos, self.port = self.get_object(message, int, pos, 1)
         pos, self.token = self.get_object(message, int, pos)
 
@@ -1256,7 +1244,7 @@ class TunneledMessage(ServerMessage):
         pos, self.code = self.get_object(message, int, pos)
         pos, self.req = self.get_object(message, int, pos)
 
-        pos, ip_address = pos + 4, socket.inet_ntoa(self.strrev(message[pos:pos + 4]))
+        pos, ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
         pos, port = self.get_object(message, int, pos, 1)
         self.addr = (ip_address, port)
 
@@ -1301,6 +1289,12 @@ class SearchParent(ServerMessage):
 
     def __init__(self, parentip=None):
         self.parentip = parentip
+
+    @staticmethod
+    def strunreverse(string):
+        strlist = string.split(".")
+        strlist.reverse()
+        return '.'.join(strlist)
 
     def make_network_message(self):
         return self.pack_object(socket.inet_aton(self.strunreverse(self.parentip)))
@@ -1445,7 +1439,7 @@ class PossibleParents(ServerMessage):
         self.list = {}
         for _ in range(num):
             pos, username = self.get_object(message, str, pos)
-            pos, ip_address = pos + 4, socket.inet_ntoa(message[pos:pos + 4][::-1])
+            pos, ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
             pos, port = self.get_object(message, int, pos)
 
             self.list[username] = (ip_address, port)
@@ -2169,7 +2163,7 @@ class SharedFileList(PeerMessage):
 
     def parse_network_message(self, message):
         try:
-            message = zlib.decompress(message)
+            message = memoryview(zlib.decompress(message))
             self._parse_network_message(message)
 
         except Exception as error:
@@ -2307,7 +2301,7 @@ class FileSearchResult(PeerMessage):
 
     def parse_network_message(self, message):
         try:
-            message = zlib.decompress(message)
+            message = memoryview(zlib.decompress(message))
             self._parse_network_message(message)
         except Exception as error:
             log.add("Exception during parsing %(area)s: %(exception)s",
@@ -2540,7 +2534,7 @@ class FolderContentsResponse(PeerMessage):
 
     def parse_network_message(self, message):
         try:
-            message = zlib.decompress(message)
+            message = memoryview(zlib.decompress(message))
             self._parse_network_message(message)
         except Exception as error:
             log.add("Exception during parsing %(area)s: %(exception)s",
