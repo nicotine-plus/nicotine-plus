@@ -281,7 +281,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="icon-name">user-available-symbolic</property>
+                            <property name="icon-name">mail-send-symbolic</property>
                           </object>
                         </child>
                         <child>
@@ -306,7 +306,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="icon-name">system-file-manager-symbolic</property>
+                            <property name="icon-name">folder-symbolic</property>
                           </object>
                         </child>
                         <child>
@@ -356,7 +356,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="icon-name">contact-new-symbolic</property>
                           </object>
                         </child>
                         <child>
@@ -432,7 +432,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="icon-name">document-save-symbolic</property>
+                            <property name="icon-name">image-x-generic-symbolic</property>
                           </object>
                         </child>
                         <child>
