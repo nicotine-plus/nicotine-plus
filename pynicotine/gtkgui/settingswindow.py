@@ -1464,7 +1464,6 @@ class UserInterfaceFrame(BuildFrame):
                 "useronline": self.EntryOnline,
                 "useroffline": self.EntryOffline,
                 "usernamehotspots": self.UsernameHotspots,
-                "showaway": self.DisplayAwayColors,
                 "urlcolor": self.EntryURL,
                 "tab_default": self.EntryRegularTab,
                 "tab_hilite": self.EntryHighlightTab,
@@ -1518,7 +1517,6 @@ class UserInterfaceFrame(BuildFrame):
             })
 
         self.update_color_buttons()
-        self.on_toggled_away_colors(self.DisplayAwayColors)
         self.needcolors = 0
 
     def get_settings(self):
@@ -1568,7 +1566,6 @@ class UserInterfaceFrame(BuildFrame):
                 "inputcolor": self.EntryInput.get_text(),
                 "search": self.EntryImmediate.get_text(),
                 "searchq": self.EntryQueue.get_text(),
-                "showaway": self.DisplayAwayColors.get_active(),
                 "useraway": self.EntryAway.get_text(),
                 "useronline": self.EntryOnline.get_text(),
                 "useroffline": self.EntryOffline.get_text(),
@@ -1656,30 +1653,19 @@ class UserInterfaceFrame(BuildFrame):
 
         entry.set_text("")
 
-    def on_toggled_away_colors(self, widget):
+    def on_username_hotspots_toggled(self, widget):
 
         sensitive = widget.get_active()
 
         self.EntryAway.set_sensitive(sensitive)
-        self.PickAway.set_sensitive(sensitive)
-        self.DefaultAway.set_sensitive(sensitive)
-
-    def on_username_hotspots_toggled(self, widget):
-
-        sensitive = widget.get_active()
-        display_away = self.DisplayAwayColors.get_active()
-
-        self.DisplayAwayColors.set_sensitive(sensitive)
-
-        self.EntryAway.set_sensitive(sensitive and display_away)
         self.EntryOnline.set_sensitive(sensitive)
         self.EntryOffline.set_sensitive(sensitive)
 
-        self.DefaultAway.set_sensitive(sensitive and display_away)
+        self.DefaultAway.set_sensitive(sensitive)
         self.DefaultOnline.set_sensitive(sensitive)
         self.DefaultOffline.set_sensitive(sensitive)
 
-        self.PickAway.set_sensitive(sensitive and display_away)
+        self.PickAway.set_sensitive(sensitive)
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 

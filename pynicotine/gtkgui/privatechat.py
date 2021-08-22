@@ -433,7 +433,7 @@ class PrivateChat:
         self.tag_username = self.create_tag(buffer, color)
 
         if self.frame.np.logged_in:
-            if self.frame.np.away and config.sections["ui"]["showaway"]:
+            if self.frame.np.away:
                 self.tag_my_username = self.create_tag(buffer, "useraway")
             else:
                 self.tag_my_username = self.create_tag(buffer, "useronline")
@@ -451,7 +451,7 @@ class PrivateChat:
         update_tag_visuals(self.tag_username, color)
 
         if self.frame.np.logged_in:
-            if self.frame.np.away and config.sections["ui"]["showaway"]:
+            if self.frame.np.away:
                 update_tag_visuals(self.tag_my_username, "useraway")
             else:
                 update_tag_visuals(self.tag_my_username, "useronline")

@@ -73,9 +73,6 @@ def get_user_status_color(status):
     else:
         color = "useroffline"
 
-    if not config.sections["ui"]["showaway"] and color == "useraway":
-        color = "useronline"
-
     return color
 
 

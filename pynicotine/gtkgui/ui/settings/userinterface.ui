@@ -925,13 +925,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DisplayAwayColors">
-            <property name="label" translatable="yes">Usernames also indicate away status</property>
-            <property name="visible">1</property>
-            <signal name="toggled" handler="on_toggled_away_colors"/>
-          </object>
-        </child>
-        <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="homogeneous">1</property>
