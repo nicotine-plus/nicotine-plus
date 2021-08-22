@@ -193,13 +193,17 @@ class UserInfo:
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.interest_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
-        popup.setup(
-            ("$" + _("I _Like This"), self.on_like_recommendation),
-            ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
-            ("", None),
-            ("#" + _("_Search for Item"), self.on_interest_recommend_search)
-        )
+        def get_interest_items(popup):
+            return (("$" + _("I _Like This"), self.on_like_recommendation, popup),
+                    ("$" + _("I _Dislike This"), self.on_dislike_recommendation, popup),
+                    ("", None),
+                    ("#" + _("_Search for Item"), self.on_interest_recommend_search, popup))
+
+        self.likes_popup_menu = popup = PopupMenu(self.frame, self.Likes, self.on_popup_interest_menu)
+        popup.setup(*get_interest_items(popup))
+
+        self.hates_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
+        popup.setup(*get_interest_items(popup))
 
         self.image_menu = popup = PopupMenu(self.frame, self.ImageViewport, self.on_image_popup_menu)
         popup.setup(
@@ -379,14 +383,14 @@ class UserInfo:
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
-    def on_like_recommendation(self, action, state):
-        self.frame.interests.on_like_recommendation(action, state, self.interest_popup_menu.get_user())
+    def on_like_recommendation(self, action, state, popup):
+        self.frame.interests.on_like_recommendation(action, state, popup.get_user())
 
-    def on_dislike_recommendation(self, action, state):
-        self.frame.interests.on_dislike_recommendation(action, state, self.interest_popup_menu.get_user())
+    def on_dislike_recommendation(self, action, state, popup):
+        self.frame.interests.on_dislike_recommendation(action, state, popup.get_user())
 
-    def on_interest_recommend_search(self, *args):
-        self.frame.interests.recommend_search(self.interest_popup_menu.get_user())
+    def on_interest_recommend_search(self, action, state, popup):
+        self.frame.interests.recommend_search(popup.get_user())
 
     def on_send_message(self, *args):
         self.frame.np.privatechats.show_user(self.user)
