@@ -125,31 +125,33 @@ class UserInfo:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
+        try:
+            if Gtk.get_major_version() == 4:
+                args = (Gtk.EventControllerScrollFlags.VERTICAL,)
+            else:
+                args = (self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
+
+            self.scroll_controller = Gtk.EventControllerScroll.new(*args)
+            self.scroll_controller.connect("scroll", self.on_scroll)
+
+        except AttributeError:
+            # GTK <3.24
+            self.ImageViewport.connect("scroll-event", self.on_scroll_event)
+
         if Gtk.get_major_version() == 4:
             self.image = Gtk.Picture()
-            self.image_container = Gtk.Box()
-            self.image_container.append(self.image)
-            self.ImageViewport.set_child(self.image_container)
+            self.image.set_can_shrink(False)
+            self.image.set_halign(Gtk.Align.CENTER)
+            self.image.set_valign(Gtk.Align.CENTER)
 
-            self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
-            self.scroll_controller.connect("scroll", self.on_scroll)
+            self.ImageViewport.set_child(self.image)
             self.ImageViewport.add_controller(self.scroll_controller)
 
         else:
             self.image = Gtk.Image()
-            self.image_container = Gtk.EventBox()
-            self.image_container.add(self.image)
-            self.ImageViewport.add(self.image_container)
-            self.ImageViewport.show_all()
+            self.image.show()
 
-            try:
-                self.scroll_controller = Gtk.EventControllerScroll.new(
-                    self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
-                self.scroll_controller.connect("scroll", self.on_scroll)
-
-            except AttributeError:
-                # GTK <3.24
-                self.ImageViewport.connect("scroll-event", self.on_scroll_event)
+            self.ImageViewport.add(self.image)
 
         self.user = user
         self.conn = None
@@ -200,7 +202,7 @@ class UserInfo:
             ("#" + _("_Search for Item"), self.on_interest_recommend_search)
         )
 
-        self.image_menu = popup = PopupMenu(self.frame, self.image_container, self.on_image_popup_menu)
+        self.image_menu = popup = PopupMenu(self.frame, self.ImageViewport, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -234,6 +236,10 @@ class UserInfo:
 
     def load_picture(self, data):
 
+        if data is None:
+            self.image.hide()
+            return
+
         try:
             import gc
             import tempfile
@@ -253,6 +259,8 @@ class UserInfo:
 
             self.actual_zoom = 0
             self.SavePicture.set_sensitive(True)
+
+            self.image.show()
 
         except Exception as e:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -319,8 +327,7 @@ class UserInfo:
 
         self.AcceptUploads.set_text(_("%s") % allowed)
 
-        if msg.has_pic and msg.pic is not None:
-            self.load_picture(msg.pic)
+        self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
         self.set_finished()
@@ -509,6 +516,7 @@ class UserInfo:
         gc.collect()
 
     def on_close(self, *args):
+
         del self.userinfos.pages[self.user]
         self.frame.np.userinfo.remove_user(self.user)
         self.userinfos.remove_page(self.Main)
