@@ -132,6 +132,7 @@ from pynicotine.slskmessages import Relogged
 from pynicotine.slskmessages import RemoveThingIHate
 from pynicotine.slskmessages import RemoveThingILike
 from pynicotine.slskmessages import RemoveUser
+from pynicotine.slskmessages import ResetDistributed
 from pynicotine.slskmessages import RoomAdded
 from pynicotine.slskmessages import RoomList
 from pynicotine.slskmessages import RoomRemoved
@@ -348,6 +349,7 @@ class SlskProtoThread(threading.Thread):
         BranchLevel: 126,
         BranchRoot: 127,
         ChildDepth: 129,
+        ResetDistributed: 130,
         PrivateRoomUsers: 133,
         PrivateRoomAddUser: 134,
         PrivateRoomRemoveUser: 135,

@@ -1752,6 +1752,15 @@ class ChildDepth(ServerMessage):
         return self.pack_object(self.value)
 
 
+class ResetDistributed(ServerMessage):
+    """ Server code: 130 """
+    """ The server asks us to reset our distributed parent and children. """
+
+    def parse_network_message(self, message):
+        # Empty message
+        pass
+
+
 class PrivateRoomUsers(ServerMessage):
     """ Server code: 133 """
     """ The server sends us a list of room users that we can alter

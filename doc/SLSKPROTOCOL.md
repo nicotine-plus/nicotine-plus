@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on July 17, 2021
+Last updated on August 25, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -173,6 +173,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 126  | [Branch Level](#server-code-126)                  |            |
 | 127  | [Branch Root](#server-code-127)                   |            |
 | 129  | [Child Depth](#server-code-129)                   |            |
+| 130  | [Reset Distributed](#server-code-130)             |            |
 | 133  | [Private Room Users](#server-code-133)            |            |
 | 134  | [Private Room Add User](#server-code-134)         |            |
 | 135  | [Private Room Remove User](#server-code-135)      |            |
@@ -1967,6 +1968,26 @@ Nicotine: ChildDepth
     1.  **uint** <ins>child depth</ins>
   - Receive
       - *No Message*
+
+### Server Code 130
+
+**Reset Distributed**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: ResetDistributed
+
+#### Description
+
+The server asks us to reset our distributed parent and children.
+
+#### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+      - Empty Message
 
 ### Server Code 133
 

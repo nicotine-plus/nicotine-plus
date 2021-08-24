@@ -228,6 +228,7 @@ class NicotineCore:
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
             slskmessages.DistribEmbeddedMessage: self.embedded_message,
+            slskmessages.ResetDistributed: self.reset_distributed,
             slskmessages.ConnectToPeerTimeout: self.connect_to_peer_timeout,
             slskmessages.TransferTimeout: self.transfer_timeout,
             slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
@@ -1529,6 +1530,17 @@ Error: %(error)s""", {
 
         log.add_msg_contents(msg)
         self.chatrooms.ticker_remove(msg)
+
+    def reset_distributed(self, msg):
+        """ Server code: 130 """
+
+        log.add_msg_contents(msg)
+        log.add_conn("Received a reset request for distributed network")
+
+        if self.parent_conn is not None:
+            self.queue.append(slskmessages.ConnClose(self.parent_conn))
+
+        self.send_have_no_parent()
 
     def private_room_users(self, msg):
         """ Server code: 133 """
