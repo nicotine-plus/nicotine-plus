@@ -285,10 +285,10 @@ class UserInfo:
     def get_user_stats(self, msg):
 
         if msg.avgspeed > 0:
-            self.speed.set_text(_("Upload Speed: %s") % human_speed(msg.avgspeed))
+            self.speed.set_text(human_speed(msg.avgspeed))
 
-        self.filesshared.set_text(_("Shared Files: %s") % humanize(msg.files))
-        self.dirsshared.set_text(_("Shared Folders: %s") % humanize(msg.dirs))
+        self.filesshared.set_text(humanize(msg.files))
+        self.dirsshared.set_text(humanize(msg.dirs))
 
     def show_connection_error(self):
 
@@ -312,34 +312,14 @@ class UserInfo:
         if msg is None:
             return
 
-        self.image_pixbuf = None
         self.descr.get_buffer().set_text("")
-
         append_line(self.descr, msg.descr, showstamp=False, scroll=False)
 
-        self.uploads.set_text(_("Upload Slots: %i") % msg.totalupl)
-        self.queuesize.set_text(_("Queued Uploads: %i") % msg.queuesize)
+        self.uploads.set_text(humanize(msg.totalupl))
+        self.queuesize.set_text(humanize(msg.queuesize))
+        self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
 
-        if msg.slotsavail:
-            slots = _("Yes")
-        else:
-            slots = _("No")
-
-        self.slotsavail.set_text(_("Free Upload Slots: %s") % slots)
-
-        if msg.uploadallowed == 0:
-            allowed = _("No one")
-        elif msg.uploadallowed == 1:
-            allowed = _("Everyone")
-        elif msg.uploadallowed == 2:
-            allowed = _("Buddies")
-        elif msg.uploadallowed == 3:
-            allowed = _("Trusted Buddies")
-        else:
-            allowed = _("unknown")
-
-        self.AcceptUploads.set_text(_("Accepts Uploads From: %s") % allowed)
-
+        self.image_pixbuf = None
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
@@ -436,7 +416,7 @@ class UserInfo:
             callback=self.on_save_picture_response,
             initialdir=config.sections["transfers"]["downloaddir"],
             initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
-            title="Save as..."
+            title=_("Save as...")
         )
 
     def on_image_popup_menu(self, menu, widget):
