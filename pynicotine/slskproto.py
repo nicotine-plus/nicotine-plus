@@ -406,7 +406,7 @@ class SlskProtoThread(threading.Thread):
         DistribSearch: 3,
         DistribBranchLevel: 4,
         DistribBranchRoot: 5,
-        DistribChildDepth: 7,
+        DistribChildDepth: 7,         # Deprecated
         DistribEmbeddedMessage: 93
     }
 

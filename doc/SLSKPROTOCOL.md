@@ -3226,14 +3226,14 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 #### Message Index
 
-| Code | Message                                      |
-| ---- | -------------------------------------------- |
-| 0    | [Ping](#distributed-code-0)                  |
-| 3    | [Search Request](#distributed-code-3)        |
-| 4    | [Branch Level](#distributed-code-4)          |
-| 5    | [Branch Root](#distributed-code-5)           |
-| 7    | [Child Depth](#distributed-code-7)           |
-| 93   | [Server Search Request](#distributed-code-93)|
+| Code | Message                                  | Status     |
+| ---- | ---------------------------------------- | ---------- |
+| 0    | [Ping](#distributed-code-0)              |            |
+| 3    | [Search Request](#distributed-code-3)    |            |
+| 4    | [Branch Level](#distributed-code-4)      |            |
+| 5    | [Branch Root](#distributed-code-5)       |            |
+| 7    | [Child Depth](#distributed-code-7)       | Deprecated |
+| 93   | [Embedded Message](#distributed-code-93) |            |
 
 ### Distributed Code 0
 
@@ -3288,7 +3288,7 @@ Nicotine: DistribSearch
 
 #### Description
 
-See SBranchLevel
+We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
 #### Function Names
 
@@ -3308,7 +3308,7 @@ Nicotine: DistribBranchLevel
 
 #### Description
 
-See SBranchRoot
+We tell our distributed children the username of the root of the branch we're in on the distributed network.
 
 #### Function Names
 
@@ -3324,11 +3324,13 @@ Nicotine: DistribBranchRoot
 
 ### Distributed Code 7
 
-**Branch Level**
+**Child Depth**
 
 #### Description
 
-See SChildDepth
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+We tell our distributed parent the maximum number of generation of children we have on the distributed network.
 
 #### Function Names
 

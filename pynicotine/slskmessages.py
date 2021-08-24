@@ -2885,6 +2885,8 @@ class DistribSearch(DistribMessage):
 
 class DistribBranchLevel(DistribMessage):
     """ Distrib code: 4 """
+    """ We tell our distributed children what our position is in our branch (xth
+    generation) on the distributed network. """
 
     def __init__(self, conn, value=None):
         self.conn = conn
@@ -2902,6 +2904,8 @@ class DistribBranchLevel(DistribMessage):
 
 class DistribBranchRoot(DistribMessage):
     """ Distrib code: 5 """
+    """ We tell our distributed children the username of the root of the branch
+    we’re in on the distributed network. """
 
     def __init__(self, conn, user=None):
         self.conn = conn
@@ -2919,6 +2923,9 @@ class DistribBranchRoot(DistribMessage):
 
 class DistribChildDepth(DistribMessage):
     """ Distrib code: 7 """
+    """ We tell our distributed parent the maximum number of generation of children
+    we have on the distributed network. """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     def __init__(self, conn, value=None):
         self.conn = conn
