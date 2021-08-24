@@ -1185,7 +1185,7 @@ class SlskProtoThread(threading.Thread):
                 # Invalid message size or buffer is being filled
                 break
 
-            msgtype = msg_buffer_mem[4]
+            msgtype = msg_buffer_mem[idx + 4]
 
             # Unpack distributed messages
             if msgtype in self.distribclasses:
