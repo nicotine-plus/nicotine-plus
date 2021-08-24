@@ -265,7 +265,7 @@ class SlskMessage:
 
         except struct.error as error:
             log.add("%s %s trying to unpack %s at '%s' at %s/%s",
-                    (self.__class__, error, obj_type, message[start:].__repr__(), start, len(message)))
+                    (self.__class__, error, obj_type, bytes(message[start:]), start, len(message)))
             raise struct.error(error)
 
     def pack_object(self, obj, signedint=False, unsignedlonglong=False, latin1=False):
