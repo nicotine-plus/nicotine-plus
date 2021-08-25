@@ -318,8 +318,8 @@ class SlskProtoThread(threading.Thread):
         PrivilegedUsers: 69,
         HaveNoParent: 71,
         SearchParent: 73,
-        ParentMinSpeed: 83,           # Unused
-        ParentSpeedRatio: 84,         # Unused
+        ParentMinSpeed: 83,
+        ParentSpeedRatio: 84,
         ParentInactivityTimeout: 86,  # Deprecated
         SearchInactivityTimeout: 87,  # Deprecated
         MinParentsInCache: 88,        # Deprecated

@@ -135,6 +135,9 @@ class NicotineCore:
         self.active_server_conn = None
         self.parent_conn = None
         self.potential_parents = {}
+        self.distrib_parent_min_speed = 0
+        self.distrib_parent_speed_ratio = 1
+        self.max_distrib_children = 10
         self.waitport = None
         self.ipaddress = None
         self.privileges_left = None
@@ -203,8 +206,8 @@ class NicotineCore:
             slskmessages.AddToPrivileged: self.add_to_privileged,
             slskmessages.CheckPrivileges: self.check_privileges,
             slskmessages.ServerPing: self.dummy_message,
-            slskmessages.ParentMinSpeed: self.dummy_message,
-            slskmessages.ParentSpeedRatio: self.dummy_message,
+            slskmessages.ParentMinSpeed: self.parent_min_speed,
+            slskmessages.ParentSpeedRatio: self.parent_speed_ratio,
             slskmessages.ParentInactivityTimeout: self.dummy_message,
             slskmessages.SearchInactivityTimeout: self.dummy_message,
             slskmessages.MinParentsInCache: self.dummy_message,
@@ -1354,6 +1357,7 @@ Error: %(error)s""", {
 
         if msg.user == config.sections["server"]["login"]:
             self.transfers.upload_speed = msg.avgspeed
+            self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
 
         self.interests.get_user_stats(msg)
         self.userinfo.get_user_stats(msg)
@@ -1426,6 +1430,18 @@ Error: %(error)s""", {
         log.add_msg_contents(msg)
         self.transfers.set_privileged_users(msg.users)
         log.add(_("%i privileged users"), (len(msg.users)))
+
+    def parent_min_speed(self, msg):
+        """ Server code: 83 """
+
+        log.add_msg_contents(msg)
+        self.distrib_parent_min_speed = msg.speed
+
+    def parent_speed_ratio(self, msg):
+        """ Server code: 84 """
+
+        log.add_msg_contents(msg)
+        self.distrib_parent_speed_ratio = msg.ratio
 
     def add_to_privileged(self, msg):
         """ Server code: 91 """

@@ -644,7 +644,7 @@ Nicotine: SetStatus
 
 We send our new status to the server. Status is a way to define whether you're available or busy. 
 
-1 = Away  
+*1 = Away  
 2 = Online*
 
 #### Data Order
@@ -995,7 +995,7 @@ Nicotine: AdminCommand
 
 **DEPRECATED**
 
-The server tells us a new room has been added.
+The server sends this to indicate change in place in queue while we're waiting for files from another peer.
 
 #### Function Names
 
@@ -1313,14 +1313,14 @@ The server informs us about the minimum upload speed required to become a parent
 #### Function Names
 
 Museekd: SParentMinSpeed  
-Nicotine: ParentMinSpeed (unused)
+Nicotine: ParentMinSpeed
 
 #### Data Order
 
   - Send
       - *No Message*
   - Receive
-    1.  **uint** <ins>number</ins>
+    1.  **uint** <ins>speed</ins>
 
 ### Server Code 84
 
@@ -1333,14 +1333,14 @@ The server sends us a speed ratio determining the number of children we can have
 #### Function Names
 
 Museekd: SParentSpeedRatio  
-Nicotine: ParentSpeedRatio (unused)
+Nicotine: ParentSpeedRatio
 
 #### Data Order
 
   - Send
       - *No Message*
   - Receive
-    1.  **uint** <ins>number</ins>
+    1.  **uint** <ins>ratio</ins>
 
 ### Server Code 86
 

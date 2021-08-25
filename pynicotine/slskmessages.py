@@ -1021,8 +1021,8 @@ class AdminCommand(ServerMessage):
 
 class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
-    """ Server sends this to indicate change in place in queue while we're
-    waiting for files from other peer. """
+    """ The server sends this to indicate change in place in queue while we're
+    waiting for files from another peer. """
     """ DEPRECATED """
 
     def __init__(self, user=None, req=None, place=None):
@@ -1302,24 +1302,27 @@ class SearchParent(ServerMessage):
 
 class ParentMinSpeed(ServerMessage):
     """ Server code: 83 """
-    """ UNUSED """
+    """ The server informs us about the minimum upload speed required to become
+    a parent in the distributed network. """
 
     def __init__(self):
-        self.num = None
+        self.speed = None
 
     def parse_network_message(self, message):
-        _pos, self.num = self.get_object(message, int)
+        _pos, self.speed = self.get_object(message, int)
 
 
 class ParentSpeedRatio(ServerMessage):
     """ Server code: 84 """
-    """ UNUSED """
+    """ The server sends us a speed ratio determining the number of children we
+    can have in the distributed network. The maximum number of children is our
+    upload speed divided by the speed ratio. """
 
     def __init__(self):
-        self.num = None
+        self.ratio = None
 
     def parse_network_message(self, message):
-        _pos, self.num = self.get_object(message, int)
+        _pos, self.ratio = self.get_object(message, int)
 
 
 class ParentInactivityTimeout(ServerMessage):
