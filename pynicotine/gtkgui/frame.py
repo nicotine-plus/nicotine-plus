@@ -1301,7 +1301,6 @@ class NicotineFrame:
             ("#" + _("_Chat Rooms"), "win.chatrooms"),
             ("#" + _("_Interests"), "win.interests"),
             ("", None),
-            ("#" + _("_Fast Configure"), "app.fastconfigure"),
             ("#" + _("_Transfer Statistics"), "app.transferstatistics")
         )
 
@@ -1312,8 +1311,9 @@ class NicotineFrame:
         menu = PopupMenu(self)
         menu.setup(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
-            ("#" + _("Check _Latest Version"), "app.checklatest"),
             ("#" + _("Report a _Bug"), "app.reportbug"),
+            ("#" + _("_Fast Configure"), "app.fastconfigure"),
+            ("#" + _("Check _Latest Version"), "app.checklatest"),
             ("", None),
             ("#" + _("About _Nicotine+"), "app.about")
         )
