@@ -105,7 +105,7 @@ if __name__ == '__main__':
 
     # Specify a description for the PyPi project page
     LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
-file sharing network.
+network.
 
 Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
 alternative to the official Soulseek client, providing additional
@@ -132,7 +132,7 @@ functionality while keeping current with the Soulseek protocol."""
         name="nicotine-plus",
         version=config.version,
         license="GPLv3+",
-        description="Graphical client for the Soulseek file sharing network",
+        description="Graphical client for the Soulseek peer-to-peer network",
         long_description=LONG_DESCRIPTION,
         author="Nicotine+ Team",
         author_email="nicotine-team@lists.launchpad.net",

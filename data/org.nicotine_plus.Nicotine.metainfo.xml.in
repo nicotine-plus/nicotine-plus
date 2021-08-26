@@ -6,11 +6,11 @@
   <project_license>GPL-3.0+</project_license>
   <translation type="gettext">nicotine</translation>
   <name>Nicotine+</name>
-  <summary>Graphical client for the Soulseek file sharing network</summary>
+  <summary>Graphical client for the Soulseek peer-to-peer network</summary>
   <description>
     <p>
-      Nicotine+ is a graphical client for the Soulseek peer-to-peer file
-      sharing network.
+      Nicotine+ is a graphical client for the Soulseek peer-to-peer
+      network.
     </p>
     <p>
       Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
