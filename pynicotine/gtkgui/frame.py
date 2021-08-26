@@ -1312,7 +1312,7 @@ class NicotineFrame:
         menu.setup(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
             ("#" + _("Report a _Bug"), "app.reportbug"),
-            ("#" + _("_Fast Configure"), "app.fastconfigure"),
+            ("#" + _("_Setup Assistant"), "app.fastconfigure"),
             ("#" + _("Check _Latest Version"), "app.checklatest"),
             ("", None),
             ("#" + _("About _Nicotine+"), "app.about")
