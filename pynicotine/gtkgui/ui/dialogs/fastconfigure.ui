@@ -46,7 +46,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Graphical client for the Soulseek peer-to-peer file sharing network</property>
+            <property name="label" translatable="yes">Graphical client for the Soulseek peer-to-peer network</property>
             <property name="justify">center</property>
             <property name="wrap">1</property>
             <property name="width-chars">36</property>

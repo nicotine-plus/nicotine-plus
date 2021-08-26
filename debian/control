@@ -34,9 +34,9 @@ Depends:
 Recommends:
     gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
     gir1.2-gspell-1
-Description: graphical client for Soulseek P2P network
+Description: graphical client for Soulseek peer-to-peer network
  Nicotine+ is a graphical client for the Soulseek peer-to-peer
- file sharing network.
+ network.
  .
  Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
  alternative to the official Soulseek client, providing additional
