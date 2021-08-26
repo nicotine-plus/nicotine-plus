@@ -54,14 +54,14 @@ class Transfer:
 
     __slots__ = ("conn", "user", "filename",
                  "path", "req", "size", "file", "starttime", "lasttime",
-                 "offset", "currentbytes", "lastbytes", "speed", "timeelapsed",
+                 "currentbytes", "lastbytes", "speed", "timeelapsed",
                  "timeleft", "timequeued", "modifier", "place", "bitrate", "length",
                  "iterator", "_status", "laststatuschange", "legacy_attempt")
 
     def __init__(
         self, conn=None, user=None, filename=None,
         path=None, status=None, req=None, size=None, file=None, starttime=None,
-        offset=None, currentbytes=None, speed=None, timeelapsed=None,
+        currentbytes=None, speed=None, timeelapsed=None,
         timeleft=None, timequeued=None, modifier=None, place=0, bitrate=None, length=None,
         iterator=None, legacy_attempt=False
     ):
@@ -75,7 +75,6 @@ class Transfer:
         self.file = file
         self.starttime = starttime
         self.lasttime = starttime
-        self.offset = offset
         self.currentbytes = currentbytes
         self.lastbytes = currentbytes
         self.speed = speed
@@ -1094,10 +1093,9 @@ class Transfers:
                     i.status = "Local file error"
 
                 else:
-                    i.currentbytes = offset
+                    i.lastbytes = offset
                     i.file = file_handle
                     i.place = 0
-                    i.offset = offset
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
                     self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_name)
@@ -1152,6 +1150,7 @@ class Transfers:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
                 file_handle = open(real_path, "rb")
+                offset = file_handle.tell()
 
             except IOError as error:
                 log.add(_("Upload I/O error: %s"), error)
@@ -1163,6 +1162,7 @@ class Transfers:
                 self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
                 i.status = "Transferring"
                 i.file = file_handle
+                i.lastbytes = offset
                 i.place = 0
 
                 if self.is_privileged(i.user):
@@ -1301,13 +1301,13 @@ class Transfers:
                 i.status = "Transferring"
                 oldelapsed = i.timeelapsed
                 i.timeelapsed = curtime - i.starttime
+                bytesdifference = i.currentbytes - i.lastbytes
+
+                if bytesdifference:
+                    self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
 
                 if i.size > i.currentbytes:
                     if curtime > i.starttime and i.currentbytes > i.lastbytes:
-
-                        bytesdifference = (i.currentbytes - i.lastbytes)
-                        self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
-
                         i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
 
                         if i.speed <= 0:
@@ -1353,17 +1353,17 @@ class Transfers:
 
             if i.starttime is None:
                 i.starttime = curtime
-                i.offset = msg.offset
 
             i.status = "Transferring"
             oldelapsed = i.timeelapsed
             i.timeelapsed = curtime - i.starttime
+            bytesdifference = i.currentbytes - i.lastbytes
+
+            if bytesdifference:
+                self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
 
             if i.size > i.currentbytes:
                 if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                    bytesdifference = (i.currentbytes - i.lastbytes)
-                    self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
-
                     i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
 
                     if i.speed <= 0:
