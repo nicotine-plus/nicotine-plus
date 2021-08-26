@@ -17,9 +17,9 @@ The current stable version of Nicotine+ is 3.1.1, released on August 2, 2021. Se
 
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use packages for your distribution/operating system. This will save you time.
 
-### Ubuntu PPA/Debian (Stable)
+### Ubuntu/Debian (Stable)
 
-To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, run the following:
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the stable Nicotine+ apt repository (PPA) by running the following:
 
 ```sh
 sudo apt install software-properties-common
@@ -29,7 +29,9 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-### Ubuntu PPA/Debian (Unstable)
+If you prefer to install a .deb package directly, you can download one [here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a new .deb package each time an update is available.
+
+### Ubuntu/Debian (Unstable)
 
 The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
 
@@ -40,6 +42,8 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6CEB6050A30E5769
 sudo apt update
 sudo apt install nicotine
 ```
+
+If you prefer to install a .deb package directly, you can download one [here](http://ppa.launchpad.net/nicotine-team/unstable/ubuntu/pool/main/n/nicotine/). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a new .deb package each time an update is available.
 
 ### Arch Linux/Manjaro/Parabola (Stable)
 
