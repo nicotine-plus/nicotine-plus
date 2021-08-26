@@ -576,7 +576,6 @@ class NicotineFrame:
         self.connect_action.set_enabled(not status)
         self.disconnect_action.set_enabled(status)
         self.away_action.set_enabled(status)
-        self.check_privileges_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
 
         self.PrivateChatCombo.set_sensitive(status)
@@ -640,10 +639,8 @@ class NicotineFrame:
         self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
         self.privatechats.update_visuals()
 
-    def on_check_privileges(self, *args):
-        self.np.request_check_privileges()
-
     def on_get_privileges(self, *args):
+
         import urllib.parse
 
         login = urllib.parse.quote(config.sections["server"]["login"])
@@ -651,8 +648,10 @@ class NicotineFrame:
             'url': 'https://www.slsknet.org/userlogin.php?username=' + login
         }
         open_uri(url, self.MainWindow)
+        self.np.request_check_privileges()
 
     def on_fast_configure(self, *args, show=True):
+
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
@@ -663,6 +662,7 @@ class NicotineFrame:
             self.fastconfigure.show()
 
     def on_settings(self, *args, page=None):
+
         if self.settingswindow is None:
             self.settingswindow = Settings(self)
 
@@ -707,6 +707,7 @@ class NicotineFrame:
         config.sections["ui"]["header_bar"] = not state
 
     def set_show_log(self, show):
+
         if show:
             self.set_status_text("")
             self.DebugLog.show()
@@ -1017,10 +1018,6 @@ class NicotineFrame:
         self.application.add_action(self.away_action)
         self.application.set_accels_for_action("app.away", ["<Primary>h"])
 
-        self.check_privileges_action = Gio.SimpleAction.new("checkprivileges", None)
-        self.check_privileges_action.connect("activate", self.on_check_privileges)
-        self.application.add_action(self.check_privileges_action)
-
         self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
         self.get_privileges_action.connect("activate", self.on_get_privileges)
         self.application.add_action(self.get_privileges_action)
@@ -1224,14 +1221,7 @@ class NicotineFrame:
             ("#" + _("_Connect"), "app.connect"),
             ("#" + _("_Disconnect"), "app.disconnect"),
             ("#" + _("_Away"), "app.away"),
-            ("", None)
-        )
-
-    def add_privileges_section(self, menu):
-
-        menu.setup(
-            ("#" + _("_Check _Privileges"), "app.checkprivileges"),
-            ("#" + _("_Get _Privileges"), "app.getprivileges"),
+            ("#" + _("Soulseek _Privileges"), "app.getprivileges"),
             ("", None)
         )
 
@@ -1245,7 +1235,6 @@ class NicotineFrame:
 
         menu = PopupMenu(self)
         self.add_connection_section(menu)
-        self.add_privileges_section(menu)
         self.add_preferences_item(menu)
 
         menu.setup(("", None))
@@ -1318,16 +1307,15 @@ class NicotineFrame:
 
         return menu
 
-    def add_about_item(self, menu):
-        menu.setup(("#" + _("About _Nicotine+"), "app.about"))
-
     def create_help_menu(self):
 
         menu = PopupMenu(self)
         menu.setup(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
             ("#" + _("Check _Latest Version"), "app.checklatest"),
-            ("#" + _("Report a _Bug"), "app.reportbug")
+            ("#" + _("Report a _Bug"), "app.reportbug"),
+            ("", None),
+            ("#" + _("About _Nicotine+"), "app.about")
         )
 
         return menu
@@ -1337,7 +1325,6 @@ class NicotineFrame:
 
         menu = PopupMenu(self)
         self.add_connection_section(menu)
-        self.add_privileges_section(menu)
 
         menu.setup(
             (">" + _("_View"), self.create_view_menu()),
@@ -1350,7 +1337,6 @@ class NicotineFrame:
 
         menu.setup((">" + _("_Help"), self.create_help_menu()))
         self.add_preferences_item(menu)
-        self.add_about_item(menu)
         self.add_quit_item(menu)
 
         return menu
@@ -1358,17 +1344,13 @@ class NicotineFrame:
     def create_menu_bar(self):
         """ Classic menu bar (header bar disabled) """
 
-        help_menu = self.create_help_menu()
-        help_menu.setup(("", None))
-        self.add_about_item(help_menu)
-
         menu = PopupMenu(self)
         menu.setup(
             (">" + _("_File"), self.create_file_menu()),
             (">" + _("_View"), self.create_view_menu()),
             (">" + _("_Shares"), self.create_shares_menu()),
             (">" + _("_Modes"), self.create_modes_menu()),
-            (">" + _("_Help"), help_menu)
+            (">" + _("_Help"), self.create_help_menu())
         )
 
         return menu
