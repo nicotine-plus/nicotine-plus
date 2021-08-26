@@ -1770,8 +1770,19 @@ class LoggingFrame(BuildFrame):
 class SearchesFrame(BuildFrame):
 
     def __init__(self, parent):
+
         self.p = parent
         BuildFrame.__init__(self, "search")
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
+
+        if Gtk.get_major_version() == 4:
+            button = self.ShowSearchHelp.get_first_child()
+            button.set_child(self.FilterHelpLabel)
+        else:
+            self.ShowSearchHelp.add(self.FilterHelpLabel)
+
+        self.ShowSearchHelp.set_popover(self.AboutSearchFiltersPopover)
+
         self.options = {
             "searches": {
                 "maxresults": self.MaxResults,
@@ -1787,6 +1798,7 @@ class SearchesFrame(BuildFrame):
         }
 
     def set_settings(self):
+
         try:
             searches = config.sections["searches"]
         except Exception:

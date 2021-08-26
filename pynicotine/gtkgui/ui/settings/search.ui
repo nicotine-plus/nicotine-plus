@@ -385,13 +385,18 @@
             <property name="visible">1</property>
             <property name="spacing">12</property>
             <child>
+              <object class="GtkMenuButton" id="ShowSearchHelp">
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkButton" id="ClearFilterHistory">
                 <property name="visible">1</property>
                 <signal name="clicked" handler="on_clear_filter_history" swapped="no"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
                         <property name="visible">1</property>
@@ -515,6 +520,22 @@
             </child>
           </object>
         </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkBox" id="FilterHelpLabel">
+    <property name="visible">1</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">1</property>
+        <property name="icon-name">dialog-question-symbolic</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel">
+        <property name="visible">1</property>
+        <property name="label" translatable="yes">Result Filter Help</property>
       </object>
     </child>
   </object>
