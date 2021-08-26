@@ -45,6 +45,7 @@ jobs:
         gtk: [3, 4]
     env:
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      GSK_RENDERER: cairo
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
