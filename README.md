@@ -81,6 +81,12 @@ Nicotine+ can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure t
 pip3 install nicotine-plus
 ```
 
+Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
+
+```sh
+pip3 install nicotine-plus --upgrade
+```
+
 #### Flathub (Stable)
 
 If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
