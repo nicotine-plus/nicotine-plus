@@ -1218,17 +1218,11 @@ class NicotineFrame:
 
     """ Primary Menus """
 
-    def add_connect_section(self, menu):
+    def add_connection_section(self, menu):
 
         menu.setup(
             ("#" + _("_Connect"), "app.connect"),
             ("#" + _("_Disconnect"), "app.disconnect"),
-            ("", None)
-        )
-
-    def add_away_section(self, menu):
-
-        menu.setup(
             ("#" + _("_Away"), "app.away"),
             ("", None)
         )
@@ -1250,8 +1244,7 @@ class NicotineFrame:
     def create_file_menu(self):
 
         menu = PopupMenu(self)
-        self.add_connect_section(menu)
-        self.add_away_section(menu)
+        self.add_connection_section(menu)
         self.add_privileges_section(menu)
         self.add_preferences_item(menu)
 
@@ -1280,18 +1273,19 @@ class NicotineFrame:
 
         return menu
 
-    def add_public_scan_section(self, menu):
+    def add_configure_shares_section(self, menu):
 
         menu.setup(
             ("#" + _("_Rescan Public Shares"), "app.publicrescan"),
-            ("#" + _("_Browse Public Shares"), "app.browsepublicshares"),
+            ("#" + _("Rescan B_uddy Shares"), "app.buddyrescan"),
+            ("#" + _("_Configure Shares"), "app.configureshares"),
             ("", None)
         )
 
-    def add_buddy_scan_section(self, menu):
+    def add_browse_shares_section(self, menu):
 
         menu.setup(
-            ("#" + _("Rescan B_uddy Shares"), "app.buddyrescan"),
+            ("#" + _("_Browse Public Shares"), "app.browsepublicshares"),
             ("#" + _("Bro_wse Buddy Shares"), "app.browsebuddyshares"),
             ("", None)
         )
@@ -1299,12 +1293,8 @@ class NicotineFrame:
     def create_shares_menu(self):
 
         menu = PopupMenu(self)
-        menu.setup(
-            ("#" + _("_Configure Shares"), "app.configureshares"),
-            ("", None)
-        )
-        self.add_public_scan_section(menu)
-        self.add_buddy_scan_section(menu)
+        self.add_configure_shares_section(menu)
+        self.add_browse_shares_section(menu)
 
         return menu
 
@@ -1346,8 +1336,7 @@ class NicotineFrame:
         """ Menu button menu (header bar enabled) """
 
         menu = PopupMenu(self)
-        self.add_connect_section(menu)
-        self.add_away_section(menu)
+        self.add_connection_section(menu)
         self.add_privileges_section(menu)
 
         menu.setup(
@@ -1356,8 +1345,8 @@ class NicotineFrame:
             ("", None)
         )
 
-        self.add_public_scan_section(menu)
-        self.add_buddy_scan_section(menu)
+        self.add_configure_shares_section(menu)
+        self.add_browse_shares_section(menu)
 
         menu.setup((">" + _("_Help"), self.create_help_menu()))
         self.add_preferences_item(menu)
