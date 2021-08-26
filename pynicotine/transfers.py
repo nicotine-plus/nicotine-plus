@@ -58,34 +58,30 @@ class Transfer:
                  "timeleft", "timequeued", "modifier", "place", "bitrate", "length",
                  "iterator", "_status", "laststatuschange", "legacy_attempt")
 
-    def __init__(
-        self, conn=None, user=None, filename=None,
-        path=None, status=None, req=None, size=None, file=None, starttime=None,
-        currentbytes=None, speed=None, timeelapsed=None,
-        timeleft=None, timequeued=None, modifier=None, place=0, bitrate=None, length=None,
-        iterator=None, legacy_attempt=False
-    ):
+    def __init__(self, user=None, filename=None, path=None, status=None, req=None, size=None,
+                 file=None, currentbytes=None, timequeued=None, place=0, bitrate=None, length=None):
         self.user = user
         self.filename = filename
-        self.conn = conn
         self.path = path
-        self.modifier = modifier
         self.req = req
         self.size = size
         self.file = file
-        self.starttime = starttime
-        self.lasttime = starttime
         self.currentbytes = currentbytes
-        self.lastbytes = currentbytes
-        self.speed = speed
-        self.timeelapsed = timeelapsed
-        self.timeleft = timeleft
         self.timequeued = timequeued
-        self.place = place  # Queue position
+        self.place = place
         self.bitrate = bitrate
         self.length = length
-        self.iterator = iterator
-        self.legacy_attempt = legacy_attempt
+
+        self.conn = None
+        self.modifier = None
+        self.starttime = None
+        self.lasttime = None
+        self.lastbytes = None
+        self.speed = None
+        self.timeelapsed = None
+        self.timeleft = None
+        self.iterator = None
+        self.legacy_attempt = False
         self.setstatus(status)
 
     def setstatus(self, status):
@@ -1093,8 +1089,8 @@ class Transfers:
                     i.status = "Local file error"
 
                 else:
-                    i.lastbytes = offset
                     i.file = file_handle
+                    i.lastbytes = offset
                     i.place = 0
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
@@ -1159,8 +1155,6 @@ class Transfers:
                 i.status = "Local file error"
 
             else:
-                self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
-                i.status = "Transferring"
                 i.file = file_handle
                 i.lastbytes = offset
                 i.place = 0
@@ -1170,6 +1164,9 @@ class Transfers:
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
+
+                i.status = "Transferring"
+                self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
 
                 ip_address = None
                 if i.conn is not None:
