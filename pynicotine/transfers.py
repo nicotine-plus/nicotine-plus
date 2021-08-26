@@ -1101,6 +1101,7 @@ class Transfers:
                         i.legacy_attempt = False
                         self.queue.append(slskmessages.DownloadFile(i.conn, file_handle))
                         self.queue.append(slskmessages.FileOffset(i.conn, i.size, offset))
+
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
                                 "user": i.user,
@@ -1133,6 +1134,7 @@ class Transfers:
             "filename": i.filename,
             "user": i.user
         })
+        needupdate = True
 
         if i.conn is None:
             i.conn = msg.conn
@@ -1165,34 +1167,35 @@ class Transfers:
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
 
-                i.status = "Transferring"
-                self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
+                if i.size > offset:
+                    i.status = "Transferring"
+                    self.queue.append(slskmessages.UploadFile(i.conn, file=file_handle, size=i.size))
 
-                ip_address = None
-                if i.conn is not None:
-                    try:
-                        ip_address = i.conn.getpeername()
-                    except OSError:
-                        # Connection already closed
-                        pass
+                    ip_address = None
+                    if i.conn is not None:
+                        try:
+                            ip_address = i.conn.getpeername()
+                        except OSError:
+                            # Connection already closed
+                            pass
 
-                log.add_upload(
-                    _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
-                        "user": i.user,
-                        "ip": ip_address,
-                        "file": i.filename
-                    }
-                )
+                    log.add_upload(
+                        _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
+                            "user": i.user,
+                            "ip": ip_address,
+                            "file": i.filename
+                        }
+                    )
+                else:
+                    i.lasttime = time.time()
+                    self.upload_finished(i, file_handle=file_handle)
+                    needupdate = False
 
             if self.uploadsview:
                 self.uploadsview.new_transfer_notification()
-                self.uploadsview.update(i)
 
-            if i.size == 0:
-                # If filesize is 0, we will not receive a UploadFile message later. Finish now.
-                i.conn = None
-                i.lasttime = time.time()
-                self.upload_finished(i, file_handle=file_handle)
+                if needupdate:
+                    self.uploadsview.update(i)
 
         else:
             log.add_transfer("Upload error formally known as 'Unknown file request': %(req)s (%(user)s: %(file)s)", {
@@ -1974,6 +1977,7 @@ class Transfers:
         i.currentbytes = i.size
         i.speed = None
         i.timeleft = ""
+        i.conn = None
 
         for j in self.uploads:
             if j.user == i.user:
