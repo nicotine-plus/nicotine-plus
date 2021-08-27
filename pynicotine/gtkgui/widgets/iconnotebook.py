@@ -23,10 +23,12 @@
 import sys
 
 from gi.repository import Gdk
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -554,6 +556,29 @@ class IconNotebook:
             tab_label.onclose(None)
             return True
 
+        keycodes_tab, mods = parse_accelerator("<Primary>Tab")
+
+        if state & mods and keycode in keycodes_tab:
+            # Ctrl+Tab and Shift+Ctrl+Tab: cycle through tabs
+
+            num_pages = self.notebook.get_n_pages()
+            current_page = self.notebook.get_current_page()
+
+            if state & Gdk.ModifierType.SHIFT_MASK:
+                if current_page == 0:
+                    self.notebook.set_current_page(num_pages - 1)
+                else:
+                    self.notebook.prev_page()
+
+                return True
+
+            if current_page == (num_pages - 1):
+                self.notebook.set_current_page(0)
+            else:
+                self.notebook.next_page()
+
+            return True
+
         return False
 
     def on_switch_page(self, notebook, new_page, page_num):
@@ -570,3 +595,5 @@ class IconNotebook:
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)
         self.set_text_color(new_page, status=0)
+
+        GLib.idle_add(grab_widget_focus, notebook)
