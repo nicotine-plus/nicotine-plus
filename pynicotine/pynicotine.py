@@ -1380,9 +1380,8 @@ Error: %(error)s""", {
     def relogged(self, _msg):
         """ Server code: 41 """
 
-        log.add(_("Someone else is logging in with the same nickname, server is going to disconnect us"))
+        log.add_important_info(_("Someone logged in to your Soulseek account elsewhere"))
         self.manualdisconnect = True
-        self.pluginhandler.server_disconnect_notification(False)
 
     def recommendations(self, msg):
         """ Server code: 54 """
