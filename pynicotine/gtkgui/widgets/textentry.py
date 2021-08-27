@@ -458,6 +458,9 @@ class ChatEntry:
         text = self.entry.get_text()[:ix].split(" ")[-1]
         preix = ix - len(text)
 
+        if not text:
+            return False
+
         if not config.sections["words"]["cycle"]:
             completion, single = self.get_completion(text, self.completion_list)
             if completion:
