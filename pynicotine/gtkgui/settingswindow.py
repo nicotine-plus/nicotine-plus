@@ -159,12 +159,20 @@ class NetworkFrame(BuildFrame):
             }
         }
 
-    def on_change_password_response(self, dialog, response_id, data):
+    def on_change_password_response(self, dialog, response_id, logged_in):
 
         password = dialog.get_response_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
+            return
+
+        if logged_in != self.p.frame.np.logged_in:
+            message_dialog(
+                parent=self.p.dialog,
+                title=_("Password Change Rejected"),
+                message=("Since your login status changed, your password has not been changed. Please try again.")
+            )
             return
 
         if not password:
@@ -194,7 +202,8 @@ class NetworkFrame(BuildFrame):
             title=_("Change Password"),
             message=message,
             visibility=False,
-            callback=self.on_change_password_response
+            callback=self.on_change_password_response,
+            callback_data=self.p.frame.np.logged_in
         )
 
     def on_check_port(self, widget):
