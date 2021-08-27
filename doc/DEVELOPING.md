@@ -17,7 +17,7 @@ This document contains important information about Nicotine+ design decisions an
 
 Nicotine+ is Python application, built on backend code from the PySoulSeek project started in 2001. We only allow Python code in the main client, as this makes it easy to distribute and run Nicotine+ on virtually any system. In turn, we are able to devote more time towards implementing bug fixes and additional functionality.
 
-We aim to support the oldest minor Python 3 version still used by supported releases of distributions and operating systems. The minimum version Nicotine+ currently supports is 3.6.
+We aim to support the oldest minor Python 3 version still used by supported releases of distributions and operating systems. The minimum version Nicotine+ currently supports is 3.5.
 
 ## GTK
 

@@ -4,7 +4,7 @@
 
 ### Required
 
-* [python](https://www.python.org/) >= 3.6 for interpreter;
+* [python](https://www.python.org/) >= 3.5 for interpreter;
 * [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) for using GObject introspection with Python 3;
 * [gir1.2-gtk-3.0](https://www.gtk.org/) for GObject introspection bindings for GTK;
 * [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files.

@@ -109,9 +109,9 @@ def check_arguments():
 
 def check_core_dependencies():
 
-    # Require Python >= 3.6
+    # Require Python >= 3.5
     try:
-        assert sys.version_info[:2] >= (3, 6), '.'.join(
+        assert sys.version_info[:2] >= (3, 5), '.'.join(
             map(str, sys.version_info[:3])
         )
 
@@ -119,7 +119,7 @@ def check_core_dependencies():
         return _("""You are using an unsupported version of Python (%(old_version)s).
 You should install Python %(min_version)s or newer.""") % {
             "old_version": error,
-            "min_version": "3.6"
+            "min_version": "3.5"
         }
 
     # Require gdbm or semidbm, for faster loading of shelves
