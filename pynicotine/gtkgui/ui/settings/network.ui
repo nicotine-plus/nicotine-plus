@@ -199,7 +199,7 @@
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">1</property>
-                                <property name="icon-name">preferences-system-network-symbolic</property>
+                                <property name="icon-name">network-wireless-symbolic</property>
                               </object>
                             </child>
                             <child>
