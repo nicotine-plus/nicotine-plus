@@ -116,10 +116,27 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="ChangePassword">
-                            <property name="label">Change Password</property>
                             <property name="halign">end</property>
                             <property name="visible">1</property>
                             <signal name="clicked" handler="on_change_password" swapped="no"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">dialog-password-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Change Password</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -173,9 +190,26 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="CheckPortButton">
-                        <property name="label" translatable="yes">Check Port Status</property>
                         <property name="visible">1</property>
                         <signal name="clicked" handler="on_check_port" swapped="no"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">preferences-system-network-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Check Port Status</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

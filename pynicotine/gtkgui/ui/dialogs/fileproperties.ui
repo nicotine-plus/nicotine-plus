@@ -329,7 +329,7 @@
       <object class="GtkBox">
         <property name="visible">1</property>
         <property name="margin-top">18</property>
-        <property name="spacing">5</property>
+        <property name="spacing">6</property>
         <property name="valign">end</property>
         <property name="vexpand">1</property>
         <child>

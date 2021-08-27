@@ -106,7 +106,7 @@
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
+                                    <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
@@ -134,7 +134,7 @@
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
+                                    <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
@@ -167,7 +167,7 @@
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="spacing">5</property>
+                                        <property name="spacing">6</property>
                                         <child>
                                           <object class="GtkImage">
                                             <property name="visible">1</property>
@@ -254,7 +254,7 @@
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
+                                    <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
@@ -282,7 +282,7 @@
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">5</property>
+                                    <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">1</property>
@@ -315,7 +315,7 @@
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="spacing">5</property>
+                                        <property name="spacing">6</property>
                                         <child>
                                           <object class="GtkImage">
                                             <property name="visible">1</property>
