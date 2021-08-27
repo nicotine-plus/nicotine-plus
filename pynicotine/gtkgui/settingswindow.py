@@ -183,7 +183,7 @@ class NetworkFrame(BuildFrame):
         if self.p.frame.np.logged_in:
             message = _("Enter a new password for your Soulseek account:")
         else:
-            message = (_("You are currently disconnected from the server. If you are attempting to change "
+            message = (_("You are currently logged out of the Soulseek network. If you are attempting to change "
                          "the password of an existing Soulseek account, you need to be logged into the account "
                          "in question.")
                        + "\n\n"
