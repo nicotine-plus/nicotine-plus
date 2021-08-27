@@ -1697,11 +1697,14 @@ class NicotineFrame:
 
     def on_key_press_event(self, *args):
 
-        keyval, keycode, state = get_key_press_event_args(*args)
-        kaycodes, mods = parse_accelerator("<Alt>")
         self.on_disable_auto_away()
 
-        if state != mods:
+        keyval, keycode, state = get_key_press_event_args(*args)
+        _keycodes, mods_alt = parse_accelerator("<Alt>")
+        _keycodes, mods_primary = parse_accelerator("<Primary>")
+
+        # Alt+1-9 or Ctrl+1-9 to change main tabs
+        if state != mods_alt and state != mods_primary:
             return False
 
         for i in range(1, 10):
