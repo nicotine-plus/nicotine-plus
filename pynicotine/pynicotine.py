@@ -1253,7 +1253,11 @@ Error: %(error)s""", {
             self.manualdisconnect = True
             self.queue.append(slskmessages.ConnClose(self.active_server_conn))
 
-            log.add_important_error(_("Can not log in. Reason: %s"), msg.reason)
+            if msg.reason == "INVALIDPASS":
+                self.ui_callback.invalid_password()
+                return
+
+            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
 
     def add_user(self, msg):
         """ Server code: 5 """

@@ -401,23 +401,6 @@ class NicotineFrame:
 
     """ Init UI """
 
-    def server_login(self):
-
-        if not self.np.away:
-            self.set_user_status(_("Online"))
-
-            autoaway = config.sections["server"]["autoaway"]
-
-            if autoaway > 0:
-                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
-            else:
-                self.awaytimerid = None
-        else:
-            self.set_user_status(_("Away"))
-
-        self.set_widget_online_status(True)
-        self.tray_icon.set_away(self.np.away)
-
     def init_spell_checker(self):
 
         try:
@@ -554,6 +537,23 @@ class NicotineFrame:
     def network_callback(self, msgs):
         GLib.idle_add(self.np.network_event, msgs)
 
+    def server_login(self):
+
+        if not self.np.away:
+            self.set_user_status(_("Online"))
+
+            autoaway = config.sections["server"]["autoaway"]
+
+            if autoaway > 0:
+                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
+            else:
+                self.awaytimerid = None
+        else:
+            self.set_user_status(_("Away"))
+
+        self.set_widget_online_status(True)
+        self.tray_icon.set_away(self.np.away)
+
     def server_disconnect(self):
 
         if self.awaytimerid is not None:
@@ -570,6 +570,27 @@ class NicotineFrame:
 
         # Reset transfer stats (speed, total files/users)
         self.update_bandwidth()
+
+    def invalid_password_response(self, dialog, response_id, data):
+
+        if response_id == Gtk.ResponseType.REJECT:
+            self.on_settings(page='Network')
+
+        dialog.destroy()
+
+    def invalid_password(self):
+
+        title = _("Invalid Password")
+        msg = _("The password you've entered is invalid for user %s") % config.sections["server"]["login"]
+
+        option_dialog(
+            parent=self.application.get_active_window(),
+            title=title,
+            message=msg,
+            third=_("Change Login Details"),
+            cancel=False,
+            callback=self.invalid_password_response
+        )
 
     def set_widget_online_status(self, status):
 

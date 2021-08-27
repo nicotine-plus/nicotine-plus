@@ -88,7 +88,7 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">To create a new user, fill in the username and password you want. If you already have a Soulseek account, fill in your chosen details.</property>
+        <property name="label" translatable="yes">To create a new Soulseek account, fill in your desired username and password. If you already have an account, fill in your existing login details.</property>
         <property name="justify">center</property>
         <property name="wrap">1</property>
         <property name="width-chars">36</property>

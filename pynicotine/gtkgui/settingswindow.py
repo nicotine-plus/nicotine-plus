@@ -171,22 +171,28 @@ class NetworkFrame(BuildFrame):
             self.on_change_password()
             return
 
+        if not self.p.frame.np.logged_in:
+            config.sections["server"]["passw"] = password
+            config.write_configuration()
+            return
+
         self.frame.np.request_change_password(password)
 
     def on_change_password(self, *args):
 
-        if not self.p.frame.np.logged_in:
-            message_dialog(
-                parent=self.p.dialog,
-                title=_("Unable to Change Password"),
-                message=_("You need to connect to the server in order to change your password."),
-            )
-            return
+        if self.p.frame.np.logged_in:
+            message = _("Enter a new password for your Soulseek account:")
+        else:
+            message = (_("You are currently disconnected from the server. If you are attempting to change "
+                         "the password of an existing Soulseek account, you need to be logged into the account "
+                         "in question.")
+                       + "\n\n"
+                       + _("Enter password to use when logging in:"))
 
         entry_dialog(
             parent=self.p.dialog,
             title=_("Change Password"),
-            message=_("Enter a new password for your Soulseek user:"),
+            message=message,
             visibility=False,
             callback=self.on_change_password_response
         )
