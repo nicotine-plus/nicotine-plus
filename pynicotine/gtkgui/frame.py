@@ -1166,7 +1166,7 @@ class NicotineFrame:
         action.connect("activate", self.on_keyboard_shortcuts)
         action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
         self.application.add_action(action)
-        self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question"])
+        self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question", "F1"])
 
         action = Gio.SimpleAction.new("transferstatistics", None)
         action.connect("activate", self.on_transfer_statistics)
