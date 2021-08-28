@@ -544,7 +544,7 @@ class IconNotebook:
 
     def on_key_press_event(self, *args):
 
-        keyval, keycode, state = get_key_press_event_args(*args)
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes_w, mods = parse_accelerator("<Primary>w")
         keycodes_f4, mods = parse_accelerator("<Primary>F4")
 

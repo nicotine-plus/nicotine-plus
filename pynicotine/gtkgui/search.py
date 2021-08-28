@@ -34,12 +34,9 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -278,7 +275,6 @@ class Search:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
 
-        self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
         self.ShowSearchHelp.set_popover(self.AboutSearchFiltersPopover)
 
         if Gtk.get_major_version() == 4:
@@ -1102,21 +1098,6 @@ class Search:
             self.on_download_folders()
 
         treeview.get_selection().unselect_all()
-
-    def on_key_press_event(self, *args):
-
-        keyval, keycode, state = get_key_press_event_args(*args)
-        self.select_results()
-
-        keycodes, mods = parse_accelerator("<Primary>c")
-
-        if state & mods and keycode in keycodes:
-            self.on_copy_file_path()
-        else:
-            # No key match, continue event
-            return False
-
-        return True
 
     def on_popup_menu(self, menu, widget):
 

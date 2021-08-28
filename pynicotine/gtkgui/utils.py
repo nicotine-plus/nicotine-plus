@@ -269,6 +269,7 @@ def get_key_press_event_args(*args):
 
     try:
         controller, keyval, keycode, state = args
+        widget = controller.get_widget()
 
     except ValueError:
         # GTK <3.24
@@ -277,7 +278,7 @@ def get_key_press_event_args(*args):
         keycode = event.hardware_keycode
         state = event.state
 
-    return (keyval, keycode, state)
+    return (keyval, keycode, state, widget)
 
 
 def parse_accelerator(accelerator):

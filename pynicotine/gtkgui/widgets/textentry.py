@@ -437,7 +437,7 @@ class ChatEntry:
 
     def on_key_press_event(self, *args):
 
-        keyval, keycode, state = get_key_press_event_args(*args)
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("Tab")
 
         if keycode not in keycodes:
@@ -575,7 +575,7 @@ class TextSearchBar:
 
     def on_key_press_event(self, *args):
 
-        keyval, keycode, state = get_key_press_event_args(*args)
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Primary>f")
 
         if state & mods and keycode in keycodes:

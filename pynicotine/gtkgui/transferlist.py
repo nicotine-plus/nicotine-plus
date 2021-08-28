@@ -844,7 +844,7 @@ class TransferList:
 
     def on_key_press_event(self, *args):
 
-        keyval, keycode, state = get_key_press_event_args(*args)
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
         self.select_transfers()
 
         keycodes, mods = parse_accelerator("t")

@@ -30,13 +30,10 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -151,8 +148,6 @@ class UserBrowse:
         # Build the window
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
-        self.key_controller_folder = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
-        self.key_controller_file = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
 
         if Gtk.get_major_version() == 4:
             self.MainPaned.set_resize_start_child(True)
@@ -922,29 +917,6 @@ class UserBrowse:
             callback=self.on_upload_files_response,
             droplist=users
         )
-
-    def on_folder_key_press_event(self, *args):
-        is_file = False
-        return self.on_key_press_event(is_file, *args)
-
-    def on_file_key_press_event(self, *args):
-        is_file = True
-        return self.on_key_press_event(is_file, *args)
-
-    def on_key_press_event(self, is_file, *args):
-
-        keyval, keycode, state = get_key_press_event_args(*args)
-        self.select_files()
-
-        keycodes, mods = parse_accelerator("<Primary>c")
-
-        if state & mods and keycode in keycodes:
-            self.copy_selected_path(is_file=is_file)
-        else:
-            # No key match, continue event
-            return False
-
-        return True
 
     def on_play_files(self, *args):
 

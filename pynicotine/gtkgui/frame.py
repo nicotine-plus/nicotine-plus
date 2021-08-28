@@ -1699,7 +1699,7 @@ class NicotineFrame:
 
         self.on_disable_auto_away()
 
-        keyval, keycode, state = get_key_press_event_args(*args)
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
         _keycodes, mods_alt = parse_accelerator("<Alt>")
         _keycodes, mods_primary = parse_accelerator("<Primary>")
 
