@@ -129,9 +129,8 @@ class TransferList:
             GObject.TYPE_UINT64,   # (13) current bytes
             GObject.TYPE_UINT64,   # (14) speed
             GObject.TYPE_UINT64,   # (15) time elapsed
-            GObject.TYPE_UINT64,   # (16) file count
-            GObject.TYPE_UINT64,   # (17) queue position
-            GObject.TYPE_PYOBJECT  # (18) transfer object
+            GObject.TYPE_UINT64,   # (16) queue position
+            GObject.TYPE_PYOBJECT  # (17) transfer object
         )
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
@@ -153,7 +152,7 @@ class TransferList:
         cols["path"].set_sort_column_id(1)
         cols["filename"].set_sort_column_id(2)
         cols["status"].set_sort_column_id(11)
-        cols["queue_position"].set_sort_column_id(17)
+        cols["queue_position"].set_sort_column_id(16)
         cols["percent"].set_sort_column_id(5)
         cols["size"].set_sort_column_id(12)
         cols["speed"].set_sort_column_id(14)
@@ -255,7 +254,7 @@ class TransferList:
     def select_transfer(self, model, iterator, select_user=False):
 
         user = model.get_value(iterator, 0)
-        transfer = model.get_value(iterator, 18)
+        transfer = model.get_value(iterator, 17)
 
         if isinstance(transfer, Transfer):
             self.selected_transfers.add(transfer)
@@ -366,9 +365,7 @@ class TransferList:
         percent = totalsize = position = 0
         hspeed = helapsed = left = ""
         elapsed = 0
-        filecount = 0
         salientstatus = ""
-        extensions = {}
 
         iterator = self.transfersmodel.iter_children(initer)
 
@@ -378,18 +375,6 @@ class TransferList:
 
             if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
                 salientstatus = status
-
-            filename = self.transfersmodel.get_value(iterator, 2)
-            parts = filename.rsplit('.', 1)
-
-            if len(parts) == 2:
-                ext = parts[1]
-                try:
-                    extensions[ext.lower()] += 1
-                except KeyError:
-                    extensions[ext.lower()] = 1
-
-            filecount += self.transfersmodel.get_value(iterator, 16)
 
             if status == "Filtered":
                 # We don't want to count filtered files when calculating the progress
@@ -421,14 +406,6 @@ class TransferList:
         if elapsed > 0:
             helapsed = human_length(elapsed)
 
-        if not extensions:
-            extensions = ""
-        elif len(extensions) == 1:
-            extensions = " (" + self.extension_list_template % {'ext': next(iter(extensions))} + ")"
-        else:
-            extensions = " (" + ", ".join((str(count) + " " + ext for (ext, count) in extensions.items())) + ")"
-
-        self.transfersmodel.set_value(initer, 2, self.files_template % {'number': filecount} + extensions)
         self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
         self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
         self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
@@ -440,7 +417,6 @@ class TransferList:
         self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, position))
         self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
         self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
-        self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, filecount))
 
     def update_specific(self, transfer=None):
 
@@ -506,13 +482,12 @@ class TransferList:
             self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, currentbytes))
             self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
             self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
-            self.transfersmodel.set_value(initer, 17, GObject.Value(GObject.TYPE_UINT64, place))
+            self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, place))
             return
 
         fn = transfer.filename
         user = transfer.user
         shortfn = fn.split("\\")[-1]
-        filecount = 1
 
         if self.tree_users != "ungrouped":
             # Group by folder or user
@@ -542,7 +517,6 @@ class TransferList:
                         empty_int,
                         empty_int,
                         empty_int,
-                        filecount,
                         empty_int,
                         lambda: None
                     ]
@@ -581,7 +555,6 @@ class TransferList:
                             empty_int,
                             empty_int,
                             empty_int,
-                            filecount,
                             empty_int,
                             lambda: None
                         ]
@@ -623,7 +596,6 @@ class TransferList:
                 GObject.Value(GObject.TYPE_UINT64, icurrentbytes),
                 GObject.Value(GObject.TYPE_UINT64, speed),
                 GObject.Value(GObject.TYPE_UINT64, elapsed),
-                GObject.Value(GObject.TYPE_UINT64, filecount),
                 GObject.Value(GObject.TYPE_UINT64, place),
                 transfer
             )
