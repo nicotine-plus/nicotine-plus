@@ -325,7 +325,7 @@ class IconNotebook:
         for page in self.unread_pages:
             tab_label, menu_label = self.get_labels(page)
             self.popup_menu_unread.setup(
-                ("#" + tab_label.get_text(), self.set_unread_page, self.page_num(page))
+                ("#" + tab_label.get_text(), self.set_unread_page, page)
             )
 
     def append_unread_page(self, page):
@@ -522,7 +522,8 @@ class IconNotebook:
     def set_current_page(self, page_num):
         return self.notebook.set_current_page(page_num)
 
-    def set_unread_page(self, action, state, page_num):
+    def set_unread_page(self, action, state, page):
+        page_num = self.page_num(page)
         self.notebook.set_current_page(page_num)
 
     def get_nth_page(self, page_num):
