@@ -1704,11 +1704,13 @@ class NicotineFrame:
         _keycodes, mods_primary = parse_accelerator("<Primary>")
 
         # Alt+1-9 or Ctrl+1-9 to change main tabs
-        if state != mods_alt and state != mods_primary:
+        if not state & mods_alt | mods_primary:
             return False
 
         for i in range(1, 10):
-            if keyval == Gdk.keyval_from_name(str(i)):
+            keycodes, mods = parse_accelerator(str(i))
+
+            if keycode in keycodes:
                 self.MainNotebook.set_current_page(i - 1)
                 return True
 
