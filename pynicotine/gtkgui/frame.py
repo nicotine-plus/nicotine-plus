@@ -1702,7 +1702,7 @@ class NicotineFrame:
         _keycodes, mods_primary = parse_accelerator("<Primary>")
 
         # Alt+1-9 or Ctrl+1-9 to change main tabs
-        if not state & mods_alt | mods_primary:
+        if not state & (mods_alt | mods_primary):
             return False
 
         for i in range(1, 10):
