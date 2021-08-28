@@ -36,6 +36,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -78,6 +79,18 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
         self.update_visuals()
+
+        self.notebook.connect("switch-page", self.on_switch_search_page)
+
+    def on_switch_search_page(self, notebook, page, page_num):
+
+        for search in self.searches.values():
+            if search["tab"] is None:
+                continue
+
+            if search["tab"].Main == page:
+                GLib.idle_add(grab_widget_focus, search["tab"].ResultsList)
+                break
 
     def populate_search_history(self):
 
@@ -166,13 +179,12 @@ class Searches(IconNotebook):
     def create_tab(self, id, text, mode, remember=False, showtab=True):
 
         tab = Search(self, text, id, mode, remember, showtab)
-
-        if showtab:
-            self.show_tab(tab, id, text, mode)
-
         ignore = False
         search = {"id": id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": ignore}
         self.searches[id] = search
+
+        if showtab:
+            self.show_tab(tab, id, text, mode)
 
         return search
 
@@ -243,6 +255,7 @@ class Searches(IconNotebook):
         for id in self.searches.values():
             if id["tab"] is None:
                 continue
+
             id["tab"].update_visuals()
 
         self.wish_list.update_visuals()

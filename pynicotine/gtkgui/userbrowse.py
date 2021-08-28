@@ -32,6 +32,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -63,6 +64,15 @@ class UserBrowses(IconNotebook):
             show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.UserBrowseNotebookRaw
         )
+
+        self.notebook.connect("switch-page", self.on_switch_browse_page)
+
+    def on_switch_browse_page(self, notebook, page, page_num):
+
+        for tab in self.pages.values():
+            if tab.Main == page:
+                GLib.idle_add(grab_widget_focus, tab.FolderTreeView)
+                break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
 

@@ -28,6 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -56,6 +57,15 @@ class UserInfos(IconNotebook):
             show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.UserInfoNotebookRaw
         )
+
+        self.notebook.connect("switch-page", self.on_switch_info_page)
+
+    def on_switch_info_page(self, notebook, page, page_num):
+
+        for tab in self.pages.values():
+            if tab.Main == page:
+                GLib.idle_add(grab_widget_focus, tab.descr)
+                break
 
     def show_user(self, user):
 

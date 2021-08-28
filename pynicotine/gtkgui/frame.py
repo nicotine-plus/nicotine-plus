@@ -1621,8 +1621,6 @@ class NicotineFrame:
         for child in page.get_children():
             child.show()
 
-        GLib.idle_add(grab_widget_focus, notebook)
-
         tab_label = notebook.get_tab_label(page)
         self.current_tab_label = tab_label
 

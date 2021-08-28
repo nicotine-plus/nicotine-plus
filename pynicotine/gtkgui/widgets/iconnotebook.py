@@ -23,12 +23,10 @@
 import sys
 
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -595,5 +593,3 @@ class IconNotebook:
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)
         self.set_text_color(new_page, status=0)
-
-        GLib.idle_add(grab_widget_focus, notebook)
