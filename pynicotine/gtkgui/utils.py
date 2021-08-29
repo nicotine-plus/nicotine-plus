@@ -248,17 +248,13 @@ def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timest
 def connect_key_press_event(widget, callback):
     """ Use event controller or legacy 'key-press-event', depending on GTK version """
 
-    try:
-        if Gtk.get_major_version() == 4:
-            controller = Gtk.EventControllerKey()
-            widget.add_controller(controller)
-        else:
-            controller = Gtk.EventControllerKey.new(widget)
-
+    if Gtk.get_major_version() == 4:
+        controller = Gtk.EventControllerKey()
         controller.connect("key-pressed", callback)
 
-    except AttributeError:
-        # GTK <3.24
+        widget.add_controller(controller)
+
+    else:
         controller = None
         widget.connect("key-press-event", callback)
 
@@ -267,12 +263,11 @@ def connect_key_press_event(widget, callback):
 
 def get_key_press_event_args(*args):
 
-    try:
+    if Gtk.get_major_version() == 4:
         controller, keyval, keycode, state = args
         widget = controller.get_widget()
 
-    except ValueError:
-        # GTK <3.24
+    else:
         widget, event = args
         keyval = event.keyval
         keycode = event.hardware_keycode
