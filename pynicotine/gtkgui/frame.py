@@ -97,6 +97,7 @@ class NicotineFrame:
         self.ci_mode = ci_mode
         self.current_page_id = ""
         self.current_tab_label = None
+        self.hamburger_menu = None
         self.checking_update = False
         self.autoaway = False
         self.awaytimerid = None
@@ -1378,11 +1379,10 @@ class NicotineFrame:
 
     def set_up_menu(self):
 
-        menu = self.create_hamburger_menu()
-        self.HeaderMenu.set_menu_model(menu)
-
         menu = self.create_menu_bar()
         self.application.set_menubar(menu)
+
+        self.hamburger_menu = self.create_hamburger_menu()
 
     def on_menu(self, *args):
 
@@ -1427,18 +1427,15 @@ class NicotineFrame:
 
         header_bar.remove(end_widget)
         header_bar.pack_end(end_widget)
+
+        # Set menu model after moving menu button to avoid GTK warnings in old GTK versions
+        self.HeaderMenu.set_menu_model(self.hamburger_menu)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
 
         """ Move the headerbar widgets to a GtkBox "toolbar", and show the regular
         title bar (client side decorations disabled) """
-
-        self.MainWindow.set_show_menubar(True)
-        self.HeaderMenu.hide()
-
-        # Don't override builtin accelerator for menu bar
-        self.application.set_accels_for_action("app.menu", [])
 
         if not hasattr(self, page_id + "Toolbar"):
             # No toolbar needed for this page
@@ -1478,6 +1475,13 @@ class NicotineFrame:
     def remove_header_bar(self):
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
+
+        self.MainWindow.set_show_menubar(True)
+        self.HeaderMenu.set_menu_model(None)
+        self.HeaderMenu.hide()
+
+        # Don't override builtin accelerator for menu bar
+        self.application.set_accels_for_action("app.menu", [])
 
         self.MainWindow.unrealize()
         self.MainWindow.set_titlebar(None)
