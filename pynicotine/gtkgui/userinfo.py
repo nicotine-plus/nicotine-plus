@@ -135,19 +135,6 @@ class UserInfo:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
-        try:
-            if Gtk.get_major_version() == 4:
-                args = (Gtk.EventControllerScrollFlags.VERTICAL,)
-            else:
-                args = (self.ImageViewport, Gtk.EventControllerScrollFlags.VERTICAL)
-
-            self.scroll_controller = Gtk.EventControllerScroll.new(*args)
-            self.scroll_controller.connect("scroll", self.on_scroll)
-
-        except AttributeError:
-            # GTK <3.24
-            self.ImageViewport.connect("scroll-event", self.on_scroll_event)
-
         if Gtk.get_major_version() == 4:
             self.image = Gtk.Picture()
             self.image.set_can_shrink(False)
@@ -155,6 +142,9 @@ class UserInfo:
             self.image.set_valign(Gtk.Align.CENTER)
 
             self.ImageViewport.set_child(self.image)
+
+            self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+            self.scroll_controller.connect("scroll", self.on_scroll)
             self.ImageViewport.add_controller(self.scroll_controller)
 
         else:
@@ -162,6 +152,7 @@ class UserInfo:
             self.image.show()
 
             self.ImageViewport.add(self.image)
+            self.ImageViewport.connect("scroll-event", self.on_scroll_event)
 
         self.user = user
         self.conn = None
