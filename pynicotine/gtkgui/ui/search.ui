@@ -142,6 +142,7 @@
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
                 <property name="column-spacing">12</property>
+                <property name="row-spacing">6</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">6</property>
