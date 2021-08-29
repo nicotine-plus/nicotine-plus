@@ -361,7 +361,10 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, menu, x, y, controller=None, button=3):
+    def popup(self, x, y, controller=None, button=3, menu=None):
+
+        if menu is None:
+            menu = self.create_context_menu(self.widget)
 
         if Gtk.get_major_version() == 4:
             if not x and not y:
@@ -390,8 +393,8 @@ class PopupMenu(Gio.Menu):
 
     def _callback(self, controller, x, y):
 
+        menu = None
         menu_model = self
-        menu = self.create_context_menu(self.widget)
         callback = self.callback
 
         if isinstance(self.widget, Gtk.TreeView):
@@ -418,7 +421,7 @@ class PopupMenu(Gio.Menu):
             if cancel:
                 return
 
-        self.popup(menu, x, y, controller)
+        self.popup(x, y, controller, menu=menu)
 
         if controller:
             controller.set_state(Gtk.EventSequenceState.CLAIMED)
