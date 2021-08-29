@@ -239,6 +239,7 @@ def initialise_columns(treeview_name, treeview, *args):
     treeview.emit("columns-changed")
 
     treeview.key_controller = connect_key_press_event(treeview, on_key_press_event)
+    treeview.column_menu = PopupMenu(widget=treeview, callback=press_header, connect_events=False)
 
     return cols
 
@@ -322,10 +323,6 @@ def set_last_column_autosize(treeview):
 def hide_columns(treeview, cols, config):
 
     for (column_id, column) in cols.items():
-        parent = column.get_button()
-        if parent:
-            PopupMenu(widget=parent, callback=press_header)
-
         # Read Show / Hide column settings from last session
         if config:
             try:
@@ -377,9 +374,8 @@ def save_columns(treeview_name, columns, subpage=None):
         column_config[treeview_name] = saved_columns
 
 
-def press_header(menu, widget):
+def press_header(menu, treeview):
 
-    treeview = widget.get_parent()
     columns = treeview.get_columns()
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()

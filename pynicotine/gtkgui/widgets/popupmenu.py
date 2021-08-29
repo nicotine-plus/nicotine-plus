@@ -86,7 +86,7 @@ class PopupMenu(Gio.Menu):
     def create_context_menu(self, widget):
 
         if self.popup_menu:
-            return
+            return self.popup_menu
 
         if Gtk.get_major_version() == 4:
             if isinstance(widget, (Gtk.TextView, Gtk.TreeView)):
@@ -113,6 +113,8 @@ class PopupMenu(Gio.Menu):
 
         self.popup_menu = Gtk.Menu.new_from_model(self)
         self.popup_menu.attach_to_widget(widget, None)
+
+        return self.popup_menu
 
     def create_action(self, action_id, stateful=False):
 
@@ -359,18 +361,16 @@ class PopupMenu(Gio.Menu):
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, x, y, controller=None, button=3):
-
-        self.create_context_menu(self.widget)
+    def popup(self, menu, x, y, controller=None, button=3):
 
         if Gtk.get_major_version() == 4:
             if not x and not y:
                 x = y = 0
 
-            self.popup_menu.set_halign(Gtk.Align.START)
-            self.popup_menu.set_offset(x, y)
-            self.popup_menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
-            self.popup_menu.popup()
+            menu.set_halign(Gtk.Align.START)
+            menu.set_offset(x, y)
+            menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
+            menu.popup()
             return
 
         try:
@@ -380,15 +380,19 @@ class PopupMenu(Gio.Menu):
             else:
                 event = None
 
-            self.popup_menu.popup_at_pointer(event)
+            menu.popup_at_pointer(event)
 
         except (AttributeError, TypeError):
             time = Gtk.get_current_event_time()
-            self.popup_menu.popup(None, None, None, None, button, time)
+            menu.popup(None, None, None, None, button, time)
 
     """ Events """
 
     def _callback(self, controller, x, y):
+
+        menu_model = self
+        menu = self.create_context_menu(self.widget)
+        callback = self.callback
 
         if isinstance(self.widget, Gtk.TreeView):
             if x and y:
@@ -398,20 +402,23 @@ class PopupMenu(Gio.Menu):
                 set_treeview_selected_row(self.widget, bin_x, bin_y)
 
                 if not self.widget.get_path_at_pos(bin_x, bin_y):
-                    # Stop here to allow column header menus to appear
-                    return
+                    # Special case for column header menu
+
+                    menu_model = self.widget.column_menu
+                    menu = menu_model.create_context_menu(menu_model.widget)
+                    callback = menu_model.callback
 
             elif not self.widget.get_selection().count_selected_rows():
                 # No rows selected, don't show menu
                 return
 
-        if self.callback:
-            cancel = self.callback(self, self.widget)
+        if callback:
+            cancel = callback(menu_model, self.widget)
 
             if cancel:
                 return
 
-        self.popup(x, y, controller)
+        self.popup(menu, x, y, controller)
 
         if controller:
             controller.set_state(Gtk.EventSequenceState.CLAIMED)
