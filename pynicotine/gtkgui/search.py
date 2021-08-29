@@ -75,6 +75,10 @@ class Searches(IconNotebook):
             notebookraw=self.frame.SearchNotebookRaw
         )
 
+        if Gtk.get_major_version() == 3:
+            # Workaround to make dropdown menu appear below button
+            self.frame.SearchMethod.set_wrap_width(1)
+
         self.wish_list = WishList(frame, self)
 
         self.populate_search_history()
