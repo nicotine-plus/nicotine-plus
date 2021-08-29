@@ -922,7 +922,7 @@ class Search:
     def update_filter_counter(self, count):
 
         if count > 0:
-            self.FilterLabel.set_text(_("Result Filters") + " *")
+            self.FilterLabel.set_text(_("Result Filters [%d]") % count)
         else:
             self.FilterLabel.set_text(_("Result Filters"))
 
