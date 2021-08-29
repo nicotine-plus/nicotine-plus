@@ -1672,9 +1672,7 @@ Error: %(error)s""", {
 
         self.requested_share_times[user] = request_time
 
-        log.add(_("%(user)s is making a BrowseShares request"), {
-            'user': user
-        })
+        log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
 
         ip_address, _port = msg.conn.addr
         checkuser, reason = self.network_filter.check_user(user, ip_address)
@@ -1728,24 +1726,25 @@ Error: %(error)s""", {
 
         self.requested_info_times[user] = request_time
 
-        if login_user != user and self.network_filter.is_user_banned(user):
-            log.add(
-                _("%(user)s is banned, but is making a UserInfo request"), {
-                    'user': user
-                }
-            )
-            return
+        if login_user != user:
+            log.add(_("User %(user)s is reading your user info"), {'user': user})
 
-        try:
-            userpic = config.sections["userinfo"]["pic"]
-
-            with open(userpic, 'rb') as file_handle:
-                pic = file_handle.read()
-
-        except Exception:
+        if self.network_filter.is_user_banned(user):
             pic = None
+            descr = "You are banned from downloading my shared files."
 
-        descr = unescape(config.sections["userinfo"]["descr"])
+        else:
+            try:
+                userpic = config.sections["userinfo"]["pic"]
+
+                with open(userpic, 'rb') as file_handle:
+                    pic = file_handle.read()
+
+            except Exception:
+                pic = None
+
+            descr = unescape(config.sections["userinfo"]["descr"])
+
         totalupl = self.transfers.get_total_uploads_allowed()
         queuesize = self.transfers.get_upload_queue_size()
         slotsavail = self.transfers.allow_new_uploads()
@@ -1757,13 +1756,6 @@ Error: %(error)s""", {
 
         self.queue.append(
             slskmessages.UserInfoReply(conn, descr, pic, totalupl, queuesize, slotsavail, uploadallowed))
-
-        if login_user != user:
-            log.add(
-                _("%(user)s is making a UserInfo request"), {
-                    'user': user
-                }
-            )
 
     def user_info_reply(self, msg):
         """ Peer code: 16 """
