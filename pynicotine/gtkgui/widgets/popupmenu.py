@@ -102,7 +102,7 @@ class PopupMenu(Gio.Menu):
             self.popup_menu.set_parent(widget)
             self.popup_menu.set_has_arrow(False)
             self.popup_menu.present()
-            return
+            return self.popup_menu
 
         if isinstance(widget, (Gtk.Button, Gtk.TreeView)):
             """ In GTK 3, attaching directly to a Gtk.Button or Gtk.TreeView seems to cause
