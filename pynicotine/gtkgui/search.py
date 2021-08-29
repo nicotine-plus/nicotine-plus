@@ -974,9 +974,9 @@ class Search:
                 f_in = re.compile(f_in.lower())
                 self.filters["include"] = f_in
             except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterInEntry, "red", "white")
+                set_widget_fg_bg_css(self.FilterInEntry, bg_color="#e04f5e", fg_color="white")
             else:
-                set_widget_fg_bg_css(self.FilterInEntry)
+                update_widget_visuals(self.FilterInEntry)
 
             self.active_filter_count += 1
 
@@ -985,9 +985,9 @@ class Search:
                 f_out = re.compile(f_out.lower())
                 self.filters["exclude"] = f_out
             except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterOutEntry, "red", "white")
+                set_widget_fg_bg_css(self.FilterOutEntry, bg_color="#e04f5e", fg_color="white")
             else:
-                set_widget_fg_bg_css(self.FilterOutEntry)
+                update_widget_visuals(self.FilterOutEntry)
 
             self.active_filter_count += 1
 
