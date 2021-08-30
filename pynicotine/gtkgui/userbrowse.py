@@ -411,22 +411,27 @@ class UserBrowse:
         menu.set_num_selected_files(num_selected_files)
         self.user_popup.toggle_user_items()
 
-    def make_new_model(self, shares, private_shares=None):
+    def clear_model(self):
 
-        # Temporarily disable sorting for improved performance
-        self.dir_store.set_default_sort_func(lambda *args: 0)
-        self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
-
-        self.shares = shares
-        private_size = num_private_folders = 0
         self.query = None
         self.selected_folder = None
+        self.shares.clear()
         self.selected_files.clear()
         self.directories.clear()
         self.files.clear()
         self.dir_store.clear()
         self.file_store.clear()
         self.search_list.clear()
+
+    def make_new_model(self, shares, private_shares=None):
+
+        # Temporarily disable sorting for improved performance
+        self.dir_store.set_default_sort_func(lambda *args: 0)
+        self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+
+        self.clear_model()
+        self.shares = shares
+        private_size = num_private_folders = 0
 
         # Generate the directory tree and select first directory
         size, num_folders = self.create_folder_tree(shares)
@@ -635,9 +640,6 @@ class UserBrowse:
         self.userbrowses.request_changed(self.Main)
 
         self.progressbar1.set_fraction(1.0)
-
-        self.FolderTreeView.set_sensitive(True)
-        self.FileTreeView.set_sensitive(True)
         self.RefreshButton.set_sensitive(True)
 
     def update_gauge(self, msg):
@@ -1006,10 +1008,9 @@ class UserBrowse:
 
     def on_refresh(self, *args):
 
+        self.clear_model()
+        self.FolderTreeView.grab_focus()
         self.info_bar.set_visible(False)
-
-        self.FolderTreeView.set_sensitive(False)
-        self.FileTreeView.set_sensitive(False)
 
         self.set_in_progress(self.indeterminate_progress)
         self.frame.np.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
