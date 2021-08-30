@@ -1,0 +1,37 @@
+name: In-Tree Unit Tests
+
+on: [push, pull_request]
+
+jobs:
+
+  ubuntu:
+    runs-on: ubuntu-lts-20.0.X-x64
+    strategy:
+      matrix:
+        python: [3.8]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install gir1.2-gtk-3.0 libgirepository1.0-dev python3 python3-pip
+          python3 -m pip install flake8 pygobject pylint
+
+      - name: Linter
+        run: |
+          python3 -m flake8
+          python3 -m pylint pynicotine test
+
+      - name: Integration and unit tests
+        run: |
+          xvfb-run python3 -m unittest
+          
