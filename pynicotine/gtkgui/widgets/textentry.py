@@ -520,7 +520,6 @@ class TextSearchBar:
         self.entry.connect("next-match", self.on_search_next_match)
 
         self.key_controller_textview = connect_key_press_event(self.textview, self.on_key_press_event)
-        self.key_controller_search_bar = connect_key_press_event(self.search_bar, self.on_key_press_event)
 
     def on_search_match(self, search_type, restarted=False):
 
@@ -586,15 +585,8 @@ class TextSearchBar:
         return False
 
     def show_search_bar(self):
-
-        active = not self.search_bar.get_search_mode()
-        self.search_bar.set_search_mode(active)
-
-        if active:
-            self.entry.grab_focus()
-            return
-
-        self.textview.grab_focus()
+        self.search_bar.set_search_mode(True)
+        self.entry.grab_focus()
 
 
 def clear_entry(entry):
