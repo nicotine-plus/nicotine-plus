@@ -1714,6 +1714,10 @@ class NicotineFrame:
 
             notebook = getattr(self, notebook_name)
             page = notebook.get_nth_page(notebook.get_current_page())
+
+            if page is None:
+                return False
+
             tab_label, menu_label = notebook.get_labels(page)
             tab_label.onclose()
             return True
