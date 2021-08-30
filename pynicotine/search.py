@@ -41,8 +41,8 @@ class Search:
         self.geoip = geoip
         self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
 
-        if hasattr(ui_callback, "searches"):
-            self.ui_callback = ui_callback.searches
+        if hasattr(ui_callback, "search"):
+            self.ui_callback = ui_callback.search
 
     def server_disconnect(self):
         if self.ui_callback:

@@ -224,11 +224,11 @@ class NicotineFrame:
         # Initialize other notebooks
         self.interests = Interests(self)
         self.chatrooms = ChatRooms(self)
-        self.searches = Searches(self)
+        self.search = Searches(self)
         self.downloads = Downloads(self, self.DownloadsTabLabel)
         self.uploads = Uploads(self, self.UploadsTabLabel)
         self.userlist = UserList(self)
-        self.privatechats = PrivateChats(self)
+        self.privatechat = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
@@ -372,7 +372,7 @@ class NicotineFrame:
             return
 
         self.chatrooms.clear_notifications()
-        self.privatechats.clear_notifications()
+        self.privatechat.clear_notifications()
 
         if Gtk.get_major_version() == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
@@ -397,7 +397,7 @@ class NicotineFrame:
         config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
         config.sections["ui"]["last_tab_id"] = self.MainNotebook.get_current_page()
 
-        for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.searches):
+        for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.search):
             page.save_columns()
 
     """ Init UI """
@@ -659,7 +659,7 @@ class NicotineFrame:
 
         self.np.request_set_status(self.np.away and 1 or 2)
         self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
-        self.privatechats.update_visuals()
+        self.privatechat.update_visuals()
 
     def on_get_privileges(self, *args):
 
@@ -1643,9 +1643,9 @@ class NicotineFrame:
         elif tab_label == self.PrivateChatTabLabel:
             self.set_active_header_bar("PrivateChat")
 
-            curr_page_num = self.privatechats.get_current_page()
-            curr_page = self.privatechats.get_nth_page(curr_page_num)
-            self.privatechats.on_switch_chat(self.privatechats.notebook, curr_page, curr_page_num, forceupdate=True)
+            curr_page_num = self.privatechat.get_current_page()
+            curr_page = self.privatechat.get_nth_page(curr_page_num)
+            self.privatechat.on_switch_chat(self.privatechat.notebook, curr_page, curr_page_num, forceupdate=True)
 
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")
@@ -1700,14 +1700,29 @@ class NicotineFrame:
     def on_key_press_event(self, *args):
 
         self.on_disable_auto_away()
-
         keyval, keycode, state, widget = get_key_press_event_args(*args)
+
+        # Ctrl+W and Ctrl+F4: close current secondary tab
+        keycodes_w, mods = parse_accelerator("<Primary>w")
+        keycodes_f4, mods = parse_accelerator("<Primary>F4")
+
+        if state & mods and (keycode in keycodes_w or keycode in keycodes_f4):
+            notebook_name = self.current_page_id.lower()
+
+            if not hasattr(self, notebook_name):
+                return False
+
+            notebook = getattr(self, notebook_name)
+            page = notebook.get_nth_page(notebook.get_current_page())
+            tab_label, menu_label = notebook.get_labels(page)
+            tab_label.onclose()
+            return True
+
+        # Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs
         keycodes_tab, mods = parse_accelerator("<Primary>Tab")
 
         if state & mods and keycode in keycodes_tab:
-            # Ctrl+Tab and Shift+Ctrl+Tab: cycle through tabs
-
-            notebook_name = self.current_page_id + "NotebookRaw"
+            notebook_name = self.current_page_id.lower()
 
             if not hasattr(self, notebook_name):
                 return False
@@ -1731,10 +1746,10 @@ class NicotineFrame:
 
             return True
 
+        # Alt+1-9 or Ctrl+1-9: change main tab
         _keycodes, mods_alt = parse_accelerator("<Alt>")
         _keycodes, mods_primary = parse_accelerator("<Primary>")
 
-        # Alt+1-9 or Ctrl+1-9 to change main tabs
         if not state & (mods_alt | mods_primary):
             return False
 
@@ -1870,10 +1885,10 @@ class NicotineFrame:
 
         # Other notebooks
         self.chatrooms.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
-        self.privatechats.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
+        self.privatechat.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
         self.userinfo.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
         self.userbrowse.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
-        self.searches.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
+        self.search.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
 
     def match_main_notebox(self, tab):
 
@@ -1886,7 +1901,7 @@ class NicotineFrame:
         elif tab == self.uploadsvbox:
             name = "uploads"     # Uploads
         elif tab == self.searchvbox:
-            name = "search"      # Searches
+            name = "search"      # Search
         elif tab == self.userinfovbox:
             name = "userinfo"    # Userinfo
         elif tab == self.userbrowsevbox:
@@ -1912,7 +1927,7 @@ class NicotineFrame:
         elif tab == "uploads":
             child = self.uploadsvbox            # Uploads
         elif tab == "search":
-            child = self.searchvbox             # Searches
+            child = self.searchvbox             # Search
         elif tab == "userinfo":
             child = self.userinfovbox           # Userinfo
         elif tab == "userbrowse":
@@ -1965,7 +1980,7 @@ class NicotineFrame:
         self.RoomSearchCombo.set_sensitive(act)
 
     def on_search(self, *args):
-        self.searches.on_search()
+        self.search.on_search()
         clear_entry(self.SearchEntry)
 
     """ User Info """
@@ -2404,8 +2419,8 @@ class NicotineFrame:
                 gtk_settings.set_property("gtk-font-name", global_font)
 
             self.chatrooms.update_visuals()
-            self.privatechats.update_visuals()
-            self.searches.update_visuals()
+            self.privatechat.update_visuals()
+            self.search.update_visuals()
             self.downloads.update_visuals()
             self.uploads.update_visuals()
             self.userinfo.update_visuals()
@@ -2417,15 +2432,15 @@ class NicotineFrame:
             self.update_visuals()
 
         self.chatrooms.toggle_chat_buttons()
-        self.searches.populate_search_history()
+        self.search.populate_search_history()
 
         # Other notebooks
-        for w in (self.chatrooms, self.privatechats, self.userinfo, self.userbrowse, self.searches):
+        for w in (self.chatrooms, self.privatechat, self.userinfo, self.userbrowse, self.search):
             w.set_tab_closers(config.sections["ui"]["tabclosers"])
             w.show_hilite_images(config.sections["notifications"]["notification_tab_icons"])
             w.set_text_colors(None)
 
-        for w in (self.privatechats, self.userinfo, self.userbrowse):
+        for w in (self.privatechat, self.userinfo, self.userbrowse):
             w.show_status_images(config.sections["ui"]["tab_status_icons"])
 
         # Main notebook

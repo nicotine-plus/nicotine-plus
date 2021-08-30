@@ -1865,11 +1865,11 @@ class SearchesFrame(BuildFrame):
         }
 
     def on_clear_search_history(self, widget):
-        self.frame.searches.clear_search_history()
+        self.frame.search.clear_search_history()
         self.ClearSearchHistorySuccess.show()
 
     def on_clear_filter_history(self, widget):
-        self.frame.searches.clear_filter_history()
+        self.frame.search.clear_filter_history()
         self.ClearFilterHistorySuccess.show()
 
     def on_enable_filters_toggled(self, widget):

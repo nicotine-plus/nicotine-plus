@@ -388,7 +388,7 @@ class ChatEntry:
             if self.is_chatroom:
                 parent = self.frame.chatrooms.joinedrooms[self.entity]
             else:
-                parent = self.frame.privatechats.users[self.entity]
+                parent = self.frame.privatechat.users[self.entity]
 
             parent.on_clear_messages()
 
@@ -400,7 +400,7 @@ class ChatEntry:
             return  # Avoid gsignal warning
 
         elif cmd in ("/c", "/close"):
-            self.frame.privatechats.users[self.entity].on_close()
+            self.frame.privatechat.users[self.entity].on_close()
 
         elif cmd == "/now":
             self.frame.np.now_playing.display_now_playing(

@@ -140,7 +140,7 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;w</property>
-                <property name="title" translatable="yes">Close Tab</property>
+                <property name="title" translatable="yes">Close Secondary Tab</property>
               </object>
             </child>
           </object>
