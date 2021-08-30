@@ -304,7 +304,8 @@ class Search:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
-        self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
+        self.key_controller_filters = connect_key_press_event(self.FiltersContainer, self.on_key_press_event)
+        self.key_controller_results = connect_key_press_event(self.ResultsList, self.on_key_press_event)
 
         self.text = text
         self.searchterm_words_include = []
@@ -1341,6 +1342,12 @@ class Search:
         visible = widget.get_active()
         self.FiltersContainer.set_reveal_child(visible)
         config.sections["searches"]["filters_visible"] = visible
+
+        if visible:
+            self.FilterIn.grab_focus()
+            return
+
+        self.ResultsList.grab_focus()
 
     def on_copy_search_term(self, *args):
         copy_text(self.text)
