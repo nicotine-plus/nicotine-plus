@@ -1707,12 +1707,12 @@ class NicotineFrame:
         if state & mods and keycode in keycodes_tab:
             # Ctrl+Tab and Shift+Ctrl+Tab: cycle through tabs
 
-            page = self.MainNotebook.get_nth_page(self.MainNotebook.get_current_page())
-            notebook = page.get_children()[-1].get_children()[-1]
+            notebook_name = self.current_page_id + "NotebookRaw"
 
-            if not isinstance(notebook, Gtk.Notebook):
+            if not hasattr(self, notebook_name):
                 return False
 
+            notebook = getattr(self, notebook_name)
             num_pages = notebook.get_n_pages()
             current_page = notebook.get_current_page()
 

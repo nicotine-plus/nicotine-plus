@@ -88,7 +88,7 @@ class ChatRooms(IconNotebook):
             self.frame.images,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.ChatNotebookRaw
+            notebookraw=self.frame.ChatroomsNotebookRaw
         )
 
         self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))
