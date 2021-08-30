@@ -585,8 +585,15 @@ class TextSearchBar:
         return False
 
     def show_search_bar(self):
-        self.search_bar.set_search_mode(True)
-        self.entry.grab_focus()
+
+        active = not self.search_bar.get_search_mode()
+        self.search_bar.set_search_mode(active)
+
+        if active:
+            self.entry.grab_focus()
+            return
+
+        self.textview.grab_focus()
 
 
 def clear_entry(entry):

@@ -34,10 +34,13 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
+from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
+from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -300,6 +303,8 @@ class Search:
         else:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
+
+        self.key_controller = connect_key_press_event(self.ResultsList, self.on_key_press_event)
 
         self.text = text
         self.searchterm_words_include = []
@@ -1041,6 +1046,18 @@ class Search:
 
         # Single user, add items directly to "User(s)" submenu
         self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
+
+    def on_key_press_event(self, *args):
+
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
+        keycodes, mods = parse_accelerator("<Primary>f")
+
+        if state & mods and keycode in keycodes:
+            active = not self.ShowFilters.get_active()
+            self.ShowFilters.set_active(active)
+            return True
+
+        return False
 
     def on_select_user_results(self, *args):
 
