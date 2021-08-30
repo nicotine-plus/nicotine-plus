@@ -831,12 +831,6 @@ class TransferList:
             self.retry_transfers()
             return True
 
-        keycodes, mods = parse_accelerator("<Primary>c")
-
-        if state & mods and keycode in keycodes:
-            self.on_copy_file_path()
-            return True
-
         keycodes, mods = parse_accelerator("Delete")
 
         if keycode in keycodes:

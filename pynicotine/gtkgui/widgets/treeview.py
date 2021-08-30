@@ -252,6 +252,10 @@ def on_key_press_event(*args):
     if state & mods and keycode in keycodes:
         path, column = treeview.get_cursor()
         model = treeview.get_model()
+
+        if path is None:
+            return False
+
         iterator = model.get_iter(path)
         cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
 
