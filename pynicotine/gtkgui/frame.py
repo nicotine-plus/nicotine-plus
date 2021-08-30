@@ -1702,6 +1702,35 @@ class NicotineFrame:
         self.on_disable_auto_away()
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
+        keycodes_tab, mods = parse_accelerator("<Primary>Tab")
+
+        if state & mods and keycode in keycodes_tab:
+            # Ctrl+Tab and Shift+Ctrl+Tab: cycle through tabs
+
+            page = self.MainNotebook.get_nth_page(self.MainNotebook.get_current_page())
+            notebook = page.get_children()[-1].get_children()[-1]
+
+            if not isinstance(notebook, Gtk.Notebook):
+                return False
+
+            num_pages = notebook.get_n_pages()
+            current_page = notebook.get_current_page()
+
+            if state & Gdk.ModifierType.SHIFT_MASK:
+                if current_page == 0:
+                    notebook.set_current_page(num_pages - 1)
+                else:
+                    notebook.prev_page()
+
+                return True
+
+            if current_page == (num_pages - 1):
+                notebook.set_current_page(0)
+            else:
+                notebook.next_page()
+
+            return True
+
         _keycodes, mods_alt = parse_accelerator("<Alt>")
         _keycodes, mods_primary = parse_accelerator("<Primary>")
 

@@ -677,7 +677,7 @@ class Search:
             self.update_result_counter()
 
             # Update tab notification
-            self.frame.searches.request_changed(self.Main)
+            self.searches.request_changed(self.Main)
             self.frame.request_tab_icon(self.frame.SearchTabLabel)
 
     def append(self, row):
