@@ -912,6 +912,10 @@ class NicotineFrame:
             load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
             set_dialog_properties(self.KeyboardShortcutsDialog, self.MainWindow, quit_callback=self.on_hide)
 
+            # Workaround for off-centered dialog on first run
+            self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
+            self.on_hide(self.KeyboardShortcutsDialog)
+
         self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_transfer_statistics(self, *args):
