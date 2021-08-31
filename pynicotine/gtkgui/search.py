@@ -345,11 +345,6 @@ class Search:
             '>': operator.gt
         }
 
-        if mode not in ("global", "wishlist"):
-            self.RememberCheckButton.hide()
-
-        self.RememberCheckButton.set_active(remember)
-
         """ Columns """
 
         self.resultsmodel = Gtk.TreeStore(
@@ -1351,16 +1346,6 @@ class Search:
 
     def on_copy_search_term(self, *args):
         copy_text(self.text)
-
-    def on_toggle_remember(self, widget):
-
-        self.remember = widget.get_active()
-        search = self.searches.searches[self.id]
-
-        if not self.remember:
-            self.searches.wish_list.remove_wish(search["term"])
-        else:
-            self.searches.wish_list.add_wish(search["term"])
 
     def push_history(self, widget, title):
 

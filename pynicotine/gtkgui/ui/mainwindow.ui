@@ -110,7 +110,7 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkButton" id="WishList">
+          <object class="GtkMenuButton" id="WishList">
             <property name="visible">1</property>
             <child>
               <object class="GtkBox">

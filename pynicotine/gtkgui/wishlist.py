@@ -28,10 +28,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import load_ui_elements
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
@@ -48,16 +45,7 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "wishlist.ui"))
-
-        self.dialog = generic_dialog(
-            parent=frame.MainWindow,
-            content_box=self.Main,
-            quit_callback=self.hide,
-            title=_("Search Wishlist"),
-            width=600,
-            height=600
-        )
+        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "wishlist.ui"))
 
         self.store = Gtk.ListStore(str)
 
@@ -80,7 +68,8 @@ class WishList:
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)
 
-        frame.WishList.connect("clicked", self.show)
+        frame.WishList.set_popover(self.WishListPopover)
+        frame.WishList.connect("toggled", self.on_show)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
@@ -119,7 +108,7 @@ class WishList:
     def on_clear_wishlist(self, *args):
 
         option_dialog(
-            parent=self.dialog,
+            parent=self.frame.MainWindow,
             title=_('Clear Wishlist?'),
             message=_('Are you sure you wish to clear your wishlist?'),
             callback=self.clear_wishlist_response
@@ -162,7 +151,6 @@ class WishList:
                         search["remember"] = False
                         self.searches.searches[number] = search
 
-                        search["tab"].RememberCheckButton.set_active(False)
                     else:
                         del self.searches.searches[number]
 
@@ -228,9 +216,23 @@ class WishList:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def show(self, *args):
-        dialog_show(self.dialog)
+    def on_show(self, *args):
 
-    def hide(self, *args):
-        dialog_hide(self.dialog)
-        return True
+        page = self.searches.get_nth_page(self.searches.get_current_page())
+
+        if page is None:
+            return
+
+        text = self.searches.notebook.get_tab_label(page).get_text()
+
+        if text in self.wishes:
+            # Highlight existing wish row
+
+            iterator = self.wishes[text]
+            self.WishlistView.set_cursor(self.store.get_path(iterator))
+            self.WishlistView.grab_focus()
+            return
+
+        # Pre-fill text field with search term from active search tab
+        self.AddWishEntry.set_text(text)
+        self.AddWishEntry.grab_focus()
