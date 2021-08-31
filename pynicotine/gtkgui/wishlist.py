@@ -68,8 +68,15 @@ class WishList:
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)
 
+        if Gtk.get_major_version() == 4:
+            button = frame.WishList.get_first_child()
+            button.connect("clicked", self.on_show)
+            button.set_child(frame.WishListLabel)
+        else:
+            frame.WishList.add(frame.WishListLabel)
+            frame.WishList.connect("toggled", self.on_show)
+
         frame.WishList.set_popover(self.WishListPopover)
-        frame.WishList.connect("toggled", self.on_show)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
