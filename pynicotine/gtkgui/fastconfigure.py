@@ -42,7 +42,7 @@ class FastConfigureAssistant(object):
         self.frame = frame
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
-        set_dialog_properties(self.FastConfigureDialog, frame.MainWindow, type_hint="dialog")
+        set_dialog_properties(self.FastConfigureDialog, frame.MainWindow)
 
         for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):
             self.FastConfigureDialog.append_page(page)
