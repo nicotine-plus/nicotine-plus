@@ -3104,8 +3104,8 @@ class Settings:
             content_box=self.Main,
             quit_callback=self.on_delete,
             title=_("Preferences"),
-            width=960,
-            height=650
+            width=800,
+            height=600
         )
 
         dialog.add_buttons(
