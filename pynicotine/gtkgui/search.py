@@ -304,7 +304,6 @@ class Search:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
-        self.key_controller_filters = connect_key_press_event(self.FiltersContainer, self.on_key_press_event)
         self.key_controller_results = connect_key_press_event(self.ResultsList, self.on_key_press_event)
 
         self.text = text
@@ -923,9 +922,9 @@ class Search:
     def update_filter_counter(self, count):
 
         if count > 0:
-            self.FilterLabel.set_text(_("Result Filters [%d]") % count)
+            self.FilterLabel.set_label(_("Result _Filters [%d]") % count)
         else:
-            self.FilterLabel.set_text(_("Result Filters"))
+            self.FilterLabel.set_label(_("Result _Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
@@ -1049,8 +1048,8 @@ class Search:
         keycodes, mods = parse_accelerator("<Primary>f")
 
         if state & mods and keycode in keycodes:
-            active = not self.ShowFilters.get_active()
-            self.ShowFilters.set_active(active)
+            self.ShowFilters.set_active(True)
+            self.FilterIn.grab_focus()
             return True
 
         return False
