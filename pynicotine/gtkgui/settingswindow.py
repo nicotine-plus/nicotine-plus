@@ -1684,12 +1684,6 @@ class UserInterfaceFrame(BuildFrame):
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
-    def on_default_colors(self, widget):
-
-        for section, color_ids in self.colorsd.items():
-            for color_id in color_ids:
-                self.set_default_color(section, color_id)
-
     def on_colors_changed(self, widget):
 
         if isinstance(widget, Gtk.Entry):

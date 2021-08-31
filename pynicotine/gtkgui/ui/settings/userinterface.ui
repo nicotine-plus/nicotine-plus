@@ -41,6 +41,38 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
+                    <property name="label" translatable="yes">Decimal separator:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">DecimalSep</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="DecimalSep">
+                    <property name="visible">1</property>
+                    <items>
+                      <item translatable="yes">&lt;None&gt;</item>
+                      <item>,</item>
+                      <item>.</item>
+                      <item translatable="yes">&lt;space&gt;</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
                     <property name="label" translatable="yes">When closing Nicotine+:</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">CloseAction</property>
@@ -71,34 +103,41 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">12</property>
+        <property name="spacing">30</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Tabs</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabSelectPrevious">
-            <property name="label" translatable="yes">Select previous tab on startup</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabClosers">
-            <property name="label" translatable="yes">Close-buttons on tabs</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="TabStatusIcons">
-            <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
-            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Tabs</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="TabSelectPrevious">
+                <property name="label" translatable="yes">Select previous tab on startup</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="TabClosers">
+                <property name="label" translatable="yes">Close-buttons on tabs</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="TabStatusIcons">
+                <property name="label" translatable="yes">Tabs show user status icons instead of status text</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -266,77 +305,13 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Lists</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="FilePathTooltips">
-            <property name="label" translatable="yes">Enable file path tooltips in search and transfer views</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Displays the complete file path of a search result or file transfer when you hover a folder path or file name with your cursor.</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="ReverseFilePaths">
-            <property name="label" translatable="yes">Show reverse file paths in search and transfer views (requires a restart)</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="ShowPrivateSearchResults">
-            <property name="label" translatable="yes">Show privately shared files in search results</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission, and are .</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="ShowPrivateShares">
-            <property name="label" translatable="yes">Show privately shared files in user shares</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files when you browse their shares. Folders containing such files are prefixed with '[PRIVATE FOLDER]', and are not downloadable unless the uploader gives explicit permission.</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Text Appearance</property>
-            <property name="wrap">1</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
+            <property name="homogeneous">1</property>
             <property name="column-spacing">12</property>
             <property name="row-spacing">12</property>
+            <property name="min-children-per-line">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
@@ -344,12 +319,25 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Chat username appearance:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">UsernameStyle</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Regular tab label color:</property>
+                        <property name="hexpand">1</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">PickRegularTab</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="PickRegularTab">
+                        <property name="visible">1</property>
+                        <signal name="color-set" handler="on_color_set"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -359,15 +347,43 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBoxText" id="UsernameStyle">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <signal name="changed" handler="on_colors_changed"/>
-                    <items>
-                      <item translatable="yes">bold</item>
-                      <item translatable="yes">italic</item>
-                      <item translatable="yes">underline</item>
-                      <item translatable="yes">normal</item>
-                    </items>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkEntry" id="EntryRegularTab">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="width-chars">7</property>
+                        <signal name="changed" handler="on_colors_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultRegularTab">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_default_color"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -377,12 +393,25 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Decimal separator:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">DecimalSep</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Changed tab label color:</property>
+                        <property name="hexpand">1</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">PickChangedTab</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="PickChangedTab">
+                        <property name="visible">1</property>
+                        <signal name="color-set" handler="on_color_set"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -392,14 +421,117 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBoxText" id="DecimalSep">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <items>
-                      <item translatable="yes">&lt;None&gt;</item>
-                      <item>,</item>
-                      <item>.</item>
-                      <item translatable="yes">&lt;space&gt;</item>
-                    </items>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkEntry" id="EntryChangedTab">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="width-chars">7</property>
+                        <signal name="changed" handler="on_colors_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultChangedTab">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_default_color"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Highlighted tab label color:</property>
+                        <property name="hexpand">1</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">PickHighlightTab</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="PickHighlightTab">
+                        <property name="visible">1</property>
+                        <signal name="color-set" handler="on_color_set"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkEntry" id="EntryHighlightTab">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="width-chars">7</property>
+                        <signal name="changed" handler="on_colors_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultHighlightTab">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_default_color"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -411,27 +543,251 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">12</property>
+        <property name="spacing">30</property>
         <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Icons</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">18</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="label" translatable="yes">Lists</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="FilePathTooltips">
+                <property name="label" translatable="yes">Enable file path tooltips in search and transfer views</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Displays the complete file path of a search result or file transfer when you hover a folder path or file name with your cursor.</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="ReverseFilePaths">
+                <property name="label" translatable="yes">Show reverse file paths in search and transfer views (requires a restart)</property>
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="ShowPrivateSearchResults">
+                <property name="label" translatable="yes">Show privately shared files in search results</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission, and are .</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="ShowPrivateShares">
+                <property name="label" translatable="yes">Show privately shared files in user shares</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files when you browse their shares. Folders containing such files are prefixed with '[PRIVATE FOLDER]', and are not downloadable unless the uploader gives explicit permission.</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="homogeneous">1</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="min-children-per-line">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">List text color:</property>
+                        <property name="hexpand">1</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">PickImmediate</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="PickImmediate">
+                        <property name="visible">1</property>
+                        <signal name="color-set" handler="on_color_set"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkEntry" id="EntryImmediate">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="width-chars">7</property>
+                        <signal name="changed" handler="on_colors_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultImmediate">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_default_color"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Search with queue text color:</property>
+                        <property name="hexpand">1</property>
+                        <property name="xalign">0</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">PickQueue</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkColorButton" id="PickQueue">
+                        <property name="visible">1</property>
+                        <signal name="color-set" handler="on_color_set"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkEntry" id="EntryQueue">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="width-chars">7</property>
+                        <signal name="changed" handler="on_colors_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultQueue">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <signal name="clicked" handler="on_default_color"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">30</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="xalign">0</property>
+                <property name="margin-top">12</property>
+                <property name="label" translatable="yes">Chats</property>
+                <property name="wrap">1</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="UsernameHotspots">
+                <property name="label" translatable="yes">Colored and clickable usernames</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
+                <property name="use-underline">1</property>
+                <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
+              </object>
+            </child>
             <child>
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="homogeneous">1</property>
                 <property name="column-spacing">12</property>
                 <property name="row-spacing">12</property>
                 <property name="max-children-per-line">2</property>
@@ -443,9 +799,10 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Icon theme folder (requires restart):</property>
+                        <property name="label" translatable="yes">Chat username appearance:</property>
                         <property name="xalign">0</property>
-                        <property name="mnemonic_widget">ThemeDir</property>
+                        <property name="wrap">1</property>
+                        <property name="mnemonic_widget">UsernameStyle</property>
                       </object>
                     </child>
                   </object>
@@ -455,473 +812,21 @@
                     <property name="visible">1</property>
                     <property name="focusable">0</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkComboBoxText" id="UsernameStyle">
                         <property name="visible">1</property>
-                        <property name="spacing">12</property>
-                        <child>
-                          <object class="GtkButton" id="ThemeDir">
-                            <property name="visible">1</property>
-                            <property name="hexpand">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="DefaultTheme">
-                            <property name="visible">1</property>
-                            <signal name="clicked" handler="on_default_theme" swapped="no"/>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">1</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">edit-clear-symbolic</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">1</property>
-                                    <property name="label" translatable="yes">Clear</property>
-                                    <property name="use-underline">1</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
+                        <signal name="changed" handler="on_colors_changed"/>
+                        <items>
+                          <item translatable="yes">bold</item>
+                          <item translatable="yes">italic</item>
+                          <item translatable="yes">underline</item>
+                          <item translatable="yes">normal</item>
+                        </items>
                       </object>
                     </child>
                   </object>
                 </child>
               </object>
             </child>
-            <child>
-              <object class="GtkFrame">
-                <property name="visible">1</property>
-                <child>
-                  <object class="GtkIconView" id="IconView">
-                    <property name="visible">1</property>
-                    <property name="pixbuf-column">0</property>
-                    <property name="text-column">1</property>
-                    <property name="selection-mode">none</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Fonts</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBox">
-            <property name="visible">1</property>
-            <property name="column-spacing">12</property>
-            <property name="row-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Global font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectGlobalFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectGlobalFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultGlobalFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Chat font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectChatFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectChatFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultChatFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">List font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectListFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectListFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultListFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Transfers font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectTransfersFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectTransfersFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultTransfersFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Search font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectSearchFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectSearchFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultSearchFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Browse font:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">SelectBrowserFont</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkFontButton" id="SelectBrowserFont">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultBrowserFont">
-                        <property name="visible">1</property>
-                        <signal name="clicked" handler="on_default_font"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="margin-top">12</property>
-            <property name="label" translatable="yes">Chat Colors</property>
-            <property name="wrap">1</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="UsernameHotspots">
-            <property name="label" translatable="yes">Colored and clickable usernames</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Clicked usernames reveal the user context menu.</property>
-            <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
           </object>
         </child>
         <child>
@@ -1538,184 +1443,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">List and Search Colors</property>
-            <property name="wrap">1</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBox">
-            <property name="visible">1</property>
-            <property name="homogeneous">1</property>
-            <property name="column-spacing">12</property>
-            <property name="row-spacing">12</property>
-            <property name="min-children-per-line">1</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">List text color:</property>
-                        <property name="hexpand">1</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">PickImmediate</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkColorButton" id="PickImmediate">
-                        <property name="visible">1</property>
-                        <signal name="color-set" handler="on_color_set"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkEntry" id="EntryImmediate">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="width-chars">7</property>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultImmediate">
-                        <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <signal name="clicked" handler="on_default_color"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Search with queue text color:</property>
-                        <property name="hexpand">1</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">PickQueue</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkColorButton" id="PickQueue">
-                        <property name="visible">1</property>
-                        <signal name="color-set" handler="on_color_set"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkEntry" id="EntryQueue">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="width-chars">7</property>
-                        <signal name="changed" handler="on_colors_changed"/>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="DefaultQueue">
-                        <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <signal name="clicked" handler="on_default_color"/>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-refresh-symbolic</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Text Entry Colors</property>
+            <property name="label" translatable="yes">Text Entries</property>
             <property name="wrap">1</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -1891,9 +1619,8 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Tab Label Colors</property>
-            <property name="wrap">1</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Fonts</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -1902,10 +1629,8 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="homogeneous">1</property>
             <property name="column-spacing">12</property>
             <property name="row-spacing">12</property>
-            <property name="min-children-per-line">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
@@ -1913,25 +1638,12 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Regular tab label color:</property>
-                        <property name="hexpand">1</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">PickRegularTab</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkColorButton" id="PickRegularTab">
-                        <property name="visible">1</property>
-                        <signal name="color-set" handler="on_color_set"/>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Global font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectGlobalFont</property>
                   </object>
                 </child>
               </object>
@@ -1945,18 +1657,17 @@
                     <property name="visible">1</property>
                     <property name="spacing">12</property>
                     <child>
-                      <object class="GtkEntry" id="EntryRegularTab">
+                      <object class="GtkFontButton" id="SelectGlobalFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="width-chars">7</property>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="DefaultRegularTab">
+                      <object class="GtkButton" id="DefaultGlobalFont">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <signal name="clicked" handler="on_default_color"/>
+                        <signal name="clicked" handler="on_default_font"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -1987,25 +1698,12 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Changed tab label color:</property>
-                        <property name="hexpand">1</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">PickChangedTab</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkColorButton" id="PickChangedTab">
-                        <property name="visible">1</property>
-                        <signal name="color-set" handler="on_color_set"/>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">Chat font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectChatFont</property>
                   </object>
                 </child>
               </object>
@@ -2019,18 +1717,17 @@
                     <property name="visible">1</property>
                     <property name="spacing">12</property>
                     <child>
-                      <object class="GtkEntry" id="EntryChangedTab">
+                      <object class="GtkFontButton" id="SelectChatFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="width-chars">7</property>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="DefaultChangedTab">
+                      <object class="GtkButton" id="DefaultChatFont">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <signal name="clicked" handler="on_default_color"/>
+                        <signal name="clicked" handler="on_default_font"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -2061,25 +1758,12 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="spacing">12</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Highlighted tab label color:</property>
-                        <property name="hexpand">1</property>
-                        <property name="xalign">0</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">PickHighlightTab</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkColorButton" id="PickHighlightTab">
-                        <property name="visible">1</property>
-                        <signal name="color-set" handler="on_color_set"/>
-                      </object>
-                    </child>
+                    <property name="label" translatable="yes">List font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectListFont</property>
                   </object>
                 </child>
               </object>
@@ -2093,18 +1777,197 @@
                     <property name="visible">1</property>
                     <property name="spacing">12</property>
                     <child>
-                      <object class="GtkEntry" id="EntryHighlightTab">
+                      <object class="GtkFontButton" id="SelectListFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="width-chars">7</property>
-                        <signal name="changed" handler="on_colors_changed"/>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkButton" id="DefaultHighlightTab">
+                      <object class="GtkButton" id="DefaultListFont">
                         <property name="visible">1</property>
-                        <property name="halign">start</property>
-                        <signal name="clicked" handler="on_default_color"/>
+                        <signal name="clicked" handler="on_default_font"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Transfers font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectTransfersFont</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkFontButton" id="SelectTransfersFont">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultTransfersFont">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_default_font"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Search font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectSearchFont</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkFontButton" id="SelectSearchFont">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultSearchFont">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_default_font"/>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">1</property>
+                                <property name="icon-name">view-refresh-symbolic</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Default</property>
+                                <property name="use-underline">1</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Browse font:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">SelectBrowserFont</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkFontButton" id="SelectBrowserFont">
+                        <property name="visible">1</property>
+                        <property name="hexpand">1</property>
+                        <property name="font">Sans 12</property>
+                        <signal name="font-set" handler="on_fonts_changed"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="DefaultBrowserFont">
+                        <property name="visible">1</property>
+                        <signal name="clicked" handler="on_default_font"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
@@ -2135,25 +1998,103 @@
       </object>
     </child>
     <child>
-      <object class="GtkButton" id="DefaultColors">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="halign">start</property>
-        <signal name="clicked" handler="on_default_colors"/>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Icons</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
+            <property name="spacing">18</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkImage">
+              <object class="GtkFlowBox">
                 <property name="visible">1</property>
-                <property name="icon-name">view-refresh-symbolic</property>
+                <property name="homogeneous">1</property>
+                <property name="column-spacing">12</property>
+                <property name="row-spacing">12</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Icon theme folder (requires restart):</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">ThemeDir</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">12</property>
+                        <child>
+                          <object class="GtkButton" id="ThemeDir">
+                            <property name="visible">1</property>
+                            <property name="hexpand">1</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="DefaultTheme">
+                            <property name="visible">1</property>
+                            <signal name="clicked" handler="on_default_theme" swapped="no"/>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">edit-clear-symbolic</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">1</property>
+                                    <property name="label" translatable="yes">Clear</property>
+                                    <property name="use-underline">1</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkFrame">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Reset Colors to Default</property>
-                <property name="use-underline">1</property>
+                <child>
+                  <object class="GtkIconView" id="IconView">
+                    <property name="visible">1</property>
+                    <property name="pixbuf-column">0</property>
+                    <property name="text-column">1</property>
+                    <property name="selection-mode">none</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
