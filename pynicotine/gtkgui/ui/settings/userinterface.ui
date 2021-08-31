@@ -1661,6 +1661,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
@@ -1721,6 +1722,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
@@ -1781,6 +1783,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
@@ -1841,6 +1844,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
@@ -1901,6 +1905,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
@@ -1961,6 +1966,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="font">Sans 12</property>
+                        <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
                     </child>
