@@ -21,22 +21,38 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkCheckButton" id="UseCustomBan">
-                <property name="label" translatable="yes">Custom ban message:</property>
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkCheckButton" id="UseCustomBan">
+                    <property name="label" translatable="yes">Custom ban message:</property>
+                    <property name="visible">1</property>
+                    <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
+                    <property name="use-underline">1</property>
+                    <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="CustomBan">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkEntry" id="CustomBan">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="width-chars">24</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

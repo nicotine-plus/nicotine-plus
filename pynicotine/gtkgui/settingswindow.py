@@ -933,6 +933,8 @@ class GeoBlockFrame(BuildFrame):
         if config.sections["transfers"]["geoblockcc"] is not None:
             self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
 
+        self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
+
     def get_settings(self):
         return {
             "transfers": {

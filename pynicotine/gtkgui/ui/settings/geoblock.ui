@@ -45,22 +45,38 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkCheckButton" id="UseCustomGeoBlock">
-                <property name="label" translatable="yes">Use custom Geo Block message:</property>
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="tooltip_text" translatable="yes">Sent to users as the reason for being blocked.</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_use_custom_geo_block_toggled" swapped="no"/>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkCheckButton" id="UseCustomGeoBlock">
+                    <property name="label" translatable="yes">Use custom Geo Block message:</property>
+                    <property name="visible">1</property>
+                    <property name="tooltip_text" translatable="yes">Sent to users as the reason for being blocked.</property>
+                    <property name="use-underline">1</property>
+                    <signal name="toggled" handler="on_use_custom_geo_block_toggled" swapped="no"/>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="GtkEntry" id="CustomGeoBlock">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkEntry" id="CustomGeoBlock">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="width-chars">24</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
