@@ -829,6 +829,7 @@ class NicotineFrame:
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
+            self.userlist.Main.show()
 
         elif mode == "chatrooms":
 
@@ -841,6 +842,7 @@ class NicotineFrame:
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
+            self.userlist.Main.show()
 
         elif mode == "tab":
 
@@ -849,6 +851,7 @@ class NicotineFrame:
 
             self.userlist.BuddiesToolbar.hide()
             self.userlist.UserLabel.show()
+            self.userlist.Main.hide()
 
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
