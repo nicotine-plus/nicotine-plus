@@ -62,7 +62,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Retry</property>
+                            <property name="label" translatable="yes">_Retry</property>
+                            <property name="use-underline">1</property>
                           </object>
                         </child>
                       </object>
@@ -89,7 +90,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Abort</property>
+                            <property name="label" translatable="yes">_Abort</property>
+                            <property name="use-underline">1</property>
                           </object>
                         </child>
                       </object>
@@ -116,7 +118,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Clear</property>
+                            <property name="label" translatable="yes">_Clear</property>
+                            <property name="use-underline">1</property>
                           </object>
                         </child>
                       </object>
@@ -152,8 +155,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Clear _Finished</property>
-                            <property name="use-underline">1</property>
+                            <property name="label" translatable="yes">Clear Finished</property>
                           </object>
                         </child>
                       </object>
@@ -186,7 +188,8 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Clear Downloads...</property>
+        <property name="label" translatable="yes">Clear _Downloads...</property>
+        <property name="use-underline">1</property>
       </object>
     </child>
     <child>

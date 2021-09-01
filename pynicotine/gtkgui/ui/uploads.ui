@@ -62,7 +62,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Abort</property>
+                            <property name="label" translatable="yes">_Abort</property>
+                            <property name="use-underline">1</property>
                           </object>
                         </child>
                       </object>
@@ -152,8 +153,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Clear _Finished</property>
-                            <property name="use-underline">1</property>
+                            <property name="label" translatable="yes">Clear Finished</property>
                           </object>
                         </child>
                       </object>
@@ -186,7 +186,8 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Clear Uploads...</property>
+        <property name="label" translatable="yes">Clear Uploa_ds...</property>
+        <property name="use-underline">1</property>
       </object>
     </child>
     <child>
