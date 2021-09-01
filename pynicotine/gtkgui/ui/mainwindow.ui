@@ -803,6 +803,7 @@
         <child>
           <object class="GtkPaned" id="MainPaned">
             <property name="visible">1</property>
+            <property name="vexpand">1</property>
             <child>
               <object class="GtkPaned" id="NotebooksPane">
                 <property name="visible">1</property>
