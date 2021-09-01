@@ -293,14 +293,16 @@ class NicotineFrame:
 
         if Gtk.get_major_version() == 4:
             self.MainPaned.set_resize_start_child(True)
-            self.MainPaned.set_shrink_start_child(False)
-            self.MainPaned.set_resize_end_child(False)
-            self.MainPaned.set_shrink_end_child(False)
+            self.NotebooksPane.set_resize_start_child(True)
+            self.NotebooksPane.set_shrink_start_child(False)
+            self.NotebooksPane.set_resize_end_child(False)
+            self.NotebooksPane.set_shrink_end_child(False)
         else:
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
-            self.MainPaned.child_set_property(self.NotebooksPane, "shrink", False)
-            self.MainPaned.child_set_property(self.DebugLog, "resize", False)
-            self.MainPaned.child_set_property(self.DebugLog, "shrink", False)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
 
         """ Scanning """
 
@@ -788,15 +790,15 @@ class NicotineFrame:
 
         mode = self.verify_buddy_list_mode(mode)
 
-        if self.userlist.Main in self.NotebooksPane.get_children():
+        if self.userlist.Main in self.MainPaned.get_children():
 
             if mode == "always":
                 return
 
             if Gtk.get_major_version() == 4:
-                self.NotebooksPane.set_property("end-child", None)
+                self.MainPaned.set_property("end-child", None)
             else:
-                self.NotebooksPane.remove(self.userlist.Main)
+                self.MainPaned.remove(self.userlist.Main)
 
         elif self.userlist.Main in self.ChatroomsPane.get_children():
 
@@ -818,12 +820,12 @@ class NicotineFrame:
 
         if mode == "always":
 
-            if self.userlist.Main not in self.NotebooksPane.get_children():
+            if self.userlist.Main not in self.MainPaned.get_children():
                 if Gtk.get_major_version() == 4:
-                    self.NotebooksPane.set_end_child(self.userlist.Main)
-                    self.NotebooksPane.set_resize_end_child(False)
+                    self.MainPaned.set_end_child(self.userlist.Main)
+                    self.MainPaned.set_resize_end_child(False)
                 else:
-                    self.NotebooksPane.pack2(self.userlist.Main, False, True)
+                    self.MainPaned.pack2(self.userlist.Main, False, True)
 
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
