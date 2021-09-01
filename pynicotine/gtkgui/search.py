@@ -304,7 +304,8 @@ class Search:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
-        self.key_controller_results = connect_key_press_event(self.ResultsList, self.on_key_press_event)
+        self.key_controller_filters = connect_key_press_event(self.FiltersContainer, self.on_key_press_event_filters)
+        self.key_controller_results = connect_key_press_event(self.ResultsList, self.on_key_press_event_results)
 
         self.text = text
         self.searchterm_words_include = []
@@ -1042,7 +1043,18 @@ class Search:
         # Single user, add items directly to "User(s)" submenu
         self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
 
-    def on_key_press_event(self, *args):
+    def on_key_press_event_filters(self, *args):
+
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
+        keycodes, mods = parse_accelerator("Escape")
+
+        if keycode in keycodes:
+            self.ShowFilters.set_active(False)
+            return True
+
+        return False
+
+    def on_key_press_event_results(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Primary>f")
@@ -1381,6 +1393,10 @@ class Search:
         f_type = self.push_history(self.FilterType, "filtertype")
 
         self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country, f_type)
+
+    def on_filter_entry_changed(self, widget):
+        if not widget.get_text():
+            self.on_refilter()
 
     def on_clear_filters(self, *args):
 
