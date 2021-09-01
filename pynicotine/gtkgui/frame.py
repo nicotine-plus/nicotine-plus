@@ -1654,10 +1654,12 @@ class NicotineFrame:
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")
             self.uploads.update(forceupdate=True)
+            GLib.idle_add(grab_widget_focus, self.uploads.Transfers)
 
         elif tab_label == self.DownloadsTabLabel:
             self.set_active_header_bar("Downloads")
             self.downloads.update(forceupdate=True)
+            GLib.idle_add(grab_widget_focus, self.downloads.Transfers)
 
         elif tab_label == self.SearchTabLabel:
             self.set_active_header_bar("Search")
@@ -1666,14 +1668,24 @@ class NicotineFrame:
         elif tab_label == self.UserInfoTabLabel:
             self.set_active_header_bar("UserInfo")
 
+            curr_page_num = self.userinfo.get_current_page()
+            curr_page = self.userinfo.get_nth_page(curr_page_num)
+            self.userinfo.on_switch_info_page(self.userinfo.notebook, curr_page, curr_page_num)
+
         elif tab_label == self.UserBrowseTabLabel:
             self.set_active_header_bar("UserBrowse")
 
+            curr_page_num = self.userbrowse.get_current_page()
+            curr_page = self.userbrowse.get_nth_page(curr_page_num)
+            self.userbrowse.on_switch_browse_page(self.userbrowse.notebook, curr_page, curr_page_num)
+
         elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
+            GLib.idle_add(grab_widget_focus, self.userlist.UserListTree)
 
         elif tab_label == self.InterestsTabLabel:
             self.set_active_header_bar("Interests")
+            GLib.idle_add(grab_widget_focus, self.interests.LikesList)
 
     def on_page_removed(self, main_notebook, child, page_num):
 
