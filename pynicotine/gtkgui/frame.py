@@ -63,6 +63,7 @@ from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_file
+from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
@@ -1724,11 +1725,11 @@ class NicotineFrame:
 
         if state & mods and (keycode in keycodes_w or keycode in keycodes_f4):
             notebook_name = self.current_page_id.lower()
+            notebook = getattr(self, notebook_name)
 
-            if not hasattr(self, notebook_name):
+            if not isinstance(notebook, IconNotebook):
                 return False
 
-            notebook = getattr(self, notebook_name)
             page = notebook.get_nth_page(notebook.get_current_page())
 
             if page is None:
@@ -1743,11 +1744,11 @@ class NicotineFrame:
 
         if state & mods and keycode in keycodes_tab:
             notebook_name = self.current_page_id.lower()
+            notebook = getattr(self, notebook_name)
 
-            if not hasattr(self, notebook_name):
+            if not isinstance(notebook, IconNotebook):
                 return False
 
-            notebook = getattr(self, notebook_name)
             num_pages = notebook.get_n_pages()
             current_page = notebook.get_current_page()
 
