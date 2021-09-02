@@ -1446,6 +1446,8 @@ class NicotineFrame:
         """ Move the headerbar widgets to a GtkBox "toolbar", and show the regular
         title bar (client side decorations disabled) """
 
+        self.MainWindow.set_show_menubar(True)
+
         if not hasattr(self, page_id + "Toolbar"):
             # No toolbar needed for this page
             return
@@ -1485,7 +1487,6 @@ class NicotineFrame:
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
-        self.MainWindow.set_show_menubar(True)
         self.HeaderMenu.set_menu_model(None)
         self.HeaderMenu.hide()
 
