@@ -736,6 +736,11 @@
             <signal name="icon-press" handler="on_create_room" swapped="no"/>
           </object>
         </child>
+        <child>
+          <object class="GtkMenuButton" id="RoomList">
+            <property name="visible">1</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -743,11 +748,6 @@
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
-        <child>
-          <object class="GtkMenuButton" id="RoomList">
-            <property name="visible">1</property>
-          </object>
-        </child>
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
