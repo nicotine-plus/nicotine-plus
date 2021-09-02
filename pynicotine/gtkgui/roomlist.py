@@ -96,6 +96,9 @@ class RoomList:
         self.AcceptPrivateRoom.set_active(config.sections["server"]["private_chatrooms"])
         self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
 
+        frame.ChatroomsCompletion.set_model(self.room_model)
+        frame.ChatroomsCompletion.set_text_column(0)
+
         if Gtk.get_major_version() == 4:
             button = frame.RoomList.get_first_child()
             button.set_child(frame.RoomListLabel)
