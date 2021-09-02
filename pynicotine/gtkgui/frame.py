@@ -628,7 +628,6 @@ class NicotineFrame:
         self.downloads.TransferButtons.set_sensitive(status)
         self.uploads.TransferButtons.set_sensitive(status)
 
-        self.RoomType.set_sensitive(status)
         self.JoinRoomEntry.set_sensitive(status)
         self.RoomList.set_sensitive(status)
 
@@ -2088,16 +2087,37 @@ class NicotineFrame:
         self.np.privatechats.show_user(username)
         clear_entry(widget)
 
+    def on_create_room_response(self, dialog, response_id, room):
+
+        private = dialog.checkbox.get_active()
+        dialog.destroy()
+
+        if response_id == Gtk.ResponseType.OK:
+            # Create a new room
+            self.np.queue.append(slskmessages.JoinRoom(room, private))
+
     def on_create_room(self, widget, *args):
 
         room = widget.get_text()
 
         if not room:
-            return
+            return False
 
-        private = self.RoomType.get_active()
-        self.np.queue.append(slskmessages.JoinRoom(room, private))
-        widget.set_text("")
+        if room not in self.chatrooms.roomlist.server_rooms and room not in self.chatrooms.roomlist.private_rooms:
+            option_dialog(
+                parent=self.MainWindow,
+                title=_('Create New Room?'),
+                message=_('Are you sure you wish to create a new room "%s"?') % room,
+                checkbox_label=_("Make room private"),
+                callback=self.on_create_room_response,
+                callback_data=room
+            )
+
+        else:
+            self.np.queue.append(slskmessages.JoinRoom(room))
+
+        clear_entry(widget)
+        return True
 
     def update_completions(self):
         self.np.chatrooms.update_completions()

@@ -723,17 +723,6 @@
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBoxText" id="RoomType">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Room type</property>
-            <property name="active">0</property>
-            <items>
-              <item translatable="yes">Public</item>
-              <item translatable="yes">Private</item>
-            </items>
-          </object>
-        </child>
-        <child>
           <object class="GtkEntry" id="JoinRoomEntry">
             <property name="visible">1</property>
             <property name="height-request">0</property>

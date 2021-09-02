@@ -101,9 +101,6 @@ class ChatRooms(IconNotebook):
         else:
             self.frame.ChatroomsPane.child_set_property(self.notebook, "resize", True)
 
-            # Workaround to make dropdown menu appear below button
-            self.frame.RoomType.set_wrap_width(1)
-
         self.update_visuals()
 
     def on_reordered_page(self, notebook, page, page_num, force=0):
