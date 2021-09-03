@@ -628,7 +628,7 @@ class NicotineFrame:
         self.downloads.TransferButtons.set_sensitive(status)
         self.uploads.TransferButtons.set_sensitive(status)
 
-        self.JoinRoomEntry.set_sensitive(status)
+        self.ChatroomsEntry.set_sensitive(status)
         self.RoomList.set_sensitive(status)
 
         self.tray_icon.set_server_actions_sensitive(status)
@@ -1648,14 +1648,22 @@ class NicotineFrame:
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
-            self.chatrooms.on_switch_chat(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+
+            if curr_page is not None:
+                self.chatrooms.on_switch_chat(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+            else:
+                GLib.idle_add(grab_widget_focus, self.ChatroomsEntry)
 
         elif tab_label == self.PrivateChatTabLabel:
             self.set_active_header_bar("PrivateChat")
 
             curr_page_num = self.privatechat.get_current_page()
             curr_page = self.privatechat.get_nth_page(curr_page_num)
-            self.privatechat.on_switch_chat(self.privatechat.notebook, curr_page, curr_page_num, forceupdate=True)
+
+            if curr_page is not None:
+                self.privatechat.on_switch_chat(self.privatechat.notebook, curr_page, curr_page_num, forceupdate=True)
+            else:
+                GLib.idle_add(grab_widget_focus, self.PrivateChatEntry)
 
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")
@@ -1676,14 +1684,22 @@ class NicotineFrame:
 
             curr_page_num = self.userinfo.get_current_page()
             curr_page = self.userinfo.get_nth_page(curr_page_num)
-            self.userinfo.on_switch_info_page(self.userinfo.notebook, curr_page, curr_page_num)
+
+            if curr_page is not None:
+                self.userinfo.on_switch_info_page(self.userinfo.notebook, curr_page, curr_page_num)
+            else:
+                GLib.idle_add(grab_widget_focus, self.UserInfoEntry)
 
         elif tab_label == self.UserBrowseTabLabel:
             self.set_active_header_bar("UserBrowse")
 
             curr_page_num = self.userbrowse.get_current_page()
             curr_page = self.userbrowse.get_nth_page(curr_page_num)
-            self.userbrowse.on_switch_browse_page(self.userbrowse.notebook, curr_page, curr_page_num)
+
+            if curr_page is not None:
+                self.userbrowse.on_switch_browse_page(self.userbrowse.notebook, curr_page, curr_page_num)
+            else:
+                GLib.idle_add(grab_widget_focus, self.UserBrowseEntry)
 
         elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
