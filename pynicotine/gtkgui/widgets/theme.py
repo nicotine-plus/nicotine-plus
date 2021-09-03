@@ -33,6 +33,10 @@ def set_global_style():
         padding: 0;
     }
 
+    .background-border {
+        background: @borders;
+    }
+
     .border-top {
         border-top: 1px solid @borders;
     }

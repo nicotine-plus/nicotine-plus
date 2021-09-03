@@ -43,14 +43,6 @@ class Interests:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
         self.frame.interestsvbox.add(self.Main)
 
-        if Gtk.get_major_version() == 4:
-            self.InterestsPanedSecond.set_resize_start_child(True)
-            self.InterestsPanedSecond.set_resize_end_child(False)
-
-        else:
-            self.InterestsPanedSecond.child_set_property(self.RecommendationsVbox, "resize", True)
-            self.InterestsPanedSecond.child_set_property(self.SimilarUsers, "resize", False)
-
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
         self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -58,10 +50,10 @@ class Interests:
         self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
             None, self.LikesList,
-            ["i_like", _("I Like"), -1, "text", None]
+            ["likes", _("Likes"), -1, "text", None]
         )
 
-        cols["i_like"].set_sort_column_id(0)
+        cols["likes"].set_sort_column_id(0)
         self.LikesList.set_model(self.likes_model)
 
         self.dislikes = {}
@@ -71,10 +63,10 @@ class Interests:
         self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
             None, self.DislikesList,
-            ["i_dislike", _("I Dislike"), -1, "text", None]
+            ["dislikes", _("Dislikes"), -1, "text", None]
         )
 
-        cols["i_dislike"].set_sort_column_id(0)
+        cols["dislikes"].set_sort_column_id(0)
         self.DislikesList.set_model(self.dislikes_model)
 
         self.recommendations_model = Gtk.ListStore(
@@ -94,24 +86,6 @@ class Interests:
         cols["item"].set_sort_column_id(1)
 
         self.RecommendationsList.set_model(self.recommendations_model)
-
-        self.unrecommendations_model = Gtk.ListStore(
-            str,  # (0) hrating
-            str,  # (1) item
-            int   # (2) rating
-        )
-
-        self.unrecommendations_column_numbers = list(range(self.unrecommendations_model.get_n_columns()))
-        cols = initialise_columns(
-            None, self.UnrecommendationsList,
-            ["rating", _("Rating"), 0, "number", None],
-            ["item", _("Item"), -1, "text", None]
-        )
-
-        cols["rating"].set_sort_column_id(2)
-        cols["item"].set_sort_column_id(1)
-
-        self.UnrecommendationsList.set_model(self.unrecommendations_model)
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(
@@ -272,16 +246,18 @@ class Interests:
     def on_r_recommend_search(self, *args):
         self.recommend_search(self.r_popup_menu.get_user())
 
-    def on_global_recommendations_clicked(self, *args):
-        self.frame.np.interests.request_global_recommendations()
-
     def on_recommendations_clicked(self, *args):
+
+        if not self.likes and not self.dislikes:
+            self.frame.np.interests.request_global_recommendations()
+            return
+
         self.frame.np.interests.request_recommendations()
 
     def on_similar_users_clicked(self, *args):
         self.frame.np.interests.request_similar_users()
 
-    def set_recommendations(self, title, recom):
+    def set_recommendations(self, recom):
         self.recommendations_model.clear()
 
         for (thing, rating) in recom.items():
@@ -291,27 +267,14 @@ class Interests:
 
         self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
-    def set_unrecommendations(self, title, recom):
-        self.unrecommendations_model.clear()
-
-        for (thing, rating) in recom.items():
-            self.unrecommendations_model.insert_with_valuesv(
-                -1, self.unrecommendations_column_numbers, [humanize(rating), thing, rating]
-            )
-
-        self.unrecommendations_model.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-
     def global_recommendations(self, msg):
-        self.set_recommendations("Global recommendations", msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
+        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
 
     def recommendations(self, msg):
-        self.set_recommendations("Recommendations", msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
+        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
 
     def item_recommendations(self, msg):
-        self.set_recommendations(_("Recommendations for %s") % msg.thing, msg.recommendations)
-        self.set_unrecommendations("Unrecommendations", msg.unrecommendations)
+        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
 
     def similar_users(self, msg):
 

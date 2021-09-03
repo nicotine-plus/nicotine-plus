@@ -21,7 +21,7 @@
                 <property name="margin-end">12</property>
                 <property name="margin-top">12</property>
                 <property name="margin-bottom">12</property>
-                <property name="label" translatable="yes">My Interests</property>
+                <property name="label" translatable="yes">Personal Interests</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
                 </attributes>
@@ -31,7 +31,21 @@
               <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
                 <property name="vexpand">1</property>
+                <child>
+                  <object class="GtkEntry" id="AddLikeEntry">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="width-chars">15</property>
+                    <property name="placeholder-text" translatable="yes">Add something you like...</property>
+                    <property name="primary-icon-name">non-starred-symbolic</property>
+                    <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
+                    <signal name="icon-press" handler="on_add_thing_i_like" swapped="no"/>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
@@ -43,7 +57,6 @@
                           <object class="GtkTreeView" id="LikesList">
                             <property name="visible">1</property>
                             <property name="hexpand">1</property>
-                            <property name="enable-search">0</property>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -51,35 +64,46 @@
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkActionBar">
-                    <property name="visible">1</property>
-                    <child type="center">
-                      <object class="GtkEntry" id="AddLikeEntry">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="width-chars">15</property>
-                        <property name="placeholder-text" translatable="yes">Add something you like...</property>
-                        <property name="primary-icon-name">non-starred-symbolic</property>
-                        <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
-                        <signal name="icon-press" handler="on_add_thing_i_like" swapped="no"/>
-                        <style>
-                          <class name="flat"/>
-                        </style>
-                      </object>
-                    </child>
+                    <style>
+                      <class name="border-bottom"/>
+                    </style>
                   </object>
                 </child>
               </object>
             </child>
             <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
+                <property name="xalign">0</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="label" translatable="yes">Personal Displeasures</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="margin-top">6</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
                 <property name="vexpand">1</property>
+                <child>
+                  <object class="GtkEntry" id="AddDislikeEntry">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="width-chars">15</property>
+                    <property name="placeholder-text" translatable="yes">Add something you dislike...</property>
+                    <property name="primary-icon-name">action-unavailable-symbolic</property>
+                    <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
+                    <signal name="icon-press" handler="on_add_thing_i_dislike" swapped="no"/>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
@@ -91,7 +115,6 @@
                           <object class="GtkTreeView" id="DislikesList">
                             <property name="visible">1</property>
                             <property name="hexpand">1</property>
-                            <property name="enable-search">0</property>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -101,169 +124,74 @@
                     </child>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkActionBar">
-                    <property name="visible">1</property>
-                    <child type="center">
-                      <object class="GtkEntry" id="AddDislikeEntry">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
-                        <property name="width-chars">15</property>
-                        <property name="placeholder-text" translatable="yes">Add something you dislike...</property>
-                        <property name="primary-icon-name">action-unavailable-symbolic</property>
-                        <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
-                        <signal name="icon-press" handler="on_add_thing_i_dislike" swapped="no"/>
-                        <style>
-                          <class name="flat"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                </child>
               </object>
             </child>
           </object>
         </child>
         <child>
-          <object class="GtkPaned" id="InterestsPanedSecond">
+          <object class="GtkFlowBox" id="RecommendationsVbox">
             <property name="visible">1</property>
+            <property name="column-spacing">1</property>
+            <property name="row-spacing">1</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkBox" id="RecommendationsVbox">
+              <object class="GtkBox">
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
+                <property name="width-request">280</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="orientation">vertical</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="spacing">12</property>
                     <child>
-                      <object class="GtkBox">
-                        <property name="visible">1</property>
-                        <property name="margin-start">6</property>
-                        <property name="margin-end">6</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">6</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="xalign">0</property>
-                            <property name="hexpand">1</property>
-                            <property name="margin-start">6</property>
-                            <property name="label" translatable="yes">Recommendations</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="GlobalRecommendationsButton">
-                            <property name="visible">1</property>
-                            <signal name="clicked" handler="on_global_recommendations_clicked" swapped="no"/>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">1</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">view-refresh-symbolic</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">1</property>
-                                    <property name="label" translatable="yes">_Global</property>
-                                    <property name="use-underline">1</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkButton" id="RecommendationsButton">
-                            <property name="visible">1</property>
-                            <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">1</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">view-refresh-symbolic</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">1</property>
-                                    <property name="label" translatable="yes">_Personal</property>
-                                    <property name="use-underline">1</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">1</property>
-                        <child>
-                          <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="vexpand">1</property>
-                            <child>
-                              <object class="GtkTreeView" id="RecommendationsList">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="search-column">1</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkLabel" id="UnrecommendationsLabel">
+                      <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="margin-start">12</property>
-                        <property name="margin-end">12</property>
-                        <property name="margin-top">12</property>
-                        <property name="margin-bottom">12</property>
-                        <property name="label" translatable="yes">Unrecommendations</property>
+                        <property name="hexpand">1</property>
+                        <property name="margin-start">6</property>
+                        <property name="label" translatable="yes">Recommendations</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkButton" id="RecommendationsButton">
                         <property name="visible">1</property>
+                        <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
                         <child>
-                          <object class="GtkScrolledWindow">
+                          <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="vexpand">1</property>
-                            <child>
-                              <object class="GtkTreeView" id="UnrecommendationsList">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="search-column">1</property>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
-                                </child>
-                              </object>
+                            <property name="icon-name">view-refresh-symbolic</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="circular"/>
+                          <class name="image-button"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <child>
+                      <object class="GtkScrolledWindow">
+                        <property name="visible">1</property>
+                        <property name="vexpand">1</property>
+                        <child>
+                          <object class="GtkTreeView" id="RecommendationsList">
+                            <property name="visible">1</property>
+                            <property name="hexpand">1</property>
+                            <property name="search-column">1</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
                             </child>
                           </object>
                         </child>
@@ -271,13 +199,16 @@
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="view"/>
+                </style>
               </object>
             </child>
             <child>
               <object class="GtkBox" id="SimilarUsers">
-                <property name="width-request">280</property>
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
+                <property name="width-request">280</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
@@ -340,8 +271,14 @@
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="view"/>
+                </style>
               </object>
             </child>
+            <style>
+              <class name="background-border"/>
+            </style>
           </object>
         </child>
       </object>

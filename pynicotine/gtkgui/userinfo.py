@@ -166,9 +166,9 @@ class UserInfo:
         self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
             None, self.Hates,
-            ["hates", _("Hates"), 0, "text", None]
+            ["dislikes", _("Dislikes"), 0, "text", None]
         )
-        cols["hates"].set_sort_column_id(0)
+        cols["dislikes"].set_sort_column_id(0)
 
         self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 

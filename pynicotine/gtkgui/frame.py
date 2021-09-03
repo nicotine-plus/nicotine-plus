@@ -621,9 +621,8 @@ class NicotineFrame:
         if self.current_tab_label == self.SearchTabLabel:
             GLib.idle_add(grab_widget_focus, self.SearchEntry)
 
-        self.interests.SimilarUsersButton.set_sensitive(status)
-        self.interests.GlobalRecommendationsButton.set_sensitive(status)
         self.interests.RecommendationsButton.set_sensitive(status)
+        self.interests.SimilarUsersButton.set_sensitive(status)
 
         self.downloads.TransferButtons.set_sensitive(status)
         self.uploads.TransferButtons.set_sensitive(status)
