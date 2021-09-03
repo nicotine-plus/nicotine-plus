@@ -323,7 +323,7 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="FilterFreeSlot">
-                            <property name="label" translatable="yes">Free _Slot</property>
+                            <property name="label" translatable="yes">Free Sl_ot</property>
                             <property name="visible">1</property>
                             <property name="use-underline">1</property>
                             <signal name="toggled" handler="on_refilter" swapped="no"/>
