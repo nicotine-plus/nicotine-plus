@@ -83,7 +83,7 @@
                     <child>
                       <object class="GtkLabel" id="FilterLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Result _Filters</property>
+                        <property name="label" translatable="yes">_Result Filters</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
