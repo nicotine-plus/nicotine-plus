@@ -802,6 +802,7 @@
       <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
+        <property name="width-request">580</property>
         <child>
           <object class="GtkPaned" id="MainPaned">
             <property name="visible">1</property>
