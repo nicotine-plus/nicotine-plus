@@ -152,7 +152,6 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="hexpand">1</property>
                         <property name="margin-start">6</property>
                         <property name="label" translatable="yes">Recommendations</property>
                         <attributes>
@@ -216,12 +215,11 @@
                     <property name="margin-end">6</property>
                     <property name="margin-top">6</property>
                     <property name="margin-bottom">6</property>
-                    <property name="spacing">6</property>
+                    <property name="spacing">12</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="hexpand">1</property>
                         <property name="margin-start">6</property>
                         <property name="label" translatable="yes">Similar Users</property>
                         <attributes>
