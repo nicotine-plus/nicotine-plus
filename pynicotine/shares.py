@@ -627,7 +627,8 @@ class Shares:
                 'names': '\n'.join(errors)
             })
             log.add(exception)
-            log.add(_("Shared files database seems to be corrupted, rescan your shares"))
+            log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
+                      "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
 
             if not reset_shares:
                 cls.load_shares(shares, dbs, reset_shares=True)
