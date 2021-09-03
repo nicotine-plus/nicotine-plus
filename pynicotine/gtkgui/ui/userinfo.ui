@@ -428,7 +428,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Send _Message</property>
+                            <property name="label" translatable="yes">Send M_essage</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -453,7 +453,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Brow_se Files</property>
+                            <property name="label" translatable="yes">_Browse Files</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -528,8 +528,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">_Ban User</property>
-                            <property name="use-underline">1</property>
+                            <property name="label" translatable="yes">Ban User</property>
                           </object>
                         </child>
                       </object>
@@ -553,8 +552,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">_Ignore User</property>
-                            <property name="use-underline">1</property>
+                            <property name="label" translatable="yes">Ignore User</property>
                           </object>
                         </child>
                       </object>

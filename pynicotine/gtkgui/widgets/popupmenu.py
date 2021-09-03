@@ -225,13 +225,13 @@ class PopupMenu(Gio.Menu):
         )
 
         if page != "privatechat":
-            self.append_item(("#" + _("Send _Message"), self.on_send_message))
+            self.append_item(("#" + _("Send M_essage"), self.on_send_message))
 
         if page != "userinfo":
             self.append_item(("#" + _("Show User I_nfo"), self.on_get_user_info))
 
         if page != "userbrowse":
-            self.append_item(("#" + _("Brow_se Files"), self.on_browse_user))
+            self.append_item(("#" + _("_Browse Files"), self.on_browse_user))
 
         self.setup(
             ("#" + _("Gi_ve Privileges..."), self.on_give_privileges),
@@ -245,9 +245,9 @@ class PopupMenu(Gio.Menu):
             self.append_item(("$" + _("_Add to Buddy List"), self.on_add_to_list))
 
         self.setup(
-            ("$" + _("_Ban User"), self.on_ban_user),
-            ("$" + _("_Ignore User"), self.on_ignore_user),
-            ("$" + _("B_lock User's IP Address"), self.on_block_user),
+            ("$" + _("Ban User"), self.on_ban_user),
+            ("$" + _("Ignore User"), self.on_ignore_user),
+            ("$" + _("Block User's IP Address"), self.on_block_user),
             ("$" + _("Ignore User's IP Address"), self.on_ignore_ip),
         )
 
@@ -298,13 +298,13 @@ class PopupMenu(Gio.Menu):
                 )
             )
 
-        self.actions[_("_Ban User")].set_state(
+        self.actions[_("Ban User")].set_state(
             GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_banned(self.user))
         )
-        self.actions[_("_Ignore User")].set_state(
+        self.actions[_("Ignore User")].set_state(
             GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_ignored(self.user))
         )
-        self.actions[_("B_lock User's IP Address")].set_state(
+        self.actions[_("Block User's IP Address")].set_state(
             GLib.Variant.new_boolean(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False)
         )
         self.actions[_("Ignore User's IP Address")].set_state(
