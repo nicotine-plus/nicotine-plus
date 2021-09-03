@@ -613,6 +613,13 @@ class Shares:
                 if not reset_shares:
                     shares[destination] = shelve.open(shelvefile, protocol=pickle.HIGHEST_PROTOCOL)
                 else:
+                    try:
+                        os.remove(shelvefile)
+
+                    except IsADirectoryError:
+                        # Potentially trying to use gdbm with a semidbm database
+                        os.rmdir(shelvefile)
+
                     shares[destination] = shelve.open(shelvefile, flag='n', protocol=pickle.HIGHEST_PROTOCOL)
 
             except Exception:
@@ -622,16 +629,20 @@ class Shares:
                 errors.append(shelvefile)
                 exception = format_exc()
 
-        if errors:
-            log.add(_("Failed to process the following databases: %(names)s"), {
-                'names': '\n'.join(errors)
-            })
-            log.add(exception)
-            log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
-                      "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
+        if not errors:
+            return
 
-            if not reset_shares:
-                cls.load_shares(shares, dbs, reset_shares=True)
+        log.add(_("Failed to process the following databases: %(names)s"), {
+            'names': '\n'.join(errors)
+        })
+        log.add(exception)
+
+        if not reset_shares:
+            log.add(_("Attempting to reset index of shared files due to an error. Please rescan your shares."))
+            return cls.load_shares(shares, dbs, reset_shares=True)
+
+        log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
+                  "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
