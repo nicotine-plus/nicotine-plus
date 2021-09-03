@@ -639,7 +639,8 @@ class Shares:
 
         if not reset_shares:
             log.add(_("Attempting to reset index of shared files due to an error. Please rescan your shares."))
-            return cls.load_shares(shares, dbs, reset_shares=True)
+            cls.load_shares(shares, dbs, reset_shares=True)
+            return
 
         log.add(_("File index of shared files could not be accessed. This could occur due to several instances of "
                   "Nicotine+ being active simultaneously, file permission issues, or another issue in Nicotine+."))
