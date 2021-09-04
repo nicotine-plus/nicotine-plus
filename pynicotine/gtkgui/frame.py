@@ -1285,9 +1285,9 @@ class NicotineFrame:
             ("$" + _("Show _Log Pane"), "win.showlog"),
             ("$" + _("Show _Debug Log Controls"), "win.showdebug"),
             ("", None),
-            ("O" + _("Buddylist in Separate Tab"), "win.togglebuddylist", "tab"),
-            ("O" + _("Buddylist in Chatrooms"), "win.togglebuddylist", "chatrooms"),
-            ("O" + _("Buddylist Always Visible"), "win.togglebuddylist", "always")
+            ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
+            ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
+            ("O" + _("Buddy List Always Visible"), "win.togglebuddylist", "always")
         )
 
         return menu
