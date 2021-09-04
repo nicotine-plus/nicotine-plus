@@ -168,7 +168,7 @@
                                 <child>
                                   <object class="GtkImage">
                                     <property name="visible">1</property>
-                                    <property name="icon-name">document-save-symbolic</property>
+                                    <property name="icon-name">document-send-symbolic</property>
                                   </object>
                                 </child>
                               </object>

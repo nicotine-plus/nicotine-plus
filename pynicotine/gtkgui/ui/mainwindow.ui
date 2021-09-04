@@ -582,37 +582,6 @@
   <object class="GtkHeaderBar" id="HeaderUserBrowse">
     <property name="visible">1</property>
     <property name="height-request">42</property>
-    <child>
-      <object class="GtkBox" id="UserBrowseStart">
-        <property name="visible">1</property>
-        <property name="valign">center</property>
-        <child>
-          <object class="GtkButton" id="LoadFromDisk">
-            <property name="visible">1</property>
-            <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">1</property>
-                    <property name="icon-name">folder-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Load from _Disk</property>
-                    <property name="use-underline">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
     <child type="title">
       <object class="GtkBox" id="UserBrowseTitle">
         <property name="visible">1</property>
@@ -649,6 +618,32 @@
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
+        <child>
+          <object class="GtkButton" id="LoadFromDisk">
+            <property name="visible">1</property>
+            <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">document-open-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="tooltip-text" translatable="yes">Opens a local list of shared files that was previously saved to disk</property>
+                    <property name="label" translatable="yes">_Open Share</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
