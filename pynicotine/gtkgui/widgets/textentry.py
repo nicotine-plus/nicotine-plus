@@ -505,11 +505,12 @@ class ChatEntry:
 
 class TextSearchBar:
 
-    def __init__(self, textview, search_bar, entry):
+    def __init__(self, textview, search_bar, entry, controller_widget=None, focus_widget=None):
 
         self.textview = textview
         self.search_bar = search_bar
         self.entry = entry
+        self.focus_widget = focus_widget or textview
 
         self.search_bar.connect_entry(self.entry)
 
@@ -519,7 +520,12 @@ class TextSearchBar:
         self.entry.connect("previous-match", self.on_search_previous_match)
         self.entry.connect("next-match", self.on_search_next_match)
 
-        self.key_controller_textview = connect_key_press_event(self.textview, self.on_key_press_event)
+        if not controller_widget:
+            controller_widget = textview
+
+        self.key_controller_search = connect_key_press_event(controller_widget, self.on_key_press_event_search)
+        self.key_controller_esc = connect_key_press_event(controller_widget, self.on_key_press_event_escape)
+        self.key_controller_esc_entry = connect_key_press_event(entry, self.on_key_press_event_escape)
 
     def on_search_match(self, search_type, restarted=False):
 
@@ -573,7 +579,18 @@ class TextSearchBar:
     def on_search_next_match(self, *args):
         self.on_search_match(search_type="next")
 
-    def on_key_press_event(self, *args):
+    def on_key_press_event_escape(self, *args):
+
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
+        keycodes, mods = parse_accelerator("Escape")
+
+        if keycode in keycodes:
+            self.hide_search_bar()
+            return True
+
+        return False
+
+    def on_key_press_event_search(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Primary>f")
@@ -587,6 +604,10 @@ class TextSearchBar:
     def show_search_bar(self):
         self.search_bar.set_search_mode(True)
         self.entry.grab_focus()
+
+    def hide_search_bar(self):
+        self.search_bar.set_search_mode(False)
+        self.focus_widget.grab_focus()
 
 
 def clear_entry(entry):

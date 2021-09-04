@@ -447,7 +447,8 @@ class ChatRoom:
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
 
         # Chat Text Search
-        TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry)
+        TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry,
+                      controller_widget=self.ChatView, focus_widget=self.ChatEntry)
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,

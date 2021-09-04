@@ -180,7 +180,8 @@ class PrivateChat:
         self.status = status
 
         # Text Search
-        TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry)
+        TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry,
+                      controller_widget=self.Main, focus_widget=self.ChatLine)
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
