@@ -41,6 +41,9 @@ class Interests:
             if thing and isinstance(thing, str):
                 self.queue.append(slskmessages.AddThingIHate(thing))
 
+        if self.ui_callback:
+            self.ui_callback.server_login()
+
     def add_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):

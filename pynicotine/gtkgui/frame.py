@@ -1706,6 +1706,7 @@ class NicotineFrame:
 
         elif tab_label == self.InterestsTabLabel:
             self.set_active_header_bar("Interests")
+            self.interests.populate_recommendations()
             GLib.idle_add(grab_widget_focus, self.interests.LikesList)
 
     def on_page_removed(self, main_notebook, child, page_num):

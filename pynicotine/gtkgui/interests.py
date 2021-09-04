@@ -39,6 +39,7 @@ class Interests:
     def __init__(self, frame):
 
         self.frame = frame
+        self.populated_recommends = False
 
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
         self.frame.interestsvbox.add(self.Main)
@@ -156,6 +157,25 @@ class Interests:
         popup.setup_user_menu()
 
         self.update_visuals()
+
+    def server_login(self):
+
+        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.interestsvbox):
+            # Only populate recommendations if the tab is open on login
+            return
+
+        self.populate_recommendations()
+
+    def populate_recommendations(self):
+        """ Populates the lists of recommendations and similar users if empty """
+
+        if self.populated_recommends or not self.frame.np.logged_in:
+            return
+
+        self.on_recommendations_clicked()
+        self.on_similar_users_clicked()
+
+        self.populated_recommends = True
 
     def recommend_search(self, item):
         self.frame.SearchEntry.set_text(item)
