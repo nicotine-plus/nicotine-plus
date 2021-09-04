@@ -2463,6 +2463,8 @@ class NowPlayingFrame(BuildFrame):
             player = "lastfm"
         elif self.NP_mpris.get_active():
             player = "mpris"
+        elif self.NP_listenbrainz.get_active():
+            player = "listenbrainz"
         elif self.NP_other.get_active():
             player = "other"
 
@@ -2478,6 +2480,8 @@ class NowPlayingFrame(BuildFrame):
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)
+        elif player == 'listenbrainz':
+            self.NP_listenbrainz.set_active(True)
         elif player == "other":
             self.NP_other.set_active(True)
         else:
@@ -2492,6 +2496,10 @@ class NowPlayingFrame(BuildFrame):
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
             self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
+
+        elif self.NP_listenbrainz.get_active():
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
+            self.player_input.set_text(_("Username:"))
 
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
