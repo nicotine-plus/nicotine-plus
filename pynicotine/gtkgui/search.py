@@ -923,9 +923,9 @@ class Search:
     def update_filter_counter(self, count):
 
         if count > 0:
-            self.FilterLabel.set_label(_("Result _Filters [%d]") % count)
+            self.FilterLabel.set_label(_("_Result Filters [%d]") % count)
         else:
-            self.FilterLabel.set_label(_("Result _Filters"))
+            self.FilterLabel.set_label(_("_Result Filters"))
 
         self.FilterLabel.set_tooltip_text("%d active filter(s)" % count)
 
