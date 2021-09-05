@@ -270,7 +270,6 @@
                 <child>
                   <object class="GtkImage" id="ExpandDownloadsImage">
                     <property name="visible">1</property>
-                    <property name="icon-name">go-down-symbolic</property>
                   </object>
                 </child>
               </object>
@@ -425,7 +424,6 @@
                 <child>
                   <object class="GtkImage" id="ExpandUploadsImage">
                     <property name="visible">1</property>
-                    <property name="icon-name">go-down-symbolic</property>
                   </object>
                 </child>
               </object>
@@ -636,7 +634,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="tooltip-text" translatable="yes">Opens a local list of shared files that was previously saved to disk</property>
-                    <property name="label" translatable="yes">_Open Share</property>
+                    <property name="label" translatable="yes">_Open List</property>
                     <property name="use-underline">1</property>
                   </object>
                 </child>
@@ -1434,7 +1432,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Downloading (speed / active downloads)</property>
+                    <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
                     <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
                     <child>
                       <object class="GtkBox">
@@ -1461,7 +1459,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Uploading (speed / active uploads)</property>
+                    <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
                     <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
                     <child>
                       <object class="GtkBox">

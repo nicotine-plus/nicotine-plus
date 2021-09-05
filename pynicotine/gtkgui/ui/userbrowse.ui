@@ -197,13 +197,11 @@
                                 <child>
                                   <object class="GtkToggleButton" id="ExpandButton">
                                     <property name="visible">1</property>
-                                    <property name="active">1</property>
                                     <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                     <signal name="clicked" handler="on_expand" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="expand">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">go-down-symbolic</property>
                                       </object>
                                     </child>
                                   </object>

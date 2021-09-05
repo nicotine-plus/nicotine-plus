@@ -326,6 +326,7 @@ class UserBrowse:
                 (">" + _("User"), self.user_popup)
             )
 
+        self.ExpandButton.set_active(True)
         self.update_visuals()
 
     def set_label(self, label):

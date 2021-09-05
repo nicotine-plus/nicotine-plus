@@ -2081,6 +2081,7 @@ class NicotineFrame:
 
         choose_file(
             parent=self.MainWindow,
+            title=_("Select a Saved Shares List File"),
             callback=self.on_load_from_disk_selected,
             initialdir=sharesdir,
             multiple=True
