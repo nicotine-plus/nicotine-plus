@@ -108,6 +108,9 @@ class PluginHandler:
                 log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
                 return False
 
+            # Add plugin folder to path in order to support relative imports
+            sys.path.append(path)
+
             import importlib.util
             spec = importlib.util.spec_from_file_location(plugin_name, os.path.join(path, '__init__.py'))
             plugin = importlib.util.module_from_spec(spec)
@@ -185,6 +188,7 @@ class PluginHandler:
 
         try:
             plugin = self.enabled_plugins[plugin_name]
+            path = self.__findplugin(plugin_name)
 
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
@@ -196,6 +200,9 @@ class PluginHandler:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
+
+            if path in sys.path:
+                sys.path.remove(path)
 
             del self.enabled_plugins[plugin_name]
             del plugin
