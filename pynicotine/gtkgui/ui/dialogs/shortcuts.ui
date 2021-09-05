@@ -8,7 +8,7 @@
       <object class="GtkShortcutsSection">
         <property name="visible">1</property>
         <property name="section-name">shortcuts</property>
-        <property name="max-height">14</property>
+        <property name="max-height">13</property>
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
@@ -66,13 +66,6 @@
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;l</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">&lt;Primary&gt;r</property>
-                <property name="title" translatable="yes">Show Room List</property>
               </object>
             </child>
             <child>
