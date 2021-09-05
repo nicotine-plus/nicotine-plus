@@ -136,7 +136,6 @@ class NicotineFrame:
         """ GTK Settings """
 
         gtk_settings = Gtk.Settings.get_default()
-        gtk_settings.set_property("gtk-dialogs-use-header", config.sections["ui"]["header_bar"])
 
         dark_mode = config.sections["ui"]["dark_mode"]
         global_font = config.sections["ui"]["globalfont"]
@@ -147,9 +146,15 @@ class NicotineFrame:
         if global_font and global_font != "Normal":
             gtk_settings.set_property("gtk-font-name", global_font)
 
-        # Left align window controls on macOS
         if sys.platform == "darwin":
+            # Left align window controls on macOS
             gtk_settings.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+
+            # Disable header bar in macOS for now due to GTK 3 performance issues
+            gtk_settings.set_property("gtk-dialogs-use-header", False)
+
+        else:
+            gtk_settings.set_property("gtk-dialogs-use-header", config.sections["ui"]["header_bar"])
 
         """ Actions and Menu """
 
@@ -1075,6 +1080,7 @@ class NicotineFrame:
 
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
+        action.set_enabled(sys.platform != "darwin")  # Disable header bar on macOS for now due to GTK 3 perf issues
         action.connect("change-state", self.on_show_header_bar)
         self.MainWindow.add_action(action)
 
@@ -1539,7 +1545,7 @@ class NicotineFrame:
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
-        if config.sections["ui"]["header_bar"]:
+        if config.sections["ui"]["header_bar"] and sys.platform != "darwin":
             self.set_header_bar(page_id)
 
         else:
