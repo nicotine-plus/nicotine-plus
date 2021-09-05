@@ -65,7 +65,7 @@
             <property name="visible">1</property>
             <property name="halign">center</property>
             <property name="margin-top">6</property>
-            <signal name="clicked" handler="on_close" swapped="no"/>
+            <signal name="clicked" handler="on_cancel" swapped="no"/>
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
