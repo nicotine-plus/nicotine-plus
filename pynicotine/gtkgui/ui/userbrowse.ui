@@ -19,7 +19,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox" id="RecommendationsVbox">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="column-spacing">1</property>
             <property name="row-spacing">1</property>
