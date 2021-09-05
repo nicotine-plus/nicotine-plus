@@ -40,6 +40,13 @@ def install_pacman():
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
 
+def install_pypi():
+    """ Install dependencies from PyPi """
+
+    packages = ["stdlib_list"]
+    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
+
+
 def install_pyinstaller():
     """ Install PyInstaller dependency. Use an older version, and rebuild bootloader
     to reduce false positives in anti-malware software. """
@@ -58,4 +65,5 @@ def install_pyinstaller():
 
 if __name__ == '__main__':
     install_pacman()
+    install_pypi()
     install_pyinstaller()

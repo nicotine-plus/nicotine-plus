@@ -18,8 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import glob
-import os
 import sys
 
 from ctypes.util import find_library
@@ -32,6 +30,7 @@ import pynicotine.plugins
 
 from pynicotine.config import config
 from setup import generate_translations
+from stdlib_list import stdlib_list
 
 
 """ Add Contents """
@@ -51,9 +50,10 @@ if sys.platform == 'win32':
         raise Exception("No SSL libraries found")
 
 
-# Add plugins and SSL support
+# Add plugins, SSL support and standard modules (for plugins)
 hiddenimports = ["certifi"] + \
-    [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
+    [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg] + \
+    list(stdlib_list())
 
 
 # GTK Builder files, plugins, geoip database, translations
