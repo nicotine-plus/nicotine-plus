@@ -201,8 +201,19 @@ class PluginHandler:
 
             self.update_completions(plugin)
 
+            # Remove references to relative modules
             if path in sys.path:
                 sys.path.remove(path)
+
+            for name, module in list(sys.modules.items()):
+                try:
+                    if module.__file__.startswith(path):
+                        sys.modules.pop(name, None)
+                        del module
+
+                except AttributeError:
+                    # Builtin module
+                    continue
 
             del self.enabled_plugins[plugin_name]
             del plugin
