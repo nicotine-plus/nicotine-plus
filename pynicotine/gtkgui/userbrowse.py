@@ -183,7 +183,7 @@ class UserBrowse:
         self.files = {}
         self.totalsize = 0
 
-        self.dir_store = Gtk.TreeStore(str, str)
+        self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
@@ -489,8 +489,7 @@ class UserBrowse:
                     subfolder = "[PRIVATE FOLDER]  " + subfolder
 
                 self.directories[current_path] = self.dir_store.insert_with_values(
-                    parent, -1, self.dir_column_numbers,
-                    [subfolder, current_path]
+                    parent, -1, self.dir_column_numbers, [subfolder]
                 )
 
             for filedata in files:
@@ -518,7 +517,17 @@ class UserBrowse:
 
             self.queued_folder = None
 
-    def set_directory(self, directory):
+    def set_directory(self, iter_data):
+
+        directory = None
+
+        for d, i in self.directories.items():
+            if i.user_data == iter_data:
+                directory = d
+                break
+
+        if not directory:
+            return
 
         # Temporarily disable sorting for improved performance
         self.file_store.set_default_sort_func(lambda *args: 0)
@@ -668,8 +677,7 @@ class UserBrowse:
         if iterator is None:
             return
 
-        directory = model.get_value(iterator, 1)
-        self.set_directory(directory)
+        self.set_directory(iterator.user_data)
 
     def on_file_properties(self, *args):
 
