@@ -22,6 +22,7 @@
 
 import os
 import sys
+import threading
 
 from ast import literal_eval
 from time import time
@@ -297,6 +298,23 @@ class PluginHandler:
 
     def _trigger_command(self, command, source, args, public_command):
 
+        def excepthook(args):
+            from traceback import extract_stack
+            from traceback import extract_tb
+            from traceback import format_list
+
+            log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                      "Trace: %(trace)s\nProblem area:%(area)s"), {
+                'module': module,
+                'errortype': sys.exc_info()[0],
+                'error': sys.exc_info()[1],
+                'trace': ''.join(format_list(extract_stack())),
+                'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
+            })
+
+        default_handler = threading.excepthook
+        threading.excepthook = excepthook
+
         for module, plugin in self.enabled_plugins.items():
             try:
                 if plugin is None:
@@ -328,19 +346,9 @@ class PluginHandler:
                         {'module': module, 'value': str(return_value)})
 
             except Exception:
-                from traceback import extract_stack
-                from traceback import extract_tb
-                from traceback import format_list
+                excepthook(None)
 
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-                          "Trace: %(trace)s\nProblem area:%(area)s"), {
-                    'module': module,
-                    'errortype': sys.exc_info()[0],
-                    'error': sys.exc_info()[1],
-                    'trace': ''.join(format_list(extract_stack())),
-                    'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
-                })
-
+        threading.excepthook = default_handler
         return False
 
     def trigger_event(self, function_name, args):
