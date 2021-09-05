@@ -25,6 +25,7 @@ import sys
 import threading
 
 from ast import literal_eval
+from contextlib import contextmanager
 from time import time
 
 from pynicotine import slskmessages
@@ -296,9 +297,41 @@ class PluginHandler:
     def trigger_private_command_event(self, user, command, args):
         return self._trigger_command(command, user, args, public_command=False)
 
+    @contextmanager
+    def thread_safe_excep_handling(self, hook):
+        try:
+            if sys.version_info[1] >= 8:
+                def excepthook(args):
+                    hook()
+                default_hook = threading.excepthook
+                threading.excepthook = excepthook
+                yield
+            else:
+                default_init = threading.Thread.__init__
+
+                def init(self, *args, **kwargs):
+                    default_init(self, *args, **kwargs)
+                    run_old = self.run
+                    def run_with_except_hook(*args, **kw):
+                        try:
+                            run_old(*args, **kw)
+                        except Exception:
+                            hook()
+                    self.run = run_with_except_hook
+                threading.Thread.__init__ = init
+                yield
+        except Exception:
+            # Catches errors not only in here but also in the context of the with statement where this is used
+            hook()
+        finally:
+            if sys.version_info[1] >= 8:
+                threading.excepthook = default_hook
+            else:
+                threading.Thread.__init__ = default_init
+
     def _trigger_command(self, command, source, args, public_command):
 
-        def excepthook(args):
+        def excepthook():
             from traceback import extract_stack
             from traceback import extract_tb
             from traceback import format_list
@@ -312,11 +345,9 @@ class PluginHandler:
                 'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
             })
 
-        default_handler = threading.excepthook
-        threading.excepthook = excepthook
 
         for module, plugin in self.enabled_plugins.items():
-            try:
+            with self.thread_safe_excep_handling(excepthook):
                 if plugin is None:
                     continue
 
@@ -344,11 +375,6 @@ class PluginHandler:
 
                 log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
                         {'module': module, 'value': str(return_value)})
-
-            except Exception:
-                excepthook(None)
-
-        threading.excepthook = default_handler
         return False
 
     def trigger_event(self, function_name, args):
