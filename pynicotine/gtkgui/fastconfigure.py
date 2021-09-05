@@ -72,6 +72,9 @@ class FastConfigureAssistant(object):
 
     def show(self):
 
+        if config.need_config():
+            self.cancel_button.hide()
+
         # userpasspage
         self.username.set_text(
             config.sections["server"]["login"]
