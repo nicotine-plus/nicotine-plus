@@ -159,11 +159,6 @@ class UserBrowse:
         load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
-        if Gtk.get_major_version() == 4:
-            self.MainPaned.set_resize_start_child(True)
-        else:
-            self.MainPaned.child_set_property(self.FolderPane, "resize", True)
-
         self.user = user
         self.conn = None
         self.local_shares_type = None
