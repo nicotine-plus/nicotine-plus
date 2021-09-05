@@ -49,6 +49,7 @@ def set_dialog_properties(dialog, parent, quit_callback=None, modal=True):
             dialog.connect("close-request", quit_callback)
     else:
         dialog.set_property("window-position", Gtk.WindowPosition.CENTER_ON_PARENT)
+        dialog.set_type_hint(Gdk.WindowTypeHint.DIALOG)
 
         if quit_callback:
             dialog.connect("delete-event", quit_callback)
