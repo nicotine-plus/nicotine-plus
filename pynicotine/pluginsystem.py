@@ -165,6 +165,7 @@ class PluginHandler:
 
         except Exception:
             from traceback import format_exc
+            self.unload_plugin(plugin_name)
             log.add(_("Unable to enable plugin %(module)s\n%(exc_trace)s"),
                     {'module': plugin_name, 'exc_trace': format_exc()})
             return False
@@ -182,13 +183,31 @@ class PluginHandler:
 
         return pluginlist
 
+    def unload_plugin(self, plugin_name):
+        path = self.__findplugin(plugin_name)
+        if not path:
+            return
+
+        # Remove references to relative modules
+        if path in sys.path:
+            sys.path.remove(path)
+
+        for name, module in list(sys.modules.items()):
+            try:
+                if module.__file__.startswith(path):
+                    sys.modules.pop(name, None)
+                    del module
+
+            except AttributeError:
+                # Builtin module
+                continue
+
     def disable_plugin(self, plugin_name):
         if plugin_name not in self.enabled_plugins:
             return False
 
         try:
             plugin = self.enabled_plugins[plugin_name]
-            path = self.__findplugin(plugin_name)
 
             log.add(_("Disabled plugin {}".format(plugin.__name__)))
             plugin.disable()
@@ -200,20 +219,7 @@ class PluginHandler:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
-
-            # Remove references to relative modules
-            if path in sys.path:
-                sys.path.remove(path)
-
-            for name, module in list(sys.modules.items()):
-                try:
-                    if module.__file__.startswith(path):
-                        sys.modules.pop(name, None)
-                        del module
-
-                except AttributeError:
-                    # Builtin module
-                    continue
+            self.unload_plugin(plugin_name)
 
             del self.enabled_plugins[plugin_name]
             del plugin
