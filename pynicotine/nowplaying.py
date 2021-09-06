@@ -73,6 +73,8 @@ class NowPlaying:
         try:
             if player == "lastfm":
                 result = self.lastfm(command)
+            elif player == 'listenbrainz':
+                result = self.listenbrainz(command)
             elif player == "other":
                 result = self.other(command)
             elif player == "mpris":
@@ -258,6 +260,43 @@ class NowPlaying:
             self.title['nowplaying'] += " - " + self.title['title']
 
         return True
+
+    def listenbrainz(self, username):
+        """ Function to get the currently playing song listenbrainz api """
+
+        import json
+
+        if not username:
+            log.add_important_error(_('listenbrainz: Please provide your listenbrainz username'))
+            return None
+
+        try:
+            response = http_request('https', 'api.listenbrainz.org',
+                                    '/1/user/{}/playing-now'.format(username),
+                                    headers={'User-Agent': 'Nicotine+'})
+
+        except Exception as error:
+            log.add_important_error(_('listenbrainz: Could not connect to listenbrainz: %(error)s'), {'error': error})
+            return None
+
+        try:
+            json_api = json.loads(response)['payload']
+            if not json_api['playing_now']:
+                log.add_important_error(_('listenbrainz: You don\'t seem to be listening to anything right now'))
+                return None
+            track = json_api['listens'][0]['track_metadata']
+
+            self.title['artist'] = track['artist_name']
+            self.title['title'] = track['track_name']
+            self.title['album'] = track['release_name']
+            self.title['nowplaying'] = '%s: %s - %s - %s' % (
+                _('Playing now'), self.title['artist'], self.title['album'], self.title['title'])
+
+            return True
+        except Exception:
+            log.add_important_error(_('listenbrainz: Could not get current track from listenbrainz: %(error)s'),
+                                    {'error': str(response)})
+        return None
 
     def other(self, command):
 
