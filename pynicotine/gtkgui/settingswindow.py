@@ -2765,11 +2765,10 @@ class PluginsFrame(BuildFrame):
             config_name = plugin.lower()
 
             for name, data in options.items():
-                if config_name not in config.sections["plugins"] or name not in config.sections["plugins"][config_name]:
-                    if config_name not in config.sections["plugins"]:
-                        print("No1 " + config_name + ", " + repr(list(config.sections["plugins"].keys())))
-                    elif name not in config.sections["plugins"][config_name]:
-                        print("No2 " + name + ", " + repr(list(config.sections["plugins"][config_name].keys())))
+                if config_name not in config.sections["plugins"]:
+                    continue
+
+                if name not in config.sections["plugins"][config_name]:
                     continue
 
                 value = config.sections["plugins"][config_name][name]
@@ -2896,7 +2895,7 @@ class PluginsFrame(BuildFrame):
                     container.add(button_widget)
 
                 else:
-                    print("Unknown setting type '%s', data '%s'" % (name, data))
+                    log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
 
             if Gtk.get_major_version() == 3:
                 self.show_all()
