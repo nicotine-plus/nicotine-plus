@@ -271,7 +271,8 @@ class NowPlaying:
             return None
 
         try:
-            response = http_request('https', 'api.listenbrainz.org', f'/1/user/{username}/playing-now',
+            response = http_request('https', 'api.listenbrainz.org',
+                                    '/1/user/{}/playing-now'.format(username),
                                     headers={'User-Agent': 'Nicotine+'})
 
         except Exception as error:
