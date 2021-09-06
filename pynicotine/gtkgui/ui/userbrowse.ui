@@ -202,6 +202,7 @@
                                     <child>
                                       <object class="GtkImage" id="expand">
                                         <property name="visible">1</property>
+                                        <property name="icon-name">go-down-symbolic</property>
                                       </object>
                                     </child>
                                   </object>
