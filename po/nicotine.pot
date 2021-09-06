@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-06 21:13+0200\n"
+"POT-Creation-Date: 2021-09-07 02:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3243,12 +3243,12 @@ msgid ""
 msgstr ""
 
 #: pynicotine/nowplaying.py:138
-msgid "lastfm: Please provide both your lastfm username and API key"
+msgid "Last.fm: Please provide both your Last.fm username and API key"
 msgstr ""
 
 #: pynicotine/nowplaying.py:148
 #, python-format
-msgid "lastfm: Could not connect to audioscrobbler: %(error)s"
+msgid "Last.fm: Could not connect to Audioscrobbler: %(error)s"
 msgstr ""
 
 #: pynicotine/nowplaying.py:159
@@ -3257,11 +3257,11 @@ msgstr ""
 
 #: pynicotine/nowplaying.py:162
 #, python-format
-msgid "lastfm: Could not get recent track from audioscrobbler: %(error)s"
+msgid "Last.fm: Could not get recent track from Audioscrobbler: %(error)s"
 msgstr ""
 
 #: pynicotine/nowplaying.py:199
-msgid "MPRIS: Could not find a suitable MPRIS player."
+msgid "MPRIS: Could not find a suitable MPRIS player"
 msgstr ""
 
 #: pynicotine/nowplaying.py:204
@@ -3271,7 +3271,7 @@ msgstr ""
 
 #: pynicotine/nowplaying.py:207
 #, python-format
-msgid "Auto-detected MPRIS player: %s."
+msgid "Auto-detected MPRIS player: %s"
 msgstr ""
 
 #: pynicotine/nowplaying.py:221
@@ -3280,28 +3280,28 @@ msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr ""
 
 #: pynicotine/nowplaying.py:270
-msgid "listenbrainz: Please provide your listenbrainz username"
+msgid "ListenBrainz: Please provide your ListenBrainz username"
 msgstr ""
 
 #: pynicotine/nowplaying.py:279
 #, python-format
-msgid "listenbrainz: Could not connect to listenbrainz: %(error)s"
+msgid "ListenBrainz: Could not connect to ListenBrainz: %(error)s"
 msgstr ""
 
-#: pynicotine/nowplaying.py:285
-msgid "listenbrainz: You don't seem to be listening to anything right now"
+#: pynicotine/nowplaying.py:286
+msgid "ListenBrainz: You don't seem to be listening to anything right now"
 msgstr ""
 
-#: pynicotine/nowplaying.py:293
+#: pynicotine/nowplaying.py:295
 msgid "Playing now"
 msgstr ""
 
-#: pynicotine/nowplaying.py:297
+#: pynicotine/nowplaying.py:300
 #, python-format
-msgid "listenbrainz: Could not get current track from listenbrainz: %(error)s"
+msgid "ListenBrainz: Could not get current track from ListenBrainz: %(error)s"
 msgstr ""
 
-#: pynicotine/nowplaying.py:310
+#: pynicotine/nowplaying.py:315
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr ""
