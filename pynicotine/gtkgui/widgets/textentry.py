@@ -19,7 +19,6 @@
 from os.path import commonprefix
 
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
@@ -608,17 +607,3 @@ class TextSearchBar:
     def hide_search_bar(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()
-
-
-def clear_entry(entry):
-
-    completion = entry.get_completion()
-    model = completion.get_model()
-
-    # Temporarily specify dummy model to avoid completion popup
-    completion.set_model(Gtk.ListStore())
-    entry.set_text("")
-
-    # Add slight delay before restoring model, otherwise popup will appear
-    if model.get_iter_first():
-        GLib.timeout_add(100, completion.set_model, model)

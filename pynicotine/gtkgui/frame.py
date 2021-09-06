@@ -70,7 +70,6 @@ from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import clear_entry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import append_line
 from pynicotine.gtkgui.widgets.textview import scroll_bottom
@@ -2029,7 +2028,7 @@ class NicotineFrame:
 
     def on_search(self, *args):
         self.search.on_search()
-        clear_entry(self.SearchEntry)
+        self.SearchEntry.set_text("")
 
     """ User Info """
 
@@ -2044,7 +2043,7 @@ class NicotineFrame:
             return
 
         self.np.userinfo.request_user_info(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     """ User Browse """
 
@@ -2056,7 +2055,7 @@ class NicotineFrame:
             return
 
         self.np.userbrowse.browse_user(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, data):
 
@@ -2109,7 +2108,7 @@ class NicotineFrame:
             return
 
         self.np.privatechats.show_user(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     def on_create_room_response(self, dialog, response_id, room):
 
@@ -2140,7 +2139,7 @@ class NicotineFrame:
         else:
             self.np.queue.append(slskmessages.JoinRoom(room))
 
-        clear_entry(widget)
+        widget.set_text("")
         return True
 
     def update_completions(self):
