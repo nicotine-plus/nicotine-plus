@@ -266,6 +266,7 @@ class PluginHandler:
             self.enable_plugin(plugin)
 
     def plugin_settings(self, plugin_name, plugin):
+        plugin_name = plugin_name.lower()
         try:
             if not plugin.settings:
                 return

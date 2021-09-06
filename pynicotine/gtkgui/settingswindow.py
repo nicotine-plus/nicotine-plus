@@ -2754,16 +2754,17 @@ class PluginsFrame(BuildFrame):
 
             self.options = options
             self.plugin = plugin
+            config_name = plugin.lower()
 
             for name, data in options.items():
-                if plugin not in config.sections["plugins"] or name not in config.sections["plugins"][plugin]:
-                    if plugin not in config.sections["plugins"]:
-                        print("No1 " + plugin + ", " + repr(list(config.sections["plugins"].keys())))
-                    elif name not in config.sections["plugins"][plugin]:
-                        print("No2 " + name + ", " + repr(list(config.sections["plugins"][plugin].keys())))
+                if config_name not in config.sections["plugins"] or name not in config.sections["plugins"][config_name]:
+                    if config_name not in config.sections["plugins"]:
+                        print("No1 " + config_name + ", " + repr(list(config.sections["plugins"].keys())))
+                    elif name not in config.sections["plugins"][config_name]:
+                        print("No2 " + name + ", " + repr(list(config.sections["plugins"][config_name].keys())))
                     continue
 
-                value = config.sections["plugins"][plugin][name]
+                value = config.sections["plugins"][config_name][name]
 
                 if data["type"] in ("integer", "int", "float"):
                     container = self.generate_widget_container(data["description"])
@@ -2779,7 +2780,7 @@ class PluginsFrame(BuildFrame):
                     self.tw[name] = Gtk.SpinButton.new(
                         Gtk.Adjustment.new(0, minimum, maximum, stepsize, 10, 0),
                         1, decimals)
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     container.add(self.tw[name])
 
@@ -2787,7 +2788,7 @@ class PluginsFrame(BuildFrame):
                     container = Gtk.Box()
 
                     self.tw[name] = Gtk.CheckButton.new_with_label(data["description"])
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     self.get_content_area().add(container)
                     container.add(self.tw[name])
@@ -2820,7 +2821,7 @@ class PluginsFrame(BuildFrame):
                         vbox.add(radio)
 
                     self.tw[name].group_radios = group_radios
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                 elif data["type"] in ("dropdown",):
                     container = self.generate_widget_container(data["description"])
@@ -2830,7 +2831,7 @@ class PluginsFrame(BuildFrame):
                     for label in data["options"]:
                         self.tw[name].append_text(label)
 
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     container.add(self.tw[name])
 
@@ -2839,7 +2840,7 @@ class PluginsFrame(BuildFrame):
 
                     self.tw[name] = entry = Gtk.Entry()
                     entry.set_hexpand(True)
-                    self.settings.set_widget(entry, config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(entry, config.sections["plugins"][config_name][name])
 
                     container.add(entry)
 
@@ -2847,7 +2848,7 @@ class PluginsFrame(BuildFrame):
                     container = self.generate_widget_container(data["description"], vertical=True)
 
                     self.tw[name] = Gtk.TextView()
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     scrolled_window = Gtk.ScrolledWindow()
                     scrolled_window.set_hexpand(True)
@@ -2882,7 +2883,7 @@ class PluginsFrame(BuildFrame):
                         chooser = None
 
                     self.tw[name] = FileChooserButton(button_widget, self, chooser)
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][plugin][name])
+                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     container.add(button_widget)
 
@@ -2911,7 +2912,7 @@ class PluginsFrame(BuildFrame):
                 for name in self.options:
                     value = self.settings.get_widget_data(self.tw[name])
                     if value is not None:
-                        config.sections["plugins"][self.plugin][name] = value
+                        config.sections["plugins"][self.plugin.lower()][name] = value
 
                 self.settings.frame.np.pluginhandler.plugin_settings(
                     self.plugin, self.settings.frame.np.pluginhandler.enabled_plugins[self.plugin])
