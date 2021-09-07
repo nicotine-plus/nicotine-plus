@@ -2972,7 +2972,7 @@ class PluginsFrame(BuildFrame):
             return
 
         plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
-        dialog = self.PluginPreferencesDialog(self, plugin_info["Name"])
+        dialog = self.PluginPreferencesDialog(self, plugin_info.get("Name", self.selected_plugin))
 
         dialog.add_options(
             self.selected_plugin,
@@ -2992,14 +2992,14 @@ class PluginsFrame(BuildFrame):
         self.selected_plugin = model.get_value(iterator, 2)
         info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
 
-        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info['Version']})
-        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
-        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
+        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get('Version', '-')})
+        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get('Name', self.selected_plugin)})
+        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get('Authors', '-'))})
 
         self.PluginDescription.get_buffer().set_text("")
         append_line(self.PluginDescription,
                     "%(description)s" % {
-                        "description": info['Description'].replace(r'\n', "\n")
+                        "description": info.get('Description', _('No description provided')).replace(r'\n', "\n")
                     },
                     showstamp=False,
                     scroll=False)
@@ -3047,7 +3047,7 @@ class PluginsFrame(BuildFrame):
                 continue
             enabled = (plugin in config.sections["plugins"]["enabled"])
             self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
-                -1, self.column_numbers, [enabled, info['Name'], plugin]
+                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
             )
 
         return {}
