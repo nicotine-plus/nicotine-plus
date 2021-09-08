@@ -30,7 +30,6 @@ This is the actual client code. Actual GUI classes are in the separate modules
 """
 
 import os
-import sys
 import threading
 import time
 
@@ -269,7 +268,7 @@ class NicotineCore:
 
         log.add_debug("Loading Nicotine+ %(nic_version)s, using Python %(py_version)s" % {
             "nic_version": config.version,
-            "py_version": sys.version
+            "py_version": config.python_version
         })
 
         self.ui_callback = ui_callback

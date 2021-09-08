@@ -130,6 +130,9 @@ class NicotineFrame:
 
             config.load_config()
 
+        config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+        log.add_debug("Loading GTK %s", config.gtk_version)
+
         """ GTK Settings """
 
         gtk_settings = Gtk.Settings.get_default()
@@ -1013,11 +1016,7 @@ class NicotineFrame:
         else:
             self.AboutDialog.connect("response", lambda x, y: x.destroy())
 
-        self.AboutDialog.set_version(
-            config.version + "  •  GTK %s.%s.%s" %
-            (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-        )
-
+        self.AboutDialog.set_version(config.version + "  •  GTK " + config.gtk_version)
         self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_about_uri(self, widget, uri):
@@ -2568,7 +2567,10 @@ class NicotineFrame:
 
         from traceback import format_tb
         loop = GLib.MainLoop()
-        error = "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, exc_value, ''.join(format_tb(exc_traceback)))
+        error = ("\n\nNicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
+                 "Type: %s\nValue: %s\nTraceback: %s" %
+                 (config.version, config.gtk_version, config.python_version, exc_type,
+                  exc_value, ''.join(format_tb(exc_traceback))))
 
         option_dialog(
             parent=self.application.get_active_window(),

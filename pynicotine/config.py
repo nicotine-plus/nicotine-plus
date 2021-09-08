@@ -56,6 +56,8 @@ class Config:
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
         self.version = "3.2.0.dev1"
+        self.python_version = sys.version
+        self.gtk_version = ""
 
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
