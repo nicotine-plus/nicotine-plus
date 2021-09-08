@@ -50,11 +50,10 @@ class TextView:
 
         else:
             self.gesture_click = Gtk.GestureMultiPress.new(self.textview)
+            self.textview.connect("size-allocate", self.on_size_allocate)
 
         self.gesture_click.connect("pressed", self._callback_pressed)
         self.gesture_click.connect("released", self._callback_released)
-
-        self.textview.connect("size-allocate", self.on_size_allocate)
 
     def scroll_bottom(self):
 
