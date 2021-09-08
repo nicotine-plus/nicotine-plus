@@ -40,7 +40,7 @@ class TextView:
         self.textview = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_parent()
-        self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
+        self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         self.tag_urls = []
         self.pressed_x = 0
