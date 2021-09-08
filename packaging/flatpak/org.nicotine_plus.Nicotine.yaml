@@ -1,7 +1,7 @@
 ---
 app-id: org.nicotine_plus.Nicotine
 runtime: org.freedesktop.Platform
-runtime-version: '20.08'
+runtime-version: '21.08'
 sdk: org.freedesktop.Sdk
 command: nicotine
 

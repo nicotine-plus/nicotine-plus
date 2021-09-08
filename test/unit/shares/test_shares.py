@@ -50,7 +50,7 @@ class SharesTest(unittest.TestCase):
 
         # Verify that shared files were added
         self.assertIn(('dummy_file', 0, None, None), shares.share_dbs["files"]["Shares"])
-        self.assertIn(('nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["files"]["Shares"])
+        self.assertIn(('nicotinetestdata.mp3', 80919, None, 5), shares.share_dbs["files"]["Shares"])
 
         # Verify that expected folder is empty
         self.assertEqual(len(shares.share_dbs["files"]["Shares\\folder2"]), 0)
@@ -114,7 +114,7 @@ class SharesTest(unittest.TestCase):
         shares = Shares(None, config, deque(), None)
         shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
-        self.assertIn(('nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["files"]["Downloaded"])
-        self.assertIn(('Downloaded\\nicotinetestdata.mp3', 80919, (128, 0), 5), shares.share_dbs["fileindex"].values())
+        self.assertIn(('nicotinetestdata.mp3', 80919, None, 5), shares.share_dbs["files"]["Downloaded"])
+        self.assertIn(('Downloaded\\nicotinetestdata.mp3', 80919, None, 5), shares.share_dbs["fileindex"].values())
 
         shares.close_shares("normal")
