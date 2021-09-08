@@ -151,12 +151,17 @@ def set_widget_font(widget, font):
     widget.set_property("font", font)
 
 
-def update_tag_visuals(tag, color):
+def update_tag_visuals(tag, color=None, font=None):
 
     config_ui = config.sections["ui"]
 
+    if font:
+        set_widget_font(tag, config_ui[font])
+
+    if color is None:
+        return
+
     set_widget_color(tag, config_ui[color])
-    set_widget_font(tag, config_ui["chatfont"])
 
     # URLs
     if color == "urlcolor":
@@ -183,7 +188,7 @@ def update_tag_visuals(tag, color):
             tag.set_property("underline", Pango.Underline.NONE)
 
 
-def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=True):
+def update_widget_visuals(widget, list_font_target="listfont"):
 
     from pynicotine.gtkgui.widgets.textview import TextView
     config_ui = config.sections["ui"]
@@ -197,12 +202,6 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
             bg_color=config_ui["textbg"],
             fg_color=config_ui["inputcolor"]
         )
-
-    elif update_text_tags and isinstance(widget, Gtk.TextTag):
-        # Chat rooms and private chats have their own code for this
-
-        set_widget_color(widget, config_ui["chatremote"])
-        set_widget_font(widget, config_ui["chatfont"])
 
     elif isinstance(widget, TextView):
         # Update URL tag colors

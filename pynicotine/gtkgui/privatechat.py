@@ -44,7 +44,6 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
-from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
@@ -181,7 +180,7 @@ class PrivateChat:
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry,
                       controller_widget=self.Main, focus_widget=self.ChatLine)
 
-        self.chat_textview = TextView(self.ChatScroll)
+        self.chat_textview = TextView(self.ChatScroll, font="chatfont")
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
@@ -411,7 +410,7 @@ class PrivateChat:
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
-            update_widget_visuals(widget, update_text_tags=False)
+            update_widget_visuals(widget)
 
     def user_name_event(self, x, y, user):
         self.populate_user_menu(user)
@@ -437,20 +436,20 @@ class PrivateChat:
 
     def update_tags(self):
 
-        update_tag_visuals(self.tag_remote, "chatremote")
-        update_tag_visuals(self.tag_local, "chatlocal")
-        update_tag_visuals(self.tag_action, "chatme")
-        update_tag_visuals(self.tag_hilite, "chathilite")
+        self.chat_textview.update_tag(self.tag_remote)
+        self.chat_textview.update_tag(self.tag_local)
+        self.chat_textview.update_tag(self.tag_action)
+        self.chat_textview.update_tag(self.tag_hilite)
 
         color = get_user_status_color(self.status)
-        update_tag_visuals(self.tag_username, color)
+        self.chat_textview.update_tag(self.tag_username, color)
 
         if not self.frame.np.logged_in:
             color = "useroffline"
         else:
             color = "useraway" if self.frame.np.away else "useronline"
 
-        update_tag_visuals(self.tag_my_username, color)
+        self.chat_textview.update_tag(self.tag_my_username, color)
 
     def get_user_status(self, status):
 
@@ -460,7 +459,7 @@ class PrivateChat:
         self.status = status
 
         color = get_user_status_color(self.status)
-        update_tag_visuals(self.tag_username, color)
+        self.chat_textview.update_tag(self.tag_username, color)
 
     def on_close(self, *args):
 

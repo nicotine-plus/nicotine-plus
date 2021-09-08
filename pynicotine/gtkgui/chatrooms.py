@@ -48,7 +48,6 @@ from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
-from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -443,13 +442,13 @@ class ChatRoom:
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
 
-        self.log_textview = TextView(self.RoomLog)
+        self.log_textview = TextView(self.RoomLog, font="chatfont")
 
         # Chat Text Search
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry,
                       controller_widget=self.ChatView, focus_widget=self.ChatEntry)
 
-        self.chat_textview = TextView(self.ChatScroll)
+        self.chat_textview = TextView(self.ChatScroll, font="chatfont")
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,
@@ -1032,7 +1031,7 @@ class ChatRoom:
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
-            update_widget_visuals(widget, update_text_tags=False)
+            update_widget_visuals(widget)
 
         self.room_wall.update_visuals()
 
@@ -1070,15 +1069,15 @@ class ChatRoom:
             status = self.usersmodel.get_value(self.users[username], 5)
             color = get_user_status_color(status)
 
-        update_tag_visuals(self.tag_users[username], color)
+        self.chat_textview.update_tag(self.tag_users[username], color)
 
     def update_tags(self):
 
-        update_tag_visuals(self.tag_remote, "chatremote")
-        update_tag_visuals(self.tag_local, "chatlocal")
-        update_tag_visuals(self.tag_action, "chatme")
-        update_tag_visuals(self.tag_hilite, "chathilite")
-        update_tag_visuals(self.tag_log, "chatremote")
+        self.chat_textview.update_tag(self.tag_remote)
+        self.chat_textview.update_tag(self.tag_local)
+        self.chat_textview.update_tag(self.tag_action)
+        self.chat_textview.update_tag(self.tag_hilite)
+        self.chat_textview.update_tag(self.tag_log)
 
         for username in self.tag_users:
             self.update_user_tag(username)

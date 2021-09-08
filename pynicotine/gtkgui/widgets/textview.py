@@ -35,11 +35,12 @@ from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 
 class TextView:
 
-    def __init__(self, textview):
+    def __init__(self, textview, font=None):
 
         self.textview = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_parent()
+        self.font = font
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.[^\\s]+)|(mailto\\:[^\\s]+)")
 
         self.tag_urls = []
@@ -185,7 +186,11 @@ class TextView:
         tag = self.textbuffer.create_tag()
 
         if color:
-            update_tag_visuals(tag, color)
+            update_tag_visuals(tag, color=color)
+            tag.color = color
+
+        if self.font:
+            update_tag_visuals(tag, font=self.font)
 
         if url:
             if url[:4] == "www.":
@@ -199,9 +204,16 @@ class TextView:
 
         return tag
 
+    def update_tag(self, tag, color=None):
+
+        if color is None and hasattr(tag, "color"):
+            color = tag.color
+
+        update_tag_visuals(tag, color, self.font)
+
     def update_tags(self):
         for tag in self.tag_urls:
-            update_tag_visuals(tag, "urlcolor")
+            self.update_tag(tag)
 
     """ Events """
 
