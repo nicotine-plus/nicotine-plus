@@ -46,7 +46,7 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
-from pynicotine.gtkgui.widgets.textview import append_line
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
@@ -2961,6 +2961,7 @@ class PluginsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
+        self.descr_textview = TextView(self.PluginDescription)
 
     def on_add_plugins(self, widget):
 
@@ -3003,13 +3004,10 @@ class PluginsFrame(BuildFrame):
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info['Name']})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info['Authors'])})
 
-        self.PluginDescription.get_buffer().set_text("")
-        append_line(self.PluginDescription,
-                    "%(description)s" % {
-                        "description": info['Description'].replace(r'\n', "\n")
-                    },
-                    showstamp=False,
-                    scroll=False)
+        self.descr_textview.clear()
+        self.descr_textview.append_line("%(description)s" % {
+            "description": info['Description'].replace(r'\n', "\n")},
+            showstamp=False, scroll=False)
 
         self.check_properties_button(self.selected_plugin)
 

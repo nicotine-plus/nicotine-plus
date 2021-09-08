@@ -38,7 +38,6 @@ from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
-from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import load_ui_elements
@@ -48,8 +47,7 @@ from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
-from pynicotine.gtkgui.widgets.textview import append_line
-from pynicotine.gtkgui.widgets.textview import scroll_bottom
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -144,8 +142,8 @@ class ChatRooms(IconNotebook):
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not room.opened:
-                    GLib.idle_add(scroll_bottom, room.RoomLog.get_parent())
-                    GLib.idle_add(scroll_bottom, room.ChatScroll.get_parent())
+                    GLib.idle_add(room.log_textview.scroll_bottom)
+                    GLib.idle_add(room.chat_textview.scroll_bottom)
                     room.opened = True
 
                 # Remove hilite
@@ -446,9 +444,13 @@ class ChatRoom:
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
 
+        self.log_textview = TextView(self.RoomLog)
+
         # Chat Text Search
         TextSearchBar(self.ChatScroll, self.ChatSearchBar, self.ChatSearchEntry,
                       controller_widget=self.ChatView, focus_widget=self.ChatEntry)
+
+        self.chat_textview = TextView(self.ChatScroll)
 
         # Chat Entry
         self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,
@@ -521,10 +523,10 @@ class ChatRoom:
         PopupMenu(self.frame, self.RoomLog).setup(
             ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
-            ("#" + _("Copy"), self.on_copy_activity_log),
-            ("#" + _("Copy All"), self.on_copy_all_activity_log),
+            ("#" + _("Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
             ("", None),
-            ("#" + _("Clear Activity View"), self.on_clear_activity_log),
+            ("#" + _("Clear Activity View"), self.log_textview.on_clear_all_text),
             ("", None),
             ("#" + _("_Leave Room"), self.on_leave)
         )
@@ -532,13 +534,13 @@ class ChatRoom:
         PopupMenu(self.frame, self.ChatScroll).setup(
             ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
-            ("#" + _("Copy"), self.on_copy_room_log),
-            ("#" + _("Copy All"), self.on_copy_all_room_log),
+            ("#" + _("Copy"), self.chat_textview.on_copy_text),
+            ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Room Log"), self.on_view_room_log),
             ("#" + _("Delete Room Log..."), self.on_delete_room_log),
             ("", None),
-            ("#" + _("Clear Message View"), self.on_clear_messages),
+            ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
@@ -668,14 +670,14 @@ class ChatRoom:
                     tag = self.tag_action
 
                 if user != login:
-                    append_line(self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag, username=user,
-                                usertag=usertag, timestamp_format="", scroll=False)
+                    self.chat_textview.append_line(self.frame.np.privatechats.censor_chat(line), tag, username=user,
+                                                   usertag=usertag, timestamp_format="", scroll=False)
                 else:
-                    append_line(self.ChatScroll, line, tag, username=user, usertag=usertag,
-                                timestamp_format="", scroll=False)
+                    self.chat_textview.append_line(line, tag, username=user, usertag=usertag,
+                                                   timestamp_format="", scroll=False)
 
             if lines:
-                append_line(self.ChatScroll, _("--- old messages above ---"), self.tag_hilite, scroll=False)
+                self.chat_textview.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False)
 
     def populate_user_menu(self, user):
 
@@ -870,8 +872,8 @@ class ChatRoom:
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
         if user != login:
-            append_line(
-                self.ChatScroll, self.frame.np.privatechats.censor_chat(line), tag,
+            self.chat_textview.append_line(
+                self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
@@ -885,8 +887,8 @@ class ChatRoom:
                     }
                 )
         else:
-            append_line(
-                self.ChatScroll, line, tag,
+            self.chat_textview.append_line(
+                line, tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
@@ -898,7 +900,7 @@ class ChatRoom:
         if hasattr(self, "tag_" + str(message_type)):
             tag = getattr(self, "tag_" + str(message_type))
 
-        append_line(self.ChatScroll, text, tag, timestamp_format=timestamp_format)
+        self.chat_textview.append_line(text, tag, timestamp_format=timestamp_format)
 
     def show_tickers(self):
         tickers = self.tickers.get_tickers()
@@ -928,7 +930,7 @@ class ChatRoom:
 
         if not self.frame.np.network_filter.is_user_ignored(username) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(username):
-            append_line(self.RoomLog, _("%s joined the room") % username, self.tag_log)
+            self.log_textview.append_line(_("%s joined the room") % username, self.tag_log)
 
         self.add_user_row(userdata)
 
@@ -946,7 +948,7 @@ class ChatRoom:
 
         if not self.frame.np.network_filter.is_user_ignored(username) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(username):
-            append_line(self.RoomLog, _("%s left the room") % username, self.tag_log)
+            self.log_textview.append_line(_("%s left the room") % username, self.tag_log)
 
         self.usersmodel.remove(self.users[username])
         del self.users[username]
@@ -991,7 +993,7 @@ class ChatRoom:
 
         if not self.frame.np.network_filter.is_user_ignored(user) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(user):
-            append_line(self.RoomLog, action % user, self.tag_log)
+            self.log_textview.append_line(action % user, self.tag_log)
 
         self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(self.users[user], 5, status)
@@ -1128,7 +1130,7 @@ class ChatRoom:
 
         self.tickers.set_ticker([])
 
-        append_line(self.ChatScroll, _("--- disconnected ---"), self.tag_hilite)
+        self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
         self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
@@ -1155,7 +1157,7 @@ class ChatRoom:
         self.usersmodel.set_default_sort_func(lambda *args: -1)
 
         # Spit this line into chat log
-        append_line(self.ChatScroll, _("--- reconnected ---"), self.tag_hilite)
+        self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite)
 
         # Update user count
         self.count_users()
@@ -1201,18 +1203,6 @@ class ChatRoom:
         if self.room not in config.sections["logging"]["rooms"]:
             config.sections["logging"]["rooms"].append(self.room)
 
-    def on_copy_all_activity_log(self, *args):
-        copy_all_text(self.RoomLog)
-
-    def on_copy_all_room_log(self, *args):
-        copy_all_text(self.ChatScroll)
-
-    def on_copy_activity_log(self, *args):
-        self.RoomLog.emit("copy-clipboard")
-
-    def on_copy_room_log(self, *args):
-        self.ChatScroll.emit("copy-clipboard")
-
     def on_view_room_log(self, *args):
         open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
@@ -1222,8 +1212,8 @@ class ChatRoom:
 
         if response_id == Gtk.ResponseType.OK:
             delete_log(config.sections["logging"]["roomlogsdir"], self.room)
-            self.on_clear_messages()
-            self.on_clear_activity_log()
+            self.log_textview.clear()
+            self.chat_textview.clear()
 
     def on_delete_room_log(self, *args):
 
@@ -1233,12 +1223,6 @@ class ChatRoom:
             message=_('Are you sure you wish to permanently delete all logged messages for this room?'),
             callback=self.on_delete_room_log_response
         )
-
-    def on_clear_messages(self, *args):
-        self.ChatScroll.get_buffer().set_text("")
-
-    def on_clear_activity_log(self, *args):
-        self.RoomLog.get_buffer().set_text("")
 
     def on_ignore_users_settings(self, *args):
         self.frame.on_settings(page='IgnoreList')

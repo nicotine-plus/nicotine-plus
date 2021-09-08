@@ -26,7 +26,7 @@ from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.textview import append_line
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 
 
@@ -48,10 +48,12 @@ class RoomWall:
             height=600
         )
 
+        self.room_wall_textview = TextView(self.RoomWallList)
+
     def update_message_list(self):
         tickers = self.room.tickers.get_tickers()
-        append_line(
-            self.RoomWallList, "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])),
+        self.room_wall_textview.append_line(
+            "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])),
             showstamp=False, scroll=False)
 
     def clear_room_wall_message(self, update_list=True):
@@ -62,7 +64,7 @@ class RoomWall:
         login = config.sections["server"]["login"]
         self.room.tickers.remove_ticker(login)
 
-        self.RoomWallList.get_buffer().set_text("")
+        self.room_wall_textview.clear()
 
         if update_list:
             self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room.room, ""))
@@ -77,7 +79,7 @@ class RoomWall:
 
         if entry_text:
             login = config.sections["server"]["login"]
-            append_line(self.RoomWallList, "[%s] %s" % (login, entry_text), showstamp=False, scroll=False)
+            self.room_wall_textview.append_line("[%s] %s" % (login, entry_text), showstamp=False, scroll=False)
 
         self.update_message_list()
 
@@ -96,7 +98,7 @@ class RoomWall:
 
     def hide(self, *args):
 
-        self.RoomWallList.get_buffer().set_text("")
+        self.room_wall_textview.clear()
         dialog_hide(self.dialog)
         return True
 

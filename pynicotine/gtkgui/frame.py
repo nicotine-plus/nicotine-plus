@@ -53,7 +53,6 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import connect_key_press_event
-from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
@@ -71,8 +70,7 @@ from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
-from pynicotine.gtkgui.widgets.textview import append_line
-from pynicotine.gtkgui.widgets.textview import scroll_bottom
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
@@ -279,17 +277,19 @@ class NicotineFrame:
 
         """ Log """
 
+        self.log_textview = TextView(self.LogWindow)
+
         # Popup menu on the log windows
         PopupMenu(self, self.LogWindow).setup(
             ("#" + _("Find..."), self.on_find_log_window),
             ("", None),
-            ("#" + _("Copy"), self.on_copy_log_window),
-            ("#" + _("Copy All"), self.on_copy_all_log_window),
+            ("#" + _("Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Debug Logs"), self.on_view_debug_logs),
             ("#" + _("View Transfer Log"), self.on_view_transfer_log),
             ("", None),
-            ("#" + _("Clear Log View"), self.on_clear_log_window)
+            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
         )
 
         # Text Search
@@ -738,7 +738,7 @@ class NicotineFrame:
         if show:
             self.set_status_text("")
             self.DebugLog.show()
-            scroll_bottom(self.LogScrolledWindow)
+            self.log_textview.scroll_bottom()
         else:
             self.DebugLog.hide()
 
@@ -2247,18 +2247,11 @@ class NicotineFrame:
         else:
             should_scroll = True
 
-        append_line(self.LogWindow, msg, scroll=should_scroll, find_urls=False)
-
+        self.log_textview.append_line(msg, scroll=should_scroll, find_urls=False)
         return False
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
-
-    def on_copy_log_window(self, *args):
-        self.LogWindow.emit("copy-clipboard")
-
-    def on_copy_all_log_window(self, *args):
-        copy_all_text(self.LogWindow)
 
     def on_view_debug_logs(self, *args):
 
@@ -2275,9 +2268,6 @@ class NicotineFrame:
 
     def on_view_transfer_log(self, *args):
         open_log(config.sections["logging"]["transferslogsdir"], "transfers")
-
-    def on_clear_log_window(self, *args):
-        self.LogWindow.get_buffer().set_text("")
 
     def add_debug_level(self, debug_level):
 
