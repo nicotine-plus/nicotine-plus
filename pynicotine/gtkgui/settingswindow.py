@@ -807,12 +807,14 @@ class SharesFrame(BuildFrame):
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
+            virtual_name = model.get_value(iterator, 0)
             folder = model.get_value(iterator, 1)
 
             entry_dialog(
                 parent=self.p.dialog,
                 title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
+                default=virtual_name,
                 callback=self.rename_virtuals_response,
                 callback_data=iterator
             )
