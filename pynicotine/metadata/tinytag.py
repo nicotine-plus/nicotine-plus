@@ -636,7 +636,6 @@ class ID3(TinyTag):
         if fh.read(3) == b'TAG':  # check if this is an ID3 v1 tag
             def asciidecode(x):
                 return self._unpad(codecs.decode(x, 'latin1'))
-            self._bytepos_after_id3v2 = 0
             fields = fh.read(30 + 30 + 30 + 4 + 30 + 1)
             self._set_field('title', fields[:30], transfunc=asciidecode)
             self._set_field('artist', fields[30:60], transfunc=asciidecode)
@@ -650,6 +649,8 @@ class ID3(TinyTag):
             genre_id = ord(fields[124:125])
             if genre_id < len(ID3.ID3V1_GENRES):
                 self.genre = ID3.ID3V1_GENRES[genre_id]
+            if self._bytepos_after_id3v2 is None:
+                self._bytepos_after_id3v2 = 0
 
     def _parse_frame(self, fh, id3version=False):
         # ID3v2.2 especially ugly. see: http://id3.org/id3v2-00
