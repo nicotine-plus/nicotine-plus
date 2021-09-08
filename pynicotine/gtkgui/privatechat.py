@@ -27,7 +27,6 @@ from collections import deque
 from time import altzone
 from time import daylight
 
-from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -190,7 +189,7 @@ class PrivateChat:
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame, None, self.on_popup_menu)
+        self.popup_menu_user = popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu)
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
@@ -409,13 +408,9 @@ class PrivateChat:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, update_text_tags=False)
 
-    def user_name_event(self, tag, widget, event, iterator, user):
-
-        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button == 1:
-            self.populate_user_menu(user)
-            self.popup_menu_user.popup(event.x, event.y, button=event.button.button)
-
-        return True
+    def user_name_event(self, x, y, user):
+        self.populate_user_menu(user)
+        self.popup_menu_user.popup(x, y, button=1)
 
     def create_tags(self):
 
@@ -425,7 +420,7 @@ class PrivateChat:
         self.tag_hilite = self.chat_textview.create_tag("chathilite")
 
         color = get_user_status_color(self.status)
-        self.tag_username = self.chat_textview.create_tag(color, event=self.user_name_event, event_data=self.user)
+        self.tag_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=self.user)
 
         if not self.frame.np.logged_in:
             color = "useroffline"
@@ -433,7 +428,7 @@ class PrivateChat:
             color = "useraway" if self.frame.np.away else "useronline"
 
         my_username = config.sections["server"]["login"]
-        self.tag_my_username = self.chat_textview.create_tag(color, event=self.user_name_event, event_data=my_username)
+        self.tag_my_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=my_username)
 
     def update_tags(self):
 

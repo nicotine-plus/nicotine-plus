@@ -208,7 +208,7 @@ class NetworkFrame(BuildFrame):
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
-                 str(self.frame.np.waitport)]), self.p.dialog)
+                 str(self.frame.np.waitport)]))
 
     def on_toggle_upnp(self, widget, *args):
 

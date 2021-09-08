@@ -674,7 +674,7 @@ class NicotineFrame:
         url = "%(url)s" % {
             'url': 'https://www.slsknet.org/userlogin.php?username=' + login
         }
-        open_uri(url, self.MainWindow)
+        open_uri(url)
         self.np.request_check_privileges()
 
     def on_fast_configure(self, *args, show=True):
@@ -988,7 +988,7 @@ class NicotineFrame:
 
     def on_report_bug(self, *args):
         url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        open_uri(url, self.MainWindow)
+        open_uri(url)
 
     def on_about(self, *args):
 
@@ -1021,7 +1021,7 @@ class NicotineFrame:
         self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_about_uri(self, widget, uri):
-        open_uri(uri, self.MainWindow)
+        open_uri(uri)
         return True
 
     """ Actions """

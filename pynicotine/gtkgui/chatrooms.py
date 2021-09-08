@@ -26,7 +26,6 @@ import os
 
 from collections import deque
 
-from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
@@ -1025,13 +1024,9 @@ class ChatRoom:
 
         self.room_wall.update_visuals()
 
-    def user_name_event(self, tag, widget, event, iterator, user):
-
-        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button == 1:
-            self.populate_user_menu(user)
-            self.popup_menu.popup(event.x, event.y, button=event.button.button)
-
-        return True
+    def user_name_event(self, x, y, user):
+        self.populate_user_menu(user)
+        self.popup_menu.popup(x, y, button=1)
 
     def create_tags(self):
 
@@ -1047,7 +1042,7 @@ class ChatRoom:
     def get_user_tag(self, username):
 
         if username not in self.tag_users:
-            self.tag_users[username] = self.chat_textview.create_tag(event=self.user_name_event, event_data=username)
+            self.tag_users[username] = self.chat_textview.create_tag(callback=self.user_name_event, username=username)
             self.update_user_tag(username)
 
         return self.tag_users[username]

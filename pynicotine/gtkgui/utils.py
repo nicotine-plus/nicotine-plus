@@ -149,7 +149,7 @@ def delete_log_callback(path, data):
     os.remove(path)
 
 
-def open_uri(uri, window):
+def open_uri(uri):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
     As of now failures will be silently discarded."""
