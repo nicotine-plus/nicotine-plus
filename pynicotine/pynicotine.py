@@ -35,6 +35,7 @@ import threading
 import time
 
 from collections import deque
+from typing import TYPE_CHECKING
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
@@ -56,6 +57,10 @@ from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
 from pynicotine.utils import unescape
+
+if TYPE_CHECKING:
+    from typing import Callable
+    from pynicotine.gtkgui.frame import NicotineFrame
 
 
 class PeerConnection:
@@ -94,25 +99,24 @@ class NicotineCore:
     This class links the networking thread and user interface. """
 
     def __init__(self, bindip, port):
-
-        self.ui_callback = None
-        self.network_callback = None
-        self.network_filter = None
-        self.statistics = None
-        self.shares = None
-        self.search = None
-        self.transfers = None
-        self.interests = None
-        self.userbrowse = None
-        self.userinfo = None
-        self.userlist = None
-        self.privatechats = None
-        self.chatrooms = None
-        self.pluginhandler = None
-        self.now_playing = None
-        self.protothread = None
-        self.geoip = None
-        self.notifications = None
+        self.ui_callback = None  # type: NicotineFrame
+        self.network_callback = None  # type: Callable
+        self.network_filter = None  # type: NetworkFilter
+        self.statistics = None  # type: Statistics
+        self.shares = None  # type: Shares
+        self.search = None  # type: Search
+        self.transfers = None  # type: transfers.Transfers
+        self.interests = None  # type: Interests
+        self.userbrowse = None  # type: UserBrowse
+        self.userinfo = None  # type: UserInfo
+        self.userlist = None  # type: UserList
+        self.privatechats = None  # type: PrivateChats
+        self.chatrooms = None  # type: ChatRooms
+        self.pluginhandler = None  # type: PluginHandler
+        self.now_playing = None  # type: NowPlaying
+        self.protothread = None  # type: slskproto.SlskProtoThread
+        self.geoip = None  # type: GeoIP
+        self.notifications = None  # type:Notifications
 
         self.shutdown = False
         self.manualdisconnect = False

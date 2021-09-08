@@ -66,7 +66,7 @@ class Plugin(BasePlugin):
     def outgoing_user_search_event(self, users, text):
         self.log('OutgoingUserSearchEvent, users=%s, text=%s', (users, text))
 
-    def user_resolve_notification(self, user, ip_address, port, country):
+    def user_resolve_notification(self, user, ip_address, port, country=None):
         self.log('UserResolveNotification, user=%s, ip_address=%s, port=%s, country=%s',
                  (user, ip_address, port, country))
 

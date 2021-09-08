@@ -25,9 +25,17 @@ import sys
 
 from ast import literal_eval
 from time import time
+from typing import Any, Dict, Sequence, TYPE_CHECKING, Tuple, Union
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+
+if TYPE_CHECKING:
+    from typing import Callable, List
+
+    from pynicotine.config import Config
+    from pynicotine.pynicotine import NicotineCore
+    from pynicotine.gtkgui.frame import NicotineFrame
 
 
 returncode = {
@@ -594,165 +602,498 @@ class ResponseThrottle:
 
 
 class BasePlugin:
+    """The base of every plugin
+
+    Note:
+        Every `_event` and `_notification` method in this class can return
+        either a return code (int), a tuple of the argument it was given or None.
+
+        A return code decides the next action taken. If the even should be
+        further processed by other plugins etc. See
+        `pynicotine.pluginsystem.returncode` for more information.
+
+        Returning `None` continues the processing of the event by other plugins
+        without changing the arguments.
+
+        Returning a tuple of the of the original args (modified or not) will
+        updated the argument in further processing. Like so you can eg. cencor
+        profanity in incoming messages.
+
+        Because most of the time you will not need to return something special,
+        we only marked the methods with return type annotations where the
+        returned values have a bigger impact.
+
+    Attributes:
+        __name__: The name of the plugin used as a prefix when logging
+        __publiccommands__: A list of commands available in public chat rooms.
+        __privatecommands__: A list of commands available in private chats
+        settings: A dict of the settings default values. Every setting needs
+            a respective `metasettings` entry
+        metasettings: A dict of information about the settings. For every
+            key in `settings` we also have a key here with a further dict
+            including these keys:
+            - description (str): Description of the setting (multiline possible)
+            - type (str): The type of the setting as a string (decides how the
+                settings is rendered in the plugin preferences).  Depending on
+                the tpye further keys can be used.
+                - 'integer', 'int', 'float': A number field. 'float' will have
+                    2 digits after the comma. 'int', 'integer' will have none.
+                    Setting has to be either a `float` or `int`
+                    - 'minimum' ([int, float], optional): The smalles possible value
+                    - 'maximum' ([int, float], optional): The highes possible value
+                    - 'stepsize' ([int, float], optional): How much the number
+                        in/decreases per step
+                - 'bool': A checkbox. Setting has to be either `True` or `False`.
+                - 'radio': A list of radoi boxes where one can be selected.
+                    The setting has to be a single string. which is present in the
+                    options.
+                    - 'options' (Sequence[str]): A list of strings to choose from
+                - 'dropdown': The same as 'radio' but as a dropdown.
+                    - 'options' (Sequence[str]): A list of strings to choose from
+                - 'str', 'string': A single line of text input (not multiline)
+                - 'textview': A text box which accepts multiline text
+                - 'list string': A list of strings rendered in a table
+                - 'file': A file chooser. The settings is a string containing
+                    an absolute path.
+                    - 'chooser' (str, optional): 'folder', 'image' or `None`
+                        Folder, image or file picker respectively.
+    """
 
     __name__ = "BasePlugin"
-    __publiccommands__ = []
-    __privatecommands__ = []
-    settings = {}
-    metasettings = {}
+    __publiccommands__ = []   # type: List[Tuple[str, Callable[[str, str], Union[int, None]]]]
+    __privatecommands__ = []  # type: List[Tuple[str, Callable[[str, str], Union[int, None]]]]
+    settings = {}      # type: Dict[str, Union[str, int, bool, Sequence[str]]]
+    metasettings = {}  # type: Dict[str, Dict[str, str]]
 
-    def __init__(self, parent, config, core):
-
-        # Never override this function, override init() instead
+    def __init__(self, parent: PluginHandler, config: 'Config', core: 'NicotineCore'):
+        # Usually it's not needed to override this method. Use `BasePlugin.init` instead.
         self.parent = parent
         self.config = config
         self.core = core
-        self.frame = core.ui_callback
+        self.frame = core.ui_callback  # type: NicotineFrame
 
     def init(self):
-        # Custom enable function for plugins
-        pass
+        """Custom init to be used intead of `BasePlugin.__init__`
+        """
 
     def disable(self):
-        # Custom disable function for plugins
-        pass
+        """Called when disabling the plugin
 
-    def public_room_message_notification(self, room, user, line):
-        pass
+        When shutting down this method is called after the `BasePlugin.shutdown_notification`
+        but before `BasePlugin.server_disconnect_notification`.
+        """
 
-    def search_request_notification(self, searchterm, user, searchid):
-        pass
+    def public_room_message_notification(self, room: str, user: str, line: str):
+        """Message received in the all in one public chat
 
-    def distrib_search_notification(self, searchterm, user, searchid):
-        pass
+        To enable this you have to join the "Public" chat. In the "Chat Rooms"
+        register click "Room List" and enable "Show feed of public chat room
+        messages". This will open a new chat window that includes all messages
+        from all public chats.
 
-    def incoming_private_chat_event(self, user, line):
-        pass
+        Args:
+            room: In which room we received the message
+            user: The sender
+            line: The received message
+        """
 
-    def incoming_private_chat_notification(self, user, line):
-        pass
+    def search_request_notification(self, searchterm: str, user: str, searchid):
+        """We sent out or receive a filtered search request
 
-    def incoming_public_chat_event(self, room, user, line):
-        pass
+        This only includes username, room or buddies filtered search. This
+        event won't be triggered for unfiltered searches.
 
-    def incoming_public_chat_notification(self, room, user, line):
-        pass
+        Args:
+            searchterm: Search query
+            user: The initiator of the search
+            searchid: A random integer acting as identify for the search request
+        """
 
-    def outgoing_private_chat_event(self, user, line):
-        pass
+    def distrib_search_notification(self, searchterm: str, user: str, searchid):
+        """We sent out or received a search request
 
-    def outgoing_private_chat_notification(self, user, line):
-        pass
+        In comparison to `BasePlugin.search_request_notification` this will
+        get the unfiltered searches.
 
-    def outgoing_public_chat_event(self, room, line):
-        pass
+        Args:
+            searchterm: Search query
+            user: The initiator of the search
+            searchid: A random integer acting as identify for the search request
+        """
 
-    def outgoing_public_chat_notification(self, room, line):
-        pass
+    def incoming_private_chat_event(self, user: str, line: str) -> Union[int, Tuple[str, str], None]:
+        """A message from a user was received
 
-    def outgoing_global_search_event(self, text):
-        pass
+        We received a message but it has not yet been rendered to the chat log.
 
-    def outgoing_room_search_event(self, rooms, text):
-        pass
+        Args:
+            user: The sender
+            line: The received message
 
-    def outgoing_buddy_search_event(self, text):
-        pass
+        Returns:
+            Either `None`, a return code or a tuple of the user and a new message.
+            `None` prevents further processing. The message will thus not be
+            rendered and `BasePlugin.incoming_public_chat_notification` will
+            not be called.
+            !! Only the message from the triplet will be processed.
+        """
 
-    def outgoing_user_search_event(self, users, text):
-        pass
+    def incoming_private_chat_notification(self, user: str, line: str):
+        """A message from a user was received and processed
 
-    def user_resolve_notification(self, user, ip_address, port, country):
-        pass
+        Args:
+            user: The sender
+            line: The received message
+        """
+
+    def incoming_public_chat_event(self, room: str, user: str, line: str) -> Union[int, Tuple[str, str, str], None]:
+        """A message in a public chat room was received
+
+        We received a message but it has not yet been rendered to the chat log.
+
+        Args:
+            room: In which room we received the message
+            user: The sender
+            line: The received message
+
+        Returns:
+            Either `None`, a return code or a triplet of room, user and a new message.
+            `None` prevents further processing. The message will thus not be
+            rendered and `BasePlugin.incoming_public_chat_notification` will
+            not be called.
+            !! Only the message from the triplet will be processed.
+        """
+
+    def incoming_public_chat_notification(self, room: str, user: str, line: str):
+        """A message in a public chat room was received and processed
+
+        Args:
+            room: In which room we received the message
+            user: The sender
+            line: The received message
+        """
+
+    def outgoing_private_chat_event(self, user: str, line: str) -> Union[int, Tuple[str, str], None]:
+        """Before a message is sent to a user in private chat
+
+        This method is called right before `BasePlugin.outgoing_private_chat_notification`.
+
+        Args:
+            user: The recipient
+            line: The sent message
+
+        Returns:
+            Either `None`, a return code or a tuple of a user and a new line.
+            `None` prevents the message from being sent. Thus
+            `BasePlugin.outgoing_private_chat_notification` will never be called.
+            !! The user in the tuple will be ignored though.
+        """
+
+    def outgoing_private_chat_notification(self, user: str, line: str):
+        """A message was sent to a user in private chat
+
+        Args:
+            user: The recipient
+            line: The sent message
+        """
+
+    def outgoing_public_chat_event(self, room: str, line: str) -> Union[int, Tuple[str, str], None]:
+        """Before a message is sent to a public chat room
+
+        This method is called right before `BasePlugin.outgoing_public_chat_notification`.
+
+        Args:
+            room: The affected room
+            line: The message we want to send
+
+        Returns:
+            Either `None`, a return code or tuple of a room and a new line.
+            `None` prevents the message from being sent. Thus
+            `BasePlugin.outgoing_public_chat_notification` will never be called.
+            !! The room in the tuple will be ignored though.
+        """
+
+    def outgoing_public_chat_notification(self, room: str, line: str):
+        """A message was sent to a public chat room
+
+        Args:
+            room: The affected room
+            line: The sent message
+        """
+
+    def outgoing_global_search_event(self, text: str) -> Union[int, str, None]:
+        """Search for files
+
+        This is called before the search in case you want to change the arguments.
+
+        Args:
+            text: Search query
+
+        Returns:
+           Either `None`, a return code or a new search query
+        """
+
+    def outgoing_room_search_event(self, rooms, text: str) -> Union[int, Sequence[str], None]:
+        """Search all users in a room for a file
+
+        This is called before the search in case you want to change the arguments.
+
+        Args:
+            rooms: A list of rooms to get the users to search for from
+            text: Search query
+
+        Returns:
+           Either `None`, a return code or a tuple of a new room list and the
+           search query.
+        """
+
+    def outgoing_buddy_search_event(self, text: str) -> Union[int, str, None]:
+        """Search all buddies for a file
+
+        This is called before the search in case you want to change the arguments.
+
+        Args:
+            text: Search query
+
+        Returns:
+            Either `None`, a return code or a new query to search for
+        """
+
+    def outgoing_user_search_event(self,
+                                   users: Sequence[str],
+                                   text: str) -> Union[int, Tuple[Sequence[str], str], None]:
+        """Search specific users for a file
+
+        This is called before the search in case you want to change the arguments.
+
+        Args:
+            users: List of users that will always contain a single user
+            text: Query to search for
+
+        Returns:
+           Either `None`, a return code or a new list of users and search query
+        """
+
+    def user_resolve_notification(self, user: str, ip_address: str, port: int, country: Union[str, None] = None):
+        """Received information about a user we requestd
+
+        Args:
+            user: The users' username
+            ip_address: His IP address
+            port: Soulseek port he uses
+            country: Country based on his IP address if possible
+        """
 
     def server_connect_notification(self):
-        pass
+        """Connected with the soulseek servers
+        """
 
-    def server_disconnect_notification(self, userchoice):
-        pass
+    def server_disconnect_notification(self, userchoice: bool):
+        """Lost connection with the soulseek servers
 
-    def join_chatroom_notification(self, room):
-        pass
+        Args:
+            userchoice: True if it's caused by a user action (like quitting N+)
+        """
 
-    def leave_chatroom_notification(self, room):
-        pass
+    def join_chatroom_notification(self, room: str):
+        """You have joined a public chat room
 
-    def user_join_chatroom_notification(self, room, user):
-        pass
+        Args:
+            room: The affected room
+        """
 
-    def user_leave_chatroom_notification(self, room, user):
-        pass
+    def leave_chatroom_notification(self, room: str):
+        """You have left a public chat room
 
-    def user_stats_notification(self, user, stats):
-        pass
+        Args:
+            room: The affected room
+        """
 
-    def upload_queued_notification(self, user, virtual_path, real_path):
-        pass
+    def user_join_chatroom_notification(self, room: str, user: str):
+        """A user has joined a public chat room
 
-    def upload_started_notification(self, user, virtual_path, real_path):
-        pass
+        Args:
+            room: The affected room
+            user: The affected user
+        """
 
-    def upload_finished_notification(self, user, virtual_path, real_path):
-        pass
+    def user_leave_chatroom_notification(self, room: str, user: str):
+        """A user has left a public chat room
 
-    def download_started_notification(self, user, virtual_path, real_path):
-        pass
+        Args:
+            room: The affected room
+            user: The affected user
+        """
 
-    def download_finished_notification(self, user, virtual_path, real_path):
-        pass
+    def user_stats_notification(self, user: str, stats: Dict[str, int]):
+        """Receive update about a users statistics
+
+        More information can be found here: https://nicotine-plus.github.io/nicotine-plus/doc/SLSKPROTOCOL.html#userdata
+
+        Args:
+            user: Who the update is about
+            stats: Statistics about the user. This includes:
+                - 'avgspeed': average upload speed in bytes per second
+                - 'uploadnum': number of uploaded files
+                - 'files': how many files the user shares
+                - 'dirs': how many folders the user shares
+        """
+
+    def upload_queued_notification(self, user: str, virtual_path: str, real_path: str):
+        """An upload was queued
+
+        The upload hasn't started yet it is only queued at this moment.
+
+        Args:
+            user: User who downloads the file
+            virtual_path: Virtual path of the file
+            real_path: Full path of the file on your disk
+        """
+
+    def upload_started_notification(self, user: str, virtual_path: str, real_path: str):
+        """An upload was started
+
+        Args:
+            user: The user who will download your file
+            virtual_path: Virtual path as seen by the public
+            real_path: Real path to the file on your disk
+        """
+
+    def upload_finished_notification(self, user: str, virtual_path: str, real_path: str):
+        """An upload has successfully finished
+
+        Args:
+            user: The user who downloaded your file
+            virtual_path: Virtual path as seen by the public
+            real_path: Real path to the file on your disk
+        """
+
+    def download_started_notification(self, user: str, virtual_path: str, real_path: str):
+        """You started downloading a file
+
+        Args:
+            user: From whom we downloaded the file from
+            virtual_path: Virtual path of the uploader's end
+            real_path: Path where the file will be downloaded to locally
+        """
+
+    def download_finished_notification(self, user: str, virtual_path: str, real_path: str):
+        """A download has successfully finished
+
+        Args:
+            user: From whom we downloaded the file from
+            virtual_path: Path of the file at the uploaders side
+            real_path: Path where the file has been downloaded to locally
+        """
 
     def shutdown_notification(self):
-        pass
+        """Nicotine+ is shutting down
 
-    # The following are functions to make your life easier,
-    # you shouldn't override them.
-    def saypublic(self, room, text):
+        Called before `BasePlugin.disable_plugin` and before `BasePlugin.server_disconnect_notification`
+        """
+
+    def saypublic(self, room: str, text: str):
+        """Deprecated: Send a message to a public chat room
+
+        Use `send_public` instead.
+
+        Args:
+            room: Public chat room name
+            text: The message
+        """
         self.log("saypublic(room, text) is deprecated, please use send_public(room, text)")
         self.send_public(room, text)
 
-    def sayprivate(self, user, text):
+    def sayprivate(self, user: str, text: str):
+        """Deprecated: Send a message to a user and select the user tab
+
+        Use `send_private` instead.
+
+        Args:
+            user: The recipients' name
+            text: The message
+        """
         self.log("sayprivate(user, text) is deprecated, please use send_private(user, text)")
         self.send_private(user, text, show_ui=True)
 
-    def sendprivate(self, user, text):
+    def sendprivate(self, user: str, text: str):
+        """Deprecated: Send a message to a user without select the user tab
+
+        Use `send_private` instead.
+
+        Args:
+            user: The recipients' name
+            text: The message
+        """
         self.log("sendprivate(user, text) is deprecated, please use send_private(user, text, show_ui=False)")
         self.send_private(user, text, show_ui=False)
 
-    def fakepublic(self, room, user, text):
+    def fakepublic(self, room: str, user: str, text: str):
+        """Deprecated: Display a message in a public chat (not seen my others)
 
+        Use `echo_public` instead.
+
+        Args:
+            room: In which chat room the message should be added
+            user: Show as if this user sent the message
+            text: The message itself
+        """
         self.log("fakepublic(room, user, text) is deprecated, please use echo_public(room, text)")
 
         msg = slskmessages.SayChatroom(room, text)
         msg.user = user
         self.core.chatrooms.say_chat_room(msg)
 
-    def log(self, msg, msg_args=None):
+    def log(self, msg: str, msg_args: Sequence[Any] = None):
+        """Log to the console pane
+
+        Args:
+            msg: Message string that can contain placeholders like '%s', '%d' etc.
+            msg_args: Arguments that will fill the placeholders in `msg`
+        """
         log.add(self.__name__ + ": " + msg, msg_args)
 
-    def send_public(self, room, text):
+    def send_public(self, room: str, text: str):
+        """Send a message to a public chat room
+
+        Args:
+            room: Public chat room name
+            text: The message
+        """
         self.core.queue.append(slskmessages.SayChatroom(room, text))
 
-    def send_private(self, user, text, show_ui=True, switch_page=True):
-        """ Send user message in private.
-        show_ui controls if the UI opens a private chat view for the user.
-        switch_page controls whether the user's private chat view should be opened. """
+    def send_private(self, user: str, text: str, show_ui=True, switch_page: bool = True):
+        """Sende a message to a user
 
+        Args:
+            user: The recipients' name
+            text: The message
+            show_ui: In case no chat window with the user exists create one
+            switch_page: Switch to the users' chat window
+        """
         if show_ui:
             self.core.privatechats.show_user(user, switch_page)
-
         self.core.privatechats.send_message(user, text)
 
-    def echo_public(self, room, text, message_type="local"):
-        """ Display a raw message in chat rooms (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
+    def echo_public(self, room: str, text: str, message_type: str = "local"):
+        """Dispaly a message in a public chat (not seen by others)
 
+        Args:
+            room: In which chat room the message should be added
+            text: The message itself
+            message_type: How the message should be rendered. Available types:
+                action, remote, local, hilite
+        """
         self.core.chatrooms.echo_message(room, text, message_type)
 
-    def echo_private(self, user, text, message_type="local"):
-        """ Display a raw message in private (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
+    def echo_private(self, user: str, text: str, message_type: str = "local"):
+        """Dispaly a message in a private chat (not seen by others)
 
+        Args:
+            user: In which users chat the message should be added
+            text: The message itself
+            message_type: How the message should be rendered. Available types:
+                action, remote, local, hilite
+        """
         self.core.privatechats.show_user(user)
         self.core.privatechats.echo_message(user, text, message_type)
