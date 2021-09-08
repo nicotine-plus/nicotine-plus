@@ -185,6 +185,7 @@ def update_tag_visuals(tag, color):
 
 def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=True):
 
+    from pynicotine.gtkgui.widgets.textview import TextView
     config_ui = config.sections["ui"]
 
     if isinstance(widget, Gtk.ComboBox) and widget.get_has_entry() or isinstance(widget, Gtk.Entry):
@@ -202,6 +203,10 @@ def update_widget_visuals(widget, list_font_target="listfont", update_text_tags=
 
         set_widget_color(widget, config_ui["chatremote"])
         set_widget_font(widget, config_ui["chatfont"])
+
+    elif isinstance(widget, TextView):
+        # Update URL tag colors
+        widget.update_tags()
 
     elif isinstance(widget, Gtk.TreeView):
         set_list_color(widget, config_ui["search"])

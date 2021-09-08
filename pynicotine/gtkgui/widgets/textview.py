@@ -41,7 +41,7 @@ class TextView:
         self.scrollable = textview.get_parent()
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
 
-        self.tag_urls = {}
+        self.tag_urls = []
 
     def scroll_bottom(self):
 
@@ -126,7 +126,7 @@ class TextView:
                     import urllib.parse
                     url = urllib.parse.unquote(url)
 
-                self.tag_urls[url] = urltag
+                self.tag_urls.append(urltag)
                 _append(buffer, url, urltag)
 
                 # Match remaining url
@@ -162,6 +162,10 @@ class TextView:
             tag.connect("event", event, event_data)
 
         return tag
+
+    def update_tags(self):
+        for tag in self.tag_urls:
+            update_tag_visuals(tag, "urlcolor")
 
     """ Events """
 
