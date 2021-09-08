@@ -1026,49 +1026,28 @@ class ChatRoom:
         self.room_wall.update_visuals()
 
     def user_name_event(self, tag, widget, event, iterator, user):
-        """
-        Mouse buttons:
-        1 = left button
-        2 = middle button
-        3 = right button
-        """
-        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button in (1, 2, 3):
 
-            # Chat, Userlists use the normal popup system
+        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button == 1:
             self.populate_user_menu(user)
             self.popup_menu.popup(event.x, event.y, button=event.button.button)
 
         return True
 
-    def create_tag(self, buffer, color=None, username=None):
-
-        tag = buffer.create_tag()
-
-        if color:
-            update_tag_visuals(tag, color)
-
-        if username and Gtk.get_major_version() == 3:
-            tag.connect("event", self.user_name_event, username)
-
-        return tag
-
     def create_tags(self):
 
-        log_buffer = self.RoomLog.get_buffer()
-        self.tag_log = self.create_tag(log_buffer, "chatremote")
+        self.tag_log = self.log_textview.create_tag("chatremote")
 
-        chat_buffer = self.ChatScroll.get_buffer()
-        self.tag_remote = self.create_tag(chat_buffer, "chatremote")
-        self.tag_local = self.create_tag(chat_buffer, "chatlocal")
-        self.tag_action = self.create_tag(chat_buffer, "chatme")
-        self.tag_hilite = self.create_tag(chat_buffer, "chathilite")
+        self.tag_remote = self.chat_textview.create_tag("chatremote")
+        self.tag_local = self.chat_textview.create_tag("chatlocal")
+        self.tag_action = self.chat_textview.create_tag("chatme")
+        self.tag_hilite = self.chat_textview.create_tag("chathilite")
 
         self.tag_users = {}
 
     def get_user_tag(self, username):
 
         if username not in self.tag_users:
-            self.tag_users[username] = self.create_tag(self.ChatScroll.get_buffer(), username=username)
+            self.tag_users[username] = self.chat_textview.create_tag(event=self.user_name_event, event_data=username)
             self.update_user_tag(username)
 
         return self.tag_users[username]

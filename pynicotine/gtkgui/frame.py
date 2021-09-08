@@ -255,26 +255,6 @@ class NicotineFrame:
 
         self.notifications = Notifications(self)
 
-        """ Element Visibility """
-
-        self.set_show_log(not config.sections["logging"]["logcollapsed"])
-        self.set_show_debug(config.sections["logging"]["debug"])
-        self.set_show_flags(not config.sections["columns"]["hideflags"])
-        self.set_show_transfer_buttons(config.sections["transfers"]["enabletransferbuttons"])
-        self.set_toggle_buddy_list(config.sections["ui"]["buddylistinchatrooms"])
-
-        """ Tab Visibility/Order """
-
-        self.set_tab_positions()
-        self.set_main_tabs_order()
-        self.set_main_tabs_visibility()
-        self.set_last_session_tab()
-
-        """ Disable elements """
-
-        # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.set_widget_online_status(False)
-
         """ Log """
 
         self.log_textview = TextView(self.LogWindow)
@@ -307,6 +287,26 @@ class NicotineFrame:
             self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
             self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
             self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
+
+        """ Element Visibility """
+
+        self.set_show_log(not config.sections["logging"]["logcollapsed"])
+        self.set_show_debug(config.sections["logging"]["debug"])
+        self.set_show_flags(not config.sections["columns"]["hideflags"])
+        self.set_show_transfer_buttons(config.sections["transfers"]["enabletransferbuttons"])
+        self.set_toggle_buddy_list(config.sections["ui"]["buddylistinchatrooms"])
+
+        """ Tab Visibility/Order """
+
+        self.set_tab_positions()
+        self.set_main_tabs_order()
+        self.set_main_tabs_visibility()
+        self.set_last_session_tab()
+
+        """ Disable elements """
+
+        # Disable a few elements until we're logged in (search field, download buttons etc.)
+        self.set_widget_online_status(False)
 
         """ Scanning """
 

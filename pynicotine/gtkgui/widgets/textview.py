@@ -22,11 +22,11 @@ import time
 from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import open_uri
+from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 
 
 """ Textview """
@@ -39,8 +39,9 @@ class TextView:
         self.textview = textview
         self.textbuffer = textview.get_buffer()
         self.scrollable = textview.get_parent()
-        self.tag_urls = {}
         self.url_regex = re.compile("(\\w+\\://[^\\s]+)|(www\\.\\w+\\.\\w+.*?)|(mailto\\:[^\\s]+)")
+
+        self.tag_urls = {}
 
     def scroll_bottom(self):
 
@@ -118,12 +119,8 @@ class TextView:
                 _usertag(buffer, line[:match.start()])
 
                 url = match.group()
-                color = config.sections["ui"]["urlcolor"] or None
-                urltag = buffer.create_tag(foreground=color, underline=Pango.Underline.SINGLE)
+                urltag = self.create_tag("urlcolor", self.url_event, url)
                 urltag.last_event_type = -1
-
-                if Gtk.get_major_version() == 3:
-                    urltag.connect("event", self.url_event, url)
 
                 if url.startswith("slsk://") and config.sections["urls"]["humanizeurls"]:
                     import urllib.parse
@@ -151,6 +148,22 @@ class TextView:
     def clear(self):
         self.textbuffer.set_text("")
         self.tag_urls.clear()
+
+    """ Text Tags (usernames, URLs) """
+
+    def create_tag(self, color=None, event=None, event_data=None):
+
+        tag = self.textbuffer.create_tag()
+
+        if color:
+            update_tag_visuals(tag, color)
+
+        if event and Gtk.get_major_version() == 3:
+            tag.connect("event", event, event_data)
+
+        return tag
+
+    """ Events """
 
     def on_copy_text(self, *args):
         self.textview.emit("copy-clipboard")

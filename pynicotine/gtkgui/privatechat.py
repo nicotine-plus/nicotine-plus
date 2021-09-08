@@ -27,6 +27,7 @@ from collections import deque
 from time import altzone
 from time import daylight
 
+from gi.repository import Gdk
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
@@ -405,31 +406,30 @@ class PrivateChat:
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, update_text_tags=False)
 
-    def create_tag(self, buffer, color):
+    def user_name_event(self, tag, widget, event, iterator, user):
 
-        tag = buffer.create_tag()
-        update_tag_visuals(tag, color)
+        if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button == 1:
+            self.popup_menu_user.popup(event.x, event.y, button=event.button.button)
 
-        return tag
+        return True
 
     def create_tags(self):
 
-        buffer = self.ChatScroll.get_buffer()
-        self.tag_remote = self.create_tag(buffer, "chatremote")
-        self.tag_local = self.create_tag(buffer, "chatlocal")
-        self.tag_action = self.create_tag(buffer, "chatme")
-        self.tag_hilite = self.create_tag(buffer, "chathilite")
+        self.tag_remote = self.chat_textview.create_tag("chatremote")
+        self.tag_local = self.chat_textview.create_tag("chatlocal")
+        self.tag_action = self.chat_textview.create_tag("chatme")
+        self.tag_hilite = self.chat_textview.create_tag("chathilite")
 
         color = get_user_status_color(self.status)
-        self.tag_username = self.create_tag(buffer, color)
+        self.tag_username = self.chat_textview.create_tag(color, event=self.user_name_event, event_data=self.user)
 
-        if self.frame.np.logged_in:
-            if self.frame.np.away:
-                self.tag_my_username = self.create_tag(buffer, "useraway")
-            else:
-                self.tag_my_username = self.create_tag(buffer, "useronline")
+        if not self.frame.np.logged_in:
+            color = "useroffline"
         else:
-            self.tag_my_username = self.create_tag(buffer, "useroffline")
+            color = "useraway" if self.frame.np.away else "useronline"
+
+        my_username = config.sections["server"]["login"]
+        self.tag_my_username = self.chat_textview.create_tag(color, event=self.user_name_event, event_data=my_username)
 
     def update_tags(self):
 
@@ -441,13 +441,12 @@ class PrivateChat:
         color = get_user_status_color(self.status)
         update_tag_visuals(self.tag_username, color)
 
-        if self.frame.np.logged_in:
-            if self.frame.np.away:
-                update_tag_visuals(self.tag_my_username, "useraway")
-            else:
-                update_tag_visuals(self.tag_my_username, "useronline")
+        if not self.frame.np.logged_in:
+            color = "useroffline"
         else:
-            update_tag_visuals(self.tag_my_username, "useroffline")
+            color = "useraway" if self.frame.np.away else "useronline"
+
+        update_tag_visuals(self.tag_my_username, color)
 
     def get_user_status(self, status):
 

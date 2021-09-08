@@ -158,6 +158,10 @@ def update_tag_visuals(tag, color):
     set_widget_color(tag, config_ui[color])
     set_widget_font(tag, config_ui["chatfont"])
 
+    # URLs
+    if color == "urlcolor":
+        tag.set_property("underline", Pango.Underline.SINGLE)
+
     # Hotspots
     if color in ("useraway", "useronline", "useroffline"):
 
