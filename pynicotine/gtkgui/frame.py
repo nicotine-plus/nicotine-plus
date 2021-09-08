@@ -260,7 +260,7 @@ class NicotineFrame:
         self.log_textview = TextView(self.LogWindow)
 
         # Popup menu on the log windows
-        PopupMenu(self, self.LogWindow).setup(
+        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
             ("#" + _("Find..."), self.on_find_log_window),
             ("", None),
             ("#" + _("Copy"), self.log_textview.on_copy_text),
@@ -2249,6 +2249,10 @@ class NicotineFrame:
 
         self.log_textview.append_line(msg, scroll=should_scroll, find_urls=False)
         return False
+
+    def on_popup_menu_log(self, menu, textview):
+        actions = menu.get_actions()
+        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)

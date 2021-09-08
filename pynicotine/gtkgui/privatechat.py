@@ -189,7 +189,7 @@ class PrivateChat:
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu)
+        self.popup_menu_user = popup = PopupMenu(self.frame, None, self.on_popup_menu)
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
@@ -202,6 +202,7 @@ class PrivateChat:
             ("#" + _("Find..."), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
+            ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
             ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Chat Log"), self.on_view_chat_log),
@@ -275,6 +276,10 @@ class PrivateChat:
 
     def on_popup_menu(self, menu, widget):
         self.populate_user_menu(self.user)
+
+        actions = menu.get_actions()
+        actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
+        actions[_("Copy Link")].set_enabled(self.chat_textview.get_url_for_selected_pos())
 
     def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)

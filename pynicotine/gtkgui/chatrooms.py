@@ -519,7 +519,7 @@ class ChatRoom:
             (">" + _("Private Rooms"), self.popup_menu_private_rooms)
         )
 
-        PopupMenu(self.frame, self.RoomLog).setup(
+        PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).setup(
             ("#" + _("Find..."), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.log_textview.on_copy_text),
@@ -530,10 +530,11 @@ class ChatRoom:
             ("#" + _("_Leave Room"), self.on_leave)
         )
 
-        PopupMenu(self.frame, self.ChatScroll).setup(
+        PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat).setup(
             ("#" + _("Find..."), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
+            ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
             ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Room Log"), self.on_view_room_log),
@@ -719,6 +720,17 @@ class ChatRoom:
             return True
 
         self.populate_user_menu(user)
+
+    def on_popup_menu_log(self, menu, textview):
+
+        actions = menu.get_actions()
+        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
+
+    def on_popup_menu_chat(self, menu, textview):
+
+        actions = menu.get_actions()
+        actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
+        actions[_("Copy Link")].set_enabled(self.chat_textview.get_url_for_selected_pos())
 
     def on_show_room_wall(self, *args):
         self.room_wall.show()

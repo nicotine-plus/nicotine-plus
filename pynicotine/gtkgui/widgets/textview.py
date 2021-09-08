@@ -19,11 +19,13 @@
 import re
 import time
 
+from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import copy_all_text
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 
@@ -46,14 +48,22 @@ class TextView:
 
         if Gtk.get_major_version() == 4:
             self.gesture_click = Gtk.GestureClick()
-            self.textview.add_controller(self.gesture_click)
+            self.gesture_click_secondary = Gtk.GestureClick()
+            self.scrollable.add_controller(self.gesture_click)
+            self.scrollable.add_controller(self.gesture_click_secondary)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress.new(self.textview)
+            self.gesture_click = Gtk.GestureMultiPress.new(self.scrollable)
+            self.gesture_click_secondary = Gtk.GestureMultiPress.new(self.scrollable)
             self.textview.connect("size-allocate", self.on_size_allocate)
 
+        self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self._callback_pressed)
         self.gesture_click.connect("released", self._callback_released)
+
+        self.gesture_click_secondary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_click_secondary.connect("pressed", self._callback_pressed)
+        self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
 
     def scroll_bottom(self):
 
@@ -146,6 +156,22 @@ class TextView:
 
         return linenr
 
+    def get_has_selection(self):
+        return self.textbuffer.get_has_selection()
+
+    def get_tags_for_selected_pos(self):
+
+        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
+                                                             self.pressed_x, self.pressed_y)
+        over_text, iterator = self.textview.get_iter_at_location(buf_x, buf_y)
+        return iterator.get_tags()
+
+    def get_url_for_selected_pos(self):
+
+        for tag in self.get_tags_for_selected_pos():
+            if hasattr(tag, "url"):
+                return tag.url
+
     def clear(self):
         self.textbuffer.set_text("")
         self.tag_urls.clear()
@@ -184,17 +210,18 @@ class TextView:
     def _callback_released(self, controller, num_p, x, y):
 
         if x != self.pressed_x or y != self.pressed_y:
-            return
+            return False
 
-        buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET, x, y)
-        over_text, iterator = self.textview.get_iter_at_location(buf_x, buf_y)
-
-        for tag in iterator.get_tags():
+        for tag in self.get_tags_for_selected_pos():
             if hasattr(tag, "url"):
                 open_uri(tag.url)
+                return True
 
-            elif hasattr(tag, "username"):
+            if hasattr(tag, "username"):
                 tag.callback(x, y, tag.username)
+                return True
+
+        return False
 
     def on_size_allocate(self, *args):
         # Ensure that we're always at the bottom if textview height changes
@@ -202,6 +229,9 @@ class TextView:
 
     def on_copy_text(self, *args):
         self.textview.emit("copy-clipboard")
+
+    def on_copy_link(self, *args):
+        copy_text(self.get_url_for_selected_pos())
 
     def on_copy_all_text(self, *args):
         copy_all_text(self.textview)
