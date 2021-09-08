@@ -389,7 +389,7 @@ class ChatEntry:
             else:
                 parent = self.frame.privatechat.users[self.entity]
 
-            parent.on_clear_messages()
+            parent.chat_textview.clear()
 
         elif cmd in ("/a", "/away"):
             self.frame.on_away()
