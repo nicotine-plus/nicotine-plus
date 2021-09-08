@@ -89,11 +89,17 @@ Keep in mind that Nicotine+ will not update automatically. When a new release is
 pip3 install nicotine-plus --upgrade
 ```
 
-#### Flathub (Stable)
+#### Flatpak (Stable)
 
 If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
 
-[Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+- [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+
+#### Flatpak (Unstable)
+
+Unstable Flatpak packages are generated after every commit to the master branch, and should only be used for testing.
+
+- [Download Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
 ## Windows
 
@@ -111,9 +117,15 @@ Portable packages are also available. They can be run from your home directory, 
 
 ### Unstable
 
-Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing. You need to sign in on GitHub in order to download the packages.
+Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing.
 
-- [64/32-bit Installers / Packages](https://github.com/nicotine-plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
+- [64-bit Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
+- [32-bit Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
+
+Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
+
+- [64-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
+- [32-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
 
 ## macOS
 
@@ -135,9 +147,9 @@ brew install nicotine-plus
 
 ### Unstable (Catalina/10.15 or newer)
 
-Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing. You need to sign in on GitHub in order to download the installers.
+Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
 
-- [Download Installer](https://github.com/nicotine-plus/nicotine-plus/actions?query=branch%3Amaster+event%3Apush+is%3Asuccess+workflow%3A%22Packaging%22)
+- [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
 
 ## Building from git (Unstable)
 
