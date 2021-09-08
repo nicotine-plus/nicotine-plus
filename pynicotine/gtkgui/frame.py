@@ -2566,6 +2566,32 @@ class NicotineFrame:
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         from traceback import format_tb
+
+        # Check if exception occurred in a plugin
+        traceback = exc_traceback
+
+        while True:
+            if not traceback.tb_next:
+                break
+
+            traceback = traceback.tb_next
+
+        filename = traceback.tb_frame.f_code.co_filename
+
+        for plugin_name in self.np.pluginhandler.enabled_plugins:
+            path = self.np.pluginhandler.findplugin(plugin_name)
+
+            if filename.startswith(path):
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                          "Trace: %(trace)s"), {
+                    'module': plugin_name,
+                    'errortype': exc_type,
+                    'error': exc_value,
+                    'trace': ''.join(format_tb(exc_traceback))
+                })
+                return
+
+        # Show critical error dialog
         loop = GLib.MainLoop()
         error = ("\n\nNicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
                  "Type: %s\nValue: %s\nTraceback: %s" %
