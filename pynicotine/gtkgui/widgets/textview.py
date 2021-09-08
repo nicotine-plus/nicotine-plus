@@ -54,6 +54,8 @@ class TextView:
         self.gesture_click.connect("pressed", self._callback_pressed)
         self.gesture_click.connect("released", self._callback_released)
 
+        self.textview.connect("size-allocate", self.on_size_allocate)
+
     def scroll_bottom(self):
 
         try:
@@ -194,6 +196,10 @@ class TextView:
 
             elif hasattr(tag, "username"):
                 tag.callback(x, y, tag.username)
+
+    def on_size_allocate(self, *args):
+        # Ensure that we're always at the bottom if textview height changes
+        self.scroll_bottom()
 
     def on_copy_text(self, *args):
         self.textview.emit("copy-clipboard")
