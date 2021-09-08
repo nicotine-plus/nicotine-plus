@@ -212,7 +212,6 @@ class PrivateChat:
             ("", None),
             (">" + _("User"), self.popup_menu_user),
         )
-        popup.set_user(user)
 
         self.create_tags()
         self.update_visuals()
@@ -271,8 +270,12 @@ class PrivateChat:
     def set_label(self, label):
         self.popup_menu_user.set_widget(label)
 
-    def on_popup_menu(self, menu, widget):
+    def populate_user_menu(self, user):
+        self.popup_menu_user.set_user(user)
         self.popup_menu_user.toggle_user_items()
+
+    def on_popup_menu(self, menu, widget):
+        self.populate_user_menu(self.user)
 
     def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)
@@ -409,6 +412,7 @@ class PrivateChat:
     def user_name_event(self, tag, widget, event, iterator, user):
 
         if event.button.type == Gdk.EventType.BUTTON_PRESS and event.button.button == 1:
+            self.populate_user_menu(user)
             self.popup_menu_user.popup(event.x, event.y, button=event.button.button)
 
         return True
