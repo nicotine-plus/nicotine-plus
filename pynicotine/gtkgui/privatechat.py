@@ -279,7 +279,7 @@ class PrivateChat:
 
         actions = menu.get_actions()
         actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
-        actions[_("Copy Link")].set_enabled(self.chat_textview.get_url_for_selected_pos())
+        actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
     def on_find_chat_log(self, *args):
         self.SearchBar.set_search_mode(True)

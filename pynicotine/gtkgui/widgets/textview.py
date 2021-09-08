@@ -172,6 +172,8 @@ class TextView:
             if hasattr(tag, "url"):
                 return tag.url
 
+        return ""
+
     def clear(self):
         self.textbuffer.set_text("")
         self.tag_urls.clear()
