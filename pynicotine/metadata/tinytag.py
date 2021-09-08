@@ -581,7 +581,6 @@ class ID3(TinyTag):
                 fh.seek(frame_length - header_bytes, os.SEEK_CUR)
         if self.samplerate:
             self.duration = frames * ID3.samples_per_frame / float(self.samplerate)
-            self.bitrate = int(round(bitrate_accu / frames))
 
     def _parse_tag(self, fh):
         self._parse_id3v2(fh)
