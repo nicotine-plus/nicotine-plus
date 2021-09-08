@@ -186,11 +186,10 @@ class PluginHandler:
         if plugin_name not in self.enabled_plugins:
             return False
 
-        try:
-            plugin = self.enabled_plugins[plugin_name]
-            path = self.__findplugin(plugin_name)
+        plugin = self.enabled_plugins[plugin_name]
+        path = self.__findplugin(plugin_name)
 
-            log.add(_("Disabled plugin {}".format(plugin.__name__)))
+        try:
             plugin.disable()
 
             for trigger, _func in plugin.__publiccommands__:
@@ -200,7 +199,15 @@ class PluginHandler:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
+            log.add(_("Disabled plugin {}".format(plugin.__name__)))
 
+        except Exception:
+            from traceback import format_exc
+            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
+                    {'module': plugin_name, 'exc_trace': format_exc()})
+            return False
+
+        finally:
             # Remove references to relative modules
             if path in sys.path:
                 sys.path.remove(path)
@@ -217,12 +224,6 @@ class PluginHandler:
 
             del self.enabled_plugins[plugin_name]
             del plugin
-
-        except Exception:
-            from traceback import format_exc
-            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
-                    {'module': plugin_name, 'exc_trace': format_exc()})
-            return False
 
         return True
 
