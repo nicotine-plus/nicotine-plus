@@ -56,7 +56,6 @@ class TextView:
         else:
             self.gesture_click = Gtk.GestureMultiPress.new(self.scrollable)
             self.gesture_click_secondary = Gtk.GestureMultiPress.new(self.scrollable)
-            self.textview.connect("size-allocate", self.on_size_allocate)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self._callback_pressed)
@@ -236,10 +235,6 @@ class TextView:
                 return True
 
         return False
-
-    def on_size_allocate(self, *args):
-        # Ensure that we're always at the bottom if textview height changes
-        self.scroll_bottom()
 
     def on_copy_text(self, *args):
         self.textview.emit("copy-clipboard")
