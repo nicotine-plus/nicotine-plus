@@ -91,7 +91,7 @@ class Plugin(BasePlugin):
     def get_video_id(self, mode, source, line):
 
         match = re.search(r'(?:https?://(?:www\.)?|www\.)(?:m\.)?youtu(?:\.be|(?:be-nocookie|be)\.com)/'
-                          r'(?:.*?v=|(?:v|e|embed)/|)([0-9a-zA-Z_-]{11})', line)
+                          r'(?:\S+v=|(?:v|e|embed)/|)([0-9a-zA-Z_-]{11})', line)
         if not match:
             return None
 
