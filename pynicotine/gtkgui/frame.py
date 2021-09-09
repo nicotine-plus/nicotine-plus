@@ -2346,21 +2346,17 @@ class NicotineFrame:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
     def set_scan_indeterminate(self, sharestype):
+        GLib.timeout_add(100, self.pulse_scan_progress, sharestype)
 
-        thread = threading.Thread(target=self._set_scan_indeterminate, args=(sharestype,))
-        thread.name = "ScanProgressBar"
-        thread.daemon = True
-        thread.start()
+    def pulse_scan_progress(self, sharestype):
 
-    def _set_scan_indeterminate(self, sharestype):
+        if sharestype == "normal":
+            self.SharesProgress.pulse()
+        else:
+            self.BuddySharesProgress.pulse()
 
-        while self.scan_progress_indeterminate:
-            if sharestype == "normal":
-                GLib.idle_add(self.SharesProgress.pulse)
-            else:
-                GLib.idle_add(self.BuddySharesProgress.pulse)
-
-            time.sleep(0.2)
+        if self.scan_progress_indeterminate:
+            self.set_scan_indeterminate(sharestype)
 
     def hide_scan_progress(self, sharestype):
 
