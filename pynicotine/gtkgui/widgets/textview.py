@@ -152,7 +152,7 @@ class TextView:
 
             # Scroll to bottom if we had scrolled up less than ~2 lines previously
             if (va.get_value() + va.get_page_size()) >= va.get_upper() - 40:
-                GLib.idle_add(self.scroll_bottom)
+                GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
 
         return linenr
 

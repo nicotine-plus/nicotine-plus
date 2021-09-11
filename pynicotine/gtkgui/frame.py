@@ -2232,7 +2232,7 @@ class NicotineFrame:
     """ Log Window """
 
     def log_callback(self, timestamp_format, msg, level):
-        GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_DEFAULT)
+        GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_LOW)
 
     def update_log(self, msg, level):
 
