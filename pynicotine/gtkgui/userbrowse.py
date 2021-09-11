@@ -91,6 +91,9 @@ class UserBrowses(IconNotebook):
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
 
+            if self.get_n_pages() > 0:
+                self.frame.UserBrowseStatusPage.hide()
+
         page = self.pages[user]
 
         page.indeterminate_progress = indeterminate_progress
@@ -1057,6 +1060,9 @@ class UserBrowse:
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
+
+        if self.userbrowses.get_n_pages() == 0:
+            self.frame.UserBrowseStatusPage.show()
 
     def on_close_all_tabs(self, *args):
         self.userbrowses.remove_all_pages()

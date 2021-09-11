@@ -184,6 +184,9 @@ class ChatRooms(IconNotebook):
         if msg.private:
             self.create_private_room(msg.room, msg.owner, msg.operators)
 
+        if self.get_n_pages() > 0:
+            self.frame.ChatroomsStatusPage.hide()
+
     def room_list(self, msg):
 
         if self.autojoin:
@@ -382,6 +385,9 @@ class ChatRooms(IconNotebook):
 
         self.remove_page(room.Main)
         del self.joinedrooms[msg.room]
+
+        if self.get_n_pages() == 0:
+            self.frame.ChatroomsStatusPage.show()
 
         if msg.room != 'Public ':  # meta rooms
             self.frame.RoomSearchCombo.remove_all()

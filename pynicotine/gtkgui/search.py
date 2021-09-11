@@ -220,6 +220,9 @@ class Searches(IconNotebook):
         self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
+        if self.get_n_pages() > 0:
+            self.frame.SearchStatusPage.hide()
+
     def show_search_result(self, msg, username, country):
 
         try:
@@ -256,6 +259,9 @@ class Searches(IconNotebook):
             self.frame.np.search.remove_allowed_search_id(tab.id)
 
         self.remove_page(tab.Main)
+
+        if self.get_n_pages() == 0:
+            self.frame.SearchStatusPage.show()
 
     def update_visuals(self):
 

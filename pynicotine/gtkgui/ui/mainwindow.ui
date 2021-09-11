@@ -841,6 +841,54 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkBox" id="SearchStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">system-search-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Search Files</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Enter a search term to search for files shared by other users on the Soulseek network</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkNotebook" id="SearchNotebookRaw">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
@@ -958,6 +1006,54 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkBox" id="UserBrowseStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">folder-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">User Browse</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Enter the name of a user to browse their list of shared files. You can also open a list you have previously saved.</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkNotebook" id="UserBrowseNotebookRaw">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
@@ -1001,6 +1097,54 @@
                               </object>
                             </child>
                             <child>
+                              <object class="GtkBox" id="UserInfoStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">avatar-default-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">User Info</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Enter the name of a user to view their user description, information and personal picture</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
                               <object class="GtkNotebook" id="UserInfoNotebookRaw">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
@@ -1041,6 +1185,54 @@
                                 <style>
                                   <class name="border-bottom"/>
                                 </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="PrivateChatStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">mail-send-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Private Chat</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Enter the name of a user to start a text conversation with them in private</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child>
@@ -1121,6 +1313,54 @@
                                 <style>
                                   <class name="border-bottom"/>
                                 </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="ChatroomsStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">user-available-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Chat Rooms</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child>
