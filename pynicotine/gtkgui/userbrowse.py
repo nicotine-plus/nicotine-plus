@@ -21,6 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
 import os
 
 from gi.repository import GLib
@@ -601,7 +602,6 @@ class UserBrowse:
     def dump_shares_to_file(self, path, data):
 
         with open(path, "w", encoding="utf-8") as sharesfile:
-            import json
             json.dump(self.shares, sharesfile, ensure_ascii=False)
 
     def save_columns(self):

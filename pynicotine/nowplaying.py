@@ -20,6 +20,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import http_request
@@ -128,8 +130,6 @@ class NowPlaying:
 
     def lastfm(self, user):
         """ Function to get the last song played via Last.fm API """
-
-        import json
 
         try:
             user, apikey = user.split(';')
@@ -263,8 +263,6 @@ class NowPlaying:
 
     def listenbrainz(self, username):
         """ Function to get the currently playing song via ListenBrainz API """
-
-        import json
 
         if not username:
             log.add_important_error(_("ListenBrainz: Please provide your ListenBrainz username"))

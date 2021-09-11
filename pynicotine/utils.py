@@ -26,6 +26,7 @@ This module contains utility functions.
 """
 
 import errno
+import json
 import os
 import pickle
 
@@ -117,8 +118,6 @@ def get_path(folder_name, base_name, callback, data=None):
 
 
 def get_latest_version():
-
-    import json
 
     response = http_request(
         "https", "pypi.org", "/pypi/nicotine-plus/json",

@@ -27,6 +27,8 @@ Example uses:
 
 """
 
+import json
+
 from itertools import islice
 
 from pynicotine.pluginsystem import BasePlugin
@@ -64,7 +66,6 @@ class Plugin(BasePlugin):
             return
 
         try:
-            import json
             response = json.loads(response)
 
             for post in islice(response['data']['children'], self.settings['reddit_links']):

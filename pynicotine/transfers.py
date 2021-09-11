@@ -28,6 +28,7 @@
 the transfer manager.
 """
 
+import json
 import os
 import os.path
 import re
@@ -197,7 +198,6 @@ class Transfers:
             return None
 
         with open(transfers_file, encoding="utf-8") as handle:
-            import json
             return json.load(handle)
 
     @staticmethod
@@ -2391,11 +2391,9 @@ class Transfers:
                 for i in reversed(self.uploads) if i.status == "Finished"]
 
     def save_downloads_callback(self, filename):
-        import json
         json.dump(self.get_downloads(), filename, ensure_ascii=False)
 
     def save_uploads_callback(self, filename):
-        import json
         json.dump(self.get_uploads(), filename, ensure_ascii=False)
 
     def save_transfers(self, transfer_type):
