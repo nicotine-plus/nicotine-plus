@@ -37,14 +37,18 @@ class Downloads(TransferList):
 
     def __init__(self, frame, tab_label):
 
+        self.retry_label = _("Resume")
+        self.abort_label = _("Pause")
+        self.aborted_status = _("Paused")
+
         TransferList.__init__(self, frame, type='download')
         self.tab_label = tab_label
 
         self.popup_menu_clear.setup(
-            ("#" + _("Finished / Aborted / Filtered"), self.on_clear_finished_aborted),
+            ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),
-            ("#" + _("Aborted"), self.on_clear_aborted),
+            ("#" + _("Paused"), self.on_clear_paused),
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Filtered"), self.on_clear_filtered),
             ("#" + _("Queued..."), self.on_try_clear_queued),
@@ -150,11 +154,11 @@ class Downloads(TransferList):
                 requested_users.add(user)
                 requested_folders.add(folder)
 
-    def on_clear_aborted(self, *args):
-        self.clear_transfers(["Aborted", "Cancelled"])
+    def on_clear_paused(self, *args):
+        self.clear_transfers(["Paused"])
 
-    def on_clear_finished_aborted(self, *args):
-        self.clear_transfers(["Aborted", "Cancelled", "Finished", "Filtered"])
+    def on_clear_finished_filtered(self, *args):
+        self.clear_transfers(["Finished", "Filtered"])
 
     def on_clear_failed(self, *args):
         self.clear_transfers(["Cannot connect", "Local file error", "Remote file error", "File not shared"])

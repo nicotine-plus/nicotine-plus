@@ -62,7 +62,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Retry</property>
+                            <property name="label" translatable="yes">Resume</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -84,13 +84,13 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">1</property>
-                            <property name="icon-name">system-shutdown-symbolic</property>
+                            <property name="icon-name">media-playback-pause-symbolic</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Abort</property>
+                            <property name="label" translatable="yes">Pause</property>
                             <property name="use-underline">1</property>
                           </object>
                         </child>
@@ -140,8 +140,8 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="tooltip-text">Clear every download that has either finished transferring, been caught by a filter, or been explicitly aborted by us.</property>
-                    <signal name="clicked" handler="on_clear_finished_aborted"/>
+                    <property name="tooltip-text">Clear every download that has finished transferring or been caught by a filter.</property>
+                    <signal name="clicked" handler="on_clear_finished_filtered"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>

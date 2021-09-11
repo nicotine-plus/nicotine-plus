@@ -261,7 +261,7 @@ class Transfers:
                 pass
 
             if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
-                status = "Aborted"
+                status = "Paused"
             elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
                 status = i[3]
             else:
@@ -288,7 +288,7 @@ class Transfers:
             users.add(i.user)
 
             if i.status in ("Aborted", "Paused"):
-                i.status = "Aborted"
+                i.status = "Paused"
 
             elif i.status in ("Filtered", "Finished"):
                 continue
@@ -736,7 +736,7 @@ class Transfers:
     def transfer_request_downloads(self, msg, user):
 
         for i in self.downloads:
-            if i.filename == msg.file and user == i.user and i.status not in ("Finished", "Aborted", "Filtered"):
+            if i.filename == msg.file and user == i.user and i.status not in ("Finished", "Paused", "Filtered"):
 
                 # Remote peer is signalling a tranfer is ready, attempting to download it
 
@@ -1230,7 +1230,7 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-            if i.status != "Aborted":
+            if i.status != "Paused":
                 if i.status == "Transferring":
                     self.abort_transfer(i, reason=msg.reason)
 
@@ -1254,7 +1254,7 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status in ("Aborted", "Download folder error", "Local file error", "User logged off"):
+            if i.status in ("Paused", "Download folder error", "Local file error", "User logged off"):
                 continue
 
             if not i.legacy_attempt:
@@ -1521,7 +1521,7 @@ class Transfers:
         filename = msg.filename
 
         for i in self.downloads:
-            if i.user == username and i.filename == filename and i.status not in ("Finished", "Aborted", "Filtered"):
+            if i.user == username and i.filename == filename and i.status not in ("Finished", "Paused", "Filtered"):
                 i.place = msg.place
 
                 if self.downloadsview:
@@ -1861,7 +1861,7 @@ class Transfers:
 
         # walk through downloads and break if any file in the same folder exists, else execute
         for i in self.downloads:
-            if i.status not in ("Finished", "Aborted", "Filtered") and i.path == folderpath:
+            if i.status not in ("Finished", "Paused", "Filtered") and i.path == folderpath:
                 return
 
         config = self.config.sections
@@ -2372,11 +2372,7 @@ class Transfers:
         """ Stop all transfers on disconnect/shutdown """
 
         for i in self.downloads + self.uploads:
-            if i.status == "Aborted":
-                self.abort_transfer(i)
-                i.status = "Paused"
-
-            elif i.status != "Finished":
+            if i.status not in ("Finished", "Paused"):
                 self.abort_transfer(i)
                 i.status = "Old"
 

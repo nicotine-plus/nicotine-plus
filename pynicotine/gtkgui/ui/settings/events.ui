@@ -183,9 +183,9 @@
                       <item>Send to Player</item>
                       <item>Open Folder</item>
                       <item>Search</item>
-                      <item>Abort</item>
+                      <item>Pause</item>
                       <item>Clear</item>
-                      <item>Retry</item>
+                      <item>Resume</item>
                     </items>
                   </object>
                 </child>

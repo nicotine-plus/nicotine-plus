@@ -977,7 +977,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Files you download from other users are queued here, and can be aborted and resumed on demand</property>
+                                        <property name="label" translatable="yes">Files you download from other users are queued here, and can be paused and resumed on demand</property>
                                         <property name="max-width-chars">55</property>
                                         <property name="justify">center</property>
                                         <property name="wrap">1</property>

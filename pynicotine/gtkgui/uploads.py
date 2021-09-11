@@ -34,6 +34,10 @@ class Uploads(TransferList):
 
     def __init__(self, frame, tab_label):
 
+        self.retry_label = _("Retry")
+        self.abort_label = _("Abort")
+        self.aborted_status = _("Aborted")
+
         TransferList.__init__(self, frame, type='upload')
         self.tab_label = tab_label
 

@@ -96,6 +96,7 @@ class TransferList:
         self.statuses["Connection closed by peer"] = _("Connection closed by peer")
         self.statuses["Disallowed extension"] = _("Disallowed extension")  # Sent by Soulseek NS for filtered extensions
         self.statuses["Aborted"] = _("Aborted")
+        self.statuses["Paused"] = _("Paused")
         self.statuses["Finished"] = _("Finished")
         self.statuses["Filtered"] = _("Filtered")
         self.statuses["Banned"] = _("Banned")
@@ -197,8 +198,8 @@ class TransferList:
             ("#" + _("File P_roperties"), self.on_file_properties),
             (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
-            ("#" + _("_Retry"), self.on_retry_transfer),
-            ("#" + _("Abor_t"), self.on_abort_transfer),
+            ("#" + self.retry_label, self.on_retry_transfer),
+            ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
             (">" + _("Clear Groups"), self.popup_menu_clear)
@@ -630,7 +631,7 @@ class TransferList:
                 self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
 
                 if not clear:
-                    transfer.status = "Aborted"
+                    transfer.status = self.aborted_status
                     self.update(transfer)
 
             if clear:
@@ -779,7 +780,7 @@ class TransferList:
         else:
             act = True
 
-        for i in (_("_Retry"), _("Abor_t"), _("_Clear")):
+        for i in (self.retry_label, self.abort_label, _("_Clear")):
             actions[i].set_enabled(act)
 
         menu.set_num_selected_files(num_selected_transfers)
@@ -795,11 +796,11 @@ class TransferList:
             self.on_open_directory()
         elif dc == 3:  # Search
             self.on_file_search()
-        elif dc == 4:  # Abort
+        elif dc == 4:  # Pause / Abort
             self.abort_transfers()
         elif dc == 5:  # Clear
             self.abort_transfers(clear=True)
-        elif dc == 6:  # Retry
+        elif dc == 6:  # Resume / Retry
             self.retry_transfers()
 
     def on_select_user_transfers(self, *args):

@@ -153,14 +153,14 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">r</property>
-                <property name="title" translatable="yes">Retry Transfer</property>
+                <property name="title" translatable="yes">Resume / Retry Transfer</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">t</property>
-                <property name="title" translatable="yes">Abort Transfer</property>
+                <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
             </child>
           </object>
