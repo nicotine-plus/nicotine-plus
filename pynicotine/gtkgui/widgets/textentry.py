@@ -56,6 +56,14 @@ class ChatEntry:
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
         self.key_controller = connect_key_press_event(entry, self.on_key_press_event)
 
+        # Emoji Picker
+        try:
+            self.entry.set_property("show-emoji-icon", True)
+
+        except TypeError:
+            # GTK version not supported
+            pass
+
         # Spell Check
         if config.sections["ui"]["spellcheck"]:
             if not self.frame.spell_checker:
