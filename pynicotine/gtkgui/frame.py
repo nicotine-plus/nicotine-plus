@@ -923,6 +923,10 @@ class NicotineFrame:
             load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
             set_dialog_properties(self.KeyboardShortcutsDialog, self.MainWindow, quit_callback=self.on_hide)
 
+            if hasattr(Gtk.Entry.props, "show-emoji-icon"):
+                # Emoji picker only available in GTK 3.24+
+                self.EmojiShortcut.show()
+
             # Workaround for off-centered dialog on first run
             self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
             self.on_hide(self.KeyboardShortcutsDialog)
