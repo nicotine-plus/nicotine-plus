@@ -559,6 +559,8 @@ class SlskProtoThread(threading.Thread):
     def abort(self):
         """ Call this to abort the thread """
         self._want_abort = True
+
+        self.selector.close()
         self.server_disconnect()
 
     """ File Transfers """
@@ -689,7 +691,10 @@ class SlskProtoThread(threading.Thread):
         elif self._is_upload(conn_obj):
             self.total_uploads -= 1
 
-        self.selector.unregister(connection)
+        # If we're shutting down, we've already closed the selector in abort()
+        if not self._want_abort:
+            self.selector.unregister(connection)
+
         connection.close()
         del connection_list[connection]
         self._numsockets -= 1
