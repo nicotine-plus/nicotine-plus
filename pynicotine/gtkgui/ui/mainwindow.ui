@@ -931,6 +931,54 @@
                                 </style>
                               </object>
                             </child>
+                            <child>
+                              <object class="GtkBox" id="DownloadsStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">document-save-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Downloads</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">When you download files from other users, the files are listed here</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -966,6 +1014,54 @@
                                 <style>
                                   <class name="border-bottom"/>
                                 </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="UploadsStatusPage">
+                                <property name="visible">1</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="spacing">30</property>
+                                <property name="orientation">vertical</property>
+                                <property name="vexpand">1</property>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">emblem-shared-symbolic</property>
+                                    <property name="pixel-size">128</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">1</property>
+                                    <property name="spacing">12</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">Uploads</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                        <attributes>
+                                          <attribute name="weight" value="ultrabold"/>
+                                          <attribute name="size" value="20000"/>
+                                        </attributes>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">1</property>
+                                        <property name="label" translatable="yes">When a user downloads files you have shared, the files are listed here</property>
+                                        <property name="max-width-chars">55</property>
+                                        <property name="justify">center</property>
+                                        <property name="wrap">1</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>

@@ -1671,12 +1671,16 @@ class NicotineFrame:
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")
             self.uploads.update(forceupdate=True)
-            GLib.idle_add(grab_widget_focus, self.uploads.Transfers)
+
+            if self.uploads.Transfers.get_visible():
+                GLib.idle_add(grab_widget_focus, self.uploads.Transfers)
 
         elif tab_label == self.DownloadsTabLabel:
             self.set_active_header_bar("Downloads")
             self.downloads.update(forceupdate=True)
-            GLib.idle_add(grab_widget_focus, self.downloads.Transfers)
+
+            if self.downloads.Transfers.get_visible():
+                GLib.idle_add(grab_widget_focus, self.downloads.Transfers)
 
         elif tab_label == self.SearchTabLabel:
             self.set_active_header_bar("Search")

@@ -161,6 +161,7 @@ class TransferList:
 
         self.Transfers.set_model(self.transfersmodel)
 
+        self.status_page = getattr(frame, "%ssStatusPage" % self.type.title())
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
         state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % self.type]))
@@ -295,6 +296,7 @@ class TransferList:
 
         if not self.Transfers.get_sensitive():
             """ List is not initialized """
+            self.Main.hide()
             return
 
         curtime = time()
@@ -331,6 +333,9 @@ class TransferList:
             too often """
 
             self.update_parent_rows()
+
+            self.status_page.set_visible(not self.transfer_list)
+            self.Main.set_visible(self.transfer_list)
 
     def update_parent_rows(self, only_remove=False):
 
