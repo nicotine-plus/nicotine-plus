@@ -977,7 +977,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">When you download files from other users, the files are listed here</property>
+                                        <property name="label" translatable="yes">Files you download from other users are queued here, and can be aborted and resumed on demand</property>
                                         <property name="max-width-chars">55</property>
                                         <property name="justify">center</property>
                                         <property name="wrap">1</property>
@@ -1066,7 +1066,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">When a user downloads files you have shared, the files are listed here</property>
+                                        <property name="label" translatable="yes">Users' attempts to download your shared files are queued and managed here</property>
                                         <property name="max-width-chars">55</property>
                                         <property name="justify">center</property>
                                         <property name="wrap">1</property>
