@@ -34,7 +34,7 @@ from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textview import append_line
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
@@ -159,6 +159,8 @@ class UserInfo:
         self.image_pixbuf = None
         self.zoom_factor = 5
         self.actual_zoom = 0
+
+        self.descr_textview = TextView(self.descr)
 
         self.hates_store = Gtk.ListStore(str)
         self.Hates.set_model(self.hates_store)
@@ -313,8 +315,8 @@ class UserInfo:
         if msg is None:
             return
 
-        self.descr.get_buffer().set_text("")
-        append_line(self.descr, msg.descr, showstamp=False, scroll=False)
+        self.descr_textview.clear()
+        self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
 
         self.uploads.set_text(humanize(msg.totalupl))
         self.queuesize.set_text(humanize(msg.queuesize))

@@ -53,7 +53,6 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import connect_key_press_event
-from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
@@ -70,10 +69,8 @@ from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import clear_entry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
-from pynicotine.gtkgui.widgets.textview import append_line
-from pynicotine.gtkgui.widgets.textview import scroll_bottom
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
@@ -132,6 +129,9 @@ class NicotineFrame:
             shutil.move(config.filename, corruptfile)
 
             config.load_config()
+
+        config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
+        log.add_debug("Loading GTK %s", config.gtk_version)
 
         """ GTK Settings """
 
@@ -258,6 +258,39 @@ class NicotineFrame:
 
         self.notifications = Notifications(self)
 
+        """ Log """
+
+        self.log_textview = TextView(self.LogWindow)
+
+        # Popup menu on the log windows
+        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
+            ("#" + _("Find..."), self.on_find_log_window),
+            ("", None),
+            ("#" + _("Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
+            ("", None),
+            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
+            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
+            ("", None),
+            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
+        )
+
+        # Text Search
+        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+
+        if Gtk.get_major_version() == 4:
+            self.MainPaned.set_resize_start_child(True)
+            self.NotebooksPane.set_resize_start_child(True)
+            self.NotebooksPane.set_shrink_start_child(False)
+            self.NotebooksPane.set_resize_end_child(False)
+            self.NotebooksPane.set_shrink_end_child(False)
+        else:
+            self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
+
         """ Element Visibility """
 
         self.set_show_log(not config.sections["logging"]["logcollapsed"])
@@ -277,37 +310,6 @@ class NicotineFrame:
 
         # Disable a few elements until we're logged in (search field, download buttons etc.)
         self.set_widget_online_status(False)
-
-        """ Log """
-
-        # Popup menu on the log windows
-        PopupMenu(self, self.LogWindow).setup(
-            ("#" + _("Find..."), self.on_find_log_window),
-            ("", None),
-            ("#" + _("Copy"), self.on_copy_log_window),
-            ("#" + _("Copy All"), self.on_copy_all_log_window),
-            ("", None),
-            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
-            ("", None),
-            ("#" + _("Clear Log View"), self.on_clear_log_window)
-        )
-
-        # Text Search
-        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
-
-        if Gtk.get_major_version() == 4:
-            self.MainPaned.set_resize_start_child(True)
-            self.NotebooksPane.set_resize_start_child(True)
-            self.NotebooksPane.set_shrink_start_child(False)
-            self.NotebooksPane.set_resize_end_child(False)
-            self.NotebooksPane.set_shrink_end_child(False)
-        else:
-            self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
-            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
-            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
 
         """ Scanning """
 
@@ -675,7 +677,7 @@ class NicotineFrame:
         url = "%(url)s" % {
             'url': 'https://www.slsknet.org/userlogin.php?username=' + login
         }
-        open_uri(url, self.MainWindow)
+        open_uri(url)
         self.np.request_check_privileges()
 
     def on_fast_configure(self, *args, show=True):
@@ -739,7 +741,7 @@ class NicotineFrame:
         if show:
             self.set_status_text("")
             self.DebugLog.show()
-            scroll_bottom(self.LogScrolledWindow)
+            self.log_textview.scroll_bottom()
         else:
             self.DebugLog.hide()
 
@@ -989,7 +991,7 @@ class NicotineFrame:
 
     def on_report_bug(self, *args):
         url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        open_uri(url, self.MainWindow)
+        open_uri(url)
 
     def on_about(self, *args):
 
@@ -1014,15 +1016,11 @@ class NicotineFrame:
         else:
             self.AboutDialog.connect("response", lambda x, y: x.destroy())
 
-        self.AboutDialog.set_version(
-            config.version + "  •  GTK %s.%s.%s" %
-            (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-        )
-
+        self.AboutDialog.set_version(config.version + "  •  GTK " + config.gtk_version)
         self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_about_uri(self, widget, uri):
-        open_uri(uri, self.MainWindow)
+        open_uri(uri)
         return True
 
     """ Actions """
@@ -2029,7 +2027,7 @@ class NicotineFrame:
 
     def on_search(self, *args):
         self.search.on_search()
-        clear_entry(self.SearchEntry)
+        self.SearchEntry.set_text("")
 
     """ User Info """
 
@@ -2044,7 +2042,7 @@ class NicotineFrame:
             return
 
         self.np.userinfo.request_user_info(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     """ User Browse """
 
@@ -2056,7 +2054,7 @@ class NicotineFrame:
             return
 
         self.np.userbrowse.browse_user(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, data):
 
@@ -2109,7 +2107,7 @@ class NicotineFrame:
             return
 
         self.np.privatechats.show_user(username)
-        clear_entry(widget)
+        widget.set_text("")
 
     def on_create_room_response(self, dialog, response_id, room):
 
@@ -2140,7 +2138,7 @@ class NicotineFrame:
         else:
             self.np.queue.append(slskmessages.JoinRoom(room))
 
-        clear_entry(widget)
+        widget.set_text("")
         return True
 
     def update_completions(self):
@@ -2248,18 +2246,15 @@ class NicotineFrame:
         else:
             should_scroll = True
 
-        append_line(self.LogWindow, msg, scroll=should_scroll, find_urls=False)
-
+        self.log_textview.append_line(msg, scroll=should_scroll, find_urls=False)
         return False
+
+    def on_popup_menu_log(self, menu, textview):
+        actions = menu.get_actions()
+        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
-
-    def on_copy_log_window(self, *args):
-        self.LogWindow.emit("copy-clipboard")
-
-    def on_copy_all_log_window(self, *args):
-        copy_all_text(self.LogWindow)
 
     def on_view_debug_logs(self, *args):
 
@@ -2276,9 +2271,6 @@ class NicotineFrame:
 
     def on_view_transfer_log(self, *args):
         open_log(config.sections["logging"]["transferslogsdir"], "transfers")
-
-    def on_clear_log_window(self, *args):
-        self.LogWindow.get_buffer().set_text("")
 
     def add_debug_level(self, debug_level):
 
@@ -2354,21 +2346,17 @@ class NicotineFrame:
             GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
 
     def set_scan_indeterminate(self, sharestype):
+        GLib.timeout_add(100, self.pulse_scan_progress, sharestype)
 
-        thread = threading.Thread(target=self._set_scan_indeterminate, args=(sharestype,))
-        thread.name = "ScanProgressBar"
-        thread.daemon = True
-        thread.start()
+    def pulse_scan_progress(self, sharestype):
 
-    def _set_scan_indeterminate(self, sharestype):
+        if sharestype == "normal":
+            self.SharesProgress.pulse()
+        else:
+            self.BuddySharesProgress.pulse()
 
-        while self.scan_progress_indeterminate:
-            if sharestype == "normal":
-                GLib.idle_add(self.SharesProgress.pulse)
-            else:
-                GLib.idle_add(self.BuddySharesProgress.pulse)
-
-            time.sleep(0.2)
+        if self.scan_progress_indeterminate:
+            self.set_scan_indeterminate(sharestype)
 
     def hide_scan_progress(self, sharestype):
 
@@ -2574,8 +2562,37 @@ class NicotineFrame:
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         from traceback import format_tb
+
+        # Check if exception occurred in a plugin
+        traceback = exc_traceback
+
+        while True:
+            if not traceback.tb_next:
+                break
+
+            traceback = traceback.tb_next
+
+        filename = traceback.tb_frame.f_code.co_filename
+
+        for plugin_name in self.np.pluginhandler.enabled_plugins:
+            path = self.np.pluginhandler.findplugin(plugin_name)
+
+            if filename.startswith(path):
+                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                          "Trace: %(trace)s"), {
+                    'module': plugin_name,
+                    'errortype': exc_type,
+                    'error': exc_value,
+                    'trace': ''.join(format_tb(exc_traceback))
+                })
+                return
+
+        # Show critical error dialog
         loop = GLib.MainLoop()
-        error = "\n\nType: %s\nValue: %s\nTraceback: %s" % (exc_type, exc_value, ''.join(format_tb(exc_traceback)))
+        error = ("\n\nNicotine+ Version: %s\nGTK Version: %s\nPython Version: %s\n\n"
+                 "Type: %s\nValue: %s\nTraceback: %s" %
+                 (config.version, config.gtk_version, config.python_version, exc_type,
+                  exc_value, ''.join(format_tb(exc_traceback))))
 
         option_dialog(
             parent=self.application.get_active_window(),

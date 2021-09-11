@@ -75,7 +75,7 @@ class PluginHandler:
         if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
             self.core.privatechats.update_completions()
 
-    def __findplugin(self, plugin_name):
+    def findplugin(self, plugin_name):
         for directory in self.plugindirs:
             fullpath = os.path.join(directory, plugin_name)
 
@@ -102,7 +102,7 @@ class PluginHandler:
 
         except Exception:
             # Import user plugin
-            path = self.__findplugin(plugin_name)
+            path = self.findplugin(plugin_name)
 
             if path is None:
                 log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
@@ -186,11 +186,10 @@ class PluginHandler:
         if plugin_name not in self.enabled_plugins:
             return False
 
-        try:
-            plugin = self.enabled_plugins[plugin_name]
-            path = self.__findplugin(plugin_name)
+        plugin = self.enabled_plugins[plugin_name]
+        path = self.findplugin(plugin_name)
 
-            log.add(_("Disabled plugin {}".format(plugin.__name__)))
+        try:
             plugin.disable()
 
             for trigger, _func in plugin.__publiccommands__:
@@ -200,7 +199,15 @@ class PluginHandler:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
+            log.add(_("Disabled plugin {}".format(plugin.__name__)))
 
+        except Exception:
+            from traceback import format_exc
+            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
+                    {'module': plugin_name, 'exc_trace': format_exc()})
+            return False
+
+        finally:
             # Remove references to relative modules
             if path in sys.path:
                 sys.path.remove(path)
@@ -218,12 +225,6 @@ class PluginHandler:
             del self.enabled_plugins[plugin_name]
             del plugin
 
-        except Exception:
-            from traceback import format_exc
-            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
-                    {'module': plugin_name, 'exc_trace': format_exc()})
-            return False
-
         return True
 
     def get_plugin_settings(self, plugin_name):
@@ -236,7 +237,7 @@ class PluginHandler:
         return None
 
     def get_plugin_info(self, plugin_name):
-        path = os.path.join(self.__findplugin(plugin_name), 'PLUGININFO')
+        path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
 
         with open(path, 'r', encoding="utf-8") as file_handle:
             infodict = {}
@@ -299,48 +300,33 @@ class PluginHandler:
     def _trigger_command(self, command, source, args, public_command):
 
         for module, plugin in self.enabled_plugins.items():
-            try:
-                if plugin is None:
-                    continue
+            if plugin is None:
+                continue
 
-                return_value = None
+            return_value = None
 
-                if public_command:
-                    for trigger, func in plugin.__publiccommands__:
-                        if trigger == command:
-                            return_value = func(plugin, source, args)
+            if public_command:
+                for trigger, func in plugin.__publiccommands__:
+                    if trigger == command:
+                        return_value = func(plugin, source, args)
 
-                else:
-                    for trigger, func in plugin.__privatecommands__:
-                        if trigger == command:
-                            return_value = func(plugin, source, args)
+            else:
+                for trigger, func in plugin.__privatecommands__:
+                    if trigger == command:
+                        return_value = func(plugin, source, args)
 
-                if return_value is None:
-                    # Nothing changed, continue to the next plugin
-                    continue
+            if return_value is None:
+                # Nothing changed, continue to the next plugin
+                continue
 
-                if return_value == returncode['zap']:
-                    return True
+            if return_value == returncode['zap']:
+                return True
 
-                if return_value == returncode['pass']:
-                    continue
+            if return_value == returncode['pass']:
+                continue
 
-                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
-                        {'module': module, 'value': str(return_value)})
-
-            except Exception:
-                from traceback import extract_stack
-                from traceback import extract_tb
-                from traceback import format_list
-
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-                          "Trace: %(trace)s\nProblem area:%(area)s"), {
-                    'module': module,
-                    'errortype': sys.exc_info()[0],
-                    'error': sys.exc_info()[1],
-                    'trace': ''.join(format_list(extract_stack())),
-                    'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
-                })
+            log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+                    {'module': module, 'value': str(return_value)})
 
         return False
 
@@ -352,50 +338,35 @@ class PluginHandler:
         function_name_camelcase = function_name.title().replace('_', '')
 
         for module, plugin in self.enabled_plugins.items():
-            try:
-                if hasattr(plugin, function_name_camelcase):
-                    plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
-                        "old_function": function_name_camelcase,
-                        "new_function": function_name
-                    })
-                    return_value = getattr(plugin, function_name_camelcase)(*args)
-                else:
-                    return_value = getattr(plugin, function_name)(*args)
-
-                if return_value is None:
-                    # Nothing changed, continue to the next plugin
-                    continue
-
-                if isinstance(return_value, tuple):
-                    # The original args were modified, update them
-                    args = return_value
-                    continue
-
-                if return_value == returncode['zap']:
-                    return None
-
-                if return_value == returncode['break']:
-                    return args
-
-                if return_value == returncode['pass']:
-                    continue
-
-                log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
-                        {'module': module, 'value': return_value})
-
-            except Exception:
-                from traceback import extract_stack
-                from traceback import extract_tb
-                from traceback import format_list
-
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-                          "Trace: %(trace)s\nProblem area:%(area)s"), {
-                    'module': module,
-                    'errortype': sys.exc_info()[0],
-                    'error': sys.exc_info()[1],
-                    'trace': ''.join(format_list(extract_stack())),
-                    'area': ''.join(format_list(extract_tb(sys.exc_info()[2])))
+            if hasattr(plugin, function_name_camelcase):
+                plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
+                    "old_function": function_name_camelcase,
+                    "new_function": function_name
                 })
+                return_value = getattr(plugin, function_name_camelcase)(*args)
+            else:
+                return_value = getattr(plugin, function_name)(*args)
+
+            if return_value is None:
+                # Nothing changed, continue to the next plugin
+                continue
+
+            if isinstance(return_value, tuple):
+                # The original args were modified, update them
+                args = return_value
+                continue
+
+            if return_value == returncode['zap']:
+                return None
+
+            if return_value == returncode['break']:
+                return args
+
+            if return_value == returncode['pass']:
+                continue
+
+            log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+                    {'module': module, 'value': return_value})
 
         return args
 

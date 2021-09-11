@@ -46,7 +46,7 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
-from pynicotine.gtkgui.widgets.textview import append_line
+from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.logfacility import log
@@ -208,7 +208,7 @@ class NetworkFrame(BuildFrame):
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
-                 str(self.frame.np.waitport)]), self.p.dialog)
+                 str(self.frame.np.waitport)]))
 
     def on_toggle_upnp(self, widget, *args):
 
@@ -807,12 +807,14 @@ class SharesFrame(BuildFrame):
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
+            virtual_name = model.get_value(iterator, 0)
             folder = model.get_value(iterator, 1)
 
             entry_dialog(
                 parent=self.p.dialog,
                 title=_("Edit Virtual Name"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
+                default=virtual_name,
                 callback=self.rename_virtuals_response,
                 callback_data=iterator
             )
@@ -2463,6 +2465,8 @@ class NowPlayingFrame(BuildFrame):
             player = "lastfm"
         elif self.NP_mpris.get_active():
             player = "mpris"
+        elif self.NP_listenbrainz.get_active():
+            player = "listenbrainz"
         elif self.NP_other.get_active():
             player = "other"
 
@@ -2478,6 +2482,8 @@ class NowPlayingFrame(BuildFrame):
 
         if player == "lastfm":
             self.NP_lastfm.set_active(True)
+        elif player == 'listenbrainz':
+            self.NP_listenbrainz.set_active(True)
         elif player == "other":
             self.NP_other.set_active(True)
         else:
@@ -2492,6 +2498,10 @@ class NowPlayingFrame(BuildFrame):
         elif self.NP_mpris.get_active():
             self.player_replacers = ["$n", "$p", "$a", "$b", "$t", "$y", "$c", "$r", "$k", "$l", "$f"]
             self.player_input.set_text(_("Client name (e.g. amarok, audacious, exaile) or empty for auto:"))
+
+        elif self.NP_listenbrainz.get_active():
+            self.player_replacers = ["$n", "$t", "$a", "$b"]
+            self.player_input.set_text(_("Username:"))
 
         elif self.NP_other.get_active():
             self.player_replacers = ["$n"]
@@ -2757,11 +2767,10 @@ class PluginsFrame(BuildFrame):
             config_name = plugin.lower()
 
             for name, data in options.items():
-                if config_name not in config.sections["plugins"] or name not in config.sections["plugins"][config_name]:
-                    if config_name not in config.sections["plugins"]:
-                        print("No1 " + config_name + ", " + repr(list(config.sections["plugins"].keys())))
-                    elif name not in config.sections["plugins"][config_name]:
-                        print("No2 " + name + ", " + repr(list(config.sections["plugins"][config_name].keys())))
+                if config_name not in config.sections["plugins"]:
+                    continue
+
+                if name not in config.sections["plugins"][config_name]:
                     continue
 
                 value = config.sections["plugins"][config_name][name]
@@ -2888,7 +2897,7 @@ class PluginsFrame(BuildFrame):
                     container.add(button_widget)
 
                 else:
-                    print("Unknown setting type '%s', data '%s'" % (name, data))
+                    log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
 
             if Gtk.get_major_version() == 3:
                 self.show_all()
@@ -2954,6 +2963,7 @@ class PluginsFrame(BuildFrame):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
+        self.descr_textview = TextView(self.PluginDescription)
 
     def on_add_plugins(self, widget):
 
@@ -2996,13 +3006,10 @@ class PluginsFrame(BuildFrame):
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get('Name', self.selected_plugin)})
         self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get('Authors', '-'))})
 
-        self.PluginDescription.get_buffer().set_text("")
-        append_line(self.PluginDescription,
-                    "%(description)s" % {
-                        "description": info.get('Description', _('No description provided')).replace(r'\n', "\n")
-                    },
-                    showstamp=False,
-                    scroll=False)
+        self.descr_textview.clear()
+        self.descr_textview.append_line("%(description)s" % {
+            "description": info.get('Description', _('No description provided')).replace(r'\n', "\n")},
+            showstamp=False, scroll=False)
 
         self.check_properties_button(self.selected_plugin)
 

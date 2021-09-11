@@ -149,7 +149,7 @@ def delete_log_callback(path, data):
     os.remove(path)
 
 
-def open_uri(uri, window):
+def open_uri(uri):
     """Open a URI in an external (web) browser. The given argument has
     to be a properly formed URI including the scheme (fe. HTTP).
     As of now failures will be silently discarded."""
@@ -232,14 +232,6 @@ def copy_file_url(user, path):
     )
 
     copy_text(url)
-
-
-def append_line(textview, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S",
-                username=None, usertag=None, scroll=True, find_urls=True):
-
-    from pynicotine.gtkgui.widgets.textview import append_line as append_new
-    log.add("pynicotine.gtkgui.utils.append_line is deprecated and should not be accessed directly by plugins anymore")
-    append_new(textview, line, tag, timestamp, showstamp, timestamp_format, username, usertag, scroll, find_urls)
 
 
 """ Events """

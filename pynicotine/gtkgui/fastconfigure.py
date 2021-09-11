@@ -168,8 +168,7 @@ class FastConfigureAssistant(object):
             '='.join([
                 'http://tools.slsknet.org/porttest.php?port',
                 str(self.frame.np.waitport)
-            ]),
-            self.FastConfigureDialog
+            ])
         )
 
     def on_add_share_response(self, dialog, response_id, directory):

@@ -38,6 +38,19 @@
       <image>https://raw.githubusercontent.com/nicotine-plus/nicotine-plus/master/data/screenshots/screenshot4.png</image>
     </screenshot>
   </screenshots>
+  <recommends>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <control>touch</control>
+  </recommends>
+  <requires>
+    <display_length compare="ge">600</display_length>
+  </requires>
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+    <kudo>Notifications</kudo>
+  </kudos>
   <url type="homepage">https://nicotine-plus.org/</url>
   <url type="bugtracker">https://github.com/nicotine-plus/nicotine-plus/issues</url>
   <developer_name>Nicotine+ Team</developer_name>
