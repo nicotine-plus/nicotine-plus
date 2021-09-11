@@ -240,12 +240,7 @@ class PluginHandler:
         path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
 
         with open(path, 'r', encoding="utf-8") as file_handle:
-            infodict = {
-                "Name": "Example Plugin",
-                "Version": 1.0,
-                "Authors": "",
-                "Description": "No description provided"
-            }
+            infodict = {}
 
             for line in file_handle:
                 try:
