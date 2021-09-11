@@ -843,6 +843,12 @@ class TransferList:
             self.abort_transfers(clear=True)
             return True
 
+        keycodes, mods = parse_accelerator("<Alt>Return")
+
+        if keycode in keycodes:
+            self.on_file_properties()
+            return True
+
         # No key match, continue event
         return False
 

@@ -152,6 +152,13 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
+                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="title" translatable="yes">File Properties</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
                 <property name="accelerator">r</property>
                 <property name="title" translatable="yes">Resume / Retry Transfer</property>
               </object>
