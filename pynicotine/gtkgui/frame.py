@@ -1710,7 +1710,10 @@ class NicotineFrame:
 
         elif tab_label == self.UserListTabLabel:
             self.set_active_header_bar("UserList")
-            GLib.idle_add(grab_widget_focus, self.userlist.UserListTree)
+            self.userlist.update()
+
+            if self.userlist.UserListTree.get_visible():
+                GLib.idle_add(grab_widget_focus, self.userlist.UserListTree)
 
         elif tab_label == self.InterestsTabLabel:
             self.set_active_header_bar("Interests")

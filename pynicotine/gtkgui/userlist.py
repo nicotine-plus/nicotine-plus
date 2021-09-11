@@ -247,6 +247,14 @@ class UserList:
         widget.set_text("")
         self.frame.np.userlist.add_user(username)
 
+    def update(self):
+
+        if config.sections["ui"]["buddylistinchatrooms"] != "tab":
+            return
+
+        self.frame.UserListStatusPage.set_visible(not self.user_iterators)
+        self.Main.set_visible(self.user_iterators)
+
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
@@ -461,6 +469,7 @@ class UserList:
         )
 
         self.save_user_list()
+        self.update()
 
         for widget in self.buddies_combo_entries:
             widget.append_text(user)
@@ -476,6 +485,7 @@ class UserList:
 
         self.save_user_list()
         self.buddies_combos_fill()
+        self.update()
 
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
