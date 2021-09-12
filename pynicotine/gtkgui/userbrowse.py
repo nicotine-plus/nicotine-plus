@@ -35,7 +35,6 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -75,7 +74,7 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(grab_widget_focus, tab.FolderTreeView)
+                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() is False)
                 break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):

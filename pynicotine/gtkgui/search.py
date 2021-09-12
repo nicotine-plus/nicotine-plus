@@ -37,7 +37,6 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -95,7 +94,7 @@ class Searches(IconNotebook):
                 continue
 
             if search["tab"].Main == page:
-                GLib.idle_add(grab_widget_focus, search["tab"].ResultsList)
+                GLib.idle_add(lambda: search["tab"].ResultsList.grab_focus() is False)
                 break
 
     def populate_search_history(self):

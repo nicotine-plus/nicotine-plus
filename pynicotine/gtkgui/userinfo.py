@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -64,7 +63,7 @@ class UserInfos(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(grab_widget_focus, tab.descr)
+                GLib.idle_add(lambda: tab.descr.grab_focus() is False)
                 break
 
     def show_user(self, user):

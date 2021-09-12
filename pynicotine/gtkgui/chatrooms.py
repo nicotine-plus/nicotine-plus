@@ -38,7 +38,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.utils import delete_log
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
@@ -136,7 +135,7 @@ class ChatRooms(IconNotebook):
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
-                GLib.idle_add(grab_widget_focus, room.ChatEntry)
+                GLib.idle_add(lambda: room.ChatEntry.grab_focus() is False)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not room.opened:

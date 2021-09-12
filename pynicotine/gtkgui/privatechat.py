@@ -34,7 +34,6 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import delete_log
-from pynicotine.gtkgui.utils import grab_widget_focus
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -75,7 +74,7 @@ class PrivateChats(IconNotebook):
 
         for user, tab in list(self.users.items()):
             if tab.Main == page:
-                GLib.idle_add(grab_widget_focus, tab.ChatLine)
+                GLib.idle_add(lambda: tab.ChatLine.grab_focus() is False)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
