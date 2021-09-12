@@ -188,7 +188,7 @@ if sys.platform == "win32":
 
     MAXSOCKETS = 512
 else:
-    import resource
+    import resource  # pylint: disable=import-error
 
     if sys.platform == "darwin":
 
