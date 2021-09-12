@@ -66,14 +66,8 @@ class TextView:
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
 
     def scroll_bottom(self):
-
-        try:
-            adjustment = self.scrollable.get_vadjustment()
-            adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
-
-        except AttributeError:
-            # Nicotine+ is exiting
-            pass
+        adjustment = self.scrollable.get_vadjustment()
+        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
 
     def append_line(self, line, tag=None, timestamp=None, showstamp=True, timestamp_format="%H:%M:%S",
                     username=None, usertag=None, scroll=True, find_urls=True):

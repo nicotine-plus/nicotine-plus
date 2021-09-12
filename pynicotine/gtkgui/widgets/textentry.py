@@ -403,8 +403,7 @@ class ChatEntry:
             self.frame.on_away()
 
         elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.on_quit()
-            return  # Avoid gsignal warning
+            self.frame.quit()
 
         elif cmd in ("/c", "/close"):
             self.frame.privatechat.users[self.entity].on_close()

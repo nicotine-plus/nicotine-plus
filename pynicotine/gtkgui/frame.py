@@ -179,9 +179,9 @@ class NicotineFrame:
         self.key_controller = connect_key_press_event(self.MainWindow, self.on_key_press_event)
 
         if Gtk.get_major_version() == 4:
-            self.MainWindow.connect("close-request", self.on_delete_event)
+            self.MainWindow.connect("close-request", self.on_close_request)
         else:
-            self.MainWindow.connect("delete-event", self.on_delete_event)
+            self.MainWindow.connect("delete-event", self.on_close_request)
 
         try:
             if Gtk.get_major_version() == 4:
@@ -2240,9 +2240,6 @@ class NicotineFrame:
 
     def update_log(self, msg, level):
 
-        if self.np.shutdown:
-            return
-
         if level and level.startswith("important"):
             title = "Information" if level == "important_info" else "Error"
             message_dialog(parent=self.application.get_active_window(), title=title, message=msg)
@@ -2563,7 +2560,7 @@ class NicotineFrame:
         loop.quit()
 
         try:
-            self.on_quit()
+            self.quit()
         except Exception:
             """ We attempt a clean shut down, but this may not be possible if
             the program didn't initialize fully. Ignore any additional errors
@@ -2636,7 +2633,7 @@ class NicotineFrame:
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 0
 
-            self.on_quit()
+            self.quit()
 
         elif response_id == Gtk.ResponseType.REJECT:
             if checkbox:
@@ -2645,11 +2642,11 @@ class NicotineFrame:
             if self.MainWindow.get_property("visible"):
                 self.MainWindow.hide()
 
-    def on_delete_event(self, *args):
+    def on_close_request(self, *args):
 
         if not config.sections["ui"]["exitdialog"]:
-            self.save_state()
-            return False
+            self.quit()
+            return True
 
         if config.sections["ui"]["exitdialog"] == 2:
             if self.MainWindow.get_property("visible"):
@@ -2664,7 +2661,6 @@ class NicotineFrame:
             checkbox_label=_("Remember choice"),
             callback=self.on_quit_response
         )
-
         return True
 
     def on_hide(self, dialog, *args):
@@ -2672,10 +2668,9 @@ class NicotineFrame:
         return True
 
     def on_quit(self, *args):
-        self.save_state()
-        self.application.quit()
+        self.quit()
 
-    def save_state(self):
+    def quit(self):
 
         # Shut down event processor/networking
         self.np.quit()
@@ -2691,6 +2686,9 @@ class NicotineFrame:
 
         config.write_configuration()
         log.remove_listener(self.log_callback)
+
+        # Terminate GtkApplication
+        self.application.quit()
 
 
 class Application(Gtk.Application):
