@@ -29,9 +29,25 @@ from pynicotine.config import config
 def set_global_style():
 
     css = b"""
+    /* Tweaks */
+
     flowboxchild {
+        /* GTK adds unwanted padding to flowbox children by default */
         padding: 0;
     }
+
+    scrollbar {
+        /* Workaround for themes breaking scrollbar hitbox with margins */
+        margin: 0;
+    }
+
+    .preferences .dialog-action-box {
+        /* Add missing spacing to dialog action buttons */
+        border-top: 1px solid @borders;
+        padding: 6px;
+    }
+
+    /* Borders */
 
     .background-border {
         background: @borders;
@@ -43,11 +59,6 @@ def set_global_style():
 
     .border-bottom {
         border-bottom: 1px solid @borders;
-    }
-
-    .preferences .dialog-action-box {
-        border-top: 1px solid @borders;
-        padding: 6px;
     }
     """
 
