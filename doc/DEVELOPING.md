@@ -93,7 +93,7 @@ As strings change in the Nicotine+ source code, the translation template file sh
 To update the template (.pot) file, run the following command:
 
 ```console
-python3 setup.py update_pot
+python3 po/update_pot.py
 ```
 
 A developer part of the [Nicotine+ Launchpad team](https://launchpad.net/~nicotine-team) should then [upload the updated .pot file](https://translations.launchpad.net/nicotine+/trunk/+translations-upload) to Launchpad, and [approve it](https://translations.launchpad.net/nicotine+/+imports).

@@ -33,35 +33,11 @@ import sys
 import warnings
 
 from distutils.core import setup
-from distutils.cmd import Command
-from os.path import abspath
 from pkgutil import walk_packages
 
 import pynicotine
 
 from pynicotine.config import config
-
-
-class UpdatePot(Command):
-
-    description = 'update .pot translation template'
-    user_options = []
-
-    def initialize_options(self):
-        # Not used
-        pass
-
-    def finalize_options(self):
-        # Not used
-        pass
-
-    def run(self):
-
-        files = sorted(glob.glob("data/**/*.in", recursive=True), key=abspath) + \
-            sorted(glob.glob("pynicotine/**/*.py", recursive=True), key=abspath) + \
-            sorted(glob.glob("pynicotine/**/*.ui", recursive=True), key=abspath)
-
-        os.system("xgettext -o po/nicotine.pot " + " ".join(files))
 
 
 def generate_translations():
@@ -143,6 +119,5 @@ functionality while keeping current with the Soulseek protocol."""
         scripts=SCRIPTS,
         data_files=DATA_FILES,
         python_requires=">=3.5",
-        install_requires=["PyGObject>=3.18"],
-        cmdclass={"update_pot": UpdatePot}
+        install_requires=["PyGObject>=3.18"]
     )
