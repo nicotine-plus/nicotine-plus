@@ -195,7 +195,7 @@ class TransferList:
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
-            ("#" + _("File P_roperties"), self.on_file_properties),
+            ("#" + _("F_ile Properties"), self.on_file_properties),
             (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
@@ -769,7 +769,7 @@ class TransferList:
             # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
             act = False
 
-        for i in (_("Send to _Player"), _("_Open in File Manager"), _("File P_roperties"),
+        for i in (_("Send to _Player"), _("_Open in File Manager"), _("F_ile Properties"),
                   _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
             actions[i].set_enabled(act)
 

@@ -313,7 +313,7 @@ class UserBrowse:
                 ("", None),
                 ("#" + _("Send to _Player"), self.on_play_files),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
-                ("#" + _("File _Properties"), self.on_file_properties),
+                ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
@@ -326,7 +326,7 @@ class UserBrowse:
                 ("", None),
                 (">" + _("Download"), self.popup_menu_downloads_files),
                 ("", None),
-                ("#" + _("File _Properties"), self.on_file_properties),
+                ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
                 ("#" + _("Copy _File Path"), self.on_copy_file_path),
                 ("#" + _("Copy _URL"), self.on_copy_url),
@@ -403,13 +403,13 @@ class UserBrowse:
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
-            for i in (_("Download"), _("Upload"), _("Send to _Player"), _("File _Properties"),
+            for i in (_("Download"), _("Upload"), _("Send to _Player"), _("F_ile Properties"),
                       _("Copy _File Path"), _("Copy _URL")):
                 actions[i].set_enabled(num_selected_files)
 
             actions[_("Open in File _Manager")].set_enabled(self.selected_folder)
         else:
-            for i in (_("Download"), _("File _Properties"), _("Copy _File Path"), _("Copy _URL")):
+            for i in (_("Download"), _("F_ile Properties"), _("Copy _File Path"), _("Copy _URL")):
                 actions[i].set_enabled(num_selected_files)
 
         menu.set_num_selected_files(num_selected_files)

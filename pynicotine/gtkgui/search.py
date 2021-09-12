@@ -421,7 +421,7 @@ class Search:
             ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
             ("", None),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
-            ("#" + _("File _Properties"), self.on_file_properties),
+            ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
@@ -1160,7 +1160,7 @@ class Search:
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
+        for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
                   _("Copy _URL")):
             actions[i].set_enabled(False)
 
@@ -1174,7 +1174,7 @@ class Search:
         if self.selected_files_count:
             # At least one selected result is a file, activate file-related items
 
-            for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("File _Properties"),
+            for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
                       _("Copy _URL")):
                 actions[i].set_enabled(True)
 

@@ -37,8 +37,8 @@ class Downloads(TransferList):
 
     def __init__(self, frame, tab_label):
 
-        self.retry_label = _("Resume")
-        self.abort_label = _("Pause")
+        self.retry_label = _("_Resume")
+        self.abort_label = _("P_ause")
         self.aborted_status = _("Paused")
 
         TransferList.__init__(self, frame, type='download')
