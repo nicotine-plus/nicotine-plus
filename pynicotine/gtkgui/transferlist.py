@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from sys import maxsize
 from time import time
 
@@ -38,7 +36,6 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -49,21 +46,22 @@ from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.transfers import Transfer
 from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
 
-class TransferList:
+class TransferList(UserInterface):
 
     def __init__(self, frame, type):
 
+        super().__init__("ui/" + type + "s.ui")
+        getattr(frame, type + "svbox").add(self.Main)
+
         self.frame = frame
         self.type = type
-
-        load_ui_elements(self, os.path.join(frame.gui_dir, "ui", type + "s.ui"))
-        getattr(frame, type + "svbox").add(self.Main)
 
         grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
 

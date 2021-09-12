@@ -56,7 +56,6 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.utils import open_uri
@@ -74,13 +73,14 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 
 
-class NicotineFrame:
+class NicotineFrame(UserInterface):
 
     def __init__(self, application, network_processor, use_trayicon, start_hidden, bindip, port, ci_mode):
 
@@ -110,7 +110,7 @@ class NicotineFrame:
 
         """ Load UI """
 
-        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "mainwindow.ui"))
+        super().__init__("ui/mainwindow.ui")
 
         """ Logging """
 
@@ -919,19 +919,19 @@ class NicotineFrame:
 
     def on_keyboard_shortcuts(self, *args):
 
-        if not hasattr(self, "KeyboardShortcutsDialog"):
-            load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "shortcuts.ui"))
-            set_dialog_properties(self.KeyboardShortcutsDialog, self.MainWindow, quit_callback=self.on_hide)
+        if not hasattr(self, "shortcuts"):
+            self.shortcuts = UserInterface("ui/dialogs/shortcuts.ui")
+            set_dialog_properties(self.shortcuts.dialog, self.MainWindow, quit_callback=self.on_hide)
 
             if hasattr(Gtk.Entry.props, "show-emoji-icon"):
                 # Emoji picker only available in GTK 3.24+
-                self.EmojiShortcut.show()
+                self.shortcuts.emoji.show()
 
             # Workaround for off-centered dialog on first run
-            self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
-            self.on_hide(self.KeyboardShortcutsDialog)
+            self.shortcuts.dialog.present_with_time(Gdk.CURRENT_TIME)
+            self.on_hide(self.shortcuts.dialog)
 
-        self.KeyboardShortcutsDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.shortcuts.dialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
@@ -999,11 +999,11 @@ class NicotineFrame:
 
     def on_about(self, *args):
 
-        load_ui_elements(self, os.path.join(self.gui_dir, "ui", "dialogs", "about.ui"))
-        set_dialog_properties(self.AboutDialog, self.MainWindow)
+        self.about = UserInterface("ui/dialogs/about.ui")
+        set_dialog_properties(self.about.dialog, self.MainWindow)
 
         # Override link handler with our own
-        self.AboutDialog.connect("activate-link", self.on_about_uri)
+        self.about.dialog.connect("activate-link", self.on_about_uri)
 
         if self.images["n"]:
             logo = self.images["n"]
@@ -1011,17 +1011,17 @@ class NicotineFrame:
             if Gtk.get_major_version() == 4:
                 logo = Gdk.Texture.new_for_pixbuf(logo)
 
-            self.AboutDialog.set_logo(logo)
+            self.about.dialog.set_logo(logo)
         else:
-            self.AboutDialog.set_logo_icon_name(GLib.get_prgname())
+            self.about.dialog.set_logo_icon_name(GLib.get_prgname())
 
         if Gtk.get_major_version() == 4:
-            self.AboutDialog.connect("close-request", lambda x: x.destroy())
+            self.about.dialog.connect("close-request", lambda x: x.destroy())
         else:
-            self.AboutDialog.connect("response", lambda x, y: x.destroy())
+            self.about.dialog.connect("response", lambda x, y: x.destroy())
 
-        self.AboutDialog.set_version(config.version + "  •  GTK " + config.gtk_version)
-        self.AboutDialog.present_with_time(Gdk.CURRENT_TIME)
+        self.about.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
+        self.about.dialog.present_with_time(Gdk.CURRENT_TIME)
 
     def on_about_uri(self, widget, uri):
         open_uri(uri)

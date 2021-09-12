@@ -16,27 +16,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 
 
-class Statistics:
+class Statistics(UserInterface):
 
     def __init__(self, frame):
 
+        super().__init__("ui/dialogs/statistics.ui")
+
         self.frame = frame
-
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "statistics.ui"))
-
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,

@@ -18,13 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -33,15 +30,16 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class FastConfigureAssistant(object):
+class FastConfigureAssistant(UserInterface):
 
     def __init__(self, frame):
 
-        self.frame = frame
+        super().__init__("ui/dialogs/fastconfigure.ui")
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fastconfigure.ui"))
+        self.frame = frame
         set_dialog_properties(self.FastConfigureDialog, frame.MainWindow)
 
         for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):

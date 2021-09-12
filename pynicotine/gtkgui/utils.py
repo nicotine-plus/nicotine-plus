@@ -38,46 +38,6 @@ from pynicotine.utils import get_path
 NICOTINE = None
 
 
-def load_ui_elements(ui_class, filename):
-
-    try:
-        with open(filename, "r", encoding="utf-8") as f:
-            if Gtk.get_major_version() == 4:
-                builder = Gtk.Builder(ui_class)
-                builder.add_from_string(
-                    f.read()
-                    .replace("GtkRadioButton", "GtkCheckButton")
-                )
-                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
-            else:
-                builder = Gtk.Builder()
-                builder.add_from_string(
-                    f.read()
-                    .replace("<child type=\"center\">", "<child>")
-                    .replace("<child type=\"end\">", "<child>")
-                    .replace("<property name=\"focusable\">0</property>",
-                             "<property name=\"can-focus\">0</property>")
-                )
-                builder.connect_signals(ui_class)
-
-        for obj in builder.get_objects():
-            try:
-                obj_name = Gtk.Buildable.get_name(obj)
-
-                if not obj_name.startswith("_"):
-                    setattr(ui_class, obj_name, obj)
-
-            except TypeError:
-                pass
-
-    except Exception as e:
-        log.add(_("Failed to load ui file %(file)s: %(error)s"), {
-            "file": filename,
-            "error": e
-        })
-        sys.exit()
-
-
 def grab_widget_focus(widget):
     """ Workaround for GTK 4 where a direct call to Gtk.Widget.grab_focus in GLib.idle_add
     results in endless focus grab attempts and 100% CPU usage """

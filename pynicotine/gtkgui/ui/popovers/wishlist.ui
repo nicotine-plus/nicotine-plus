@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkPopover" id="WishListPopover">
+  <object class="GtkPopover" id="popover">
     <child>
-      <object class="GtkBox" id="Main">
+      <object class="GtkBox" id="main">
         <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <property name="margin-start">12</property>
@@ -18,11 +18,11 @@
             <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, useful for discovering uncommon files.</property>
             <property name="max-width-chars">55</property>
             <property name="wrap">1</property>
-            <property name="mnemonic_widget">WishlistView</property>
+            <property name="mnemonic_widget">list_view</property>
           </object>
         </child>
         <child>
-          <object class="GtkEntry" id="AddWishEntry">
+          <object class="GtkEntry" id="wish_entry">
             <property name="visible">1</property>
             <property name="hexpand">1</property>
             <property name="placeholder-text" translatable="yes">Add search term...</property>
@@ -44,7 +44,7 @@
                     <property name="height-request">380</property>
                     <property name="width-request">500</property>
                     <child>
-                      <object class="GtkTreeView" id="WishlistView">
+                      <object class="GtkTreeView" id="list_view">
                         <property name="visible">1</property>
                         <property name="rubber-banding">1</property>
                         <child internal-child="selection">

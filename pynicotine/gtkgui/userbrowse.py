@@ -36,7 +36,6 @@ from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -47,6 +46,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
@@ -155,15 +155,15 @@ class UserBrowses(IconNotebook):
                 break
 
 
-class UserBrowse:
+class UserBrowse(UserInterface):
 
     def __init__(self, userbrowses, user):
+
+        super().__init__("ui/userbrowse.ui")
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
 
-        # Build the window
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userbrowse.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         self.user = user

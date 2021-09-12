@@ -39,7 +39,6 @@ from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
@@ -53,6 +52,7 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
@@ -407,20 +407,20 @@ class ChatRooms(IconNotebook):
         self.autojoin = True
 
 
-class ChatRoom:
+class ChatRoom(UserInterface):
 
     def __init__(self, chatrooms, room, users, meta=False):
+
+        super().__init__("ui/chatrooms.ui")
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame
         self.room = room
         self.meta = meta  # not a real room if set to True
 
-        # Build the window
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "chatrooms.ui"))
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "chatroomcommands.ui"))
+        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
-        self.ShowChatHelp.set_popover(self.AboutChatRoomCommandsPopover)
+        self.ShowChatHelp.set_popover(self.command_help.popover)
 
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")

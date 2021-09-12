@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkPopover" id="AboutSearchFiltersPopover">
+  <object class="GtkPopover" id="popover">
     <child>
-      <object class="GtkScrolledWindow" id="AboutSearchFiltersView">
+      <object class="GtkScrolledWindow">
         <property name="visible">1</property>
         <property name="hscrollbar-policy">never</property>
         <property name="height-request">500</property>

@@ -22,7 +22,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import operator
-import os
 import re
 import sre_constants
 
@@ -39,7 +38,6 @@ from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -53,6 +51,7 @@ from pynicotine.gtkgui.widgets.treeview import select_user_row_iter
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
@@ -290,18 +289,17 @@ class Searches(IconNotebook):
                 break
 
 
-class Search:
+class Search(UserInterface):
 
     def __init__(self, searches, text, id, mode, remember, showtab):
+
+        super().__init__("ui/search.ui")
 
         self.searches = searches
         self.frame = searches.frame
 
-        # Build the window
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "search.ui"))
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
-
-        self.ShowSearchHelp.set_popover(self.AboutSearchFiltersPopover)
+        self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
+        self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")

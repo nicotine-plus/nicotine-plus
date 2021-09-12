@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkPopover" id="RoomListPopover">
+  <object class="GtkPopover" id="popover">
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
@@ -16,7 +16,7 @@
             <property name="visible">1</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkSearchEntry" id="SearchRooms">
+              <object class="GtkSearchEntry" id="search_entry">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
                 <property name="width-chars">15</property>
@@ -24,7 +24,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="RefreshButton">
+              <object class="GtkButton" id="refresh_button">
                 <property name="visible">1</property>
                 <property name="tooltip-text" translatable="yes">Refresh room list</property>
                 <signal name="clicked" handler="on_refresh" swapped="no"/>
@@ -54,7 +54,7 @@
                     <property name="height-request">400</property>
                     <property name="width-request">350</property>
                     <child>
-                      <object class="GtkTreeView" id="RoomsList">
+                      <object class="GtkTreeView" id="list_view">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <signal name="row-activated" handler="on_row_activated"/>
@@ -76,7 +76,7 @@
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="RoomFeed">
+                  <object class="GtkCheckButton" id="feed_check">
                     <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                     <property name="visible">1</property>
                     <property name="use-underline">1</property>
@@ -90,7 +90,7 @@
                 <property name="visible">1</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="AcceptPrivateRoom">
+                  <object class="GtkCheckButton" id="private_room_check">
                     <property name="label" translatable="yes">_Accept private room invitations</property>
                     <property name="visible">1</property>
                     <property name="use-underline">1</property>

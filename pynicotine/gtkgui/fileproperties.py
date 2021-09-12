@@ -19,23 +19,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.utils import load_ui_elements
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 
 
-class FileProperties:
+class FileProperties(UserInterface):
 
     def __init__(self, frame, properties):
 
+        super().__init__("ui/dialogs/fileproperties.ui")
+
         self.frame = frame
         self.properties = properties
-
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "fileproperties.ui"))
 
         self.dialog = generic_dialog(
             parent=frame.MainWindow,

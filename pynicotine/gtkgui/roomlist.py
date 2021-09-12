@@ -22,32 +22,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 
 
-class RoomList:
+class RoomList(UserInterface):
 
     def __init__(self, frame, joined_rooms, private_rooms):
 
-        # Build the window
+        super().__init__("ui/popovers/roomlist.ui")
+
         self.frame = frame
         self.server_rooms = set()
         self.joined_rooms = joined_rooms
         self.private_rooms = private_rooms
         frame.RoomSearchCombo.set_active_id("joined")
-
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "roomlist.ui"))
 
         self.room_model = Gtk.ListStore(
             str,
@@ -66,12 +63,12 @@ class RoomList:
             # Older GTK versions
             self.room_model_filtered = Gtk.TreeModelSort.sort_new_with_model(self.room_filter)
 
-        self.RoomsList.set_model(self.room_model_filtered)
+        self.list_view.set_model(self.room_model_filtered)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         attribute_columns = (2, 3)
         self.cols = initialise_columns(
-            None, self.RoomsList,
+            None, self.list_view,
             ["room", _("Room"), 260, "text", attribute_columns],
             ["users", _("Users"), 100, "number", attribute_columns]
         )
@@ -79,7 +76,7 @@ class RoomList:
         self.cols["users"].set_sort_column_id(1)
 
         self.popup_room = None
-        self.popup_menu = PopupMenu(self.frame, self.RoomsList, self.on_popup_menu)
+        self.popup_menu = PopupMenu(self.frame, self.list_view, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
@@ -88,13 +85,13 @@ class RoomList:
             ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
-        self.RoomsList.set_headers_clickable(True)
+        self.list_view.set_headers_clickable(True)
 
         self.search_iter = None
         self.query = ""
 
-        self.AcceptPrivateRoom.set_active(config.sections["server"]["private_chatrooms"])
-        self.AcceptPrivateRoom.connect("toggled", self.on_toggle_accept_private_room)
+        self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
+        self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
         frame.ChatroomsCompletion.set_model(self.room_model)
         frame.ChatroomsCompletion.set_text_column(0)
@@ -105,7 +102,7 @@ class RoomList:
         else:
             frame.RoomList.add(frame.RoomListLabel)
 
-        frame.RoomList.set_popover(self.RoomListPopover)
+        frame.RoomList.set_popover(self.popover)
 
     def get_selected_room(self, treeview):
 
@@ -157,7 +154,7 @@ class RoomList:
 
     def room_match_function(self, model, iterator, data=None):
 
-        query = self.SearchRooms.get_text().lower()
+        query = self.search_entry.get_text().lower()
 
         if not query:
             return True
@@ -296,7 +293,7 @@ class RoomList:
 
     def on_show_chat_feed(self, *args):
 
-        if self.RoomFeed.get_active():
+        if self.feed_check.get_active():
             self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
             self.frame.np.queue.append(slskmessages.JoinPublicRoom())
             return
@@ -326,7 +323,7 @@ class RoomList:
         self.frame.np.queue.append(slskmessages.RoomList())
 
     def on_toggle_accept_private_room(self, widget):
-        value = self.AcceptPrivateRoom.get_active()
+        value = self.private_room_check.get_active()
         self.frame.np.queue.append(slskmessages.PrivateRoomToggle(value))
 
     def update_visuals(self):

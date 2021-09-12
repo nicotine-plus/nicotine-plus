@@ -18,31 +18,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class Interests:
+class Interests(UserInterface):
 
     def __init__(self, frame):
 
+        super().__init__("ui/interests.ui")
+        frame.interestsvbox.add(self.Main)
+
         self.frame = frame
         self.populated_recommends = False
-
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "interests.ui"))
-        self.frame.interestsvbox.add(self.Main)
 
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)

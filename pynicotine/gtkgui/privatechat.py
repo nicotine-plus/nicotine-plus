@@ -35,7 +35,6 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import delete_log
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -45,6 +44,7 @@ from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 
@@ -157,18 +157,18 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.Main, user, 0)
 
 
-class PrivateChat:
+class PrivateChat(UserInterface):
 
     def __init__(self, chats, user, status):
+
+        super().__init__("ui/privatechat.ui")
 
         self.user = user
         self.chats = chats
         self.frame = chats.frame
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "privatechat.ui"))
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "privatechatcommands.ui"))
-
-        self.ShowChatHelp.set_popover(self.AboutPrivateChatCommandsPopover)
+        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+        self.ShowChatHelp.set_popover(self.command_help.popover)
 
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")

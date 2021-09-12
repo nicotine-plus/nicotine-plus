@@ -21,22 +21,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 
 
-class WishList:
+class WishList(UserInterface):
 
     def __init__(self, frame, searches):
+
+        super().__init__("ui/popovers/wishlist.ui")
 
         self.disconnected = False
         self.frame = frame
@@ -45,17 +45,15 @@ class WishList:
         self.timer = None
         self.wishes = {}
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "wishlist.ui"))
-
         self.store = Gtk.ListStore(str)
 
         self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
-            None, self.WishlistView,
+            None, self.list_view,
             ["wishes", _("Wishes"), -1, "text", None]
         )
 
-        self.WishlistView.set_model(self.store)
+        self.list_view.set_model(self.store)
 
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
@@ -66,7 +64,7 @@ class WishList:
         renderers = cols["wishes"].get_cells()
         for render in renderers:
             render.set_property('editable', True)
-            render.connect('edited', self.cell_edited_callback, self.WishlistView, 0)
+            render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
@@ -76,7 +74,7 @@ class WishList:
             frame.WishList.add(frame.WishListLabel)
             frame.WishList.connect("toggled", self.on_show)
 
-        frame.WishList.set_popover(self.WishListPopover)
+        frame.WishList.set_popover(self.popover)
 
     def cell_edited_callback(self, widget, index, value, treeview, pos):
 
@@ -90,14 +88,14 @@ class WishList:
 
     def on_add_wish(self, *args):
 
-        wish = self.AddWishEntry.get_text()
-        self.AddWishEntry.set_text("")
+        wish = self.wish_entry.get_text()
+        self.wish_entry.set_text("")
 
         self.add_wish(wish)
 
     def on_remove_wish(self, *args):
 
-        model, paths = self.WishlistView.get_selection().get_selected_rows()
+        model, paths = self.list_view.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
@@ -236,10 +234,10 @@ class WishList:
             # Highlight existing wish row
 
             iterator = self.wishes[text]
-            self.WishlistView.set_cursor(self.store.get_path(iterator))
-            self.WishlistView.grab_focus()
+            self.list_view.set_cursor(self.store.get_path(iterator))
+            self.list_view.grab_focus()
             return
 
         # Pre-fill text field with search term from active search tab
-        self.AddWishEntry.set_text(text)
-        self.AddWishEntry.grab_focus()
+        self.wish_entry.set_text(text)
+        self.wish_entry.grab_focus()

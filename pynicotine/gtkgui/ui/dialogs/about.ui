@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.18"/>
-  <object class="GtkAboutDialog" id="AboutDialog">
+  <object class="GtkAboutDialog" id="dialog">
     <property name="modal">1</property>
     <property name="comments" translatable="yes">Graphical client for the Soulseek peer-to-peer network</property>
     <property name="website">https://nicotine-plus.org</property>

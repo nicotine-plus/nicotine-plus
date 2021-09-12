@@ -35,7 +35,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
@@ -49,28 +48,19 @@ from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import unescape
 
 
-class BuildFrame:
-    """ This class build the individual frames from the settings window """
-
-    def __init__(self, window):
-
-        self.frame = self.p.frame
-
-        # Build the frame
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", window + ".ui"))
-
-
-class NetworkFrame(BuildFrame):
+class NetworkFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/network.ui")
 
-        BuildFrame.__init__(self, "network")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.needportmap = False
 
@@ -222,14 +212,14 @@ class NetworkFrame(BuildFrame):
         self.needportmap = True
 
 
-class DownloadsFrame(BuildFrame):
+class DownloadsFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/downloads.ui")
+
         self.p = parent
-
-        BuildFrame.__init__(self, "downloads")
-
+        self.frame = self.p.frame
         self.needrescan = False
 
         self.IncompleteDir = FileChooserButton(
@@ -563,13 +553,14 @@ class DownloadsFrame(BuildFrame):
         self.on_verify_filter(self.VerifyFilters)
 
 
-class SharesFrame(BuildFrame):
+class SharesFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/shares.ui")
 
-        BuildFrame.__init__(self, "shares")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.needrescan = False
         self.shareddirs = []
@@ -846,13 +837,14 @@ class SharesFrame(BuildFrame):
         self.remove_shared_dir()
 
 
-class UploadsFrame(BuildFrame):
+class UploadsFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/uploads.ui")
 
-        BuildFrame.__init__(self, "uploads")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "transfers": {
@@ -913,11 +905,14 @@ class UploadsFrame(BuildFrame):
         self.LimitSpeed.set_sensitive(sensitive)
 
 
-class GeoBlockFrame(BuildFrame):
+class GeoBlockFrame(UserInterface):
 
     def __init__(self, parent):
+
+        super().__init__("ui/settings/geoblock.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "geoblock")
+        self.frame = self.p.frame
 
         self.options = {
             "transfers": {
@@ -952,13 +947,14 @@ class GeoBlockFrame(BuildFrame):
         self.CustomGeoBlock.set_sensitive(widget.get_active())
 
 
-class UserInfoFrame(BuildFrame):
+class UserInfoFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/userinfo.ui")
 
-        BuildFrame.__init__(self, "userinfo")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.ImageChooser = FileChooserButton(self.ImageChooser, parent.dialog, "image")
 
@@ -997,12 +993,14 @@ class UserInfoFrame(BuildFrame):
         self.ImageChooser.clear()
 
 
-class IgnoreListFrame(BuildFrame):
+class IgnoreListFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/ignore.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "ignore")
+        self.frame = self.p.frame
 
         self.options = {
             "server": {
@@ -1152,12 +1150,14 @@ class IgnoreListFrame(BuildFrame):
         self.ignored_ips_list.clear()
 
 
-class BanListFrame(BuildFrame):
+class BanListFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/ban.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "ban")
+        self.frame = self.p.frame
 
         self.options = {
             "server": {
@@ -1320,13 +1320,14 @@ class BanListFrame(BuildFrame):
         self.blocked_list_model.clear()
 
 
-class TextToSpeechFrame(BuildFrame):
+class TextToSpeechFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/tts.ui")
 
-        BuildFrame.__init__(self, "tts")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "ui": {
@@ -1369,13 +1370,14 @@ class TextToSpeechFrame(BuildFrame):
         }
 
 
-class UserInterfaceFrame(BuildFrame):
+class UserInterfaceFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/userinterface.ui")
 
-        BuildFrame.__init__(self, "userinterface")
+        self.p = parent
+        self.frame = self.p.frame
 
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
@@ -1700,13 +1702,14 @@ class UserInterfaceFrame(BuildFrame):
         self.needcolors = 1
 
 
-class LoggingFrame(BuildFrame):
+class LoggingFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/log.ui")
 
-        BuildFrame.__init__(self, "log")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.PrivateLogDir = FileChooserButton(self.PrivateLogDir, parent.dialog, "folder")
         self.RoomLogDir = FileChooserButton(self.RoomLogDir, parent.dialog, "folder")
@@ -1774,21 +1777,23 @@ class LoggingFrame(BuildFrame):
         self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
 
-class SearchesFrame(BuildFrame):
+class SearchesFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/search.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "search")
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "popovers", "searchfilters.ui"))
+        self.frame = self.p.frame
+
+        self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
+        self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
             button = self.ShowSearchHelp.get_first_child()
             button.set_child(self.FilterHelpLabel)
         else:
             self.ShowSearchHelp.add(self.FilterHelpLabel)
-
-        self.ShowSearchHelp.set_popover(self.AboutSearchFiltersPopover)
 
         self.options = {
             "searches": {
@@ -1877,11 +1882,15 @@ class SearchesFrame(BuildFrame):
             w.set_sensitive(active)
 
 
-class AwayModeFrame(BuildFrame):
+class AwayModeFrame(UserInterface):
 
     def __init__(self, parent):
+
+        super().__init__("ui/settings/away.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "away")
+        self.frame = self.p.frame
+
         self.options = {
             "server": {
                 "autoaway": self.AutoAway,
@@ -1905,13 +1914,14 @@ class AwayModeFrame(BuildFrame):
         }
 
 
-class EventsFrame(BuildFrame):
+class EventsFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/events.ui")
 
-        BuildFrame.__init__(self, "events")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "transfers": {
@@ -1949,13 +1959,14 @@ class EventsFrame(BuildFrame):
         }
 
 
-class UrlCatchingFrame(BuildFrame):
+class UrlCatchingFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/urlcatch.ui")
 
-        BuildFrame.__init__(self, "urlcatch")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "urls": {
@@ -2092,13 +2103,14 @@ class UrlCatchingFrame(BuildFrame):
         self.protocolmodel.clear()
 
 
-class CensorListFrame(BuildFrame):
+class CensorListFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/censor.ui")
 
-        BuildFrame.__init__(self, "censor")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "words": {
@@ -2203,12 +2215,14 @@ class CensorListFrame(BuildFrame):
         self.censor_list_model.clear()
 
 
-class AutoReplaceListFrame(BuildFrame):
+class AutoReplaceListFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/autoreplace.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "autoreplace")
+        self.frame = self.p.frame
 
         self.options = {
             "words": {
@@ -2312,12 +2326,14 @@ class AutoReplaceListFrame(BuildFrame):
             self.replacelist.insert_with_valuesv(-1, self.column_numbers, [word, replacement])
 
 
-class CompletionFrame(BuildFrame):
+class CompletionFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/completion.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "completion")
+        self.frame = self.p.frame
 
         self.options = {
             "words": {
@@ -2393,12 +2409,14 @@ class CompletionFrame(BuildFrame):
         }
 
 
-class NowPlayingFrame(BuildFrame):
+class NowPlayingFrame(UserInterface):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/nowplaying.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "nowplaying")
+        self.frame = self.p.frame
 
         self.options = {
             "players": {
@@ -2562,13 +2580,14 @@ class NowPlayingFrame(BuildFrame):
         }
 
 
-class NotificationsFrame(BuildFrame):
+class NotificationsFrame(UserInterface):
 
     def __init__(self, parent):
 
-        self.p = parent
+        super().__init__("ui/settings/notifications.ui")
 
-        BuildFrame.__init__(self, "notifications")
+        self.p = parent
+        self.frame = self.p.frame
 
         self.options = {
             "notifications": {
@@ -2632,7 +2651,7 @@ class NotificationsFrame(BuildFrame):
         }
 
 
-class PluginsFrame(BuildFrame):
+class PluginsFrame(UserInterface):
 
     """ Plugin preferences dialog """
 
@@ -2932,8 +2951,10 @@ class PluginsFrame(BuildFrame):
 
     def __init__(self, parent):
 
+        super().__init__("ui/settings/plugin.ui")
+
         self.p = parent
-        BuildFrame.__init__(self, "plugin")
+        self.frame = self.p.frame
 
         self.options = {
             "plugins": {
@@ -3100,15 +3121,13 @@ class PluginsFrame(BuildFrame):
         }
 
 
-class Settings:
+class Settings(UserInterface):
 
     def __init__(self, frame):
 
+        super().__init__("ui/settings/settingswindow.ui")
+
         self.frame = frame
-
-        # Build the window
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "settings", "settingswindow.ui"))
-
         self.dialog = dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,

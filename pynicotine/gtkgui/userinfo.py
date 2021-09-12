@@ -29,7 +29,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import grab_widget_focus
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -37,6 +36,7 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
@@ -127,15 +127,15 @@ class UserInfos(IconNotebook):
             self.set_user_status(page.Main, user, 0)
 
 
-class UserInfo:
+class UserInfo(UserInterface):
 
     def __init__(self, userinfos, user):
+
+        super().__init__("ui/userinfo.ui")
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
 
-        # Build the window
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "userinfo.ui"))
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
 
         if Gtk.get_major_version() == 4:

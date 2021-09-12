@@ -21,7 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import time
 
 from gi.repository import GLib
@@ -29,7 +28,6 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -37,19 +35,19 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
+from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 
 
-class UserList:
+class UserList(UserInterface):
 
     def __init__(self, frame):
 
-        # Build the window
-        self.frame = frame
+        super().__init__("ui/buddylist.ui")
 
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "buddylist.ui"))
+        self.frame = frame
 
         """ Columns """
 

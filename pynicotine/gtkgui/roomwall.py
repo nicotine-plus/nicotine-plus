@@ -16,28 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import load_ui_elements
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
+from pynicotine.gtkgui.widgets.ui import UserInterface
 
 
-class RoomWall:
+class RoomWall(UserInterface):
 
     def __init__(self, frame, room):
 
+        super().__init__("ui/dialogs/roomwall.ui")
+
         self.frame = frame
         self.room = room
-
-        load_ui_elements(self, os.path.join(self.frame.gui_dir, "ui", "dialogs", "roomwall.ui"))
 
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
