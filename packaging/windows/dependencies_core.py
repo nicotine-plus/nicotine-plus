@@ -35,8 +35,7 @@ def install_pacman():
                 prefix + "python-flake8",
                 prefix + "python-pip",
                 prefix + "python-pylint",
-                prefix + "python-gobject",
-                prefix + "python-setuptools"]
+                prefix + "python-gobject"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 

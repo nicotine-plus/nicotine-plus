@@ -11,10 +11,10 @@ Build-Depends:
     gettext,
     gir1.2-gtk-3.0,
     lintian,
-    pylint3,
     python3 (>= 3.5),
     python3-gdbm,
     python3-gi,
+    python3-setuptools,
     xvfb
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
 Vcs-browser: https://github.com/nicotine-plus/nicotine-plus

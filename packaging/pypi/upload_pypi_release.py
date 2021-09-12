@@ -34,10 +34,8 @@ def install_dependencies():
 def create_packages():
     """ Prepare source distribution and wheel """
 
-    setuptools_wrapper = "import setuptools; exec(open('setup.py').read())"
-
     for target in ("sdist", "bdist_wheel"):
-        subprocess.check_call([sys.executable, "-c", setuptools_wrapper, target])
+        subprocess.check_call([sys.executable, "setup.py", target])
 
 
 def upload_packages():

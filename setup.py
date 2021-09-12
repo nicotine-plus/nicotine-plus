@@ -30,9 +30,8 @@
 import glob
 import os
 import sys
-import warnings
 
-from distutils.core import setup
+from setuptools import setup
 from pkgutil import walk_packages
 
 import pynicotine
@@ -75,10 +74,6 @@ def generate_translations():
 
 if __name__ == '__main__':
 
-    # Suppress distutils 'Unknown distribution option' for python_requires and install_requires.
-    # The aforementioned options are only used by pip and PyPi, distutils doesn't understand them.
-    warnings.filterwarnings("ignore", message="Unknown distribution option")
-
     # Specify a description for the PyPi project page
     LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
 network.
@@ -90,9 +85,8 @@ functionality while keeping current with the Soulseek protocol."""
     # Specify included files
     PACKAGES = ["pynicotine"] + \
         [name for importer, name, ispkg in walk_packages(path=pynicotine.__path__, prefix="pynicotine.") if ispkg]
-    PACKAGE_DATA = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in PACKAGES)
 
-    SCRIPTS = ["nicotine"]
+    PACKAGE_DATA = dict((package, ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"]) for package in PACKAGES)
 
     DATA_FILES = [
         ("share/applications", glob.glob("data/*.desktop")),
@@ -116,7 +110,7 @@ functionality while keeping current with the Soulseek protocol."""
         platforms="any",
         packages=PACKAGES,
         package_data=PACKAGE_DATA,
-        scripts=SCRIPTS,
+        scripts=["nicotine"],
         data_files=DATA_FILES,
         python_requires=">=3.5",
         install_requires=["PyGObject>=3.18"]

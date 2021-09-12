@@ -16,7 +16,8 @@
 
 ## Building
 
-* [gettext](https://www.gnu.org/software/gettext/) for generating translations.
+* [gettext](https://www.gnu.org/software/gettext/) for generating translations;
+* [setuptools](https://setuptools.readthedocs.io/en/latest/) for packaging.
 
 ## Testing
 
@@ -53,6 +54,19 @@ sudo apt install gir1.2-appindicator3-0.1 gir1.2-gspell-1
 
 ```sh
 sudo dnf install gspell libappindicator-gtk3
+```
+
+#### Installing the build dependencies
+* On Debian/Ubuntu based distributions:
+
+```sh
+sudo apt install gettext python3-setuptools
+```
+
+* On Redhat/Fedora based distributions:
+
+```sh
+sudo dnf install gettext python3-setuptools
 ```
 
 #### Installing the test dependencies

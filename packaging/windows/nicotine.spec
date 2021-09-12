@@ -18,13 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
+
+# Provide access to the pynicotine module
+sys.path.append(os.path.abspath(os.path.join(SPECPATH, "..", "..")))
 
 from ctypes.util import find_library
 from pkgutil import walk_packages
-
-# Provide access to the pynicotine module
-sys.path.append('.')
 
 import pynicotine.plugins
 
