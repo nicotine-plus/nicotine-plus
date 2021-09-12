@@ -442,20 +442,9 @@ class PrivateChat:
 
     def update_tags(self):
 
-        self.chat_textview.update_tag(self.tag_remote)
-        self.chat_textview.update_tag(self.tag_local)
-        self.chat_textview.update_tag(self.tag_action)
-        self.chat_textview.update_tag(self.tag_hilite)
-
-        color = get_user_status_color(self.status)
-        self.chat_textview.update_tag(self.tag_username, color)
-
-        if not self.frame.np.logged_in:
-            color = "useroffline"
-        else:
-            color = "useraway" if self.frame.np.away else "useronline"
-
-        self.chat_textview.update_tag(self.tag_my_username, color)
+        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
+                    self.tag_username, self.tag_my_username):
+            self.chat_textview.update_tag(tag)
 
     def get_user_status(self, status):
 

@@ -1014,8 +1014,7 @@ class ChatRoom:
         self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(self.users[user], 5, status)
 
-        if user in self.tag_users:
-            self.update_user_tag(user)
+        self.update_user_tag(user)
 
     def set_user_country(self, user, country):
 
@@ -1079,14 +1078,11 @@ class ChatRoom:
 
     def update_tags(self):
 
-        self.chat_textview.update_tag(self.tag_remote)
-        self.chat_textview.update_tag(self.tag_local)
-        self.chat_textview.update_tag(self.tag_action)
-        self.chat_textview.update_tag(self.tag_hilite)
-        self.chat_textview.update_tag(self.tag_log)
+        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite, self.tag_log):
+            self.chat_textview.update_tag(tag)
 
-        for username in self.tag_users:
-            self.update_user_tag(username)
+        for tag in self.tag_users.values():
+            self.chat_textview.update_tag(tag)
 
     def on_leave(self, *args):
 

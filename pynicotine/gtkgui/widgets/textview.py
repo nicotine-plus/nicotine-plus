@@ -199,10 +199,10 @@ class TextView:
 
     def update_tag(self, tag, color=None):
 
-        if color is None and hasattr(tag, "color"):
-            color = tag.color
+        if color is not None:
+            tag.color = color
 
-        update_tag_visuals(tag, color, self.font)
+        update_tag_visuals(tag, tag.color, self.font)
 
     def update_tags(self):
         for tag in self.tag_urls:
