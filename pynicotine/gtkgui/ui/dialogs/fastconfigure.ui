@@ -3,7 +3,7 @@
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAssistant" id="FastConfigureDialog">
     <property name="modal">1</property>
-    <property name="default-width">800</property>
+    <property name="default-width">720</property>
     <signal name="cancel" handler="on_cancel" swapped="no"/>
     <signal name="close" handler="on_close" swapped="no"/>
     <signal name="prepare" handler="on_prepare" swapped="no"/>
