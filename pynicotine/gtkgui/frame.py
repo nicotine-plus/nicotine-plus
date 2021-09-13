@@ -1715,7 +1715,7 @@ class NicotineFrame(UserInterface):
             self.set_active_header_bar("UserList")
             self.userlist.update()
 
-            if self.userlist.UserListTree.get_visible():
+            if self.userlist.Main.get_visible():
                 GLib.idle_add(lambda: self.userlist.UserListTree.grab_focus() is False)
 
         elif tab_label == self.InterestsTabLabel:
