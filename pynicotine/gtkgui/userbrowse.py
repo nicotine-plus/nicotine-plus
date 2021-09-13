@@ -74,7 +74,7 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() is False)
+                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
                 break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):

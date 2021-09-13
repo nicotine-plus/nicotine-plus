@@ -94,7 +94,7 @@ class Searches(IconNotebook):
                 continue
 
             if search["tab"].Main == page:
-                GLib.idle_add(lambda: search["tab"].ResultsList.grab_focus() is False)
+                GLib.idle_add(lambda: search["tab"].ResultsList.grab_focus() == -1)
                 break
 
     def populate_search_history(self):

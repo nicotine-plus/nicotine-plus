@@ -135,7 +135,7 @@ class ChatRooms(IconNotebook):
 
         for name, room in self.joinedrooms.items():
             if room.Main == page:
-                GLib.idle_add(lambda: room.ChatEntry.grab_focus() is False)
+                GLib.idle_add(lambda: room.ChatEntry.grab_focus() == -1)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not room.opened:

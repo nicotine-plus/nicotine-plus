@@ -74,7 +74,7 @@ class PrivateChats(IconNotebook):
 
         for user, tab in list(self.users.items()):
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.ChatLine.grab_focus() is False)
+                GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:

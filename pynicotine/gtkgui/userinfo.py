@@ -63,7 +63,7 @@ class UserInfos(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.descr.grab_focus() is False)
+                GLib.idle_add(lambda: tab.descr.grab_focus() == -1)
                 break
 
     def show_user(self, user):
