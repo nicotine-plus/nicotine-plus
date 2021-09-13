@@ -8,7 +8,7 @@
       <object class="GtkShortcutsSection">
         <property name="visible">1</property>
         <property name="section-name">shortcuts</property>
-        <property name="max-height">13</property>
+        <property name="max-height">11</property>
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
@@ -141,33 +141,19 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
-            <property name="title" translatable="yes">File Lists</property>
+            <property name="title" translatable="yes">Shares</property>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Primary&gt;c</property>
-                <property name="title" translatable="yes">Copy File Path</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;p</property>
+                <property name="title" translatable="yes">Rescan Public Shares</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Alt&gt;Return</property>
-                <property name="title" translatable="yes">File Properties</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">r</property>
-                <property name="title" translatable="yes">Resume / Retry Transfer</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">t</property>
-                <property name="title" translatable="yes">Pause / Abort Transfer</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;b</property>
+                <property name="title" translatable="yes">Rescan Buddy Shares</property>
               </object>
             </child>
           </object>
@@ -237,19 +223,33 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
-            <property name="title" translatable="yes">Shares</property>
+            <property name="title" translatable="yes">File Lists</property>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;p</property>
-                <property name="title" translatable="yes">Rescan Public Shares</property>
+                <property name="accelerator">&lt;Primary&gt;c</property>
+                <property name="title" translatable="yes">Copy File Path</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;b</property>
-                <property name="title" translatable="yes">Rescan Buddy Shares</property>
+                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="title" translatable="yes">File Properties</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">r</property>
+                <property name="title" translatable="yes">Resume / Retry Transfer</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">t</property>
+                <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
             </child>
           </object>
