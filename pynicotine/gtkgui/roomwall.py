@@ -20,9 +20,6 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -32,23 +29,22 @@ class RoomWall(UserInterface):
 
     def __init__(self, frame, room):
 
-        super().__init__("ui/dialogs/roomwall.ui")
+        super().__init__("ui/popovers/roomwall.ui")
 
         self.frame = frame
         self.room = room
+        self.room_wall_textview = TextView(self.message_view)
 
-        self.dialog = generic_dialog(
-            parent=frame.MainWindow,
-            content_box=self.Main,
-            quit_callback=self.hide,
-            title=_("Room Wall"),
-            width=800,
-            height=600
-        )
+        if Gtk.get_major_version() == 4:
+            button = room.ShowRoomWall.get_first_child()
+            button.connect("clicked", self.on_show)
+        else:
+            room.ShowRoomWall.connect("clicked", self.on_show)
 
-        self.room_wall_textview = TextView(self.RoomWallList)
+        room.ShowRoomWall.set_popover(self.popover)
 
     def update_message_list(self):
+
         tickers = self.room.tickers.get_tickers()
         self.room_wall_textview.append_line(
             "%s" % ("\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])),
@@ -56,8 +52,8 @@ class RoomWall(UserInterface):
 
     def clear_room_wall_message(self, update_list=True):
 
-        entry_text = self.RoomWallEntry.get_text()
-        self.RoomWallEntry.set_text("")
+        entry_text = self.message_entry.get_text()
+        self.message_entry.set_text("")
 
         login = config.sections["server"]["login"]
         self.room.tickers.remove_ticker(login)
@@ -94,21 +90,14 @@ class RoomWall(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def hide(self, *args):
+    def on_show(self, *args):
 
         self.room_wall_textview.clear()
-        dialog_hide(self.dialog)
-        return True
-
-    def show(self):
-
         self.update_message_list()
 
         login = config.sections["server"]["login"]
 
         for user, msg in self.room.tickers.get_tickers():
             if user == login:
-                self.RoomWallEntry.set_text(msg)
-                self.RoomWallEntry.select_region(0, -1)
-
-        dialog_show(self.dialog)
+                self.message_entry.set_text(msg)
+                self.message_entry.select_region(0, -1)

@@ -145,18 +145,8 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="ShowRoomWall">
+                          <object class="GtkMenuButton" id="ShowRoomWall">
                             <property name="visible">1</property>
-                            <signal name="clicked" handler="on_show_room_wall" swapped="no"/>
-                            <child>
-                              <object class="GtkImage">
-                                <property name="visible">1</property>
-                                <property name="icon-name">view-list-symbolic</property>
-                              </object>
-                            </child>
-                            <style>
-                              <class name="image-button"/>
-                            </style>
                           </object>
                         </child>
                         <child>

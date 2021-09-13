@@ -72,7 +72,7 @@ class WishList(UserInterface):
             button.set_child(frame.WishListLabel)
         else:
             frame.WishList.add(frame.WishListLabel)
-            frame.WishList.connect("toggled", self.on_show)
+            frame.WishList.connect("clicked", self.on_show)
 
         frame.WishList.set_popover(self.popover)
 

@@ -422,6 +422,7 @@ class ChatRoom(UserInterface):
         self.ShowChatHelp.set_popover(self.command_help.popover)
 
         if Gtk.get_major_version() == 4:
+            self.ShowRoomWall.set_icon_name("view-list-symbolic")
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
 
             self.ChatPaned.set_resize_start_child(True)
@@ -430,6 +431,7 @@ class ChatRoom(UserInterface):
             self.ChatPanedSecond.set_shrink_end_child(False)
 
         else:
+            self.ShowRoomWall.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
@@ -735,9 +737,6 @@ class ChatRoom(UserInterface):
         actions = menu.get_actions()
         actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
         actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
-
-    def on_show_room_wall(self, *args):
-        self.room_wall.show()
 
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])
