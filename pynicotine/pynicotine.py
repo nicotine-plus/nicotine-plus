@@ -266,7 +266,7 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add_debug("Loading Nicotine+ %(nic_version)s, using Python %(py_version)s" % {
+        log.add("Loading Nicotine+ %(nic_version)s, using Python %(py_version)s" % {
             "nic_version": config.version,
             "py_version": config.python_version
         })

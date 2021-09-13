@@ -130,7 +130,7 @@ class NicotineFrame(UserInterface):
             config.load_config()
 
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-        log.add_debug("Loading GTK %s", config.gtk_version)
+        log.add("Loading GTK %s", config.gtk_version)
 
         """ GTK Settings """
 
