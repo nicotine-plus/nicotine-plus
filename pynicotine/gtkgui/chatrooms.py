@@ -198,7 +198,7 @@ class ChatRooms(IconNotebook):
 
             for room in room_list:
                 if room == 'Public ':
-                    self.roomlist.RoomFeed.set_active(True)
+                    self.roomlist.feed_check.set_active(True)
 
                 elif isinstance(room, str):
                     self.autojoin_rooms.add(room)
@@ -1096,7 +1096,7 @@ class ChatRoom(UserInterface):
             self.frame.np.queue.append(slskmessages.LeaveRoom(self.room))
 
         elif self.room == 'Public ':
-            self.chatrooms.roomlist.RoomFeed.set_active(False)
+            self.chatrooms.roomlist.feed_check.set_active(False)
 
         self.frame.np.pluginhandler.leave_chatroom_notification(self.room)
 
