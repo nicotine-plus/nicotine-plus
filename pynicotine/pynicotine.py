@@ -702,10 +702,8 @@ Error: %(error)s""", {
 
         country_code = self.geoip.get_country_code(msg.ip_address)
 
-        if country_code == "-":
-            country_code = ""
-
         self.chatrooms.set_user_country(user, country_code)
+        self.userinfo.set_user_country(user, country_code)
         self.userlist.set_user_country(user, country_code)
 
         # From this point on all paths should call
@@ -1127,6 +1125,22 @@ Error: %(error)s""", {
 
     def request_set_status(self, status):
         self.queue.append(slskmessages.SetStatus(status))
+
+    def get_user_country(self, user):
+        """ Retrieve a user's country code if previously cached, otherwise request
+        user's IP address to determine country """
+
+        user_address = self.users.get(user)
+
+        if user_address and isinstance(user_address.addr, tuple):
+            ip_address, _port = user_address.addr
+            country_code = self.geoip.get_country_code(ip_address)
+            return country_code
+
+        if user not in self.ip_requested:
+            self.queue.append(slskmessages.GetPeerAddress(user))
+
+        return None
 
     def watch_user(self, user, force_update=False):
         """ Tell the server we want to be notified of status/stat updates

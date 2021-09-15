@@ -574,7 +574,7 @@ class ChatRoom(UserInterface):
         status_image = self.frame.get_status_image(status)
         flag_image = self.frame.get_flag_image(country)
 
-        # Request user's IP address, so we can get the country
+        # Request user's IP address, so we can get the country and ignore messages by IP
         self.frame.np.queue.append(slskmessages.GetPeerAddress(username))
 
         h_speed = ""

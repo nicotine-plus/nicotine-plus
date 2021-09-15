@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pynicotine import slskmessages
-
 
 class UserList:
 
@@ -43,15 +41,14 @@ class UserList:
             self.ui_callback.server_disconnect()
 
     def add_user(self, user):
+        if self.ui_callback:
+            self.ui_callback.add_user(user)
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
 
-        # Request user's IP address, so we can get the country
-        self.queue.append(slskmessages.GetPeerAddress(user))
-
-        if self.ui_callback:
-            self.ui_callback.add_user(user)
+        # Request user country
+        self.set_user_country(user, self.core.get_user_country(user))
 
     def remove_user(self, user):
         if self.ui_callback:
@@ -65,9 +62,9 @@ class UserList:
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
-    def set_user_country(self, user, country):
+    def set_user_country(self, user, country_code):
         if self.ui_callback:
-            self.ui_callback.set_user_country(user, country)
+            self.ui_callback.set_user_country(user, country_code)
 
     def get_user_stats(self, msg):
         if self.ui_callback:

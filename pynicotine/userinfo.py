@@ -41,9 +41,23 @@ class UserInfo:
             self.ui_callback.server_disconnect()
 
     def add_user(self, user):
+        if user not in self.users:
+            self.users.add(user)
 
-        if user in self.users:
-            return
+    def remove_user(self, user):
+        self.users.remove(user)
+
+    def show_user(self, user):
+        if self.ui_callback:
+            self.ui_callback.show_user(user)
+
+    def request_user_info(self, user):
+
+        self.add_user(user)
+        self.show_user(user)
+
+        # Request user description, picture and queue information
+        self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))
 
         # Request user status, speed and number of shared files
         self.core.watch_user(user, force_update=True)
@@ -51,24 +65,8 @@ class UserInfo:
         # Request user interests
         self.queue.append(slskmessages.UserInterests(user))
 
-        self.users.add(user)
-
-    def remove_user(self, user):
-        self.users.remove(user)
-
-    def show_user(self, user):
-
-        self.add_user(user)
-
-        if self.ui_callback:
-            self.ui_callback.show_user(user)
-
-    def request_user_info(self, user):
-
-        msg = slskmessages.UserInfoRequest(None)
-
-        self.show_user(user)
-        self.core.send_message_to_peer(user, msg)
+        # Request user country
+        self.set_user_country(user, self.core.get_user_country(user))
 
     def set_conn(self, username, conn):
         if self.ui_callback:
@@ -85,6 +83,10 @@ class UserInfo:
     def get_user_status(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
+
+    def set_user_country(self, user, country_code):
+        if self.ui_callback:
+            self.ui_callback.set_user_country(user, country_code)
 
     def update_gauge(self, msg):
         if self.ui_callback:

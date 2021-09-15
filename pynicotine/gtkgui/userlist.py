@@ -422,20 +422,20 @@ class UserList(UserInterface):
         self.usersmodel.set_value(iterator, 11, GObject.Value(GObject.TYPE_UINT64, avgspeed))
         self.usersmodel.set_value(iterator, 12, GObject.Value(GObject.TYPE_UINT64, files))
 
-    def set_user_country(self, user, country):
+    def set_user_country(self, user, country_code):
 
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
             return
 
-        flag_image = self.frame.get_flag_image(country)
+        flag_image = self.frame.get_flag_image(country_code)
 
         if not flag_image:
             return
 
         self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, flag_image))
-        self.usersmodel.set_value(iterator, 14, "flag_" + country)
+        self.usersmodel.set_value(iterator, 14, "flag_" + country_code)
 
     def add_user(self, user):
 

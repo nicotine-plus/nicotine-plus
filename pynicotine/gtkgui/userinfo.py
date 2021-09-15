@@ -28,6 +28,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -102,6 +103,10 @@ class UserInfos(IconNotebook):
         if msg.user in self.pages:
             page = self.pages[msg.user]
             self.set_user_status(page.Main, msg.user, msg.status)
+
+    def set_user_country(self, user, country_code):
+        if user in self.pages:
+            self.pages[user].set_user_country(country_code)
 
     def user_interests(self, msg):
         if msg.user in self.pages:
@@ -294,6 +299,16 @@ class UserInfo(UserInterface):
 
         self.filesshared.set_text(humanize(msg.files))
         self.dirsshared.set_text(humanize(msg.dirs))
+
+    def set_user_country(self, country_code):
+
+        if country_code:
+            country = GeoIP.country_code_to_name(country_code)
+            country_text = "%s (%s)" % (country, country_code)
+        else:
+            country_text = _("Unknown")
+
+        self.country.set_text(country_text)
 
     def show_connection_error(self):
 

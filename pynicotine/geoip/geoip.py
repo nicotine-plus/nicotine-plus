@@ -279,6 +279,7 @@ class GeoIP:
 
     @classmethod
     def country_code_to_name(cls, country_code):
+
         try:
             return cls.COUNTRY_LIST[country_code.lower()]
 
@@ -286,4 +287,10 @@ class GeoIP:
             return country_code
 
     def get_country_code(self, addr):
-        return self.ip2location.get_country_code(addr)
+
+        country_code = self.ip2location.get_country_code(addr)
+
+        if country_code == "-":
+            country_code = ""
+
+        return country_code
