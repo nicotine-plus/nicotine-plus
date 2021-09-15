@@ -843,7 +843,7 @@ class TransferList(UserInterface):
 
         keycodes, mods = parse_accelerator("<Alt>Return")
 
-        if keycode in keycodes:
+        if state & mods and keycode in keycodes:
             self.on_file_properties()
             return True
 

@@ -690,7 +690,7 @@ class UserBrowse(UserInterface):
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Alt>Return")
 
-        if keycode in keycodes:
+        if state & mods and keycode in keycodes:
             self.on_file_properties()
             return True
 
