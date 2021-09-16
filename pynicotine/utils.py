@@ -195,7 +195,7 @@ def _handle_log(folder, filename, callback):
 def open_log_callback(path, _data):
 
     if not os.path.exists(path):
-        with open(path, "w"):
+        with open(path, "w", encoding="utf-8"):
             # No logs, create empty file
             pass
 
@@ -204,7 +204,7 @@ def open_log_callback(path, _data):
 
 def delete_log_callback(path, _data):
 
-    with open(path, "w"):
+    with open(path, "w", encoding="utf-8"):
         # Check if path should contain special characters
         pass
 
