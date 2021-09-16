@@ -26,8 +26,8 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
+from pynicotine.utils import open_uri
 
 
 """ Textview """

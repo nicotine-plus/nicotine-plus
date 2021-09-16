@@ -29,6 +29,8 @@ import errno
 import json
 import os
 import pickle
+import sys
+import webbrowser
 
 from pynicotine.config import config
 from pynicotine.logfacility import log
@@ -36,6 +38,7 @@ from pynicotine.logfacility import log
 ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
 REPLACEMENTCHAR = '_'
+OPEN_SOULSEEK_URL = None
 
 
 def rename_process(new_name, debug_info=False):
@@ -115,6 +118,97 @@ def get_path(folder_name, base_name, callback, data=None):
         # Use path with forbidden characters removed (NTFS/FAT)
         filepath = os.path.join(folder_name, clean_file(base_name))
         callback(filepath, data)
+
+
+def open_file_path(file_path, command=None):
+    """ Currently used to either open a folder or play an audio file
+    Tries to run a user-specified command first, and falls back to
+    the system default. """
+
+    try:
+        file_path = os.path.normpath(file_path)
+
+        if command and "$" in command:
+            execute_command(command, file_path)
+
+        elif sys.platform == "win32":
+            os.startfile(file_path)
+
+        elif sys.platform == "darwin":
+            execute_command("open $", file_path)
+
+        else:
+            webbrowser.open(file_path)
+
+    except Exception as error:
+        log.add(_("Failed to open file path: %s"), error)
+
+
+def open_uri(uri):
+    """ Open a URI in an external (web) browser. The given argument has
+    to be a properly formed URI including the scheme (fe. HTTP). """
+
+    # Situation 1, user defined a way of handling the protocol
+    protocol = uri[:uri.find(":")]
+    protocol_handlers = config.sections["urls"]["protocols"]
+
+    if protocol in protocol_handlers and protocol_handlers[protocol]:
+        try:
+            execute_command(protocol_handlers[protocol], uri)
+            return
+        except RuntimeError as error:
+            log.add(error)
+
+    if protocol == "slsk":
+        OPEN_SOULSEEK_URL(uri.strip())
+        return
+
+    # Situation 2, user did not define a way of handling the protocol
+    try:
+        webbrowser.open(uri)
+
+    except Exception as error:
+        log.add(_("Failed to open URL: %s"), error)
+
+
+def open_log(folder, filename):
+    _handle_log(folder, filename, open_log_callback)
+
+
+def delete_log(folder, filename):
+    _handle_log(folder, filename, delete_log_callback)
+
+
+def _handle_log(folder, filename, callback):
+
+    try:
+        if not os.path.isdir(folder):
+            os.makedirs(folder)
+
+        filename = filename.replace(os.sep, "-") + ".log"
+        get_path(folder, filename, callback)
+
+    except Exception as error:
+        log.add("Failed to process log file: %s", error)
+
+
+def open_log_callback(path, _data):
+
+    if not os.path.exists(path):
+        with open(path, "w"):
+            # No logs, create empty file
+            pass
+
+    open_file_path(path)
+
+
+def delete_log_callback(path, _data):
+
+    with open(path, "w"):
+        # Check if path should contain special characters
+        pass
+
+    os.remove(path)
 
 
 def get_latest_version():

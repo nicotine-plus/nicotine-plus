@@ -35,7 +35,6 @@ from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -50,6 +49,7 @@ from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
+from pynicotine.utils import open_file_path
 
 
 class UserBrowses(IconNotebook):

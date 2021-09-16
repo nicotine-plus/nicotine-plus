@@ -29,8 +29,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import open_file_path
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.utils import open_file_path
 
 
 class Downloads(TransferList):
@@ -55,6 +55,9 @@ class Downloads(TransferList):
             ("", None),
             ("#" + _("Clear All..."), self.on_try_clear_all),
         )
+
+    def switch_tab(self):
+        self.frame.change_main_page("downloads")
 
     def on_try_clear_queued(self, *args):
 

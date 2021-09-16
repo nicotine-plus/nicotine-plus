@@ -37,8 +37,6 @@ from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
 from pynicotine.gtkgui.roomlist import RoomList
 from pynicotine.gtkgui.roomwall import RoomWall
-from pynicotine.gtkgui.utils import delete_log
-from pynicotine.gtkgui.utils import open_log
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -53,9 +51,11 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
+from pynicotine.utils import open_log
 
 
 class ChatRooms(IconNotebook):

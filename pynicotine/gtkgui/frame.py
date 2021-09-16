@@ -38,7 +38,6 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.config import config
-from pynicotine.gtkgui import utils
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
@@ -55,9 +54,6 @@ from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import open_file_path
-from pynicotine.gtkgui.utils import open_log
-from pynicotine.gtkgui.utils import open_uri
 from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
@@ -77,6 +73,9 @@ from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
 from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
+from pynicotine.utils import open_file_path
+from pynicotine.utils import open_log
+from pynicotine.utils import open_uri
 
 
 class NicotineFrame(UserInterface):
@@ -100,7 +99,6 @@ class NicotineFrame(UserInterface):
         self.awaytimerid = None
         self.bindip = bindip
         self.port = port
-        utils.NICOTINE = self
 
         # Initialize these windows/dialogs later when necessary
         self.fastconfigure = None
