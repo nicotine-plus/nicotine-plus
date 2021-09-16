@@ -18,91 +18,106 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import socket
+import threading
 
-from pynicotine import slskmessages
-from pynicotine.pluginsystem import BasePlugin
-from pynicotine.pluginsystem import returncode
+from pynicotine.pluginsystem import BasePlugin, ResponseThrottle, returncode
+from pynicotine.slskmessages import GetPeerAddress
 
 
 class Plugin(BasePlugin):
 
     __name__ = "Port Checker"
 
+    settings = {
+        'keyword_enabled': False,
+        'socket_timeout': 10
+    }
+    metasettings = {
+        'keyword_enabled': {
+            'description': 'Enable "portscan" keyword trigger',
+            'type': 'bool'
+        },
+        'socket_timeout': {
+            'description': 'Socket timeout (in seconds)',
+            'type': 'int'
+        }
+    }
+    my_username = checkroom = throttle = pending_user = ''
+
     def init(self):
-        # keys are users, value of 1 means pending requested scan, 2 means pending unrequested scan
-        # and 3 means the user was scanned
-        self.checked = {}
+
+        self.throttle = ResponseThrottle(self.core, self.__name__)
+        self.my_username = self.config.sections["server"]["login"]
         self.checkroom = 'nicotine'
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        if room != self.checkroom:
+        if room != self.checkroom or not self.settings['keyword_enabled'] or self.my_username == user:
             return
-        words = line.lower().split()
-        if 'portscan' in words:
-            self.log("%s requested a port scan", (user,))
-            self.checked[user] = 1
-            self.resolve(user)
-        elif (('cant' in words or "can't" in words or 'can someone' in words or 'can anyone' in words)
-              and ('browse' in words or 'download' in words or 'connect' in words)):
-            if user not in self.checked:
-                self.log("%s seems to have trouble, performing a port scan", (user,))
-                self.checked[user] = 2
-                self.resolve(user)
-            else:
-                self.log("%s seems to have trouble, but we already performed a port scan", (user,))
 
-    def user_resolve_notification(self, user, ip_address, port, country):
+        if not self.throttle.ok_to_respond(room, user, line, 10):
+            return
 
-        if user in self.checked:
-            status = self.checkport(ip_address, port)
-            if status in ('open',):
-                if self.checked[user] in (1,):
-                    self.send_public(
-                        self.checkroom,
-                        '%s: Your port is accessible, you can blame others in case of problems ;)' % user)
-                else:
-                    self.log("%s: Port is accessible, not reporting since this was an unrequested scan.", (user,))
-            elif status in ('closed',):
-                self.send_public(
-                    self.checkroom,
-                    ('%s: Alas, your firewall and/or router is not configured properly. I could not '
-                     'contact you at port %s') % (user, port))
-            else:
-                if self.checked[user] in (1,):
-                    self.send_public(
-                        self.checkroom,
-                        '%s: the server doesn\'t want to tell me your IP address, I cannot scan you.' % (user,))
-                else:
-                    self.log("%s: Unknown port status on %s:%s", (user, ip_address, port))
-            self.checked[user] = 3
+        if 'portscan' in line.lower():  # noqa
+            self.log("%s requested a port scan", user)
+            self.resolve(user, True)
 
-    def my_public_command(self, room, args):
+    def user_resolve_notification(self, user, ip, port, _):
 
-        if args:
-            self.checked[args] = 1
-            self.resolve(args)
-            return returncode['zap']
+        if not self.pending_user or user not in self.pending_user:
+            return
+
+        user, announce = self.pending_user
+        self.pending_user = ()
+        threading.Thread(target=self.check_port, args=(user, ip, port, announce)).start()
+
+    def resolve(self, user, announce):
+
+        if user in self.core.users and isinstance(self.core.users[user].addr, tuple):
+            ip, port = self.core.users[user].addr
+            threading.Thread(target=self.check_port, args=(user, ip, port, announce)).start()
+        else:
+            self.pending_user = user, announce
+            self.core.queue.append(GetPeerAddress(user))
+
+    def check_port(self, user, ip, port, announce):
+
+        status = self._check_port(ip, port)
+
+        if announce and status in ('open', 'closed'):
+            self.throttle.responded()
+            self.send_public(self.checkroom, '%s: Your port is %s' % (user, status))
+
+        self.log("User %s on %s:%s port is %s.", (user, ip, port, status))
+
+        return
+
+    def _check_port(self, ip, port):
+
+        if ip in ('0.0.0.0',) or port in (0,):
+            return 'unknown'
+
+        timeout = self.settings['socket_timeout']
+        self.log('Scanning %s:%d (socket timeout %d seconds)...', (ip, port, timeout))
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(timeout)
+
+        result = sock.connect_ex((ip, port))
+        sock.close()
+
+        if result == 0:
+            return 'open'
+        else:
+            return 'closed'
+
+    def port_checker_command(self, _, user):
+
+        if user:
+            self.resolve(user, False)
         else:
             self.log("Provide a user name as parameter.")
 
-    def resolve(self, user):
-        self.core.queue.append(slskmessages.GetPeerAddress(user))
+        return returncode['zap']
 
-    def checkport(self, ip_address, port):
-
-        if ip_address in ('0.0.0.0',) or port in (0,):
-            return 'unknown'
-        self.log("Testing port at %s:%s", (ip_address, port))
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(60)
-        try:
-            s.connect((ip_address, port))
-            self.log("%s:%s: Port is open.", (ip_address, port))
-            return 'open'
-        except socket.error:
-            self.log("%s:%s: Port is closed.", (ip_address, port))
-            return 'closed'
-        s.close()
-
-    __publiccommands__ = [('port', my_public_command)]
+    __publiccommands__ = __privatecommands__ = [('port', port_checker_command)]  # noqa
