@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import threading
 import socket
+import threading
 
 from pynicotine.pluginsystem import BasePlugin, ResponseThrottle, returncode
 from pynicotine.slskmessages import GetPeerAddress
 
 
 class Plugin(BasePlugin):
+
     __name__ = "Port Checker"
 
     settings = {
@@ -88,7 +89,7 @@ class Plugin(BasePlugin):
             self.send_public(self.checkroom, '%s: Your port is %s' % (user, status))
 
         self.log("User %s on %s:%s port is %s.", (user, ip, port, status))
-        
+
         return
 
     def _check_port(self, ip, port):
