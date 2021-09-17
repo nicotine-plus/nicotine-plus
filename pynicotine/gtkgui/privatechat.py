@@ -57,6 +57,7 @@ class PrivateChats(IconNotebook):
 
         IconNotebook.__init__(
             self,
+            self.frame,
             self.frame.images,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],

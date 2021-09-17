@@ -231,12 +231,13 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, images, tabclosers=False, show_hilite_image=True, show_status_image=False, notebookraw=None):
+    def __init__(self, frame, images, tabclosers=False, show_hilite_image=True, show_status_image=False, notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
         self.notebook.set_show_border(False)
 
+        self.frame = frame
         self.tabclosers = tabclosers
 
         self.images = images
@@ -268,7 +269,7 @@ class IconNotebook:
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
-        self.popup_menu_unread = PopupMenu(widget=self.unread_button, connect_events=False)
+        self.popup_menu_unread = PopupMenu(self.frame, connect_events=False)
         self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
