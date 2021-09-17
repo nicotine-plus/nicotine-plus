@@ -65,7 +65,13 @@ class TextView:
         self.gesture_click_secondary.connect("pressed", self._callback_pressed)
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
 
+        self.textview.connect("realize", self.on_realize)
+
     def scroll_bottom(self):
+
+        if not self.textview.get_realized():
+            # Avoid GTK warnings
+            return False
 
         adjustment = self.scrollable.get_vadjustment()
         adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
@@ -243,3 +249,6 @@ class TextView:
 
     def on_clear_all_text(self, *args):
         self.clear()
+
+    def on_realize(self, *args):
+        self.scroll_bottom()

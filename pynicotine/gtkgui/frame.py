@@ -2243,15 +2243,9 @@ class NicotineFrame(UserInterface):
             return
 
         if config.sections["logging"]["logcollapsed"]:
-            # Make sure we don't attempt to scroll in the log window
-            # if it's hidden, to prevent those nasty GTK warnings :)
-
-            should_scroll = False
             self.set_status_text(msg)
-        else:
-            should_scroll = True
 
-        self.log_textview.append_line(msg, scroll=should_scroll, find_urls=False)
+        self.log_textview.append_line(msg, find_urls=False)
         return False
 
     def on_popup_menu_log(self, menu, textview):

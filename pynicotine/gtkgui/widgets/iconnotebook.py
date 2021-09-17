@@ -231,7 +231,8 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, frame, images, tabclosers=False, show_hilite_image=True, show_status_image=False, notebookraw=None):
+    def __init__(self, frame, images, tabclosers=False, show_hilite_image=True, show_status_image=False,
+                 notebookraw=None):
 
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
