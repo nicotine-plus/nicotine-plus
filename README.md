@@ -127,6 +127,14 @@ Portable packages are also available. They can be run from your home directory, 
 - [64-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
 - [32-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
 
+### Chocolatey (stable)
+
+Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following:
+
+```sh
+choco install nicotine-plus
+```
+
 ## macOS
 
 ### Stable (Catalina/10.15 and newer)
