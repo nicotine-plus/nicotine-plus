@@ -292,7 +292,6 @@ class NicotineFrame(UserInterface):
 
         self.set_show_log(not config.sections["logging"]["logcollapsed"])
         self.set_show_debug(config.sections["logging"]["debug"])
-        self.set_show_flags(not config.sections["columns"]["hideflags"])
         self.set_show_transfer_buttons(config.sections["transfers"]["enabletransferbuttons"])
         self.set_toggle_buddy_list(config.sections["ui"]["buddylistinchatrooms"])
 
@@ -761,21 +760,6 @@ class NicotineFrame(UserInterface):
 
         config.sections["logging"]["debug"] = not state
 
-    def set_show_flags(self, state):
-
-        for room in self.chatrooms.joinedrooms:
-            self.chatrooms.joinedrooms[room].cols["country"].set_visible(state)
-
-        self.userlist.cols["country"].set_visible(state)
-
-    def on_show_flags(self, action, *args):
-
-        state = config.sections["columns"]["hideflags"]
-        self.set_show_flags(state)
-        action.set_state(GLib.Variant.new_boolean(state))
-
-        config.sections["columns"]["hideflags"] = not state
-
     def set_show_transfer_buttons(self, show):
         self.downloads.TransferButtons.set_reveal_child(show)
         self.uploads.TransferButtons.set_reveal_child(show)
@@ -1094,12 +1078,6 @@ class NicotineFrame(UserInterface):
         action.connect("change-state", self.on_show_debug)
         self.MainWindow.add_action(action)
 
-        state = not config.sections["columns"]["hideflags"]
-        action = Gio.SimpleAction.new_stateful("showflags", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_flags)
-        self.MainWindow.add_action(action)
-        self.application.set_accels_for_action("win.showflags", ["<Primary>u"])
-
         state = config.sections["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
@@ -1284,7 +1262,6 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("$" + _("Prefer Dark _Mode"), "app.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
-            ("$" + _("Show _Flag Columns in User Lists"), "win.showflags"),
             ("$" + _("Show _Buttons in Transfer Tabs"), "win.showtransferbuttons"),
             ("", None),
             ("$" + _("Show _Log Pane"), "win.showlog"),

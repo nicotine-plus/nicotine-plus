@@ -71,13 +71,6 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Primary&gt;u</property>
-                <property name="title" translatable="yes">Show Flag Columns in User Lists</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;b</property>
                 <property name="title" translatable="yes">Show Buttons in Transfer Tabs</property>
               </object>

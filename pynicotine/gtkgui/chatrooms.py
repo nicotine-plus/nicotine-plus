@@ -508,9 +508,6 @@ class ChatRoom(UserInterface):
         cols["status"].get_widget().hide()
         cols["country"].get_widget().hide()
 
-        if config.sections["columns"]["hideflags"]:
-            cols["country"].set_visible(False)
-
         for userdata in users:
             self.add_user_row(userdata)
 

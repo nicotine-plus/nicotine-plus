@@ -99,9 +99,6 @@ class UserList(UserInterface):
         cols["status"].get_widget().hide()
         cols["country"].get_widget().hide()
 
-        if config.sections["columns"]["hideflags"]:
-            cols["country"].set_visible(False)
-
         for render in cols["trusted"].get_cells():
             render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
 
