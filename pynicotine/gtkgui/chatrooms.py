@@ -322,37 +322,39 @@ class ChatRooms(IconNotebook):
             room.set_user_country(user, country)
 
     def user_joined_room(self, msg):
-
         if msg.room in self.joinedrooms:
             self.joinedrooms[msg.room].user_joined_room(msg.userdata)
 
     def user_left_room(self, msg):
-        self.joinedrooms[msg.room].user_left_room(msg.username)
+        if msg.room in self.joinedrooms:
+            self.joinedrooms[msg.room].user_left_room(msg.username)
 
     def ticker_set(self, msg):
-        self.joinedrooms[msg.room].ticker_set(msg)
+        if msg.room in self.joinedrooms:
+            self.joinedrooms[msg.room].ticker_set(msg)
 
     def ticker_add(self, msg):
-        self.joinedrooms[msg.room].ticker_add(msg)
+        if msg.room in self.joinedrooms:
+            self.joinedrooms[msg.room].ticker_add(msg)
 
     def ticker_remove(self, msg):
-        self.joinedrooms[msg.room].ticker_remove(msg)
+        if msg.room in self.joinedrooms:
+            self.joinedrooms[msg.room].ticker_remove(msg)
 
     def echo_message(self, room, text, message_type):
         if room in self.joinedrooms:
             self.joinedrooms[room].echo_message(text, message_type)
 
     def say_chat_room(self, msg):
-        self.joinedrooms[msg.room].say_chat_room(msg)
+        if msg.room in self.joinedrooms:
+            self.joinedrooms[msg.room].say_chat_room(msg)
 
     def public_room_message(self, msg):
 
-        try:
-            room = self.joinedrooms['Public ']
-        except KeyError:
-            return
+        room = "Public "
 
-        room.say_chat_room(msg, public=True)
+        if room in self.joinedrooms:
+            self.joinedrooms[room].say_chat_room(msg, public=True)
 
     def toggle_chat_buttons(self):
         for room in self.joinedrooms.values():
@@ -381,7 +383,10 @@ class ChatRooms(IconNotebook):
 
     def leave_room(self, msg):
 
-        room = self.joinedrooms[msg.room]
+        room = self.joinedrooms.get(msg.room)
+
+        if not room:
+            return
 
         self.remove_page(room.Main)
         del self.joinedrooms[msg.room]
