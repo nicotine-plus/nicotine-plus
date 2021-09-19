@@ -90,8 +90,8 @@ class Plugin(BasePlugin):
 
     def get_video_id(self, mode, source, line):
 
-        match = re.search(r'(https?://|www\.)((music|m)\.)?youtu(be|be-nocookie)?\.(be|com)/'
-                          r'(embed/|watch\S+v=)?(?P<video_id>[-\w]{11})', line)
+        match = re.search(r'(https?://youtu\.be/|(https?://((m|music)\.)?|www\.)youtube(-nocookie)?\.com/'
+                          r'(embed/|watch\S+v=))(?P<video_id>[-\w]{11})', line)
         if not match:
             return None
 
