@@ -138,7 +138,8 @@ class PrivateChats(IconNotebook):
             self.users[user].send_message(text)
 
     def message_user(self, msg):
-        self.users[msg.user].message_user(msg)
+        if msg.user in self.users:
+            self.users[msg.user].message_user(msg)
 
     def update_visuals(self):
 

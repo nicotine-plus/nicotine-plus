@@ -57,7 +57,15 @@ GitHub Actions currently builds Nicotine+ installers for Windows, but the follow
 
 First, follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
-Then, install dependencies:
+Then, clone the Nicotine+ git repository:
+
+```console
+pacman -S git
+git clone https://github.com/nicotine-plus/nicotine-plus
+cd nicotine-plus
+```
+
+Install dependencies:
 
 ```console
 export NICOTINE_GTK_VERSION=3
@@ -65,14 +73,6 @@ export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
 python3 packaging/windows/dependencies_core.py
 python3 packaging/windows/dependencies_packaging.py
-```
-
-Clone the Nicotine+ git repository:
-
-```console
-pacman -S git
-git clone https://github.com/nicotine-plus/nicotine-plus
-cd nicotine-plus
 ```
 
 Run PyInstaller:
