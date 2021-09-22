@@ -44,7 +44,7 @@ class PluginHandler:
         self.core = core
         self.config = config
 
-        log.add_debug("Loading plugin handler")
+        log.add("Loading plugin system")
 
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
@@ -135,7 +135,7 @@ class PluginHandler:
         # Our config file doesn't play nicely with some characters
         if "=" in plugin_name:
             log.add(
-                _("Unable to enable plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
+                _("Unable to load plugin %(name)s. Plugin folder name contains invalid characters: %(characters)s"), {
                     "name": plugin_name,
                     "characters": "="
                 })
@@ -161,11 +161,11 @@ class PluginHandler:
             self.update_completions(plugin)
 
             self.enabled_plugins[plugin_name] = plugin
-            log.add(_("Enabled plugin %s"), plugin.__name__)
+            log.add(_("Loaded plugin %s"), plugin.__name__)
 
         except Exception:
             from traceback import format_exc
-            log.add(_("Unable to enable plugin %(module)s\n%(exc_trace)s"),
+            log.add(_("Unable to load plugin %(module)s\n%(exc_trace)s"),
                     {'module': plugin_name, 'exc_trace': format_exc()})
             return False
 
@@ -199,11 +199,11 @@ class PluginHandler:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
-            log.add(_("Disabled plugin {}".format(plugin.__name__)))
+            log.add(_("Unloaded plugin {}".format(plugin.__name__)))
 
         except Exception:
             from traceback import format_exc
-            log.add(_("Unable to fully disable plugin %(module)s\n%(exc_trace)s"),
+            log.add(_("Unable to unload plugin %(module)s\n%(exc_trace)s"),
                     {'module': plugin_name, 'exc_trace': format_exc()})
             return False
 
@@ -261,7 +261,7 @@ class PluginHandler:
             return
 
         to_enable = self.config.sections["plugins"]["enabled"]
-        log.add_debug("Loading plugin(s): %s" % ', '.join(to_enable))
+        log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
 
         for plugin in to_enable:
             self.enable_plugin(plugin)
@@ -286,10 +286,10 @@ class PluginHandler:
                     plugin.settings[key] = customsettings[key]
 
                 else:
-                    log.add(_("Stored setting '%(name)s' is no longer present in the plugin"), {'name': key})
+                    log.add_debug(_("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"), {'key': key, 'name': plugin.__name__})
 
         except KeyError:
-            log.add("No custom settings found for %s", (plugin.__name__,))
+            log.add_debug("No stored settings found for %s", (plugin.__name__,))
 
     def trigger_public_command_event(self, room, command, args):
         return self._trigger_command(command, room, args, public_command=True)
@@ -325,7 +325,7 @@ class PluginHandler:
             if return_value == returncode['pass']:
                 continue
 
-            log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+            log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
                     {'module': module, 'value': str(return_value)})
 
         return False
@@ -365,7 +365,7 @@ class PluginHandler:
             if return_value == returncode['pass']:
                 continue
 
-            log.add(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+            log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
                     {'module': module, 'value': return_value})
 
         return args
