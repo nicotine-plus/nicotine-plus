@@ -774,8 +774,6 @@ class NicotineFrame(UserInterface):
 
     def set_toggle_buddy_list(self, mode):
 
-        mode = self.verify_buddy_list_mode(mode)
-
         if self.userlist.Main in self.MainPaned.get_children():
 
             if mode == "always":
@@ -816,8 +814,9 @@ class NicotineFrame(UserInterface):
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
             self.userlist.Main.show()
+            return
 
-        elif mode == "chatrooms":
+        if mode == "chatrooms":
 
             if self.userlist.Main not in self.ChatroomsPane.get_children():
                 if Gtk.get_major_version() == 4:
@@ -829,15 +828,14 @@ class NicotineFrame(UserInterface):
             self.userlist.BuddiesToolbar.show()
             self.userlist.UserLabel.hide()
             self.userlist.Main.show()
+            return
 
-        elif mode == "tab":
+        self.userlistvbox.add(self.userlist.Main)
+        self.show_tab(self.userlistvbox)
 
-            self.userlistvbox.add(self.userlist.Main)
-            self.show_tab(self.userlistvbox)
-
-            self.userlist.BuddiesToolbar.hide()
-            self.userlist.UserLabel.show()
-            self.userlist.Main.hide()
+        self.userlist.BuddiesToolbar.hide()
+        self.userlist.UserLabel.show()
+        self.userlist.Main.hide()
 
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
@@ -1084,7 +1082,11 @@ class NicotineFrame(UserInterface):
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
 
-        state = self.verify_buddy_list_mode(config.sections["ui"]["buddylistinchatrooms"])
+        state = config.sections["ui"]["buddylistinchatrooms"]
+
+        if state not in ("tab", "chatrooms", "always"):
+            state = "tab"
+
         self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful(
             "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
@@ -2069,15 +2071,6 @@ class NicotineFrame(UserInterface):
             initialdir=sharesdir,
             multiple=True
         )
-
-    """ Buddy List """
-
-    def verify_buddy_list_mode(self, mode):
-
-        if mode not in ("always", "chatrooms", "tab"):
-            return "tab"
-
-        return mode
 
     """ Chat """
 

@@ -244,7 +244,7 @@ class UserList(UserInterface):
 
     def update(self):
 
-        if config.sections["ui"]["buddylistinchatrooms"] != "tab":
+        if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
         self.frame.UserListStatusPage.set_visible(not self.user_iterators)
