@@ -1112,7 +1112,7 @@ class Transfers:
                         )
                         
                         log.add(
-                            _("Download started: %(file)s from user %(user)s"), {
+                            ("Download started: %(file)s from user %(user)s"), {
                                 "file": "%s" % base_name,
                                 "user": i.user
                             }
@@ -1965,7 +1965,7 @@ class Transfers:
         )
 
         log.add(
-            _("Download finished: %(file)s from user %(user)s"), {
+            ("Download finished: %(file)s from user %(user)s"), {
                 'file': basename,
                 'user': i.user
             }
