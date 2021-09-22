@@ -150,7 +150,15 @@ class NowPlaying:
 
         try:
             json_api = json.loads(response)
-            lastplayed = json_api["recenttracks"]["track"][0]
+            lastplayed = json_api["recenttracks"]["track"]
+
+            try:
+                # In most cases, a list containing a single track dictionary is sent
+                lastplayed = lastplayed[0]
+
+            except KeyError:
+                # On rare occasions, the track dictionary is not wrapped in a list
+                pass
 
             self.title["artist"] = lastplayed["artist"]["#text"]
             self.title["title"] = lastplayed["name"]
