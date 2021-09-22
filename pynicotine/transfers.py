@@ -1112,7 +1112,7 @@ class Transfers:
                         )
                         
                         log.add(
-                            ("Download started: %(file)s from user %(user)s"), {
+                            _("Download started: %(file)s from user %(user)s"), {
                                 "file": "%s" % base_name,
                                 "user": i.user
                             }
@@ -1637,7 +1637,7 @@ class Transfers:
                     transfer.status = "Finished"
                     transfer.size = transfer.currentbytes = size
 
-                    log.add("File %s is already downloaded", download_path)
+                    log.add(_("File %s is already downloaded", download_path))
 
                 else:
                     log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
@@ -1965,7 +1965,7 @@ class Transfers:
         )
 
         log.add(
-            ("Download finished: %(file)s from user %(user)s"), {
+            _("Download finished: %(file)s from user %(user)s"), {
                 'file': basename,
                 'user': i.user
             }
@@ -2323,7 +2323,7 @@ class Transfers:
                     }
                 )
                 log.add(
-                    ("Download stopped: %(file)s from user %(user)s"), {
+                    _("Download stopped: %(file)s from user %(user)s"), {
                         "file": clean_file(transfer.filename.replace('/', '\\').split('\\')[-1]),
                         "user": transfer.user
                     }
