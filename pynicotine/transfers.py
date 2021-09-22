@@ -2323,7 +2323,7 @@ class Transfers:
                     }
                 )
                 log.add(
-                    _("Download stopped: %(file)s from user %(user)s"), {
+                    ("Download stopped: %(file)s from user %(user)s"), {
                         "file": clean_file(transfer.filename.replace('/', '\\').split('\\')[-1]),
                         "user": transfer.user
                     }
