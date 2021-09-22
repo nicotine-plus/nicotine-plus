@@ -1039,6 +1039,7 @@ class Transfers:
         if i.conn is None and i.size is not None:
             i.conn = msg.conn
             i.req = None
+            base_name = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
 
             if i in self.transfer_request_times:
                 del self.transfer_request_times[i]
@@ -1067,7 +1068,6 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    base_name = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
                     incomplete_name = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + base_name)
                     file_handle = open(incomplete_name, 'ab+')
 
@@ -1077,7 +1077,7 @@ class Transfers:
                             try:
                                 fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
                             except IOError as error:
-                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+                                log.add(_("I/O error: Can't get an exclusive lock on file - %s"), error)
                         except ImportError:
                             pass
 
@@ -1108,6 +1108,13 @@ class Transfers:
                             _("Download started: user %(user)s, file %(file)s"), {
                                 "user": i.user,
                                 "file": "%s" % file_handle.name
+                            }
+                        )
+                        
+                        log.add(
+                            _("Download started: %(file)s from user %(user)s"), {
+                                "file": "%s" % base_name,
+                                "user": i.user
                             }
                         )
                     else:
@@ -1630,7 +1637,7 @@ class Transfers:
                     transfer.status = "Finished"
                     transfer.size = transfer.currentbytes = size
 
-                    log.add_transfer("File %s is already downloaded", download_path)
+                    log.add("File %s is already downloaded", download_path)
 
                 else:
                     log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
@@ -1954,6 +1961,13 @@ class Transfers:
             _("Download finished: user %(user)s, file %(file)s"), {
                 'user': i.user,
                 'file': i.filename
+            }
+        )
+
+        log.add(
+            _("Download finished: %(file)s from user %(user)s"), {
+                'file': basename,
+                'user': i.user
             }
         )
 
@@ -2308,7 +2322,13 @@ class Transfers:
                         "file": transfer.filename
                     }
                 )
-
+                log.add(
+                    _("Download stopped: %(file)s from user %(user)s"), {
+                        "file": clean_file(transfer.filename.replace('/', '\\').split('\\')[-1]),
+                        "user": transfer.user
+                    }
+                )
+        
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
