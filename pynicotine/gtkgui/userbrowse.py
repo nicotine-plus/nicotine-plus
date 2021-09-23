@@ -780,8 +780,7 @@ class UserBrowse(UserInterface):
 
                 self.frame.np.transfers.get_file(
                     self.user, virtualpath, destination,
-                    size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
-                )
+                    size=size, bitrate=h_bitrate, length=h_length)
 
         if not recurse:
             return
@@ -811,8 +810,7 @@ class UserBrowse(UserInterface):
                 # Get the file
                 self.frame.np.transfers.get_file(
                     self.user, virtualpath, prefix,
-                    size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
-                )
+                    size=size, bitrate=h_bitrate, length=h_length)
 
             # We have found the wanted directory: we can break out of the loop
             break

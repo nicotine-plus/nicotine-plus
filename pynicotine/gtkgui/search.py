@@ -1217,7 +1217,7 @@ class Search(UserInterface):
             # Make sure the selected result is not a directory
             if not file[1].endswith('\\'):
                 self.frame.np.transfers.get_file(
-                    file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4], checkduplicate=True)
+                    file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
 
     def on_download_files_to_selected(self, selected, data):
         self.on_download_files(prefix=selected)

@@ -600,8 +600,7 @@ class Transfers:
 
                         self.get_file(
                             username, virtualpath, destination,
-                            size=size, bitrate=h_bitrate, length=h_length, checkduplicate=True
-                        )
+                            size=size, bitrate=h_bitrate, length=h_length)
 
                     log.add_transfer(
                         "Attempting to download files in folder %(folder)s for user %(user)s. "
@@ -1544,15 +1543,19 @@ class Transfers:
 
     """ Transfer Actions """
 
-    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None,
-                 length=None, checkduplicate=False):
+    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
 
         path = clean_path(path, absolute=True)
 
-        if checkduplicate:
+        if transfer is None:
             for i in self.downloads:
                 if i.user == user and i.filename == filename and i.path == path:
-                    # Don't add duplicate downloads
+                    if i.status == "Finished":
+                        # Duplicate finished download found, verify that it's still present on disk in transfer_file
+                        transfer = i
+                        break
+
+                    # Duplicate active/cancelled download found, stop here
                     return
 
         self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
@@ -1602,7 +1605,7 @@ class Transfers:
 
         shouldupdate = True
 
-        if not direction and self.config.sections["transfers"]["enablefilters"]:
+        if direction == 0 and self.config.sections["transfers"]["enablefilters"]:
             # Only filter downloads, never uploads!
             try:
                 downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], re.I)
@@ -2323,7 +2326,7 @@ class Transfers:
             if file_path[-1] == "/":
                 self.get_folder(user, file_path[:-1].replace("/", "\\"))
             else:
-                self.get_file(user, file_path.replace("/", "\\"), checkduplicate=True)
+                self.get_file(user, file_path.replace("/", "\\"))
 
             self.downloadsview.switch_tab()
 

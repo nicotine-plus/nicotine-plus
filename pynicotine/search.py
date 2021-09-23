@@ -59,8 +59,7 @@ class Search:
 
             self.core.transfers.get_file(
                 user, fullpath, destination,
-                size=size, bitrate=bitrate, length=length, checkduplicate=True
-            )
+                size=size, bitrate=bitrate, length=length)
 
         # Ask for the rest of the files in the folder
         self.core.transfers.get_folder(user, folder)

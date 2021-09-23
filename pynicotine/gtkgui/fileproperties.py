@@ -65,7 +65,7 @@ class FileProperties(UserInterface):
 
     def on_download_item(self, *args):
         properties = self.properties[self.current_index]
-        self.frame.np.transfers.get_file(properties["user"], properties["fn"], "", checkduplicate=True)
+        self.frame.np.transfers.get_file(properties["user"], properties["fn"])
 
     def update_title(self):
 
