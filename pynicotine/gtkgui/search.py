@@ -172,10 +172,10 @@ class Searches(IconNotebook):
             if tab is not None:
                 tab.populate_filters(set_default_filters=False)
 
-    def create_tab(self, search_id, text, mode, mode_label, remember=False, showtab=True):
+    def create_tab(self, search_id, text, mode, mode_label, showtab=True):
 
-        tab = Search(self, text, search_id, mode, mode_label, remember, showtab)
-        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": False}
+        tab = Search(self, text, search_id, mode, mode_label, showtab)
+        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "ignore": False}
 
         if showtab:
             self.show_tab(tab, search_id, text, mode)
@@ -200,20 +200,17 @@ class Searches(IconNotebook):
 
     def show_search_result(self, msg, username, country):
 
-        try:
-            search = self.searches[msg.token]
-        except KeyError:
-            return
+        search = self.searches.get(msg.token)
 
-        if search["ignore"]:
+        if search is None or search["ignore"]:
             return
 
         tab = search.get("tab")
 
         if tab is None:
+            mode = "wishlist"
             mode_label = _("Wish")
-            tab = self.create_tab(search["id"], search["term"], search["mode"], mode_label,
-                                  search["remember"], showtab=False)
+            tab = self.create_tab(search["id"], search["term"], mode, mode_label, showtab=False)
 
         counter = len(tab.all_data) + 1
 
@@ -226,9 +223,9 @@ class Searches(IconNotebook):
 
     def remove_tab(self, tab):
 
-        if tab.id in self.searches:
-            search = self.searches[tab.id]
+        search = self.searches.get(tab.id)
 
+        if search is not None:
             if tab.text not in config.sections["server"]["autosearch"]:
                 del self.searches[tab.id]
             else:
@@ -270,7 +267,7 @@ class Searches(IconNotebook):
 
 class Search(UserInterface):
 
-    def __init__(self, searches, text, id, mode, mode_label, remember, showtab):
+    def __init__(self, searches, text, id, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
 
@@ -309,7 +306,6 @@ class Search(UserInterface):
         self.id = id
         self.mode = mode
         self.mode_label = mode_label
-        self.remember = remember
         self.showtab = showtab
         self.usersiters = {}
         self.directoryiters = {}

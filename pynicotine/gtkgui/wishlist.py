@@ -129,14 +129,8 @@ class WishList(UserInterface):
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
-        self.searches.searches[search_id] = {
-            "id": search_id,
-            "term": wish,
-            "tab": None,
-            "mode": "wishlist",
-            "remember": True,
-            "ignore": True
-        }
+        self.searches.searches[search_id] = {"id": search_id, "term": wish, "tab": None, "mode": "wishlist",
+                                             "ignore": True}
 
     def remove_wish(self, wish):
 
@@ -149,13 +143,11 @@ class WishList(UserInterface):
             config.sections["server"]["autosearch"].remove(wish)
 
             for number, search in self.searches.searches.items():
+                if search["term"] == wish and search["mode"] == "wishlist":
+                    tab = search.get("tab")
 
-                if search["term"] == wish and search["remember"]:
-
-                    if search["tab"] is not None and search["tab"].showtab:  # Tab visible
-                        search["remember"] = False
+                    if tab is not None and tab.showtab:  # Tab visible
                         self.searches.searches[number] = search
-
                     else:
                         del self.searches.searches[number]
 
@@ -170,14 +162,8 @@ class WishList(UserInterface):
             for term in config.sections["server"]["autosearch"]:
                 search_id = self.frame.np.search.increment_search_id()
 
-                self.searches.searches[search_id] = {
-                    "id": search_id,
-                    "term": term,
-                    "tab": None,
-                    "mode": "wishlist",
-                    "remember": True,
-                    "ignore": True
-                }
+                self.searches.searches[search_id] = {"id": search_id, "term": term, "tab": None, "mode": "wishlist",
+                                                     "ignore": True}
 
         self.on_auto_search()
         self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
@@ -198,11 +184,11 @@ class WishList(UserInterface):
         term = searches.pop()
         searches.insert(0, term)
 
-        for i in self.searches.searches.values():
-            if i["term"] == term and i["remember"]:
-                i["ignore"] = False
+        for search in self.searches.searches.values():
+            if search["term"] == term and search["mode"] == "wishlist":
+                search["ignore"] = False
 
-                self.frame.np.search.do_wishlist_search(i["id"], term)
+                self.frame.np.search.do_wishlist_search(search["id"], term)
                 break
 
         return True
