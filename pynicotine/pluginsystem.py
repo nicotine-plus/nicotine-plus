@@ -44,8 +44,6 @@ class PluginHandler:
         self.core = core
         self.config = config
 
-        log.add("Loading plugin system")
-
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
@@ -259,6 +257,8 @@ class PluginHandler:
 
         if not enable:
             return
+
+        log.add("Loading plugin system")
 
         to_enable = self.config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
