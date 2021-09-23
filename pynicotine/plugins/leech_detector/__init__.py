@@ -115,15 +115,13 @@ class Plugin(BasePlugin):
 
         self.probed[user] = self.probed[user] + 1
         
+        self.files[user] = stats['files']
+        self.dirs[user] = stats['dirs']
+
         if stats['files'] == 0:
             # ToDo Issue #1565: Implement alternate fallback method to try get values from User Browse response
             self.log("User %s seems to have no public shares (zero), after %d attempts to get statistics from server.", (
                      user, self.probed[user]))
-            if self.settings['nonzero_numbers']:
-                return
-
-        self.files[user] = stats['files']
-        self.dirs[user] = stats['dirs']
 
         if self.probed[user] == 1:
             # We see this user for the first time
