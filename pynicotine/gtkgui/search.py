@@ -66,7 +66,6 @@ class Searches(IconNotebook):
         self.frame = frame
 
         self.searches = {}
-        self.usersearches = {}
 
         IconNotebook.__init__(
             self,
@@ -91,12 +90,11 @@ class Searches(IconNotebook):
     def on_switch_search_page(self, notebook, page, page_num):
 
         for search in self.searches.values():
-            if search["tab"] is None:
-                continue
+            tab = search.get("tab")
 
-            if search["tab"].Main == page:
-                GLib.idle_add(lambda: search["tab"].ResultsList.grab_focus() == -1)
-                break
+            if tab is not None and tab.Main == page:
+                GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
+                return True
 
     def populate_search_history(self):
 
@@ -127,14 +125,19 @@ class Searches(IconNotebook):
             return
 
         search_id, searchterm, _searchterm_without_special = search_response
+        mode_label = None
 
-        if mode == "user" and user:
-            self.usersearches[search_id] = [user]
+        if mode == "rooms":
+            mode_label = room.strip()
 
-        search = self.create_tab(search_id, searchterm, mode, showtab=True)
+        elif mode == "user":
+            mode_label = user.strip()
 
-        if search["tab"] is not None:
-            self.set_current_page(self.page_num(search["tab"].Main))
+        elif mode == "buddies":
+            mode_label = _("Buddies")
+
+        tab = self.create_tab(search_id, searchterm, mode, mode_label)
+        self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
         self.populate_search_history()
@@ -163,54 +166,27 @@ class Searches(IconNotebook):
         config.write_configuration()
 
         # Update filters in search tabs
-        for id in self.searches.values():
-            if id["tab"] is None:
-                continue
+        for search in self.searches.values():
+            tab = search.get("tab")
 
-            id["tab"].populate_filters(set_default_filters=False)
+            if tab is not None:
+                tab.populate_filters(set_default_filters=False)
 
-    def get_user_search_name(self, id):
+    def create_tab(self, search_id, text, mode, mode_label, showtab=True):
 
-        if id in self.usersearches:
-
-            users = self.usersearches[id]
-
-            if len(users) > 1:
-                return _("Users")
-            elif len(users) == 1:
-                return users[0]
-
-        return _("User")
-
-    def create_tab(self, id, text, mode, remember=False, showtab=True):
-
-        tab = Search(self, text, id, mode, remember, showtab)
-        ignore = False
-        search = {"id": id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": ignore}
-        self.searches[id] = search
+        tab = Search(self, text, search_id, mode, mode_label, showtab)
+        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "ignore": False}
 
         if showtab:
-            self.show_tab(tab, id, text, mode)
+            self.show_tab(tab, search_id, text, mode)
 
-        return search
+        return tab
 
-    def show_tab(self, tab, id, text, mode):
+    def show_tab(self, tab, search_id, text, mode):
 
-        length = 25
-        template = "(%s) %s"
-
-        if mode == "rooms":
-            fulltext = template % (_("Rooms"), text)
-
-        elif mode == "buddies":
-            fulltext = template % (_("Buddies"), text)
-
-        elif mode == "wishlist":
-            fulltext = template % (_("Wish"), text)
-
-        elif mode == "user":
-            fulltext = template % (self.get_user_search_name(id), text)
-
+        if tab.mode_label is not None:
+            fulltext = "(%s) %s" % (tab.mode_label, text)
+            length = 25
         else:
             fulltext = text
             length = 20
@@ -224,31 +200,32 @@ class Searches(IconNotebook):
 
     def show_search_result(self, msg, username, country):
 
-        try:
-            search = self.searches[msg.token]
-        except KeyError:
+        search = self.searches.get(msg.token)
+
+        if search is None or search["ignore"]:
             return
 
-        if search["ignore"]:
-            return
+        tab = search.get("tab")
 
-        if search["tab"] is None:
-            search = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
+        if tab is None:
+            mode = "wishlist"
+            mode_label = _("Wish")
+            tab = self.create_tab(search["id"], search["term"], mode, mode_label, showtab=False)
 
-        counter = len(search["tab"].all_data) + 1
+        counter = len(tab.all_data) + 1
 
         # No more things to add because we've reached the result limit
         if counter > config.sections["searches"]["max_displayed_results"]:
             self.frame.np.search.remove_allowed_search_id(msg.token)
             return
 
-        search["tab"].add_user_results(msg, username, country)
+        tab.add_user_results(msg, username, country)
 
     def remove_tab(self, tab):
 
-        if tab.id in self.searches:
-            search = self.searches[tab.id]
+        search = self.searches.get(tab.id)
 
+        if search is not None:
             if tab.text not in config.sections["server"]["autosearch"]:
                 del self.searches[tab.id]
             else:
@@ -264,11 +241,11 @@ class Searches(IconNotebook):
 
     def update_visuals(self):
 
-        for id in self.searches.values():
-            if id["tab"] is None:
-                continue
+        for search in self.searches.values():
+            tab = search.get("tab")
 
-            id["tab"].update_visuals()
+            if tab is not None:
+                tab.update_visuals()
 
         self.wish_list.update_visuals()
 
@@ -281,17 +258,16 @@ class Searches(IconNotebook):
         current_page = self.get_nth_page(self.get_current_page())
 
         for search in self.searches.values():
-            if search["tab"] is None:
-                continue
+            tab = search.get("tab")
 
-            if search["tab"].Main == current_page:
-                search["tab"].save_columns()
+            if tab is not None and tab.Main == current_page:
+                tab.save_columns()
                 break
 
 
 class Search(UserInterface):
 
-    def __init__(self, searches, text, id, mode, remember, showtab):
+    def __init__(self, searches, text, id, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
 
@@ -329,7 +305,7 @@ class Search(UserInterface):
 
         self.id = id
         self.mode = mode
-        self.remember = remember
+        self.mode_label = mode_label
         self.showtab = showtab
         self.usersiters = {}
         self.directoryiters = {}
