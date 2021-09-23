@@ -149,7 +149,7 @@ class UPnp:
         log.add_debug('Adding port mapping (%s %s/%s) at url "%s"', (private_ip, private_port, protocol, url))
 
         headers = {
-            'Host': '{}:{}'.format(router.ip_address, router.port),
+            'Host': router.base_url,
             'Content-Type': 'text/xml; charset=utf-8',
             'SOAPACTION': '"{}#AddPortMapping"'.format(router.svc_type)
         }
@@ -193,7 +193,7 @@ class UPnp:
         log.add_debug('Deleting port mapping (%s/%s) at url "%s"', (public_port, protocol, url))
 
         headers = {
-            'Host': '{}:{}'.format(router.ip_address, router.port),
+            'Host': router.base_url,
             'Content-Type': 'text/xml; charset=utf-8',
             'SOAPACTION': '"{}#DeletePortMapping"'.format(router.svc_type)
         }
@@ -216,7 +216,7 @@ class UPnp:
         log.add_debug('Listing existing port mappings...')
 
         headers = {
-            'Host': '{}:{}'.format(router.ip_address, router.port),
+            'Host': router.base_url,
             'Content-Type': 'text/xml; charset=utf-8',
             'SOAPACTION': '"{}#GetGenericPortMappingEntry"'.format(router.svc_type)
         }

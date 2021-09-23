@@ -146,6 +146,7 @@ class ChatRooms(IconNotebook):
 
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
+                break
 
     def clear_notifications(self):
 
@@ -158,6 +159,7 @@ class ChatRooms(IconNotebook):
             if room.Main == page:
                 # Remove hilite
                 self.frame.notifications.clear("rooms", None, name)
+                break
 
     def join_room(self, msg):
 
