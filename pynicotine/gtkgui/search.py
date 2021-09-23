@@ -66,7 +66,6 @@ class Searches(IconNotebook):
         self.frame = frame
 
         self.searches = {}
-        self.usersearches = {}
 
         IconNotebook.__init__(
             self,
@@ -126,11 +125,18 @@ class Searches(IconNotebook):
             return
 
         search_id, searchterm, _searchterm_without_special = search_response
+        mode_label = None
 
-        if mode == "user" and user:
-            self.usersearches[search_id] = [user]
+        if mode == "rooms":
+            mode_label = room.strip()
 
-        tab = self.create_tab(search_id, searchterm, mode)
+        elif mode == "user":
+            mode_label = user.strip()
+
+        elif mode == "buddies":
+            mode_label = _("Buddies")
+
+        tab = self.create_tab(search_id, searchterm, mode, mode_label)
         self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
@@ -166,24 +172,10 @@ class Searches(IconNotebook):
             if tab is not None:
                 tab.populate_filters(set_default_filters=False)
 
-    def get_user_search_name(self, search_id):
+    def create_tab(self, search_id, text, mode, mode_label, remember=False, showtab=True):
 
-        if search_id in self.usersearches:
-
-            users = self.usersearches[search_id]
-
-            if len(users) > 1:
-                return _("Users")
-            elif len(users) == 1:
-                return users[0]
-
-        return _("User")
-
-    def create_tab(self, search_id, text, mode, remember=False, showtab=True):
-
-        tab = Search(self, text, search_id, mode, remember, showtab)
-        search = {"id": search_id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": False}
-        self.searches[search_id] = search
+        tab = Search(self, text, search_id, mode, mode_label, remember, showtab)
+        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": False}
 
         if showtab:
             self.show_tab(tab, search_id, text, mode)
@@ -192,21 +184,9 @@ class Searches(IconNotebook):
 
     def show_tab(self, tab, search_id, text, mode):
 
-        length = 25
-        template = "(%s) %s"
-
-        if mode == "rooms":
-            fulltext = template % (_("Rooms"), text)
-
-        elif mode == "buddies":
-            fulltext = template % (_("Buddies"), text)
-
-        elif mode == "wishlist":
-            fulltext = template % (_("Wish"), text)
-
-        elif mode == "user":
-            fulltext = template % (self.get_user_search_name(search_id), text)
-
+        if tab.mode_label is not None:
+            fulltext = "(%s) %s" % (tab.mode_label, text)
+            length = 25
         else:
             fulltext = text
             length = 20
@@ -231,7 +211,9 @@ class Searches(IconNotebook):
         tab = search.get("tab")
 
         if tab is None:
-            tab = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
+            mode_label = _("Wish")
+            tab = self.create_tab(search["id"], search["term"], search["mode"], mode_label,
+                                  search["remember"], showtab=False)
 
         counter = len(tab.all_data) + 1
 
@@ -288,7 +270,7 @@ class Searches(IconNotebook):
 
 class Search(UserInterface):
 
-    def __init__(self, searches, text, id, mode, remember, showtab):
+    def __init__(self, searches, text, id, mode, mode_label, remember, showtab):
 
         super().__init__("ui/search.ui")
 
@@ -326,6 +308,7 @@ class Search(UserInterface):
 
         self.id = id
         self.mode = mode
+        self.mode_label = mode_label
         self.remember = remember
         self.showtab = showtab
         self.usersiters = {}
