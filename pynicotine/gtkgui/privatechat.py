@@ -84,6 +84,7 @@ class PrivateChats(IconNotebook):
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
                 self.frame.notifications.clear("private", tab.user)
+                break
 
     def clear_notifications(self):
 
@@ -96,6 +97,7 @@ class PrivateChats(IconNotebook):
             if tab.Main == page:
                 # Remove hilite
                 self.frame.notifications.clear("private", tab.user)
+                break
 
     def get_user_status(self, msg):
 
