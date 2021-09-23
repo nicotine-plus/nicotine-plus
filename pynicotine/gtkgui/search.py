@@ -130,11 +130,8 @@ class Searches(IconNotebook):
         if mode == "user" and user:
             self.usersearches[search_id] = [user]
 
-        search = self.create_tab(search_id, searchterm, mode, showtab=True)
-        tab = search.get("tab")
-
-        if tab is not None:
-            self.set_current_page(self.page_num(tab.Main))
+        tab = self.create_tab(search_id, searchterm, mode)
+        self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
         self.populate_search_history()
@@ -169,11 +166,11 @@ class Searches(IconNotebook):
             if tab is not None:
                 tab.populate_filters(set_default_filters=False)
 
-    def get_user_search_name(self, id):
+    def get_user_search_name(self, search_id):
 
-        if id in self.usersearches:
+        if search_id in self.usersearches:
 
-            users = self.usersearches[id]
+            users = self.usersearches[search_id]
 
             if len(users) > 1:
                 return _("Users")
@@ -182,19 +179,18 @@ class Searches(IconNotebook):
 
         return _("User")
 
-    def create_tab(self, id, text, mode, remember=False, showtab=True):
+    def create_tab(self, search_id, text, mode, remember=False, showtab=True):
 
-        tab = Search(self, text, id, mode, remember, showtab)
-        ignore = False
-        search = {"id": id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": ignore}
-        self.searches[id] = search
+        tab = Search(self, text, search_id, mode, remember, showtab)
+        search = {"id": search_id, "term": text, "tab": tab, "mode": mode, "remember": remember, "ignore": False}
+        self.searches[search_id] = search
 
         if showtab:
-            self.show_tab(tab, id, text, mode)
+            self.show_tab(tab, search_id, text, mode)
 
-        return search
+        return tab
 
-    def show_tab(self, tab, id, text, mode):
+    def show_tab(self, tab, search_id, text, mode):
 
         length = 25
         template = "(%s) %s"
@@ -209,7 +205,7 @@ class Searches(IconNotebook):
             fulltext = template % (_("Wish"), text)
 
         elif mode == "user":
-            fulltext = template % (self.get_user_search_name(id), text)
+            fulltext = template % (self.get_user_search_name(search_id), text)
 
         else:
             fulltext = text
@@ -235,7 +231,7 @@ class Searches(IconNotebook):
         tab = search.get("tab")
 
         if tab is None:
-            search = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
+            tab = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
 
         counter = len(tab.all_data) + 1
 
