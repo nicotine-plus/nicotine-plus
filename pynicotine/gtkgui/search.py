@@ -91,12 +91,11 @@ class Searches(IconNotebook):
     def on_switch_search_page(self, notebook, page, page_num):
 
         for search in self.searches.values():
-            if search["tab"] is None:
-                continue
+            tab = search.get("tab")
 
-            if search["tab"].Main == page:
-                GLib.idle_add(lambda: search["tab"].ResultsList.grab_focus() == -1)
-                break
+            if tab is not None and tab.Main == page:
+                GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
+                return True
 
     def populate_search_history(self):
 
@@ -132,9 +131,10 @@ class Searches(IconNotebook):
             self.usersearches[search_id] = [user]
 
         search = self.create_tab(search_id, searchterm, mode, showtab=True)
+        tab = search.get("tab")
 
-        if search["tab"] is not None:
-            self.set_current_page(self.page_num(search["tab"].Main))
+        if tab is not None:
+            self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
         self.populate_search_history()
@@ -163,11 +163,11 @@ class Searches(IconNotebook):
         config.write_configuration()
 
         # Update filters in search tabs
-        for id in self.searches.values():
-            if id["tab"] is None:
-                continue
+        for search in self.searches.values():
+            tab = search.get("tab")
 
-            id["tab"].populate_filters(set_default_filters=False)
+            if tab is not None:
+                tab.populate_filters(set_default_filters=False)
 
     def get_user_search_name(self, id):
 
@@ -232,17 +232,19 @@ class Searches(IconNotebook):
         if search["ignore"]:
             return
 
-        if search["tab"] is None:
+        tab = search.get("tab")
+
+        if tab is None:
             search = self.create_tab(search["id"], search["term"], search["mode"], search["remember"], showtab=False)
 
-        counter = len(search["tab"].all_data) + 1
+        counter = len(tab.all_data) + 1
 
         # No more things to add because we've reached the result limit
         if counter > config.sections["searches"]["max_displayed_results"]:
             self.frame.np.search.remove_allowed_search_id(msg.token)
             return
 
-        search["tab"].add_user_results(msg, username, country)
+        tab.add_user_results(msg, username, country)
 
     def remove_tab(self, tab):
 
@@ -264,11 +266,11 @@ class Searches(IconNotebook):
 
     def update_visuals(self):
 
-        for id in self.searches.values():
-            if id["tab"] is None:
-                continue
+        for search in self.searches.values():
+            tab = search.get("tab")
 
-            id["tab"].update_visuals()
+            if tab is not None:
+                tab.update_visuals()
 
         self.wish_list.update_visuals()
 
@@ -281,11 +283,10 @@ class Searches(IconNotebook):
         current_page = self.get_nth_page(self.get_current_page())
 
         for search in self.searches.values():
-            if search["tab"] is None:
-                continue
+            tab = search.get("tab")
 
-            if search["tab"].Main == current_page:
-                search["tab"].save_columns()
+            if tab is not None and tab.Main == current_page:
+                tab.save_columns()
                 break
 
 
