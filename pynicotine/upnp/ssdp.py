@@ -33,9 +33,7 @@ from pynicotine.utils import http_request
 
 
 class Router:
-    def __init__(self, ip_address, port, wan_ip_type, url_scheme, base_url, root_url):
-        self.ip_address = ip_address
-        self.port = port
+    def __init__(self, wan_ip_type, url_scheme, base_url, root_url):
         self.search_target = wan_ip_type
         self.url_scheme = url_scheme
         self.base_url = base_url
@@ -58,8 +56,6 @@ class Router:
         urlparts = urlsplit(response_headers['LOCATION'])
 
         return Router(
-            ip_address=sender[0],
-            port=sender[1],
             wan_ip_type=response_headers['ST'],
             url_scheme=urlparts.scheme,
             base_url=urlparts.netloc,
