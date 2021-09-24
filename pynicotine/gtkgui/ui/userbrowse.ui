@@ -244,11 +244,11 @@
                         <property name="margin-bottom">6</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="view"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="view"/>
-                </style>
               </object>
             </child>
             <child>

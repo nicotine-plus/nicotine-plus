@@ -89,11 +89,7 @@ class SSDP:
     @staticmethod
     def get_router_control_url(url_scheme, base_url, root_url):
 
-        service_type = None
-        control_url = None
-
         try:
-            # Parse the returned XML and find the <URLBase> and <controlURL> elements
             from xml.etree import ElementTree
 
             response = http_request(url_scheme, base_url, root_url, timeout=2)
@@ -105,6 +101,16 @@ class SSDP:
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
                 service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
                 control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+
+                if service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                                    "urn:schemas-upnp-org:service:WANPPPConnection:1",
+                                    "urn:schemas-upnp-org:service:WANIPConnection:2"):
+                    # We found a router with UPnP enabled
+                    break
+
+            else:
+                service_type = None
+                control_url = None
 
         except Exception as error:
             # Invalid response
@@ -128,14 +134,11 @@ class SSDP:
         url_parts = urlsplit(response_headers["LOCATION"])
         service_type, control_url = SSDP.get_router_control_url(url_parts.scheme, url_parts.netloc, url_parts.path)
 
-        log.add_debug("UPnP: Device details: service_type '%s'; control_url '%s'", (service_type, control_url))
-
-        if service_type not in ("urn:schemas-upnp-org:service:WANIPConnection:1",
-                                "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                "urn:schemas-upnp-org:service:WANIPConnection:2"):
-
-            log.add_debug("UPnP: Invalid service type for device, ignoring: %s'", service_type)
+        if service_type is None or control_url is None:
+            log.add_debug("UPnP: No router with UPnP enabled in device search response, ignoring")
             return
+
+        log.add_debug("UPnP: Device details: service_type '%s'; control_url '%s'", (service_type, control_url))
 
         routers.append(
             Router(wan_ip_type=response_headers['ST'], url_scheme=url_parts.scheme,
@@ -341,25 +344,23 @@ class UPnPPortMapping:
 
         except Exception as error:
             from traceback import format_exc
-            log.add(_("UPnP error: %(error)s"), {"error": error})
+            log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
+                "external_port": listening_port,
+                "error": error
+            })
             log.add_debug(format_exc())
-            log.add(_("Failed to automate the creation of UPnP Port Mapping rule."))
             return
 
-        log.add_debug(
-            _("Managed to map external WAN port %(externalwanport)s "
-              + "to your local host %(internalipaddress)s "
-              + "port %(internallanport)s."),
-            {
-                "externalwanport": listening_port,
-                "internalipaddress": local_ip_address,
-                "internallanport": listening_port
-            }
-        )
+        log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
+                  "IP address %(ip_address)s port %(local_port)s"), {
+            "external_port": listening_port,
+            "ip_address": local_ip_address,
+            "local_port": listening_port
+        })
 
     def _update_port_mapping(self, listening_port):
 
-        log.add_debug("Creating Port Mapping rule via UPnP...")
+        log.add_debug("UPnP: Creating Port Mapping rule...")
 
         # Find local IP address
         local_ip_address = self.find_local_ip_address()
@@ -368,10 +369,10 @@ class UPnPPortMapping:
         router = self.find_router(local_ip_address)
 
         if not router:
-            raise RuntimeError("UPnP does not work on this network")
+            raise RuntimeError("UPnP is not available on this network")
 
         # Perform the port mapping
-        log.add_debug("Trying to redirect external WAN port %s TCP => %s port %s TCP", (
+        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
             listening_port,
             local_ip_address,
             listening_port
