@@ -344,25 +344,23 @@ class UPnPPortMapping:
 
         except Exception as error:
             from traceback import format_exc
-            log.add(_("UPnP error: %(error)s"), {"error": error})
+            log.add(_("UPnP: Failed to forward external port %(external_port)s: %(error)s"), {
+                "external_port": listening_port,
+                "error": error
+            })
             log.add_debug(format_exc())
-            log.add(_("Failed to automate the creation of UPnP Port Mapping rule."))
             return
 
-        log.add_debug(
-            _("Managed to map external WAN port %(externalwanport)s "
-              + "to your local host %(internalipaddress)s "
-              + "port %(internallanport)s."),
-            {
-                "externalwanport": listening_port,
-                "internalipaddress": local_ip_address,
-                "internallanport": listening_port
-            }
-        )
+        log.add(_("UPnP: External port %(external_port)s successfully forwarded to local "
+                  "IP address %(ip_address)s port %(local_port)s"), {
+            "external_port": listening_port,
+            "ip_address": local_ip_address,
+            "local_port": listening_port
+        })
 
     def _update_port_mapping(self, listening_port):
 
-        log.add_debug("Creating Port Mapping rule via UPnP...")
+        log.add_debug("UPnP: Creating Port Mapping rule...")
 
         # Find local IP address
         local_ip_address = self.find_local_ip_address()
@@ -371,10 +369,10 @@ class UPnPPortMapping:
         router = self.find_router(local_ip_address)
 
         if not router:
-            raise RuntimeError("UPnP does not work on this network")
+            raise RuntimeError("UPnP is not available on this network")
 
         # Perform the port mapping
-        log.add_debug("Trying to redirect external WAN port %s TCP => %s port %s TCP", (
+        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
             listening_port,
             local_ip_address,
             listening_port
