@@ -574,9 +574,10 @@ class NicotineCore:
 
         self.queue.append(slskmessages.PeerConn(None, addr, init))
 
-        log.add_conn("Initialising direct connection of type %(type)s to user %(user)s", {
+        log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             'type': message_type,
-            'user': user
+            'user': user,
+            'addr': addr
         })
 
     def connect_to_peer_indirect(self, conn, error):
@@ -992,8 +993,8 @@ Error: %(error)s""", {
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn("Connection closed by peer: %(peer)s. Error: %(error)s",
-                                 {'peer': log.contents(i), 'error': error})
+                    log.add_conn("Connection of type %(type)s to user %(user)s closed by peer %(addr)s",
+                                 {'type': i.init.conn_type, 'user': i.username, 'addr': addr})
 
                     if i in self.out_indirect_conn_request_times:
                         del self.out_indirect_conn_request_times[i]
