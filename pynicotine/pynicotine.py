@@ -587,14 +587,12 @@ class NicotineCore:
         self.queue.append(slskmessages.ConnectToPeer(conn.token, conn.username, conn.conn_type))
         self.out_indirect_conn_request_times[conn] = time.time()
 
-        log.add_conn(
-            """Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection.
-Error: %(error)s""", {
-                "type": conn.conn_type,
-                "user": conn.username,
-                "error": error
-            }
-        )
+        log.add_conn(("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. "
+                      "Error: %(error)s"), {
+            "type": conn.conn_type,
+            "user": conn.username,
+            "error": error
+        })
 
     def connect_to_peer_request(self, msg):
 
@@ -1058,9 +1056,6 @@ Error: %(error)s""", {
                         self.peerconns.remove(i)
 
                     break
-
-        else:
-            self.closed_connection(msg.connobj.conn, msg.connobj.addr, msg.err)
 
     def start_upnp_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them """

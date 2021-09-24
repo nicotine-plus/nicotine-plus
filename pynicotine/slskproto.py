@@ -1530,7 +1530,6 @@ class SlskProtoThread(threading.Thread):
                         connection_in_progress.recv(1, socket.MSG_PEEK)
 
                 except socket.error as err:
-
                     self._callback_msgs.append(ConnectError(msg_obj, err))
                     self.close_connection(self._connsinprogress, connection_in_progress)
 
@@ -1593,7 +1592,12 @@ class SlskProtoThread(threading.Thread):
                             continue
 
                     except socket.error as err:
-                        self._callback_msgs.append(ConnectError(conn_obj, err))
+                        log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
+                                      "Error: %(error)s"), {
+                            "addr": conn_obj.addr,
+                            "error": err
+                        })
+                        self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
                         self.close_connection(self._conns, connection)
                         continue
 
@@ -1607,8 +1611,12 @@ class SlskProtoThread(threading.Thread):
                     try:
                         self.write_data(conn_obj)
 
-                    except socket.error as err:
-                        self._callback_msgs.append(ConnectError(conn_obj, err))
+                    except Exception as err:
+                        log.add_conn("Cannot write data to connection %(addr)s, closing connection. Error: %(error)s", {
+                            "addr": conn_obj.addr,
+                            "error": err
+                        })
+                        self._callback_msgs.append(ConnClose(connection, conn_obj.addr))
                         self.close_connection(self._conns, connection)
                         continue
 
