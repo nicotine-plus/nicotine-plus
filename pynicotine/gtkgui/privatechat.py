@@ -73,6 +73,9 @@ class PrivateChats(IconNotebook):
                 self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
             return
 
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite(self.frame.PrivateChatTabLabel)
+
         for user, tab in list(self.users.items()):
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)
@@ -315,7 +318,7 @@ class PrivateChat(UserInterface):
     def show_notification(self, text):
 
         # Hilight top-level tab label
-        self.frame.request_tab_icon(self.frame.PrivateChatTabLabel)
+        self.frame.request_tab_hilite(self.frame.PrivateChatTabLabel)
 
         # Highlight sub-level tab label
         self.chats.request_changed(self.Main)

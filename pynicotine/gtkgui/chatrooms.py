@@ -134,6 +134,9 @@ class ChatRooms(IconNotebook):
                 and not forceupdate:
             return
 
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite(self.frame.ChatroomsTabLabel)
+
         for name, room in self.joinedrooms.items():
             if room.Main == page:
                 GLib.idle_add(lambda: room.ChatEntry.grab_focus() == -1)
@@ -804,7 +807,7 @@ class ChatRoom(UserInterface):
         if tag == self.tag_hilite:
 
             # Hilight top-level tab label
-            self.frame.request_tab_icon(self.frame.ChatroomsTabLabel, status=1)
+            self.frame.request_tab_hilite(self.frame.ChatroomsTabLabel, status=1)
 
             # Hilight sub-level tab label
             self.chatrooms.request_hilite(self.Main)
@@ -818,7 +821,7 @@ class ChatRoom(UserInterface):
 
         else:
             # Hilight top-level tab label
-            self.frame.request_tab_icon(self.frame.ChatroomsTabLabel, status=0)
+            self.frame.request_tab_hilite(self.frame.ChatroomsTabLabel, status=0)
 
             # Hilight sub-level tab label
             self.chatrooms.request_changed(self.Main)

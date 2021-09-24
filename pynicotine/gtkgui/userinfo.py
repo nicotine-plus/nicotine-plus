@@ -63,6 +63,9 @@ class UserInfos(IconNotebook):
 
     def on_switch_info_page(self, notebook, page, page_num):
 
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite(self.frame.UserInfoTabLabel)
+
         for tab in self.pages.values():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.descr.grab_focus() == -1)
@@ -322,8 +325,7 @@ class UserInfo(UserInterface):
 
     def set_finished(self):
 
-        # Tab notification
-        self.frame.request_tab_icon(self.frame.UserInfoTabLabel)
+        self.frame.request_tab_hilite(self.frame.UserInfoTabLabel)
         self.userinfos.request_changed(self.Main)
 
         self.progressbar.set_fraction(1.0)

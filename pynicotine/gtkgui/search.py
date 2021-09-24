@@ -89,6 +89,9 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, notebook, page, page_num):
 
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite(self.frame.SearchTabLabel)
+
         for search in self.searches.values():
             tab = search.get("tab")
 
@@ -654,7 +657,7 @@ class Search(UserInterface):
 
             # Update tab notification
             self.searches.request_changed(self.Main)
-            self.frame.request_tab_icon(self.frame.SearchTabLabel)
+            self.frame.request_tab_hilite(self.frame.SearchTabLabel)
 
     def append(self, row):
 

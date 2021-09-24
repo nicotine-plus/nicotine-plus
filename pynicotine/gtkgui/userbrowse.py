@@ -73,6 +73,9 @@ class UserBrowses(IconNotebook):
 
     def on_switch_browse_page(self, notebook, page, page_num):
 
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite(self.frame.UserBrowseTabLabel)
+
         for tab in self.pages.values():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
@@ -647,8 +650,7 @@ class UserBrowse(UserInterface):
 
     def set_finished(self):
 
-        # Tab notification
-        self.frame.request_tab_icon(self.frame.UserBrowseTabLabel)
+        self.frame.request_tab_hilite(self.frame.UserBrowseTabLabel)
         self.userbrowses.request_changed(self.Main)
 
         self.progressbar1.set_fraction(1.0)

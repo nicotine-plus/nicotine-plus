@@ -1579,7 +1579,7 @@ class NicotineFrame(UserInterface):
             popup = PopupMenu(self, tab_label)
             popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
 
-    def request_tab_icon(self, tab_label, status=1):
+    def request_tab_hilite(self, tab_label, status=1):
 
         if self.current_tab_label == tab_label:
             return
@@ -1602,6 +1602,14 @@ class NicotineFrame(UserInterface):
         tab_label.set_hilite_image(hilite_icon)
         tab_label.set_text_color(status + 1)
 
+    def clear_tab_hilite(self, tab_label):
+
+        if not tab_label or not tab_label.get_hilite_image():
+            return
+
+        tab_label.set_hilite_image(None)
+        tab_label.set_text_color(0)
+
     def on_switch_page(self, notebook, page, page_num):
 
         # Hide widgets on previous page for a performance boost
@@ -1615,11 +1623,6 @@ class NicotineFrame(UserInterface):
 
         tab_label = notebook.get_tab_label(page)
         self.current_tab_label = tab_label
-
-        if tab_label is not None:
-            # Defaults
-            tab_label.set_hilite_image(None)
-            tab_label.set_text_color(0)
 
         if tab_label == self.ChatroomsTabLabel:
             self.set_active_header_bar("Chatrooms")
@@ -1646,6 +1649,7 @@ class NicotineFrame(UserInterface):
         elif tab_label == self.UploadsTabLabel:
             self.set_active_header_bar("Uploads")
             self.uploads.update(forceupdate=True)
+            self.clear_tab_hilite(tab_label)
 
             if self.uploads.Transfers.get_visible():
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
@@ -1653,6 +1657,7 @@ class NicotineFrame(UserInterface):
         elif tab_label == self.DownloadsTabLabel:
             self.set_active_header_bar("Downloads")
             self.downloads.update(forceupdate=True)
+            self.clear_tab_hilite(tab_label)
 
             if self.downloads.Transfers.get_visible():
                 GLib.idle_add(lambda: self.downloads.Transfers.grab_focus() == -1)

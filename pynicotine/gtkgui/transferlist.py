@@ -263,7 +263,7 @@ class TransferList(UserInterface):
             self.selected_users.add(user)
 
     def new_transfer_notification(self):
-        self.frame.request_tab_icon(self.tab_label)
+        self.frame.request_tab_hilite(self.tab_label)
 
     def on_ban(self, *args):
 
