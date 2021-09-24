@@ -30,6 +30,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 """
 
 import os
+import signal
 import threading
 import time
 
@@ -115,6 +116,10 @@ class NicotineCore:
 
         self.shutdown = False
         self.manualdisconnect = False
+
+        # Handle Ctrl+C and "kill" exit gracefully
+        for signal_type in (signal.SIGINT, signal.SIGTERM):
+            signal.signal(signal_type, self.quit)
 
         # Tell threads when we're disconnecting
         self.exit = threading.Event()
@@ -308,7 +313,12 @@ class NicotineCore:
 
         return connect_ready
 
-    def quit(self, *_args):
+    def quit(self, signal_type=None, _frame=None):
+
+        log.add(_("Quitting Nicotine+ %(version)s, %(status)s..."), {
+            "version": config.version,
+            "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
+        })
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
@@ -333,6 +343,14 @@ class NicotineCore:
         # Closing up all shelves db
         self.shares.close_shares("normal")
         self.shares.close_shares("buddy")
+
+        if self.ui_callback:
+            self.ui_callback.quit()
+
+        log.add(_("Quit Nicotine+ %(version)s, %(status)s!"), {
+            "version": config.version,
+            "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
+        })
 
     def connect(self):
 

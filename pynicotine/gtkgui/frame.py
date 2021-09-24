@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import signal
 import sys
 import threading
 import time
@@ -192,10 +191,6 @@ class NicotineFrame(UserInterface):
         except AttributeError:
             # GTK <3.24
             self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
-
-        # Handle Ctrl+C and "kill" exit gracefully
-        for signal_type in (signal.SIGINT, signal.SIGTERM):
-            signal.signal(signal_type, self.on_quit)
 
         width = config.sections["ui"]["width"]
         height = config.sections["ui"]["height"]
@@ -2521,7 +2516,7 @@ class NicotineFrame(UserInterface):
         loop.quit()
 
         try:
-            self.quit()
+            self.np.quit()
         except Exception:
             """ We attempt a clean shut down, but this may not be possible if
             the program didn't initialize fully. Ignore any additional errors
@@ -2594,7 +2589,7 @@ class NicotineFrame(UserInterface):
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 0
 
-            self.quit()
+            self.np.quit()
 
         elif response_id == Gtk.ResponseType.REJECT:
             if checkbox:
@@ -2606,7 +2601,7 @@ class NicotineFrame(UserInterface):
     def on_close_request(self, *args):
 
         if not config.sections["ui"]["exitdialog"]:
-            self.quit()
+            self.np.quit()
             return True
 
         if config.sections["ui"]["exitdialog"] == 2:
@@ -2629,12 +2624,9 @@ class NicotineFrame(UserInterface):
         return True
 
     def on_quit(self, *args):
-        self.quit()
+        self.np.quit()
 
     def quit(self):
-
-        # Shut down event processor/networking
-        self.np.quit()
 
         # Prevent triggering the page removal event, which sets the tab visibility to false
         self.MainNotebook.disconnect(self.page_removed_signal)

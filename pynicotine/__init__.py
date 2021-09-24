@@ -159,7 +159,6 @@ def rescan_shares():
 def run_headless(core, ci_mode):
     """ Run Nicotine+ in headless (no GUI) mode """
 
-    import signal
     import time
 
     from pynicotine.config import config
@@ -167,9 +166,6 @@ def run_headless(core, ci_mode):
 
     config.load_config()
     log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
-
-    for signal_type in (signal.SIGINT, signal.SIGTERM):
-        signal.signal(signal_type, core.quit)
 
     connect_ready = core.start()
 

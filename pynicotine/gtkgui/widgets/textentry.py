@@ -403,7 +403,7 @@ class ChatEntry:
             self.frame.on_away()
 
         elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.quit()
+            self.frame.np.quit()
 
         elif cmd in ("/c", "/close"):
             self.frame.privatechat.users[self.entity].on_close()
