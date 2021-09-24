@@ -97,6 +97,9 @@ class SSDP:
             from xml.etree import ElementTree
 
             response = http_request(url_scheme, base_url, root_url, timeout=2)
+            log.add_debug("UPnP: Device description response from %s://%s%s: %s",
+                          (url_scheme, base_url, root_url, response))
+
             xml = ElementTree.fromstring(response)
 
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
@@ -105,7 +108,7 @@ class SSDP:
 
         except Exception as error:
             # Invalid response
-            log.add_debug("UPnP: Invalid router description response from %s://%s%s: %s",
+            log.add_debug("UPnP: Invalid device description response from %s://%s%s: %s",
                           (url_scheme, base_url, root_url, error))
 
         return service_type, control_url
@@ -116,6 +119,8 @@ class SSDP:
         from urllib.parse import urlsplit
         response_headers = {k.upper(): v for k, v in ssdp_response.headers}
 
+        log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
+
         if "LOCATION" not in response_headers:
             log.add_debug("UPnP: M-SEARCH response did not contain a LOCATION header: %s", ssdp_response.headers)
             return
@@ -123,16 +128,21 @@ class SSDP:
         url_parts = urlsplit(response_headers["LOCATION"])
         service_type, control_url = SSDP.get_router_control_url(url_parts.scheme, url_parts.netloc, url_parts.path)
 
+        log.add_debug("UPnP: Device details: service_type '%s'; control_url '%s'", (service_type, control_url))
+
         if service_type not in ("urn:schemas-upnp-org:service:WANIPConnection:1",
                                 "urn:schemas-upnp-org:service:WANPPPConnection:1",
                                 "urn:schemas-upnp-org:service:WANIPConnection:2"):
-            # Invalid service type, don't add router
+
+            log.add_debug("UPnP: Invalid service type for device, ignoring: %s'", service_type)
             return
 
         routers.append(
             Router(wan_ip_type=response_headers['ST'], url_scheme=url_parts.scheme,
                    base_url=url_parts.netloc, root_url=url_parts.path,
                    service_type=service_type, control_url=control_url))
+
+        log.add_debug("UPnP: Added device to list")
 
     @staticmethod
     def get_routers(private_ip=None):
@@ -172,10 +182,7 @@ class SSDP:
 
             for sock in readable:
                 msg, _sender = sock.recvfrom(4096)
-                ssdp_response = SSDPResponse(msg.decode('utf-8'))
-                log.add_debug("UPnP: Device search response: %s", bytes(ssdp_response))
-
-                SSDP.add_router(routers, ssdp_response)
+                SSDP.add_router(routers, SSDPResponse(msg.decode('utf-8')))
 
             for sock in writable:
                 if not wan_ip1_sent:
@@ -211,7 +218,7 @@ class SSDP:
             # Cooldown
             time.sleep(0.01)
 
-        log.add_debug("UPnP: %s device(s) detected", len(routers))
+        log.add_debug("UPnP: %s device(s) detected", str(len(routers)))
 
         sock.close()
         return routers
