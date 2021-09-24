@@ -286,7 +286,7 @@ class PluginHandler:
                     plugin.settings[key] = customsettings[key]
 
                 else:
-                    log.add_debug(_("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"), {'key': key, 'name': plugin.__name__})
+                    log.add_debug(_("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"), {'key': key, 'name': plugin_name})
 
         except KeyError:
             log.add_debug("No stored settings found for %s", (plugin.__name__,))
