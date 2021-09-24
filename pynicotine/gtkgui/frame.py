@@ -2538,18 +2538,19 @@ class NicotineFrame(UserInterface):
 
         filename = traceback.tb_frame.f_code.co_filename
 
-        for plugin_name in self.np.pluginhandler.enabled_plugins:
-            path = self.np.pluginhandler.findplugin(plugin_name)
+        if self.np.pluginhandler is not None:
+            for plugin_name in self.np.pluginhandler.enabled_plugins:
+                path = self.np.pluginhandler.findplugin(plugin_name)
 
-            if filename.startswith(path):
-                log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
-                          "Trace: %(trace)s"), {
-                    'module': plugin_name,
-                    'errortype': exc_type,
-                    'error': exc_value,
-                    'trace': ''.join(format_tb(exc_traceback))
-                })
-                return
+                if filename.startswith(path):
+                    log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                              "Trace: %(trace)s"), {
+                        'module': plugin_name,
+                        'errortype': exc_type,
+                        'error': exc_value,
+                        'trace': ''.join(format_tb(exc_traceback))
+                    })
+                    return
 
         # Show critical error dialog
         loop = GLib.MainLoop()
@@ -2574,11 +2575,14 @@ class NicotineFrame(UserInterface):
 
         raise exc_value
 
+    def _on_critical_error_threading(self, args):
+        raise args.exc_value
+
     def on_critical_error_threading(self, args):
         """ Exception that originated in a thread.
         Raising an exception here calls sys.excepthook(), which in turn shows an error dialog. """
 
-        raise args.exc_value
+        GLib.idle_add(self._on_critical_error_threading, args)
 
     def on_quit_response(self, dialog, response_id, data):
 

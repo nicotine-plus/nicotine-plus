@@ -297,13 +297,12 @@ class NicotineCore:
         self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
         self.chatrooms = ChatRooms(self, config, self.queue, ui_callback)
 
-        self.add_upnp_portmapping()
-
         port_range = config.sections["server"]["portrange"]
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
             self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
 
+        self.add_upnp_portmapping()
         self.pluginhandler = PluginHandler(self, config)
 
         connect_ready = not config.need_config()
@@ -1099,9 +1098,9 @@ Error: %(error)s""", {
 
     def _add_upnp_portmapping(self):
 
-        from pynicotine.upnp.portmapper import UPnPPortMapping
+        from pynicotine.upnp import UPnPPortMapping
         upnp = UPnPPortMapping()
-        upnp.add_port_mapping(self)
+        upnp.update_port_mapping(self.protothread.listenport)
 
     def set_server_timer(self):
 

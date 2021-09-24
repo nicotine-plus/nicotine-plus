@@ -28,12 +28,6 @@ Copyright: 2014-2019 Tom Wallroth
            2020-2021 Nicotine+ Team
 License: MIT
 
-Files: pynicotine/upnp/ssdp.py
-       pynicotine/upnp/upnp.py
-Copyright: 2019 Dave Mulford
-           2020-2021 Nicotine+ Team
-License: MIT
-
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

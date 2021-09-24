@@ -197,7 +197,3 @@ Jason Green
 - tinytag licensed under the MIT License.  
   Copyright (c) 2014-2018 Tom Wallroth  
   https://github.com/devsnd/tinytag/
-
-- UPnP code adapted from the pyupnp project. pyupnp is licensed under the MIT License.  
-  Copyright (c) 2019 Dave Mulford  
-  https://github.com/davemulford/pyupnp
