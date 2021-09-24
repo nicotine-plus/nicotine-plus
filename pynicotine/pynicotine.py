@@ -588,13 +588,12 @@ class NicotineCore:
         self.queue.append(slskmessages.ConnectToPeer(conn.token, conn.username, conn.conn_type))
         self.out_indirect_conn_request_times[conn] = time.time()
 
-        log.add_conn(
-            "Direct connection of type %(type)s to user %(user)s failed: %(error)s. Attempting indirect connection.", {
-                "type": conn.conn_type,
-                "user": conn.username,
-                "error": error
-            }
-        )
+        log.add_conn(("Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection. "
+                      "Error: %(error)s"), {
+            "type": conn.conn_type,
+            "user": conn.username,
+            "error": error
+        })
 
     def connect_to_peer_request(self, msg):
 
