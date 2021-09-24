@@ -1059,18 +1059,6 @@ class NicotineCore:
 
                     break
 
-        else:
-
-            log.add(
-                _("Cannot connect to remote host %(host)s:%(port)s: %(error)s"), {
-                    'host': msg.connobj.addr[0],
-                    'port': msg.connobj.addr[1],
-                    'error': msg.err
-                }
-            )
-
-            self.closed_connection(msg.connobj.conn, msg.connobj.addr)
-
     def start_upnp_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them """
         """ The default interval is 4 hours """
