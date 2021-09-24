@@ -22,19 +22,24 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
-    __name__ = "Anti SHOUT"
-    settings = {
-        'maxscore': 0.6,
-        'minlength': 10,
-    }
-    metasettings = {
-        'maxscore': {
-            'description': 'The maximum ratio capitals/noncapitals before fixing capitalization',
-            'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1},
-        'minlength': {
-            'description': 'Lines shorter than this never not be altered', 'type': 'integer',
-            'minimum': 0},
-    }
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'maxscore': 0.6,
+            'minlength': 10
+        }
+        self.metasettings = {
+            'maxscore': {
+                'description': 'The maximum ratio capitals/noncapitals before fixing capitalization',
+                'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1
+            },
+            'minlength': {
+                'description': 'Lines shorter than this never not be altered', 'type': 'integer',
+                'minimum': 0
+            }
+        }
 
     @staticmethod
     def capitalize(text):
