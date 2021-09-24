@@ -1060,7 +1060,7 @@ class NicotineCore:
                     break
 
         else:
-            
+
             log.add(
                 _("Cannot connect to remote host %(host)s:%(port)s: %(error)s"), {
                     'host': msg.connobj.addr[0],
@@ -1068,7 +1068,7 @@ class NicotineCore:
                     'error': msg.err
                 }
             )
-            
+
             self.closed_connection(msg.connobj.conn, msg.connobj.addr)
 
     def start_upnp_timer(self):
