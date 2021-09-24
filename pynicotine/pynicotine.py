@@ -589,8 +589,7 @@ class NicotineCore:
         self.out_indirect_conn_request_times[conn] = time.time()
 
         log.add_conn(
-            """Direct connection of type %(type)s to user %(user)s failed, attempting indirect connection.
-Error: %(error)s""", {
+            "Direct connection of type %(type)s to user %(user)s failed: %(error)s. Attempting indirect connection.", {
                 "type": conn.conn_type,
                 "user": conn.username,
                 "error": error
@@ -798,7 +797,7 @@ Error: %(error)s""", {
 
                 i.conn = conn
 
-                log.add_conn("Connection established with user %(user)s. List of outgoing messages: %(messages)s", {
+                log.add_conn("Established connection with user %(user)s. List of outgoing messages: %(messages)s", {
                     'user': i.username,
                     'messages': i.msgs
                 })
@@ -879,7 +878,7 @@ Error: %(error)s""", {
                 self.peerconns.remove(i)
 
                 self.show_connection_error_message(i)
-                log.add_conn("Can't connect to user %s neither directly nor indirectly, giving up", i.username)
+                log.add_conn("Cannot connect to user %s neither directly nor indirectly, giving up", i.username)
                 break
 
     def connect_to_peer_timeout(self, msg):
@@ -983,7 +982,7 @@ Error: %(error)s""", {
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
-    def closed_connection(self, conn, addr, error=None):
+    def closed_connection(self, conn, addr):
 
         if conn == self.active_server_conn:
             self.server_disconnect(addr)
@@ -993,7 +992,7 @@ Error: %(error)s""", {
 
             for i in self.peerconns:
                 if i.conn == conn:
-                    log.add_conn("Connection of type %(type)s to user %(user)s closed by peer %(addr)s",
+                    log.add_conn("Closed connection of type %(type)s to user %(user)s %(addr)s",
                                  {'type': i.init.conn_type, 'user': i.username, 'addr': addr})
 
                     if i in self.out_indirect_conn_request_times:
@@ -1021,7 +1020,7 @@ Error: %(error)s""", {
         if msg.connobj.__class__ is slskmessages.ServerConn:
 
             log.add(
-                _("Can't connect to server %(host)s:%(port)s: %(error)s"), {
+                _("Cannot connect to server %(host)s:%(port)s: %(error)s"), {
                     'host': msg.connobj.addr[0],
                     'port': msg.connobj.addr[1],
                     'error': msg.err
@@ -1051,7 +1050,7 @@ Error: %(error)s""", {
                         connect to them. """
 
                         log.add_conn(
-                            "Can't respond to indirect connection request from user %(user)s. Error: %(error)s", {
+                            "Cannot respond to indirect connection request from user %(user)s. Error: %(error)s", {
                                 'user': i.username,
                                 'error': msg.err
                             })
@@ -1061,7 +1060,16 @@ Error: %(error)s""", {
                     break
 
         else:
-            self.closed_connection(msg.connobj.conn, msg.connobj.addr, msg.err)
+            
+            log.add(
+                _("Cannot connect to remote host %(host)s:%(port)s: %(error)s"), {
+                    'host': msg.connobj.addr[0],
+                    'port': msg.connobj.addr[1],
+                    'error': msg.err
+                }
+            )
+            
+            self.closed_connection(msg.connobj.conn, msg.connobj.addr)
 
     def start_upnp_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them """
