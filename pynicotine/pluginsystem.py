@@ -329,7 +329,7 @@ class PluginHandler:
                 continue
 
             log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
-                    {'module': module, 'value': str(return_value)})
+                          {'module': module, 'value': str(return_value)})
 
         return False
 
@@ -369,7 +369,7 @@ class PluginHandler:
                 continue
 
             log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
-                    {'module': module, 'value': return_value})
+                          {'module': module, 'value': return_value})
 
         return args
 
