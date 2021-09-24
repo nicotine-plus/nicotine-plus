@@ -55,8 +55,14 @@ class SSDPResponse:
 class SSDPRequest:
     """ Simple Service Discovery Protocol (SSDP) request """
 
-    def __init__(self, headers):
-        self.headers = headers
+    def __init__(self, search_target):
+
+        self.headers = {
+            "HOST": "%s:%s" % (SSDP.multicast_host, SSDP.multicast_port),
+            "ST": search_target,
+            "MAN": '"ssdp:discover"',
+            "MX": str(SSDP.response_time_secs)
+        }
 
     def sendto(self, sock, addr):
 
@@ -79,13 +85,6 @@ class SSDP:
     multicast_host = "239.255.255.250"
     multicast_port = 1900
     response_time_secs = 2
-
-    msearch_headers = {
-        "HOST": "%s:%s" % (multicast_host, multicast_port),
-        "ST": None,
-        "MAN": '"ssdp:discover"',
-        "MX": str(response_time_secs)
-    }
 
     @staticmethod
     def get_router_control_url(url_scheme, base_url, root_url):
@@ -150,25 +149,20 @@ class SSDP:
 
         # Protocol 1
         wan_ip1_sent = False
-        SSDP.msearch_headers["ST"] = "urn:schemas-upnp-org:service:WANIPConnection:1"
-        wan_ip1 = SSDPRequest(SSDP.msearch_headers)
+        wan_ip1 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
 
         wan_ppp1_sent = False
-        SSDP.msearch_headers["ST"] = "urn:schemas-upnp-org:service:WANPPPConnection:1"
-        wan_ppp1 = SSDPRequest(SSDP.msearch_headers)
+        wan_ppp1 = SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
 
         wan_igd1_sent = False
-        SSDP.msearch_headers["ST"] = "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
-        wan_igd1 = SSDPRequest(SSDP.msearch_headers)
+        wan_igd1 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
         # Protocol 2
         wan_ip2_sent = False
-        SSDP.msearch_headers["ST"] = "urn:schemas-upnp-org:service:WANIPConnection:2"
-        wan_ip2 = SSDPRequest(SSDP.msearch_headers)
+        wan_ip2 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
 
         wan_igd2_sent = False
-        SSDP.msearch_headers["ST"] = "urn:schemas-upnp-org:device:InternetGatewayDevice:2"
-        wan_igd2 = SSDPRequest(SSDP.msearch_headers)
+        wan_igd2 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
         routers = []
         time_end = time.time() + SSDP.response_time_secs
