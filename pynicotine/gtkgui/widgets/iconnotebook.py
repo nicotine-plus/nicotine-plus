@@ -93,6 +93,14 @@ class ImageLabel(Gtk.Box):
         if Gtk.get_major_version() == 4:
             self.button = Gtk.Button.new_from_icon_name("window-close-symbolic")
             self.button.set_has_frame(False)
+
+            # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
+            gesture_click = Gtk.GestureClick()
+            gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            gesture_click.connect(
+                "pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
+            self.button.add_controller(gesture_click)
+
         else:
             self.button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
             self.button.set_relief(Gtk.ReliefStyle.NONE)
@@ -254,6 +262,17 @@ class IconNotebook:
 
             self.unread_button.set_icon_name("emblem-important-symbolic")
             self.unread_button.set_has_frame(False)
+
+            # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
+            controllers = self.notebook.observe_controllers()
+
+            for num in range(controllers.get_n_items()):
+                item = controllers.get_item(num)
+
+                if isinstance(item, Gtk.GestureClick):
+                    item.set_propagation_phase(Gtk.PropagationPhase.BUBBLE)
+                    break
+
         else:
             self.window = self.notebook.get_toplevel()
             self.popup_enable()
