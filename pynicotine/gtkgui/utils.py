@@ -67,6 +67,7 @@ def connect_key_press_event(widget, callback):
 
     if Gtk.get_major_version() == 4:
         controller = Gtk.EventControllerKey()
+        controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         controller.connect("key-pressed", callback)
 
         widget.add_controller(controller)
