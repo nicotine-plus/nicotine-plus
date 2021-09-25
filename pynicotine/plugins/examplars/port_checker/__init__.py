@@ -111,7 +111,7 @@ class Plugin(BasePlugin):
 
         return 'closed'
 
-    def port_checker_command(self, _public_command, _, user):
+    def port_checker_command(self, _, user):
 
         if user:
             self.resolve(user, False)
