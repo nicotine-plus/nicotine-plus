@@ -266,7 +266,8 @@ class PluginHandler:
 
         return infodict
 
-    def show_plugin_error(self, plugin_name, exc_type, exc_value, exc_traceback):
+    @staticmethod
+    def show_plugin_error(plugin_name, exc_type, exc_value, exc_traceback):
 
         from traceback import format_tb
 
