@@ -47,6 +47,7 @@ class PluginHandler:
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
+        self.command_source = None
 
         try:
             os.makedirs(config.plugin_dir)
@@ -318,6 +319,8 @@ class PluginHandler:
 
     def _trigger_command(self, command, source, args, public_command):
 
+        self.command_source = (public_command, source)
+
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
@@ -340,6 +343,7 @@ class PluginHandler:
                 continue
 
             if return_value == returncode['zap']:
+                self.command_source = None
                 return True
 
             if return_value == returncode['pass']:
@@ -348,6 +352,7 @@ class PluginHandler:
             log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
                           {'module': module, 'value': str(return_value)})
 
+        self.command_source = None
         return False
 
     def trigger_event(self, function_name, args):
@@ -704,6 +709,66 @@ class BasePlugin:
 
     # The following are functions to make your life easier,
     # you shouldn't override them.
+
+    def log(self, msg, msg_args=None):
+        log.add(self.human_name + ": " + msg, msg_args)
+
+    def send_public(self, room, text):
+        self.core.queue.append(slskmessages.SayChatroom(room, text))
+
+    def send_private(self, user, text, show_ui=True, switch_page=True):
+        """ Send user message in private.
+        show_ui controls if the UI opens a private chat view for the user.
+        switch_page controls whether the user's private chat view should be opened. """
+
+        if show_ui:
+            self.core.privatechats.show_user(user, switch_page)
+
+        self.core.privatechats.send_message(user, text)
+
+    def echo_public(self, room, text, message_type="local"):
+        """ Display a raw message in chat rooms (not sent to others).
+        message_type changes the type (and color) of the message in the UI.
+        available message_type values: action, remote, local, hilite """
+
+        self.core.chatrooms.echo_message(room, text, message_type)
+
+    def echo_private(self, user, text, message_type="local"):
+        """ Display a raw message in private (not sent to others).
+        message_type changes the type (and color) of the message in the UI.
+        available message_type values: action, remote, local, hilite """
+
+        self.core.privatechats.show_user(user)
+        self.core.privatechats.echo_message(user, text, message_type)
+
+    def send_message(self, text):
+        """ Convenience function to send a message to the same user/room
+        a plugin command runs for """
+
+        if self.parent.command_source is None:
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source
+        function = self.send_public if public_command else self.send_private
+
+        function(source, text)
+
+    def echo_message(self, text, message_type="local"):
+        """ Convenience function to display a raw message the same window
+        a plugin command runs from """
+
+        if self.parent.command_source is None:
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source
+        function = self.echo_public if public_command else self.echo_private
+
+        function(source, text, message_type)
+
+    # Obsolete functions
+
     def saypublic(self, _room, _text):
         self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
 
@@ -715,50 +780,3 @@ class BasePlugin:
 
     def fakepublic(self, _room, _user, _text):
         self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")
-
-    def log(self, msg, msg_args=None):
-        log.add(self.human_name + ": " + msg, msg_args)
-
-    def send_public(self, room, text):
-        self.send_message(room, text, public_message=True)
-
-    def send_private(self, user, text, show_ui=True, switch_page=True):
-        """ Send user message in private.
-        show_ui controls if the UI opens a private chat view for the user.
-        switch_page controls whether the user's private chat view should be opened. """
-
-        self.send_message(user, text, show_ui, switch_page)
-
-    def send_message(self, source, text, show_ui=True, switch_page=True, public_message=False):
-
-        if public_message:
-            self.core.queue.append(slskmessages.SayChatroom(source, text))
-            return
-
-        if show_ui:
-            self.core.privatechats.show_user(source, switch_page)
-
-        self.core.privatechats.send_message(source, text)
-
-    def echo_public(self, room, text, message_type="local"):
-        """ Display a raw message in chat rooms (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
-
-        self.echo_message(room, text, message_type, public_message=True)
-
-    def echo_private(self, user, text, message_type="local"):
-        """ Display a raw message in private (not sent to others).
-        message_type changes the type (and color) of the message in the UI.
-        available message_type values: action, remote, local, hilite """
-
-        self.echo_message(user, text, message_type)
-
-    def echo_message(self, source, text, message_type="local", public_message=False):
-
-        if public_message:
-            self.core.chatrooms.echo_message(source, text, message_type)
-            return
-
-        self.core.privatechats.show_user(source)
-        self.core.privatechats.echo_message(source, text, message_type)
