@@ -44,7 +44,7 @@ class Plugin(BasePlugin):
                 'type': 'int'
             }
         }
-        self.__commands__ = [('port', self.port_checker_command)]
+        self.__publiccommands__ = self.__privatecommands__ = [('port', self.port_checker_command)]
 
         self.throttle = ResponseThrottle(self.core, self.human_name)
         self.checkroom = "nicotine"

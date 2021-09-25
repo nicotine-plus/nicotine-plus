@@ -76,10 +76,10 @@ class PluginHandler:
         if not self.config.sections["words"]["commands"]:
             return
 
-        if plugin.__publiccommands__ or plugin.__commands__:
+        if plugin.__publiccommands__:
             self.core.chatrooms.update_completions()
 
-        if plugin.__privatecommands__ or plugin.__commands__:
+        if plugin.__privatecommands__:
             self.core.privatechats.update_completions()
 
     def findplugin(self, plugin_name):
@@ -165,10 +165,10 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, _func in plugin.__publiccommands__ + plugin.__commands__:
+            for trigger, _func in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
-            for trigger, _func in plugin.__privatecommands__ + plugin.__commands__:
+            for trigger, _func in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.add('/' + trigger + ' ')
 
             self.update_completions(plugin)
@@ -206,10 +206,10 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for trigger, _func in plugin.__publiccommands__ + plugin.__commands__:
+            for trigger, _func in plugin.__publiccommands__:
                 self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
 
-            for trigger, _func in plugin.__privatecommands__ + plugin.__commands__:
+            for trigger, _func in plugin.__privatecommands__:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
@@ -328,15 +328,9 @@ class PluginHandler:
             return_value = None
             commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
 
-            # Separate command implementations for public/private chat
             for trigger, func in commands:
                 if trigger == command:
                     return_value = getattr(plugin, func.__name__)(source, args)
-
-            # Unified command implementations for public/private chat
-            for trigger, func in plugin.__commands__:
-                if trigger == command:
-                    return_value = getattr(plugin, func.__name__)(source, args, public_command)
 
             if return_value is None:
                 # Nothing changed, continue to the next plugin
@@ -588,7 +582,6 @@ class BasePlugin:
 
     __publiccommands__ = []
     __privatecommands__ = []
-    __commands__ = []
     settings = {}
     metasettings = {}
 
