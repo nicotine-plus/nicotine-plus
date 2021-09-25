@@ -185,7 +185,7 @@ class TransferList(UserInterface):
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
-            ("#" + _("_Open in File Manager"), self.on_open_directory),
+            ("#" + _("_Open in File Manager"), self.on_open_file_manager),
             ("", None),
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
@@ -788,10 +788,10 @@ class TransferList(UserInterface):
         self.select_transfers()
         dc = config.sections["transfers"]["%s_doubleclick" % self.type]
 
-        if dc == 1:  # Send to player
+        if dc == 1:  # Send to Player
             self.on_play_files()
-        elif dc == 2:  # File manager
-            self.on_open_directory()
+        elif dc == 2:  # Open in File Manager
+            self.on_open_file_manager()
         elif dc == 3:  # Search
             self.on_file_search()
         elif dc == 4:  # Pause / Abort
@@ -800,6 +800,8 @@ class TransferList(UserInterface):
             self.abort_transfers(clear=True)
         elif dc == 6:  # Resume / Retry
             self.retry_transfers()
+        elif dc == 7:  # Browse Folder
+            self.on_browse_folder()
 
     def on_select_user_transfers(self, *args):
 

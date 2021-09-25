@@ -181,11 +181,12 @@
                     <items>
                       <item>Nothing</item>
                       <item>Send to Player</item>
-                      <item>Open Folder</item>
+                      <item>Open in File Manager</item>
                       <item>Search</item>
                       <item>Pause</item>
                       <item>Clear</item>
                       <item>Resume</item>
+                      <item>Browse Folder</item>
                     </items>
                   </object>
                 </child>
@@ -215,10 +216,12 @@
                     <items>
                       <item>Nothing</item>
                       <item>Send to Player</item>
-                      <item>Open Folder</item>
+                      <item>Open in File Manager</item>
                       <item>Search</item>
                       <item>Abort</item>
                       <item>Clear</item>
+                      <item>Retry</item>
+                      <item>Browse Folder</item>
                     </items>
                   </object>
                 </child>

@@ -97,7 +97,7 @@ class Downloads(TransferList):
             callback_data=msg
         )
 
-    def on_open_directory(self, *args):
+    def on_open_file_manager(self, *args):
 
         downloaddir = config.sections["transfers"]["downloaddir"]
         incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir

@@ -73,7 +73,7 @@ class Uploads(TransferList):
             callback_data="all"
         )
 
-    def on_open_directory(self, *args):
+    def on_open_file_manager(self, *args):
 
         transfer = next(iter(self.selected_transfers), None)
 
