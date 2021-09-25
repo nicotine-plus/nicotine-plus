@@ -730,7 +730,6 @@ class NicotineFrame(UserInterface):
     def set_show_log(self, show):
 
         if show:
-            self.set_status_text("")
             self.DebugLog.show()
             self.log_textview.scroll_bottom()
         else:
@@ -2212,7 +2211,7 @@ class NicotineFrame(UserInterface):
             message_dialog(parent=self.application.get_active_window(), title=title, message=msg)
             return
 
-        if config.sections["logging"]["logcollapsed"]:
+        if level not in ("connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
         self.log_textview.append_line(msg, find_urls=False)
