@@ -1,5 +1,3 @@
-# pylint: disable=attribute-defined-outside-init
-
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -24,15 +22,19 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
-    __name__ = "MPRIS Now Playing Sender"
-    settings = {
-        'rooms': ['testroom'],
-    }
-    metasettings = {
-        'rooms': {'description': 'Rooms to broadcast in', 'type': 'list string'},
-    }
+    def __init__(self, *args, **kwargs):
 
-    def init(self):
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'rooms': ['testroom']
+        }
+        self.metasettings = {
+            'rooms': {
+                'description': 'Rooms to broadcast in',
+                'type': 'list string'
+            }
+        }
 
         self.last_song_url = ""
         self.stop = False

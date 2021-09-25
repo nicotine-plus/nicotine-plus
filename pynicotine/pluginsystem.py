@@ -47,6 +47,7 @@ class PluginHandler:
         self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
+        self.command_source = None
 
         try:
             os.makedirs(config.plugin_dir)
@@ -60,6 +61,11 @@ class PluginHandler:
         # Load home directory plugins
         self.plugindirs.append(config.plugin_dir)
 
+        BasePlugin.parent = self
+        BasePlugin.config = self.config
+        BasePlugin.core = self.core
+        BasePlugin.frame = self.core.ui_callback
+
         if os.path.isdir(config.plugin_dir):
             self.load_enabled()
         else:
@@ -67,10 +73,13 @@ class PluginHandler:
 
     def update_completions(self, plugin):
 
-        if plugin.__publiccommands__ and self.config.sections["words"]["commands"]:
+        if not self.config.sections["words"]["commands"]:
+            return
+
+        if plugin.__publiccommands__ or plugin.__commands__:
             self.core.chatrooms.update_completions()
 
-        if plugin.__privatecommands__ and self.config.sections["words"]["commands"]:
+        if plugin.__privatecommands__ or plugin.__commands__:
             self.core.privatechats.update_completions()
 
     def findplugin(self, plugin_name):
@@ -114,11 +123,14 @@ class PluginHandler:
             plugin = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(plugin)
 
-        instance = plugin.Plugin(self, self.config, self.core)
+        instance = plugin.Plugin()
+        instance.internal_name = BasePlugin.internal_name
+        instance.human_name = BasePlugin.human_name
+
         self.plugin_settings(plugin_name, instance)
 
         if hasattr(plugin, "enable"):
-            instance.log("top-level enable() function is obsolete, please use BasePlugin.init() instead")
+            instance.log("top-level enable() function is obsolete, please use BasePlugin.__init__() instead")
 
         if hasattr(plugin, "disable"):
             instance.log("top-level disable() function is obsolete, please use BasePlugin.disable() instead")
@@ -143,6 +155,9 @@ class PluginHandler:
             return False
 
         try:
+            BasePlugin.internal_name = plugin_name
+            BasePlugin.human_name = self.get_plugin_info(plugin_name).get("Name", plugin_name)
+
             plugin = self.load_plugin(plugin_name)
 
             if not plugin:
@@ -150,16 +165,17 @@ class PluginHandler:
 
             plugin.init()
 
-            for trigger, _func in plugin.__publiccommands__:
+            for trigger, _func in plugin.__publiccommands__ + plugin.__commands__:
                 self.core.chatrooms.CMDS.add('/' + trigger + ' ')
 
-            for trigger, _func in plugin.__privatecommands__:
+            for trigger, _func in plugin.__privatecommands__ + plugin.__commands__:
                 self.core.privatechats.CMDS.add('/' + trigger + ' ')
 
             self.update_completions(plugin)
 
             self.enabled_plugins[plugin_name] = plugin
-            log.add(_("Loaded plugin %s"), plugin.__name__)
+            plugin.loaded_notification()
+            log.add(_("Loaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -190,14 +206,15 @@ class PluginHandler:
         try:
             plugin.disable()
 
-            for trigger, _func in plugin.__publiccommands__:
+            for trigger, _func in plugin.__publiccommands__ + plugin.__commands__:
                 self.core.chatrooms.CMDS.remove('/' + trigger + ' ')
 
-            for trigger, _func in plugin.__privatecommands__:
+            for trigger, _func in plugin.__privatecommands__ + plugin.__commands__:
                 self.core.privatechats.CMDS.remove('/' + trigger + ' ')
 
             self.update_completions(plugin)
-            log.add(_("Unloaded plugin {}".format(plugin.__name__)))
+            plugin.unloaded_notification()
+            log.add(_("Unloaded plugin %s"), plugin.human_name)
 
         except Exception:
             from traceback import format_exc
@@ -292,7 +309,7 @@ class PluginHandler:
                     })
 
         except KeyError:
-            log.add_debug("No stored settings found for %s", (plugin.__name__,))
+            log.add_debug("No stored settings found for %s", plugin.human_name)
 
     def trigger_public_command_event(self, room, command, args):
         return self._trigger_command(command, room, args, public_command=True)
@@ -302,27 +319,31 @@ class PluginHandler:
 
     def _trigger_command(self, command, source, args, public_command):
 
+        self.command_source = (public_command, source)
+
         for module, plugin in self.enabled_plugins.items():
             if plugin is None:
                 continue
 
             return_value = None
+            commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
 
-            if public_command:
-                for trigger, func in plugin.__publiccommands__:
-                    if trigger == command:
-                        return_value = func(plugin, source, args)
+            # Separate command implementations for public/private chat
+            for trigger, func in commands:
+                if trigger == command:
+                    return_value = getattr(plugin, func.__name__)(source, args)
 
-            else:
-                for trigger, func in plugin.__privatecommands__:
-                    if trigger == command:
-                        return_value = func(plugin, source, args)
+            # Unified command implementations for public/private chat
+            for trigger, func in plugin.__commands__:
+                if trigger == command:
+                    return_value = getattr(plugin, func.__name__)(source, args, public_command)
 
             if return_value is None:
                 # Nothing changed, continue to the next plugin
                 continue
 
             if return_value == returncode['zap']:
+                self.command_source = None
                 return True
 
             if return_value == returncode['pass']:
@@ -331,6 +352,7 @@ class PluginHandler:
             log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
                           {'module': module, 'value': str(return_value)})
 
+        self.command_source = None
         return False
 
     def trigger_event(self, function_name, args):
@@ -564,26 +586,41 @@ class ResponseThrottle:
 
 class BasePlugin:
 
-    __name__ = "BasePlugin"
     __publiccommands__ = []
     __privatecommands__ = []
+    __commands__ = []
     settings = {}
     metasettings = {}
 
-    def __init__(self, parent, config, core):
+    internal_name = None
+    human_name = None
+    parent = None
+    config = None
+    core = None
+    frame = None
 
-        # Never override this function, override init() instead
-        self.parent = parent
-        self.config = config
-        self.core = core
-        self.frame = core.ui_callback
+    def __init__(self):
+        # The plugin class is initializing, plugin settings are not available yet
+        pass
 
     def init(self):
-        # Custom enable function for plugins
+        # Called after __init__() when plugin settings have loaded
+        pass
+
+    def loaded_notification(self):
+        # The plugin has finished loaded (settings are loaded at this stage)
         pass
 
     def disable(self):
-        # Custom disable function for plugins
+        # The plugin has started unloading
+        pass
+
+    def unloaded_notification(self):
+        # The plugin has finished unloading
+        pass
+
+    def shutdown_notification(self):
+        # Nicotine+ is shutting down
         pass
 
     def public_room_message_notification(self, room, user, line):
@@ -670,33 +707,11 @@ class BasePlugin:
     def download_finished_notification(self, user, virtual_path, real_path):
         pass
 
-    def shutdown_notification(self):
-        pass
-
     # The following are functions to make your life easier,
     # you shouldn't override them.
-    def saypublic(self, room, text):
-        self.log("saypublic(room, text) is deprecated, please use send_public(room, text)")
-        self.send_public(room, text)
-
-    def sayprivate(self, user, text):
-        self.log("sayprivate(user, text) is deprecated, please use send_private(user, text)")
-        self.send_private(user, text, show_ui=True)
-
-    def sendprivate(self, user, text):
-        self.log("sendprivate(user, text) is deprecated, please use send_private(user, text, show_ui=False)")
-        self.send_private(user, text, show_ui=False)
-
-    def fakepublic(self, room, user, text):
-
-        self.log("fakepublic(room, user, text) is deprecated, please use echo_public(room, text)")
-
-        msg = slskmessages.SayChatroom(room, text)
-        msg.user = user
-        self.core.chatrooms.say_chat_room(msg)
 
     def log(self, msg, msg_args=None):
-        log.add(self.__name__ + ": " + msg, msg_args)
+        log.add(self.human_name + ": " + msg, msg_args)
 
     def send_public(self, room, text):
         self.core.queue.append(slskmessages.SayChatroom(room, text))
@@ -725,3 +740,43 @@ class BasePlugin:
 
         self.core.privatechats.show_user(user)
         self.core.privatechats.echo_message(user, text, message_type)
+
+    def send_message(self, text):
+        """ Convenience function to send a message to the same user/room
+        a plugin command runs for """
+
+        if self.parent.command_source is None:
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source
+        function = self.send_public if public_command else self.send_private
+
+        function(source, text)
+
+    def echo_message(self, text, message_type="local"):
+        """ Convenience function to display a raw message the same window
+        a plugin command runs from """
+
+        if self.parent.command_source is None:
+            # Function was not called from a command
+            return
+
+        public_command, source = self.parent.command_source
+        function = self.echo_public if public_command else self.echo_private
+
+        function(source, text, message_type)
+
+    # Obsolete functions
+
+    def saypublic(self, _room, _text):
+        self.log("saypublic(room, text) is obsolete, please use send_public(room, text)")
+
+    def sayprivate(self, _user, _text):
+        self.log("sayprivate(user, text) is obsolete, please use send_private(user, text)")
+
+    def sendprivate(self, _user, _text):
+        self.log("sendprivate(user, text) is obsolete, please use send_private(user, text, show_ui=False)")
+
+    def fakepublic(self, _room, _user, _text):
+        self.log("fakepublic(room, user, text) is obsolete, please use echo_public(room, text)")

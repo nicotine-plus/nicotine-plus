@@ -22,10 +22,26 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
-    __name__ = "Plugin Debugger"
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.log('__init__')
 
     def init(self):
-        self.log('init')
+        self.log('Init')
+
+    def disable(self):
+        self.log('Disable')
+
+    def loaded_notification(self):
+        self.log('LoadedNotification')
+
+    def unloaded_notification(self):
+        self.log('UnloadedNotification')
+
+    def shutdown_notification(self):
+        self.log('ShutdownNotification')
 
     def public_room_message_notification(self, room, user, line):
         self.log('PublicRoomMessageNotification, room=%s, user=%s, line=%s', (room, user, line))
@@ -107,6 +123,3 @@ class Plugin(BasePlugin):
     def download_finished_notification(self, user, virtual_path, real_path):
         self.log('DownloadFinishedNotification, user=%s, virtual_path=%s, real_path=%s',
                  (user, virtual_path, real_path))
-
-    def shutdown_notification(self):
-        self.log('ShutdownNotification')

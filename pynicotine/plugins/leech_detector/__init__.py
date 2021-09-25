@@ -1,5 +1,3 @@
-# pylint: disable=attribute-defined-outside-init
-
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
 # COPYRIGHT (C) 2011 Quinox <quinox@users.sf.net>
 #
@@ -25,31 +23,39 @@ from pynicotine.pluginsystem import BasePlugin
 
 class Plugin(BasePlugin):
 
-    __name__ = "Leech Detector"
-    settings = {
-        'message': 'Please consider sharing more files before downloading from me. Thanks :)',
-        'num_files': 1,
-        'num_folders': 1,
-        'open_private_chat': True
-    }
-    metasettings = {
-        'message': {
-            'description': 'Message to send to leechers. New lines are sent as separate messages, '
-                           + 'too many lines may get you tempbanned for spam!',
-            'type': 'textview'},
-        'num_files': {
-            'description': 'Least required number of shared files',
-            'type': 'int', 'minimum': 1},
-        'num_folders': {
-            'description': 'Least required number of shared folders',
-            'type': 'int', 'minimum': 1},
-        'open_private_chat': {
-            'description': 'Open private chat tabs when sending messages to leechers',
-            'type': 'bool'},
-    }
+    def __init__(self, *args, **kwargs):
 
-    def init(self):
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'message': 'Please consider sharing more files before downloading from me. Thanks :)',
+            'num_files': 1,
+            'num_folders': 1,
+            'open_private_chat': True
+        }
+        self.metasettings = {
+            'message': {
+                'description': ('Message to send to leechers. New lines are sent as separate messages, '
+                                'too many lines may get you tempbanned for spam!'),
+                'type': 'textview'
+            },
+            'num_files': {
+                'description': 'Least required number of shared files',
+                'type': 'int', 'minimum': 1
+            },
+            'num_folders': {
+                'description': 'Least required number of shared folders',
+                'type': 'int', 'minimum': 1
+            },
+            'open_private_chat': {
+                'description': 'Open private chat tabs when sending messages to leechers',
+                'type': 'bool'
+            }
+        }
+
         self.probed = {}
+
+    def loaded_notification(self):
 
         min_num_files = self.metasettings['num_files']['minimum']
         min_num_folders = self.metasettings['num_folders']['minimum']

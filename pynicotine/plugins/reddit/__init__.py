@@ -38,13 +38,22 @@ from pynicotine.utils import http_request
 
 class Plugin(BasePlugin):
 
-    __name__ = "Reddit"
-    settings = {'reddit_links': 3}
-    metasettings = {'reddit_links': {"description": 'Maximum number of links to provide', 'type': 'integer'}}
+    def __init__(self, *args, **kwargs):
 
-    def init(self):
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'reddit_links': 3
+        }
+        self.metasettings = {
+            'reddit_links': {
+                'description': 'Maximum number of links to provide',
+                'type': 'integer'
+            }
+        }
+
         self.plugin_command = "!reddit"
-        self.responder = ResponseThrottle(self.core, self.__name__)
+        self.responder = ResponseThrottle(self.core, self.human_name)
 
     def incoming_public_chat_notification(self, room, user, line):
         line = line.lower().strip()

@@ -28,31 +28,37 @@ from pynicotine.utils import humanize
 
 class Plugin(BasePlugin):
 
-    __name__ = 'YouTube Info'
+    def __init__(self, *args, **kwargs):
 
-    settings = {
-        'api_key': '',
-        'color': 'Local',
-        'format': [
-            '* Title: %title%',
-            '* Duration: %duration% - Views: %views%']
-    }
-    metasettings = {
-        'api_key': {
-            'description': 'YouTube Data v3 API key:',
-            'type': 'string'},
-        'color': {
-            'description': 'Message color:',
-            'type': 'dropdown',
-            'options': ('Remote', 'Local', 'Action', 'Hilite')},
-        'format': {
-            'description': 'Message format',
-            'type': 'list string'}
-    }
-    last_video_id = {
-        'private': {},
-        'public': {}
-    }
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'api_key': '',
+            'color': 'Local',
+            'format': [
+                '* Title: %title%',
+                '* Duration: %duration% - Views: %views%']
+        }
+        self.metasettings = {
+            'api_key': {
+                'description': 'YouTube Data v3 API key:',
+                'type': 'string'
+            },
+            'color': {
+                'description': 'Message color:',
+                'type': 'dropdown',
+                'options': ('Remote', 'Local', 'Action', 'Hilite')
+            },
+            'format': {
+                'description': 'Message format',
+                'type': 'list string'
+            }
+        }
+
+        self.last_video_id = {
+            'private': {},
+            'public': {}
+        }
 
     def incoming_public_chat_notification(self, room, user, line):
 

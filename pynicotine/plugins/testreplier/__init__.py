@@ -25,18 +25,21 @@ from pynicotine.pluginsystem import BasePlugin, ResponseThrottle
 
 class Plugin(BasePlugin):
 
-    __name__ = "Test Replier"
-    settings = {
-        'replies': ['Test failed.']
-    }
-    metasettings = {
-        'replies': {
-            'description': 'Replies:',
-            'type': 'list string'}
-    }
+    def __init__(self, *args, **kwargs):
 
-    def init(self):
-        self.throttle = ResponseThrottle(self.core, self.__name__)
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'replies': ['Test failed.']
+        }
+        self.metasettings = {
+            'replies': {
+                'description': 'Replies:',
+                'type': 'list string'
+            }
+        }
+
+        self.throttle = ResponseThrottle(self.core, self.human_name)
 
     def incoming_public_chat_event(self, room, user, line):
 

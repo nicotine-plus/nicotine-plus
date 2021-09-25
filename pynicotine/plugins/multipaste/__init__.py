@@ -24,15 +24,24 @@ from pynicotine.pluginsystem import returncode
 
 class Plugin(BasePlugin):
 
-    __name__ = "Multi Paste"
-    settings = {
-        'maxpubliclines': 4,
-        'maxprivatelines': 8,
-    }
-    metasettings = {
-        'maxpubliclines': {"description": 'The maximum number of lines that will pasted in public', 'type': 'int'},
-        'maxprivatelines': {"description": 'The maximum number of lines that will be pasted in private', 'type': 'int'},
-    }
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'maxpubliclines': 4,
+            'maxprivatelines': 8
+        }
+        self.metasettings = {
+            'maxpubliclines': {
+                "description": 'The maximum number of lines that will pasted in public',
+                'type': 'int'
+            },
+            'maxprivatelines': {
+                "description": 'The maximum number of lines that will be pasted in private',
+                'type': 'int'
+            }
+        }
 
     def outgoing_private_chat_event(self, user, line):
 

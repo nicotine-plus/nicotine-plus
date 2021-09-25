@@ -26,92 +26,92 @@ from pynicotine.slskmessages import GetPeerAddress
 
 class Plugin(BasePlugin):
 
-    __name__ = "Port Checker"
+    def __init__(self, *args, **kwargs):
 
-    settings = {
-        'keyword_enabled': False,
-        'socket_timeout': 10
-    }
-    metasettings = {
-        'keyword_enabled': {
-            'description': 'Enable "portscan" keyword trigger',
-            'type': 'bool'
-        },
-        'socket_timeout': {
-            'description': 'Socket timeout (in seconds)',
-            'type': 'int'
+        super().__init__(*args, **kwargs)
+
+        self.settings = {
+            'keyword_enabled': False,
+            'socket_timeout': 10
         }
-    }
-    my_username = checkroom = throttle = pending_user = ''
+        self.metasettings = {
+            'keyword_enabled': {
+                'description': 'Enable "portscan" keyword trigger',
+                'type': 'bool'
+            },
+            'socket_timeout': {
+                'description': 'Socket timeout (in seconds)',
+                'type': 'int'
+            }
+        }
+        self.__commands__ = [('port', self.port_checker_command)]
 
-    def init(self):
-
-        self.throttle = ResponseThrottle(self.core, self.__name__)
-        self.my_username = self.config.sections["server"]["login"]
-        self.checkroom = 'nicotine'
+        self.throttle = ResponseThrottle(self.core, self.human_name)
+        self.checkroom = "nicotine"
+        self.pending_user = ""
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        if room != self.checkroom or not self.settings['keyword_enabled'] or self.my_username == user:
+        my_username = self.config.sections["server"]["login"]
+
+        if room != self.checkroom or not self.settings['keyword_enabled'] or my_username == user:
             return
 
         if not self.throttle.ok_to_respond(room, user, line, 10):
             return
 
-        if 'portscan' in line.lower():  # noqa
+        if 'portscan' in line.lower():
             self.log("%s requested a port scan", user)
             self.resolve(user, True)
 
-    def user_resolve_notification(self, user, ip, port, _):
+    def user_resolve_notification(self, user, ip_address, port, _country):
 
         if not self.pending_user or user not in self.pending_user:
             return
 
         user, announce = self.pending_user
         self.pending_user = ()
-        threading.Thread(target=self.check_port, args=(user, ip, port, announce)).start()
+        threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
 
     def resolve(self, user, announce):
 
         if user in self.core.users and isinstance(self.core.users[user].addr, tuple):
-            ip, port = self.core.users[user].addr
-            threading.Thread(target=self.check_port, args=(user, ip, port, announce)).start()
+            ip_address, port = self.core.users[user].addr
+            threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
         else:
             self.pending_user = user, announce
             self.core.queue.append(GetPeerAddress(user))
 
-    def check_port(self, user, ip, port, announce):
+    def check_port(self, user, ip_address, port, announce):
 
-        status = self._check_port(ip, port)
+        status = self._check_port(ip_address, port)
 
         if announce and status in ('open', 'closed'):
             self.throttle.responded()
             self.send_public(self.checkroom, '%s: Your port is %s' % (user, status))
 
-        self.log("User %s on %s:%s port is %s.", (user, ip, port, status))
+        self.log("User %s on %s:%s port is %s.", (user, ip_address, port, status))
 
-        return
+    def _check_port(self, ip_address, port):
 
-    def _check_port(self, ip, port):
-
-        if ip in ('0.0.0.0',) or port in (0,):
+        if ip_address in ('0.0.0.0',) or port in (0,):
             return 'unknown'
 
         timeout = self.settings['socket_timeout']
-        self.log('Scanning %s:%d (socket timeout %d seconds)...', (ip, port, timeout))
+        self.log('Scanning %s:%d (socket timeout %d seconds)...', (ip_address, port, timeout))
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout)
 
-        result = sock.connect_ex((ip, port))
+        result = sock.connect_ex((ip_address, port))
         sock.close()
 
         if result == 0:
             return 'open'
-        else:
-            return 'closed'
 
-    def port_checker_command(self, _, user):
+        return 'closed'
+
+    def port_checker_command(self, _public_command, _, user):
 
         if user:
             self.resolve(user, False)
@@ -119,5 +119,3 @@ class Plugin(BasePlugin):
             self.log("Provide a user name as parameter.")
 
         return returncode['zap']
-
-    __publiccommands__ = __privatecommands__ = [('port', port_checker_command)]  # noqa
