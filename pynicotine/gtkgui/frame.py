@@ -2211,6 +2211,7 @@ class NicotineFrame(UserInterface):
             message_dialog(parent=self.application.get_active_window(), title=title, message=msg)
             return
 
+        # Keep verbose debug messages out of Statusbar to make it more useful
         if level not in ("connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
