@@ -266,6 +266,18 @@ class PluginHandler:
 
         return infodict
 
+    def show_plugin_error(self, plugin_name, exc_type, exc_value, exc_traceback):
+
+        from traceback import format_tb
+
+        log.add(_("Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
+                  "Trace: %(trace)s"), {
+            'module': plugin_name,
+            'errortype': exc_type,
+            'error': exc_value,
+            'trace': ''.join(format_tb(exc_traceback))
+        })
+
     def save_enabled(self):
         self.config.sections["plugins"]["enabled"] = list(self.enabled_plugins.keys())
 
@@ -328,9 +340,14 @@ class PluginHandler:
             return_value = None
             commands = plugin.__publiccommands__ if public_command else plugin.__privatecommands__
 
-            for trigger, func in commands:
-                if trigger == command:
-                    return_value = getattr(plugin, func.__name__)(source, args)
+            try:
+                for trigger, func in commands:
+                    if trigger == command:
+                        return_value = getattr(plugin, func.__name__)(source, args)
+
+            except Exception:
+                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                continue
 
             if return_value is None:
                 # Nothing changed, continue to the next plugin
@@ -357,14 +374,19 @@ class PluginHandler:
         function_name_camelcase = function_name.title().replace('_', '')
 
         for module, plugin in self.enabled_plugins.items():
-            if hasattr(plugin, function_name_camelcase):
-                plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
-                    "old_function": function_name_camelcase,
-                    "new_function": function_name
-                })
-                return_value = getattr(plugin, function_name_camelcase)(*args)
-            else:
-                return_value = getattr(plugin, function_name)(*args)
+            try:
+                if hasattr(plugin, function_name_camelcase):
+                    plugin.log("%(old_function)s is deprecated, please use %(new_function)s" % {
+                        "old_function": function_name_camelcase,
+                        "new_function": function_name
+                    })
+                    return_value = getattr(plugin, function_name_camelcase)(*args)
+                else:
+                    return_value = getattr(plugin, function_name)(*args)
+
+            except Exception:
+                self.show_plugin_error(module, sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                continue
 
             if return_value is None:
                 # Nothing changed, continue to the next plugin
