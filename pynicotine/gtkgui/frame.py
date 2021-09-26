@@ -728,18 +728,6 @@ class NicotineFrame(UserInterface):
 
         config.sections["logging"]["debug"] = not state
 
-    def set_show_transfer_buttons(self, show):
-        self.downloads.TransferButtons.set_reveal_child(show)
-        self.uploads.TransferButtons.set_reveal_child(show)
-
-    def on_show_transfer_buttons(self, action, *args):
-
-        state = config.sections["transfers"]["enabletransferbuttons"]
-        self.set_show_transfer_buttons(not state)
-        action.set_state(GLib.Variant.new_boolean(not state))
-
-        config.sections["transfers"]["enabletransferbuttons"] = not state
-
     def set_toggle_buddy_list(self, mode):
 
         if self.userlist.Main in self.MainPaned.get_children():
@@ -1046,13 +1034,6 @@ class NicotineFrame(UserInterface):
         self.MainWindow.add_action(action)
         self.set_show_debug(state)
 
-        state = config.sections["transfers"]["enabletransferbuttons"]
-        action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_transfer_buttons)
-        self.MainWindow.add_action(action)
-        self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
-        self.set_show_transfer_buttons(state)
-
         state = config.sections["ui"]["buddylistinchatrooms"]
 
         if state not in ("tab", "chatrooms", "always"):
@@ -1246,7 +1227,6 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("$" + _("Prefer Dark _Mode"), "app.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
-            ("$" + _("Show _Buttons in Transfer Tabs"), "win.showtransferbuttons"),
             ("", None),
             ("$" + _("Show _Log Pane"), "win.showlog"),
             ("$" + _("Show _Debug Log Controls"), "win.showdebug"),
