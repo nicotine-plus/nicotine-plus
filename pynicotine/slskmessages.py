@@ -115,14 +115,6 @@ class ConnectToPeerTimeout:
         self.conn = conn
 
 
-class IncPort(InternalMessage):
-    """ Send by networking thread to tell UI thread the port number client
-    listens on."""
-
-    def __init__(self, port=None):
-        self.port = port
-
-
 class PeerTransfer(InternalMessage):
     """ Used to indicate progress of long transfers. """
 

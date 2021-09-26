@@ -79,7 +79,6 @@ from pynicotine.slskmessages import GlobalRecommendations
 from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
-from pynicotine.slskmessages import IncPort
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
 from pynicotine.slskmessages import JoinPublicRoom
@@ -528,8 +527,8 @@ class SlskProtoThread(threading.Thread):
             try:
                 self.listen_socket.bind((ip_address, listenport))
                 self.listen_socket.listen()
-                self._callback_msgs.append(IncPort(listenport))
                 self.listenport = listenport
+                log.add(_("Listening on port %i"), listenport)
                 break
 
             except socket.error:

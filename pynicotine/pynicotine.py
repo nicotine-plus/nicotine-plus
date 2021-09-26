@@ -143,7 +143,6 @@ class NicotineCore:
         self.distrib_parent_min_speed = 0
         self.distrib_parent_speed_ratio = 1
         self.max_distrib_children = 10
-        self.waitport = None
         self.ipaddress = None
         self.privileges_left = None
         self.servertimer = None
@@ -157,7 +156,6 @@ class NicotineCore:
         # Callback handlers for messages
         self.events = {
             slskmessages.ConnectError: self.connect_error,
-            slskmessages.IncPort: self.inc_port,
             slskmessages.ServerConn: self.server_conn,
             slskmessages.ConnClose: self.conn_close,
             slskmessages.Login: self.login,
@@ -939,8 +937,8 @@ class NicotineCore:
                 1,
             )
         )
-        if self.waitport is not None:
-            self.queue.append(slskmessages.SetWaitPort(self.waitport))
+        if self.protothread.listenport is not None:
+            self.queue.append(slskmessages.SetWaitPort(self.protothread.listenport))
 
     def server_disconnect(self, addr):
 
@@ -1186,10 +1184,6 @@ class NicotineCore:
     def ignore(self, msg):
         # Ignore received message
         pass
-
-    def inc_port(self, msg):
-        self.waitport = msg.port
-        log.add(_("Listening on port %i"), msg.port)
 
     def peer_transfer(self, msg):
 

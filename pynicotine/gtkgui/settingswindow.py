@@ -86,11 +86,11 @@ class NetworkFrame(UserInterface):
         if server["server"] is not None:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
-        if self.frame.np.waitport is None:
+        if self.frame.np.protothread.listenport is None:
             self.CurrentPort.set_text(_("Listening port is not set"))
         else:
             self.CurrentPort.set_markup(_("Active listening port is <b>%(port)s</b>") %
-                                        {"port": self.frame.np.waitport})
+                                        {"port": self.frame.np.protothread.listenport})
 
         if self.frame.np.ipaddress is None:
             self.YourIP.set_text(_("Your IP address has not been retrieved from the server"))
@@ -198,7 +198,7 @@ class NetworkFrame(UserInterface):
 
     def on_check_port(self, widget):
         open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
-                 str(self.frame.np.waitport)]))
+                 str(self.frame.np.protothread.listenport)]))
 
     def on_toggle_upnp(self, widget, *args):
 

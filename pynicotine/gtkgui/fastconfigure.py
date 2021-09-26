@@ -165,7 +165,7 @@ class FastConfigureAssistant(UserInterface):
         open_uri(
             '='.join([
                 'http://tools.slsknet.org/porttest.php?port',
-                str(self.frame.np.waitport)
+                str(self.frame.np.protothread.listenport)
             ])
         )
 
