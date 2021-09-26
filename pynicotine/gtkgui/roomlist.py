@@ -94,7 +94,6 @@ class RoomList(UserInterface):
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
         frame.ChatroomsCompletion.set_model(self.room_model)
-        frame.ChatroomsCompletion.set_text_column(0)
 
         if Gtk.get_major_version() == 4:
             button = frame.RoomList.get_first_child()

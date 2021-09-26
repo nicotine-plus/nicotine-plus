@@ -189,12 +189,24 @@ class NicotineFrame(UserInterface):
 
         """ Entry Completion """
 
-        for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
-            completion = getattr(self, entry_name + "Completion")
-            model = getattr(self, entry_name + "Combo").get_model()
+        for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse", "Chatrooms"):
+            completion = Gtk.EntryCompletion()
+            setattr(self, entry_name + "Completion", completion)
 
-            completion.set_model(model)
+            completion.set_inline_completion(True)
+            completion.set_inline_selection(True)
+            completion.set_minimum_key_length(1)
+            completion.set_popup_single_match(False)
             completion.set_text_column(0)
+
+            try:
+                model = getattr(self, entry_name + "Combo").get_model()
+                completion.set_model(model)
+
+            except AttributeError:
+                pass
+
+            getattr(self, entry_name + "Entry").set_completion(completion)
 
         """ Tray Icon/Notifications """
 
