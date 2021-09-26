@@ -110,6 +110,37 @@ class NicotineFrame(UserInterface):
 
         """ Logging """
 
+        self.log_textview = TextView(self.LogWindow)
+
+        # Popup menu on the log windows
+        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
+            ("#" + _("Find..."), self.on_find_log_window),
+            ("", None),
+            ("#" + _("Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
+            ("", None),
+            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
+            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
+            ("", None),
+            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
+        )
+
+        # Text Search
+        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+
+        if Gtk.get_major_version() == 4:
+            self.MainPaned.set_resize_start_child(True)
+            self.NotebooksPane.set_resize_start_child(True)
+            self.NotebooksPane.set_shrink_start_child(False)
+            self.NotebooksPane.set_resize_end_child(False)
+            self.NotebooksPane.set_shrink_end_child(False)
+        else:
+            self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
+            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
+            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
+
         log.add_listener(self.log_callback)
 
         """ Configuration """
@@ -152,19 +183,69 @@ class NicotineFrame(UserInterface):
         else:
             gtk_settings.set_property("gtk-dialogs-use-header", config.sections["ui"]["header_bar"])
 
+        """ Icons """
+
+        self.load_icons()
+
+        """ Entry Completion """
+
+        for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
+            completion = getattr(self, entry_name + "Completion")
+            model = getattr(self, entry_name + "Combo").get_model()
+
+            completion.set_model(model)
+            completion.set_text_column(0)
+
+        """ Tray Icon/Notifications """
+
+        # Commonly accessed strings
+        self.tray_download_template = _("Downloads: %(speed)s")
+        self.tray_upload_template = _("Uploads: %(speed)s")
+
+        self.tray_icon = TrayIcon(self)
+        self.tray_icon.load(use_trayicon)
+
+        self.notifications = Notifications(self)
+        self.statistics = Statistics(self)
+
+        """ Notebook Tabs """
+
+        # Initialize main notebook
+        self.initialize_main_tabs()
+
+        # Initialize other notebooks
+        self.interests = Interests(self)
+        self.chatrooms = ChatRooms(self)
+        self.search = Searches(self)
+        self.downloads = Downloads(self, self.DownloadsTabLabel)
+        self.uploads = Uploads(self, self.UploadsTabLabel)
+        self.userlist = UserList(self)
+        self.privatechat = PrivateChats(self)
+        self.userinfo = UserInfos(self)
+        self.userbrowse = UserBrowses(self)
+
         """ Actions and Menu """
 
         self.set_up_actions()
         self.set_up_menu()
 
-        """ Icons """
+        """ Tab Visibility/Order """
 
-        self.load_icons()
+        self.set_tab_positions()
+        self.set_main_tabs_order()
+        self.set_main_tabs_visibility()
+        self.set_last_session_tab()
 
-        if self.images["n"] and Gtk.get_major_version() == 3:
-            self.MainWindow.set_default_icon(self.images["n"])
-        else:
-            self.MainWindow.set_default_icon_name(GLib.get_prgname())
+        """ Tab Signals """
+
+        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
+        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
+        self.MainNotebook.connect("page-added", self.on_page_added)
+
+        """ Apply UI Customizations """
+
+        set_global_style()
+        self.update_visuals()
 
         """ Window Properties """
 
@@ -214,120 +295,10 @@ class NicotineFrame(UserInterface):
         if config.sections["ui"]["maximized"]:
             self.MainWindow.maximize()
 
-        """ Notebooks """
-
-        # Initialize main notebook
-        self.initialize_main_tabs()
-
-        # Initialize other notebooks
-        self.interests = Interests(self)
-        self.chatrooms = ChatRooms(self)
-        self.search = Searches(self)
-        self.downloads = Downloads(self, self.DownloadsTabLabel)
-        self.uploads = Uploads(self, self.UploadsTabLabel)
-        self.userlist = UserList(self)
-        self.privatechat = PrivateChats(self)
-        self.userinfo = UserInfos(self)
-        self.userbrowse = UserBrowses(self)
-
-        """ Entry Completion """
-
-        for entry_name in ("RoomSearch", "UserSearch", "Search", "PrivateChat", "UserInfo", "UserBrowse"):
-            completion = getattr(self, entry_name + "Completion")
-            model = getattr(self, entry_name + "Combo").get_model()
-
-            completion.set_model(model)
-            completion.set_text_column(0)
-
-        """ Tray Icon/Notifications """
-
-        # Commonly accessed strings
-        self.tray_download_template = _("Downloads: %(speed)s")
-        self.tray_upload_template = _("Uploads: %(speed)s")
-
-        self.tray_icon = TrayIcon(self)
-        self.tray_icon.load(use_trayicon)
-
-        self.notifications = Notifications(self)
-
-        """ Log """
-
-        self.log_textview = TextView(self.LogWindow)
-
-        # Popup menu on the log windows
-        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
-            ("#" + _("Find..."), self.on_find_log_window),
-            ("", None),
-            ("#" + _("Copy"), self.log_textview.on_copy_text),
-            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
-            ("", None),
-            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
-            ("", None),
-            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
-        )
-
-        # Text Search
-        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
-
-        if Gtk.get_major_version() == 4:
-            self.MainPaned.set_resize_start_child(True)
-            self.NotebooksPane.set_resize_start_child(True)
-            self.NotebooksPane.set_shrink_start_child(False)
-            self.NotebooksPane.set_resize_end_child(False)
-            self.NotebooksPane.set_shrink_end_child(False)
+        if self.images["n"] and Gtk.get_major_version() == 3:
+            self.MainWindow.set_default_icon(self.images["n"])
         else:
-            self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
-            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
-            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
-
-        """ Element Visibility """
-
-        self.set_show_log(not config.sections["logging"]["logcollapsed"])
-        self.set_show_debug(config.sections["logging"]["debug"])
-        self.set_show_transfer_buttons(config.sections["transfers"]["enabletransferbuttons"])
-        self.set_toggle_buddy_list(config.sections["ui"]["buddylistinchatrooms"])
-
-        """ Tab Visibility/Order """
-
-        self.set_tab_positions()
-        self.set_main_tabs_order()
-        self.set_main_tabs_visibility()
-        self.set_last_session_tab()
-
-        """ Disable elements """
-
-        # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.set_widget_online_status(False)
-
-        """ Scanning """
-
-        # Deactivate public shares related menu entries if we don't use them
-        if config.sections["transfers"]["friendsonly"]:
-            self.rescan_public_action.set_enabled(False)
-            self.browse_public_shares_action.set_enabled(False)
-
-        # Deactivate buddy shares related menu entries if we don't use them
-        if not config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy_action.set_enabled(False)
-            self.browse_buddy_shares_action.set_enabled(False)
-
-        """ Transfer Statistics """
-
-        self.statistics = Statistics(self)
-
-        """ Tab Signals """
-
-        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
-        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
-        self.MainNotebook.connect("page-added", self.on_page_added)
-
-        """ Apply UI Customizations """
-
-        set_global_style()
-        self.update_visuals()
+            self.MainWindow.set_default_icon_name(GLib.get_prgname())
 
         """ Show Window """
 
@@ -349,6 +320,9 @@ class NicotineFrame(UserInterface):
             )
 
         """ Connect """
+
+        # Disable a few elements until we're logged in (search field, download buttons etc.)
+        self.set_widget_online_status(False)
 
         connect_ready = network_processor.start(self, self.network_callback)
 
@@ -1064,17 +1038,20 @@ class NicotineFrame(UserInterface):
         action.connect("change-state", self.on_show_log)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
+        self.set_show_log(state)
 
         state = config.sections["logging"]["debug"]
         action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_debug)
         self.MainWindow.add_action(action)
+        self.set_show_debug(state)
 
         state = config.sections["transfers"]["enabletransferbuttons"]
         action = Gio.SimpleAction.new_stateful("showtransferbuttons", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_show_transfer_buttons)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.showtransferbuttons", ["<Primary>b"])
+        self.set_show_transfer_buttons(state)
 
         state = config.sections["ui"]["buddylistinchatrooms"]
 
@@ -1085,6 +1062,7 @@ class NicotineFrame(UserInterface):
             "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
+        self.set_toggle_buddy_list(state)
 
         # Shares
 
@@ -1109,6 +1087,16 @@ class NicotineFrame(UserInterface):
         self.browse_buddy_shares_action = Gio.SimpleAction.new("browsebuddyshares", None)
         self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
         self.application.add_action(self.browse_buddy_shares_action)
+
+        # Deactivate public shares related menu entries if we don't use them
+        if config.sections["transfers"]["friendsonly"]:
+            self.rescan_public_action.set_enabled(False)
+            self.browse_public_shares_action.set_enabled(False)
+
+        # Deactivate buddy shares related menu entries if we don't use them
+        if not config.sections["transfers"]["enablebuddyshares"]:
+            self.rescan_buddy_action.set_enabled(False)
+            self.browse_buddy_shares_action.set_enabled(False)
 
         # Modes
 
