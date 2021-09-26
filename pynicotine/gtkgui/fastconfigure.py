@@ -246,6 +246,9 @@ class FastConfigureAssistant(UserInterface):
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
+    def on_get_privileges(self, *args):
+        self.frame.on_get_privileges()
+
     def on_set_up(self, *args):
         self.FastConfigureDialog.next_page()
 
