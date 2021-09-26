@@ -19,10 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gdk
-from gi.repository import Gtk
-
 from pynicotine.gtkgui.widgets.ui import UserInterface
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 
 
@@ -136,11 +134,5 @@ class FileProperties(UserInterface):
         self.update_title()
 
     def show(self):
-
         self.update_current_file()
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            self.dialog.get_window().set_functions(
-                Gdk.WMFunction.RESIZE | Gdk.WMFunction.MOVE | Gdk.WMFunction.CLOSE
-            )
+        dialog_show(self.dialog)
