@@ -1941,7 +1941,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkToggleButton">
                     <property name="visible">1</property>
                     <property name="tooltip-text" translatable="yes">Show log history</property>
                     <property name="action-name">win.showlog</property>
