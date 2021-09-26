@@ -32,7 +32,8 @@ class UserInterface:
     def __init__(self, filename):
 
         try:
-            gui_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
+            current_path = os.path.dirname(os.path.realpath(__file__))
+            gui_dir = os.path.normpath(os.path.join(current_path, ".."))
             filename = os.path.join(gui_dir, filename)
 
             with open(filename, "r", encoding="utf-8") as f:
