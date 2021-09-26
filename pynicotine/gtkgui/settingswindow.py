@@ -2668,7 +2668,7 @@ class PluginsFrame(UserInterface):
                 title=_("%s Properties") % name,
                 modal=True,
                 default_width=600,
-                use_header_bar=config.sections["ui"]["header_bar"]
+                use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header")
             )
             set_dialog_properties(self, self.settings.dialog)
 

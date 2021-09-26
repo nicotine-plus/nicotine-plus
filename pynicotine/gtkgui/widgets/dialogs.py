@@ -29,7 +29,7 @@ def generic_dialog(parent=None, content_box=None, quit_callback=None,
     from pynicotine.config import config
 
     dialog = Gtk.Dialog(
-        use_header_bar=config.sections["ui"]["header_bar"],
+        use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header"),
         title=title,
         default_width=width,
         default_height=height
