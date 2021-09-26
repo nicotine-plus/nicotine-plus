@@ -71,6 +71,14 @@ To install Nicotine+ on Fedora, run the following:
 sudo dnf install nicotine+
 ```
 
+### Slackware (Stable)
+
+Nicotine+ is available in the community repository of SlackBuild.org. To install, download the [Nicotine+ SlackBuild](https://slackbuilds.org/repository/14.2/network/nicotine%2B/) and run the following:
+
+```sh
+./nicotine+.SlackBuild
+```
+
 ### Other Distributions
 
 If Nicotine+ has not been packaged for your distribution/operating system yet, there are other recommended ways of installing Nicotine+.
