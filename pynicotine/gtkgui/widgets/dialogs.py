@@ -26,8 +26,6 @@ from gi.repository import Gtk
 def generic_dialog(parent=None, content_box=None, quit_callback=None,
                    title="Dialog", width=400, height=400, modal=True):
 
-    from pynicotine.config import config
-
     dialog = Gtk.Dialog(
         use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header"),
         title=title,
