@@ -999,8 +999,8 @@ class NicotineFrame(UserInterface):
         state = config.sections["server"]["away"]
         self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
         self.away_action.connect("change-state", self.on_away)
-        self.application.add_action(self.away_action)
-        self.application.set_accels_for_action("app.away", ["<Primary>h"])
+        self.MainWindow.add_action(self.away_action)
+        self.application.set_accels_for_action("win.away", ["<Primary>h"])
 
         self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
         self.get_privileges_action.connect("activate", self.on_get_privileges)
@@ -1025,7 +1025,7 @@ class NicotineFrame(UserInterface):
         state = config.sections["ui"]["dark_mode"]
         self.dark_mode_action = Gio.SimpleAction.new_stateful("preferdarkmode", None, GLib.Variant.new_boolean(state))
         self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
-        self.application.add_action(self.dark_mode_action)
+        self.MainWindow.add_action(self.dark_mode_action)
 
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
@@ -1210,7 +1210,7 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("#" + _("_Connect"), "app.connect"),
             ("#" + _("_Disconnect"), "app.disconnect"),
-            ("#" + _("_Away"), "app.away"),
+            ("#" + _("_Away"), "win.away"),
             ("#" + _("Soulseek _Privileges"), "app.getprivileges"),
             ("", None)
         )
@@ -1237,7 +1237,7 @@ class NicotineFrame(UserInterface):
 
         menu = PopupMenu(self)
         menu.setup(
-            ("$" + _("Prefer Dark _Mode"), "app.preferdarkmode"),
+            ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
             ("", None),
             ("$" + _("Show _Log Pane"), "win.showlog"),

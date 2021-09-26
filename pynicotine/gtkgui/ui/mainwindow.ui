@@ -1900,7 +1900,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">1</property>
-                    <property name="action-name">app.away</property>
+                    <property name="action-name">win.away</property>
                     <child>
                       <object class="GtkLabel" id="UserStatus">
                         <property name="visible">1</property>
