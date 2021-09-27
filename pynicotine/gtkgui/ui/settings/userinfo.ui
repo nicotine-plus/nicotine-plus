@@ -45,11 +45,19 @@
                         <property name="wrap-mode">word</property>
                       </object>
                     </child>
+                    <style>
+                      <class name="border-bottom"/>
+                    </style>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkActionBar">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
+                    <property name="margin-start">6</property>
+                    <property name="margin-end">6</property>
+                    <property name="margin-top">6</property>
+                    <property name="margin-bottom">6</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
@@ -62,7 +70,7 @@
                         </attributes>
                       </object>
                     </child>
-                    <child type="center">
+                    <child>
                       <object class="GtkButton" id="ImageChooser">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
@@ -71,7 +79,7 @@
                         </style>
                       </object>
                     </child>
-                    <child type="end">
+                    <child>
                       <object class="GtkButton" id="DefaultImage">
                         <property name="visible">1</property>
                         <signal name="clicked" handler="on_default_image" swapped="no"/>

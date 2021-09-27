@@ -56,11 +56,19 @@
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="border-bottom"/>
+                            </style>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkActionBar">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">1</property>
@@ -117,7 +125,7 @@
                                 </style>
                               </object>
                             </child>
-                            <child type="end">
+                            <child>
                               <object class="GtkBox">
                                 <property name="visible">1</property>
                                 <property name="halign">end</property>
@@ -204,11 +212,19 @@
                                 </child>
                               </object>
                             </child>
+                            <style>
+                              <class name="border-bottom"/>
+                            </style>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkActionBar">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">1</property>
@@ -265,7 +281,7 @@
                                 </style>
                               </object>
                             </child>
-                            <child type="end">
+                            <child>
                               <object class="GtkBox">
                                 <property name="visible">1</property>
                                 <property name="halign">end</property>

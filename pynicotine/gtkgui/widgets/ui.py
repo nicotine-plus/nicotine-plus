@@ -48,8 +48,6 @@ class UserInterface:
                     builder = Gtk.Builder()
                     builder.add_from_string(
                         f.read()
-                        .replace("<child type=\"center\">", "<child>")
-                        .replace("<child type=\"end\">", "<child>")
                         .replace("<property name=\"focusable\">0</property>",
                                  "<property name=\"can-focus\">0</property>")
                     )
