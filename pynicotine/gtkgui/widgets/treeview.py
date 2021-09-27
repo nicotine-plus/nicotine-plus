@@ -381,6 +381,11 @@ def save_columns(treeview_name, columns, subpage=None):
 def press_header(menu, treeview):
 
     columns = treeview.get_columns()
+
+    if len(columns) <= 1:
+        # Only a single column, don't show menu
+        return True
+
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()
     actions = menu.get_actions()
