@@ -3470,6 +3470,16 @@ class Settings(UserInterface):
 
     def on_switch_page(self, selection):
 
+        model, iterator = selection.get_selected()
+
+        if iterator is None:
+            return
+
+        page_id = model.get_value(iterator, 1)
+
+        if not hasattr(sys.modules[__name__], page_id + "Frame"):
+            return
+
         child = self.viewport1.get_child()
 
         if child:
@@ -3478,17 +3488,7 @@ class Settings(UserInterface):
             else:
                 self.viewport1.remove(child)
 
-        model, iterator = selection.get_selected()
-
-        if iterator is None:
-            return
-
-        page_id = model.get_value(iterator, 1)
-
         if page_id not in self.pages:
-            if not hasattr(sys.modules[__name__], page_id + "Frame"):
-                return
-
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
             page.set_settings()
 
