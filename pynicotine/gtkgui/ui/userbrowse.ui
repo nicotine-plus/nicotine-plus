@@ -227,6 +227,11 @@
                                 <property name="enable-tree-lines">1</property>
                                 <property name="headers-visible">0</property>
                                 <signal name="row-activated" handler="on_folder_row_activated"/>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection">
+                                    <property name="mode">browse</property>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                           </object>
