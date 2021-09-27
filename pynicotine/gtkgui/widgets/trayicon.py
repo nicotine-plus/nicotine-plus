@@ -26,6 +26,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.ui import GUI_DIR
 
 
 """ Status Icon / AppIndicator """
@@ -265,7 +267,7 @@ class TrayIcon:
             local_icon_path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
         else:
             # Git folder
-            local_icon_path = os.path.join(self.frame.gui_dir, "icons", "hicolor", "scalable", "apps")
+            local_icon_path = os.path.join(GUI_DIR, "icons", "hicolor", "scalable", "apps")
 
         for icon_name in ("away", "connect", "disconnect", "msg"):
 
@@ -417,9 +419,7 @@ class TrayIcon:
         else:
             # GtkStatusIcon fallback
             if self.custom_icons:
-                self.tray_icon.set_from_pixbuf(
-                    self.frame.images[icon_name]
-                )
+                self.tray_icon.set_from_pixbuf(get_icon(icon_name))
 
             else:
                 self.tray_icon.set_from_icon_name(icon_name)

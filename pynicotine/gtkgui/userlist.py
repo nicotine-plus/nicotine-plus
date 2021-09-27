@@ -30,6 +30,8 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import get_flag_image
+from pynicotine.gtkgui.widgets.theme import get_status_image
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -192,8 +194,8 @@ class UserList(UserInterface):
             country = ""
 
         row = [
-            GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
-            GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
+            GObject.Value(GObject.TYPE_OBJECT, get_status_image(0)),
+            GObject.Value(GObject.TYPE_OBJECT, get_flag_image(country)),
             username,
             "",
             "",
@@ -384,7 +386,7 @@ class UserList(UserInterface):
             log.add(status_text, user)
             self.frame.notifications.new_text_notification(status_text % user)
 
-        img = self.frame.get_status_image(status)
+        img = get_status_image(status)
         self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, img))
         self.usersmodel.set_value(iterator, 10, GObject.Value(GObject.TYPE_INT64, status))
 
@@ -423,7 +425,7 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        flag_image = self.frame.get_flag_image(country_code)
+        flag_image = get_flag_image(country_code)
 
         if not flag_image:
             return
@@ -442,7 +444,7 @@ class UserList(UserInterface):
         self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)),
+                GObject.Value(GObject.TYPE_OBJECT, get_status_image(0)),
                 GObject.Value(GObject.TYPE_OBJECT, None),
                 user,
                 empty_str,
@@ -578,7 +580,7 @@ class UserList(UserInterface):
         for i in self.usersmodel:
             iterator = i.iter
 
-            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, self.frame.get_status_image(0)))
+            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, get_status_image(0)))
             self.usersmodel.set_value(iterator, 3, "")
             self.usersmodel.set_value(iterator, 4, "")
             self.usersmodel.set_value(iterator, 10, 0)

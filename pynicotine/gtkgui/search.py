@@ -41,6 +41,7 @@ from pynicotine.gtkgui.utils import parse_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import get_flag_image
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
@@ -70,7 +71,6 @@ class Searches(IconNotebook):
         IconNotebook.__init__(
             self,
             self.frame,
-            self.frame.images,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             notebookraw=self.frame.SearchNotebookRaw
@@ -585,7 +585,7 @@ class Search(UserInterface):
                 [
                     GObject.Value(GObject.TYPE_UINT64, counter),
                     user,
-                    GObject.Value(GObject.TYPE_OBJECT, self.frame.get_flag_image(country)),
+                    GObject.Value(GObject.TYPE_OBJECT, get_flag_image(country)),
                     h_speed,
                     h_queue,
                     directory,

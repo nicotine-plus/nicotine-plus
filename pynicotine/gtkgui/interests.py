@@ -26,6 +26,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
+from pynicotine.gtkgui.widgets.theme import get_status_image
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import humanize
@@ -302,7 +303,7 @@ class Interests(UserInterface):
         for user in msg.users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), user, "", "0", 0, 0, 0]
+                [GObject.Value(GObject.TYPE_OBJECT, get_status_image(0)), user, "", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 
@@ -314,7 +315,7 @@ class Interests(UserInterface):
         if msg.user not in self.recommendation_users:
             return
 
-        img = self.frame.get_status_image(msg.status)
+        img = get_status_image(msg.status)
         self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, img, 4, msg.status)
 
     def get_user_stats(self, msg):

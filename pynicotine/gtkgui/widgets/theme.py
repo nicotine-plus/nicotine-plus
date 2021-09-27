@@ -16,13 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import sys
 
 from gi.repository import Gdk
+from gi.repository import GdkPixbuf
 from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.gtkgui.widgets.ui import GUI_DIR
+from pynicotine.logfacility import log
 
 
 """ Global Style """
@@ -142,6 +146,146 @@ def set_global_css():
 def set_global_style():
     set_visual_settings()
     set_global_css()
+
+
+""" Icons """
+
+
+IMAGES = {}
+
+
+def load_pixbuf_from_path(path):
+
+    with open(path, 'rb') as f:
+        loader = GdkPixbuf.PixbufLoader()
+        loader.write(f.read())
+        loader.close()
+        return loader.get_pixbuf()
+
+
+def get_icon(icon_name):
+    return IMAGES.get(icon_name)
+
+
+def get_flag_image(country):
+
+    if not country:
+        return None
+
+    country = country.lower().replace("flag_", "")
+
+    try:
+        if country not in IMAGES:
+            IMAGES[country] = load_pixbuf_from_path(
+                os.path.join(GUI_DIR, "icons", "flags", country + ".svg")
+            )
+
+    except Exception:
+        return None
+
+    return get_icon(country)
+
+
+def get_status_image(status):
+
+    if status == 1:
+        return get_icon("away")
+
+    if status == 2:
+        return get_icon("online")
+
+    return get_icon("offline")
+
+
+def load_ui_icon(name):
+    """ Load icon required by the UI """
+
+    try:
+        return load_pixbuf_from_path(
+            os.path.join(GUI_DIR, "icons", name + ".svg")
+        )
+
+    except Exception:
+        return None
+
+
+def load_custom_icons(names):
+    """ Load custom icon theme if one is selected """
+
+    if config.sections["ui"].get("icontheme"):
+        log.add_debug("Loading custom icons when available")
+        extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+
+        for name in names:
+            path = None
+            exts = extensions[:]
+            loaded = False
+
+            while not path or (exts and not loaded):
+                path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
+                                          (name, exts.pop())))
+
+                if os.path.isfile(path):
+                    try:
+                        IMAGES[name] = load_pixbuf_from_path(path)
+                        loaded = True
+
+                    except Exception as e:
+                        log.add(_("Error loading custom icon %(path)s: %(error)s"), {
+                            "path": path,
+                            "error": str(e)
+                        })
+
+            if name not in IMAGES:
+                IMAGES[name] = load_ui_icon(name)
+
+        return True
+
+    return False
+
+
+def load_icons():
+    """ Load custom icons necessary for Nicotine+ to function """
+
+    names = [
+        "away",
+        "online",
+        "offline",
+        "hilite",
+        "hilite3",
+        "trayicon_away",
+        "trayicon_connect",
+        "trayicon_disconnect",
+        "trayicon_msg",
+        "n",
+        "notify"
+    ]
+
+    """ Load custom icon theme if available """
+
+    if load_custom_icons(names):
+        return
+
+    """ Load icons required by Nicotine+, such as status icons """
+
+    for name in names:
+        IMAGES[name] = load_ui_icon(name)
+
+    """ Load local app and tray icons, if available """
+
+    if Gtk.get_major_version() == 4:
+        icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+        icon_theme.append_search_path = icon_theme.add_search_path
+    else:
+        icon_theme = Gtk.IconTheme.get_default()
+
+    # Support running from folder, as well as macOS and Windows
+    path = os.path.join(GUI_DIR, "icons")
+    icon_theme.append_search_path(path)
+
+    # Support Python venv
+    path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
+    icon_theme.append_search_path(path)
 
 
 """ Widget Fonts and Colors """

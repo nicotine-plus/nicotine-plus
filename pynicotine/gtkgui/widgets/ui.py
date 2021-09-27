@@ -27,14 +27,15 @@ from pynicotine.logfacility import log
 """ UI Builder """
 
 
+GUI_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 class UserInterface:
 
     def __init__(self, filename):
 
         try:
-            current_path = os.path.dirname(os.path.realpath(__file__))
-            gui_dir = os.path.normpath(os.path.join(current_path, ".."))
-            filename = os.path.join(gui_dir, filename)
+            filename = os.path.join(GUI_DIR, filename)
 
             with open(filename, "r", encoding="utf-8") as f:
                 if Gtk.get_major_version() == 4:

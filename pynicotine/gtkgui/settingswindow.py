@@ -44,6 +44,7 @@ from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -1421,25 +1422,25 @@ class UserInterfaceFrame(UserInterface):
         self.IconView.set_model(liststore)
 
         for row in (
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["online"]), _("Connected")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["offline"]), _("Disconnected")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["away"]), _("Away")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite"]), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["hilite3"]), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["n"]), _("Window")],
-            [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["notify"]), _("Notification")]
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("online")), _("Connected")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("offline")), _("Disconnected")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("away")), _("Away")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite")), _("Highlight")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite3")), _("Highlight")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("n")), _("Window")],
+            [GObject.Value(GObject.TYPE_OBJECT, get_icon("notify")), _("Notification")]
         ):
             liststore.insert_with_valuesv(-1, column_numbers, row)
 
         if sys.platform != "darwin" and Gtk.get_major_version() != 4:
             for row in (
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_connect"]),
+                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_connect")),
                     _("Connected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_disconnect"]),
+                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_disconnect")),
                     _("Disconnected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_away"]),
+                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_away")),
                     _("Away (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, self.frame.images["trayicon_msg"]),
+                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_msg")),
                     _("Message (Tray)")]
             ):
                 liststore.insert_with_valuesv(-1, column_numbers, row)

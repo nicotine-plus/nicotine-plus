@@ -27,6 +27,8 @@ from gi.repository import Gtk
 
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import get_status_image
 from pynicotine.config import config
 
 
@@ -239,7 +241,7 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, frame, images, tabclosers=False, show_hilite_image=True, show_status_image=False,
+    def __init__(self, frame, tabclosers=False, show_hilite_image=True, show_status_image=False,
                  notebookraw=None):
 
         # We store the real Gtk.Notebook object
@@ -249,7 +251,6 @@ class IconNotebook:
         self.frame = frame
         self.tabclosers = tabclosers
 
-        self.images = images
         self._show_hilite_image = show_hilite_image
         self._show_status_image = show_status_image
 
@@ -370,7 +371,7 @@ class IconNotebook:
         label_tab = ImageLabel(
             label, onclose, closebutton=closebutton,
             show_hilite_image=self._show_hilite_image,
-            status_image=self.images["offline"],
+            status_image=get_status_image(0),
             show_status_image=self._show_status_image
         )
         label_tab.show()
@@ -441,16 +442,8 @@ class IconNotebook:
 
     def set_status_image(self, page, status):
 
+        image = get_status_image(status)
         tab_label, menu_label = self.get_labels(page)
-
-        if status == 1:
-            image_name = "away"
-        elif status == 2:
-            image_name = "online"
-        else:
-            image_name = "offline"
-
-        image = self.images[image_name]
 
         tab_label.set_status_image(image)
         menu_label.set_status_image(image)
@@ -481,9 +474,9 @@ class IconNotebook:
         image = None
 
         if status > 0:
-            image = self.images[("hilite3", "hilite")[status - 1]]
+            image = get_icon(("hilite3", "hilite")[status - 1])
 
-        if status == 1 and tab_label.get_hilite_image() == self.images["hilite"]:
+        if status == 1 and tab_label.get_hilite_image() == get_icon("hilite"):
             # Chat mentions have priority over normal notifications
             return
 

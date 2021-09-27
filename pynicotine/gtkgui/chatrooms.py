@@ -43,6 +43,8 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import get_flag_image
+from pynicotine.gtkgui.widgets.theme import get_status_image
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -81,7 +83,6 @@ class ChatRooms(IconNotebook):
         IconNotebook.__init__(
             self,
             self.frame,
-            self.frame.images,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             notebookraw=self.frame.ChatroomsNotebookRaw
@@ -579,8 +580,8 @@ class ChatRoom(UserInterface):
         username = userdata.username
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
-        status_image = self.frame.get_status_image(status)
-        flag_image = self.frame.get_flag_image(country)
+        status_image = get_status_image(status)
+        flag_image = get_flag_image(country)
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         self.frame.np.queue.append(slskmessages.GetPeerAddress(username))
@@ -1004,7 +1005,7 @@ class ChatRoom(UserInterface):
         if user not in self.users:
             return
 
-        img = self.frame.get_status_image(status)
+        img = get_status_image(status)
         if img == self.usersmodel.get_value(self.users[user], 0):
             return
 
@@ -1031,7 +1032,7 @@ class ChatRoom(UserInterface):
             # Country didn't change, no need to update
             return
 
-        flag_image = self.frame.get_flag_image(country)
+        flag_image = get_flag_image(country)
 
         if not flag_image:
             return
