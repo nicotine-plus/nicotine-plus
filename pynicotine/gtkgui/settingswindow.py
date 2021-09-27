@@ -2671,6 +2671,7 @@ class PluginsFrame(UserInterface):
                 use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header")
             )
             set_dialog_properties(self, self.settings.dialog)
+            self.get_style_context().add_class("preferences")
 
             self.add_buttons(
                 _("Cancel"), Gtk.ResponseType.CANCEL, _("OK"), Gtk.ResponseType.OK
@@ -2679,13 +2680,15 @@ class PluginsFrame(UserInterface):
             self.set_default_response(Gtk.ResponseType.OK)
             self.connect("response", self.on_response)
 
-            content_area = self.get_content_area()
-            content_area.set_orientation(Gtk.Orientation.VERTICAL)
-            content_area.set_margin_top(14)
-            content_area.set_margin_bottom(14)
-            content_area.set_margin_start(18)
-            content_area.set_margin_end(18)
-            content_area.set_spacing(12)
+            self.primary_container = Gtk.Box()
+            self.primary_container.set_orientation(Gtk.Orientation.VERTICAL)
+            self.primary_container.set_margin_top(14)
+            self.primary_container.set_margin_bottom(14)
+            self.primary_container.set_margin_start(18)
+            self.primary_container.set_margin_end(18)
+            self.primary_container.set_spacing(12)
+
+            self.get_content_area().add(self.primary_container)
 
             self.tw = {}
             self.options = {}
@@ -2714,7 +2717,7 @@ class PluginsFrame(UserInterface):
 
             label = self.generate_label(description)
             container.add(label)
-            self.get_content_area().add(container)
+            self.primary_container.add(container)
 
             return container
 
@@ -2761,8 +2764,8 @@ class PluginsFrame(UserInterface):
             box.add(self.add_button)
             box.add(self.remove_button)
 
-            self.get_content_area().add(container)
-            self.get_content_area().add(box)
+            self.primary_container.add(container)
+            self.primary_container.add(box)
 
             renderers = cols[description].get_cells()
             for render in renderers:
@@ -2818,7 +2821,7 @@ class PluginsFrame(UserInterface):
                     self.tw[name] = Gtk.CheckButton.new_with_label(data["description"])
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
-                    self.get_content_area().add(container)
+                    self.primary_container.add(container)
                     container.add(self.tw[name])
 
                 elif data["type"] in ("radio",):
@@ -3146,7 +3149,10 @@ class Settings(UserInterface):
 
         dialog.set_default_response(Gtk.ResponseType.OK)
         dialog.connect("response", self.on_response)
-        dialog.get_style_context().add_class("preferences")
+
+        style_context = dialog.get_style_context()
+        style_context.add_class("preferences")
+        style_context.add_class("preferences-border")
 
         if Gtk.get_major_version() == 3:
             self.Main.child_set_property(self.SettingsList, "shrink", False)

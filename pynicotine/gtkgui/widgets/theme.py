@@ -41,9 +41,13 @@ def set_global_style():
         margin: 0;
     }
 
+    .dialog-action-area {
+        /* Add missing spacing to dialog action buttons */
+        border-spacing: 6px;
+    }
+
     .preferences .dialog-action-box {
         /* Add missing spacing to dialog action buttons */
-        border-top: 1px solid @borders;
         padding: 6px;
     }
 
@@ -60,16 +64,22 @@ def set_global_style():
     .border-bottom {
         border-bottom: 1px solid @borders;
     }
+
+    .preferences-border .dialog-action-box {
+        border-top: 1px solid @borders;
+    }
     """
 
     global_css_provider = Gtk.CssProvider()
-    global_css_provider.load_from_data(css)
 
     if Gtk.get_major_version() == 4:
         Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
         screen = Gdk.Display.get_default()
     else:
         screen = Gdk.Screen.get_default()
+        css = css.replace(b"border-spacing: 6px;", b"")
+
+    global_css_provider.load_from_data(css)
 
     Gtk.StyleContext.add_provider_for_screen(
         screen, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
