@@ -275,7 +275,6 @@ class IconNotebook:
 
         else:
             self.window = self.notebook.get_toplevel()
-            self.popup_enable()
 
             self.unread_button.set_image(Gtk.Image.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON))
             self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
@@ -293,6 +292,7 @@ class IconNotebook:
         self.unread_button.set_menu_model(self.popup_menu_unread)
         self.unread_pages = []
 
+        self.popup_enable()
         self.notebook.hide()
 
     def get_labels(self, page):
