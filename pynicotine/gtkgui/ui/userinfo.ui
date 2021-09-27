@@ -405,7 +405,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="ImageContainer">
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <property name="hexpand">1</property>

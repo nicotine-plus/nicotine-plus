@@ -219,7 +219,7 @@ class UserInfo(UserInterface):
         self.hates_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(*get_interest_items(popup))
 
-        self.image_menu = popup = PopupMenu(self.frame, self.ImageViewport, self.on_image_popup_menu)
+        self.image_menu = popup = PopupMenu(self.frame, self.ImageContainer, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
