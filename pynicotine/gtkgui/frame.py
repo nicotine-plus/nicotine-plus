@@ -64,7 +64,10 @@ from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
+from pynicotine.gtkgui.widgets.theme import set_dark_mode
+from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import set_global_style
+from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -159,29 +162,6 @@ class NicotineFrame(UserInterface):
 
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
         log.add("Loading GTK %s", config.gtk_version)
-
-        """ GTK Settings """
-
-        gtk_settings = Gtk.Settings.get_default()
-
-        dark_mode = config.sections["ui"]["dark_mode"]
-        global_font = config.sections["ui"]["globalfont"]
-
-        if dark_mode:
-            gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode)
-
-        if global_font and global_font != "Normal":
-            gtk_settings.set_property("gtk-font-name", global_font)
-
-        if sys.platform == "darwin":
-            # Left align window controls on macOS
-            gtk_settings.set_property("gtk-decoration-layout", "close,minimize,maximize:")
-
-            # Disable header bar in macOS for now due to GTK 3 performance issues
-            gtk_settings.set_property("gtk-dialogs-use-header", False)
-
-        else:
-            gtk_settings.set_property("gtk-dialogs-use-header", config.sections["ui"]["header_bar"])
 
         """ Icons """
 
@@ -688,7 +668,7 @@ class NicotineFrame(UserInterface):
     def on_prefer_dark_mode(self, action, *args):
 
         state = config.sections["ui"]["dark_mode"]
-        Gtk.Settings.get_default().set_property("gtk-application-prefer-dark-theme", not state)
+        set_dark_mode(not state)
         action.set_state(GLib.Variant.new_boolean(not state))
 
         config.sections["ui"]["dark_mode"] = not state
@@ -703,7 +683,7 @@ class NicotineFrame(UserInterface):
             self.remove_header_bar()
             self.set_toolbar(self.current_page_id)
 
-        Gtk.Settings.get_default().set_property("gtk-dialogs-use-header", show)
+        set_use_header_bar(show)
 
     def on_show_header_bar(self, action, *args):
 
@@ -2408,19 +2388,12 @@ class NicotineFrame(UserInterface):
         if needcompletion:
             self.update_completions()
 
-        gtk_settings = Gtk.Settings.get_default()
-
         dark_mode_state = config.sections["ui"]["dark_mode"]
-        gtk_settings.set_property("gtk-application-prefer-dark-theme", dark_mode_state)
+        set_dark_mode(dark_mode_state)
         self.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
 
         if needcolors:
-            global_font = config.sections["ui"]["globalfont"]
-
-            if global_font == "Normal":
-                gtk_settings.reset_property("gtk-font-name")
-            else:
-                gtk_settings.set_property("gtk-font-name", global_font)
+            set_global_font(config.sections["ui"]["globalfont"])
 
             self.chatrooms.update_visuals()
             self.privatechat.update_visuals()

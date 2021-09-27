@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 from gi.repository import Pango
@@ -26,7 +28,49 @@ from pynicotine.config import config
 """ Global Style """
 
 
-def set_global_style():
+GTK_SETTINGS = Gtk.Settings.get_default()
+
+
+def set_dark_mode(enabled):
+    GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
+
+
+def set_global_font(font_name):
+
+    if font_name == "Normal":
+        GTK_SETTINGS.reset_property("gtk-font-name")
+        return
+
+    GTK_SETTINGS.set_property("gtk-font-name", font_name)
+
+
+def set_use_header_bar(enabled):
+    GTK_SETTINGS.set_property("gtk-dialogs-use-header", enabled)
+
+
+def set_visual_settings():
+
+    dark_mode = config.sections["ui"]["dark_mode"]
+    global_font = config.sections["ui"]["globalfont"]
+
+    if dark_mode:
+        set_dark_mode(dark_mode)
+
+    if global_font and global_font != "Normal":
+        set_global_font(global_font)
+
+    if sys.platform == "darwin":
+        # Left align window controls on macOS
+        GTK_SETTINGS.set_property("gtk-decoration-layout", "close,minimize,maximize:")
+
+        # Disable header bar in macOS for now due to GTK 3 performance issues
+        set_use_header_bar(False)
+        return
+
+    set_use_header_bar(config.sections["ui"]["header_bar"])
+
+
+def set_global_css():
 
     css = b"""
     /* Tweaks */
@@ -93,6 +137,11 @@ def set_global_style():
     Gtk.StyleContext.add_provider_for_screen(
         screen, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
     )
+
+
+def set_global_style():
+    set_visual_settings()
+    set_global_css()
 
 
 """ Widget Fonts and Colors """
