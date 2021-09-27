@@ -45,24 +45,6 @@
             <signal name="icon-press" handler="on_add_user" swapped="no"/>
           </object>
         </child>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Configure banned users</property>
-            <property name="halign">end</property>
-            <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-            <style>
-              <class name="circular"/>
-              <class name="image-button"/>
-            </style>
-          </object>
-        </child>
       </object>
     </child>
     <child>

@@ -679,21 +679,7 @@
     <child>
       <object class="GtkBox" id="UserListEnd">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
         <property name="valign">center</property>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Configure banned users</property>
-            <signal name="clicked" handler="on_settings_ban_ignore" swapped="no"/>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">1</property>
-                <property name="icon-name">emblem-system-symbolic</property>
-              </object>
-            </child>
-          </object>
-        </child>
       </object>
     </child>
   </object>

@@ -255,9 +255,6 @@ class UserList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def on_settings_ban_ignore(self, *args):
-        self.frame.on_settings_ban_ignore()
-
     def cell_toggle_callback(self, widget, index, treeview, pos):
 
         store = treeview.get_model()

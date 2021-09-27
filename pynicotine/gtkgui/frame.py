@@ -2145,9 +2145,6 @@ class NicotineFrame(UserInterface):
     def on_add_user(self, widget, *args):
         self.userlist.on_add_user(widget)
 
-    def on_settings_ban_ignore(self, *args):
-        self.on_settings(page='BanList')
-
     """ Various """
 
     def focus_combobox(self, button):
