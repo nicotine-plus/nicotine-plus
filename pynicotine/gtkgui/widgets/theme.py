@@ -41,11 +41,6 @@ def set_global_style():
         margin: 0;
     }
 
-    .dialog-action-area {
-        /* Add missing spacing to dialog action buttons */
-        border-spacing: 6px;
-    }
-
     .preferences .dialog-action-box {
         /* Add missing spacing to dialog action buttons */
         padding: 6px;
@@ -70,14 +65,28 @@ def set_global_style():
     }
     """
 
+    css_gtk4 = b"""
+    /* Tweaks */
+
+    .dialog-action-area {
+        /* Add missing spacing to dialog action buttons */
+        border-spacing: 6px;
+    }
+
+    menubutton box {
+        /* Remove unwanted spacing from menu buttons */
+        border-spacing: 0;
+    }
+    """
+
     global_css_provider = Gtk.CssProvider()
 
     if Gtk.get_major_version() == 4:
         Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
         screen = Gdk.Display.get_default()
+        css = css + css_gtk4
     else:
         screen = Gdk.Screen.get_default()
-        css = css.replace(b"border-spacing: 6px;", b"")
 
     global_css_provider.load_from_data(css)
 

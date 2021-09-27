@@ -1792,6 +1792,7 @@ class SearchesFrame(UserInterface):
         if Gtk.get_major_version() == 4:
             button = self.ShowSearchHelp.get_first_child()
             button.set_child(self.FilterHelpLabel)
+            button.get_style_context().remove_class("image-button")
         else:
             self.ShowSearchHelp.add(self.FilterHelpLabel)
 
