@@ -194,6 +194,7 @@ class UserBrowse(UserInterface):
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
+        self.folder_key_controller = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -289,7 +290,7 @@ class UserBrowse(UserInterface):
         )
 
         self.FileTreeView.set_model(self.file_store)
-        self.key_controller = connect_key_press_event(self.FileTreeView, self.on_key_press_event)
+        self.file_key_controller = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
@@ -687,7 +688,26 @@ class UserBrowse(UserInterface):
 
         self.set_directory(iterator.user_data)
 
-    def on_key_press_event(self, *args):
+    def on_folder_key_press_event(self, *args):
+
+        keyval, keycode, state, widget = get_key_press_event_args(*args)
+        keycodes, mods = parse_accelerator("Right")
+
+        if keycode in keycodes:
+            path, _focus_column = self.FolderTreeView.get_cursor()
+            self.FolderTreeView.expand_row(path, False)
+            return True
+
+        keycodes, mods = parse_accelerator("Left")
+
+        if keycode in keycodes:
+            path, _focus_column = self.FolderTreeView.get_cursor()
+            self.FolderTreeView.collapse_row(path)
+            return True
+
+        return False
+
+    def on_file_key_press_event(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Alt>Return")
