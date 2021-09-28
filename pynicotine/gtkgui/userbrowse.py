@@ -79,7 +79,7 @@ class UserBrowses(IconNotebook):
             if tab.Main == page:
 
                 # Remember folder or file selection
-                if len(tab.selected_files) > 0:
+                if tab.num_selected_files > 0:
                     GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
                 else:
                     GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
@@ -699,7 +699,7 @@ class UserBrowse(UserInterface):
         if selection is None:
             return
 
-        self.select_files()
+        self.num_selected_files = selection.count_selected_rows()
 
     def on_key_press_event(self, *args):
 
