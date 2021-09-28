@@ -408,22 +408,19 @@ class UserBrowse(UserInterface):
 
     def on_file_popup_menu(self, menu, widget):
 
-        self.select_files()
-        num_selected_files = len(self.selected_files)
-
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("F_ile Properties"),
                       _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(num_selected_files)
+                actions[i].set_enabled(self.num_selected_files)
 
             actions[_("Open in File _Manager")].set_enabled(self.selected_folder)
         else:
             for i in (_("Download"), _("F_ile Properties"), _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(num_selected_files)
+                actions[i].set_enabled(self.num_selected_files)
 
-        menu.set_num_selected_files(num_selected_files)
+        menu.set_num_selected_files(self.num_selected_files)
         self.user_popup.toggle_user_items()
 
     def clear_model(self):
