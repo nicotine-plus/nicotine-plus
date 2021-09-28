@@ -509,7 +509,6 @@ class NicotineFrame(UserInterface):
 
         self.np.request_set_status(self.np.away and 1 or 2)
         self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
-        self.privatechat.update_visuals()
 
     def on_get_privileges(self, *args):
 

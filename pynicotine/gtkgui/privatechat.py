@@ -107,7 +107,12 @@ class PrivateChats(IconNotebook):
             page = self.users[msg.user]
 
             self.set_user_status(page.Main, msg.user, msg.status)
-            page.get_user_status(msg.status)
+            page.update_remote_username_tag(msg.status)
+
+        if msg.user == config.sections["server"]["login"]:
+            for user in self.users.values():
+                # We've enabled/disabled away mode, update our username color in all chats
+                user.update_local_username_tag(msg.status)
 
     def set_completion_list(self, completion_list):
         for user in self.users.values():
@@ -261,10 +266,8 @@ class PrivateChat(UserInterface):
                                                usertag=self.tag_hilite, scroll=False)
 
     def server_login(self):
-
         timestamp_format = config.sections["logging"]["private_timestamp"]
         self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
-        self.update_tags()
 
     def server_disconnect(self):
 
@@ -272,7 +275,11 @@ class PrivateChat(UserInterface):
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
         self.offlinemessage = False
-        self.update_tags()
+
+        # Offline color for usernames
+        status = 0
+        self.update_remote_username_tag(status)
+        self.update_local_username_tag(status)
 
     def set_label(self, label):
         self.popup_menu_user.set_widget(label)
@@ -445,21 +452,25 @@ class PrivateChat(UserInterface):
         my_username = config.sections["server"]["login"]
         self.tag_my_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=my_username)
 
-    def update_tags(self):
-
-        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
-                    self.tag_username, self.tag_my_username):
-            self.chat_textview.update_tag(tag)
-
-    def get_user_status(self, status):
+    def update_remote_username_tag(self, status):
 
         if status == self.status:
             return
 
         self.status = status
 
-        color = get_user_status_color(self.status)
+        color = get_user_status_color(status)
         self.chat_textview.update_tag(self.tag_username, color)
+
+    def update_local_username_tag(self, status):
+        color = get_user_status_color(status)
+        self.chat_textview.update_tag(self.tag_my_username, color)
+
+    def update_tags(self):
+
+        for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
+                    self.tag_username, self.tag_my_username):
+            self.chat_textview.update_tag(tag)
 
     def on_close(self, *args):
 
