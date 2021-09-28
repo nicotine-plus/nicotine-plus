@@ -77,13 +77,7 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-
-                # Remember folder or file selection
-                if self.num_selected_files > 0:
-                    GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
-                else:
-                    GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
-
+                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
                 break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
@@ -200,7 +194,7 @@ class UserBrowse(UserInterface):
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
-        self.file_key_controller = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
+        self.folder_key_controller = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -284,7 +278,6 @@ class UserBrowse(UserInterface):
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
-        self.FileTreeView.get_selection().connect("changed", self.on_select_file)
 
         self.file_store = Gtk.ListStore(
             str,                  # (0) file name
@@ -693,14 +686,7 @@ class UserBrowse(UserInterface):
         if iterator is None:
             return
 
-        self.num_selected_files = selection.count_selected_rows()
-
-    def on_select_file(self, selection):
-
-        if selection is None:
-            return
-
-        self.num_selected_files = selection.count_selected_rows()
+        self.set_directory(iterator.user_data)
 
     def on_folder_key_press_event(self, *args):
 
@@ -722,6 +708,7 @@ class UserBrowse(UserInterface):
         return False
 
     def on_file_key_press_event(self, *args):
+
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         keycodes, mods = parse_accelerator("<Alt>Return")
 
