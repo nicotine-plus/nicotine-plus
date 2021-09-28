@@ -187,8 +187,8 @@ class UserBrowse(UserInterface):
         self.search_list = []
         self.query = None
         self.search_position = 0
-        self.selected_files = {}
 
+        self.selected_files = {}
         self.shares = []
 
         # Iters for current DirStore
@@ -197,6 +197,7 @@ class UserBrowse(UserInterface):
         # Iters for current FileStore
         self.files = {}
         self.totalsize = 0
+        self.num_selected_files = 0
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
