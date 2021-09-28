@@ -77,7 +77,13 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
+
+                # Remember folder or file selection
+                if len(tab.selected_files) > 0:
+                    GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
+                else:
+                    GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
+
                 break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
@@ -277,6 +283,7 @@ class UserBrowse(UserInterface):
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
+        self.FileTreeView.get_selection().connect("changed", self.on_select_file)
 
         self.file_store = Gtk.ListStore(
             str,                  # (0) file name
@@ -686,6 +693,13 @@ class UserBrowse(UserInterface):
             return
 
         self.set_directory(iterator.user_data)
+
+    def on_select_file(self, selection):
+
+        if selection is None:
+            return
+
+        self.select_files()
 
     def on_key_press_event(self, *args):
 
