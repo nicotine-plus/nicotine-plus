@@ -408,6 +408,7 @@ class UserBrowse(UserInterface):
 
     def on_file_popup_menu(self, menu, widget):
 
+        self.select_files()
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
