@@ -380,7 +380,7 @@ class UserBrowse(UserInterface):
         else:
             demanded_state = self.FolderTreeView.collapse_row(path)
 
-        if (original_state == demanded_state == False) and int(len(self.file_store)) > 0:
+        if (original_state == demanded_state is False) and int(len(self.file_store)) > 0:
             # This is the deepest level, so move focus over to Files if there are any
             self.FileTreeView.grab_focus()
 
@@ -811,8 +811,6 @@ class UserBrowse(UserInterface):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
 
-        log.add_debug(str(keyval) + " " + str(state) + " " + str(self.num_selected_files))
-
         # Note: The "Return" key is handled by on_file_row_activated
 
         # Shift focus back across to folders
@@ -851,8 +849,7 @@ class UserBrowse(UserInterface):
 
             else:
                 if int(len(self.file_store)) >= 1 and (self.num_selected_files < 1):
-                    # No selection
-                    #self.on_download_directory()  # disabled to prevent accidental folder downloading
+                    # No selection disabled to prevent accidental folder downloading
                     return True
 
                 elif int(len(self.file_store)) >= 1 and (self.num_selected_files >= 1):
@@ -938,10 +935,10 @@ class UserBrowse(UserInterface):
             self.select_files()
 
             if self.user == config.sections["server"]["login"]:
-                if int(len(self.file_store)) > 0 and (num_selected_files == 0):
+                if int(len(self.file_store)) > 0 and (self.num_selected_files == 0):
                     self.on_upload_directory_to()
 
-                elif num_selected_files > 0:
+                elif self.num_selected_files > 0:
                     self.on_upload_files()
 
                 else:
@@ -1032,9 +1029,9 @@ class UserBrowse(UserInterface):
     def on_download_directory_to(self, *args, recurse=False):
 
         if recurse:
-            str_title=_("Select Destination for Downloading Folder with Subfolders from User")
+            str_title = _("Select Destination for Downloading Folder with Subfolders from User")
         else:
-            str_title=_("Select Destination for Downloading a Folder from User")
+            str_title = _("Select Destination for Downloading a Folder from User")
 
         choose_dir(
             parent=self.frame.MainWindow,
@@ -1130,7 +1127,7 @@ class UserBrowse(UserInterface):
             path = download_folder
 
         # ToDo: Make translatable
-        str_title="Select Destination for Downloading File(s) from User"
+        str_title = "Select Destination for Downloading File(s) from User"
 
         choose_dir(
             parent=self.frame.MainWindow,
@@ -1171,9 +1168,9 @@ class UserBrowse(UserInterface):
         users.sort()
 
         if recurse:
-            str_title=_("Upload Folder (with Subfolders) To User")
+            str_title = _("Upload Folder (with Subfolders) To User")
         else:
-            str_title=_("Upload Folder To User")
+            str_title = _("Upload Folder To User")
 
         entry_dialog(
             parent=self.frame.MainWindow,
