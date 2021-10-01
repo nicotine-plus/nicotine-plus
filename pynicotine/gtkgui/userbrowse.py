@@ -79,7 +79,7 @@ class UserBrowses(IconNotebook):
             if tab.Main == page:
 
                 # Remember folder or file selection
-                if tab.num_selected_files > 0:
+                if tab.num_selected_files >= 1:
                     GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
                 else:
                     GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
@@ -201,7 +201,7 @@ class UserBrowse(UserInterface):
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
-        self.folder_key_controller = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
+        self.folder_key_controller = connect_key_press_event(self.FolderTreeView, self.on_key_press_event_folder)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -298,7 +298,7 @@ class UserBrowse(UserInterface):
         )
 
         self.FileTreeView.set_model(self.file_store)
-        self.file_key_controller = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
+        self.file_key_controller = connect_key_press_event(self.FileTreeView, self.on_key_press_event_file)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
@@ -370,22 +370,21 @@ class UserBrowse(UserInterface):
         if path is None:
             return
 
-        # Keyboard accessibility support for correct <Return> key behaviour
+        # Keyboard accessibility support for <Return> key behaviour
         original_state = self.FolderTreeView.expand_row(path, False)
         demanded_state = original_state
 
         if original_state:
             self.FolderTreeView.expand_row(path, False)
-
         else:
             demanded_state = self.FolderTreeView.collapse_row(path)
 
-        if (original_state == demanded_state is False) and int(len(self.file_store)) > 0:
+        if (original_state == demanded_state is False) and int(len(self.file_store)) >= 1:
             # This is the deepest level, so move focus over to Files if there are any
             self.FileTreeView.grab_focus()
 
-        # Note: Download is handled by on_folder_key_press_event (Ctrl+Return) modifier
-        #       key prevents accidental folder downloading see on_folder_keypress_event
+        # Note: Download Folder is handled by "Return" in on_key_press_event_folder [Ctrl+Enter]
+        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl+DblClick]
 
     def on_folder_popup_menu(self, menu, widget):
 
@@ -719,267 +718,335 @@ class UserBrowse(UserInterface):
 
         self.num_selected_files = selection.count_selected_rows()
 
-    def on_folder_key_press_event(self, *args):
+    def on_key_press_event_folder(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
         path, _focus_column = self.FolderTreeView.get_cursor()
 
-        # Note: The "Return" key is handled by on_folder_row_activated
+        _keys, mods_primary = parse_accelerator("<Primary>")
+        _keys, mods_shift = parse_accelerator("<Shift>")
+        _keys, mods_alt = parse_accelerator("<Alt>")
 
-        # Shift bindings need to be above the non-shifted one
-        keycodes, mods = parse_accelerator("<Shift>Right")
+        prs_none = prs_ctrl = prs_shift = prs_alt = False
 
-        if state & mods and keycode in keycodes:
-            if int(len(self.file_store)) > 0:
-                # Shift focus across to files
-                self.FileTreeView.grab_focus()
-                return True
+        if state & mods_primary:  # <GDK_CONTROL_MASK>
+            prs_ctrl = True
 
-        # Expand folder node with arrow cursor
-        keycodes, mods = parse_accelerator("Right")
+        if state & mods_shift:  # <GDK_SHIFT_MASK>
+            prs_shift = True
 
-        if keycode in keycodes or (int(keyval) == 61):  # Laptop unshifted + "=" key
-            self.FolderTreeView.expand_row(path, False)
-            return True
+        if state & mods_alt:  # <GDK_MOD1_MASK>
+            prs_alt = True
 
-        # Collapse folder node with arrow cursor
+        if prs_ctrl == prs_shift == prs_alt is False:
+            prs_none = True  # <GDK_MOD2_MASK> = plain
+
+        """ Key Bindings (FolderTreeView) """
+
+        # Left: Collapse folder
         keycodes, mods = parse_accelerator("Left")
 
-        if keycode in keycodes:
-            if path is not None:  # Cannot collapse a root that is already collapsed
+        if keycode in keycodes and (not prs_ctrl) and (not prs_alt):
+            if path is not None and (prs_none):
                 self.FolderTreeView.collapse_row(path)
+                return True
 
-            return True
+        # Right: Expand folder
+        keycodes, mods = parse_accelerator("Right")
 
-        # Download To / Upload
-        keycodes, mods = parse_accelerator("<Primary>Return")
+        if (keycode in keycodes and not prs_ctrl and not prs_alt) or (
+            keycode is 21 and prs_none) or (  # EN-US/GB laptop non-shifted +"=" key
+            keycode is 94 and prs_none):       # EN-GB "\" key (KeyVal here instead?)
 
-        if state & mods and keycode in keycodes:
-            if self.user == config.sections["server"]["login"]:
+            if path is not None and (prs_none):
+                self.FolderTreeView.expand_row(path, False)
+                return True
 
-                if int(len(self.file_store)) > 0:
-                    self.on_upload_directory_to()
+            if int(len(self.file_store)) >= 1 and (prs_shift):
+                # Override default expand with Shift, focus across to files instead
+                self.FileTreeView.grab_focus()
+                return True
+
+        # Enter: Expand / Collapse (un-masked key is handled by on_folder_row_activated)
+        keycodes, mods = parse_accelerator("Return")
+
+        if keycode in keycodes and (not prs_none):
+            num_files = int(len(self.file_store))
+
+            # Ctrl+Enter: Download Into... /  Upload Folder To...
+            # Shift+Ctrl+Enter: Download  /  Upload Folder Recursive To...
+            if prs_ctrl and (not prs_alt):  # (with Shift over-rides)
+
+                if self.user == config.sections["server"]["login"]:
+                    if num_files >= 1 and (not prs_shift):
+                        # Ctrl+Enter: Upload Folder To...
+                        self.on_upload_directory_to()
+
+                    elif num_files == 0 or (prs_shift):
+                        # Shift+Ctrl+Enter: Upload Folder Recursive To...
+                        self.on_upload_directory_recursive_to()
+
+                elif num_files >= 1:  # [and user is not self]
+                    if (not prs_shift):
+                        # Ctrl+Enter: Download Folder Into...
+                        self.on_download_directory_to()
+
+                    elif (prs_shift):
+                        # Shift+Ctrl+Enter: Download into default download folder
+                        self.on_download_directory()
+
+                if num_files <= 0:
+                    self.FolderTreeView.expand_row(path, False)
+
+                return True
+
+            # Shift+Enter: Navigate files even if not at the deepest level
+            elif prs_shift and (not prs_ctrl) and (not prs_alt):
+                if num_files >= 1:
+                    self.FileTreeView.grab_focus()
 
                 else:
-                    self.on_upload_directory_recursive_to()
+                    # Expand or Collapse
+                    self.on_folder_row_activated(self.FolderTreeView, path, 0)
 
                 return True
 
-            elif int(len(self.file_store)) > 0:
-                # Prompt prevents accidental folder downloading
-                self.on_download_directory_to()
+            # Alt+Enter: Open in File Manager  /  Download Folder Into...
+            elif prs_alt and (not prs_shift):  # [allow optional Ctrl]
+                if self.user == config.sections["server"]["login"]:
+                    # (nearest folder action we have to File Properties)
+                    self.on_file_manager()
+
+                elif num_files >= 1:
+                    self.on_download_directory_to()
+
+                else:
+                    self.FolderTreeView.expand_row(path, False)
+
                 return True
 
-            else:
-                # No shortcut key for recursive download is offered
-                self.FolderTreeView.expand_row(path, False)
-
-            return False
-
-        # Alternate download location / Open in File Manager
-        keycodes, mods = parse_accelerator("<Alt>Return")
-
-        if state & mods and keycode in keycodes:
-            if self.user == config.sections["server"]["login"]:
-                self.on_file_manager()
-                return True
-
-            if int(len(self.file_store)) > 0:
-                self.on_download_directory_to()
-                return True
-
-            self.FolderTreeView.expand_row(path, False)
-            return True
-
-        # Shift focus across to files
-        keycodes, mods = parse_accelerator("<Shift>Return")
-
-        if state & mods and keycode in keycodes:
-            if int(len(self.file_store)) > 0:
-                # Navigate files even if not at the deepest level
-                self.FileTreeView.grab_focus()
-
-            else:
-                self.on_folder_row_activated(self.FolderTreeView, path, 0)
-
-            return True
-
-        self.on_browse_key_press_event(*args)
+        self.on_key_press_event_browse(*args)
         return False
 
-    def on_file_key_press_event(self, *args):
+    def on_key_press_event_file(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
+        path, _focus_column = self.FileTreeView.get_cursor()
 
-        # Note: The "Return" key is handled by on_file_row_activated
+        _keys, mods_primary = parse_accelerator("<Primary>")
+        _keys, mods_shift = parse_accelerator("<Shift>")
+        _keys, mods_alt = parse_accelerator("<Alt>")
 
-        # Shift focus back across to folders
-        keycodes, mods = parse_accelerator("<Shift>Left")
+        prs_none = prs_ctrl = prs_shift = prs_alt = False
 
-        if state & mods and keycode in keycodes or (int(keyval) == 65288):  # Backspace
+        if state & mods_primary:  # <GDK_CONTROL_MASK>
+            prs_ctrl = True
+
+        if state & mods_shift:  # <GDK_SHIFT_MASK>
+            prs_shift = True
+
+        if state & mods_alt:  # <GDK_MOD1_MASK>
+            prs_alt = True
+
+        if prs_ctrl == prs_shift == prs_alt is False:
+            prs_none = True  # <GDK_MOD2_MASK> (plain)
+
+        """ Key Bindings (FileTreeView) """
+
+        # Shift selection focus back across to folders (avoid column header)
+        keycodes_lar, mods = parse_accelerator("<Shift>Left")
+        keycodes_tab, mods = parse_accelerator("<Shift>Tab")
+
+        if (state & mods and keycode in keycodes_lar) or (
+            state & mods and keycode in keycodes_tab) or (
+            prs_none and keycode is 22):  # Backspace
+
             self.FolderTreeView.grab_focus()
             return True
 
-        # Avoid column header focus back to folders
-        keycodes, mods = parse_accelerator("<Shift>Tab")
+        # Enter: Activate (unmodified "Return" key is handled by on_file_row_activated)
+        keycodes, mods = parse_accelerator("Return")
 
-        if state & mods and keycode in keycodes:
-            self.FolderTreeView.grab_focus()
-            return True
+        if keycode in keycodes and (not prs_none):
+            self.select_files()  # Support multi-select with Up/Dn keys
+            num_files = int(len(self.file_store))
 
-        # Download selected/all files in folder / Upload To
-        keycodes, mods = parse_accelerator("<Shift>Return")
+            if num_files <= 0:
+                # Expand or Collapse folder: Avoid navigation trap
+                self.FolderTreeView.grab_focus()
+                self.on_folder_row_activated(self.FolderTreeView, path, 0)
+                return True
 
-        if state & mods and keycode in keycodes:
-            self.select_files()
+            # Ctrl+Enter: Download Into... /  Upload Folder To...
+            # Shift+Ctrl+Enter: Download  /  Upload Folder Recursive To...
+            if prs_ctrl and (not prs_alt):  # (with Shift over-rides)
 
-            if self.user == config.sections["server"]["login"]:
-                if int(len(self.file_store)) >= 1 and (self.num_selected_files < 1):
-                    # No selection
-                    self.on_upload_directory_to()
+                if self.user == config.sections["server"]["login"]:
+                    if num_files >= 1 and self.num_selected_files >= 1:
+                        # Ctrl+Enter: Upload File(s) To...
+                        self.on_upload_files()
 
-                elif int(len(self.file_store)) >= 1 and (self.num_selected_files >= 1):
-                    # Single or Multi-selection
-                    self.on_upload_files()
+                    elif num_files >= 1 and self.num_selected_files <= 0:
+                        # Ctrl+Enter: Upload Folder To...
+                        self.on_upload_directory_to()
 
-                elif int(len(self.file_store)) <= 0:
-                    # Avoid navigation trap
-                    self.on_upload_directory_recursive_to()
-                    self.FolderTreeView.grab_focus()
+                else:  # [user is not self]
+                    if (not prs_shift):
+                        if num_files >= 1 and self.num_selected_files >= 1:
+                            # Ctrl+Enter: Download File(s) Into... (prompt, when Single or Multi-selection)
+                            self.on_download_files_to()
 
-            else:
-                if int(len(self.file_store)) >= 1 and (self.num_selected_files < 1):
-                    # No selection disabled to prevent accidental folder downloading
+                        elif num_files >= 1 and self.num_selected_files <= 0:
+                            # Ctrl+Enter: Download Folder Into... (destination prompt, when No selection)
+                            self.on_download_directory_to()
+                            return True
+
+                    elif (prs_shift):
+                        if num_files >= 1 and self.num_selected_files >= 1:
+                            # Shift+Ctrl+Enter: Download File(s) (no prompt, when Single or Multi-selection)
+                            self.on_download_files()
+
+                        elif num_files >= 1 and self.num_selected_files <= 0:
+                            # Shift+Ctrl+Enter: Download Folder (without prompt, when no selection=all files)
+                            self.on_download_directory()
+
                     return True
 
-                elif int(len(self.file_store)) >= 1 and (self.num_selected_files >= 1):
-                    # Single or Multi-selection
-                    self.on_download_files()
+            # Shift+Enter: Download (Multi-selection)  /  Send to Player
+            elif prs_shift and (not prs_ctrl and not prs_alt):
+                if num_files > 1:  # on_file_row_activated for Single-selection
+                    if self.user == config.sections["server"]["login"]:
+                        self.on_play_files()  # ToDo: Player multi file support
+                    else:
+                        self.on_download_files()
 
-                elif int(len(self.file_store)) >= 1 and (self.num_selected_files < 1):
-                    self.on_download_directory()
+                    return True
 
-                elif int(len(self.file_store)) <= 0:
-                    # Avoid navigation trap
-                    self.FolderTreeView.grab_focus()
-
-            return True
-
-        # Control the download_to location / Upload To
-        keycodes, mods = parse_accelerator("<Primary>Return")
-
-        if state & mods and keycode in keycodes:
-            self.select_files()
-
-            if self.num_selected_files >= 1 and int(len(self.file_store)) > 0:
-
+            # Alt+Enter: Properties / Open in File Manager / Download Folder Into...
+            elif prs_alt and (not prs_shift):
                 if self.user == config.sections["server"]["login"]:
-                    self.on_upload_files()
+                    if (prs_ctrl) or self.num_selected_files <= 0:
+                        # Ctrl+Alt+Enter: Open if File Manager
+                        self.on_file_manager()
+                    else:
+                        # Alt+Enter: File Properties
+                        self.on_file_properties()
 
-                else:
-                    self.on_download_files_to()
-
-                return True
-
-            elif self.num_selected_files < 1 and int(len(self.file_store)) > 0:
-
-                if self.user == config.sections["server"]["login"]:
-                    self.on_upload_directory_to()
-
-                else:
+                elif (prs_ctrl) or self.num_selected_files <= 0:
+                    # Alternate Download Folder Into... Location
                     self.on_download_directory_to()
 
-                return True
-
-            elif int(len(self.file_store)) <= 0:
-
-                self.FolderTreeView.grab_focus()
-
-                if self.user == config.sections["server"]["login"]:
-                    self.on_upload_directory_recursive_to()
-
                 else:
-                    self.on_download_directory_to()
+                    self.on_file_properties()
 
                 return True
 
-        # Upload files to User shortcut
-        keycodes, mods = parse_accelerator("<Primary>u")
-
-        if state & mods and keycode in keycodes:
-            if self.user == config.sections["server"]["login"]:
-                self.select_files()
-                self.on_upload_files()
-                return True
-
-        # File properties
-        keycodes, mods = parse_accelerator("<Alt>Return")
-
-        if state & mods and keycode in keycodes:
-            self.on_file_properties()
-            return True
-
-        self.on_browse_key_press_event(*args)
+        self.on_key_press_event_browse(*args)
         return False
 
-    def on_browse_key_press_event(self, *args):
+    def on_key_press_event_browse(self, *args):
 
         keyval, keycode, state, widget = get_key_press_event_args(*args)
 
-        # Common key bindings. ToDo: make them trigger from userbrowses
+        _keys, mods_primary = parse_accelerator("<Primary>")
+        _keys, mods_shift = parse_accelerator("<Shift>")
+        _keys, mods_alt = parse_accelerator("<Alt>")
 
-        # Upload folder to User folder shortcut
-        keycodes, mods = parse_accelerator("<Primary>u")
+        prs_none = prs_ctrl = prs_shift = prs_alt = False
 
-        if state & mods and keycode in keycodes:
-            self.select_files()
+        if state & mods_primary:  # <GDK_CONTROL_MASK>
+            prs_ctrl = True
 
-            if self.user == config.sections["server"]["login"]:
-                if int(len(self.file_store)) > 0 and (self.num_selected_files == 0):
-                    self.on_upload_directory_to()
+        if state & mods_shift:  # <GDK_SHIFT_MASK>
+            prs_shift = True
 
-                elif self.num_selected_files > 0:
-                    self.on_upload_files()
+        if state & mods_alt:  # <GDK_MOD1_MASK>
+            prs_alt = True
 
-                else:
-                    return False
+        if prs_ctrl == prs_shift == prs_alt is False:
+            prs_none = True  # <GDK_MOD2_MASK> (plain)
 
-                return True
+        """ Key Bindings (this UserBrowses Page) """
 
-            else:
-                return False
-
-        # Focus Find TextEntry
+        # Ctrl+F: Focus Find TextEntry
         keycodes, mods = parse_accelerator("<Primary>f")
 
-        if state & mods and keycode in keycodes:
+        if state & mods and keycode in keycodes and (not prs_shift and not prs_alt):
             self.SearchEntry.grab_focus()
             return True
 
-        # Next Find result
-        keycodes, mods = parse_accelerator("<Primary>g")
+        # Ctrl+G or F3: Find Next Match
+        keycodes_g, _mods_g = parse_accelerator("<Primary>g")
+        keycodes_f3, _mods_f3 = parse_accelerator("F3")
 
-        if state & mods and keycode in keycodes or (int(keyval) == 65472):  # F3
-            if self.SearchEntry.get_text() != "":
-                self.on_search()
-            else:
-                self.SearchEntry.grab_focus()
-            return True
+        if (keycode in keycodes_g and prs_ctrl) or (
+            keycode in keycodes_f3 and not prs_ctrl):
 
-        # Save List
+            if (not prs_alt):  # Avoid any conflict
+                if (not prs_shift) and self.SearchEntry.get_text() != "":
+                    self.on_search()
+
+                elif prs_shift:
+                    # Shift+Ctrl+G or Shift+F3: Find Previous Match
+                    # ToDo: {self.search_position = self.search_position - 2}
+                    self.on_search()
+
+                else:
+                    self.SearchEntry.grab_focus()
+
+                return True
+
+        # Ctrl+R or F5: Refresh
+        keycodes_r, _mods_r = parse_accelerator("<Primary>r")
+        keycodes_f5, _mods_f5 = parse_accelerator("F5")
+
+        if (keycode in keycodes_r and prs_ctrl and not prs_shift) or (
+            keycode in keycodes_f5 and not prs_ctrl):
+
+            if (not prs_alt):  # Avoid any conflict
+                self.on_refresh()
+                return True
+
+        # Ctrl+S: Save List
         keycodes, mods = parse_accelerator("<Primary>s")
 
-        if state & mods and keycode in keycodes:
-            self.on_save()
-            return True
+        if state & mods and keycode in keycodes and (not prs_alt):
+            if (not prs_shift):
+                self.on_save()
+                return True
 
-        # Refresh
-        keycodes, mods = parse_accelerator("<Primary>r")
+            elif (prs_shift):
+                # Shift+Ctrl+S: Idea - Save List of all open tabs
+                return True
 
-        if state & mods and keycode in keycodes or (int(keyval) == 65474):  # F5
-            self.on_refresh()
-            return True
+        # Ctrl+U: Upload To User...
+        keycodes, mods = parse_accelerator("<Primary>u")
 
+        if state & mods and keycode in keycodes and (not prs_alt):
+            self.select_files()
+
+            if self.user == config.sections["server"]["login"]:
+                if self.num_selected_files >= 1:
+                    if (not prs_shift):
+                        self.on_upload_files()
+
+                    elif (prs_shift):
+                        self.on_upload_directory_to()
+
+                elif int(len(self.file_store)) >= 1 and self.num_selected_files <= 0 and (
+                    not prs_shift):
+                    self.on_upload_directory_to()
+
+                elif int(len(self.file_store)) <= 0 or (
+                    prs_shift):
+                    self.on_upload_directory_recursive_to()
+
+                return True
+
+            else:  # [user is not self]
+                return False
+
+        # Next key binding chain is self.Main
         return False
 
     def on_file_properties(self, *args):
@@ -1116,7 +1183,7 @@ class UserBrowse(UserInterface):
     def on_download_files_to(self, *args):
 
         try:
-            _, folder = self.selected_folder.rsplit("\\", 1)
+            _path_start, folder = self.selected_folder.rsplit("\\", 1)
         except ValueError:
             folder = self.selected_folder
 
@@ -1126,8 +1193,7 @@ class UserBrowse(UserInterface):
         if not os.path.exists(path) or not os.path.isdir(path):
             path = download_folder
 
-        # ToDo: Make translatable
-        str_title = "Select Destination for Downloading File(s) from User"
+        str_title = _("Select Destination for Downloading File(s) from User")
 
         choose_dir(
             parent=self.frame.MainWindow,
