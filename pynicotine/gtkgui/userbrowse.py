@@ -1029,12 +1029,10 @@ class UserBrowse(UserInterface):
                     elif (prs_shift):
                         self.on_upload_directory_to()
 
-                elif int(len(self.file_store)) >= 1 and self.num_selected_files <= 0 and (
-                    not prs_shift):
+                elif int(len(self.file_store)) >= 1 and self.num_selected_files <= 0 and (not prs_shift):
                     self.on_upload_directory_to()
 
-                elif int(len(self.file_store)) <= 0 or (
-                    prs_shift):
+                elif int(len(self.file_store)) <= 0 or (prs_shift):
                     self.on_upload_directory_recursive_to()
 
                 return True
