@@ -755,9 +755,9 @@ class UserBrowse(UserInterface):
         keycodes, mods = parse_accelerator("Right")
 
         if (keycode in keycodes and not prs_ctrl and not prs_alt) or (
-            keycode is 21 and prs_none) or (  # EN-US/GB laptop non-shifted +"=" key
-            keycode is 94 and prs_none):       # EN-GB "\" key (KeyVal here instead?)
-
+            keycode == 21 and prs_none) or (  # EN-US/GB laptop non-shifted +"=" key
+            keycode == 94 and prs_none        # EN-GB "\" key (KeyVal here instead?)
+        ):
             if path is not None and (prs_none):
                 self.FolderTreeView.expand_row(path, False)
                 return True
@@ -859,8 +859,8 @@ class UserBrowse(UserInterface):
 
         if (state & mods and keycode in keycodes_lar) or (
             state & mods and keycode in keycodes_tab) or (
-            prs_none and keycode is 22):  # Backspace
-
+            prs_none and keycode == 22  # Backspace
+        ):
             self.FolderTreeView.grab_focus()
             return True
 
@@ -979,9 +979,7 @@ class UserBrowse(UserInterface):
         keycodes_g, _mods_g = parse_accelerator("<Primary>g")
         keycodes_f3, _mods_f3 = parse_accelerator("F3")
 
-        if (keycode in keycodes_g and prs_ctrl) or (
-            keycode in keycodes_f3 and not prs_ctrl):
-
+        if (keycode in keycodes_g and prs_ctrl) or (keycode in keycodes_f3 and not prs_ctrl):
             if (not prs_alt):  # Avoid any conflict
                 if (not prs_shift) and self.SearchEntry.get_text() != "":
                     self.on_search()
@@ -1000,9 +998,7 @@ class UserBrowse(UserInterface):
         keycodes_r, _mods_r = parse_accelerator("<Primary>r")
         keycodes_f5, _mods_f5 = parse_accelerator("F5")
 
-        if (keycode in keycodes_r and prs_ctrl and not prs_shift) or (
-            keycode in keycodes_f5 and not prs_ctrl):
-
+        if (keycode in keycodes_r and prs_ctrl and not prs_shift) or (keycode in keycodes_f5 and prs_none):
             if (not prs_alt):  # Avoid any conflict
                 self.on_refresh()
                 return True
