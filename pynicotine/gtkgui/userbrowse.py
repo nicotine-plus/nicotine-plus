@@ -857,8 +857,8 @@ class UserBrowse(UserInterface):
         keycodes_lar, mods = parse_accelerator("<Shift>Left")
         keycodes_tab, mods = parse_accelerator("<Shift>Tab")
 
-        if (state & mods and keycode in keycodes_lar) or (
-            state & mods and keycode in keycodes_tab) or (
+        if (state & mods and keycode in keycodes_lar and not prs_ctrl and not prs_alt) or (
+            state & mods and keycode in keycodes_tab and not prs_ctrl and not prs_alt) or (
             prs_none and keycode == 22  # Backspace
         ):
             self.FolderTreeView.grab_focus()
