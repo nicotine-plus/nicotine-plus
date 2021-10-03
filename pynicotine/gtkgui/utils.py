@@ -26,6 +26,70 @@ from gi.repository import Gdk
 from gi.repository import Gtk
 
 
+""" Accelerators """
+
+
+def _parse_accelerator(accelerator):
+
+    keys = keycodes = []
+    *args, key, mods = Gtk.accelerator_parse(accelerator)
+
+    if not key:
+        return keycodes, mods
+
+    if Gtk.get_major_version() == 4:
+        valid, keys = Gdk.Display.get_default().map_keyval(key)
+    else:
+        keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+        valid, keys = keymap.get_entries_for_keyval(key)
+
+    keycodes = [key.keycode for key in keys]
+    return keycodes, mods
+
+
+ALL_MODIFIERS = (_parse_accelerator("<Primary>")[1] | _parse_accelerator("<Shift>")[1] | _parse_accelerator("<Alt>")[1])
+
+
+def _activate_accelerator(widget, event, accelerator, callback, user_data=None):
+
+    keycodes, required_mods = _parse_accelerator(accelerator)
+    activated_mods = event.state
+    excluded_mods = ALL_MODIFIERS & ~required_mods
+
+    if required_mods & ~activated_mods != 0:
+        # Missing required modifiers
+        return False
+
+    if activated_mods & excluded_mods:
+        # Too many/irrelevant modifiers
+        return False
+
+    if event.hardware_keycode not in keycodes:
+        # Invalid key
+        return False
+
+    return callback(widget, None, user_data)
+
+
+def setup_accelerator(accelerator, widget, callback, user_data=None):
+
+    if Gtk.get_major_version() == 4:
+        shortcut_controller = Gtk.ShortcutController()
+        shortcut_controller.set_scope(Gtk.ShortcutScope.LOCAL)
+        shortcut_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        shortcut_controller.add_shortcut(
+            Gtk.Shortcut(
+                trigger=Gtk.ShortcutTrigger.parse_string(accelerator),
+                action=Gtk.CallbackAction.new(callback, user_data),
+            )
+        )
+        widget.add_controller(shortcut_controller)
+        return
+
+    # GTK 3 replacement for Gtk.ShortcutController
+    widget.connect("key-press-event", _activate_accelerator, accelerator, callback, user_data)
+
+
 """ Clipboard """
 
 
@@ -57,56 +121,3 @@ def copy_file_url(user, path):
     )
 
     copy_text(url)
-
-
-""" Events """
-
-
-def connect_key_press_event(widget, callback):
-    """ Use event controller or legacy 'key-press-event', depending on GTK version """
-
-    if Gtk.get_major_version() == 4:
-        controller = Gtk.EventControllerKey()
-        controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        controller.connect("key-pressed", callback)
-
-        widget.add_controller(controller)
-
-    else:
-        controller = None
-        widget.connect("key-press-event", callback)
-
-    return controller
-
-
-def get_key_press_event_args(*args):
-
-    if Gtk.get_major_version() == 4:
-        controller, keyval, keycode, state = args
-        widget = controller.get_widget()
-
-    else:
-        widget, event = args
-        keyval = event.keyval
-        keycode = event.hardware_keycode
-        state = event.state
-
-    return (keyval, keycode, state, widget)
-
-
-def parse_accelerator(accelerator):
-
-    keys = keycodes = []
-    *args, key, mods = Gtk.accelerator_parse(accelerator)
-
-    if not key:
-        return keycodes, mods
-
-    if Gtk.get_major_version() == 4:
-        valid, keys = Gdk.Display.get_default().map_keyval(key)
-    else:
-        keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
-        valid, keys = keymap.get_entries_for_keyval(key)
-
-    keycodes = [key.keycode for key in keys]
-    return keycodes, mods

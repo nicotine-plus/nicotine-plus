@@ -31,11 +31,9 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -194,7 +192,8 @@ class UserBrowse(UserInterface):
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
-        self.folder_key_controller = connect_key_press_event(self.FolderTreeView, self.on_folder_key_press_event)
+        setup_accelerator("Left", self.FolderTreeView, self.on_collapse_row_accelerator)
+        setup_accelerator("Right", self.FolderTreeView, self.on_expand_row_accelerator)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -290,7 +289,7 @@ class UserBrowse(UserInterface):
         )
 
         self.FileTreeView.set_model(self.file_store)
-        self.file_key_controller = connect_key_press_event(self.FileTreeView, self.on_file_key_press_event)
+        setup_accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
@@ -688,35 +687,25 @@ class UserBrowse(UserInterface):
 
         self.set_directory(iterator.user_data)
 
-    def on_folder_key_press_event(self, *args):
+    def on_expand_row_accelerator(self, *args):
+        """ Right: expand row """
 
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("Right")
+        path, _focus_column = self.FolderTreeView.get_cursor()
+        self.FolderTreeView.expand_row(path, False)
+        return True
 
-        if keycode in keycodes:
-            path, _focus_column = self.FolderTreeView.get_cursor()
-            self.FolderTreeView.expand_row(path, False)
-            return True
+    def on_collapse_row_accelerator(self, *args):
+        """ Left: expand row """
 
-        keycodes, mods = parse_accelerator("Left")
+        path, _focus_column = self.FolderTreeView.get_cursor()
+        self.FolderTreeView.collapse_row(path)
+        return True
 
-        if keycode in keycodes:
-            path, _focus_column = self.FolderTreeView.get_cursor()
-            self.FolderTreeView.collapse_row(path)
-            return True
+    def on_file_properties_accelerator(self, *args):
+        """ Alt+Return: show file properties dialog """
 
-        return False
-
-    def on_file_key_press_event(self, *args):
-
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("<Alt>Return")
-
-        if state & mods and keycode in keycodes:
-            self.on_file_properties()
-            return True
-
-        return False
+        self.on_file_properties()
+        return True
 
     def on_file_properties(self, *args):
 
