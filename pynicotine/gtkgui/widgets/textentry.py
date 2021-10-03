@@ -18,14 +18,11 @@
 
 from os.path import commonprefix
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import connect_key_press_event
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import get_alias
@@ -54,7 +51,8 @@ class ChatEntry:
 
         entry.connect("activate", self.on_enter)
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
-        self.key_controller = connect_key_press_event(entry, self.on_key_press_event)
+        setup_accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
+        setup_accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
         # Emoji Picker
         try:
@@ -441,13 +439,8 @@ class ChatEntry:
         # If the entry was modified, and we don't block the handler, we're no longer completing
         self.midwaycompletion = False
 
-    def on_key_press_event(self, *args):
-
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("Tab")
-
-        if keycode not in keycodes:
-            return False
+    def on_tab_complete_accelerator(self, widget, state, backwards=False):
+        """ Tab and Shift+Tab: tab complete chat """
 
         if not config.sections["words"]["tab"]:
             return False
@@ -496,7 +489,7 @@ class ChatEntry:
                 self.entry.delete_text(ix - len(currentnick), ix)
                 direction = 1  # Forward cycle
 
-                if state & Gdk.ModifierType.SHIFT_MASK:
+                if backwards:
                     direction = -1  # Backward cycle
 
                 self.completions['currentindex'] = ((self.completions['currentindex'] + direction) %
@@ -529,9 +522,10 @@ class TextSearchBar:
         if not controller_widget:
             controller_widget = textview
 
-        self.key_controller_search = connect_key_press_event(controller_widget, self.on_key_press_event_search)
-        self.key_controller_esc = connect_key_press_event(controller_widget, self.on_key_press_event_escape)
-        self.key_controller_esc_entry = connect_key_press_event(entry, self.on_key_press_event_escape)
+        setup_accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
+
+        for widget in (controller_widget, entry):
+            setup_accelerator("Escape", widget, self.on_hide_search_accelerator)
 
     def on_search_match(self, search_type, restarted=False):
 
@@ -585,27 +579,17 @@ class TextSearchBar:
     def on_search_next_match(self, *args):
         self.on_search_match(search_type="next")
 
-    def on_key_press_event_escape(self, *args):
+    def on_hide_search_accelerator(self, *args):
+        """ Escape: hide search bar """
 
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("Escape")
+        self.hide_search_bar()
+        return True
 
-        if keycode in keycodes:
-            self.hide_search_bar()
-            return True
+    def on_show_search_accelerator(self, *args):
+        """ Ctrl+F: show search bar """
 
-        return False
-
-    def on_key_press_event_search(self, *args):
-
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("<Primary>f")
-
-        if state & mods and keycode in keycodes:
-            self.show_search_bar()
-            return True
-
-        return False
+        self.show_search_bar()
+        return True
 
     def show_search_bar(self):
         self.search_bar.set_search_mode(True)

@@ -49,10 +49,8 @@ from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
@@ -245,12 +243,26 @@ class NicotineFrame(UserInterface):
         self.MainWindow.set_title(GLib.get_application_name())
 
         # Set up event controllers
-        self.key_controller = connect_key_press_event(self.MainWindow, self.on_key_press_event)
+        setup_accelerator("<Primary>w", self.MainWindow, self.on_tab_close_accelerator)
+        setup_accelerator("<Primary>F4", self.MainWindow, self.on_tab_close_accelerator)
+
+        setup_accelerator("<Primary><Shift>Tab", self.MainWindow, self.on_tab_cycle_accelerator, True)
+        setup_accelerator("<Primary>Tab", self.MainWindow, self.on_tab_cycle_accelerator)
+
+        for num in range(1, 10):
+            setup_accelerator("<Primary>" + str(num), self.MainWindow, self.on_change_primary_tab_accelerator, num)
+            setup_accelerator("<Alt>" + str(num), self.MainWindow, self.on_change_primary_tab_accelerator, num)
 
         if Gtk.get_major_version() == 4:
+            controller = Gtk.EventControllerKey()
+            controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            controller.connect("key-pressed", self.on_key_press_event)
+
+            self.MainWindow.add_controller(controller)
             self.MainWindow.connect("close-request", self.on_close_request)
         else:
             self.MainWindow.connect("delete-event", self.on_close_request)
+            self.MainWindow.connect("key-press-event", self.on_key_press_event)
 
         try:
             if Gtk.get_major_version() == 4:
@@ -1569,73 +1581,59 @@ class NicotineFrame(UserInterface):
 
         main_notebook.set_visible(main_notebook.get_n_pages())
 
-    def on_key_press_event(self, *args):
+    def on_tab_close_accelerator(self, *args):
+        """ Ctrl+W and Ctrl+F4: close current secondary tab """
 
-        self.on_disable_auto_away()
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
+        notebook_name = self.current_page_id.lower()
+        notebook = getattr(self, notebook_name)
 
-        # Ctrl+W and Ctrl+F4: close current secondary tab
-        keycodes_w, mods = parse_accelerator("<Primary>w")
-        keycodes_f4, mods = parse_accelerator("<Primary>F4")
-
-        if state & mods and (keycode in keycodes_w or keycode in keycodes_f4):
-            notebook_name = self.current_page_id.lower()
-            notebook = getattr(self, notebook_name)
-
-            if not isinstance(notebook, IconNotebook):
-                return False
-
-            page = notebook.get_nth_page(notebook.get_current_page())
-
-            if page is None:
-                return False
-
-            tab_label, menu_label = notebook.get_labels(page)
-            tab_label.onclose()
-            return True
-
-        # Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs
-        keycodes_tab, mods = parse_accelerator("<Primary>Tab")
-
-        if state & mods and keycode in keycodes_tab:
-            notebook_name = self.current_page_id.lower()
-            notebook = getattr(self, notebook_name)
-
-            if not isinstance(notebook, IconNotebook):
-                return False
-
-            num_pages = notebook.get_n_pages()
-            current_page = notebook.get_current_page()
-
-            if state & Gdk.ModifierType.SHIFT_MASK:
-                if current_page == 0:
-                    notebook.set_current_page(num_pages - 1)
-                else:
-                    notebook.prev_page()
-
-                return True
-
-            if current_page == (num_pages - 1):
-                notebook.set_current_page(0)
-            else:
-                notebook.next_page()
-
-            return True
-
-        # Alt+1-9 or Ctrl+1-9: change main tab
-        _keycodes, mods_alt = parse_accelerator("<Alt>")
-        _keycodes, mods_primary = parse_accelerator("<Primary>")
-
-        if not state & (mods_alt | mods_primary):
+        if not isinstance(notebook, IconNotebook):
             return False
 
-        for i in range(1, 10):
-            keycodes, mods = parse_accelerator(str(i))
+        page = notebook.get_nth_page(notebook.get_current_page())
 
-            if keycode in keycodes:
-                self.MainNotebook.set_current_page(i - 1)
-                return True
+        if page is None:
+            return False
 
+        tab_label, menu_label = notebook.get_labels(page)
+        tab_label.onclose()
+        return True
+
+    def on_tab_cycle_accelerator(self, widget, state, backwards=False):
+        """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
+
+        notebook_name = self.current_page_id.lower()
+        notebook = getattr(self, notebook_name)
+
+        if not isinstance(notebook, IconNotebook):
+            return False
+
+        num_pages = notebook.get_n_pages()
+        current_page = notebook.get_current_page()
+
+        if backwards:
+            if current_page == 0:
+                notebook.set_current_page(num_pages - 1)
+            else:
+                notebook.prev_page()
+
+            return True
+
+        if current_page == (num_pages - 1):
+            notebook.set_current_page(0)
+        else:
+            notebook.next_page()
+
+        return True
+
+    def on_change_primary_tab_accelerator(self, widget, state, tab_num=1):
+        """ Alt+1-9 or Ctrl+1-9: change main tab """
+
+        self.MainNotebook.set_current_page(tab_num - 1)
+        return True
+
+    def on_key_press_event(self, *args):
+        self.on_disable_auto_away()
         return False
 
     def set_main_tabs_order(self):

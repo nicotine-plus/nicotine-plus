@@ -32,10 +32,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -238,32 +236,26 @@ def initialise_columns(treeview_name, treeview, *args):
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
-    treeview.key_controller = connect_key_press_event(treeview, on_key_press_event)
+    setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(widget=treeview, callback=press_header, connect_events=False)
 
     return cols
 
 
-def on_key_press_event(*args):
+def on_copy_cell_data_accelerator(treeview, *args):
+    """ Ctrl+C: copy cell data """
 
-    keyval, keycode, state, treeview = get_key_press_event_args(*args)
-    keycodes, mods = parse_accelerator("<Primary>c")
+    path, column = treeview.get_cursor()
+    model = treeview.get_model()
 
-    if state & mods and keycode in keycodes:
-        path, column = treeview.get_cursor()
-        model = treeview.get_model()
+    if path is None:
+        return False
 
-        if path is None:
-            return False
+    iterator = model.get_iter(path)
+    cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
 
-        iterator = model.get_iter(path)
-        cell_value = str(model.get_value(iterator, column.get_sort_column_id()))
-
-        copy_text(cell_value)
-        return True
-
-    # No key match, continue event
-    return False
+    copy_text(cell_value)
+    return True
 
 
 def append_columns(treeview, cols, config):

@@ -113,7 +113,7 @@ class PluginHandler:
 
             if path is None:
                 log.add(_("Failed to load plugin '%s', could not find it."), plugin_name)
-                return False
+                return None
 
             # Add plugin folder to path in order to support relative imports
             sys.path.append(path)
@@ -160,8 +160,8 @@ class PluginHandler:
 
             plugin = self.load_plugin(plugin_name)
 
-            if not plugin:
-                raise Exception("Error loading plugin '%s'" % plugin_name)
+            if plugin is None:
+                return False
 
             plugin.init()
 
@@ -252,11 +252,16 @@ class PluginHandler:
         return None
 
     def get_plugin_info(self, plugin_name):
-        path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
 
-        with open(path, 'r', encoding="utf-8") as file_handle:
-            infodict = {}
+        infodict = {}
+        plugin_folder = self.findplugin(plugin_name)
 
+        if plugin_folder is None:
+            return infodict
+
+        info_path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
+
+        with open(info_path, 'r', encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
                     key, val = line.split("=", 1)

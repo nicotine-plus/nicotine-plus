@@ -33,11 +33,9 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -287,8 +285,9 @@ class Search(UserInterface):
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
-        self.key_controller_filters = connect_key_press_event(self.FiltersContainer, self.on_key_press_event_filters)
-        self.key_controller_results = connect_key_press_event(self.ResultsList, self.on_key_press_event_results)
+        setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
+        setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
+        setup_accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
 
         self.text = text
         self.searchterm_words_include = []
@@ -1026,34 +1025,24 @@ class Search(UserInterface):
         # Single user, add items directly to "User(s)" submenu
         self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
 
-    def on_key_press_event_filters(self, *args):
+    def on_close_filter_bar_accelerator(self, *args):
+        """ Escape: hide filter bar """
 
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("Escape")
+        self.ShowFilters.set_active(False)
+        return True
 
-        if keycode in keycodes:
-            self.ShowFilters.set_active(False)
-            return True
+    def on_show_filter_bar_accelerator(self, *args):
+        """ Ctrl+F: show filter bar """
 
-        return False
+        self.ShowFilters.set_active(True)
+        self.FilterIn.grab_focus()
+        return True
 
-    def on_key_press_event_results(self, *args):
+    def on_file_properties_accelerator(self, *args):
+        """ Alt+Return: show file properties dialog """
 
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
-        keycodes, mods = parse_accelerator("<Primary>f")
-
-        if state & mods and keycode in keycodes:
-            self.ShowFilters.set_active(True)
-            self.FilterIn.grab_focus()
-            return True
-
-        keycodes, mods = parse_accelerator("<Alt>Return")
-
-        if state & mods and keycode in keycodes:
-            self.on_file_properties()
-            return True
-
-        return False
+        self.on_file_properties()
+        return True
 
     def on_select_user_results(self, *args):
 

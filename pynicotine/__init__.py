@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
+import faulthandler
 import importlib.util
 import sys
 
@@ -211,6 +212,9 @@ binary package and what you try to run Nicotine+ with).""")
     if error:
         print(error)
         return 1
+
+    # Dump tracebacks for C modules (in addition to pure Python code)
+    faulthandler.enable()
 
     if rescan:
         return rescan_shares()
