@@ -759,7 +759,7 @@ class UserBrowse(UserInterface):
                 self.FolderTreeView.expand_row(path, False)
                 return True
 
-            if int(len(self.file_store)) >= 1 and (prs_shift):
+            if len(self.file_store) >= 1 and (prs_shift):
                 # Override default expand with Shift, focus across to files instead
                 self.FileTreeView.grab_focus()
                 return True
@@ -768,7 +768,7 @@ class UserBrowse(UserInterface):
         keycodes, mods = parse_accelerator("Return")
 
         if keycode in keycodes and (not prs_none):
-            num_files = int(len(self.file_store))
+            num_files = len(self.file_store)
 
             # Ctrl+Enter: Download Into... /  Upload Folder To...
             # Shift+Ctrl+Enter: Download  /  Upload Folder Recursive To...
@@ -866,7 +866,7 @@ class UserBrowse(UserInterface):
 
         if keycode in keycodes and (not prs_none):
             self.select_files()  # Support multi-select with Up/Dn keys
-            num_files = int(len(self.file_store))
+            num_files = len(self.file_store)
 
             if num_files <= 0:
                 # Expand or Collapse folder: Avoid navigation trap
@@ -1018,24 +1018,23 @@ class UserBrowse(UserInterface):
         if state & mods and keycode in keycodes and (not prs_alt):
             self.select_files()
 
-            if self.user == config.sections["server"]["login"]:
-                if self.num_selected_files >= 1:
-                    if (not prs_shift):
-                        self.on_upload_files()
+            if self.user != config.sections["server"]["login"]:
+                return False
 
-                    elif (prs_shift):
-                        self.on_upload_directory_to()
+            if self.num_selected_files >= 1:
+                if (not prs_shift):
+                    self.on_upload_files()
 
-                elif int(len(self.file_store)) >= 1 and self.num_selected_files <= 0 and (not prs_shift):
+                elif (prs_shift):
                     self.on_upload_directory_to()
 
-                elif int(len(self.file_store)) <= 0 or (prs_shift):
-                    self.on_upload_directory_recursive_to()
+            elif len(self.file_store) >= 1 and self.num_selected_files <= 0 and (not prs_shift):
+                self.on_upload_directory_to()
 
-                return True
+            elif len(self.file_store) <= 0 or (prs_shift):
+                self.on_upload_directory_recursive_to()
 
-            else:  # [user is not self]
-                return False
+            return True
 
         # Next key binding chain is self.Main
         return False
