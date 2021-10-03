@@ -371,15 +371,12 @@ class UserBrowse(UserInterface):
             return
 
         # Keyboard accessibility support for <Return> key behaviour
-        original_state = self.FolderTreeView.expand_row(path, False)
-        demanded_state = original_state
-
-        if original_state:
-            self.FolderTreeView.expand_row(path, False)
+        if self.FolderTreeView.row_expanded(path):
+            expandable = self.FolderTreeView.collapse_row(path)
         else:
-            demanded_state = self.FolderTreeView.collapse_row(path)
+            expandable = self.FolderTreeView.expand_row(path, False)
 
-        if (original_state == demanded_state is False) and int(len(self.file_store)) >= 1:
+        if not expandable and len(self.file_store) > 0:
             # This is the deepest level, so move focus over to Files if there are any
             self.FileTreeView.grab_focus()
 
