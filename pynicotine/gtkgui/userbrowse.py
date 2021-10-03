@@ -757,12 +757,12 @@ class UserBrowse(UserInterface):
         ):
             if path is not None and (prs_none):
                 self.FolderTreeView.expand_row(path, False)
-                return True
 
             if len(self.file_store) >= 1 and (prs_shift):
                 # Override default expand with Shift, focus across to files instead
                 self.FileTreeView.grab_focus()
-                return True
+
+            return True
 
         # Enter: Expand / Collapse (un-masked key is handled by on_folder_row_activated)
         keycodes, mods = parse_accelerator("Return")
@@ -887,27 +887,26 @@ class UserBrowse(UserInterface):
                         # Ctrl+Enter: Upload Folder To...
                         self.on_upload_directory_to()
 
-                else:  # [user is not self]
+                elif num_files >= 1:  # [and user is not self]
                     if (not prs_shift):
-                        if num_files >= 1 and self.num_selected_files >= 1:
+                        if self.num_selected_files >= 1:
                             # Ctrl+Enter: Download File(s) Into... (prompt, when Single or Multi-selection)
                             self.on_download_files_to()
 
-                        elif num_files >= 1 and self.num_selected_files <= 0:
+                        elif self.num_selected_files <= 0:
                             # Ctrl+Enter: Download Folder Into... (destination prompt, when No selection)
                             self.on_download_directory_to()
-                            return True
 
                     elif (prs_shift):
-                        if num_files >= 1 and self.num_selected_files >= 1:
+                        if self.num_selected_files >= 1:
                             # Shift+Ctrl+Enter: Download File(s) (no prompt, when Single or Multi-selection)
                             self.on_download_files()
 
-                        elif num_files >= 1 and self.num_selected_files <= 0:
+                        elif self.num_selected_files <= 0:
                             # Shift+Ctrl+Enter: Download Folder (without prompt, when no selection=all files)
                             self.on_download_directory()
 
-                    return True
+                return True
 
             # Shift+Enter: Download (Multi-selection)  /  Send to Player
             elif prs_shift and (not prs_ctrl and not prs_alt):
@@ -1006,20 +1005,21 @@ class UserBrowse(UserInterface):
         if state & mods and keycode in keycodes and (not prs_alt):
             if (not prs_shift):
                 self.on_save()
-                return True
 
             elif (prs_shift):
                 # Shift+Ctrl+S: Idea - Save List of all open tabs
-                return True
+                return False
+
+            return True
 
         # Ctrl+U: Upload To User...
         keycodes, mods = parse_accelerator("<Primary>u")
 
         if state & mods and keycode in keycodes and (not prs_alt):
-            self.select_files()
-
             if self.user != config.sections["server"]["login"]:
                 return False
+
+            self.select_files()
 
             if self.num_selected_files >= 1:
                 if (not prs_shift):
