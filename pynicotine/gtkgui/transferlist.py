@@ -32,11 +32,9 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import connect_key_press_event
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import get_key_press_event_args
-from pynicotine.gtkgui.utils import parse_accelerator
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -75,7 +73,10 @@ class TransferList(UserInterface):
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
 
-        self.key_controller = connect_key_press_event(self.Transfers, self.on_key_press_event)
+        setup_accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
+        setup_accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
+        setup_accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
+        setup_accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
 
         self.last_ui_update = self.last_save = 0
         self.transfer_list = []
@@ -820,37 +821,33 @@ class TransferList(UserInterface):
 
         self.select_transfers()
 
-    def on_key_press_event(self, *args):
+    def on_abort_transfers_accelerator(self, *args):
+        """ T: abort transfer """
 
-        keyval, keycode, state, widget = get_key_press_event_args(*args)
         self.select_transfers()
+        self.abort_transfers()
+        return True
 
-        keycodes, mods = parse_accelerator("t")
+    def on_retry_transfers_accelerator(self, *args):
+        """ R: retry transfers """
 
-        if keycode in keycodes:
-            self.abort_transfers()
-            return True
+        self.select_transfers()
+        self.retry_transfers()
+        return True
 
-        keycodes, mods = parse_accelerator("r")
+    def on_clear_transfers_accelerator(self, *args):
+        """ Delete: clear transfers """
 
-        if keycode in keycodes:
-            self.retry_transfers()
-            return True
+        self.select_transfers()
+        self.abort_transfers(clear=True)
+        return True
 
-        keycodes, mods = parse_accelerator("Delete")
+    def on_file_properties_accelerator(self, *args):
+        """ Alt+Return: show file properties dialog """
 
-        if keycode in keycodes:
-            self.abort_transfers(clear=True)
-            return True
-
-        keycodes, mods = parse_accelerator("<Alt>Return")
-
-        if state & mods and keycode in keycodes:
-            self.on_file_properties()
-            return True
-
-        # No key match, continue event
-        return False
+        self.select_transfers()
+        self.on_file_properties()
+        return True
 
     def on_file_properties(self, *args):
 
