@@ -75,7 +75,13 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
+
+                # Remember folder or file selection
+                if tab.num_selected_files >= 1:
+                    GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
+                else:
+                    GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
+
                 break
 
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
@@ -179,8 +185,8 @@ class UserBrowse(UserInterface):
         self.search_list = []
         self.query = None
         self.search_position = 0
-        self.selected_files = {}
 
+        self.selected_files = {}
         self.shares = []
 
         # Iters for current DirStore
@@ -189,6 +195,7 @@ class UserBrowse(UserInterface):
         # Iters for current FileStore
         self.files = {}
         self.totalsize = 0
+        self.num_selected_files = 0
 
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
@@ -277,6 +284,7 @@ class UserBrowse(UserInterface):
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
+        self.FileTreeView.get_selection().connect("changed", self.on_select_file)
 
         self.file_store = Gtk.ListStore(
             str,                  # (0) file name
@@ -357,8 +365,22 @@ class UserBrowse(UserInterface):
             self.expand.set_property("icon-name", "go-down-symbolic")
 
     def on_folder_row_activated(self, treeview, path, column):
-        if self.user != config.sections["server"]["login"]:
-            self.on_download_directory()
+
+        if path is None:
+            return
+
+        # Keyboard accessibility support for <Return> key behaviour
+        if self.FolderTreeView.row_expanded(path):
+            expandable = self.FolderTreeView.collapse_row(path)
+        else:
+            expandable = self.FolderTreeView.expand_row(path, False)
+
+        if not expandable and len(self.file_store) > 0:
+            # This is the deepest level, so move focus over to Files if there are any
+            self.FileTreeView.grab_focus()
+
+        # Note: Other Folder actions are handled by setup_accelerator functions [Shift/Ctrl/Alt+Return]
+        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_popup_menu(self, menu, widget):
 
@@ -400,21 +422,21 @@ class UserBrowse(UserInterface):
     def on_file_popup_menu(self, menu, widget):
 
         self.select_files()
-        num_selected_files = len(self.selected_files)
+        self.num_selected_files = len(self.selected_files)
 
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
             for i in (_("Download"), _("Upload"), _("Send to _Player"), _("F_ile Properties"),
                       _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(num_selected_files)
+                actions[i].set_enabled(self.num_selected_files)
 
             actions[_("Open in File _Manager")].set_enabled(self.selected_folder)
         else:
             for i in (_("Download"), _("F_ile Properties"), _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(num_selected_files)
+                actions[i].set_enabled(self.num_selected_files)
 
-        menu.set_num_selected_files(num_selected_files)
+        menu.set_num_selected_files(self.num_selected_files)
         self.user_popup.toggle_user_items()
 
     def clear_model(self):
@@ -687,6 +709,13 @@ class UserBrowse(UserInterface):
 
         self.set_directory(iterator.user_data)
 
+    def on_select_file(self, selection):
+
+        if selection is None:
+            return
+
+        self.num_selected_files = selection.count_selected_rows()
+
     def on_expand_row_accelerator(self, *args):
         """ Right: expand row """
 
@@ -753,8 +782,14 @@ class UserBrowse(UserInterface):
 
     def on_download_directory_to(self, *args, recurse=False):
 
+        if recurse:
+            str_title = _("Select Destination for Downloading Folder with Subfolders from User")
+        else:
+            str_title = _("Select Destination for Downloading a Folder from User")
+
         choose_dir(
             parent=self.frame.MainWindow,
+            title=str_title,
             callback=self.on_download_directory_to_selected,
             callback_data=recurse,
             initialdir=config.sections["transfers"]["downloaddir"],
@@ -835,7 +870,7 @@ class UserBrowse(UserInterface):
     def on_download_files_to(self, *args):
 
         try:
-            _, folder = self.selected_folder.rsplit("\\", 1)
+            _path_start, folder = self.selected_folder.rsplit("\\", 1)
         except ValueError:
             folder = self.selected_folder
 
@@ -845,8 +880,11 @@ class UserBrowse(UserInterface):
         if not os.path.exists(path) or not os.path.isdir(path):
             path = download_folder
 
+        str_title = _("Select Destination for Downloading File(s) from User")
+
         choose_dir(
             parent=self.frame.MainWindow,
+            title=str_title,
             callback=self.on_download_files_to_selected,
             initialdir=path,
             multichoice=False
@@ -881,10 +919,16 @@ class UserBrowse(UserInterface):
                 users.append(user)
 
         users.sort()
+
+        if recurse:
+            str_title = _("Upload Folder (with Subfolders) To User")
+        else:
+            str_title = _("Upload Folder To User")
+
         entry_dialog(
             parent=self.frame.MainWindow,
-            title=_("Upload Folder's Contents"),
-            message=_('Enter the name of a user you wish to upload to:'),
+            title=str_title,
+            message=_("Enter the name of the user you wish to upload to:"),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=users
@@ -954,7 +998,7 @@ class UserBrowse(UserInterface):
         users.sort()
         entry_dialog(
             parent=self.frame.MainWindow,
-            title=_('Upload File(s)'),
+            title=_('Upload File(s) To User'),
             message=_('Enter the name of a user you wish to upload to:'),
             callback=self.on_upload_files_response,
             droplist=users
