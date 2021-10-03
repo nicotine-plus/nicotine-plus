@@ -50,7 +50,6 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
@@ -243,39 +242,24 @@ class NicotineFrame(UserInterface):
         self.MainWindow.set_title(GLib.get_application_name())
 
         # Set up event controllers
-        setup_accelerator("<Primary>w", self.MainWindow, self.on_tab_close_accelerator)
-        setup_accelerator("<Primary>F4", self.MainWindow, self.on_tab_close_accelerator)
-
-        setup_accelerator("<Primary><Shift>Tab", self.MainWindow, self.on_tab_cycle_accelerator, True)
-        setup_accelerator("<Primary>Tab", self.MainWindow, self.on_tab_cycle_accelerator)
-
-        for num in range(1, 10):
-            setup_accelerator("<Primary>" + str(num), self.MainWindow, self.on_change_primary_tab_accelerator, num)
-            setup_accelerator("<Alt>" + str(num), self.MainWindow, self.on_change_primary_tab_accelerator, num)
-
         if Gtk.get_major_version() == 4:
-            controller = Gtk.EventControllerKey()
-            controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            controller.connect("key-pressed", self.on_key_press_event)
+            key_controller = Gtk.EventControllerKey()
+            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            key_controller.connect("key-pressed", self.on_disable_auto_away)
 
-            self.MainWindow.add_controller(controller)
+            motion_controller = Gtk.EventControllerMotion()
+            motion_controller.connect("motion", self.on_disable_auto_away)
+
+            self.MainWindow.add_controller(key_controller)
+            self.MainWindow.add_controller(motion_controller)
+
             self.MainWindow.connect("close-request", self.on_close_request)
+
         else:
-            self.MainWindow.connect("delete-event", self.on_close_request)
-            self.MainWindow.connect("key-press-event", self.on_key_press_event)
-
-        try:
-            if Gtk.get_major_version() == 4:
-                self.motion_controller = Gtk.EventControllerMotion()
-                self.MainWindow.add_controller(self.motion_controller)
-            else:
-                self.motion_controller = Gtk.EventControllerMotion.new(self.MainWindow)
-
-            self.motion_controller.connect("motion", self.on_disable_auto_away)
-
-        except AttributeError:
-            # GTK <3.24
+            self.MainWindow.connect("key-press-event", self.on_disable_auto_away)
             self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+
+            self.MainWindow.connect("delete-event", self.on_close_request)
 
         width = config.sections["ui"]["width"]
         height = config.sections["ui"]["height"]
@@ -1029,6 +1013,30 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_about)
         self.application.add_action(action)
 
+        # Notebook Tabs
+
+        action = Gio.SimpleAction.new("tabclose", None)
+        action.connect("activate", self.on_tab_close)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.tabclose", ["<Primary>F4", "<Primary>w"])
+
+        action = Gio.SimpleAction.new("tabcycle", None)
+        action.connect("activate", self.on_tab_cycle)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.tabcycle", ["<Primary>Tab"])
+
+        action = Gio.SimpleAction.new("reversetabcycle", None)
+        action.connect("activate", self.on_tab_cycle, True)
+        self.MainWindow.add_action(action)
+        self.application.set_accels_for_action("win.reversetabcycle", ["<Primary><Shift>Tab"])
+
+        for num in range(1, 10):
+            action = Gio.SimpleAction.new("primarytab" + str(num), None)
+            action.connect("activate", self.on_change_primary_tab, num)
+            self.MainWindow.add_action(action)
+            self.application.set_accels_for_action("win.primarytab" + str(num),
+                                                   ["<Primary>" + str(num), "<Alt>" + str(num)])
+
         # Debug Logging
 
         state = ("download" in config.sections["logging"]["debugmodes"])
@@ -1581,7 +1589,7 @@ class NicotineFrame(UserInterface):
 
         main_notebook.set_visible(main_notebook.get_n_pages())
 
-    def on_tab_close_accelerator(self, *args):
+    def on_tab_close(self, *args):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """
 
         notebook_name = self.current_page_id.lower()
@@ -1599,7 +1607,7 @@ class NicotineFrame(UserInterface):
         tab_label.onclose()
         return True
 
-    def on_tab_cycle_accelerator(self, widget, state, backwards=False):
+    def on_tab_cycle(self, widget, state, backwards=False):
         """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
 
         notebook_name = self.current_page_id.lower()
@@ -1626,15 +1634,11 @@ class NicotineFrame(UserInterface):
 
         return True
 
-    def on_change_primary_tab_accelerator(self, widget, state, tab_num=1):
+    def on_change_primary_tab(self, widget, state, tab_num=1):
         """ Alt+1-9 or Ctrl+1-9: change main tab """
 
         self.MainNotebook.set_current_page(tab_num - 1)
         return True
-
-    def on_key_press_event(self, *args):
-        self.on_disable_auto_away()
-        return False
 
     def set_main_tabs_order(self):
 
@@ -2001,6 +2005,8 @@ class NicotineFrame(UserInterface):
                 self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
             else:
                 self.awaytimerid = None
+
+        return False
 
     """ User Actions """
 
