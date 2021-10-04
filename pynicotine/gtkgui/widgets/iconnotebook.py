@@ -37,7 +37,7 @@ from pynicotine.config import config
 
 class ImageLabel(Gtk.Box):
 
-    def __init__(self, label="", onclose=None, closebutton=False, hilite_image=None,
+    def __init__(self, label="", full_text="", onclose=None, closebutton=False, hilite_image=None,
                  show_hilite_image=True, status_image=None, show_status_image=False):
 
         Gtk.Box.__init__(self)
@@ -54,6 +54,7 @@ class ImageLabel(Gtk.Box):
         self.label.show()
 
         self.text = label
+        self.full_text = full_text
         self.set_text(self.text)
 
         self.status_image = Gtk.Image()
@@ -364,23 +365,23 @@ class IconNotebook:
         if not self.unread_pages:
             self.unread_button.hide()
 
-    def append_page(self, page, label, onclose=None, fulltext=None, status=None):
+    def append_page(self, page, text, onclose=None, full_text=None, status=None):
 
         closebutton = self.tabclosers
 
+        if full_text is None:
+            full_text = text
+
         label_tab = ImageLabel(
-            label, onclose, closebutton=closebutton,
+            text, full_text, onclose, closebutton=closebutton,
             show_hilite_image=self._show_hilite_image,
             status_image=get_status_image(0),
             show_status_image=self._show_status_image
         )
         label_tab.show()
 
-        if fulltext is None:
-            fulltext = label
-
         # menu for all tabs
-        label_tab_menu = ImageLabel(label)
+        label_tab_menu = ImageLabel(text)
 
         if Gtk.get_major_version() == 4:
             label_tab.gesture_click = Gtk.GestureClick()
@@ -394,9 +395,9 @@ class IconNotebook:
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
         if status:
-            self.set_user_status(page, label, status)
+            self.set_user_status(page, text, status)
         else:
-            label_tab.set_tooltip_text(fulltext)
+            label_tab.set_tooltip_text(full_text)
 
         self.notebook.set_tab_reorderable(page, True)
         self.notebook.show()

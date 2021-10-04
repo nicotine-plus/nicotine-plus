@@ -154,6 +154,9 @@ class WishList(UserInterface):
 
                     break
 
+    def is_wish(self, wish):
+        return wish in self.wishes
+
     def set_interval(self, msg):
 
         self.interval = msg.seconds
@@ -215,12 +218,13 @@ class WishList(UserInterface):
         if page is None:
             return
 
-        text = self.searches.notebook.get_tab_label(page).get_text()
+        text = self.searches.notebook.get_tab_label(page).full_text
 
         if text in self.wishes:
             # Highlight existing wish row
 
             iterator = self.wishes[text]
+            self.wish_entry.set_text("")
             self.list_view.set_cursor(self.store.get_path(iterator))
             self.list_view.grab_focus()
             return

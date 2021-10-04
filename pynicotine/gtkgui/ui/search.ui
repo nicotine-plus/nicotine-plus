@@ -67,6 +67,32 @@
               </object>
             </child>
             <child>
+              <object class="GtkButton" id="AddWish">
+                <property name="visible">1</property>
+                <signal name="clicked" handler="on_add_wish" swapped="no"/>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage" id="AddWishIcon">
+                        <property name="visible">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="AddWishLabel">
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="flat"/>
+                </style>
+              </object>
+            </child>
+            <child>
               <object class="GtkToggleButton" id="ShowFilters">
                 <property name="visible">1</property>
                 <signal name="toggled" handler="on_toggle_filters" swapped="no"/>

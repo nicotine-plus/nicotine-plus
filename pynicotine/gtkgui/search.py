@@ -186,14 +186,14 @@ class Searches(IconNotebook):
     def show_tab(self, tab, search_id, text, mode):
 
         if tab.mode_label is not None:
-            fulltext = "(%s) %s" % (tab.mode_label, text)
+            full_text = "(%s) %s" % (tab.mode_label, text)
             length = 25
         else:
-            fulltext = text
+            full_text = text
             length = 20
 
-        label = fulltext[:length]
-        self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
+        label = full_text[:length]
+        self.append_page(tab.Main, label, tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if self.get_n_pages() > 0:
@@ -326,6 +326,8 @@ class Search(UserInterface):
             '>=': operator.ge,
             '>': operator.gt
         }
+
+        self.update_wish_button()
 
         """ Columns """
 
@@ -994,6 +996,29 @@ class Search(UserInterface):
             self.active_filter_count += 1
 
         self.update_results_model()
+
+    def update_wish_button(self):
+
+        if self.mode not in ("global", "wishlist"):
+            self.AddWish.hide()
+            return
+
+        if not self.searches.wish_list.is_wish(self.text):
+            self.AddWishIcon.set_property("icon-name", "list-add-symbolic")
+            self.AddWishLabel.set_label(_("Add Wi_sh"))
+            return
+
+        self.AddWishIcon.set_property("icon-name", "list-remove-symbolic")
+        self.AddWishLabel.set_label(_("Remove Wi_sh"))
+
+    def on_add_wish(self, *args):
+
+        if self.searches.wish_list.is_wish(self.text):
+            self.searches.wish_list.remove_wish(self.text)
+        else:
+            self.searches.wish_list.add_wish(self.text)
+
+        self.update_wish_button()
 
     def add_popup_menu_user(self, popup, user):
 
