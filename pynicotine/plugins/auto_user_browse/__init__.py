@@ -38,7 +38,6 @@ class Plugin(BasePlugin):
 
     def user_status_notification(self, user, status, _privileged):
 
-        print(_privileged)
         if user not in self.settings['users']:
             return
 

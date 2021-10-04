@@ -157,7 +157,7 @@ class PrivateChats:
         if user_text is None:
             return
 
-        _, message = user_text
+        user, message = user_text
 
         if message == self.CTCP_VERSION:
             ui_message = "CTCP VERSION"

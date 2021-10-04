@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from pynicotine import slskmessages
 from pynicotine.utils import get_completion_list
 
 
@@ -32,9 +33,9 @@ class ChatRooms:
 
     CTCP_VERSION = "\x01VERSION\x01"
 
-    def __init__(self, np, config, queue, ui_callback=None):
+    def __init__(self, core, config, queue, ui_callback=None):
 
-        self.np = np
+        self.core = core
         self.config = config
         self.queue = queue
         self.completion_list = []
@@ -42,6 +43,15 @@ class ChatRooms:
 
         if hasattr(ui_callback, "chatrooms"):
             self.ui_callback = ui_callback.chatrooms
+
+    def server_login(self):
+
+        for room in self.config.sections["server"]["autojoin"]:
+            if isinstance(room, str):
+                self.queue.append(slskmessages.JoinRoom(room))
+
+        if self.ui_callback:
+            self.ui_callback.server_login()
 
     def server_disconnect(self):
         if self.ui_callback:
@@ -51,17 +61,38 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.echo_message(room, message, message_type)
 
+    def send_message(self, room, message):
+
+        event = self.core.pluginhandler.outgoing_public_chat_event(room, message)
+        if event is None:
+            return
+
+        room, message = event
+        message = self.core.privatechats.auto_replace(message)
+
+        self.queue.append(slskmessages.SayChatroom(room, message))
+        self.core.pluginhandler.outgoing_public_chat_notification(room, message)
+
+    def request_leave_room(self, room):
+        self.queue.append(slskmessages.LeaveRoom(room))
+
     def get_user_stats(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_stats(msg)
 
     def join_room(self, msg):
+
         if self.ui_callback:
             self.ui_callback.join_room(msg)
 
+        self.core.pluginhandler.join_chatroom_notification(msg.room)
+
     def leave_room(self, msg):
+
         if self.ui_callback:
             self.ui_callback.leave_room(msg)
+
+        self.core.pluginhandler.leave_chatroom_notification(msg.room)
 
     def get_user_status(self, msg):
         if self.ui_callback:
@@ -119,7 +150,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.public_room_message(msg)
 
-        self.np.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
+        self.core.pluginhandler.public_room_message_notification(msg.room, msg.user, msg.msg)
 
     def room_list(self, msg):
         if self.ui_callback:
@@ -127,7 +158,7 @@ class ChatRooms:
 
     def say_chat_room(self, msg):
 
-        event = self.np.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
+        event = self.core.pluginhandler.incoming_public_chat_event(msg.room, msg.user, msg.msg)
         if event is None:
             return
 
@@ -136,7 +167,7 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.say_chat_room(msg)
 
-        self.np.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
+        self.core.pluginhandler.incoming_public_chat_notification(msg.room, msg.user, msg.msg)
 
     def set_user_country(self, user, country):
         if self.ui_callback:
@@ -159,14 +190,14 @@ class ChatRooms:
         if self.ui_callback:
             self.ui_callback.user_joined_room(msg)
 
-        self.np.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
+        self.core.pluginhandler.user_join_chatroom_notification(msg.room, msg.userdata.username)
 
     def user_left_room(self, msg):
 
         if self.ui_callback:
             self.ui_callback.user_left_room(msg)
 
-        self.np.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
+        self.core.pluginhandler.user_leave_chatroom_notification(msg.room, msg.username)
 
     def update_completions(self):
 

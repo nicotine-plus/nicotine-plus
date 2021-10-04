@@ -202,7 +202,7 @@ class Search:
             self.queue.append(slskmessages.RoomSearch(room, search_id, text))
 
         elif self.core.chatrooms.ui_callback is not None:
-            for joined_room in self.core.chatrooms.ui_callback.joinedrooms:
+            for joined_room in self.core.chatrooms.ui_callback.pages:
                 self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
 
     def do_buddies_search(self, search_id, text):

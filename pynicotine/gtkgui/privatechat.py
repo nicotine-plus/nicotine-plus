@@ -53,7 +53,7 @@ class PrivateChats(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.users = {}
+        self.pages = {}
 
         IconNotebook.__init__(
             self,
@@ -75,7 +75,7 @@ class PrivateChats(IconNotebook):
         if not self.unread_pages:
             self.frame.clear_tab_hilite(self.frame.PrivateChatTabLabel)
 
-        for user, tab in list(self.users.items()):
+        for user, tab in list(self.pages.items()):
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)
 
@@ -95,7 +95,7 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in list(self.users.items()):
+        for user, tab in list(self.pages.items()):
             if tab.Main == page:
                 # Remove hilite
                 self.frame.notifications.clear("private", tab.user)
@@ -103,31 +103,30 @@ class PrivateChats(IconNotebook):
 
     def get_user_status(self, msg):
 
-        if msg.user in self.users:
-            page = self.users[msg.user]
-
+        page = self.pages.get(msg.user)
+        if page is not None:
             self.set_user_status(page.Main, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
         if msg.user == config.sections["server"]["login"]:
-            for user in self.users.values():
+            for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
-                user.update_local_username_tag(msg.status)
+                page.update_local_username_tag(msg.status)
 
     def set_completion_list(self, completion_list):
-        for user in self.users.values():
-            user.set_completion_list(list(completion_list))
+        for page in self.pages.values():
+            page.set_completion_list(list(completion_list))
 
     def show_user(self, user, switch_page=True):
 
-        if user not in self.users:
+        if user not in self.pages:
             try:
                 status = self.frame.np.users[user].status
             except Exception:
                 # Offline
                 status = 0
 
-            self.users[user] = page = PrivateChat(self, user, status)
+            self.pages[user] = page = PrivateChat(self, user, status)
 
             self.append_page(page.Main, user, page.on_close, status=status)
             page.set_label(self.get_tab_label_inner(page.Main))
@@ -135,34 +134,40 @@ class PrivateChats(IconNotebook):
             if self.get_n_pages() > 0:
                 self.frame.PrivateChatStatusPage.hide()
 
-        if switch_page and self.get_current_page() != self.page_num(self.users[user].Main):
-            self.set_current_page(self.page_num(self.users[user].Main))
+        if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
+            self.set_current_page(self.page_num(self.pages[user].Main))
 
     def echo_message(self, user, text, message_type):
-        if user in self.users:
-            self.users[user].echo_message(text, message_type)
+
+        page = self.pages.get(user)
+        if page is not None:
+            page.echo_message(text, message_type)
 
     def send_message(self, user, text):
-        if user in self.users:
-            self.users[user].send_message(text)
+
+        page = self.pages.get(user)
+        if page is not None:
+            page.send_message(text)
 
     def message_user(self, msg):
-        if msg.user in self.users:
-            self.users[msg.user].message_user(msg)
+
+        page = self.pages.get(msg.user)
+        if page is not None:
+            page.message_user(msg)
 
     def update_visuals(self):
 
-        for page in self.users.values():
+        for page in self.pages.values():
             page.update_visuals()
             page.update_tags()
 
     def server_login(self):
-        for user, page in self.users.items():
+        for user, page in self.pages.items():
             page.server_login()
 
     def server_disconnect(self):
 
-        for user, page in self.users.items():
+        for user, page in self.pages.items():
             page.server_disconnect()
             self.set_user_status(page.Main, user, 0)
 

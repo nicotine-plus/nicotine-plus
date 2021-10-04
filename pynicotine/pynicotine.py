@@ -1246,6 +1246,7 @@ class NicotineCore:
             self.userinfo.server_login()
             self.userlist.server_login()
             self.privatechats.server_login()
+            self.chatrooms.server_login()
 
             if self.ui_callback:
                 self.ui_callback.server_login()
