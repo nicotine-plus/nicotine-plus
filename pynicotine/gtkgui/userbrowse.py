@@ -197,10 +197,25 @@ class UserBrowse(UserInterface):
         self.totalsize = 0
         self.num_selected_files = 0
 
+        # Setup FolderTreeView
         self.dir_store = Gtk.TreeStore(str)
         self.FolderTreeView.set_model(self.dir_store)
-        setup_accelerator("Left", self.FolderTreeView, self.on_collapse_row_accelerator)
-        setup_accelerator("Right", self.FolderTreeView, self.on_expand_row_accelerator)
+
+        """ Key Bindings (FolderTreeView) """
+
+        setup_accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
+        setup_accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
+        setup_accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
+
+        setup_accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
+        setup_accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (on US/UK laptop)
+
+        # Note: Unmasked Return/Enter/DblClick is handled by on_folder_row_activated (Expand/Collapse)
+        setup_accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
+        setup_accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
+        setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
+        setup_accelerator("<Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
+        setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -284,8 +299,8 @@ class UserBrowse(UserInterface):
             )
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
-        self.FileTreeView.get_selection().connect("changed", self.on_select_file)
 
+        # Setup FileTreeView
         self.file_store = Gtk.ListStore(
             str,                  # (0) file name
             str,                  # (1) hsize
@@ -297,7 +312,22 @@ class UserBrowse(UserInterface):
         )
 
         self.FileTreeView.set_model(self.file_store)
+
+        """ Key Bindings (FileTreeView) """
+
+        setup_accelerator("Left", self.FileTreeView, self.on_file_focus_folder_left_accelerator)  # ToDo: h-scrolling ##
+        setup_accelerator("<Shift>Tab", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # avoid header
+        setup_accelerator("BackSpace", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # navigate up
+        setup_accelerator("backslash", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # "\"
+
+        # Note: Unmasked Return/Enter/DblClick is handled by on_file_row_activated (Play/Download)
+        setup_accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
+        setup_accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
+        setup_accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
+        setup_accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
         setup_accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
+
+        self.FileTreeView.get_selection().connect("changed", self.on_select_file)
 
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
@@ -344,6 +374,44 @@ class UserBrowse(UserInterface):
                 (">" + _("User"), self.user_popup)
             )
 
+        """ Shortcut Key Bindings (Tool Bar) """
+
+        setup_accelerator("<Primary>f", self.Main, self.on_search_accelerator)  # Find focus
+        setup_accelerator("<Primary>f", self.FolderTreeView, self.on_search_accelerator)
+        setup_accelerator("<Primary>f", self.FileTreeView, self.on_search_accelerator)
+
+        setup_accelerator("<Primary>g", self.Main, self.on_search_next_accelerator)  # Find on_search Enter (repeat)
+        setup_accelerator("<Primary>g", self.FolderTreeView, self.on_search_next_accelerator)
+        setup_accelerator("<Primary>g", self.FileTreeView, self.on_search_next_accelerator)
+        setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
+        setup_accelerator("F3", self.FolderTreeView, self.on_search_next_accelerator)
+        setup_accelerator("F3", self.FileTreeView, self.on_search_next_accelerator)
+
+        setup_accelerator("<Shift><Primary>g", self.Main, self.on_search_previous_accelerator)  # search_position-2
+        setup_accelerator("<Shift><Primary>g", self.FolderTreeView, self.on_search_previous_accelerator)
+        setup_accelerator("<Shift><Primary>g", self.FileTreeView, self.on_search_previous_accelerator)
+        setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
+        setup_accelerator("<Shift>F3", self.FolderTreeView, self.on_search_previous_accelerator)
+        setup_accelerator("<Shift>F3", self.FileTreeView, self.on_search_previous_accelerator)
+
+        setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
+        setup_accelerator("<Primary>g", self.SearchEntry, self.on_search_next_accelerator)  # F3 parses by itself
+        setup_accelerator("<Shift><Primary>g", self.SearchEntry, self.on_search_previous_accelerator)
+
+        setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
+        setup_accelerator("<Primary>r", self.FolderTreeView, self.on_refresh_accelerator)
+        setup_accelerator("<Primary>r", self.FileTreeView, self.on_refresh_accelerator)
+        setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
+        setup_accelerator("F5", self.FolderTreeView, self.on_refresh_accelerator)
+        setup_accelerator("F5", self.FileTreeView, self.on_refresh_accelerator)
+
+        setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
+        setup_accelerator("<Primary>s", self.FolderTreeView, self.on_save_accelerator)
+        setup_accelerator("<Primary>s", self.FileTreeView, self.on_save_accelerator)
+
+        setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # or collapse all (button)
+        setup_accelerator("<Primary>backslash", self.FolderTreeView, self.on_expand_accelerator)
+
         self.ExpandButton.set_active(True)
         self.update_visuals()
 
@@ -354,6 +422,12 @@ class UserBrowse(UserInterface):
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="browserfont")
+
+    def on_expand_accelerator(self, *args):
+        """ Ctrl+\backslash: Expand / Collapse All """
+
+        self.ExpandButton.set_active(not self.ExpandButton.get_active())
+        return True
 
     def on_expand(self, widget):
 
@@ -380,7 +454,7 @@ class UserBrowse(UserInterface):
             self.FileTreeView.grab_focus()
 
         # Note: Other Folder actions are handled by setup_accelerator functions [Shift/Ctrl/Alt+Return]
-        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]
+        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]         # ToDo #
 
     def on_folder_popup_menu(self, menu, widget):
 
@@ -607,6 +681,12 @@ class UserBrowse(UserInterface):
 
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
+    def on_save_accelerator(self, *args):
+        """ Ctrl+S: Save Shares List """
+
+        self.on_save()
+        return True
+
     def on_save(self, *args):
 
         sharesdir = os.path.join(config.data_dir, "usershares")
@@ -716,24 +796,233 @@ class UserBrowse(UserInterface):
 
         self.num_selected_files = selection.count_selected_rows()
 
-    def on_expand_row_accelerator(self, *args):
-        """ Right: expand row """
+    """ Key Bindings (FolderTreeView) """
+
+    def on_folder_collapse_accelerator(self, *args):
+        """ Left: collapse row
+            Shift+Left (Gtk) | "-" | "/" (Gtk) | """
+
+        path, _focus_column = self.FolderTreeView.get_cursor()
+
+        if path is None:
+            return False
+
+        self.FolderTreeView.collapse_row(path)
+        return True
+
+    def on_folder_expand_accelerator(self, *args):
+        """ Right: expand row
+            Shift+Right (Gtk) | "+" (Gtk) |    """
+
+        path, _focus_column = self.FolderTreeView.get_cursor()
+
+        expandable = self.FolderTreeView.expand_row(path, False)
+
+        if not expandable and len(self.file_store) > 0:
+            self.FileTreeView.grab_focus()
+
+        return True
+
+    def on_folder_collapse_sub_accelerator(self, *args):
+        """ \backslash: collapse or expand to show subs """
+
+        path, _focus_column = self.FolderTreeView.get_cursor()
+
+        self.FolderTreeView.collapse_row(path)  # show 2nd level
+        self.FolderTreeView.expand_row(path, False)
+
+        return True
+
+    def on_folder_expand_sub_accelerator(self, *args):
+        """ =equal: expand only (dont move focus)   """
 
         path, _focus_column = self.FolderTreeView.get_cursor()
         self.FolderTreeView.expand_row(path, False)
         return True
 
-    def on_collapse_row_accelerator(self, *args):
-        """ Left: expand row """
+    def on_folder_focus_filetree_accelerator(self, *args):
+        """ Shift+Enter: focus selection over FileTree  """
 
-        path, _focus_column = self.FolderTreeView.get_cursor()
-        self.FolderTreeView.collapse_row(path)
+        if len(self.file_store) >= 1:
+            self.FileTreeView.grab_focus()
+
+        else:
+            self.on_folder_expand_sub_accelerator()
+            # ToDo: Expand all branch sub-nodes (*)                                                             # ToDo #
+
+        return True
+
+    def on_folder_transfer_to_accelerator(self, *args):
+        """ Ctrl+Enter: Upload Folder To...
+                        Download Folder Into...         """
+
+        if self.user == config.sections["server"]["login"]:
+            if len(self.file_store) >= 1:
+                self.on_upload_directory_to()
+            else:
+                self.on_upload_directory_recursive_to()
+
+        else:
+            if len(self.file_store) >= 1:
+                self.on_download_directory_to()
+            else:
+                self.on_download_directory_recursive_to()
+
+        return True
+
+    def on_folder_transfer_accelerator(self, *args):
+        """ Shift+Ctrl+Enter: Upload Folder Recursive To...
+            (without prompt)  Download Folder           """
+
+        if self.user == config.sections["server"]["login"]:
+            self.on_folder_expand_sub_accelerator()
+            self.on_upload_directory_recursive_to()
+
+        else:
+            if len(self.file_store) <= 0:
+                # avoid accidental recursive download
+                self.on_folder_expand_sub_accelerator()
+
+            else:
+                self.on_download_directory()  # without prompt
+
+        return True
+
+    def on_folder_open_manager_accelerator(self, *args):
+        """ Ctrl+Alt+Enter: Open folder in File Manager...
+            (or Alt+Enter)  Download Folder Into...    """
+
+        if len(self.file_store) <= 0:
+            self.on_folder_expand_sub_accelerator()
+
+        if self.user == config.sections["server"]["login"]:
+            self.on_file_manager()
+
+        elif len(self.file_store) >= 1:  # [user is not self]
+            self.on_download_directory_to()
+
+        return True
+
+    """ Key Bindings (FileTreeView) """
+
+    def on_file_focus_folder_left_accelerator(self, *args):
+        """ Left: focus back parent folder (left arrow) """
+
+        # ToDo: Only if... FileTreeView.selected_column == 0:  # ToDo: (scrolled fully left)                    # ToDo #
+
+        #_path, focus_column = self.FileTreeView.get_cursor()
+        #first_column = self.FileTreeView.get_column(0)
+
+        #log.add_debug(str(focus_column) + " " + str(first_column))
+
+        #if focus_column == first_column:
+        self.FolderTreeView.grab_focus()
+
+        return True
+
+    def on_file_focus_folder_back_accelerator(self, *args):
+        """ Shift+Tab: focus selection back parent folder
+            BackSpace | \backslash |                  """
+
+        self.FolderTreeView.grab_focus()
+        return True
+
+    def on_file_transfer_to_accelerator(self, *args):
+        """ Ctrl+Enter: Upload File(s) To...
+                        Download File(s) Into...  """
+
+        if len(self.file_store) <= 0:  # avoid navigation trap
+            self.FolderTreeView.grab_focus()
+            return True
+
+        if self.num_selected_files <= 0:  # do Folder instead
+            self.on_folder_transfer_to_accelerator()
+
+        elif self.num_selected_files >= 1:
+            self.select_files()
+
+            if self.user == config.sections["server"]["login"]:
+                self.on_upload_files()
+            else:
+                self.on_download_files_to()  # (prompt, Single or Multi-selection)
+
+        return True
+
+    def on_file_transfer_accelerator(self, *args):
+        """ Shift+Ctrl+Enter: Upload File(s) To...
+            (without prompt)  Download File(s) """
+
+        if len(self.file_store) <= 0:
+            self.FolderTreeView.grab_focus()  # avoid nav trap
+            return True
+
+        self.select_files()
+
+        if self.user == config.sections["server"]["login"]:
+            if self.num_selected_files >= 1:
+                self.on_upload_files()
+
+            elif self.num_selected_files <= 0:
+                self.on_upload_directory_to()
+
+        else:  # [user is not self]
+            if self.num_selected_files >= 1:
+                self.on_download_files()  # (no prompt, Single or Multi-selection)
+
+            elif self.num_selected_files <= 0:
+                self.on_download_directory()  # (without prompt, No-selection=All)
+
+        return True
+
+    def on_file_transfer_multi_accelerator(self, *args):
+        """ Shift+Enter: Send to Player (multiple files)
+                         Download Files (multiple)   """
+
+        if len(self.file_store) <= 0:
+            self.FolderTreeView.grab_focus()  # avoid nav trap
+            return True
+
+        self.select_files()  # support multi-select with Up/Dn keys
+
+        if self.user == config.sections["server"]["login"]:
+            self.on_play_files(*args)  # ToDo: Enqueue into Player playlist
+        else:
+            self.on_download_files()
+
+        return True
+
+    def on_file_open_manager_accelerator(self, *args):
+        """ Ctrl+Alt+Enter: Open in File Manager
+                            Download Folder Into...     """
+
+        if len(self.file_store) <= 0:
+            self.FolderTreeView.grab_focus()  # avoid nav trap
+
+        elif self.user == config.sections["server"]["login"]:
+            self.on_file_manager()
+
+        elif self.num_selected_files >= 1:  # [user is not self]
+            self.on_file_properties()
+
+        elif self.num_selected_files <= 0:
+            self.on_folder_transfer_to_accelerator()
+
         return True
 
     def on_file_properties_accelerator(self, *args):
-        """ Alt+Return: show file properties dialog """
+        """ Alt+Enter: show file properties dialog """
 
-        self.on_file_properties()
+        if len(self.file_store) <= 0:
+            self.FolderTreeView.grab_focus()  # avoid nav trap
+
+        if (self.user == config.sections["server"]["login"] and
+            (self.num_selected_files <= 0)
+        ):
+            self.on_file_manager()
+
+        else:
+            self.on_file_properties()
+
         return True
 
     def on_file_properties(self, *args):
@@ -1079,6 +1368,49 @@ class UserBrowse(UserInterface):
                 # Position cursor at first match
                 self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
                 not_selected = 0
+
+    def on_search_accelerator(self, *args):
+        """ Ctrl+F: Find """
+
+        self.SearchEntry.grab_focus()
+        return True
+
+    def on_search_next_accelerator(self, *args):
+        """ Ctrl+G or F3: Find Next """
+
+        if self.SearchEntry.get_text() != "":
+            self.on_search()
+        else:
+            self.SearchEntry.grab_focus()
+
+        return True
+
+    def on_search_previous_accelerator(self, *args):
+        """ Shift+Ctrl+G or Shift+F3: Find Previous """
+
+        if self.SearchEntry.get_text() != "":
+            # ToDo: {self.search_position = self.search_position - 2}                                           # ToDo #
+            self.on_search()
+        else:
+            self.SearchEntry.grab_focus()
+
+        return True
+
+    def on_search_escape_accelerator(self, *args):
+        """ Escape: navigate out of SearchEntry """
+
+        if self.num_selected_files >= 1:
+            self.FileTreeView.grab_focus()
+        else:
+            self.FolderTreeView.grab_focus()
+
+        return True
+
+    def on_refresh_accelerator(self, *args):
+        """ Ctrl+R or F5: Refresh """
+
+        self.on_refresh()
+        return True
 
     def on_refresh(self, *args):
 
