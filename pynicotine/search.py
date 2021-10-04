@@ -22,10 +22,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import string
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import PUNCTUATION
 
 
 class Search:
@@ -39,7 +39,7 @@ class Search:
         self.searchid = int(random.random() * (2 ** 31 - 1))
         self.share_dbs = share_dbs
         self.geoip = geoip
-        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 
         if hasattr(ui_callback, "search"):
             self.ui_callback = ui_callback.search

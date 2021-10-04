@@ -35,8 +35,10 @@ import webbrowser
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
-ILLEGALPATHCHARS = ["?", ":", ">", "<", "|", "*", '"']
-ILLEGALFILECHARS = ILLEGALPATHCHARS + ["\\", "/"]
+PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
+               '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
+ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
+ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 REPLACEMENTCHAR = '_'
 OPEN_SOULSEEK_URL = None
 
