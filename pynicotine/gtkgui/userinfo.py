@@ -70,7 +70,7 @@ class UserInfos(IconNotebook):
                 GLib.idle_add(lambda: tab.descr.grab_focus() == -1)
                 break
 
-    def show_user(self, user):
+    def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
             try:
@@ -86,8 +86,9 @@ class UserInfos(IconNotebook):
             if self.get_n_pages() > 0:
                 self.frame.UserInfoStatusPage.hide()
 
-        self.set_current_page(self.page_num(self.pages[user].Main))
-        self.frame.change_main_page("userinfo")
+        if switch_page:
+            self.set_current_page(self.page_num(self.pages[user].Main))
+            self.frame.change_main_page("userinfo")
 
     def set_conn(self, user, conn):
         if user in self.pages:

@@ -1331,6 +1331,8 @@ class NicotineCore:
         self.privatechats.get_user_status(msg)
         self.chatrooms.get_user_status(msg)
 
+        self.pluginhandler.user_status_notification(msg.user, msg.status, bool(msg.privileged))
+
     def say_chat_room(self, msg):
         """ Server code: 13 """
 

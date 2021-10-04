@@ -497,6 +497,9 @@ class PluginHandler:
     def user_stats_notification(self, user, stats):
         self.trigger_event("user_stats_notification", (user, stats))
 
+    def user_status_notification(self, user, status, privileged):
+        self.trigger_event("user_status_notification", (user, status, privileged))
+
     def upload_queued_notification(self, user, virtual_path, real_path):
         self.trigger_event("upload_queued_notification", (user, virtual_path, real_path))
 
@@ -711,6 +714,9 @@ class BasePlugin:
         pass
 
     def user_stats_notification(self, user, stats):
+        pass
+
+    def user_status_notification(self, user, status, privileged):
         pass
 
     def upload_queued_notification(self, user, virtual_path, real_path):

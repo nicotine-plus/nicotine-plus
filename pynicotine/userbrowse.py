@@ -52,12 +52,12 @@ class UserBrowse:
     def remove_user(self, user):
         self.users.remove(user)
 
-    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
+    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         self.add_user(user)
 
         if self.ui_callback:
-            self.ui_callback.show_user(user, folder, local_shares_type, indeterminate_progress)
+            self.ui_callback.show_user(user, folder, local_shares_type, indeterminate_progress, switch_page)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
@@ -105,7 +105,7 @@ class UserBrowse:
 
         self.show_user(username, folder=folder, local_shares_type="buddy", indeterminate_progress=True)
 
-    def browse_user(self, username, folder=None, local_shares_type=None, new_request=False):
+    def browse_user(self, username, folder=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -122,7 +122,7 @@ class UserBrowse:
         if username not in self.users or new_request:
             self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
-        self.show_user(username, folder=folder)
+        self.show_user(username, folder=folder, switch_page=switch_page)
 
     @staticmethod
     def get_shares_list_from_disk(filename):

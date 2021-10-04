@@ -47,14 +47,14 @@ class UserInfo:
     def remove_user(self, user):
         self.users.remove(user)
 
-    def show_user(self, user):
+    def show_user(self, user, switch_page=True):
         if self.ui_callback:
-            self.ui_callback.show_user(user)
+            self.ui_callback.show_user(user, switch_page)
 
-    def request_user_info(self, user):
+    def request_user_info(self, user, switch_page=True):
 
         self.add_user(user)
-        self.show_user(user)
+        self.show_user(user, switch_page)
 
         # Request user description, picture and queue information
         self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))
