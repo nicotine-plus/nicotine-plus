@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment_PrivateLogLines">
     <property name="upper">10000</property>
     <property name="step-increment">1</property>
