@@ -377,40 +377,25 @@ class UserBrowse(UserInterface):
         """ Shortcut Key Bindings (Tool Bar) """
 
         setup_accelerator("<Primary>f", self.Main, self.on_search_accelerator)  # Find focus
-        setup_accelerator("<Primary>f", self.FolderTreeView, self.on_search_accelerator)
-        setup_accelerator("<Primary>f", self.FileTreeView, self.on_search_accelerator)
+        setup_accelerator("<Primary>f", self.FolderTreeView, self.on_search_accelerator)  # over-ride interactive-search
+        setup_accelerator("<Primary>f", self.FileTreeView, self.on_search_accelerator)  # (alpha lookup still possible)
 
         setup_accelerator("<Primary>g", self.Main, self.on_search_next_accelerator)  # Find on_search Enter (repeat)
-        setup_accelerator("<Primary>g", self.FolderTreeView, self.on_search_next_accelerator)
-        setup_accelerator("<Primary>g", self.FileTreeView, self.on_search_next_accelerator)
         setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
-        setup_accelerator("F3", self.FolderTreeView, self.on_search_next_accelerator)
-        setup_accelerator("F3", self.FileTreeView, self.on_search_next_accelerator)
 
         setup_accelerator("<Shift><Primary>g", self.Main, self.on_search_previous_accelerator)  # search_position-2
-        setup_accelerator("<Shift><Primary>g", self.FolderTreeView, self.on_search_previous_accelerator)
-        setup_accelerator("<Shift><Primary>g", self.FileTreeView, self.on_search_previous_accelerator)
         setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
-        setup_accelerator("<Shift>F3", self.FolderTreeView, self.on_search_previous_accelerator)
-        setup_accelerator("<Shift>F3", self.FileTreeView, self.on_search_previous_accelerator)
 
         setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
         setup_accelerator("<Primary>g", self.SearchEntry, self.on_search_next_accelerator)  # F3 parses by itself
         setup_accelerator("<Shift><Primary>g", self.SearchEntry, self.on_search_previous_accelerator)
 
         setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
-        setup_accelerator("<Primary>r", self.FolderTreeView, self.on_refresh_accelerator)
-        setup_accelerator("<Primary>r", self.FileTreeView, self.on_refresh_accelerator)
         setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
-        setup_accelerator("F5", self.FolderTreeView, self.on_refresh_accelerator)
-        setup_accelerator("F5", self.FileTreeView, self.on_refresh_accelerator)
 
         setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
-        setup_accelerator("<Primary>s", self.FolderTreeView, self.on_save_accelerator)
-        setup_accelerator("<Primary>s", self.FileTreeView, self.on_save_accelerator)
 
         setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # or collapse all (button)
-        setup_accelerator("<Primary>backslash", self.FolderTreeView, self.on_expand_accelerator)
 
         self.ExpandButton.set_active(True)
         self.update_visuals()
