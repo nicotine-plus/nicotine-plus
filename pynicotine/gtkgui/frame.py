@@ -1514,7 +1514,7 @@ class NicotineFrame(UserInterface):
             self.uploads.update(forceupdate=True)
             self.clear_tab_hilite(tab_label)
 
-            if self.uploads.Transfers.get_visible():
+            if self.uploads.Main.get_visible():
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
 
         elif tab_label == self.DownloadsTabLabel:
@@ -1522,7 +1522,7 @@ class NicotineFrame(UserInterface):
             self.downloads.update(forceupdate=True)
             self.clear_tab_hilite(tab_label)
 
-            if self.downloads.Transfers.get_visible():
+            if self.downloads.Main.get_visible():
                 GLib.idle_add(lambda: self.downloads.Transfers.grab_focus() == -1)
 
         elif tab_label == self.SearchTabLabel:
