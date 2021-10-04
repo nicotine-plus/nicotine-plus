@@ -910,12 +910,6 @@ class UserBrowse(UserInterface):
 
         # ToDo: Only if... FileTreeView.selected_column == 0:  # ToDo: (scrolled fully left)                    # ToDo #
 
-        #_path, focus_column = self.FileTreeView.get_cursor()
-        #first_column = self.FileTreeView.get_column(0)
-
-        #log.add_debug(str(focus_column) + " " + str(first_column))
-
-        #if focus_column == first_column:
         self.FolderTreeView.grab_focus()
 
         return True
@@ -1015,12 +1009,11 @@ class UserBrowse(UserInterface):
         if len(self.file_store) <= 0:
             self.FolderTreeView.grab_focus()  # avoid nav trap
 
-        if (self.user == config.sections["server"]["login"] and
-            (self.num_selected_files <= 0)
-        ):
-            self.on_file_manager()
+        if self.user == config.sections["server"]["login"]:
+            if self.num_selected_files <= 0:
+                self.on_file_manager()
 
-        else:
+        if self.num_selected_files >= 1:
             self.on_file_properties()
 
         return True
