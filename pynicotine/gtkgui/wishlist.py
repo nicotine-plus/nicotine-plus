@@ -240,14 +240,15 @@ class WishList(UserInterface):
                 break
 
         if not text:
+            self.list_view.get_selection().unselect_all()
             return
 
         if text in self.wishes:
             # Highlight existing wish row
 
             iterator = self.wishes[text]
-            self.wish_entry.set_text("")
             self.list_view.set_cursor(self.store.get_path(iterator))
+            self.wish_entry.set_text("")
             self.list_view.grab_focus()
             return
 
