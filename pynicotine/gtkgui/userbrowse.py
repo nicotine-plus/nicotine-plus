@@ -206,9 +206,8 @@ class UserBrowse(UserInterface):
         setup_accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
         setup_accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
         setup_accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
-
+        setup_accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
         setup_accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
-        setup_accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (on US/UK laptop)
 
         # Note: Unmasked Return/Enter/DblClick is handled by on_folder_row_activated (Expand/Collapse)
         setup_accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
@@ -379,23 +378,17 @@ class UserBrowse(UserInterface):
         setup_accelerator("<Primary>f", self.Main, self.on_search_accelerator)  # Find focus
         setup_accelerator("<Primary>f", self.FolderTreeView, self.on_search_accelerator)  # over-ride interactive-search
         setup_accelerator("<Primary>f", self.FileTreeView, self.on_search_accelerator)  # (alpha lookup still possible)
-
         setup_accelerator("<Primary>g", self.Main, self.on_search_next_accelerator)  # Find on_search Enter (repeat)
         setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
-
         setup_accelerator("<Shift><Primary>g", self.Main, self.on_search_previous_accelerator)  # search_position-2
         setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
-
         setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
         setup_accelerator("<Primary>g", self.SearchEntry, self.on_search_next_accelerator)  # F3 parses by itself
         setup_accelerator("<Shift><Primary>g", self.SearchEntry, self.on_search_previous_accelerator)
-
         setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
         setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
-
         setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
-
-        setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # or collapse all (button)
+        setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
 
         self.ExpandButton.set_active(True)
         self.update_visuals()
@@ -892,9 +885,9 @@ class UserBrowse(UserInterface):
     def on_file_focus_folder_left_accelerator(self, *args):
         """ Left: focus back parent folder (left arrow) """
 
-        y = self.FileScrolledWindow.get_hadjustment()
+        h = self.FileScrolledWindow.get_hadjustment()
 
-        if y.get_value() > 0.0:
+        if h.get_value() > 0.0:
             # Allow horizontal scrolling
             return False
 
