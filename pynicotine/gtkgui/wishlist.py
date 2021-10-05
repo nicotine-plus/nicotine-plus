@@ -68,6 +68,8 @@ class WishList(UserInterface):
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
         setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
@@ -107,6 +109,7 @@ class WishList(UserInterface):
             self.remove_wish(wish)
 
         self.list_view.get_selection().unselect_all()
+        self.wish_entry.grab_focus()
 
     def on_remove_wish_accelerator(self, *args):
         """ Shift+Delete: Remove Wish """
@@ -121,6 +124,8 @@ class WishList(UserInterface):
         if response_id == Gtk.ResponseType.OK:
             for wish in self.wishes.copy():
                 self.remove_wish(wish)
+
+        self.wish_entry.grab_focus()
 
     def on_clear_wishlist(self, *args):
 
@@ -222,6 +227,10 @@ class WishList(UserInterface):
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
+
+    def on_list_focus_entry_accelerator(self, *args):
+        self.wish_entry.grab_focus()
+        return True
 
     def on_show(self, *args):
 
