@@ -92,7 +92,7 @@ class Search:
 
     def remove_search(self, search_id):
 
-        self.frame.np.search.remove_allowed_search_id(search_id)
+        self.remove_allowed_search_id(search_id)
         search = self.searches.get(search_id)
 
         if search is None:
