@@ -63,8 +63,7 @@ class Searches(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-
-        self.searches = {}
+        self.pages = {}
 
         IconNotebook.__init__(
             self,
@@ -90,10 +89,8 @@ class Searches(IconNotebook):
         if not self.unread_pages:
             self.frame.clear_tab_hilite(self.frame.SearchTabLabel)
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None and tab.Main == page:
+        for tab in self.pages.values():
+            if tab.Main == page:
                 GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
                 return True
 
@@ -167,16 +164,12 @@ class Searches(IconNotebook):
         config.write_configuration()
 
         # Update filters in search tabs
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None:
-                tab.populate_filters(set_default_filters=False)
+        for page in self.pages.values():
+            page.populate_filters(set_default_filters=False)
 
     def create_tab(self, search_id, text, mode, mode_label, showtab=True):
 
-        tab = Search(self, text, search_id, mode, mode_label, showtab)
-        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "ignore": False}
+        self.pages[search_id] = tab = Search(self, text, search_id, mode, mode_label, showtab)
 
         if showtab:
             self.show_tab(tab, search_id, text, mode)
@@ -201,17 +194,13 @@ class Searches(IconNotebook):
 
     def show_search_result(self, msg, username, country):
 
-        search = self.searches.get(msg.token)
-
-        if search is None or search["ignore"]:
-            return
-
-        tab = search.get("tab")
+        tab = self.pages.get(msg.token)
 
         if tab is None:
+            search_term = self.frame.np.search.searches[msg.token]["term"]
             mode = "wishlist"
             mode_label = _("Wish")
-            tab = self.create_tab(search["id"], search["term"], mode, mode_label, showtab=False)
+            tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
         counter = len(tab.all_data) + 1
 
@@ -224,17 +213,7 @@ class Searches(IconNotebook):
 
     def remove_tab(self, tab):
 
-        search = self.searches.get(tab.id)
-
-        if search is not None:
-            if tab.text not in config.sections["server"]["autosearch"]:
-                del self.searches[tab.id]
-            else:
-                search["tab"] = None
-                search["ignore"] = True
-
-            self.frame.np.search.remove_allowed_search_id(tab.id)
-
+        self.frame.np.search.remove_search(tab.id)
         self.remove_page(tab.Main)
 
         if self.get_n_pages() == 0:
@@ -242,11 +221,8 @@ class Searches(IconNotebook):
 
     def update_visuals(self):
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None:
-                tab.update_visuals()
+        for page in self.pages.values():
+            page.update_visuals()
 
         self.wish_list.update_visuals()
 
@@ -258,10 +234,8 @@ class Searches(IconNotebook):
 
         current_page = self.get_nth_page(self.get_current_page())
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None and tab.Main == current_page:
+        for tab in self.pages.values():
+            if tab.Main == current_page:
                 tab.save_columns()
                 break
 

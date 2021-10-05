@@ -30,7 +30,6 @@ from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 
 
 class WishList(UserInterface):
@@ -39,9 +38,7 @@ class WishList(UserInterface):
 
         super().__init__("ui/popovers/wishlist.ui")
 
-        self.disconnected = False
         self.frame = frame
-        self.interval = 0
         self.searches = searches
         self.timer = None
         self.wishes = {}
@@ -147,77 +144,22 @@ class WishList(UserInterface):
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
             self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
-        self.searches.searches[search_id] = {"id": search_id, "term": wish, "tab": None, "mode": "wishlist",
-                                             "ignore": True}
-
     def remove_wish(self, wish):
+
+        self.frame.np.search.remove_wish(wish)
 
         if wish in self.wishes:
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
 
-        if wish in config.sections["server"]["autosearch"]:
-
-            config.sections["server"]["autosearch"].remove(wish)
-
-            for number, search in self.searches.searches.items():
-                if search["term"] == wish and search["mode"] == "wishlist":
-                    tab = search.get("tab")
-
-                    if tab is not None and tab.showtab:  # Tab visible
-                        self.searches.searches[number] = search
-                    else:
-                        del self.searches.searches[number]
-
-                    break
-
     def is_wish(self, wish):
         return wish in self.wishes
 
     def set_interval(self, msg):
-
-        self.interval = msg.seconds
-
-        if not self.disconnected:
-            # Create wishlist searches (without tabs)
-            for term in config.sections["server"]["autosearch"]:
-                search_id = self.frame.np.search.increment_search_id()
-
-                self.searches.searches[search_id] = {"id": search_id, "term": term, "tab": None, "mode": "wishlist",
-                                                     "ignore": True}
-
-        self.on_auto_search()
-        self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
-
-    def on_auto_search(self, *args):
-
-        # Wishlists supported by server?
-        if self.interval == 0:
-            log.add(_("The server forbid us from doing wishlist searches."))
-            return False
-
-        searches = config.sections["server"]["autosearch"]
-
-        if not searches:
-            return True
-
-        # Search for a maximum of 1 item at each search interval
-        term = searches.pop()
-        searches.insert(0, term)
-
-        for search in self.searches.searches.values():
-            if search["term"] == term and search["mode"] == "wishlist":
-                search["ignore"] = False
-
-                self.frame.np.search.do_wishlist_search(search["id"], term)
-                break
-
-        return True
+        self.frame.np.search.do_wishlist_search_interval()
+        self.timer = GLib.timeout_add(msg.seconds * 1000, self.frame.np.search.do_wishlist_search_interval)
 
     def server_disconnect(self):
-
-        self.disconnected = True
-        self.interval = 0
 
         if self.timer is not None:
             GLib.source_remove(self.timer)
@@ -241,9 +183,7 @@ class WishList(UserInterface):
 
         text = None
 
-        for search in self.searches.searches.values():
-            tab = search.get("tab")
-
+        for tab in self.searches.pages.values():
             if tab is not None and tab.Main == page:
                 text = tab.text
                 break
