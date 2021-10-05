@@ -43,14 +43,6 @@ class ChatRooms:
         self.completion_list = []
         self.ui_callback = None
 
-        # Config cleanup
-        for room, data in self.private_rooms.items():
-            if "owner" not in data:
-                self.private_rooms[room]["owner"] = None
-
-            if "operator" in data:
-                del self.private_rooms[room]["operator"]
-
         if hasattr(ui_callback, "chatrooms"):
             self.ui_callback = ui_callback.chatrooms
 
