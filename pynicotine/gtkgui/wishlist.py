@@ -230,10 +230,17 @@ class WishList(UserInterface):
         if page is None:
             return
 
-        text = self.searches.notebook.get_tab_label(page).full_text
+        text = None
 
-        if text.startswith("(Wish) "):  # ToDo: get search tab tooltip text instead
-            text = text[7:]
+        for search in self.searches.searches.values():
+            tab = search.get("tab")
+
+            if tab is not None and tab.Main == page:
+                text = tab.text
+                break
+
+        if not text:
+            return
 
         if text in self.wishes:
             # Highlight existing wish row
