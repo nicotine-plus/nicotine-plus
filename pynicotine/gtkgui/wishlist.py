@@ -25,6 +25,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -66,6 +67,8 @@ class WishList(UserInterface):
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
+        setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
+
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
             button.connect("clicked", self.on_show)
@@ -86,13 +89,19 @@ class WishList(UserInterface):
         if value and not value.isspace():
             self.remove_wish(old_value)
             self.add_wish(value)
+            self.list_view.set_cursor(self.store.get_path(self.wishes[value]))
 
     def on_add_wish(self, *args):
 
         wish = self.wish_entry.get_text()
-        self.wish_entry.set_text("")
+
+        if not wish:
+            return None
 
         self.add_wish(wish)
+
+        self.wish_entry.set_text("")
+        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
     def on_remove_wish(self, *args):
 
@@ -102,6 +111,14 @@ class WishList(UserInterface):
             iterator = model.get_iter(path)
             wish = model.get_value(iterator, 0)
             self.remove_wish(wish)
+
+        self.list_view.get_selection().unselect_all()
+
+    def on_remove_wish_accelerator(self, *args):
+        """ Delete: Remove Wish """
+
+        self.on_remove_wish()
+        return True
 
     def clear_wishlist_response(self, dialog, response_id, data):
 
@@ -220,6 +237,9 @@ class WishList(UserInterface):
 
         text = self.searches.notebook.get_tab_label(page).full_text
 
+        if text.startswith("(Wish) "):
+            text = text[7:]
+
         if text in self.wishes:
             # Highlight existing wish row
 
@@ -227,8 +247,10 @@ class WishList(UserInterface):
             self.wish_entry.set_text("")
             self.list_view.set_cursor(self.store.get_path(iterator))
             self.list_view.grab_focus()
-            return
 
-        # Pre-fill text field with search term from active search tab
-        self.wish_entry.set_text(text)
-        self.wish_entry.grab_focus()
+        else:
+            # Pre-fill text field with search term from active search tab
+
+            self.list_view.get_selection().unselect_all()
+            self.wish_entry.set_text(text)
+            self.wish_entry.grab_focus()
