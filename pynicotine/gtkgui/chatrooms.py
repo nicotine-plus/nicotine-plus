@@ -66,18 +66,8 @@ class ChatRooms(IconNotebook):
 
         self.frame = frame
         self.pages = {}
-
         self.autojoin_rooms = set()
-        self.private_rooms = config.sections["private_rooms"]["rooms"]
-
-        # Config cleanup
-        for room, data in self.private_rooms.items():
-            if "owner" not in data:
-                self.private_rooms[room]["owner"] = None
-            if "operator" in data:
-                del self.private_rooms[room]["operator"]
-
-        self.roomlist = RoomList(self.frame, self.pages, self.private_rooms)
+        self.roomlist = RoomList(self.frame)
 
         IconNotebook.__init__(
             self,
@@ -164,14 +154,12 @@ class ChatRooms(IconNotebook):
                 self.frame.notifications.clear("rooms", None, room)
                 break
 
-    def server_login(self):
+    def room_list(self, msg):
 
-        for room in config.sections["server"]["autojoin"]:
-            if room == 'Public ':
-                self.roomlist.feed_check.set_active(True)
+        self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
 
-            elif isinstance(room, str):
-                self.autojoin_rooms.add(room)
+        if config.sections["words"]["roomnames"]:
+            self.frame.update_completions()
 
     def join_room(self, msg):
 
@@ -196,116 +184,61 @@ class ChatRooms(IconNotebook):
         if msg.room != "Public ":
             self.frame.RoomSearchCombo.append_text(msg.room)
 
-        if msg.private:
-            self.create_private_room(msg.room, msg.owner, msg.operators)
-
         if self.get_n_pages() > 0:
             self.frame.ChatroomsStatusPage.hide()
 
-    def room_list(self, msg):
+    def leave_room(self, msg):
 
-        self.roomlist.set_room_list(msg.rooms, msg.ownedprivaterooms, msg.otherprivaterooms)
+        page = self.pages.get(msg.room)
 
-        if config.sections["words"]["roomnames"]:
-            self.frame.update_completions()
-
-    def create_private_room(self, room, owner=None, operators=[]):
-
-        if room in self.private_rooms:
-            if operators is not None:
-                for operator in operators:
-                    if operator not in self.private_rooms[room]["operators"]:
-                        self.private_rooms[room]["operators"].append(operator)
-
-            self.private_rooms[room]["owner"] = owner
+        if page is None:
             return
 
-        self.private_rooms[room] = {"users": [], "joined": 0, "operators": operators, "owned": False, "owner": owner}
+        self.remove_page(page.Main)
+        del self.pages[msg.room]
+
+        if msg.room != "Public ":
+            self.frame.RoomSearchCombo.remove_all()
+            self.frame.RoomSearchCombo.append_text("Joined Rooms ")
+
+            for room in self.pages:
+                self.frame.RoomSearchCombo.append_text(room)
+
+        if self.get_n_pages() == 0:
+            self.frame.ChatroomsStatusPage.show()
 
     def private_room_users(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room not in rooms:
-            self.create_private_room(msg.room)
-
-        rooms[msg.room]["users"] = msg.users
-        rooms[msg.room]["joined"] = msg.numusers
+        pass
 
     def private_room_owned(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room not in rooms:
-            self.create_private_room(msg.room)
-
-        rooms[msg.room]["operators"] = msg.operators
+        pass
 
     def private_room_add_user(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and msg.user not in rooms[msg.room]["users"]:
-            rooms[msg.room]["users"].append(msg.user)
+        pass
 
     def private_room_remove_user(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and msg.user in rooms[msg.room]["users"]:
-            rooms[msg.room]["users"].remove(msg.user)
+        pass
 
     def private_room_operator_added(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and config.sections["server"]["login"] not in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].append(config.sections["server"]["login"])
+        pass
 
     def private_room_operator_removed(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and config.sections["server"]["login"] in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].remove(config.sections["server"]["login"])
+        pass
 
     def private_room_add_operator(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and msg.user not in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].append(msg.user)
+        pass
 
     def private_room_remove_operator(self, msg):
-
-        rooms = self.private_rooms
-
-        if msg.room in rooms and msg.user in rooms[msg.room]["operators"]:
-            rooms[msg.room]["operators"].remove(msg.user)
+        pass
 
     def private_room_added(self, msg):
-
-        rooms = self.private_rooms
-        room = msg.room
-
-        if room not in rooms:
-            self.create_private_room(room)
-            log.add(_("You have been added to a private room: %(room)s"), {"room": room})
-
-        self.roomlist.set_private_rooms()
+        self.roomlist.update_room(msg.room)
 
     def private_room_removed(self, msg):
-
-        if msg.room in self.private_rooms:
-            del self.private_rooms[msg.room]
-
-        self.roomlist.set_private_rooms()
+        pass
 
     def private_room_disown(self, msg):
-
-        if msg.room in self.private_rooms and \
-                self.private_rooms[msg.room]["owner"] == config.sections["server"]["login"]:
-            self.private_rooms[msg.room]["owner"] = None
+        pass
 
     def get_user_stats(self, msg):
         for page in self.pages.values():
@@ -392,25 +325,14 @@ class ChatRooms(IconNotebook):
         for page in self.pages.values():
             page.save_columns()
 
-    def leave_room(self, msg):
+    def server_login(self):
 
-        page = self.pages.get(msg.room)
+        for room in config.sections["server"]["autojoin"]:
+            if room == 'Public ':
+                self.roomlist.feed_check.set_active(True)
 
-        if not page:
-            return
-
-        self.remove_page(page.Main)
-        del self.pages[msg.room]
-
-        if self.get_n_pages() == 0:
-            self.frame.ChatroomsStatusPage.show()
-
-        if msg.room != "Public ":
-            self.frame.RoomSearchCombo.remove_all()
-            self.frame.RoomSearchCombo.append_text("Joined Rooms ")
-
-            for room in self.pages:
-                self.frame.RoomSearchCombo.append_text(room)
+            elif isinstance(room, str):
+                self.autojoin_rooms.add(room)
 
     def server_disconnect(self):
 
@@ -600,12 +522,12 @@ class ChatRoom(UserInterface):
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
 
-        if self.room in self.chatrooms.private_rooms:
-            if username == self.chatrooms.private_rooms[self.room]["owner"]:
+        if self.room in self.frame.np.chatrooms.private_rooms:
+            if username == self.frame.np.chatrooms.private_rooms[self.room]["owner"]:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.SINGLE
 
-            elif username in self.chatrooms.private_rooms[self.room]["operators"]:
+            elif username in self.frame.np.chatrooms.private_rooms[self.room]["operators"]:
                 weight = Pango.Weight.BOLD
                 underline = Pango.Underline.NONE
 

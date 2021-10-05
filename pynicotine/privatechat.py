@@ -228,12 +228,7 @@ class PrivateChats:
 
     def update_completions(self):
 
-        chatrooms = []
-
-        if self.ui_callback:
-            chatrooms = self.ui_callback.frame.chatrooms.roomlist.server_rooms
-
-        self.completion_list = get_completion_list(self.CMDS, chatrooms)
+        self.completion_list = get_completion_list(self.CMDS, self.core.chatrooms.server_rooms)
 
         if self.ui_callback:
             self.ui_callback.set_completion_list(self.completion_list)

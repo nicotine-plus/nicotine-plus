@@ -25,25 +25,21 @@
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 
 
 class RoomList(UserInterface):
 
-    def __init__(self, frame, joined_rooms, private_rooms):
+    def __init__(self, frame):
 
         super().__init__("ui/popovers/roomlist.ui")
 
         self.frame = frame
-        self.server_rooms = set()
-        self.joined_rooms = joined_rooms
-        self.private_rooms = private_rooms
+        self.room_iters = {}
         frame.RoomSearchCombo.set_active_id("joined")
 
         self.room_model = Gtk.ListStore(
@@ -113,29 +109,6 @@ class RoomList(UserInterface):
 
         return model.get_value(iterator, 0)
 
-    def is_private_room_owned(self, room):
-
-        if (room in self.private_rooms
-                and self.private_rooms[room]["owner"] == config.sections["server"]["login"]):
-            return True
-
-        return False
-
-    def is_private_room_member(self, room):
-
-        if room in self.private_rooms:
-            return True
-
-        return False
-
-    def is_private_room_operator(self, room):
-
-        if (room in self.private_rooms
-                and config.sections["server"]["login"] in self.private_rooms[room]["operators"]):
-            return True
-
-        return False
-
     def private_rooms_sort(self, model, iter1, iter2, column):
 
         try:
@@ -175,89 +148,40 @@ class RoomList(UserInterface):
 
         self.clear()
 
+        for room, users in owned_rooms:
+            self.update_room(room, users, private=True, owned=True)
+
+        for room, users in other_private_rooms:
+            self.update_room(room, users, private=True)
+
         for room, users in rooms:
             self.update_room(room, users)
-
-        self.set_private_rooms(owned_rooms, other_private_rooms)
 
         self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
 
-    def set_private_rooms(self, ownedrooms=[], otherrooms=[]):
+    def update_room(self, room, user_count, private=False, owned=False):
 
-        myusername = config.sections["server"]["login"]
+        iterator = self.room_iters.get(room)
 
-        for room in ownedrooms:
-            try:
-                self.private_rooms[room[0]]['joined'] = room[1]
-                if self.private_rooms[room[0]]['owner'] != myusername:
-                    log.add("I remember the room %(room)s being owned by %(previous)s, but the "
-                            + "server says its owned by %(new)s.", {
-                                'room': room[0],
-                                'previous': self.private_rooms[room[0]]['owner'],
-                                'new': myusername
-                            })
-                self.private_rooms[room[0]]['owner'] = myusername
-            except KeyError:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": myusername}
+        if iterator is not None:
+            self.room_model.set_value(iterator, 1, user_count)
+            return
 
-        for room in otherrooms:
-            try:
-                self.private_rooms[room[0]]['joined'] = room[1]
-                if self.private_rooms[room[0]]['owner'] == myusername:
-                    log.add("I remember the room %(room)s being owned by %(old)s, but the server "
-                            + "says that's not true.", {
-                                'room': room[0],
-                                'old': self.private_rooms[room[0]]['owner'],
-                            })
-                    self.private_rooms[room[0]]['owner'] = None
-            except KeyError:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": None}
+        text_weight = Pango.Weight.BOLD if private else Pango.Weight.NORMAL
+        text_underline = Pango.Underline.SINGLE if owned else Pango.Underline.NONE
 
-        iterator = self.room_model.get_iter_first()
-
-        while iterator:
-            room = self.room_model.get_value(iterator, 0)
-
-            if self.is_private_room_owned(room) or self.is_private_room_member(room):
-                self.room_model.remove(iterator)
-
-            iterator = self.room_model.iter_next(iterator)
-
-        for room in self.private_rooms:
-            num = self.private_rooms[room]["joined"]
-
-            if self.is_private_room_owned(room):
-                self.room_model.prepend([str(room), num, Pango.Weight.BOLD, Pango.Underline.SINGLE])
-
-            elif self.is_private_room_member(room):
-                self.room_model.prepend([str(room), num, Pango.Weight.BOLD, Pango.Underline.NONE])
-
-    def update_room(self, room, user_count):
-
-        if room in self.server_rooms:
-            iterator = self.room_model.get_iter_first()
-
-            while iterator:
-                if self.room_model.get_value(iterator, 0) == room:
-                    self.room_model.set_value(iterator, 1, user_count)
-                    break
-
-                iterator = self.room_model.iter_next(iterator)
-
-        else:
-            self.room_model.insert_with_valuesv(
-                -1, self.column_numbers,
-                [room, user_count, Pango.Weight.NORMAL, Pango.Underline.NONE]
-            )
-            self.server_rooms.add(room)
+        self.room_iters[room] = self.room_model.insert_with_valuesv(
+            -1, self.column_numbers,
+            [room, user_count, text_weight, text_underline]
+        )
 
     def on_row_activated(self, treeview, path, column):
 
         room = self.get_selected_room(treeview)
 
-        if room is not None and room not in self.joined_rooms:
+        if room is not None and room not in self.frame.np.chatrooms.joined_rooms:
             self.popup_room = room
             self.on_popup_join()
 
@@ -268,63 +192,46 @@ class RoomList(UserInterface):
 
         room = self.get_selected_room(widget)
 
-        if room is not None:
-            if room in self.joined_rooms:
-                act = (False, True)
-            else:
-                act = (True, False)
-        else:
-            act = (False, False)
-
         self.popup_room = room
         prooms_enabled = True
 
         actions = menu.get_actions()
 
-        actions[_("Join Room")].set_enabled(act[0])
-        actions[_("Leave Room")].set_enabled(act[1])
+        actions[_("Join Room")].set_enabled(room not in self.frame.np.chatrooms.joined_rooms)
+        actions[_("Leave Room")].set_enabled(room in self.frame.np.chatrooms.joined_rooms)
 
-        actions[_("Disown Private Room")].set_enabled(self.is_private_room_owned(self.popup_room))
+        actions[_("Disown Private Room")].set_enabled(self.frame.np.chatrooms.is_private_room_owned(self.popup_room))
         actions[_("Cancel Room Membership")].set_enabled(
-            (prooms_enabled and self.is_private_room_member(self.popup_room)))
+            (prooms_enabled and self.frame.np.chatrooms.is_private_room_member(self.popup_room)))
 
     def on_popup_join(self, *args):
-        self.frame.np.queue.append(slskmessages.JoinRoom(self.popup_room))
+        self.frame.np.chatrooms.request_join_room(self.popup_room)
 
     def on_show_chat_feed(self, *args):
 
         if self.feed_check.get_active():
-            self.frame.chatrooms.join_room(slskmessages.JoinRoom("Public "))
-            self.frame.np.queue.append(slskmessages.JoinPublicRoom())
+            self.frame.np.chatrooms.request_join_public_room()
             return
 
-        self.frame.np.queue.append(slskmessages.LeavePublicRoom())
-        self.frame.chatrooms.leave_room(slskmessages.LeaveRoom("Public "))  # Faking protocol msg
+        self.frame.np.chatrooms.request_leave_public_room()
 
     def on_popup_private_room_disown(self, *args):
-
-        if self.is_private_room_owned(self.popup_room):
-            self.frame.np.queue.append(slskmessages.PrivateRoomDisown(self.popup_room))
-            del self.private_rooms[self.popup_room]
+        self.frame.np.chatrooms.request_private_room_disown(self.popup_room)
 
     def on_popup_private_room_dismember(self, *args):
-
-        if self.is_private_room_member(self.popup_room):
-            self.frame.np.queue.append(slskmessages.PrivateRoomDismember(self.popup_room))
-            del self.private_rooms[self.popup_room]
+        self.frame.np.chatrooms.request_private_room_dismember(self.popup_room)
 
     def on_popup_leave(self, *args):
-        self.frame.np.queue.append(slskmessages.LeaveRoom(self.popup_room))
+        self.frame.np.chatrooms.request_leave_room(self.popup_room)
 
     def on_search_room(self, *args):
         self.room_filter.refilter()
 
     def on_refresh(self, *args):
-        self.frame.np.queue.append(slskmessages.RoomList())
+        self.frame.np.chatrooms.request_room_list()
 
     def on_toggle_accept_private_room(self, widget):
-        value = self.private_room_check.get_active()
-        self.frame.np.queue.append(slskmessages.PrivateRoomToggle(value))
+        self.frame.np.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
 
     def update_visuals(self):
         for widget in list(self.__dict__.values()):
@@ -332,4 +239,4 @@ class RoomList(UserInterface):
 
     def clear(self):
         self.room_model.clear()
-        self.server_rooms.clear()
+        self.room_iters.clear()

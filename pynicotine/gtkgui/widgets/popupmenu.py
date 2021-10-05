@@ -323,22 +323,23 @@ class PopupMenu(Gio.Menu):
 
         popup.set_user(self.user)
 
-        for room in self.frame.chatrooms.private_rooms:
+        for room, data in self.frame.np.chatrooms.private_rooms.items():
+            is_owned = self.frame.np.chatrooms.is_private_room_owned(room)
+            is_operator = self.frame.np.chatrooms.is_private_room_operator(room)
 
-            if (not self.frame.chatrooms.roomlist.is_private_room_owned(room)
-                    and not self.frame.chatrooms.roomlist.is_private_room_operator(room)):
+            if not is_owned and not is_operator:
                 continue
 
-            if self.user in self.frame.chatrooms.private_rooms[room]["users"]:
+            if self.user in data["users"]:
                 popup.append_item(
                     ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
             else:
                 popup.append_item(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
 
-            if not self.frame.chatrooms.roomlist.is_private_room_owned(room):
+            if not is_owned:
                 continue
 
-            if self.user in self.frame.chatrooms.private_rooms[room]["operators"]:
+            if self.user in data["operators"]:
                 popup.append_item(
                     ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
             else:

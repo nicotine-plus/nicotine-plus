@@ -33,7 +33,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine import slskproto
 from pynicotine.config import config
 from pynicotine.gtkgui.chatrooms import ChatRooms
@@ -1939,7 +1938,7 @@ class NicotineFrame(UserInterface):
 
         if response_id == Gtk.ResponseType.OK:
             # Create a new room
-            self.np.queue.append(slskmessages.JoinRoom(room, private))
+            self.np.chatrooms.request_join_room(room, private)
 
     def on_create_room(self, widget, *args):
 
@@ -1948,7 +1947,7 @@ class NicotineFrame(UserInterface):
         if not room:
             return False
 
-        if room not in self.chatrooms.roomlist.server_rooms and room not in self.chatrooms.roomlist.private_rooms:
+        if room not in self.np.chatrooms.server_rooms and room not in self.np.chatrooms.private_rooms:
             option_dialog(
                 parent=self.MainWindow,
                 title=_('Create New Room?'),
@@ -1959,7 +1958,7 @@ class NicotineFrame(UserInterface):
             )
 
         else:
-            self.np.queue.append(slskmessages.JoinRoom(room))
+            self.np.chatrooms.request_join_room(room)
 
         widget.set_text("")
         return True
