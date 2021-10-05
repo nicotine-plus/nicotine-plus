@@ -89,19 +89,13 @@ class WishList(UserInterface):
         if value and not value.isspace():
             self.remove_wish(old_value)
             self.add_wish(value)
-            self.list_view.set_cursor(self.store.get_path(self.wishes[value]))
 
     def on_add_wish(self, *args):
 
         wish = self.wish_entry.get_text()
-
-        if not wish:
-            return None
+        self.wish_entry.set_text("")
 
         self.add_wish(wish)
-
-        self.wish_entry.set_text("")
-        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
     def on_remove_wish(self, *args):
 
@@ -146,6 +140,7 @@ class WishList(UserInterface):
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
+            self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
         self.searches.searches[search_id] = {"id": search_id, "term": wish, "tab": None, "mode": "wishlist",
                                              "ignore": True}
@@ -237,7 +232,7 @@ class WishList(UserInterface):
 
         text = self.searches.notebook.get_tab_label(page).full_text
 
-        if text.startswith("(Wish) "):
+        if text.startswith("(Wish) "):  # ToDo: get search tab tooltip text instead
             text = text[7:]
 
         if text in self.wishes:
@@ -247,10 +242,9 @@ class WishList(UserInterface):
             self.wish_entry.set_text("")
             self.list_view.set_cursor(self.store.get_path(iterator))
             self.list_view.grab_focus()
+            return
 
-        else:
-            # Pre-fill text field with search term from active search tab
-
-            self.list_view.get_selection().unselect_all()
-            self.wish_entry.set_text(text)
-            self.wish_entry.grab_focus()
+        # Pre-fill text field with search term from active search tab
+        self.list_view.get_selection().unselect_all()
+        self.wish_entry.set_text(text)
+        self.wish_entry.grab_focus()
