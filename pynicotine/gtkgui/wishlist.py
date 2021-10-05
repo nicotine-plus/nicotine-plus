@@ -115,7 +115,7 @@ class WishList(UserInterface):
         self.list_view.get_selection().unselect_all()
 
     def on_remove_wish_accelerator(self, *args):
-        """ Delete: Remove Wish """
+        """ Shift+Delete: Remove Wish """
 
         self.on_remove_wish()
         return True
