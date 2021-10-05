@@ -315,7 +315,7 @@ class UserBrowse(UserInterface):
 
         """ Key Bindings (FileTreeView) """
 
-        setup_accelerator("Left", self.FileTreeView, self.on_file_focus_folder_left_accelerator)  # ToDo: h-scrolling ##
+        setup_accelerator("Left", self.FileTreeView, self.on_file_focus_folder_left_accelerator)
         setup_accelerator("<Shift>Tab", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # avoid header
         setup_accelerator("BackSpace", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # navigate up
         setup_accelerator("backslash", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # "\"
@@ -439,7 +439,7 @@ class UserBrowse(UserInterface):
             self.FileTreeView.grab_focus()
 
         # Note: Other Folder actions are handled by setup_accelerator functions [Shift/Ctrl/Alt+Return]
-        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]         # ToDo #
+        # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_popup_menu(self, menu, widget):
 
@@ -833,7 +833,6 @@ class UserBrowse(UserInterface):
 
         else:
             self.on_folder_expand_sub_accelerator()
-            # ToDo: Expand all branch sub-nodes (*)                                                             # ToDo #
 
         return True
 
@@ -865,7 +864,7 @@ class UserBrowse(UserInterface):
 
         else:
             if len(self.file_store) <= 0:
-                # avoid accidental recursive download
+                # risk of accidental recursive download
                 self.on_folder_expand_sub_accelerator()
 
             else:
@@ -893,7 +892,11 @@ class UserBrowse(UserInterface):
     def on_file_focus_folder_left_accelerator(self, *args):
         """ Left: focus back parent folder (left arrow) """
 
-        # ToDo: Only if... FileTreeView.selected_column == 0:  # ToDo: (scrolled fully left)                    # ToDo #
+        y = self.FileScrolledWindow.get_hadjustment()
+
+        if y.get_value() > 0.0:
+            # Allow horizontal scrolling
+            return False
 
         self.FolderTreeView.grab_focus()
 
@@ -1367,7 +1370,7 @@ class UserBrowse(UserInterface):
         """ Shift+Ctrl+G or Shift+F3: Find Previous """
 
         if self.SearchEntry.get_text() != "":
-            # ToDo: {self.search_position = self.search_position - 2}                                           # ToDo #
+            # ToDo: {self.search_position = self.search_position - 2}
             self.on_search()
         else:
             self.SearchEntry.grab_focus()
