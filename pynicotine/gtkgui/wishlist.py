@@ -25,6 +25,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -66,6 +67,10 @@ class WishList(UserInterface):
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
+        setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
+
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
             button.connect("clicked", self.on_show)
@@ -103,6 +108,15 @@ class WishList(UserInterface):
             wish = model.get_value(iterator, 0)
             self.remove_wish(wish)
 
+        self.list_view.get_selection().unselect_all()
+        self.wish_entry.grab_focus()
+
+    def on_remove_wish_accelerator(self, *args):
+        """ Shift+Delete: Remove Wish """
+
+        self.on_remove_wish()
+        return True
+
     def clear_wishlist_response(self, dialog, response_id, data):
 
         dialog.destroy()
@@ -110,6 +124,8 @@ class WishList(UserInterface):
         if response_id == Gtk.ResponseType.OK:
             for wish in self.wishes.copy():
                 self.remove_wish(wish)
+
+        self.wish_entry.grab_focus()
 
     def on_clear_wishlist(self, *args):
 
@@ -129,6 +145,7 @@ class WishList(UserInterface):
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
+            self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
         self.searches.searches[search_id] = {"id": search_id, "term": wish, "tab": None, "mode": "wishlist",
                                              "ignore": True}
@@ -211,6 +228,10 @@ class WishList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
+    def on_list_focus_entry_accelerator(self, *args):
+        self.wish_entry.grab_focus()
+        return True
+
     def on_show(self, *args):
 
         page = self.searches.get_nth_page(self.searches.get_current_page())
@@ -218,17 +239,29 @@ class WishList(UserInterface):
         if page is None:
             return
 
-        text = self.searches.notebook.get_tab_label(page).full_text
+        text = None
+
+        for search in self.searches.searches.values():
+            tab = search.get("tab")
+
+            if tab is not None and tab.Main == page:
+                text = tab.text
+                break
+
+        if not text:
+            self.list_view.get_selection().unselect_all()
+            return
 
         if text in self.wishes:
             # Highlight existing wish row
 
             iterator = self.wishes[text]
-            self.wish_entry.set_text("")
             self.list_view.set_cursor(self.store.get_path(iterator))
+            self.wish_entry.set_text("")
             self.list_view.grab_focus()
             return
 
         # Pre-fill text field with search term from active search tab
+        self.list_view.get_selection().unselect_all()
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()
