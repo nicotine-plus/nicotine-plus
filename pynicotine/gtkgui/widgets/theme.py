@@ -111,6 +111,18 @@ def set_global_css():
     .preferences-border .dialog-action-box {
         border-top: 1px solid @borders;
     }
+
+    /* Buttons */
+
+    .circular {
+        border-radius: 9999px;
+    }
+
+    .count {
+        padding-left: 10px;
+        padding-right: 10px;
+        min-width: 12px;
+    }
     """
 
     css_gtk4 = b"""

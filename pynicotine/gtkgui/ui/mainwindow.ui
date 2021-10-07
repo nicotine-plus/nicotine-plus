@@ -175,29 +175,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="DownloadUsers">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="DownloadUsers">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -224,29 +215,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="DownloadFiles">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="DownloadFiles">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -336,29 +318,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="UploadUsers">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="UploadUsers">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -385,29 +358,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="UploadFiles">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="UploadFiles">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>

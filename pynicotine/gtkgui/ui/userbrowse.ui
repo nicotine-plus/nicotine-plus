@@ -70,29 +70,20 @@
                                       <object class="GtkButton" id="NumDirectoriesButton">
                                         <property name="visible">1</property>
                                         <child>
-                                          <object class="GtkBox">
-                                            <property name="width-request">24</property>
+                                          <object class="GtkLabel" id="NumDirectories">
                                             <property name="visible">1</property>
-                                            <property name="spacing">5</property>
-                                            <property name="homogeneous">1</property>
-                                            <child>
-                                              <object class="GtkLabel" id="NumDirectories">
-                                                <property name="visible">1</property>
-                                                <property name="label">0</property>
-                                                <property name="margin-start">5</property>
-                                                <property name="margin-end">5</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
-                                                <style>
-                                                  <class name="dim-label"/>
-                                                </style>
-                                              </object>
-                                            </child>
+                                            <property name="label">0</property>
+                                            <attributes>
+                                              <attribute name="weight" value="bold"/>
+                                            </attributes>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <style>
                                           <class name="circular"/>
+                                          <class name="count"/>
                                         </style>
                                       </object>
                                     </child>
@@ -118,29 +109,20 @@
                                       <object class="GtkButton" id="AmountSharedButton">
                                         <property name="visible">1</property>
                                         <child>
-                                          <object class="GtkBox">
-                                            <property name="width-request">24</property>
+                                          <object class="GtkLabel" id="AmountShared">
                                             <property name="visible">1</property>
-                                            <property name="spacing">5</property>
-                                            <property name="homogeneous">1</property>
-                                            <child>
-                                              <object class="GtkLabel" id="AmountShared">
-                                                <property name="visible">1</property>
-                                                <property name="label">0.0 B</property>
-                                                <property name="margin-start">5</property>
-                                                <property name="margin-end">5</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="bold"/>
-                                                </attributes>
-                                                <style>
-                                                  <class name="dim-label"/>
-                                                </style>
-                                              </object>
-                                            </child>
+                                            <property name="label">0.0 B</property>
+                                            <attributes>
+                                              <attribute name="weight" value="bold"/>
+                                            </attributes>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <style>
                                           <class name="circular"/>
+                                          <class name="count"/>
                                         </style>
                                       </object>
                                     </child>
