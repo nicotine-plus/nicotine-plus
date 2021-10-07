@@ -178,6 +178,9 @@
                                         <property name="icon-name">media-floppy-symbolic</property>
                                       </object>
                                     </child>
+                                    <style>
+                                      <class name="image-button"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <child>
@@ -191,6 +194,9 @@
                                         <property name="icon-name">view-refresh-symbolic</property>
                                       </object>
                                     </child>
+                                    <style>
+                                      <class name="image-button"/>
+                                    </style>
                                   </object>
                                 </child>
                                 <child>
@@ -204,6 +210,9 @@
                                         <property name="icon-name">go-down-symbolic</property>
                                       </object>
                                     </child>
+                                    <style>
+                                      <class name="image-button"/>
+                                    </style>
                                   </object>
                                 </child>
                               </object>
