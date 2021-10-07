@@ -84,7 +84,7 @@ class UserBrowses(IconNotebook):
 
                 break
 
-    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False):
+    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         if user not in self.pages:
             self.save_columns()
@@ -111,8 +111,9 @@ class UserBrowses(IconNotebook):
         page.queued_folder = folder
         page.browse_queued_folder()
 
-        self.set_current_page(self.page_num(page.Main))
-        self.frame.change_main_page("userbrowse")
+        if switch_page:
+            self.set_current_page(self.page_num(page.Main))
+            self.frame.change_main_page("userbrowse")
 
     def set_conn(self, user, conn):
         if user in self.pages:
