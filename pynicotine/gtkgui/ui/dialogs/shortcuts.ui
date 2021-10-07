@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.20"/>
   <object class="GtkShortcutsWindow" id="dialog">
     <property name="modal">1</property>
     <property name="title" translatable="yes">Keyboard Shortcuts</property>
@@ -150,6 +149,88 @@
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">Delete</property>
+                <property name="title" translatable="yes">Clear / Remove Transfer</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">1</property>
+            <property name="title" translatable="yes">User Browse</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;Return</property>
+                <property name="title" translatable="yes">Download / Upload To</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="title" translatable="yes">File Properties</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Alt&gt;O</property>
+                <property name="title" translatable="yes">Open List from Disk</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;S</property>
+                <property name="title" translatable="yes">Save List to Disk</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;R</property>
+                <property name="title" translatable="yes">Refresh (F5)</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;backslash</property>
+                <property name="title" translatable="yes">Expand / Collapse All</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">BackSpace</property>
+                <property name="title" translatable="yes">Back to Parent Folder</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">1</property>
+            <property name="title" translatable="yes">Shares</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;p</property>
+                <property name="title" translatable="yes">Rescan Public Shares</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;b</property>
+                <property name="title" translatable="yes">Rescan Buddy Shares</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -210,26 +291,6 @@
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;g</property>
                 <property name="title" translatable="yes">Find Previous Match</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
-            <property name="title" translatable="yes">Shares</property>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;p</property>
-                <property name="title" translatable="yes">Rescan Public Shares</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;b</property>
-                <property name="title" translatable="yes">Rescan Buddy Shares</property>
               </object>
             </child>
           </object>
