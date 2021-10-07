@@ -179,15 +179,15 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Alt&gt;O</property>
-                <property name="title" translatable="yes">Open List from Disk</property>
+                <property name="accelerator">&lt;Primary&gt;S</property>
+                <property name="title" translatable="yes">Save List to Disk</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
-                <property name="accelerator">&lt;Primary&gt;S</property>
-                <property name="title" translatable="yes">Save List to Disk</property>
+                <property name="accelerator">&lt;Primary&gt;G</property>
+                <property name="title" translatable="yes">Find Next (F3)</property>
               </object>
             </child>
             <child>
