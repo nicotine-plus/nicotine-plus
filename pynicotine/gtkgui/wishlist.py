@@ -66,7 +66,8 @@ class WishList(UserInterface):
 
         setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
         setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
-        setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
+        setup_accelerator("<Shift>Tab", self.list_view, self.on_focus_entry_accelerator)  # skip column header
+        setup_accelerator("<Primary>F", self.wish_entry, self.on_interactive_search_accelerator)  # in listbox
 
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
@@ -142,6 +143,8 @@ class WishList(UserInterface):
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
+
+        if wish in self.wishes:  # highlight result regardless of prior existance
             self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
 
     def remove_wish(self, wish):
@@ -170,9 +173,12 @@ class WishList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def on_list_focus_entry_accelerator(self, *args):
+    def on_focus_entry_accelerator(self, *args):
         self.wish_entry.grab_focus()
         return True
+
+    def on_interactive_search_accelerator(self, *args):
+        self.list_view.grab_focus()  # allow activation of the Gtk interactive-search
 
     def on_show(self, *args):
 
