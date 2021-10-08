@@ -140,9 +140,6 @@ class Searches(IconNotebook):
         # Repopulate the combo list
         self.populate_search_history()
 
-    def set_wishlist_interval(self, msg):
-        self.wish_list.set_interval(msg)
-
     def clear_search_history(self):
 
         self.frame.SearchEntry.set_text("")
@@ -218,6 +215,15 @@ class Searches(IconNotebook):
 
         if self.get_n_pages() == 0:
             self.frame.SearchStatusPage.show()
+
+    def add_wish(self, wish):
+        self.wish_list.add_wish(wish)
+
+    def remove_wish(self, wish):
+        self.wish_list.remove_wish(wish)
+
+    def set_wishlist_interval(self, msg):
+        self.wish_list.set_interval(msg)
 
     def update_visuals(self):
 
@@ -977,7 +983,7 @@ class Search(UserInterface):
             self.AddWish.hide()
             return
 
-        if not self.searches.wish_list.is_wish(self.text):
+        if not self.frame.np.search.is_wish(self.text):
             self.AddWishIcon.set_property("icon-name", "list-add-symbolic")
             self.AddWishLabel.set_label(_("Add Wi_sh"))
             return
@@ -987,10 +993,10 @@ class Search(UserInterface):
 
     def on_add_wish(self, *args):
 
-        if self.searches.wish_list.is_wish(self.text):
-            self.searches.wish_list.remove_wish(self.text)
+        if self.frame.np.search.is_wish(self.text):
+            self.frame.np.search.remove_wish(self.text)
         else:
-            self.searches.wish_list.add_wish(self.text)
+            self.frame.np.search.add_wish(self.text)
 
         self.update_wish_button()
 

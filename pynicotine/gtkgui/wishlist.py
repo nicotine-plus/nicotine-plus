@@ -96,8 +96,9 @@ class WishList(UserInterface):
         old_value = store.get_value(iterator, 0)
 
         if value and not value.isspace():
-            self.remove_wish(old_value)
-            self.add_wish(value)
+            self.frame.np.search.remove_wish(old_value)
+            self.frame.np.search.add_wish(value)
+            self.select_wish(value)
 
     def on_add_wish(self, *args):
 
@@ -107,10 +108,8 @@ class WishList(UserInterface):
         if wish not in self.wishes:
             GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
 
-        self.add_wish(wish)
-
-        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
-        self.list_view.grab_focus()
+        self.frame.np.search.add_wish(wish)
+        self.select_wish(wish)
 
     def on_remove_wish(self, *args):
 
@@ -119,7 +118,7 @@ class WishList(UserInterface):
         for path in reversed(paths):
             iterator = model.get_iter(path)
             wish = model.get_value(iterator, 0)
-            self.remove_wish(wish)
+            self.frame.np.search.remove_wish(wish)
 
         self.list_view.get_selection().unselect_all()
         self.wish_entry.grab_focus()
@@ -151,24 +150,23 @@ class WishList(UserInterface):
 
     def add_wish(self, wish):
 
-        search_id = self.frame.np.search.add_wish(wish)
-
-        if not search_id:
-            return None
-
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
     def remove_wish(self, wish):
 
-        self.frame.np.search.remove_wish(wish)
-
         if wish in self.wishes:
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
 
-    def is_wish(self, wish):
-        return wish in self.wishes
+    def select_wish(self, wish):
+
+        wish_iterator = self.wishes.get(wish)
+        if wish_iterator is None:
+            return
+
+        self.list_view.set_cursor(self.store.get_path(wish_iterator))
+        self.list_view.grab_focus()
 
     def set_interval(self, msg):
         self.frame.np.search.do_wishlist_search_interval()

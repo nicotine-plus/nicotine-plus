@@ -281,7 +281,7 @@ class Search:
     def add_wish(self, wish):
 
         if not wish:
-            return None
+            return
 
         # Get a new search ID
         self.increment_search_id()
@@ -290,7 +290,9 @@ class Search:
             self.config.sections["server"]["autosearch"].append(wish)
 
         self.add_search(self.searchid, wish, "wishlist", ignore=True)
-        return self.searchid
+
+        if self.ui_callback:
+            self.ui_callback.add_wish(wish)
 
     def remove_wish(self, wish):
 
@@ -301,6 +303,12 @@ class Search:
                 if search["term"] == wish and search["mode"] == "wishlist":
                     del search
                     break
+
+        if self.ui_callback:
+            self.ui_callback.remove_wish(wish)
+
+    def is_wish(self, wish):
+        return wish in self.config.sections["server"]["autosearch"]
 
     def set_wishlist_interval(self, msg):
 
