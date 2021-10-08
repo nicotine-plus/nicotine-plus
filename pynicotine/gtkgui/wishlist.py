@@ -64,6 +64,16 @@ class WishList(UserInterface):
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
+        self.completion = Gtk.EntryCompletion()
+        self.completion.set_inline_completion(True)
+        self.completion.set_inline_selection(True)
+        self.completion.set_minimum_key_length(1)
+        self.completion.set_popup_single_match(False)
+        self.completion.set_text_column(0)
+        self.completion.set_model(self.store)
+
+        self.wish_entry.set_completion(self.completion)
+
         setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
         setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
         setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
@@ -142,7 +152,10 @@ class WishList(UserInterface):
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
-            self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
+            GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
+
+        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
+        self.list_view.grab_focus()
 
     def remove_wish(self, wish):
 
