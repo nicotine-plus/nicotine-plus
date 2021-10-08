@@ -153,11 +153,15 @@ class WishList(UserInterface):
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
+        self.update_wish_button(wish)
+
     def remove_wish(self, wish):
 
         if wish in self.wishes:
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
+
+        self.update_wish_button(wish)
 
     def select_wish(self, wish):
 
@@ -177,6 +181,12 @@ class WishList(UserInterface):
         if self.timer is not None:
             GLib.source_remove(self.timer)
             self.timer = None
+
+    def update_wish_button(self, wish):
+
+        for page in self.searches.pages.values():
+            if page.text == wish:
+                page.update_wish_button()
 
     def update_visuals(self):
 

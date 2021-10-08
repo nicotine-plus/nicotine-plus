@@ -307,8 +307,6 @@ class Search(UserInterface):
             '>': operator.gt
         }
 
-        self.update_wish_button()
-
         """ Columns """
 
         self.resultsmodel = Gtk.TreeStore(
@@ -408,6 +406,10 @@ class Search(UserInterface):
 
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
+
+        """ Wishlist """
+
+        self.update_wish_button()
 
     def set_label(self, label):
         self.tab_menu.set_widget(label)
@@ -997,8 +999,6 @@ class Search(UserInterface):
             self.frame.np.search.remove_wish(self.text)
         else:
             self.frame.np.search.add_wish(self.text)
-
-        self.update_wish_button()
 
     def add_popup_menu_user(self, popup, user):
 
