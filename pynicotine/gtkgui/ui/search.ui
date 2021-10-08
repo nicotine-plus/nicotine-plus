@@ -369,6 +369,7 @@
                                   </object>
                                 </child>
                                 <style>
+                                  <class name="flat"/>
                                   <class name="image-button"/>
                                 </style>
                               </object>
