@@ -166,7 +166,7 @@
                         <property name="hexpand">1</property>
                         <child internal-child="entry">
                           <object class="GtkEntry" id="FilterInEntry">
-                            <property name="width-chars">12</property>
+                            <property name="width-chars">14</property>
                             <property name="placeholder-text" translatable="yes">Include text...</property>
                             <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                             <property name="primary-icon-name">emblem-ok-symbolic</property>
@@ -196,7 +196,7 @@
                         <property name="hexpand">1</property>
                         <child internal-child="entry">
                           <object class="GtkEntry" id="FilterOutEntry">
-                            <property name="width-chars">12</property>
+                            <property name="width-chars">14</property>
                             <property name="placeholder-text" translatable="yes">Exclude text...</property>
                             <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                             <property name="primary-icon-name">action-unavailable-symbolic</property>
@@ -226,7 +226,7 @@
                         <property name="hexpand">1</property>
                         <child internal-child="entry">
                           <object class="GtkEntry" id="FilterTypeEntry">
-                            <property name="width-chars">7</property>
+                            <property name="width-chars">9</property>
                             <property name="placeholder-text" translatable="yes">File type...</property>
                             <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                             <property name="primary-icon-name">text-x-generic-symbolic</property>
@@ -320,7 +320,7 @@
                             <property name="hexpand">1</property>
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterCountryEntry">
-                                <property name="width-chars">7</property>
+                                <property name="width-chars">9</property>
                                 <property name="placeholder-text" translatable="yes">Country code...</property>
                                 <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                                 <property name="primary-icon-name">mark-location-symbolic</property>
@@ -338,17 +338,25 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="FilterFreeSlot">
-                            <property name="label" translatable="yes">Free Sl_ot</property>
-                            <property name="visible">1</property>
-                            <property name="use-underline">1</property>
-                            <signal name="toggled" handler="on_refilter" swapped="no"/>
-                          </object>
-                        </child>
-                        <child>
                           <object class="GtkBox">
                             <property name="visible">1</property>
                             <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkToggleButton" id="FilterFreeSlot">
+                                <property name="visible">1</property>
+                                <property name="tooltip-text" translatable="yes">Free slot</property>
+                                <signal name="toggled" handler="on_refilter" swapped="no"/>
+                                <child>
+                                  <object class="GtkImage">
+                                    <property name="visible">1</property>
+                                    <property name="icon-name">appointment-soon-symbolic</property>
+                                  </object>
+                                </child>
+                                <style>
+                                  <class name="image-button"/>
+                                </style>
+                              </object>
+                            </child>
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">1</property>
@@ -360,12 +368,9 @@
                                     <property name="icon-name">edit-clear-symbolic</property>
                                   </object>
                                 </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkMenuButton" id="ShowSearchHelp">
-                                <property name="visible">1</property>
-                                <property name="tooltip-text" translatable="yes">Search result filter help</property>
+                                <style>
+                                  <class name="image-button"/>
+                                </style>
                               </object>
                             </child>
                           </object>

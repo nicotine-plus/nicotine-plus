@@ -256,14 +256,11 @@ class Search(UserInterface):
         self.frame = searches.frame
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")
-            self.ShowSearchHelp.set_icon_name("dialog-question-symbolic")
         else:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
-            self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
         setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
         setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
