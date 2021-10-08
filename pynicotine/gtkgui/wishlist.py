@@ -104,7 +104,13 @@ class WishList(UserInterface):
         wish = self.wish_entry.get_text()
         self.wish_entry.set_text("")
 
+        if wish not in self.wishes:
+            GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
+
         self.add_wish(wish)
+
+        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
+        self.list_view.grab_focus()
 
     def on_remove_wish(self, *args):
 
@@ -152,10 +158,6 @@ class WishList(UserInterface):
 
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
-            GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
-
-        self.list_view.set_cursor(self.store.get_path(self.wishes[wish]))
-        self.list_view.grab_focus()
 
     def remove_wish(self, wish):
 
