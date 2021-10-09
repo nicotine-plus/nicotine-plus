@@ -50,7 +50,7 @@ class UserList(UserInterface):
         super().__init__("ui/buddylist.ui")
 
         self.frame = frame
-        self.page_id = "UserList"
+        self.page_id = "userlist"
 
         """ Columns """
 

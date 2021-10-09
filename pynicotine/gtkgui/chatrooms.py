@@ -65,7 +65,7 @@ class ChatRooms(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "Chatrooms"
+        self.page_id = "chatrooms"
         self.pages = {}
         self.autojoin_rooms = set()
         self.roomlist = RoomList(self.frame)
@@ -75,7 +75,7 @@ class ChatRooms(IconNotebook):
             self.frame,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.ChatroomsNotebookRaw
+            notebookraw=self.frame.chatrooms_notebook
         )
 
         self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))

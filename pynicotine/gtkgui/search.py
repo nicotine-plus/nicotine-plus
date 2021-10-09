@@ -63,7 +63,7 @@ class Searches(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "Search"
+        self.page_id = "search"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -71,7 +71,7 @@ class Searches(IconNotebook):
             self.frame,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.SearchNotebookRaw
+            notebookraw=self.frame.search_notebook
         )
 
         if Gtk.get_major_version() == 3:

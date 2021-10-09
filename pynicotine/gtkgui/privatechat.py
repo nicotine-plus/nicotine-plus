@@ -53,7 +53,7 @@ class PrivateChats(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "PrivateChat"
+        self.page_id = "private"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -62,7 +62,7 @@ class PrivateChats(IconNotebook):
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.PrivateChatNotebookRaw
+            notebookraw=self.frame.private_notebook
         )
 
         self.notebook.connect("switch-page", self.on_switch_chat)

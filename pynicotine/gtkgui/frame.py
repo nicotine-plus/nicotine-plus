@@ -626,7 +626,7 @@ class NicotineFrame(UserInterface):
                 return
 
             self.userlistvbox.remove(self.userlist.Main)
-            self.hide_tab(None, None, lista=[self.UserListTabLabel, self.userlistvbox])
+            self.hide_tab(None, None, lista=[self.userlist_tab_label, self.userlistvbox])
 
         if mode == "always":
 
@@ -1235,9 +1235,9 @@ class NicotineFrame(UserInterface):
     def on_menu(self, *args):
 
         if Gtk.get_major_version() == 4:
-            self.HeaderMenu.popup()
+            self.header_menu.popup()
         else:
-            self.HeaderMenu.set_active(not self.HeaderMenu.get_active())
+            self.header_menu.set_active(not self.header_menu.get_active())
 
     """ Headerbar/toolbar """
 
@@ -1247,25 +1247,25 @@ class NicotineFrame(UserInterface):
         enabled) """
 
         self.MainWindow.set_show_menubar(False)
-        self.HeaderMenu.show()
+        self.header_menu.show()
 
         self.application.set_accels_for_action("app.menu", ["F10"])
 
-        menu_parent = self.HeaderMenu.get_parent()
+        menu_parent = self.header_menu.get_parent()
         if menu_parent is not None:
-            menu_parent.remove(self.HeaderMenu)
+            menu_parent.remove(self.header_menu)
 
-        header_bar = getattr(self, "Header" + page_id)
-        end_widget = getattr(self, page_id + "End")
-        end_widget.add(self.HeaderMenu)
+        header_bar = getattr(self, "header_" + page_id)
+        end_widget = getattr(self, page_id + "_end")
+        end_widget.add(self.header_menu)
 
         if Gtk.get_major_version() == 4:
-            self.HeaderMenu.set_icon_name("open-menu-symbolic")
+            self.header_menu.set_icon_name("open-menu-symbolic")
 
             header_bar.set_show_title_buttons(True)
 
         else:
-            self.HeaderMenu.set_image(self.HeaderMenuIcon)
+            self.header_menu.set_image(self.header_menu_icon)
 
             # Avoid "Untitled window" in certain desktop environments
             header_bar.set_title(self.MainWindow.get_title())
@@ -1277,7 +1277,7 @@ class NicotineFrame(UserInterface):
         header_bar.pack_end(end_widget)
 
         # Set menu model after moving menu button to avoid GTK warnings in old GTK versions
-        self.HeaderMenu.set_menu_model(self.hamburger_menu)
+        self.header_menu.set_menu_model(self.hamburger_menu)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
@@ -1287,26 +1287,26 @@ class NicotineFrame(UserInterface):
 
         self.MainWindow.set_show_menubar(True)
 
-        if not hasattr(self, page_id + "Toolbar"):
+        if not hasattr(self, page_id + "_toolbar"):
             # No toolbar needed for this page
             return
 
-        header_bar = getattr(self, "Header" + page_id)
-        toolbar = getattr(self, page_id + "Toolbar")
-        toolbar_contents = getattr(self, page_id + "ToolbarContents")
+        header_bar = getattr(self, "header_" + page_id)
+        toolbar = getattr(self, page_id + "_toolbar")
+        toolbar_contents = getattr(self, page_id + "_toolbar_contents")
 
-        title_widget = getattr(self, page_id + "Title")
+        title_widget = getattr(self, page_id + "_title")
         title_widget.set_hexpand(True)
 
         try:
-            start_widget = getattr(self, page_id + "Start")
+            start_widget = getattr(self, page_id + "_start")
             header_bar.remove(start_widget)
 
         except AttributeError:
             # No start widget
             start_widget = None
 
-        end_widget = getattr(self, page_id + "End")
+        end_widget = getattr(self, page_id + "_end")
         header_bar.remove(end_widget)
 
         if Gtk.get_major_version() == 4:
@@ -1326,8 +1326,8 @@ class NicotineFrame(UserInterface):
 
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
-        self.HeaderMenu.set_menu_model(None)
-        self.HeaderMenu.hide()
+        self.header_menu.set_menu_model(None)
+        self.header_menu.hide()
 
         # Don't override builtin accelerator for menu bar
         self.application.set_accels_for_action("app.menu", [])
@@ -1341,15 +1341,15 @@ class NicotineFrame(UserInterface):
         """ Move the GtkBox toolbar widgets back to the headerbar, and hide
         the toolbar """
 
-        if not hasattr(self, self.current_page_id + "Toolbar"):
+        if not hasattr(self, self.current_page_id + "_toolbar"):
             # No toolbar on this page
             return
 
-        header_bar = getattr(self, "Header" + self.current_page_id)
-        toolbar = getattr(self, self.current_page_id + "Toolbar")
-        toolbar_contents = getattr(self, self.current_page_id + "ToolbarContents")
+        header_bar = getattr(self, "header_" + self.current_page_id)
+        toolbar = getattr(self, self.current_page_id + "_toolbar")
+        toolbar_contents = getattr(self, self.current_page_id + "_toolbar_contents")
 
-        title_widget = getattr(self, self.current_page_id + "Title")
+        title_widget = getattr(self, self.current_page_id + "_title")
         title_widget.set_hexpand(False)
         toolbar_contents.remove(title_widget)
 
@@ -1360,7 +1360,7 @@ class NicotineFrame(UserInterface):
             header_bar.set_custom_title(title_widget)
 
         try:
-            start_widget = getattr(self, self.current_page_id + "Start")
+            start_widget = getattr(self, self.current_page_id + "_start")
             toolbar_contents.remove(start_widget)
             header_bar.add(start_widget)
 
@@ -1368,7 +1368,7 @@ class NicotineFrame(UserInterface):
             # No start widget
             pass
 
-        end_widget = getattr(self, self.current_page_id + "End")
+        end_widget = getattr(self, self.current_page_id + "_end")
         toolbar_contents.remove(end_widget)
         header_bar.pack_end(end_widget)
 
@@ -1397,28 +1397,22 @@ class NicotineFrame(UserInterface):
 
         # Translation for the labels of tabs, icon names
         tab_data = {
-            self.SearchTabLabel: (_("Search Files"), "system-search-symbolic"),
-            self.DownloadsTabLabel: (_("Downloads"), "document-save-symbolic"),
-            self.UploadsTabLabel: (_("Uploads"), "emblem-shared-symbolic"),
-            self.UserBrowseTabLabel: (_("User Browse"), "folder-symbolic"),
-            self.UserInfoTabLabel: (_("User Info"), "avatar-default-symbolic"),
-            self.PrivateChatTabLabel: (_("Private Chat"), "mail-send-symbolic"),
-            self.UserListTabLabel: (_("Buddy List"), "contact-new-symbolic"),
-            self.ChatroomsTabLabel: (_("Chat Rooms"), "user-available-symbolic"),
-            self.InterestsTabLabel: (_("Interests"), "emblem-default-symbolic")
+            "search_tab_label": (_("Search Files"), "system-search-symbolic"),
+            "downloads_tab_label": (_("Downloads"), "document-save-symbolic"),
+            "uploads_tab_label": (_("Uploads"), "emblem-shared-symbolic"),
+            "userbrowse_tab_label": (_("User Browse"), "folder-symbolic"),
+            "userinfo_tab_label": (_("User Info"), "avatar-default-symbolic"),
+            "private_tab_label": (_("Private Chat"), "mail-send-symbolic"),
+            "userlist_tab_label": (_("Buddy List"), "contact-new-symbolic"),
+            "chatrooms_tab_label": (_("Chat Rooms"), "user-available-symbolic"),
+            "interests_tab_label": (_("Interests"), "emblem-default-symbolic")
         }
 
         # Initialize tabs labels
         for i in range(self.MainNotebook.get_n_pages()):
             page = self.MainNotebook.get_nth_page(i)
-            tab_label = self.MainNotebook.get_tab_label(page)
-
-            if Gtk.get_major_version() == 4:
-                tab_label_id = Gtk.Buildable.get_buildable_id(tab_label)
-            else:
-                tab_label_id = Gtk.Buildable.get_name(tab_label)
-
-            tab_text, tab_icon_name = tab_data[tab_label]
+            tab_label_id = self.match_main_notebox(page) + "_tab_label"
+            tab_text, tab_icon_name = tab_data[tab_label_id]
 
             # Initialize the image label
             tab_label = ImageLabel(
@@ -1431,7 +1425,7 @@ class NicotineFrame(UserInterface):
             tab_label.set_icon(tab_icon_name)
             tab_label.set_text_color()
 
-            # Replace previous placeholder label
+            # Apply tab label
             self.MainNotebook.set_tab_label(page, tab_label)
             self.MainNotebook.set_tab_reorderable(page, True)
             tab_label.show()
@@ -1444,7 +1438,7 @@ class NicotineFrame(UserInterface):
 
         page = self.MainNotebook.get_nth_page(self.MainNotebook.get_current_page())
         current_tab_label = self.MainNotebook.get_tab_label(page)
-        tab_label = getattr(self, page_id + "TabLabel")
+        tab_label = getattr(self, page_id + "_tab_label")
 
         if current_tab_label == tab_label:
             return
@@ -1469,7 +1463,7 @@ class NicotineFrame(UserInterface):
 
     def clear_tab_hilite(self):
 
-        tab_label = getattr(self, self.current_page_id + "TabLabel")
+        tab_label = getattr(self, self.current_page_id + "_tab_label")
 
         if not tab_label.get_hilite_image():
             return
@@ -1488,9 +1482,10 @@ class NicotineFrame(UserInterface):
         for child in page.get_children():
             child.show()
 
-        if page == self.chatroomsvbox:
-            self.set_active_header_bar(self.chatrooms.page_id)
+        page_id = self.match_main_notebox(page)
+        self.set_active_header_bar(page_id)
 
+        if page == self.chatroomsvbox:
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
 
@@ -1499,9 +1494,7 @@ class NicotineFrame(UserInterface):
             else:
                 GLib.idle_add(lambda: self.ChatroomsEntry.grab_focus() == -1)
 
-        elif page == self.privatechatvbox:
-            self.set_active_header_bar(self.privatechat.page_id)
-
+        elif page == self.privatevbox:
             curr_page_num = self.privatechat.get_current_page()
             curr_page = self.privatechat.get_nth_page(curr_page_num)
 
@@ -1511,7 +1504,6 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.PrivateChatEntry.grab_focus() == -1)
 
         elif page == self.uploadsvbox:
-            self.set_active_header_bar(self.uploads.page_id)
             self.uploads.update(forceupdate=True)
             self.clear_tab_hilite()
 
@@ -1519,7 +1511,6 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
 
         elif page == self.downloadsvbox:
-            self.set_active_header_bar(self.downloads.page_id)
             self.downloads.update(forceupdate=True)
             self.clear_tab_hilite()
 
@@ -1527,8 +1518,6 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.downloads.Transfers.grab_focus() == -1)
 
         elif page == self.searchvbox:
-            self.set_active_header_bar(self.search.page_id)
-
             curr_page_num = self.search.get_current_page()
             curr_page = self.search.get_nth_page(curr_page_num)
 
@@ -1538,8 +1527,6 @@ class NicotineFrame(UserInterface):
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
 
         elif page == self.userinfovbox:
-            self.set_active_header_bar(self.userinfo.page_id)
-
             curr_page_num = self.userinfo.get_current_page()
             curr_page = self.userinfo.get_nth_page(curr_page_num)
 
@@ -1549,8 +1536,6 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
         elif page == self.userbrowsevbox:
-            self.set_active_header_bar(self.userbrowse.page_id)
-
             curr_page_num = self.userbrowse.get_current_page()
             curr_page = self.userbrowse.get_nth_page(curr_page_num)
 
@@ -1560,14 +1545,12 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
         elif page == self.userlistvbox:
-            self.set_active_header_bar(self.userlist.page_id)
             self.userlist.update()
 
             if self.userlist.Main.get_visible():
                 GLib.idle_add(lambda: self.userlist.UserListTree.grab_focus() == -1)
 
         elif page == self.interestsvbox:
-            self.set_active_header_bar(self.interests.page_id)
             self.interests.populate_recommendations()
             GLib.idle_add(lambda: self.interests.LikesList.grab_focus() == -1)
 
@@ -1600,7 +1583,7 @@ class NicotineFrame(UserInterface):
     def on_tab_close(self, *args):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """
 
-        notebook_name = self.current_page_id.lower()
+        notebook_name = self.current_page_id
         notebook = getattr(self, notebook_name)
 
         if not isinstance(notebook, IconNotebook):
@@ -1618,7 +1601,7 @@ class NicotineFrame(UserInterface):
     def on_tab_cycle(self, widget, state, backwards=False):
         """ Ctrl+Tab and Shift+Ctrl+Tab: cycle through secondary tabs """
 
-        notebook_name = self.current_page_id.lower()
+        notebook_name = self.current_page_id
         notebook = getattr(self, notebook_name)
 
         if not isinstance(notebook, IconNotebook):
@@ -1668,6 +1651,10 @@ class NicotineFrame(UserInterface):
                 continue
 
             tab_box = self.match_main_name_page(name)
+
+            if tab_box is None:
+                continue
+
             num = self.MainNotebook.page_num(tab_box)
 
             self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
@@ -1780,7 +1767,7 @@ class NicotineFrame(UserInterface):
 
         if tab == self.chatroomsvbox:
             name = "chatrooms"   # Chatrooms
-        elif tab == self.privatechatvbox:
+        elif tab == self.privatevbox:
             name = "private"     # Private rooms
         elif tab == self.downloadsvbox:
             name = "downloads"   # Downloads
@@ -1807,7 +1794,7 @@ class NicotineFrame(UserInterface):
         if tab == "chatrooms":
             child = self.chatroomsvbox          # Chatrooms
         elif tab == "private":
-            child = self.privatechatvbox        # Private rooms
+            child = self.privatevbox            # Private rooms
         elif tab == "downloads":
             child = self.downloadsvbox          # Downloads
         elif tab == "uploads":

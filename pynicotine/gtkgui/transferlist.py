@@ -60,7 +60,7 @@ class TransferList(UserInterface):
 
         self.frame = frame
         self.type = type
-        self.page_id = self.type.title() + "s"
+        self.page_id = self.type + "s"
 
         grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
 

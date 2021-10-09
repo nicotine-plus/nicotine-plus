@@ -41,7 +41,7 @@ class Interests(UserInterface):
         frame.interestsvbox.add(self.Main)
 
         self.frame = frame
-        self.page_id = "Interests"
+        self.page_id = "interests"
         self.populated_recommends = False
 
         self.likes = {}
