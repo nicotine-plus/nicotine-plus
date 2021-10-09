@@ -207,7 +207,7 @@ class NicotineFrame(UserInterface):
         self.downloads = Downloads(self)
         self.uploads = Uploads(self)
         self.userlist = UserList(self)
-        self.privatechat = PrivateChats(self)
+        self.privatechat = self.private = PrivateChats(self)
         self.userinfo = UserInfos(self)
         self.userbrowse = UserBrowses(self)
 
