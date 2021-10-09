@@ -90,6 +90,7 @@ class NicotineFrame(UserInterface):
         self.np = network_processor
         self.ci_mode = ci_mode
         self.current_page_id = ""
+        self.hidden_tabs = {}
         self.hamburger_menu = None
         self.checking_update = False
         self.autoaway = False
@@ -225,9 +226,7 @@ class NicotineFrame(UserInterface):
 
         """ Tab Signals """
 
-        self.page_removed_signal = self.MainNotebook.connect("page-removed", self.on_page_removed)
         self.MainNotebook.connect("page-reordered", self.on_page_reordered)
-        self.MainNotebook.connect("page-added", self.on_page_added)
 
         """ Apply UI Customizations """
 
@@ -626,7 +625,7 @@ class NicotineFrame(UserInterface):
                 return
 
             self.userlistvbox.remove(self.userlist.Main)
-            self.hide_tab(None, None, lista=[self.userlist_tab_label, self.userlistvbox])
+            self.hide_tab(self.userlist.page_id)
 
         if mode == "always":
 
@@ -657,7 +656,7 @@ class NicotineFrame(UserInterface):
             return
 
         self.userlistvbox.add(self.userlist.Main)
-        self.show_tab(self.userlistvbox)
+        self.show_tab(self.userlist.page_id)
 
         self.userlist.BuddiesToolbar.hide()
         self.userlist.UserLabel.show()
@@ -689,36 +688,6 @@ class NicotineFrame(UserInterface):
 
     def on_browse_buddy_shares(self, *args):
         self.np.userbrowse.browse_local_buddy_shares(new_request=True)
-
-    # Modes
-
-    def on_chat_rooms(self, *args):
-        self.change_main_page("chatrooms")
-
-    def on_private_chat(self, *args):
-        self.change_main_page("private")
-
-    def on_downloads(self, *args):
-        self.change_main_page("downloads")
-
-    def on_uploads(self, *args):
-        self.change_main_page("uploads")
-
-    def on_search_files(self, *args):
-        self.change_main_page("search")
-
-    def on_user_info(self, *args):
-        self.change_main_page("userinfo")
-
-    def on_user_browse(self, *args):
-        self.change_main_page("userbrowse")
-
-    def on_interests(self, *args):
-        self.change_main_page("interests")
-
-    def on_buddy_list(self, *args):
-        self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant.new_string("tab"))
-        self.change_main_page("userlist")
 
     # Help
 
@@ -949,44 +918,6 @@ class NicotineFrame(UserInterface):
             self.rescan_buddy_action.set_enabled(False)
             self.browse_buddy_shares_action.set_enabled(False)
 
-        # Modes
-
-        action = Gio.SimpleAction.new("chatrooms", None)
-        action.connect("activate", self.on_chat_rooms)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("privatechat", None)
-        action.connect("activate", self.on_private_chat)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("downloads", None)
-        action.connect("activate", self.on_downloads)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("uploads", None)
-        action.connect("activate", self.on_uploads)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("searchfiles", None)
-        action.connect("activate", self.on_search_files)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("userinfo", None)
-        action.connect("activate", self.on_user_info)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("userbrowse", None)
-        action.connect("activate", self.on_user_browse)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("interests", None)
-        action.connect("activate", self.on_interests)
-        self.MainWindow.add_action(action)
-
-        action = Gio.SimpleAction.new("buddylist", None)
-        action.connect("activate", self.on_buddy_list)
-        self.MainWindow.add_action(action)
-
         # Help
 
         action = Gio.SimpleAction.new("keyboardshortcuts", None)
@@ -1157,32 +1088,15 @@ class NicotineFrame(UserInterface):
 
         return menu
 
-    def create_modes_menu(self):
-
-        menu = PopupMenu(self)
-        menu.setup(
-            ("#" + _("_Search Files"), "win.searchfiles"),
-            ("#" + _("_Downloads"), "win.downloads"),
-            ("#" + _("_Uploads"), "win.uploads"),
-            ("#" + _("User _Browse"), "win.userbrowse"),
-            ("#" + _("User I_nfo"), "win.userinfo"),
-            ("#" + _("_Private Chat"), "win.privatechat"),
-            ("#" + _("Buddy _List"), "win.buddylist"),
-            ("#" + _("_Chat Rooms"), "win.chatrooms"),
-            ("#" + _("_Interests"), "win.interests"),
-            ("", None),
-            ("#" + _("_Transfer Statistics"), "app.transferstatistics")
-        )
-
-        return menu
-
     def create_help_menu(self):
 
         menu = PopupMenu(self)
         menu.setup(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
-            ("#" + _("Report a _Bug"), "app.reportbug"),
             ("#" + _("_Setup Assistant"), "app.fastconfigure"),
+            ("#" + _("_Transfer Statistics"), "app.transferstatistics"),
+            ("", None),
+            ("#" + _("Report a _Bug"), "app.reportbug"),
             ("#" + _("Check _Latest Version"), "app.checklatest"),
             ("", None),
             ("#" + _("About _Nicotine+"), "app.about")
@@ -1198,7 +1112,6 @@ class NicotineFrame(UserInterface):
 
         menu.setup(
             (">" + _("_View"), self.create_view_menu()),
-            (">" + _("_Modes"), self.create_modes_menu()),
             ("", None)
         )
 
@@ -1219,7 +1132,6 @@ class NicotineFrame(UserInterface):
             (">" + _("_File"), self.create_file_menu()),
             (">" + _("_View"), self.create_view_menu()),
             (">" + _("_Shares"), self.create_shares_menu()),
-            (">" + _("_Modes"), self.create_modes_menu()),
             (">" + _("_Help"), self.create_help_menu())
         )
 
@@ -1392,27 +1304,24 @@ class NicotineFrame(UserInterface):
 
     def initialize_main_tabs(self):
 
-        self.hidden_tabs = {}
-        hide_tab_template = _("Hide %(tab)s")
-
         # Translation for the labels of tabs, icon names
-        tab_data = {
-            "search_tab_label": (_("Search Files"), "system-search-symbolic"),
-            "downloads_tab_label": (_("Downloads"), "document-save-symbolic"),
-            "uploads_tab_label": (_("Uploads"), "emblem-shared-symbolic"),
-            "userbrowse_tab_label": (_("User Browse"), "folder-symbolic"),
-            "userinfo_tab_label": (_("User Info"), "avatar-default-symbolic"),
-            "private_tab_label": (_("Private Chat"), "mail-send-symbolic"),
-            "userlist_tab_label": (_("Buddy List"), "contact-new-symbolic"),
-            "chatrooms_tab_label": (_("Chat Rooms"), "user-available-symbolic"),
-            "interests_tab_label": (_("Interests"), "emblem-default-symbolic")
-        }
+        tab_data = [
+            ("search", _("Search Files"), "system-search-symbolic"),
+            ("downloads", _("Downloads"), "document-save-symbolic"),
+            ("uploads", _("Uploads"), "emblem-shared-symbolic"),
+            ("userbrowse", _("User Browse"), "folder-symbolic"),
+            ("userinfo", _("User Info"), "avatar-default-symbolic"),
+            ("private", _("Private Chat"), "mail-send-symbolic"),
+            ("userlist", _("Buddy List"), "contact-new-symbolic"),
+            ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
+            ("interests", _("Interests"), "emblem-default-symbolic")
+        ]
 
         # Initialize tabs labels
         for i in range(self.MainNotebook.get_n_pages()):
+            tab_id, tab_text, tab_icon_name = tab_data[i]
             page = self.MainNotebook.get_nth_page(i)
-            tab_label_id = self.match_main_notebox(page) + "_tab_label"
-            tab_text, tab_icon_name = tab_data[tab_label_id]
+            page.page_id = tab_id
 
             # Initialize the image label
             tab_label = ImageLabel(
@@ -1420,56 +1329,16 @@ class NicotineFrame(UserInterface):
                 show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
                 show_status_image=True
             )
-            setattr(self, tab_label_id, tab_label)
 
             tab_label.set_icon(tab_icon_name)
             tab_label.set_text_color()
-
-            # Apply tab label
-            self.MainNotebook.set_tab_label(page, tab_label)
-            self.MainNotebook.set_tab_reorderable(page, True)
             tab_label.show()
 
-            # Set the menu to hide the tab
-            popup = PopupMenu(self, tab_label)
-            popup.setup(("#" + hide_tab_template % {"tab": tab_text}, self.hide_tab, (tab_label, page)))
-
-    def request_tab_hilite(self, page_id, status=1):
-
-        page = self.MainNotebook.get_nth_page(self.MainNotebook.get_current_page())
-        current_tab_label = self.MainNotebook.get_tab_label(page)
-        tab_label = getattr(self, page_id + "_tab_label")
-
-        if current_tab_label == tab_label:
-            return
-
-        if not tab_label:
-            return
-
-        if status == 1:
-            hilite_icon = get_icon("hilite")
-        else:
-            hilite_icon = get_icon("hilite3")
-
-            if tab_label.get_hilite_image() == get_icon("hilite"):
-                # Chat mentions have priority over normal notifications
-                return
-
-        if hilite_icon == tab_label.get_hilite_image():
-            return
-
-        tab_label.set_hilite_image(hilite_icon)
-        tab_label.set_text_color(status + 1)
-
-    def clear_tab_hilite(self):
-
-        tab_label = getattr(self, self.current_page_id + "_tab_label")
-
-        if not tab_label.get_hilite_image():
-            return
-
-        tab_label.set_hilite_image(None)
-        tab_label.set_text_color(0)
+            # Apply tab label
+            setattr(self, tab_id + "_tab_label", tab_label)
+            self.MainNotebook.set_tab_label(page, tab_label)
+            self.MainNotebook.set_tab_reorderable(page, True)
+            self.set_tab_expand(page)
 
     def on_switch_page(self, notebook, page, page_num):
 
@@ -1482,8 +1351,7 @@ class NicotineFrame(UserInterface):
         for child in page.get_children():
             child.show()
 
-        page_id = self.match_main_notebox(page)
-        self.set_active_header_bar(page_id)
+        self.set_active_header_bar(page.page_id)
 
         if page == self.chatroomsvbox:
             curr_page_num = self.chatrooms.get_current_page()
@@ -1554,31 +1422,15 @@ class NicotineFrame(UserInterface):
             self.interests.populate_recommendations()
             GLib.idle_add(lambda: self.interests.LikesList.grab_focus() == -1)
 
-    def on_page_removed(self, main_notebook, child, page_num):
-
-        name = self.match_main_notebox(child)
-        config.sections["ui"]["modes_visible"][name] = False
-
-        self.on_page_reordered(main_notebook, child, page_num)
-
-    def on_page_added(self, main_notebook, child, page_num):
-
-        name = self.match_main_notebox(child)
-        config.sections["ui"]["modes_visible"][name] = True
-
-        self.on_page_reordered(main_notebook, child, page_num)
-
     def on_page_reordered(self, main_notebook, child, page_num):
 
-        tab_names = []
+        page_ids = []
 
         for i in range(self.MainNotebook.get_n_pages()):
-            tab_box = self.MainNotebook.get_nth_page(i)
-            tab_names.append(self.match_main_notebox(tab_box))
+            page = self.MainNotebook.get_nth_page(i)
+            page_ids.append(page.page_id)
 
-        config.sections["ui"]["modes_order"] = tab_names
-
-        main_notebook.set_visible(main_notebook.get_n_pages())
+        config.sections["ui"]["modes_order"] = page_ids
 
     def on_tab_close(self, *args):
         """ Ctrl+W and Ctrl+F4: close current secondary tab """
@@ -1631,33 +1483,107 @@ class NicotineFrame(UserInterface):
         self.MainNotebook.set_current_page(tab_num - 1)
         return True
 
+    def request_tab_hilite(self, page_id, status=1):
+
+        if self.current_page_id == page_id:
+            return
+
+        tab_label = getattr(self, page_id + "_tab_label")
+
+        if status == 1:
+            hilite_icon = get_icon("hilite")
+        else:
+            hilite_icon = get_icon("hilite3")
+
+            if tab_label.get_hilite_image() == get_icon("hilite"):
+                # Chat mentions have priority over normal notifications
+                return
+
+        if hilite_icon == tab_label.get_hilite_image():
+            return
+
+        tab_label.set_hilite_image(hilite_icon)
+        tab_label.set_text_color(status + 1)
+
+    def clear_tab_hilite(self):
+
+        tab_label = getattr(self, self.current_page_id + "_tab_label")
+
+        if not tab_label.get_hilite_image():
+            return
+
+        tab_label.set_hilite_image(None)
+        tab_label.set_text_color(0)
+
+    def change_main_page(self, page_id):
+
+        page = getattr(self, page_id + "vbox")
+
+        if page in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
+            page_num = self.MainNotebook.page_num(page)
+            self.MainNotebook.set_current_page(page_num)
+            return
+
+        self.show_tab(page_id)
+
+    def show_tab(self, page_id):
+
+        page = getattr(self, page_id + "vbox")
+
+        if page in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
+            return
+
+        if page not in self.hidden_tabs:
+            return
+
+        tab_label = self.hidden_tabs[page]
+
+        self.MainNotebook.append_page(page, tab_label)
+        self.MainNotebook.set_tab_reorderable(page, True)
+        self.set_tab_expand(page)
+
+        del self.hidden_tabs[page]
+
+    def hide_tab(self, page_id):
+
+        tab_label = getattr(self, page_id + "_tab_label")
+        page = getattr(self, page_id + "vbox")
+
+        if page not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
+            return
+
+        if page in self.hidden_tabs:
+            return
+
+        self.hidden_tabs[page] = tab_label
+
+        num = self.MainNotebook.page_num(page)
+        self.MainNotebook.remove_page(num)
+
     def set_main_tabs_order(self):
 
-        tab_names = config.sections["ui"]["modes_order"]
         order = 0
 
-        for name in tab_names:
-            tab_box = self.match_main_name_page(name)
-            self.MainNotebook.reorder_child(tab_box, order)
+        for name in config.sections["ui"]["modes_order"]:
+            page = getattr(self, name + "vbox", lambda: None)
+            self.MainNotebook.reorder_child(page, order)
             order += 1
 
     def set_main_tabs_visibility(self):
 
-        tab_names = config.sections["ui"]["modes_visible"]
-
-        for name in tab_names:
-            if tab_names[name]:
+        for name in config.sections["ui"]["modes_visible"]:
+            if config.sections["ui"]["modes_visible"][name]:
                 # Tab is visible
                 continue
 
-            tab_box = self.match_main_name_page(name)
+            page = getattr(self, name + "vbox", lambda: None)()
 
-            if tab_box is None:
+            if page is None:
                 continue
 
-            num = self.MainNotebook.page_num(tab_box)
+            num = self.MainNotebook.page_num(page)
 
-            self.hidden_tabs[tab_box] = self.MainNotebook.get_tab_label(tab_box)
+            self.hidden_tabs[page] = self.MainNotebook.get_tab_label(page)
             self.MainNotebook.remove_page(num)
 
         if self.MainNotebook.get_n_pages() <= 1:
@@ -1677,153 +1603,42 @@ class NicotineFrame(UserInterface):
         if 0 <= last_tab_id <= self.MainNotebook.get_n_pages():
             self.MainNotebook.set_current_page(last_tab_id)
 
-    def hide_tab(self, action, state, lista):
+    def set_tab_expand(self, page):
 
-        event_box, tab_box = lista
-
-        if tab_box not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-            return
-
-        if tab_box in self.hidden_tabs:
-            return
-
-        self.hidden_tabs[tab_box] = event_box
-
-        num = self.MainNotebook.page_num(tab_box)
-        self.MainNotebook.remove_page(num)
-
-    def show_tab(self, tab_box):
-
-        if tab_box in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-            return
-
-        if tab_box not in self.hidden_tabs:
-            return
-
-        event_box = self.hidden_tabs[tab_box]
-
-        self.MainNotebook.append_page(tab_box, event_box)
-        self.set_tab_expand(tab_box)
-        self.MainNotebook.set_tab_reorderable(tab_box, True)
-
-        del self.hidden_tabs[tab_box]
-
-    def set_tab_expand(self, tab_box):
-
-        tab_label = self.MainNotebook.get_tab_label(tab_box)
+        tab_label = self.MainNotebook.get_tab_label(page)
         tab_position = config.sections["ui"]["tabmain"]
 
-        if tab_position in ("Left", "left", _("Left"), "Right", "right", _("Right")):
+        if tab_position in ("left", "right"):
             expand = False
         else:
             expand = True
 
         if Gtk.get_major_version() == 4:
-            self.MainNotebook.get_page(tab_box).set_property("tab-expand", expand)
+            self.MainNotebook.get_page(page).set_property("tab-expand", expand)
         else:
-            self.MainNotebook.child_set_property(tab_box, "tab-expand", expand)
+            self.MainNotebook.child_set_property(page, "tab-expand", expand)
 
         tab_label.set_centered(expand)
 
-    def get_tab_position(self, string):
-
-        if string in ("Top", "top", _("Top")):
-            position = Gtk.PositionType.TOP
-
-        elif string in ("Bottom", "bottom", _("Bottom")):
-            position = Gtk.PositionType.BOTTOM
-
-        elif string in ("Left", "left", _("Left")):
-            position = Gtk.PositionType.LEFT
-
-        elif string in ("Right", "right", _("Right")):
-            position = Gtk.PositionType.RIGHT
-
-        else:
-            position = Gtk.PositionType.TOP
-
-        return position
-
     def set_tab_positions(self):
 
-        ui = config.sections["ui"]
+        default_pos = Gtk.PositionType.TOP
+        positions = {
+            "top": Gtk.PositionType.TOP,
+            "bottom": Gtk.PositionType.BOTTOM,
+            "left": Gtk.PositionType.LEFT,
+            "right": Gtk.PositionType.RIGHT
+        }
 
         # Main notebook
-        tab_position = ui["tabmain"]
-        self.MainNotebook.set_tab_pos(self.get_tab_position(tab_position))
-
-        for i in range(self.MainNotebook.get_n_pages()):
-            tab_box = self.MainNotebook.get_nth_page(i)
-            self.set_tab_expand(tab_box)
+        self.MainNotebook.set_tab_pos(positions.get(config.sections["ui"]["tabmain"], default_pos))
 
         # Other notebooks
-        self.chatrooms.set_tab_pos(self.get_tab_position(ui["tabrooms"]))
-        self.privatechat.set_tab_pos(self.get_tab_position(ui["tabprivate"]))
-        self.userinfo.set_tab_pos(self.get_tab_position(ui["tabinfo"]))
-        self.userbrowse.set_tab_pos(self.get_tab_position(ui["tabbrowse"]))
-        self.search.set_tab_pos(self.get_tab_position(ui["tabsearch"]))
-
-    def match_main_notebox(self, tab):
-
-        if tab == self.chatroomsvbox:
-            name = "chatrooms"   # Chatrooms
-        elif tab == self.privatevbox:
-            name = "private"     # Private rooms
-        elif tab == self.downloadsvbox:
-            name = "downloads"   # Downloads
-        elif tab == self.uploadsvbox:
-            name = "uploads"     # Uploads
-        elif tab == self.searchvbox:
-            name = "search"      # Search
-        elif tab == self.userinfovbox:
-            name = "userinfo"    # Userinfo
-        elif tab == self.userbrowsevbox:
-            name = "userbrowse"  # User browse
-        elif tab == self.interestsvbox:
-            name = "interests"   # Interests
-        elif tab == self.userlistvbox:
-            name = "userlist"    # Buddy list
-        else:
-            # this should never happen, unless you've renamed a widget
-            return
-
-        return name
-
-    def match_main_name_page(self, tab):
-
-        if tab == "chatrooms":
-            child = self.chatroomsvbox          # Chatrooms
-        elif tab == "private":
-            child = self.privatevbox            # Private rooms
-        elif tab == "downloads":
-            child = self.downloadsvbox          # Downloads
-        elif tab == "uploads":
-            child = self.uploadsvbox            # Uploads
-        elif tab == "search":
-            child = self.searchvbox             # Search
-        elif tab == "userinfo":
-            child = self.userinfovbox           # Userinfo
-        elif tab == "userbrowse":
-            child = self.userbrowsevbox         # User browse
-        elif tab == "interests":
-            child = self.interestsvbox          # Interests
-        elif tab == "userlist":
-            child = self.userlistvbox           # Buddy list
-        else:
-            # this should never happen, unless you've renamed a widget
-            return
-
-        return child
-
-    def change_main_page(self, tab_name):
-
-        tab_box = self.match_main_name_page(tab_name)
-
-        if tab_box in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-            page_num = self.MainNotebook.page_num
-            self.MainNotebook.set_current_page(page_num(tab_box))
-        else:
-            self.show_tab(tab_box)
+        self.chatrooms.set_tab_pos(positions.get(config.sections["ui"]["tabrooms"], default_pos))
+        self.privatechat.set_tab_pos(positions.get(config.sections["ui"]["tabprivate"], default_pos))
+        self.userinfo.set_tab_pos(positions.get(config.sections["ui"]["tabinfo"], default_pos))
+        self.userbrowse.set_tab_pos(positions.get(config.sections["ui"]["tabbrowse"], default_pos))
+        self.search.set_tab_pos(positions.get(config.sections["ui"]["tabsearch"], default_pos))
 
     """ Search """
 
@@ -2456,9 +2271,6 @@ class NicotineFrame(UserInterface):
         self.np.quit()
 
     def quit(self):
-
-        # Prevent triggering the page removal event, which sets the tab visibility to false
-        self.MainNotebook.disconnect(self.page_removed_signal)
 
         # Explicitly hide tray icon, otherwise it will not disappear on Windows
         self.tray_icon.hide()

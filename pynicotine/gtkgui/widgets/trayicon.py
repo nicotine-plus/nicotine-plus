@@ -119,11 +119,11 @@ class TrayIcon:
         self.show_window()
 
     def on_downloads(self, *args):
-        self.frame.on_downloads()
+        self.frame.change_main_page("downloads")
         self.show_window()
 
     def on_uploads(self, *args):
-        self.frame.on_uploads()
+        self.frame.change_main_page("uploads")
         self.show_window()
 
     def on_open_private_chat_response(self, dialog, response_id, data):

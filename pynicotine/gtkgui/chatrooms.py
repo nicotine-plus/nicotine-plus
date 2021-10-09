@@ -78,8 +78,6 @@ class ChatRooms(IconNotebook):
             notebookraw=self.frame.chatrooms_notebook
         )
 
-        self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))
-
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
