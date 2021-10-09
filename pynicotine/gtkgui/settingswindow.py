@@ -1380,6 +1380,18 @@ class UserInterfaceFrame(UserInterface):
         self.p = parent
         self.frame = self.p.frame
 
+        self.tabs = {
+            "search": self.EnableSearchTab,
+            "downloads": self.EnableDownloadsTab,
+            "uploads": self.EnableUploadsTab,
+            "userbrowse": self.EnableUserBrowseTab,
+            "userinfo": self.EnableUserInfoTab,
+            "private": self.EnablePrivateTab,
+            "userlist": self.EnableUserListTab,
+            "chatrooms": self.EnableChatroomsTab,
+            "interests": self.EnableInterestsTab
+        }
+
         # Define options for each GtkComboBox using a liststore
         # The first element is the translated string,
         # the second is a GtkPositionType
@@ -1519,6 +1531,12 @@ class UserInterfaceFrame(UserInterface):
 
         self.p.set_widgets_data(self.options)
 
+        for page_id, enabled in config.sections["ui"]["modes_visible"].items():
+            widget = self.tabs.get(page_id)
+
+            if widget is not None:
+                widget.set_active(enabled)
+
         # Function to set the default iter from the value found in the config file
         def set_active_conf(model, path, iterator, data):
             if model.get_value(iterator, 1).lower() == data["cfg"].lower():
@@ -1551,6 +1569,11 @@ class UserInterfaceFrame(UserInterface):
         iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
         iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
 
+        enabled_tabs = {}
+
+        for page_id, widget in self.tabs.items():
+            enabled_tabs[page_id] = widget.get_active()
+
         return {
             "ui": {
                 "globalfont": self.SelectGlobalFont.get_font(),
@@ -1573,6 +1596,7 @@ class UserInterfaceFrame(UserInterface):
                 "tabsearch": self.pos_list.get_value(iter_search, 1),
                 "tabinfo": self.pos_list.get_value(iter_info, 1),
                 "tabbrowse": self.pos_list.get_value(iter_browse, 1),
+                "modes_visible": enabled_tabs,
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
                 "tab_status_icons": self.TabStatusIcons.get_active(),

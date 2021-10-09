@@ -552,6 +552,84 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
+                <property name="label" translatable="yes">Visible Tabs</property>
+                <property name="xalign">0</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableSearchTab">
+                <property name="label" translatable="yes">Show search tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableDownloadsTab">
+                <property name="label" translatable="yes">Show downloads tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableUploadsTab">
+                <property name="label" translatable="yes">Show uploads tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableUserBrowseTab">
+                <property name="label" translatable="yes">Show user browse tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableUserInfoTab">
+                <property name="label" translatable="yes">Show user info tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnablePrivateTab">
+                <property name="label" translatable="yes">Show private chat tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableUserListTab">
+                <property name="label" translatable="yes">Show buddy list tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableChatroomsTab">
+                <property name="label" translatable="yes">Show chat room tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="EnableInterestsTab">
+                <property name="label" translatable="yes">Show interests tab</property>
+                <property name="visible">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="spacing">30</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Lists</property>
                 <property name="xalign">0</property>
                 <attributes>

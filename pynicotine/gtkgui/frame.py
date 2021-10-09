@@ -1541,6 +1541,7 @@ class NicotineFrame(UserInterface):
         self.MainNotebook.append_page(page, tab_label)
         self.MainNotebook.set_tab_reorderable(page, True)
         self.set_tab_expand(page)
+        self.MainNotebook.show()
 
         del self.hidden_tabs[page]
 
@@ -1571,20 +1572,12 @@ class NicotineFrame(UserInterface):
 
     def set_main_tabs_visibility(self):
 
-        for name in config.sections["ui"]["modes_visible"]:
-            if config.sections["ui"]["modes_visible"][name]:
-                # Tab is visible
+        for page_id, enabled in config.sections["ui"]["modes_visible"].items():
+            if enabled:
+                self.show_tab(page_id)
                 continue
 
-            page = getattr(self, name + "vbox", lambda: None)()
-
-            if page is None:
-                continue
-
-            num = self.MainNotebook.page_num(page)
-
-            self.hidden_tabs[page] = self.MainNotebook.get_tab_label(page)
-            self.MainNotebook.remove_page(num)
+            self.hide_tab(page_id)
 
         if self.MainNotebook.get_n_pages() <= 1:
             self.MainNotebook.hide()
@@ -1608,7 +1601,7 @@ class NicotineFrame(UserInterface):
         tab_label = self.MainNotebook.get_tab_label(page)
         tab_position = config.sections["ui"]["tabmain"]
 
-        if tab_position in ("left", "right"):
+        if tab_position in ("Left", "Right"):
             expand = False
         else:
             expand = True
@@ -1624,10 +1617,10 @@ class NicotineFrame(UserInterface):
 
         default_pos = Gtk.PositionType.TOP
         positions = {
-            "top": Gtk.PositionType.TOP,
-            "bottom": Gtk.PositionType.BOTTOM,
-            "left": Gtk.PositionType.LEFT,
-            "right": Gtk.PositionType.RIGHT
+            "Top": Gtk.PositionType.TOP,
+            "Bottom": Gtk.PositionType.BOTTOM,
+            "Left": Gtk.PositionType.LEFT,
+            "Right": Gtk.PositionType.RIGHT
         }
 
         # Main notebook
@@ -2111,14 +2104,16 @@ class NicotineFrame(UserInterface):
             w.show_status_images(config.sections["ui"]["tab_status_icons"])
 
         # Main notebook
+        self.set_tab_positions()
+        self.set_main_tabs_visibility()
+
         for i in range(self.MainNotebook.get_n_pages()):
-            tab_box = self.MainNotebook.get_nth_page(i)
-            tab_label = self.MainNotebook.get_tab_label(tab_box)
+            page = self.MainNotebook.get_nth_page(i)
+            tab_label = self.MainNotebook.get_tab_label(page)
 
             tab_label.show_hilite_image(config.sections["notifications"]["notification_tab_icons"])
             tab_label.set_text_color(0)
-
-        self.set_tab_positions()
+            self.set_tab_expand(page)
 
         self.np.transfers.check_upload_queue()
 
