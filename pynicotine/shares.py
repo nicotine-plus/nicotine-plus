@@ -26,13 +26,13 @@ import os
 import pickle
 import shelve
 import stat
-import string
 import sys
 import threading
 import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import PUNCTUATION
 from pynicotine.utils import rename_process
 
 """ Check if there's an appropriate (performant) database type for shelves """
@@ -74,7 +74,7 @@ class Scanner:
         self.sharestype = sharestype
         self.rebuild = rebuild
         self.tinytag = None
-        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
 
     def run(self):
 
@@ -472,7 +472,7 @@ class Shares:
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
-        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
         self.public_rescanning = False
         self.buddy_rescanning = False

@@ -55,6 +55,7 @@ class UserBrowses(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "userbrowse"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -63,15 +64,15 @@ class UserBrowses(IconNotebook):
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.UserBrowseNotebookRaw
+            notebookraw=self.frame.userbrowse_notebook
         )
 
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, notebook, page, page_num):
 
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.UserBrowseTabLabel)
+        if self.frame.current_page_id != self.page_id:
+            return
 
         for tab in self.pages.values():
             if tab.Main == page:
@@ -730,7 +731,7 @@ class UserBrowse(UserInterface):
 
     def set_finished(self):
 
-        self.frame.request_tab_hilite(self.frame.UserBrowseTabLabel)
+        self.frame.request_tab_hilite(self.userbrowses.page_id)
         self.userbrowses.request_changed(self.Main)
 
         self.progressbar1.set_fraction(1.0)

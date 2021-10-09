@@ -47,6 +47,7 @@ class UserInfos(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "userinfo"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -55,22 +56,22 @@ class UserInfos(IconNotebook):
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.UserInfoNotebookRaw
+            notebookraw=self.frame.userinfo_notebook
         )
 
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
     def on_switch_info_page(self, notebook, page, page_num):
 
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.UserInfoTabLabel)
+        if self.frame.current_page_id != self.page_id:
+            return
 
         for tab in self.pages.values():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.descr.grab_focus() == -1)
                 break
 
-    def show_user(self, user):
+    def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
             try:
@@ -86,8 +87,9 @@ class UserInfos(IconNotebook):
             if self.get_n_pages() > 0:
                 self.frame.UserInfoStatusPage.hide()
 
-        self.set_current_page(self.page_num(self.pages[user].Main))
-        self.frame.change_main_page("userinfo")
+        if switch_page:
+            self.set_current_page(self.page_num(self.pages[user].Main))
+            self.frame.change_main_page("userinfo")
 
     def set_conn(self, user, conn):
         if user in self.pages:
@@ -324,7 +326,7 @@ class UserInfo(UserInterface):
 
     def set_finished(self):
 
-        self.frame.request_tab_hilite(self.frame.UserInfoTabLabel)
+        self.frame.request_tab_hilite(self.userinfos.page_id)
         self.userinfos.request_changed(self.Main)
 
         self.progressbar.set_fraction(1.0)

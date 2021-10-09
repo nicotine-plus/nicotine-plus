@@ -35,14 +35,13 @@ from pynicotine.utils import open_file_path
 
 class Downloads(TransferList):
 
-    def __init__(self, frame, tab_label):
+    def __init__(self, frame):
 
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
         self.aborted_status = _("Paused")
 
         TransferList.__init__(self, frame, type='download')
-        self.tab_label = tab_label
 
         self.popup_menu_clear.setup(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),

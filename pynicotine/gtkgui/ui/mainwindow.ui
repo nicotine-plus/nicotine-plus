@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="HeaderMenuIcon">
+  <object class="GtkImage" id="header_menu_icon">
     <property name="visible">1</property>
     <property name="icon-name">open-menu-symbolic</property>
   </object>
-  <object class="GtkMenuButton" id="HeaderMenu">
+  <object class="GtkMenuButton" id="header_menu">
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
   </object>
@@ -26,11 +25,11 @@
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderSearch">
+  <object class="GtkHeaderBar" id="header_search">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="SearchTitle">
+      <object class="GtkBox" id="search_title">
         <property name="visible">1</property>
         <property name="hexpand">0</property>
         <property name="spacing">4</property>
@@ -119,7 +118,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="SearchEnd">
+      <object class="GtkBox" id="search_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -139,16 +138,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderDownloads">
+  <object class="GtkHeaderBar" id="header_downloads">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="DownloadsTitle">
+      <object class="GtkBox" id="downloads_title">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -173,29 +175,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="DownloadUsers">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="DownloadUsers">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -222,29 +215,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="DownloadFiles">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="DownloadFiles">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -253,7 +237,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="DownloadsEnd">
+      <object class="GtkBox" id="downloads_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -270,6 +254,9 @@
                     <property name="icon-name">go-down-symbolic</property>
                   </object>
                 </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
               </object>
             </child>
             <child>
@@ -294,16 +281,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderUploads">
+  <object class="GtkHeaderBar" id="header_uploads">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="UploadsTitle">
+      <object class="GtkBox" id="uploads_title">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -328,29 +318,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="UploadUsers">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="UploadUsers">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -377,29 +358,20 @@
                 <property name="visible">1</property>
                 <property name="action-name">app.transferstatistics</property>
                 <child>
-                  <object class="GtkBox">
-                    <property name="width-request">24</property>
+                  <object class="GtkLabel" id="UploadFiles">
                     <property name="visible">1</property>
-                    <property name="spacing">5</property>
-                    <property name="homogeneous">1</property>
-                    <child>
-                      <object class="GtkLabel" id="UploadFiles">
-                        <property name="visible">1</property>
-                        <property name="label">0</property>
-                        <property name="margin-start">5</property>
-                        <property name="margin-end">5</property>
-                        <attributes>
-                          <attribute name="weight" value="bold"/>
-                        </attributes>
-                        <style>
-                          <class name="dim-label"/>
-                        </style>
-                      </object>
-                    </child>
+                    <property name="label">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
                   </object>
                 </child>
                 <style>
                   <class name="circular"/>
+                  <class name="count"/>
                 </style>
               </object>
             </child>
@@ -408,7 +380,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="UploadsEnd">
+      <object class="GtkBox" id="uploads_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -425,6 +397,9 @@
                     <property name="icon-name">go-down-symbolic</property>
                   </object>
                 </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
               </object>
             </child>
             <child>
@@ -449,16 +424,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderPrivateChat">
+  <object class="GtkHeaderBar" id="header_private">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="PrivateChatTitle">
+      <object class="GtkBox" id="private_title">
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
@@ -488,7 +466,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="PrivateChatEnd">
+      <object class="GtkBox" id="private_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -503,16 +481,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderUserInfo">
+  <object class="GtkHeaderBar" id="header_userinfo">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="UserInfoTitle">
+      <object class="GtkBox" id="userinfo_title">
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
@@ -542,7 +523,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="UserInfoEnd">
+      <object class="GtkBox" id="userinfo_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -574,11 +555,11 @@
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderUserBrowse">
+  <object class="GtkHeaderBar" id="header_userbrowse">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="UserBrowseTitle">
+      <object class="GtkBox" id="userbrowse_title">
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
@@ -608,7 +589,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="UserBrowseEnd">
+      <object class="GtkBox" id="userbrowse_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -649,16 +630,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderUserList">
+  <object class="GtkHeaderBar" id="header_userlist">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="UserListTitle">
+      <object class="GtkBox" id="userlist_title">
         <property name="visible">1</property>
         <property name="valign">center</property>
         <child>
@@ -677,7 +661,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="UserListEnd">
+      <object class="GtkBox" id="userlist_end">
         <property name="visible">1</property>
         <property name="valign">center</property>
       </object>
@@ -700,11 +684,11 @@
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderChatrooms">
+  <object class="GtkHeaderBar" id="header_chatrooms">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkBox" id="ChatroomsTitle">
+      <object class="GtkBox" id="chatrooms_title">
         <property name="visible">1</property>
         <property name="hexpand">0</property>
         <property name="spacing">4</property>
@@ -730,7 +714,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="ChatroomsEnd">
+      <object class="GtkBox" id="chatrooms_end">
         <property name="visible">1</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
@@ -745,16 +729,19 @@
                 <property name="icon-name">emblem-system-symbolic</property>
               </object>
             </child>
+            <style>
+              <class name="image-button"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
   </object>
-  <object class="GtkHeaderBar" id="HeaderInterests">
+  <object class="GtkHeaderBar" id="header_interests">
     <property name="visible">1</property>
     <property name="height-request">42</property>
     <child type="title">
-      <object class="GtkLabel" id="InterestsTitle">
+      <object class="GtkLabel" id="interests_title">
         <property name="visible">1</property>
         <property name="label" translatable="yes">Interests</property>
         <style>
@@ -763,7 +750,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="InterestsEnd">
+      <object class="GtkBox" id="interests_end">
         <property name="visible">1</property>
         <property name="valign">center</property>
       </object>
@@ -801,10 +788,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="SearchToolbar">
+                              <object class="GtkBox" id="search_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="SearchToolbarContents">
+                                  <object class="GtkBox" id="search_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -872,18 +859,13 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkNotebook" id="SearchNotebookRaw">
+                              <object class="GtkNotebook" id="search_notebook">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="SearchTabLabel">
-                        <property name="visible">1</property>
                       </object>
                     </child>
                     <!-- Downloads -->
@@ -896,10 +878,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="DownloadsToolbar">
+                              <object class="GtkBox" id="downloads_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="DownloadsToolbarContents">
+                                  <object class="GtkBox" id="downloads_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -970,11 +952,6 @@
                         </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="DownloadsTabLabel">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
                     <!-- Uploads -->
                     <child>
                       <object class="GtkBox" id="uploadsvbox">
@@ -985,10 +962,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UploadsToolbar">
+                              <object class="GtkBox" id="uploads_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="UploadsToolbarContents">
+                                  <object class="GtkBox" id="uploads_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1059,11 +1036,6 @@
                         </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="UploadsTabLabel">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
                     <!-- User Browse -->
                     <child>
                       <object class="GtkBox" id="userbrowsevbox">
@@ -1074,10 +1046,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserBrowseToolbar">
+                              <object class="GtkBox" id="userbrowse_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="UserBrowseToolbarContents">
+                                  <object class="GtkBox" id="userbrowse_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1145,18 +1117,13 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkNotebook" id="UserBrowseNotebookRaw">
+                              <object class="GtkNotebook" id="userbrowse_notebook">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="UserBrowseTabLabel">
-                        <property name="visible">1</property>
                       </object>
                     </child>
                     <!-- User Info -->
@@ -1169,10 +1136,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserInfoToolbar">
+                              <object class="GtkBox" id="userinfo_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="UserInfoToolbarContents">
+                                  <object class="GtkBox" id="userinfo_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1240,7 +1207,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkNotebook" id="UserInfoNotebookRaw">
+                              <object class="GtkNotebook" id="userinfo_notebook">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
                               </object>
@@ -1249,14 +1216,9 @@
                         </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="UserInfoTabLabel">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
                     <!-- Private Chat -->
                     <child>
-                      <object class="GtkBox" id="privatechatvbox">
+                      <object class="GtkBox" id="privatevbox">
                         <property name="visible">1</property>
                         <property name="orientation">vertical</property>
                         <child>
@@ -1264,10 +1226,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="PrivateChatToolbar">
+                              <object class="GtkBox" id="private_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="PrivateChatToolbarContents">
+                                  <object class="GtkBox" id="private_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1335,18 +1297,13 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkNotebook" id="PrivateChatNotebookRaw">
+                              <object class="GtkNotebook" id="private_notebook">
                                 <property name="visible">1</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
                           </object>
                         </child>
-                      </object>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="PrivateChatTabLabel">
-                        <property name="visible">1</property>
                       </object>
                     </child>
                     <!-- Buddy List -->
@@ -1359,10 +1316,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="UserListToolbar">
+                              <object class="GtkBox" id="userlist_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="UserListToolbarContents">
+                                  <object class="GtkBox" id="userlist_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1433,11 +1390,6 @@
                         </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="UserListTabLabel">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
                     <!-- Chat Rooms -->
                     <child>
                       <object class="GtkBox" id="chatroomsvbox">
@@ -1448,10 +1400,10 @@
                             <property name="visible">0</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="ChatroomsToolbar">
+                              <object class="GtkBox" id="chatrooms_toolbar">
                                 <property name="visible">0</property>
                                 <child>
-                                  <object class="GtkBox" id="ChatroomsToolbarContents">
+                                  <object class="GtkBox" id="chatrooms_toolbar_contents">
                                     <property name="visible">1</property>
                                     <property name="hexpand">1</property>
                                     <property name="margin-start">6</property>
@@ -1522,7 +1474,7 @@
                               <object class="GtkPaned" id="ChatroomsPane">
                                 <property name="visible">1</property>
                                 <child>
-                                  <object class="GtkNotebook" id="ChatroomsNotebookRaw">
+                                  <object class="GtkNotebook" id="chatrooms_notebook">
                                     <property name="visible">1</property>
                                     <property name="show-border">0</property>
                                     <property name="scrollable">1</property>
@@ -1534,19 +1486,9 @@
                         </child>
                       </object>
                     </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="ChatroomsTabLabel">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
                     <!-- Interests -->
                     <child>
                       <object class="GtkBox" id="interestsvbox">
-                        <property name="visible">1</property>
-                      </object>
-                    </child>
-                    <child type="tab">
-                      <object class="GtkBox" id="InterestsTabLabel">
                         <property name="visible">1</property>
                       </object>
                     </child>

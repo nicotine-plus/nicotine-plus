@@ -63,15 +63,15 @@ class Searches(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-
-        self.searches = {}
+        self.page_id = "search"
+        self.pages = {}
 
         IconNotebook.__init__(
             self,
             self.frame,
             tabclosers=config.sections["ui"]["tabclosers"],
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.SearchNotebookRaw
+            notebookraw=self.frame.search_notebook
         )
 
         if Gtk.get_major_version() == 3:
@@ -87,13 +87,11 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, notebook, page, page_num):
 
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.SearchTabLabel)
+        if self.frame.current_page_id != self.page_id:
+            return
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None and tab.Main == page:
+        for tab in self.pages.values():
+            if tab.Main == page:
                 GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
                 return True
 
@@ -143,9 +141,6 @@ class Searches(IconNotebook):
         # Repopulate the combo list
         self.populate_search_history()
 
-    def set_wishlist_interval(self, msg):
-        self.wish_list.set_interval(msg)
-
     def clear_search_history(self):
 
         self.frame.SearchEntry.set_text("")
@@ -167,16 +162,12 @@ class Searches(IconNotebook):
         config.write_configuration()
 
         # Update filters in search tabs
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None:
-                tab.populate_filters(set_default_filters=False)
+        for page in self.pages.values():
+            page.populate_filters(set_default_filters=False)
 
     def create_tab(self, search_id, text, mode, mode_label, showtab=True):
 
-        tab = Search(self, text, search_id, mode, mode_label, showtab)
-        self.searches[search_id] = {"id": search_id, "term": text, "tab": tab, "mode": mode, "ignore": False}
+        self.pages[search_id] = tab = Search(self, text, search_id, mode, mode_label, showtab)
 
         if showtab:
             self.show_tab(tab, search_id, text, mode)
@@ -186,14 +177,14 @@ class Searches(IconNotebook):
     def show_tab(self, tab, search_id, text, mode):
 
         if tab.mode_label is not None:
-            fulltext = "(%s) %s" % (tab.mode_label, text)
+            full_text = "(%s) %s" % (tab.mode_label, text)
             length = 25
         else:
-            fulltext = text
+            full_text = text
             length = 20
 
-        label = fulltext[:length]
-        self.append_page(tab.Main, label, tab.on_close, fulltext=fulltext)
+        label = full_text[:length]
+        self.append_page(tab.Main, label, tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if self.get_n_pages() > 0:
@@ -201,17 +192,13 @@ class Searches(IconNotebook):
 
     def show_search_result(self, msg, username, country):
 
-        search = self.searches.get(msg.token)
-
-        if search is None or search["ignore"]:
-            return
-
-        tab = search.get("tab")
+        tab = self.pages.get(msg.token)
 
         if tab is None:
+            search_term = self.frame.np.search.searches[msg.token]["term"]
             mode = "wishlist"
             mode_label = _("Wish")
-            tab = self.create_tab(search["id"], search["term"], mode, mode_label, showtab=False)
+            tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
         counter = len(tab.all_data) + 1
 
@@ -224,29 +211,25 @@ class Searches(IconNotebook):
 
     def remove_tab(self, tab):
 
-        search = self.searches.get(tab.id)
-
-        if search is not None:
-            if tab.text not in config.sections["server"]["autosearch"]:
-                del self.searches[tab.id]
-            else:
-                search["tab"] = None
-                search["ignore"] = True
-
-            self.frame.np.search.remove_allowed_search_id(tab.id)
-
+        self.frame.np.search.remove_search(tab.id)
         self.remove_page(tab.Main)
 
         if self.get_n_pages() == 0:
             self.frame.SearchStatusPage.show()
 
+    def add_wish(self, wish):
+        self.wish_list.add_wish(wish)
+
+    def remove_wish(self, wish):
+        self.wish_list.remove_wish(wish)
+
+    def set_wishlist_interval(self, msg):
+        self.wish_list.set_interval(msg)
+
     def update_visuals(self):
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None:
-                tab.update_visuals()
+        for page in self.pages.values():
+            page.update_visuals()
 
         self.wish_list.update_visuals()
 
@@ -258,10 +241,8 @@ class Searches(IconNotebook):
 
         current_page = self.get_nth_page(self.get_current_page())
 
-        for search in self.searches.values():
-            tab = search.get("tab")
-
-            if tab is not None and tab.Main == current_page:
+        for tab in self.pages.values():
+            if tab.Main == current_page:
                 tab.save_columns()
                 break
 
@@ -276,14 +257,11 @@ class Search(UserInterface):
         self.frame = searches.frame
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-        self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")
-            self.ShowSearchHelp.set_icon_name("dialog-question-symbolic")
         else:
             self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
-            self.ShowSearchHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 
         setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
         setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
@@ -426,6 +404,10 @@ class Search(UserInterface):
 
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
+
+        """ Wishlist """
+
+        self.update_wish_button()
 
     def set_label(self, label):
         self.tab_menu.set_widget(label)
@@ -656,7 +638,7 @@ class Search(UserInterface):
 
             # Update tab notification
             self.searches.request_changed(self.Main)
-            self.frame.request_tab_hilite(self.frame.SearchTabLabel)
+            self.frame.request_tab_hilite(self.searches.page_id)
 
     def append(self, row):
 
@@ -994,6 +976,27 @@ class Search(UserInterface):
             self.active_filter_count += 1
 
         self.update_results_model()
+
+    def update_wish_button(self):
+
+        if self.mode not in ("global", "wishlist"):
+            self.AddWish.hide()
+            return
+
+        if not self.frame.np.search.is_wish(self.text):
+            self.AddWishIcon.set_property("icon-name", "list-add-symbolic")
+            self.AddWishLabel.set_label(_("Add Wi_sh"))
+            return
+
+        self.AddWishIcon.set_property("icon-name", "list-remove-symbolic")
+        self.AddWishLabel.set_label(_("Remove Wi_sh"))
+
+    def on_add_wish(self, *args):
+
+        if self.frame.np.search.is_wish(self.text):
+            self.frame.np.search.remove_wish(self.text)
+        else:
+            self.frame.np.search.add_wish(self.text)
 
     def add_popup_menu_user(self, popup, user):
 

@@ -82,10 +82,10 @@ class SearchTest(unittest.TestCase):
 
         # First item
 
-        searchid = self.search.add_wish(SEARCH_TEXT)
+        self.search.add_wish(SEARCH_TEXT)
         self.assertEqual(config.sections["server"]["autosearch"][0], SEARCH_TEXT)
-        self.assertEqual(searchid, old_searchid + 1)
-        self.assertEqual(searchid, self.search.get_current_search_id())
+        self.assertEqual(self.search.searchid, old_searchid + 1)
+        self.assertEqual(self.search.searchid, self.search.get_current_search_id())
 
         # Second item
 

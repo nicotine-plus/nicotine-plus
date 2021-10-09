@@ -32,14 +32,13 @@ from pynicotine.utils import open_file_path
 
 class Uploads(TransferList):
 
-    def __init__(self, frame, tab_label):
+    def __init__(self, frame):
 
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
         self.aborted_status = _("Aborted")
 
         TransferList.__init__(self, frame, type='upload')
-        self.tab_label = tab_label
 
         self.popup_menu_clear.setup(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),

@@ -22,10 +22,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import string
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import PUNCTUATION
 
 
 class Search:
@@ -36,15 +36,25 @@ class Search:
         self.config = config
         self.queue = queue
         self.ui_callback = None
+        self.searches = {}
         self.searchid = int(random.random() * (2 ** 31 - 1))
+        self.wishlist_interval = 0
         self.share_dbs = share_dbs
         self.geoip = geoip
-        self.translatepunctuation = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+        self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
+
+        # Create wishlist searches
+        for term in config.sections["server"]["autosearch"]:
+            search_id = self.increment_search_id()
+            self.searches[search_id] = {"id": search_id, "term": term, "mode": "wishlist", "ignore": True}
 
         if hasattr(ui_callback, "search"):
             self.ui_callback = ui_callback.search
 
     def server_disconnect(self):
+
+        self.wishlist_interval = 0
+
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
@@ -75,6 +85,24 @@ class Search:
     def remove_allowed_search_id(search_id):
         """ Disallow parsing search result messages for a search ID """
         slskmessages.SEARCH_TOKENS_ALLOWED.discard(search_id)
+
+    def add_search(self, search_id, term, mode, ignore):
+        self.searches[search_id] = {"id": search_id, "term": term, "mode": mode, "ignore": ignore}
+        self.add_allowed_search_id(search_id)
+
+    def remove_search(self, search_id):
+
+        self.remove_allowed_search_id(search_id)
+        search = self.searches.get(search_id)
+
+        if search is None:
+            return
+
+        if search["term"] in self.config.sections["server"]["autosearch"]:
+            search["ignore"] = True
+            return
+
+        del self.searches[search_id]
 
     def process_search_term(self, text, mode, room, user):
 
@@ -185,7 +213,7 @@ class Search:
         elif mode == "user":
             self.do_peer_search(self.searchid, searchterm, users)
 
-        self.add_allowed_search_id(self.searchid)
+        self.add_search(self.searchid, searchterm, mode, ignore=False)
         return (self.searchid, searchterm, searchterm_without_special)
 
     def do_global_search(self, search_id, text):
@@ -202,7 +230,7 @@ class Search:
             self.queue.append(slskmessages.RoomSearch(room, search_id, text))
 
         elif self.core.chatrooms.ui_callback is not None:
-            for joined_room in self.core.chatrooms.ui_callback.joinedrooms:
+            for joined_room in self.core.chatrooms.ui_callback.pages:
                 self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
 
     def do_buddies_search(self, search_id, text):
@@ -220,6 +248,29 @@ class Search:
         self.add_allowed_search_id(search_id)
         self.queue.append(slskmessages.WishlistSearch(search_id, text))
 
+    def do_wishlist_search_interval(self):
+
+        if self.wishlist_interval == 0:
+            log.add(_("The server forbid us from doing wishlist searches."))
+            return False
+
+        searches = self.config.sections["server"]["autosearch"]
+
+        if not searches:
+            return True
+
+        # Search for a maximum of 1 item at each search interval
+        term = searches.pop()
+        searches.insert(0, term)
+
+        for search in self.searches.values():
+            if search["term"] == term and search["mode"] == "wishlist":
+                search["ignore"] = False
+                self.do_wishlist_search(search["id"], term)
+                break
+
+        return True
+
     def get_current_search_id(self):
         return self.searchid
 
@@ -230,7 +281,7 @@ class Search:
     def add_wish(self, wish):
 
         if not wish:
-            return None
+            return
 
         # Get a new search ID
         self.increment_search_id()
@@ -238,10 +289,30 @@ class Search:
         if wish not in self.config.sections["server"]["autosearch"]:
             self.config.sections["server"]["autosearch"].append(wish)
 
-        self.add_allowed_search_id(self.searchid)
-        return self.searchid
+        self.add_search(self.searchid, wish, "wishlist", ignore=True)
+
+        if self.ui_callback:
+            self.ui_callback.add_wish(wish)
+
+    def remove_wish(self, wish):
+
+        if wish in self.config.sections["server"]["autosearch"]:
+            self.config.sections["server"]["autosearch"].remove(wish)
+
+            for search in self.searches.values():
+                if search["term"] == wish and search["mode"] == "wishlist":
+                    del search
+                    break
+
+        if self.ui_callback:
+            self.ui_callback.remove_wish(wish)
+
+    def is_wish(self, wish):
+        return wish in self.config.sections["server"]["autosearch"]
 
     def set_wishlist_interval(self, msg):
+
+        self.wishlist_interval = msg.seconds
 
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
@@ -251,6 +322,11 @@ class Search:
     def file_search_result(self, msg):
 
         if not self.ui_callback or msg.token not in slskmessages.SEARCH_TOKENS_ALLOWED:
+            return
+
+        search = self.searches.get(msg.token)
+
+        if search is None or search["ignore"]:
             return
 
         conn = msg.conn

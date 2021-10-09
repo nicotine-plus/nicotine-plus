@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment_MaxDisplayedResults">
     <property name="lower">100</property>
     <property name="upper">25000</property>

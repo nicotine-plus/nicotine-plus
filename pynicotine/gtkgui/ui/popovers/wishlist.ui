@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.18"/>
   <object class="GtkPopover" id="popover">
     <child>
       <object class="GtkBox" id="main">
@@ -15,7 +14,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, useful for discovering uncommon files.</property>
+            <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
             <property name="max-width-chars">55</property>
             <property name="wrap">1</property>
             <property name="mnemonic_widget">list_view</property>
@@ -25,7 +24,7 @@
           <object class="GtkEntry" id="wish_entry">
             <property name="visible">1</property>
             <property name="hexpand">1</property>
-            <property name="placeholder-text" translatable="yes">Add search term...</property>
+            <property name="placeholder-text" translatable="yes">Add Wish...</property>
             <property name="primary-icon-name">list-add-symbolic</property>
             <signal name="activate" handler="on_add_wish" swapped="no"/>
             <signal name="icon-press" handler="on_add_wish" swapped="no"/>
@@ -78,13 +77,14 @@
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">1</property>
-                                <property name="icon-name">edit-clear-symbolic</property>
+                                <property name="icon-name">list-remove-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">_Remove</property>
+                                <property name="label" translatable="yes">R_emove Wish</property>
+                                <property name="tooltip-text">Shift+Delete</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>
@@ -117,7 +117,7 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
-                                    <property name="label" translatable="yes">_Clear All...</property>
+                                    <property name="label" translatable="yes">Clear All...</property>
                                     <property name="use-underline">1</property>
                                   </object>
                                 </child>

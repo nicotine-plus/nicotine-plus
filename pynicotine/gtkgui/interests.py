@@ -41,6 +41,7 @@ class Interests(UserInterface):
         frame.interestsvbox.add(self.Main)
 
         self.frame = frame
+        self.page_id = "interests"
         self.populated_recommends = False
 
         self.likes = {}
@@ -159,7 +160,7 @@ class Interests(UserInterface):
 
     def server_login(self):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.interestsvbox):
+        if self.frame.current_page_id != self.page_id:
             # Only populate recommendations if the tab is open on login
             return
 

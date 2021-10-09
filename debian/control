@@ -9,11 +9,11 @@ Build-Depends:
     devscripts,
     dh-python,
     gettext,
-    gir1.2-gtk-3.0,
+    gir1.2-gtk-3.0 (>= 3.18),
     lintian,
     python3 (>= 3.5),
     python3-gdbm,
-    python3-gi,
+    python3-gi (>= 3.18),
     python3-setuptools,
     xvfb
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
@@ -27,10 +27,10 @@ Architecture: all
 Depends:
     ${python3:Depends},
     ${misc:Depends},
-    gir1.2-gtk-3.0,
+    gir1.2-gtk-3.0 (>= 3.18),
     python3 (>= 3.5),
     python3-gdbm,
-    python3-gi
+    python3-gi (>= 3.18)
 Recommends:
     gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1,
     gir1.2-gspell-1

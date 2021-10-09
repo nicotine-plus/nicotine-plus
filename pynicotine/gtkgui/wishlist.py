@@ -25,11 +25,11 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.logfacility import log
 
 
 class WishList(UserInterface):
@@ -38,9 +38,7 @@ class WishList(UserInterface):
 
         super().__init__("ui/popovers/wishlist.ui")
 
-        self.disconnected = False
         self.frame = frame
-        self.interval = 0
         self.searches = searches
         self.timer = None
         self.wishes = {}
@@ -66,6 +64,20 @@ class WishList(UserInterface):
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
+        self.completion = Gtk.EntryCompletion()
+        self.completion.set_inline_completion(True)
+        self.completion.set_inline_selection(True)
+        self.completion.set_minimum_key_length(1)
+        self.completion.set_popup_single_match(False)
+        self.completion.set_text_column(0)
+        self.completion.set_model(self.store)
+
+        self.wish_entry.set_completion(self.completion)
+
+        setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
+        setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
+
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
             button.connect("clicked", self.on_show)
@@ -84,15 +96,20 @@ class WishList(UserInterface):
         old_value = store.get_value(iterator, 0)
 
         if value and not value.isspace():
-            self.remove_wish(old_value)
-            self.add_wish(value)
+            self.frame.np.search.remove_wish(old_value)
+            self.frame.np.search.add_wish(value)
+            self.select_wish(value)
 
     def on_add_wish(self, *args):
 
         wish = self.wish_entry.get_text()
         self.wish_entry.set_text("")
 
-        self.add_wish(wish)
+        if wish not in self.wishes:
+            GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
+
+        self.frame.np.search.add_wish(wish)
+        self.select_wish(wish)
 
     def on_remove_wish(self, *args):
 
@@ -101,7 +118,16 @@ class WishList(UserInterface):
         for path in reversed(paths):
             iterator = model.get_iter(path)
             wish = model.get_value(iterator, 0)
-            self.remove_wish(wish)
+            self.frame.np.search.remove_wish(wish)
+
+        self.list_view.get_selection().unselect_all()
+        self.wish_entry.grab_focus()
+
+    def on_remove_wish_accelerator(self, *args):
+        """ Shift+Delete: Remove Wish """
+
+        self.on_remove_wish()
+        return True
 
     def clear_wishlist_response(self, dialog, response_id, data):
 
@@ -109,7 +135,9 @@ class WishList(UserInterface):
 
         if response_id == Gtk.ResponseType.OK:
             for wish in self.wishes.copy():
-                self.remove_wish(wish)
+                self.frame.np.search.remove_wish(wish)
+
+        self.wish_entry.grab_focus()
 
     def on_clear_wishlist(self, *args):
 
@@ -122,16 +150,10 @@ class WishList(UserInterface):
 
     def add_wish(self, wish):
 
-        search_id = self.frame.np.search.add_wish(wish)
-
-        if not search_id:
-            return None
-
         if wish not in self.wishes:
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
-        self.searches.searches[search_id] = {"id": search_id, "term": wish, "tab": None, "mode": "wishlist",
-                                             "ignore": True}
+        self.update_wish_button(wish)
 
     def remove_wish(self, wish):
 
@@ -139,74 +161,41 @@ class WishList(UserInterface):
             self.store.remove(self.wishes[wish])
             del self.wishes[wish]
 
-        if wish in config.sections["server"]["autosearch"]:
+        self.update_wish_button(wish)
 
-            config.sections["server"]["autosearch"].remove(wish)
+    def select_wish(self, wish):
 
-            for number, search in self.searches.searches.items():
-                if search["term"] == wish and search["mode"] == "wishlist":
-                    tab = search.get("tab")
+        wish_iterator = self.wishes.get(wish)
+        if wish_iterator is None:
+            return
 
-                    if tab is not None and tab.showtab:  # Tab visible
-                        self.searches.searches[number] = search
-                    else:
-                        del self.searches.searches[number]
-
-                    break
+        self.list_view.set_cursor(self.store.get_path(wish_iterator))
+        self.list_view.grab_focus()
 
     def set_interval(self, msg):
-
-        self.interval = msg.seconds
-
-        if not self.disconnected:
-            # Create wishlist searches (without tabs)
-            for term in config.sections["server"]["autosearch"]:
-                search_id = self.frame.np.search.increment_search_id()
-
-                self.searches.searches[search_id] = {"id": search_id, "term": term, "tab": None, "mode": "wishlist",
-                                                     "ignore": True}
-
-        self.on_auto_search()
-        self.timer = GLib.timeout_add(self.interval * 1000, self.on_auto_search)
-
-    def on_auto_search(self, *args):
-
-        # Wishlists supported by server?
-        if self.interval == 0:
-            log.add(_("The server forbid us from doing wishlist searches."))
-            return False
-
-        searches = config.sections["server"]["autosearch"]
-
-        if not searches:
-            return True
-
-        # Search for a maximum of 1 item at each search interval
-        term = searches.pop()
-        searches.insert(0, term)
-
-        for search in self.searches.searches.values():
-            if search["term"] == term and search["mode"] == "wishlist":
-                search["ignore"] = False
-
-                self.frame.np.search.do_wishlist_search(search["id"], term)
-                break
-
-        return True
+        self.frame.np.search.do_wishlist_search_interval()
+        self.timer = GLib.timeout_add(msg.seconds * 1000, self.frame.np.search.do_wishlist_search_interval)
 
     def server_disconnect(self):
-
-        self.disconnected = True
-        self.interval = 0
 
         if self.timer is not None:
             GLib.source_remove(self.timer)
             self.timer = None
 
+    def update_wish_button(self, wish):
+
+        for page in self.searches.pages.values():
+            if page.text == wish:
+                page.update_wish_button()
+
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
+
+    def on_list_focus_entry_accelerator(self, *args):
+        self.wish_entry.grab_focus()
+        return True
 
     def on_show(self, *args):
 
@@ -215,16 +204,27 @@ class WishList(UserInterface):
         if page is None:
             return
 
-        text = self.searches.notebook.get_tab_label(page).get_text()
+        text = None
+
+        for tab in self.searches.pages.values():
+            if tab is not None and tab.Main == page:
+                text = tab.text
+                break
+
+        if not text:
+            self.list_view.get_selection().unselect_all()
+            return
 
         if text in self.wishes:
             # Highlight existing wish row
 
             iterator = self.wishes[text]
             self.list_view.set_cursor(self.store.get_path(iterator))
+            self.wish_entry.set_text("")
             self.list_view.grab_focus()
             return
 
         # Pre-fill text field with search term from active search tab
+        self.list_view.get_selection().unselect_all()
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()

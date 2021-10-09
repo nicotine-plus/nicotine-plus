@@ -21,27 +21,37 @@ import os
 
 def check_gui_dependencies():
 
-    # Require GTK+ >= 3.18
+    if os.getenv("NICOTINE_GTK_VERSION") == '4':
+        gtk_version = (4, 4, 0)
+        pygobject_version = (3, 40, 0)
+    else:
+        gtk_version = pygobject_version = (3, 18, 0)
+
     try:
         import gi
+        gi.check_version(pygobject_version)
 
-    except ImportError:
-        return _("Cannot find %s, please install it.") % "pygobject"
-
-    else:
-        try:
-            version = '4.0' if os.getenv("NICOTINE_GTK_VERSION") == '4' else '3.0'
-            gi.require_version('Gtk', version)
-
-        except ValueError:
-            return _("""You are using an unsupported version of GTK.
-You should install GTK %s or newer.""") % "3.18"
+    except (ImportError, ValueError):
+        return _("Cannot find %s, please install it.") % ("pygobject >= " + '.'.join(map(str, pygobject_version)))
 
     try:
-        from gi.repository import Gtk  # noqa: F401
+        api_version = (gtk_version[0], 0)
+        gi.require_version('Gtk', '.'.join(map(str, api_version)))
+
+    except ValueError:
+        return _("Cannot find %s, please install it.") % ("GTK " + str(gtk_version[0]))
+
+    try:
+        from gi.repository import Gtk
 
     except ImportError:
         return _("Cannot import the Gtk module. Bad install of the python-gobject module?")
+
+    if Gtk.check_version(*gtk_version):
+        return _("You are using an unsupported version of GTK %(major_version)s. You should install "
+                 "GTK %(complete_version)s or newer.") % {
+            "major_version": gtk_version[0],
+            "complete_version": '.'.join(map(str, gtk_version))}
 
     return None
 

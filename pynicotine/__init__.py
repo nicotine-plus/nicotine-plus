@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import argparse
-import faulthandler
 import importlib.util
 import sys
 
@@ -27,6 +25,7 @@ from pynicotine.i18n import apply_translation
 def check_arguments():
     """ Parse command line arguments specified by the user """
 
+    import argparse
     from pynicotine.config import config
     parser = argparse.ArgumentParser(description=_("Nicotine+ is a Soulseek client"), add_help=False)
 
@@ -214,7 +213,12 @@ binary package and what you try to run Nicotine+ with).""")
         return 1
 
     # Dump tracebacks for C modules (in addition to pure Python code)
-    faulthandler.enable()
+    try:
+        import faulthandler
+        faulthandler.enable()
+
+    except Exception as error:
+        print("Faulthandler module could not be enabled. Error: %s" % error)
 
     if rescan:
         return rescan_shares()
