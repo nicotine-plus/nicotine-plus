@@ -135,7 +135,7 @@ class WishList(UserInterface):
 
         if response_id == Gtk.ResponseType.OK:
             for wish in self.wishes.copy():
-                self.remove_wish(wish)
+                self.frame.np.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
