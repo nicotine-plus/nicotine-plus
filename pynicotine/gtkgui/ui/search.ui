@@ -229,7 +229,7 @@
                             <property name="hexpand">1</property>
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterTypeEntry">
-                                <property name="width-chars">9</property>
+                                <property name="width-chars">12</property>
                                 <property name="placeholder-text" translatable="yes">File type...</property>
                                 <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
@@ -259,7 +259,7 @@
                             <property name="hexpand">1</property>
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterSizeEntry">
-                                <property name="width-chars">7</property>
+                                <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">File size...</property>
                                 <property name="tooltip-text" translatable="yes">File size</property>
                                 <property name="primary-icon-name">drive-harddisk-symbolic</property>
@@ -289,7 +289,7 @@
                             <property name="hexpand">1</property>
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterBitrateEntry">
-                                <property name="width-chars">7</property>
+                                <property name="width-chars">10</property>
                                 <property name="placeholder-text" translatable="yes">Bitrate...</property>
                                 <property name="tooltip-text" translatable="yes">Bitrate</property>
                                 <property name="primary-icon-name">audio-volume-high-symbolic</property>
@@ -323,7 +323,7 @@
                                 <property name="hexpand">1</property>
                                 <child internal-child="entry">
                                   <object class="GtkEntry" id="FilterCountryEntry">
-                                    <property name="width-chars">9</property>
+                                    <property name="width-chars">12</property>
                                     <property name="placeholder-text" translatable="yes">Country code...</property>
                                     <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                                     <property name="primary-icon-name">mark-location-symbolic</property>
