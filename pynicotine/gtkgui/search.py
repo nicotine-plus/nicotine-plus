@@ -638,7 +638,7 @@ class Search(UserInterface):
 
             # Update tab notification
             self.searches.request_changed(self.Main)
-            self.frame.request_tab_hilite(self.frame.SearchTabLabel)
+            self.frame.request_tab_hilite(self.searches.page_id)
 
     def append(self, row):
 

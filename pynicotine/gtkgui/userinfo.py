@@ -326,7 +326,7 @@ class UserInfo(UserInterface):
 
     def set_finished(self):
 
-        self.frame.request_tab_hilite(self.frame.UserInfoTabLabel)
+        self.frame.request_tab_hilite(self.userinfos.page_id)
         self.userinfos.request_changed(self.Main)
 
         self.progressbar.set_fraction(1.0)

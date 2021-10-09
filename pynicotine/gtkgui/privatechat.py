@@ -326,7 +326,7 @@ class PrivateChat(UserInterface):
     def show_notification(self, text):
 
         # Hilight top-level tab label
-        self.frame.request_tab_hilite(self.frame.PrivateChatTabLabel)
+        self.frame.request_tab_hilite(self.chats.page_id)
 
         # Highlight sub-level tab label
         self.chats.request_changed(self.Main)

@@ -651,7 +651,7 @@ class UserBrowse(UserInterface):
 
     def set_finished(self):
 
-        self.frame.request_tab_hilite(self.frame.UserBrowseTabLabel)
+        self.frame.request_tab_hilite(self.userbrowses.page_id)
         self.userbrowses.request_changed(self.Main)
 
         self.progressbar1.set_fraction(1.0)
