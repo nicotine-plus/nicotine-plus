@@ -53,6 +53,7 @@ class PrivateChats(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "PrivateChat"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -66,14 +67,10 @@ class PrivateChats(IconNotebook):
 
         self.notebook.connect("switch-page", self.on_switch_chat)
 
-    def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
+    def on_switch_chat(self, notebook, page, page_num):
 
-        if self.frame.MainNotebook.get_current_page() != \
-                self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and not forceupdate:
+        if self.frame.current_page_id != self.page_id:
             return
-
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.PrivateChatTabLabel)
 
         for user, tab in list(self.pages.items()):
             if tab.Main == page:
@@ -90,7 +87,7 @@ class PrivateChats(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.privatechatvbox):
+        if self.frame.current_page_id != self.page_id:
             return
 
         page = self.get_nth_page(self.get_current_page())
@@ -337,8 +334,7 @@ class PrivateChat(UserInterface):
         # Don't show notifications if the private chat is open and the window
         # is in use
         if self.chats.get_current_page() == self.chats.page_num(self.Main) and \
-           self.frame.MainNotebook.get_current_page() == \
-           self.frame.MainNotebook.page_num(self.frame.privatechatvbox) and \
+           self.frame.current_page_id == self.chats.page_id and \
            self.frame.MainWindow.is_active():
             return
 

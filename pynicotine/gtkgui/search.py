@@ -63,6 +63,7 @@ class Searches(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "Search"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -86,8 +87,8 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, notebook, page, page_num):
 
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.SearchTabLabel)
+        if self.frame.current_page_id != self.page_id:
+            return
 
         for tab in self.pages.values():
             if tab.Main == page:

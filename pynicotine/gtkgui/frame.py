@@ -90,7 +90,6 @@ class NicotineFrame(UserInterface):
         self.np = network_processor
         self.ci_mode = ci_mode
         self.current_page_id = ""
-        self.current_tab_label = None
         self.hamburger_menu = None
         self.checking_update = False
         self.autoaway = False
@@ -451,18 +450,18 @@ class NicotineFrame(UserInterface):
 
         self.UserBrowseCombo.set_sensitive(status)
 
-        if self.current_tab_label == self.UserBrowseTabLabel:
+        if self.current_page_id == "UserBrowse":
             GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
         self.UserInfoCombo.set_sensitive(status)
 
-        if self.current_tab_label == self.UserInfoTabLabel:
+        if self.current_page_id == "UserInfo":
             GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchCombo.set_sensitive(status)
 
-        if self.current_tab_label == self.SearchTabLabel:
+        if self.current_page_id == "Search":
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
 
         self.interests.RecommendationsButton.set_sensitive(status)
@@ -1443,7 +1442,10 @@ class NicotineFrame(UserInterface):
 
     def request_tab_hilite(self, tab_label, status=1):
 
-        if self.current_tab_label == tab_label:
+        page = self.MainNotebook.get_nth_page(self.MainNotebook.get_current_page())
+        current_tab_label = self.MainNotebook.get_tab_label(page)
+
+        if current_tab_label == tab_label:
             return
 
         if not tab_label:
@@ -1464,9 +1466,11 @@ class NicotineFrame(UserInterface):
         tab_label.set_hilite_image(hilite_icon)
         tab_label.set_text_color(status + 1)
 
-    def clear_tab_hilite(self, tab_label):
+    def clear_tab_hilite(self):
 
-        if not tab_label or not tab_label.get_hilite_image():
+        tab_label = getattr(self, self.current_page_id + "TabLabel")
+
+        if not tab_label.get_hilite_image():
             return
 
         tab_label.set_hilite_image(None)
@@ -1484,81 +1488,87 @@ class NicotineFrame(UserInterface):
             child.show()
 
         tab_label = notebook.get_tab_label(page)
-        self.current_tab_label = tab_label
 
         if tab_label == self.ChatroomsTabLabel:
-            self.set_active_header_bar("Chatrooms")
+            self.set_active_header_bar(self.chatrooms.page_id)
 
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
 
             if curr_page is not None:
-                self.chatrooms.on_switch_chat(self.chatrooms.notebook, curr_page, curr_page_num, forceupdate=True)
+                self.chatrooms.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
                 GLib.idle_add(lambda: self.ChatroomsEntry.grab_focus() == -1)
 
         elif tab_label == self.PrivateChatTabLabel:
-            self.set_active_header_bar("PrivateChat")
+            self.set_active_header_bar(self.privatechat.page_id)
 
             curr_page_num = self.privatechat.get_current_page()
             curr_page = self.privatechat.get_nth_page(curr_page_num)
 
             if curr_page is not None:
-                self.privatechat.on_switch_chat(self.privatechat.notebook, curr_page, curr_page_num, forceupdate=True)
+                self.privatechat.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
                 GLib.idle_add(lambda: self.PrivateChatEntry.grab_focus() == -1)
 
         elif tab_label == self.UploadsTabLabel:
-            self.set_active_header_bar("Uploads")
+            self.set_active_header_bar(self.uploads.page_id)
             self.uploads.update(forceupdate=True)
-            self.clear_tab_hilite(tab_label)
+            self.clear_tab_hilite()
 
             if self.uploads.Main.get_visible():
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
 
         elif tab_label == self.DownloadsTabLabel:
-            self.set_active_header_bar("Downloads")
+            self.set_active_header_bar(self.downloads.page_id)
             self.downloads.update(forceupdate=True)
-            self.clear_tab_hilite(tab_label)
+            self.clear_tab_hilite()
 
             if self.downloads.Main.get_visible():
                 GLib.idle_add(lambda: self.downloads.Transfers.grab_focus() == -1)
 
         elif tab_label == self.SearchTabLabel:
-            self.set_active_header_bar("Search")
+            self.set_active_header_bar(self.search.page_id)
+
+            curr_page_num = self.search.get_current_page()
+            curr_page = self.search.get_nth_page(curr_page_num)
+
+            if curr_page is not None:
+                self.search.notebook.emit("switch-page", curr_page, curr_page_num)
+
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
 
         elif tab_label == self.UserInfoTabLabel:
-            self.set_active_header_bar("UserInfo")
+            self.set_active_header_bar(self.userinfo.page_id)
 
             curr_page_num = self.userinfo.get_current_page()
             curr_page = self.userinfo.get_nth_page(curr_page_num)
 
             if curr_page is not None:
-                self.userinfo.on_switch_info_page(self.userinfo.notebook, curr_page, curr_page_num)
+                self.userinfo.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
                 GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
         elif tab_label == self.UserBrowseTabLabel:
-            self.set_active_header_bar("UserBrowse")
+            self.set_active_header_bar(self.userbrowse.page_id)
 
             curr_page_num = self.userbrowse.get_current_page()
             curr_page = self.userbrowse.get_nth_page(curr_page_num)
 
             if curr_page is not None:
-                self.userbrowse.on_switch_browse_page(self.userbrowse.notebook, curr_page, curr_page_num)
+                self.userbrowse.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
                 GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
         elif tab_label == self.UserListTabLabel:
-            self.set_active_header_bar("UserList")
+            self.set_active_header_bar(self.userlist.page_id)
             self.userlist.update()
 
             if self.userlist.Main.get_visible():
                 GLib.idle_add(lambda: self.userlist.UserListTree.grab_focus() == -1)
 
         elif tab_label == self.InterestsTabLabel:
-            self.set_active_header_bar("Interests")
+            self.set_active_header_bar(self.interests.page_id)
             self.interests.populate_recommendations()
             GLib.idle_add(lambda: self.interests.LikesList.grab_focus() == -1)
 

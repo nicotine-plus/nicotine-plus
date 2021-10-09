@@ -47,6 +47,7 @@ class UserInfos(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "UserInfo"
         self.pages = {}
 
         IconNotebook.__init__(
@@ -62,8 +63,8 @@ class UserInfos(IconNotebook):
 
     def on_switch_info_page(self, notebook, page, page_num):
 
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.UserInfoTabLabel)
+        if self.frame.current_page_id != self.page_id:
+            return
 
         for tab in self.pages.values():
             if tab.Main == page:

@@ -65,6 +65,7 @@ class ChatRooms(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
+        self.page_id = "Chatrooms"
         self.pages = {}
         self.autojoin_rooms = set()
         self.roomlist = RoomList(self.frame)
@@ -118,14 +119,10 @@ class ChatRooms(IconNotebook):
         # Save
         config.sections["server"]["autojoin"] = new_autojoin
 
-    def on_switch_chat(self, notebook, page, page_num, forceupdate=False):
+    def on_switch_chat(self, notebook, page, page_num):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) \
-                and not forceupdate:
+        if self.frame.current_page_id != self.page_id:
             return
-
-        if not self.unread_pages:
-            self.frame.clear_tab_hilite(self.frame.ChatroomsTabLabel)
 
         for room, tab in self.pages.items():
             if tab.Main == page:
@@ -143,7 +140,7 @@ class ChatRooms(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.MainNotebook.get_current_page() != self.frame.MainNotebook.page_num(self.frame.chatroomsvbox):
+        if self.frame.current_page_id != self.page_id:
             return
 
         page = self.get_nth_page(self.get_current_page())
@@ -755,8 +752,7 @@ class ChatRoom(UserInterface):
         # is in use
         if self.chatrooms.get_current_page() == \
            self.chatrooms.page_num(self.Main) and \
-           self.frame.MainNotebook.get_current_page() == \
-           self.frame.MainNotebook.page_num(self.frame.chatroomsvbox) and \
+           self.frame.current_page_id == self.chatrooms.page_id and \
            self.frame.MainWindow.is_active():
             return
 

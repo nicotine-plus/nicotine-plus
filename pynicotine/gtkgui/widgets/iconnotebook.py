@@ -575,3 +575,6 @@ class IconNotebook:
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)
         self.set_text_color(new_page, status=0)
+
+        if not self.unread_pages:
+            self.frame.clear_tab_hilite()

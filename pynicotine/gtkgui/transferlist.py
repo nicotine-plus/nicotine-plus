@@ -60,6 +60,7 @@ class TransferList(UserInterface):
 
         self.frame = frame
         self.type = type
+        self.page_id = self.type.title() + "s"
 
         grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
 
@@ -316,7 +317,7 @@ class TransferList(UserInterface):
         if forceupdate or finished or (curtime - self.last_ui_update) > 1:
             self.frame.update_bandwidth()
 
-        if not forceupdate and self.frame.current_tab_label != self.tab_label:
+        if not forceupdate and self.frame.current_page_id != self.page_id:
             """ No need to do unnecessary work if transfers are not visible """
             return
 
