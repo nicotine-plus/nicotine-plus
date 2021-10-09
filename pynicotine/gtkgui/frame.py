@@ -450,18 +450,18 @@ class NicotineFrame(UserInterface):
 
         self.UserBrowseCombo.set_sensitive(status)
 
-        if self.current_page_id == "UserBrowse":
+        if self.current_page_id == self.userbrowse.page_id:
             GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
         self.UserInfoCombo.set_sensitive(status)
 
-        if self.current_page_id == "UserInfo":
+        if self.current_page_id == self.userinfo.page_id:
             GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
         self.UserSearchCombo.set_sensitive(status)
         self.SearchCombo.set_sensitive(status)
 
-        if self.current_page_id == "Search":
+        if self.current_page_id == self.search.page_id:
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
 
         self.interests.RecommendationsButton.set_sensitive(status)
