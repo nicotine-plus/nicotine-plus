@@ -200,10 +200,6 @@ class NetworkFrame(UserInterface):
             callback_data=self.p.frame.np.logged_in
         )
 
-    def on_check_port(self, widget):
-        open_uri('='.join(['http://tools.slsknet.org/porttest.php?port',
-                 str(self.frame.np.protothread.listenport)]))
-
     def on_toggle_upnp(self, widget, *args):
 
         active = widget.get_active()
