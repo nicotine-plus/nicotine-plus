@@ -1540,6 +1540,9 @@ class NicotineFrame(UserInterface):
 
     def show_tab(self, page_id):
 
+        if page_id == self.userlist.page_id:
+            self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant.new_string("tab"))
+
         try:
             page = getattr(self, page_id + "vbox")
         except AttributeError:
