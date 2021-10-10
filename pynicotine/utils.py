@@ -139,8 +139,8 @@ def open_file_path(file_path, command=None):
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
 
-        else:
-            webbrowser.open(file_path)
+        elif not webbrowser.open(file_path):
+            raise webbrowser.Error("no known URL provider available")
 
     except Exception as error:
         log.add(_("Failed to open file path: %s"), error)
@@ -168,7 +168,9 @@ def open_uri(uri):
 
     # Situation 2, user did not define a way of handling the protocol
     try:
-        webbrowser.open(uri)
+        if not webbrowser.open(uri):
+            raise webbrowser.Error("no known URL provider available")
+
         return True
 
     except Exception as error:
