@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_image
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -79,6 +80,10 @@ class Searches(IconNotebook):
             self.frame.SearchMethod.set_wrap_width(1)
 
         self.wish_list = WishList(frame, self)
+
+        CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
+        CompletionEntry(frame.UserSearchEntry, frame.UserSearchCombo.get_model())
+        CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
 
         self.populate_search_history()
         self.update_visuals()

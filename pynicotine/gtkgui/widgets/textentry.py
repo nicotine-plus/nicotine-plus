@@ -598,3 +598,35 @@ class TextSearchBar:
     def hide_search_bar(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()
+
+
+class CompletionEntry:
+
+    def __init__(self, entry, model):
+
+        self.entry = entry
+
+        completion = Gtk.EntryCompletion()
+        completion.set_inline_completion(True)
+        completion.set_inline_selection(True)
+        completion.set_popup_single_match(False)
+        completion.set_model(model)
+        completion.set_text_column(0)
+        completion.set_match_func(self.entry_completion_find_match)
+
+        entry.set_completion(completion)
+
+    def entry_completion_find_match(self, completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        item_text = completion.get_model().get_value(iterator, 0)
+
+        if not item_text:
+            return False
+
+        if item_text.lower().startswith(entry_text.lower()):
+            return True
+
+        return False

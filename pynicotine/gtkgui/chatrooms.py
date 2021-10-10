@@ -41,6 +41,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_image
@@ -77,6 +78,8 @@ class ChatRooms(IconNotebook):
             show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
             notebookraw=self.frame.chatrooms_notebook
         )
+
+        CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
 
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)

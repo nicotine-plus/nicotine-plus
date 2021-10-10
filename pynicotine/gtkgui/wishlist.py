@@ -27,6 +27,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -64,15 +65,7 @@ class WishList(UserInterface):
             render.set_property('editable', True)
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
-        self.completion = Gtk.EntryCompletion()
-        self.completion.set_inline_completion(True)
-        self.completion.set_inline_selection(True)
-        self.completion.set_minimum_key_length(1)
-        self.completion.set_popup_single_match(False)
-        self.completion.set_text_column(0)
-        self.completion.set_model(self.store)
-
-        self.wish_entry.set_completion(self.completion)
+        CompletionEntry(self.wish_entry, self.store)
 
         setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
         setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
@@ -103,12 +96,14 @@ class WishList(UserInterface):
     def on_add_wish(self, *args):
 
         wish = self.wish_entry.get_text()
+        wish_exists = (wish in self.wishes)
         self.wish_entry.set_text("")
 
-        if wish not in self.wishes:
-            GLib.idle_add(lambda: self.wish_entry.grab_focus() == -1)
-
         self.frame.np.search.add_wish(wish)
+
+        if not wish_exists:
+            return
+
         self.select_wish(wish)
 
     def on_remove_wish(self, *args):
