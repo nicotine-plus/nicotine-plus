@@ -507,10 +507,7 @@ class NicotineFrame(UserInterface):
         import urllib.parse
 
         login = urllib.parse.quote(config.sections["server"]["login"])
-        url = "%(url)s" % {
-            'url': 'https://www.slsknet.org/userlogin.php?username=' + login
-        }
-        open_uri(url)
+        open_uri(config.privileges_url % login)
         self.np.request_check_privileges()
 
     def on_fast_configure(self, *args, show=True):
@@ -771,8 +768,7 @@ class NicotineFrame(UserInterface):
         self.checking_update = False
 
     def on_report_bug(self, *args):
-        url = "https://github.com/nicotine-plus/nicotine-plus/issues"
-        open_uri(url)
+        open_uri(config.issue_tracker_url)
 
     def on_about(self, *args):
 

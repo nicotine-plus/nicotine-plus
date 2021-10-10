@@ -82,7 +82,7 @@ class FastConfigureAssistant(UserInterface):
         )
 
         # portpage
-        url = '='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.protothread.listenport)])
+        url = config.portchecker_url % str(self.frame.np.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.checkmyport.set_markup(text)
         self.checkmyport.connect("activate-link", lambda x, url: open_uri(url))
@@ -105,7 +105,7 @@ class FastConfigureAssistant(UserInterface):
         import urllib.parse
 
         login = urllib.parse.quote(config.sections["server"]["login"])
-        url = '='.join(['https://www.slsknet.org/userlogin.php?username', login])
+        url = config.privileges_url % login
         text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges...") + "</a>"
         self.privileges.set_markup(text)
         self.privileges.connect("activate-link", lambda x, url: open_uri(url))

@@ -96,7 +96,7 @@ class NetworkFrame(UserInterface):
             }
             self.CurrentPort.set_markup(text)
 
-        url = '='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.protothread.listenport)])
+        url = config.portchecker_url % str(self.frame.np.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.CheckPortLabel.set_markup(text)
         self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
