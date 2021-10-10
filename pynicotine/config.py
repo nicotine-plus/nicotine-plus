@@ -362,7 +362,7 @@ class Config:
                 "listfont": "",
                 "browserfont": "",
                 "transfersfont": "",
-                "last_tab_id": 0,
+                "last_tab_id": "",
                 "modes_visible": {
                     "search": True,
                     "downloads": True,
