@@ -780,7 +780,7 @@ class NicotineFrame(UserInterface):
         set_dialog_properties(self.about.dialog, self.MainWindow)
 
         # Override link handler with our own
-        self.about.dialog.connect("activate-link", self.on_about_uri)
+        self.about.dialog.connect("activate-link", lambda x, url: open_uri(url))
 
         logo = get_icon("n")
 
@@ -799,10 +799,6 @@ class NicotineFrame(UserInterface):
 
         self.about.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
         self.about.dialog.present_with_time(Gdk.CURRENT_TIME)
-
-    def on_about_uri(self, widget, uri):
-        open_uri(uri)
-        return True
 
     """ Actions """
 

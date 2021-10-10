@@ -90,13 +90,16 @@ class NetworkFrame(UserInterface):
         if self.frame.np.protothread.listenport is None:
             self.CurrentPort.set_text(_("Listening port is not set"))
         else:
-            self.CurrentPort.set_markup(_("Active listening port is <b>%(port)s</b>") %
-                                        {"port": self.frame.np.protothread.listenport})
+            text = _("Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</b>") % {
+                "ip": self.frame.np.ipaddress or _("unknown"),
+                "port": self.frame.np.protothread.listenport
+            }
+            self.CurrentPort.set_markup(text)
 
-        if self.frame.np.ipaddress is None:
-            self.YourIP.set_text(_("Your IP address has not been retrieved from the server"))
-        else:
-            self.YourIP.set_markup(_("Your IP address is <b>%(ip)s</b>") % {"ip": self.frame.np.ipaddress})
+        url = '='.join(['http://tools.slsknet.org/porttest.php?port', str(self.frame.np.protothread.listenport)])
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
+        self.CheckPortLabel.set_markup(text)
+        self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
 
         if server["portrange"] is not None:
             self.FirstPort.set_value(server["portrange"][0])

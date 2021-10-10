@@ -157,20 +157,24 @@ def open_uri(uri):
     if protocol in protocol_handlers and protocol_handlers[protocol]:
         try:
             execute_command(protocol_handlers[protocol], uri)
-            return
+            return True
+
         except RuntimeError as error:
             log.add(error)
 
     if protocol == "slsk":
         OPEN_SOULSEEK_URL(uri.strip())
-        return
+        return True
 
     # Situation 2, user did not define a way of handling the protocol
     try:
         webbrowser.open(uri)
+        return True
 
     except Exception as error:
         log.add(_("Failed to open URL: %s"), error)
+
+    return False
 
 
 def open_log(folder, filename):
