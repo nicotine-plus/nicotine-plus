@@ -198,7 +198,7 @@ class Search:
             items.insert(0, searchterm)
 
             # Clear old items
-            del items[15:]
+            del items[200:]
             self.config.write_configuration()
 
         if mode == "global":
