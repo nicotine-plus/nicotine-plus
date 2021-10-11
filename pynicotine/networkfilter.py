@@ -182,20 +182,14 @@ class NetworkFilter:
 
         country_code = self.geoip.get_country_code(ip_address)
 
-        if country_code == "-":
-            if self.config.sections["transfers"]["geopanic"]:
-                return 0, "Blocked country (Sorry, geographical paranoia)"
-
-            return 1, ""
-
         """ Please note that all country codes are stored in the same string at the first index
         of an array, separated by commas (no idea why...) """
 
         if self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if self.config.sections["transfers"]["usecustomgeoblock"]:
-                return 0, "Blocked country (%s)" % self.config.sections["transfers"]["customgeoblock"]
+                return 0, "Banned (%s)" % self.config.sections["transfers"]["customgeoblock"]
 
-            return 0, "Blocked country"
+            return 0, "Banned"
 
         return 1, ""
 

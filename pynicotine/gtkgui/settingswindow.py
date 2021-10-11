@@ -905,48 +905,6 @@ class UploadsFrame(UserInterface):
         self.LimitSpeed.set_sensitive(sensitive)
 
 
-class GeoBlockFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/geoblock.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "transfers": {
-                "geoblock": self.GeoBlock,
-                "geopanic": self.GeoPanic,
-                "geoblockcc": self.GeoBlockCC,
-                "usecustomgeoblock": self.UseCustomGeoBlock,
-                "customgeoblock": self.CustomGeoBlock
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-        if config.sections["transfers"]["geoblockcc"] is not None:
-            self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
-
-        self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
-
-    def get_settings(self):
-        return {
-            "transfers": {
-                "geoblock": self.GeoBlock.get_active(),
-                "geopanic": self.GeoPanic.get_active(),
-                "geoblockcc": [self.GeoBlockCC.get_text().upper()],
-                "usecustomgeoblock": self.UseCustomGeoBlock.get_active(),
-                "customgeoblock": self.CustomGeoBlock.get_text()
-            }
-        }
-
-    def on_use_custom_geo_block_toggled(self, widget):
-        self.CustomGeoBlock.set_sensitive(widget.get_active())
-
-
 class UserInfoFrame(UserInterface):
 
     def __init__(self, parent):
@@ -1166,7 +1124,11 @@ class BanListFrame(UserInterface):
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan,
-                "customban": self.CustomBan
+                "customban": self.CustomBan,
+                "geoblock": self.GeoBlock,
+                "geoblockcc": self.GeoBlockCC,
+                "usecustomgeoblock": self.UseCustomGeoBlock,
+                "customgeoblock": self.CustomGeoBlock
             }
         }
 
@@ -1205,6 +1167,14 @@ class BanListFrame(UserInterface):
         self.banlist = server["banlist"][:]
         self.p.set_widgets_data(self.options)
 
+        self.on_country_codes_toggled(self.GeoBlock)
+
+        if config.sections["transfers"]["geoblockcc"] is not None:
+            self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
+
+        self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
+        self.on_use_custom_ban_toggled(self.UseCustomBan)
+
         if server["ipblocklist"] is not None:
             self.blocked_list = server["ipblocklist"].copy()
             for blocked, user in server["ipblocklist"].items():
@@ -1212,8 +1182,6 @@ class BanListFrame(UserInterface):
                     str(blocked),
                     str(user)
                 ])
-
-        self.on_use_custom_ban_toggled(self.UseCustomBan)
 
     def get_settings(self):
         return {
@@ -1223,9 +1191,22 @@ class BanListFrame(UserInterface):
             },
             "transfers": {
                 "usecustomban": self.UseCustomBan.get_active(),
-                "customban": self.CustomBan.get_text()
+                "customban": self.CustomBan.get_text(),
+                "geoblock": self.GeoBlock.get_active(),
+                "geoblockcc": [self.GeoBlockCC.get_text().upper()],
+                "usecustomgeoblock": self.UseCustomGeoBlock.get_active(),
+                "customgeoblock": self.CustomGeoBlock.get_text()
             }
         }
+
+    def on_country_codes_toggled(self, widget):
+        self.GeoBlockCC.set_sensitive(widget.get_active())
+
+    def on_use_custom_geo_block_toggled(self, widget):
+        self.CustomGeoBlock.set_sensitive(widget.get_active())
+
+    def on_use_custom_ban_toggled(self, widget):
+        self.CustomBan.set_sensitive(widget.get_active())
 
     def on_add_banned_response(self, dialog, response_id, data):
 
@@ -1262,9 +1243,6 @@ class BanListFrame(UserInterface):
     def on_clear_banned(self, widget):
         self.banlist = []
         self.banlist_model.clear()
-
-    def on_use_custom_ban_toggled(self, widget):
-        self.CustomBan.set_sensitive(widget.get_active())
 
     def on_add_blocked_response(self, dialog, response_id, data):
 
@@ -3203,7 +3181,6 @@ class Settings(UserInterface):
         self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
         self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
-        self.tree["GeoBlock"] = model.append(row, [_("Geo Block"), "GeoBlock"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
         self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
