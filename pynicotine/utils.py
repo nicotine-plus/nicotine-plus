@@ -415,30 +415,7 @@ def human_speed(filesize):
 
 
 def humanize(number):
-
-    fashion = config.sections["ui"]["decimalsep"]
-
-    if fashion in ("", "<None>"):
-        return str(number)
-
-    if fashion == "<space>":
-        fashion = " "
-
-    number = str(number)
-
-    if number[0] == "-":
-        neg = "-"
-        number = number[1:]
-    else:
-        neg = ""
-
-    ret = ""
-
-    while number[-3:]:
-        part, number = number[-3:], number[:-3]
-        ret = "%s%s%s" % (part, fashion, ret)
-
-    return neg + ret[:-1]
+    return "{:n}".format(number)
 
 
 def unescape(string):

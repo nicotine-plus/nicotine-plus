@@ -1450,7 +1450,6 @@ class UserInterfaceFrame(UserInterface):
                 "transfersfont": self.SelectTransfersFont,
                 "browserfont": self.SelectBrowserFont,
                 "usernamestyle": self.UsernameStyle,
-                "decimalsep": self.DecimalSep,
 
                 "file_path_tooltips": self.FilePathTooltips,
                 "reverse_file_paths": self.ReverseFilePaths,
@@ -1566,7 +1565,6 @@ class UserInterfaceFrame(UserInterface):
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font(),
                 "usernamestyle": self.UsernameStyle.get_active_text(),
-                "decimalsep": self.DecimalSep.get_active_text(),
 
                 "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
