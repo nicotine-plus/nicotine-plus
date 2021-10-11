@@ -975,10 +975,11 @@ class IgnoreListFrame(UserInterface):
         self.ignorelist = Gtk.ListStore(str)
 
         self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
-        initialise_columns(
+        cols = initialise_columns(
             None, self.IgnoredUsers,
             ["users", _("Users"), -1, "text", None]
         )
+        cols["users"].set_sort_column_id(0)
 
         self.IgnoredUsers.set_model(self.ignorelist)
 
@@ -1140,10 +1141,11 @@ class BanListFrame(UserInterface):
         self.banlist_model = Gtk.ListStore(str)
 
         self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
-        initialise_columns(
+        cols = initialise_columns(
             None, self.BannedList,
             ["users", _("Users"), -1, "text", None]
         )
+        cols["users"].set_sort_column_id(0)
 
         self.BannedList.set_model(self.banlist_model)
 
