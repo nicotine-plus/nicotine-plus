@@ -604,8 +604,6 @@ class NicotineFrame(UserInterface):
             self.userlistvbox.remove(self.userlist.Main)
             self.hide_tab(page_id)
 
-        config.sections["ui"]["modes_visible"][page_id] = (mode == "tab")
-
         if mode == "always":
 
             if self.userlist.Main not in self.MainPaned.get_children():
@@ -1500,14 +1498,15 @@ class NicotineFrame(UserInterface):
 
     def change_main_page(self, page_id):
 
-        page = getattr(self, page_id + "vbox")
+        self.show_tab(page_id)
 
-        if page in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
-            page_num = self.MainNotebook.page_num(page)
-            self.MainNotebook.set_current_page(page_num)
+        try:
+            page = getattr(self, page_id + "vbox")
+        except AttributeError:
             return
 
-        self.show_tab(page_id)
+        page_num = self.MainNotebook.page_num(page)
+        self.MainNotebook.set_current_page(page_num)
 
     def show_tab(self, page_id):
 
@@ -1519,18 +1518,19 @@ class NicotineFrame(UserInterface):
         except AttributeError:
             return
 
-        self.set_tab_expand(page)
+        config.sections["ui"]["modes_visible"][page_id] = True
         page.show()
 
         self.MainNotebook.show()
 
     def hide_tab(self, page_id):
 
-        page = getattr(self, page_id + "vbox")
-
-        if page not in (self.MainNotebook.get_nth_page(i) for i in range(self.MainNotebook.get_n_pages())):
+        try:
+            page = getattr(self, page_id + "vbox")
+        except AttributeError:
             return
 
+        config.sections["ui"]["modes_visible"][page_id] = False
         page.hide()
 
         if self.MainNotebook.get_n_pages() <= 1:
