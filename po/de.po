@@ -12,30 +12,34 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-18 23:57+0200\n"
-"PO-Revision-Date: 2020-09-02 01:31+0000\n"
-"Last-Translator: daelstorm <Unknown>\n"
-"Language-Team: German\n"
+"PO-Revision-Date: 2021-10-12 12:59+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2020-11-18 22:08+0000\n"
-"X-Generator: Launchpad (build c35ff22711d15549e2303ae18ae521fd91f6bf00)\n"
-"Language: de\n"
 
 #: ../nicotine:66 ../nicotine:81
 #, c-format
 msgid "Cannot find %s, please install it."
-msgstr ""
+msgstr "Kann %s nicht finden, bitte installieren Sie es."
 
 #: ../nicotine:77
 msgid ""
 "Cannot import the Gtk module. Bad install of the python-gobject module?"
 msgstr ""
+"Das Gtk-Modul kann nicht importiert werden. Schlechte Installation des "
+"Python-Gobject-Moduls?"
 
 #: ../nicotine:98
 #, c-format
 msgid "Nicotine+ version %s"
-msgstr ""
+msgstr "Nicotine+ Version %s"
 
 #: ../nicotine:101
 msgid "Cannot find the pynicotine.utils module."
@@ -43,7 +47,7 @@ msgstr "Kann Modul pynicotine.utils nicht finden"
 
 #: ../nicotine:133
 msgid "Errors occured while trying to change process name:"
-msgstr ""
+msgstr "Beim Versuch, den Prozessnamen zu ändern, sind Fehler aufgetreten:"
 
 #: ../nicotine:261
 #, c-format
@@ -269,8 +273,7 @@ msgid ""
 "Trace: %(trace)s\n"
 "Problem area:%(area)s"
 msgstr ""
-"Plugin %(module)s mit folgender Fehlermeldung fehlgeschlagen:\n"
-"%(errortype)s: %(error)s\n"
+"Plugin %(module)s ist mit Fehler %(errortype)s fehlgeschlagen: %(error)s.\n"
 "Trace: %(trace)s\n"
 "Problembereich: %(area)s"
 
@@ -1550,7 +1553,7 @@ msgstr ""
 
 #: ../pynicotine/gtkgui/frame.py:1237
 msgid "You are using the latest version of Nicotine+."
-msgstr "Du verwendest die aktuellste Version von Nicotine+!"
+msgstr "Du verwendest die aktuellste Version von Nicotine+"
 
 #: ../pynicotine/gtkgui/frame.py:1481
 #: ../pynicotine/gtkgui/settingswindow.py:1953
