@@ -3,11 +3,16 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
+"PO-Revision-Date: 2021-10-11 15:54+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: POEditor.com\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -15,29 +20,24 @@ msgid "Nicotine+"
 msgstr "Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
-#, fuzzy
 msgid "Soulseek Client"
-msgstr "Nicotine+ is een Soulseek client."
+msgstr "Soulseek client."
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
 #: pynicotine/gtkgui/ui/dialogs/about.ui:5
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
-#, fuzzy
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr ""
-"Een grafische client voor het Soulseek-netwerk voor het delen van bestanden"
+msgstr "Grafische client voor het Soulseek-netwerk voor het delen van bestanden"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
-#, fuzzy
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
 msgstr ""
-"Nicotine+ is een grafische client voor het Soulseek peer-to-peer netwerk "
-"voor het delen van bestanden."
+"Nicotine+ is een grafische client voor het Soulseek peer-to-peer netwerk."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 msgid ""
@@ -45,71 +45,70 @@ msgid ""
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
+"Nicotine+ wil een aangenaam, Free and Open Source (FOSS) alternatief zijn "
+"voor de officiële Soulseek-client, met extra functionaliteit, met de laatste "
+"stand van het Soulseek protocol."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:56
-#, fuzzy
 msgid "Nicotine+ Team"
-msgstr "Nicotine+"
+msgstr "Nicotine+ Team"
 
 #: pynicotine/__init__.py:30
-#, fuzzy
 msgid "Nicotine+ is a Soulseek client"
-msgstr "Nicotine+ is een Soulseek client."
+msgstr "Nicotine+ is een Soulseek client"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
-msgstr ""
+msgstr "toon dit helpbericht en sluit af"
 
 #: pynicotine/__init__.py:38
-#, fuzzy
 msgid "file"
-msgstr "Volgend bestand"
+msgstr "bestand"
 
 #: pynicotine/__init__.py:39
-#, fuzzy
 msgid "use non-default configuration file"
-msgstr "Test de configuratie"
+msgstr "gebruik niet-standaard configuratiebestand"
 
 #: pynicotine/__init__.py:42 pynicotine/__init__.py:46
 msgid "dir"
-msgstr ""
+msgstr "map"
 
 #: pynicotine/__init__.py:43
 msgid "use non-default user data directory for e.g. list of downloads"
 msgstr ""
+"niet-standaard gebruikersgegevensmap gebruiken voor bijv. lijst met downloads"
 
 #: pynicotine/__init__.py:47
 msgid "use non-default directory for plugins"
-msgstr ""
+msgstr "gebruik niet-standaardmap voor plug-ins"
 
 #: pynicotine/__init__.py:51
 msgid "enable the tray icon"
-msgstr ""
+msgstr "schakel het pictogram in het systeemvak in"
 
 #: pynicotine/__init__.py:55
-#, fuzzy
 msgid "disable the tray icon"
-msgstr "Pictogram in systeemvak weergeven"
+msgstr "Pictogram in systeemvak uitschakelen"
 
 #: pynicotine/__init__.py:59
 msgid "start the program without showing window"
-msgstr ""
+msgstr "start het programma zonder het venster te tonen"
 
 #: pynicotine/__init__.py:62
 msgid "ip"
-msgstr ""
+msgstr "ip"
 
 #: pynicotine/__init__.py:63
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr ""
+msgstr "bind sockets aan het gegeven IP (nuttig voor VPN)"
 
 #: pynicotine/__init__.py:66
 msgid "port"
-msgstr ""
+msgstr "poort"
 
 #: pynicotine/__init__.py:67
 msgid "listen on the given port"
-msgstr ""
+msgstr "luister aan de gegeven poort"
 
 #: pynicotine/__init__.py:71
 #, fuzzy
