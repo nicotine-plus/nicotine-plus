@@ -250,7 +250,7 @@ class UserList(UserInterface):
         if config.sections["ui"]["buddylistinchatrooms"] in ("always", "chatrooms"):
             return
 
-        self.frame.UserListStatusPage.set_visible(not self.user_iterators)
+        self.frame.userlist_status_page.set_visible(not self.user_iterators)
         self.Main.set_visible(self.user_iterators)
 
     def update_visuals(self):

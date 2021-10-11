@@ -132,7 +132,7 @@ class PrivateChats(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.PrivateChatStatusPage.hide()
+                self.frame.private_status_page.hide()
 
         if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -485,7 +485,7 @@ class PrivateChat(UserInterface):
         self.chats.remove_page(self.Main)
 
         if self.chats.get_n_pages() == 0:
-            self.frame.PrivateChatStatusPage.show()
+            self.frame.private_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.chats.remove_all_pages()

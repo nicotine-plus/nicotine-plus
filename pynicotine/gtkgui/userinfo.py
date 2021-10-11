@@ -88,7 +88,7 @@ class UserInfos(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.UserInfoStatusPage.hide()
+                self.frame.userinfo_status_page.hide()
 
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -545,7 +545,7 @@ class UserInfo(UserInterface):
         self.userinfos.remove_page(self.Main)
 
         if self.userinfos.get_n_pages() == 0:
-            self.frame.UserInfoStatusPage.show()
+            self.frame.userinfo_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.userinfos.remove_all_pages()

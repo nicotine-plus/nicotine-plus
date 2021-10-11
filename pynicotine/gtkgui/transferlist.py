@@ -162,7 +162,7 @@ class TransferList(UserInterface):
 
         self.Transfers.set_model(self.transfersmodel)
 
-        self.status_page = getattr(frame, "%ssStatusPage" % self.type.title())
+        self.status_page = getattr(frame, "%ss_status_page" % self.type)
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
         state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % self.type]))

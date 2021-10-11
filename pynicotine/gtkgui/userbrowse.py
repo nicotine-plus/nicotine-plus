@@ -100,7 +100,7 @@ class UserBrowses(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.UserBrowseStatusPage.hide()
+                self.frame.userbrowse_status_page.hide()
 
         page = self.pages[user]
 
@@ -1090,7 +1090,7 @@ class UserBrowse(UserInterface):
         self.userbrowses.remove_page(self.Main)
 
         if self.userbrowses.get_n_pages() == 0:
-            self.frame.UserBrowseStatusPage.show()
+            self.frame.userbrowse_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.userbrowses.remove_all_pages()

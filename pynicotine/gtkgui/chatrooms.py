@@ -183,7 +183,7 @@ class ChatRooms(IconNotebook):
             self.frame.RoomSearchCombo.append_text(msg.room)
 
         if self.get_n_pages() > 0:
-            self.frame.ChatroomsStatusPage.hide()
+            self.frame.chatrooms_status_page.hide()
 
     def leave_room(self, msg):
 
@@ -203,7 +203,7 @@ class ChatRooms(IconNotebook):
                 self.frame.RoomSearchCombo.append_text(room)
 
         if self.get_n_pages() == 0:
-            self.frame.ChatroomsStatusPage.show()
+            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass

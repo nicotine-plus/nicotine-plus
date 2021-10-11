@@ -193,7 +193,7 @@ class Searches(IconNotebook):
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if self.get_n_pages() > 0:
-            self.frame.SearchStatusPage.hide()
+            self.frame.search_status_page.hide()
 
     def show_search_result(self, msg, username, country):
 
@@ -220,7 +220,7 @@ class Searches(IconNotebook):
         self.remove_page(tab.Main)
 
         if self.get_n_pages() == 0:
-            self.frame.SearchStatusPage.show()
+            self.frame.search_status_page.show()
 
     def add_wish(self, wish):
         self.wish_list.add_wish(wish)
