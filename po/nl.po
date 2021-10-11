@@ -4,31 +4,35 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-18 23:57+0200\n"
-"PO-Revision-Date: 2020-09-02 01:32+0000\n"
-"Last-Translator: Kenny Verstraete <Unknown>\n"
-"Language-Team: Dutch <>\n"
+"PO-Revision-Date: 2021-10-11 15:26+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/nl/>\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2020-11-18 22:08+0000\n"
-"X-Generator: Launchpad (build c35ff22711d15549e2303ae18ae521fd91f6bf00)\n"
-"Language: nl\n"
 "X-Poedit-Language: Dutch\n"
 
 #: ../nicotine:66 ../nicotine:81
 #, c-format
 msgid "Cannot find %s, please install it."
-msgstr ""
+msgstr "Kan %s niet vinden, installeer het."
 
 #: ../nicotine:77
 msgid ""
 "Cannot import the Gtk module. Bad install of the python-gobject module?"
 msgstr ""
+"Kan de Gtk module niet importeren. Slechte installatie van de python-gobject "
+"module?"
 
 #: ../nicotine:98
 #, c-format
 msgid "Nicotine+ version %s"
-msgstr ""
+msgstr "Nicotine+ versie %s"
 
 #: ../nicotine:101
 msgid "Cannot find the pynicotine.utils module."
@@ -36,12 +40,12 @@ msgstr "Kan de pynicotine.utils module niet vinden."
 
 #: ../nicotine:133
 msgid "Errors occured while trying to change process name:"
-msgstr "Fouten opgetreden tijdens poging om de procesnaam te veranderen:"
+msgstr "Er zijn fouten opgetreden bij het wijzigen van de procesnaam:"
 
 #: ../nicotine:261
 #, c-format
 msgid "Starting using the profiler (saving dump to %s)"
-msgstr ""
+msgstr "Beginnen met het gebruik van de profiler (dump opslaan in %s)"
 
 #: ../nicotine:152
 msgid ""
@@ -51,50 +55,53 @@ msgstr ""
 
 #: ../nicotine:85
 msgid "Can not find Nicotine+ modules."
-msgstr ""
+msgstr "Kan Nicotine+ modules niet vinden."
 
 #: ../nicotine:71
 #, c-format
 msgid "You're using an unsupported version of GTK (%s)."
-msgstr ""
+msgstr "Je gebruikt een niet-ondersteunde versie van GTK (%s)."
 
 #: ../nicotine:59
 #, c-format
 msgid "You're using an unsupported version of Python (%s)."
-msgstr ""
+msgstr "Je gebruikt een niet-ondersteunde versie van Python (%s)."
 
 #: ../nicotine:38
 msgid "Nicotine+ is a Soulseek client."
-msgstr ""
+msgstr "Nicotine+ is een Soulseek cliënt."
 
 #: ../pynicotine/config.py:462
 msgid "You need to specify a username and password before connecting..."
 msgstr ""
+"Je moet een gebruikersnaam en wachtwoord opgeven voordat je verbinding "
+"maakt..."
 
 #: ../pynicotine/config.py:477 ../pynicotine/config.py:681
 #, python-format
 msgid "Something went wrong while opening your transfer list: %(error)s"
-msgstr ""
+msgstr "Er ging iets mis bij het openen van je transferlijst: %(error)s"
 
 #: ../pynicotine/config.py:484
 #, python-format
 msgid "Something went wrong while reading your transfer list: %(error)s"
-msgstr ""
+msgstr "Er ging iets mis bij het lezen van je transferlijst: %(error)s"
 
 #: ../pynicotine/config.py:520
 #, python-format
 msgid "Unknown config section '%s'"
-msgstr ""
+msgstr "Onbekende configuratiesectie '%s'"
 
 #: ../pynicotine/config.py:524
 #, python-format
 msgid "Unknown config option '%(option)s' in section '%(section)s'"
-msgstr ""
+msgstr "Onbekende config-optie '%(option)s' in sectie '%(section)s'"
 
 #: ../pynicotine/config.py:698
 #, python-format
 msgid "Something went wrong while writing your transfer list: %(error)s"
 msgstr ""
+"Er is iets fout gegaan tijdens het schrijven van je transferlijst: %(error)s"
 
 #: ../pynicotine/config.py:730
 #, python-format
@@ -114,7 +121,7 @@ msgstr "Kan %s niet verwijderen"
 #: ../pynicotine/config.py:773
 #, python-format
 msgid "Can't back config file up, error: %s"
-msgstr "Kan geen reservekopie maken van configuratiebestand, fout: %s"
+msgstr "Kan geen backup maken van configuratiebestand, fout: %s"
 
 #: ../pynicotine/config.py:782
 #, python-format
@@ -124,12 +131,12 @@ msgstr "Kan configuratiebestand niet hernoemen, fout: %s"
 #: ../pynicotine/config.py:822
 #, python-format
 msgid "Something went wrong while opening your alias file: %s"
-msgstr ""
+msgstr "Er is iets fout gegaan bij het openen van uw alias bestand: %s"
 
 #: ../pynicotine/config.py:830
 #, python-format
 msgid "Something went wrong while saving your alias file: %s"
-msgstr ""
+msgstr "Er is iets fout gegaan tijdens het opslaan van je alias bestand: %s"
 
 #: ../pynicotine/config.py:850
 #, python-format
@@ -143,7 +150,7 @@ msgstr "Aliassen:"
 #: ../pynicotine/config.py:866
 #, python-format
 msgid "Removed alias %(alias)s: %(action)s\n"
-msgstr "Alias %(alias)s gewist: %(action)s\n"
+msgstr "Alias %(alias)s verwijderd: %(action)s\n"
 
 #: ../pynicotine/config.py:869
 #, python-format
@@ -155,15 +162,17 @@ msgid ""
 "ERROR: Could not execute now playing code. Are you sure you picked the right "
 "player?"
 msgstr ""
+"FOUT: Kon de nu spelende code niet uitvoeren. Ben je zeker dat je de juiste "
+"speler gekozen hebt?"
 
 #: ../pynicotine/nowplaying.py:135
 #, python-format
 msgid "ERROR: lastfm: Could not connect to audioscrobbler: %(error)s"
-msgstr ""
+msgstr "FOUT: lastfm: Kan geen verbinding maken met audioscrobbler: %(error)s"
 
 #: ../pynicotine/nowplaying.py:141
 msgid "ERROR: lastfm: Please provide both your lastfm username and API key"
-msgstr ""
+msgstr "FOUT: lastfm: Geef zowel uw lastfm gebruikersnaam als API sleutel"
 
 #: ../pynicotine/nowplaying.py:150
 #, python-format
@@ -475,7 +484,7 @@ msgid ""
 "attempt from an unknown IP & port"
 msgstr ""
 "%(user)s wil jouw gedeelde bestanden verkennen, mogelijke bedrieger "
-"tegengehouden met onbekend adres & poort."
+"tegengehouden met onbekend adres & poort"
 
 #: ../pynicotine/pynicotine.py:1715
 #, python-format
@@ -2145,7 +2154,7 @@ msgstr "Iconen"
 
 #: ../pynicotine/gtkgui/settingswindow.py:3481
 msgid "Notebook Tabs"
-msgstr "Notebook Tabs"
+msgstr "Tabs"
 
 #: ../pynicotine/gtkgui/settingswindow.py:3483
 msgid "Chat"
@@ -4018,7 +4027,7 @@ msgid ""
 "into the Buddy Uploads subdirectory in your Download directory"
 msgstr ""
 "Deze gebruikers kunnen u bestanden sturen, welke opgeslagen worden in de "
-"Uploads van vrienden map in je inkomende map."
+"vrienden uploadsmap in je inkomende map"
 
 #: ../pynicotine/gtkgui/ui/settings/downloads.ui.h:8
 msgid "<b>Folders</b>"
@@ -4115,11 +4124,11 @@ msgstr ""
 
 #: ../pynicotine/gtkgui/ui/settings/events.ui.h:7
 msgid "Download transfers"
-msgstr "Download-overdrachten - Actie:"
+msgstr "Download transfers"
 
 #: ../pynicotine/gtkgui/ui/settings/events.ui.h:8
 msgid "Upload transfers"
-msgstr "Upload-overdrachten - Actie:"
+msgstr "Uploads"
 
 #: ../pynicotine/gtkgui/ui/settings/events.ui.h:9
 msgid "Nothing"
@@ -4327,7 +4336,7 @@ msgstr "Formaat van Logbestand:"
 
 #: ../pynicotine/gtkgui/ui/settings/log.ui.h:21
 msgid "Chat room format:"
-msgstr "Formaat van chatkamers"
+msgstr "Formaat van chatkamers:"
 
 #: ../pynicotine/gtkgui/ui/settings/log.ui.h:22
 msgid "Private chat format:"
