@@ -1984,18 +1984,17 @@ class EventsFrame(UserInterface):
         }
 
 
-class UrlCatchingFrame(UserInterface):
+class UrlHandlersFrame(UserInterface):
 
     def __init__(self, parent):
 
-        super().__init__("ui/settings/urlcatch.ui")
+        super().__init__("ui/settings/urlhandlers.ui")
 
         self.p = parent
         self.frame = self.p.frame
 
         self.options = {
             "urls": {
-                "urlcatching": self.URLCatching,
                 "protocols": None
             }
         }
@@ -2046,7 +2045,6 @@ class UrlCatchingFrame(UserInterface):
                 ])
                 self.protocols[key] = iterator
 
-        self.on_url_catching_toggled(self.URLCatching)
         selection = self.ProtocolHandlers.get_selection()
         selection.unselect_all()
 
@@ -2071,14 +2069,9 @@ class UrlCatchingFrame(UserInterface):
 
         return {
             "urls": {
-                "urlcatching": self.URLCatching.get_active(),
                 "protocols": protocols
             }
         }
-
-    def on_url_catching_toggled(self, widget):
-        act = self.URLCatching.get_active()
-        self.ProtocolContainer.set_sensitive(act)
 
     def on_select(self, selection):
 
@@ -3202,7 +3195,7 @@ class Settings(UserInterface):
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
-        self.tree["UrlCatching"] = model.append(row, [_("URL Catching"), "UrlCatching"])
+        self.tree["UrlHandlers"] = model.append(row, [_("URL Handlers"), "UrlHandlers"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])

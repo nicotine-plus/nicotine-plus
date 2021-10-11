@@ -123,8 +123,7 @@ class TextView:
         if buffer.get_char_count() > 0:
             line = "\n" + line
 
-        if (find_urls and config.sections["urls"]["urlcatching"]
-                and ("://" in line or "www." in line or "mailto:" in line)):
+        if find_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
             match = self.url_regex.search(line)
 

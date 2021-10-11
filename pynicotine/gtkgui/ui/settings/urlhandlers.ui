@@ -5,31 +5,6 @@
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">URL Catching</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="URLCatching">
-            <property name="label" translatable="yes">Enable URL catching</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
       <object class="GtkBox" id="ProtocolContainer">
         <property name="visible">1</property>
         <property name="spacing">18</property>
@@ -42,7 +17,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Protocol Handlers</property>
+                <property name="label" translatable="yes">URL Handlers</property>
                 <property name="xalign">0</property>
                 <property name="mnemonic_widget">ProtocolHandlers</property>
                 <attributes>
@@ -54,7 +29,7 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Instances of $ will be replaced by the link, add empty handlers to use the system default web browser.</property>
+                <property name="label" translatable="yes">Instances of $ will be replaced by the link. The default web browser of the system will be used in cases where a protocol has not been configured.</property>
                 <property name="selectable">1</property>
                 <property name="wrap">1</property>
               </object>
