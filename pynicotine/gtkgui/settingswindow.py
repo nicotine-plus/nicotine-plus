@@ -3207,6 +3207,7 @@ class Settings(UserInterface):
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
         self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
+        self.tree["UrlCatching"] = model.append(row, [_("URL Catching"), "UrlCatching"])
 
         self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
@@ -3222,7 +3223,6 @@ class Settings(UserInterface):
         self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])
         self.tree["CensorList"] = model.append(row, [_("Censor List"), "CensorList"])
         self.tree["AutoReplaceList"] = model.append(row, [_("Auto-Replace List"), "AutoReplaceList"])
-        self.tree["UrlCatching"] = model.append(row, [_("URL Catching"), "UrlCatching"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
         self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
 
