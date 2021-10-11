@@ -1492,9 +1492,6 @@
                         <property name="visible">1</property>
                       </object>
                     </child>
-                    <style>
-                      <class name="view"/>
-                    </style>
                   </object>
                 </child>
                 <!-- Log Window -->

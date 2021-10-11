@@ -1293,6 +1293,7 @@ class NicotineFrame(UserInterface):
         for i in range(self.MainNotebook.get_n_pages()):
             tab_id, tab_text, tab_icon_name = tab_data[i]
             page = self.MainNotebook.get_nth_page(i)
+            page.get_style_context().add_class("view")
             page.page_id = tab_id
 
             # Initialize the image label
