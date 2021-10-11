@@ -70,6 +70,8 @@ class NetworkFrame(UserInterface):
                 "server": None,
                 "login": self.Login,
                 "portrange": None,
+                "autoaway": self.AutoAway,
+                "autoreply": self.AutoReply,
                 "interface": self.Interface,
                 "upnp": self.UseUPnP,
                 "upnp_interval": self.UPnPInterval,
@@ -145,6 +147,8 @@ class NetworkFrame(UserInterface):
                 "server": server,
                 "login": self.Login.get_text(),
                 "portrange": portrange,
+                "autoaway": self.AutoAway.get_value_as_int(),
+                "autoreply": self.AutoReply.get_text(),
                 "interface": self.Interface.get_active_text(),
                 "upnp": self.UseUPnP.get_active(),
                 "upnp_interval": self.UPnPInterval.get_value_as_int(),
@@ -1885,38 +1889,6 @@ class SearchesFrame(UserInterface):
             w.set_sensitive(active)
 
 
-class AwayModeFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/away.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "server": {
-                "autoaway": self.AutoAway,
-                "autoreply": self.AutoReply
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-    def get_settings(self):
-        try:
-            autoaway = self.AutoAway.get_value_as_int()
-        except Exception:
-            autoaway = None
-        return {
-            "server": {
-                "autoaway": autoaway,
-                "autoreply": self.AutoReply.get_text()
-            }
-        }
-
-
 class EventsFrame(UserInterface):
 
     def __init__(self, parent):
@@ -3147,10 +3119,9 @@ class Settings(UserInterface):
         self.tree["Events"] = model.append(row, [_("Events"), "Events"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
-        self.tree["AwayMode"] = model.append(row, [_("Away Mode"), "AwayMode"])
         self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])
         self.tree["CensorReplaceList"] = model.append(row, [_("Censor & Replace"), "CensorReplaceList"])
+        self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
         self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
 
