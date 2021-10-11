@@ -248,7 +248,6 @@ class IconNotebook:
         # We store the real Gtk.Notebook object
         self.notebook = notebookraw
         self.notebook.set_show_border(False)
-        self.notebook.get_style_context().add_class("background")
 
         self.frame = frame
         self.tabclosers = tabclosers
@@ -391,7 +390,6 @@ class IconNotebook:
         label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
         label_tab.gesture_click.connect("pressed", label_tab.onclose, page)
 
-        page.get_style_context().add_class("view")
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
         if status:

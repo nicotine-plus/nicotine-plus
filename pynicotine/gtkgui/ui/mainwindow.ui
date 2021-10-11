@@ -856,6 +856,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -946,6 +949,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -1030,6 +1036,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -1114,6 +1123,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -1204,6 +1216,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -1294,6 +1309,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                             <child>
@@ -1384,6 +1402,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                           </object>
@@ -1468,6 +1489,9 @@
                                     </child>
                                   </object>
                                 </child>
+                                <style>
+                                  <class name="view"/>
+                                </style>
                               </object>
                             </child>
                             <child>
