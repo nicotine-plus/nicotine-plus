@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-02 14:47+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3794,8 +3794,8 @@ msgstr "Kan de volgende databases niet verwerken: %(names)s"
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
-"Het is niet gelukt om het aantal gedeelde bestanden naar de server te "
-"sturen: %s"
+"Het is niet gelukt om het aantal gedeelde bestanden naar de server te sturen:"
+" %s"
 
 #: pynicotine/shares.py:882
 #, python-format
@@ -3816,8 +3816,8 @@ msgstr "Kan mapinhoud van gedeelde map %(folder)s niet ophalen: %(error)s"
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"Kan de share-database niet lezen. Gelieve uw shares opnieuw te scannen. "
-"Fout: %s"
+"Kan de share-database niet lezen. Gelieve uw shares opnieuw te scannen. Fout:"
+" %s"
 
 #: pynicotine/slskproto.py:304
 #, python-format
@@ -4944,8 +4944,8 @@ msgid ""
 "The better-known variants kb, mb, and gb can also be used for kilobyte, "
 "megabyte, and gigabyte units."
 msgstr ""
-"De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor "
-"kilobyte-, megabyte- en gigabyte-eenheden."
+"De bekendere varianten kb, mb en gb kunnen ook worden gebruikt voor kilobyte-"
+", megabyte- en gigabyte-eenheden."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:300
 msgid "Filters files based upon their bitrate."
@@ -4985,34 +4985,30 @@ msgstr ""
 "vergeleken, tenzij een operator (=, !, < of >) wordt gebruikt."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:370
-#, fuzzy
 msgid ""
 "Enter a raw value in seconds or use the MM:SS and HH:MM:SS time formats:\n"
 "    =53 shows files that are around 53 seconds long.\n"
 "    >5:30 to show files more than 5 and a half minutes long.\n"
 "    <5:30:00 shows files less than 5 and a half hours long."
 msgstr ""
-"Voer een ruwe waarde in seconden in of gebruik de MM:SS en HH:MM:SS "
-"tijdnotaties:\n"
-"    >5:30 om bestanden te tonen die minstens 5 en een halve minuut lang "
-"zijn.\n"
+"Voer een ruwe waarde in seconden in of gebruik de tijdformaten MM:SS en "
+"HH:MM:SS:\n"
+"    =53 toont bestanden die ongeveer 53 seconden lang zijn.\n"
+"    >5:30 toont bestanden die meer dan 5 en een halve minuut lang zijn.\n"
 "    <5:30:00 toont bestanden die minder dan 5 en een half uur lang zijn."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:383
-#, fuzzy
 msgid ""
 "Multiple conditions can be specified:\n"
 "    >6:00 <12:00 to show files between 6 and 12 minutes long.\n"
 "    !9:54 !8:43 !7:32 to hide some specific files from the results.\n"
 "    =5:34 =4:23 =3:05 to include files with specific durations."
 msgstr ""
-"Meerdere condities kunnen gespecificeerd worden met | pijp-"
-"scheidingstekens:\n"
-"    >6:00|<12:00 om bestanden te tonen tussen 6 en 12 minuten lang.\n"
-"    !9:54|!8:43|!7:32 om sommige specifieke bestanden uit de resultaten te "
+"Meerdere voorwaarden kunnen worden opgegeven:\n"
+"    >6:00 <12:00 om bestanden tussen 6 en 12 minuten te tonen.\n"
+"    9:54 ! 8:43 ! 7:32 om enkele specifieke bestanden uit de resultaten te "
 "verbergen.\n"
-"    =5:34|=4:23|=3:05 om bestanden met een specifieke tijdsduur toe te "
-"voegen."
+"    =5:34 =4:23 =3:05 om bestanden met een specifieke duur op te nemen."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:409
 msgid ""
@@ -5028,9 +5024,8 @@ msgstr ""
 "    !GB zal resultaten verbergen van gebruikers uit Groot-Brittannië."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:421
-#, fuzzy
 msgid "Multiple countries can be specified with commas or spaces."
-msgstr "U kunt meerdere landen opgeven met komma's of spaties."
+msgstr "Meerdere landen kunnen worden opgegeven met komma's of spaties."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:430
 #: pynicotine/gtkgui/ui/search.ui:384
@@ -5110,9 +5105,8 @@ msgstr "Bestand types…"
 
 #: pynicotine/gtkgui/ui/search.ui:245
 #: pynicotine/gtkgui/ui/settings/search.ui:228
-#, fuzzy
 msgid "File type, e.g. flac wav or !mp3 !m4a"
-msgstr "Bestandstype, bijv. flac|wav|ape of !mp3|!m4a"
+msgstr "Bestandstype, bijv. flac wav of !mp3 !m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:273
 msgid "File size…"
@@ -5120,9 +5114,8 @@ msgstr "Bestandsgrootte…"
 
 #: pynicotine/gtkgui/ui/search.ui:274
 #: pynicotine/gtkgui/ui/settings/search.ui:259
-#, fuzzy
 msgid "File size, e.g. >10.5m <1g"
-msgstr "Bestandsgrootte..."
+msgstr "Bestandsgrootte, bijv. >10,5m <1g"
 
 #: pynicotine/gtkgui/ui/search.ui:302
 msgid "Bitrate…"
@@ -5130,7 +5123,6 @@ msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:303
 #: pynicotine/gtkgui/ui/settings/search.ui:290
-#, fuzzy
 msgid "Bitrate, e.g. 256 <1412"
 msgstr "Bitsnelheid, b.v. 256 <1412"
 
@@ -5140,9 +5132,8 @@ msgstr "Looptijd…"
 
 #: pynicotine/gtkgui/ui/search.ui:332
 #: pynicotine/gtkgui/ui/settings/search.ui:321
-#, fuzzy
 msgid "Duration, e.g. >6:00 <12:00 !6:54"
-msgstr "Duur, bijv. 2:20|!3:30|=4:40"
+msgstr "Duur, bijv. >6:00 <12:00 !6:54"
 
 #: pynicotine/gtkgui/ui/search.ui:364
 msgid "Country code…"
@@ -5150,9 +5141,8 @@ msgstr "Landcode…"
 
 #: pynicotine/gtkgui/ui/search.ui:365
 #: pynicotine/gtkgui/ui/settings/search.ui:352
-#, fuzzy
 msgid "Country code, e.g. US ES or !DE !GB"
-msgstr "Landcode, bijv. US|GB|ES of !DE|!GB"
+msgstr "Landcode, bijv. US ES of !DE ! GB"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:35
 msgid ""
@@ -5336,17 +5326,15 @@ msgstr "Vervangingen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:38
 msgid "Autoclear finished/filtered downloads from transfer list"
-msgstr ""
-"Automatisch wissen van voltooide/gefilterde downloads uit transferlijst"
+msgstr "Automatisch wissen van voltooide/gefilterde downloads uit transferlijst"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:45
 msgid "Store completed downloads in username subfolders"
 msgstr "Voltooide downloads opslaan in submappen met gebruikersnaam"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:57
-#, fuzzy
 msgid "Allow users to send you any files:"
-msgstr "Sta deze gebruikers toe bestanden naar je te sturen:"
+msgstr "Sta gebruikers toe om je bestanden te sturen:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:68
 msgid "No one"
@@ -5390,19 +5378,16 @@ msgid "Folders"
 msgstr "Mappen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:213
-#, fuzzy
 msgid "Finished downloads:"
-msgstr "Voltooide bestandsdownloads"
+msgstr "Voltooide downloads:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:236
-#, fuzzy
 msgid "Incomplete downloads:"
-msgstr "Voltooide downloads"
+msgstr "Onvoltooide downloads:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:259
-#, fuzzy
 msgid "Received files:"
-msgstr "Bestand opvragen"
+msgstr "Ontvangen bestanden:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:285
 msgid "Events"
@@ -5743,8 +5728,7 @@ msgstr "Beperk shares voor vrienden tot vertrouwde vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:60
 msgid "Autoclear finished/cancelled uploads from transfer list"
-msgstr ""
-"Automatisch wissen van voltooide/geannuleerde uploads uit transferlijst"
+msgstr "Automatisch wissen van voltooide/geannuleerde uploads uit transferlijst"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:71
 msgid "Double-click action for uploads:"
