@@ -3105,8 +3105,8 @@ class Settings(UserInterface):
 
         self.tree["General"] = row = model.append(None, [_("General"), "General"])
         self.tree["Network"] = model.append(row, [_("Network"), "Network"])
-        self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
         self.tree["UserInterface"] = model.append(row, [_("User Interface"), "UserInterface"])
+        self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
         self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
         self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
         self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
