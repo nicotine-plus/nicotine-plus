@@ -27,13 +27,6 @@
             <signal name="toggled" handler="on_url_catching_toggled" swapped="no"/>
           </object>
         </child>
-        <child>
-          <object class="GtkCheckButton" id="HumanizeURLs">
-            <property name="label" translatable="yes">Humanize slsk:// URLs</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
       </object>
     </child>
     <child>

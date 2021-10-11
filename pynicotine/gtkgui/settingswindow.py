@@ -1996,7 +1996,6 @@ class UrlCatchingFrame(UserInterface):
         self.options = {
             "urls": {
                 "urlcatching": self.URLCatching,
-                "humanizeurls": self.HumanizeURLs,
                 "protocols": None
             }
         }
@@ -2073,16 +2072,12 @@ class UrlCatchingFrame(UserInterface):
         return {
             "urls": {
                 "urlcatching": self.URLCatching.get_active(),
-                "humanizeurls": self.HumanizeURLs.get_active(),
                 "protocols": protocols
             }
         }
 
     def on_url_catching_toggled(self, widget):
-
-        self.HumanizeURLs.set_active(widget.get_active())
         act = self.URLCatching.get_active()
-
         self.ProtocolContainer.set_sensitive(act)
 
     def on_select(self, selection):

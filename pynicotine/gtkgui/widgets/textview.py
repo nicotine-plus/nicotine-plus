@@ -133,11 +133,6 @@ class TextView:
                 _usertag(buffer, line[:match.start()])
 
                 url = match.group()
-
-                if url.startswith("slsk://") and config.sections["urls"]["humanizeurls"]:
-                    import urllib.parse
-                    url = urllib.parse.unquote(url)
-
                 urltag = self.create_tag("urlcolor", url=url)
                 self.tag_urls.append(urltag)
                 _append(buffer, url, urltag)
