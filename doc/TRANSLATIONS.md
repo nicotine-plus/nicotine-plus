@@ -32,6 +32,15 @@ Nicotine+ will try to autodetect your language based on what locale you're using
 * French: `LANGUAGE=fr_FR.UTF-8 python nicotine`
 * ...
 
+## Updating the translation template
+
+When strings change in the Nicotine+ source code, the translation template file `po/nicotine.pot` should also be updated. To update the template, run the following command:
+
+```console
+python3 po/update_pot.py
+```
+
+
 ## Add yourself to the translators
 
 If you added a lot of translations, you can add yourself to the translators list via a pull request(PR).
