@@ -78,7 +78,7 @@ if __name__ == '__main__':
     LONG_DESCRIPTION = """Nicotine+ is a graphical client for the Soulseek peer-to-peer
 network.
 
-Nicotine+ aims to be a pleasant, Free and Open Source (FOSS)
+Nicotine+ aims to be a pleasant, free and open source (FOSS)
 alternative to the official Soulseek client, providing additional
 functionality while keeping current with the Soulseek protocol."""
 
