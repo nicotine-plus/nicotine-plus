@@ -17,10 +17,12 @@
 - hyriand (2003)
 
 ## Spanish
+- Strange (2021)
 - Silvio Orta (2007)
 - Dreslo
 
 ## French
+- melmorabity (2021)
 - m-balthazar (2020)
 - Michael Labouebe (2016-2017) [gfarmerfr(at)free(dot)fr]
 - ManWell (2007)
