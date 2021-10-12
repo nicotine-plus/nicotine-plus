@@ -375,9 +375,9 @@ class Search(UserInterface):
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download File(s) _To..."), self.on_download_files_to),
+            ("#" + _("Download File(s) _To…"), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
-            ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
+            ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
@@ -394,7 +394,7 @@ class Search(UserInterface):
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
@@ -1134,11 +1134,11 @@ class Search(UserInterface):
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
+        for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
                   _("Copy _URL")):
             actions[i].set_enabled(False)
 
-        for i in (_("Download _Folder(s)"), _("Download F_older(s) To..."), _("_Browse Folder(s)"),
+        for i in (_("Download _Folder(s)"), _("Download F_older(s) To…"), _("_Browse Folder(s)"),
                   _("Copy _File Path"), _("Copy Folder U_RL")):
             actions[i].set_enabled(files)
 
@@ -1148,7 +1148,7 @@ class Search(UserInterface):
         if self.selected_files_count:
             # At least one selected result is a file, activate file-related items
 
-            for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
+            for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
                       _("Copy _URL")):
                 actions[i].set_enabled(True)
 

@@ -213,39 +213,39 @@ class UserBrowse(UserInterface):
         popup.setup(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame)
         self.popup_menu_downloads_folders.setup(
             ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
             ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
+            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_downloads_files = PopupMenu(self.frame)
         self.popup_menu_downloads_files.setup(
             ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download _To..."), self.on_download_files_to),
+            ("#" + _("Download _To…"), self.on_download_files_to),
             ("", None),
             ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
             ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
+            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_uploads_folders = PopupMenu(self.frame)
         self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to)
+            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to)
         )
 
         self.popup_menu_uploads_files = PopupMenu(self.frame)
         self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
+            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
             ("#" + _("Up_load File(s)"), self.on_upload_files)
         )
 
@@ -254,12 +254,12 @@ class UserBrowse(UserInterface):
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
+                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
-                ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-                ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
+                ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+                ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("", None),
@@ -271,9 +271,9 @@ class UserBrowse(UserInterface):
         else:
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
+                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
@@ -370,13 +370,13 @@ class UserBrowse(UserInterface):
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
-                      _("Download R_ecursive To..."), _("Upload Folder To..."), _("Upload Folder Recursive To..."),
+            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
+                      _("Download R_ecursive To…"), _("Upload Folder To…"), _("Upload Folder Recursive To…"),
                       _("Open in File _Manager"), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
         else:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
-                      _("Download R_ecursive To..."), _("Copy _Folder Path"), _("Copy _URL")):
+            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
+                      _("Download R_ecursive To…"), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
 
         self.user_popup.toggle_user_items()

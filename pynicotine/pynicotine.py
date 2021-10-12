@@ -306,13 +306,13 @@ class NicotineCore:
         connect_ready = not config.need_config()
 
         if not connect_ready:
-            log.add(_("You need to specify a username and password before connecting..."))
+            log.add(_("You need to specify a username and password before connecting…"))
 
         return connect_ready
 
     def quit(self, signal_type=None, _frame=None):
 
-        log.add(_("Quitting Nicotine+ %(version)s, %(status)s..."), {
+        log.add(_("Quitting Nicotine+ %(version)s, %(status)s…"), {
             "version": config.version,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
@@ -911,7 +911,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         log.add(
-            _("Connected to server %(host)s:%(port)s, logging in..."), {
+            _("Connected to server %(host)s:%(port)s, logging in…"), {
                 'host': msg.addr[0],
                 'port': msg.addr[1]
             }

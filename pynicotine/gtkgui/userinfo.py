@@ -207,7 +207,7 @@ class UserInfo(UserInterface):
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
             ("", None),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
@@ -443,7 +443,7 @@ class UserInfo(UserInterface):
             callback=self.on_save_picture_response,
             initialdir=config.sections["transfers"]["downloaddir"],
             initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Save as...")
+            title=_("Save as…")
         )
 
     def on_image_popup_menu(self, menu, widget):

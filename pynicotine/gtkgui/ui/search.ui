@@ -170,7 +170,7 @@
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterInEntry">
                                 <property name="width-chars">14</property>
-                                <property name="placeholder-text" translatable="yes">Include text...</property>
+                                <property name="placeholder-text" translatable="yes">Include text…</property>
                                 <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                                 <property name="primary-icon-name">emblem-ok-symbolic</property>
                                 <signal name="activate" handler="on_refilter" swapped="no"/>
@@ -200,7 +200,7 @@
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterOutEntry">
                                 <property name="width-chars">14</property>
-                                <property name="placeholder-text" translatable="yes">Exclude text...</property>
+                                <property name="placeholder-text" translatable="yes">Exclude text…</property>
                                 <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                                 <property name="primary-icon-name">action-unavailable-symbolic</property>
                                 <signal name="activate" handler="on_refilter" swapped="no"/>
@@ -230,7 +230,7 @@
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterTypeEntry">
                                 <property name="width-chars">12</property>
-                                <property name="placeholder-text" translatable="yes">File type...</property>
+                                <property name="placeholder-text" translatable="yes">File type…</property>
                                 <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
                                 <property name="primary-icon-name">text-x-generic-symbolic</property>
                                 <signal name="activate" handler="on_refilter" swapped="no"/>
@@ -260,7 +260,7 @@
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterSizeEntry">
                                 <property name="width-chars">10</property>
-                                <property name="placeholder-text" translatable="yes">File size...</property>
+                                <property name="placeholder-text" translatable="yes">File size…</property>
                                 <property name="tooltip-text" translatable="yes">File size</property>
                                 <property name="primary-icon-name">drive-harddisk-symbolic</property>
                                 <signal name="activate" handler="on_refilter" swapped="no"/>
@@ -290,7 +290,7 @@
                             <child internal-child="entry">
                               <object class="GtkEntry" id="FilterBitrateEntry">
                                 <property name="width-chars">10</property>
-                                <property name="placeholder-text" translatable="yes">Bitrate...</property>
+                                <property name="placeholder-text" translatable="yes">Bitrate…</property>
                                 <property name="tooltip-text" translatable="yes">Bitrate</property>
                                 <property name="primary-icon-name">audio-volume-high-symbolic</property>
                                 <signal name="activate" handler="on_refilter" swapped="no"/>
@@ -324,7 +324,7 @@
                                 <child internal-child="entry">
                                   <object class="GtkEntry" id="FilterCountryEntry">
                                     <property name="width-chars">12</property>
-                                    <property name="placeholder-text" translatable="yes">Country code...</property>
+                                    <property name="placeholder-text" translatable="yes">Country code…</property>
                                     <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
                                     <property name="primary-icon-name">mark-location-symbolic</property>
                                     <signal name="activate" handler="on_refilter" swapped="no"/>

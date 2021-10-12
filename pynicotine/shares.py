@@ -164,7 +164,7 @@ class Scanner:
         except TypeError:
             num_folders = len(list(oldmtimes))
 
-        self.queue.put((_("%(num)s folders found before rescan, rebuilding..."), {"num": num_folders}, None))
+        self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": num_folders}, None))
 
         newmtimes = {}
 
@@ -967,11 +967,11 @@ class Shares:
             return None
 
         if sharestype == "normal":
-            log.add(_("Rescanning normal shares..."))
+            log.add(_("Rescanning normal shares…"))
             self.public_rescanning = True
 
         else:
-            log.add(_("Rescanning buddy shares..."))
+            log.add(_("Rescanning buddy shares…"))
             self.buddy_rescanning = True
 
         shared_folders = self.get_shared_folders(sharestype)

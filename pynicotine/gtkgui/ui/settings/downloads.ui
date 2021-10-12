@@ -377,7 +377,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Add...</property>
+                                <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>
@@ -405,7 +405,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Edit...</property>
+                                <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>

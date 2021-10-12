@@ -106,7 +106,7 @@ class FastConfigureAssistant(UserInterface):
 
         login = urllib.parse.quote(config.sections["server"]["login"])
         url = config.privileges_url % login
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges...") + "</a>"
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
         self.privileges.set_markup(text)
         self.privileges.connect("activate-link", lambda x, url: open_uri(url))
 

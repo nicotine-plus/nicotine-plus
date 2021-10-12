@@ -457,7 +457,7 @@ class ChatRoom(UserInterface):
         )
 
         PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).setup(
-            ("#" + _("Find..."), self.on_find_activity_log),
+            ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.log_textview.on_copy_text),
             ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
@@ -468,14 +468,14 @@ class ChatRoom(UserInterface):
         )
 
         PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat).setup(
-            ("#" + _("Find..."), self.on_find_room_log),
+            ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
             ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
             ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Room Log"), self.on_view_room_log),
-            ("#" + _("Delete Room Log..."), self.on_delete_room_log),
+            ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
             ("#" + _("_Leave Room"), self.on_leave_room)

@@ -235,7 +235,7 @@ class PopupMenu(Gio.Menu):
             self.append_item(("#" + _("_Browse Files"), self.on_browse_user))
 
         self.setup(
-            ("#" + _("Gi_ve Privileges..."), self.on_give_privileges),
+            ("#" + _("Gi_ve Privileges…"), self.on_give_privileges),
             ("", None),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
             ("#" + _("Client Version"), self.on_version),

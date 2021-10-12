@@ -60,7 +60,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Room...</property>
+                <property name="placeholder-text" translatable="yes">Room…</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
@@ -80,7 +80,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
@@ -101,7 +101,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Search term...</property>
+                <property name="placeholder-text" translatable="yes">Search term…</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
@@ -449,7 +449,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_private_chat" swapped="no"/>
@@ -506,7 +506,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_user_info" swapped="no"/>
@@ -572,7 +572,7 @@
                 <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_shares" swapped="no"/>
@@ -651,7 +651,7 @@
             <property name="height-request">0</property>
             <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
-            <property name="placeholder-text" translatable="yes">Add buddy...</property>
+            <property name="placeholder-text" translatable="yes">Add buddy…</property>
             <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
@@ -699,7 +699,7 @@
             <property name="height-request">0</property>
             <property name="max-width-chars">40</property>
             <property name="width-chars">5</property>
-            <property name="placeholder-text" translatable="yes">Create or join room...</property>
+            <property name="placeholder-text" translatable="yes">Create or join room…</property>
             <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
             <property name="primary-icon-name">user-available-symbolic</property>
             <signal name="activate" handler="on_create_room" swapped="no"/>

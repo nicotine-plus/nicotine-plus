@@ -142,7 +142,7 @@ class UserList(UserInterface):
             ("$" + _("_Trusted"), self.on_trusted),
             ("", None),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("Edit _Comments..."), self.on_edit_comments),
+            ("#" + _("Edit _Comments…"), self.on_edit_comments),
             ("#" + _("_Remove"), self.on_remove_user)
         )
 

@@ -50,9 +50,9 @@ class Downloads(TransferList):
             ("#" + _("Paused"), self.on_clear_paused),
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Filtered"), self.on_clear_filtered),
-            ("#" + _("Queued..."), self.on_try_clear_queued),
+            ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All..."), self.on_try_clear_all),
+            ("#" + _("Clear All…"), self.on_try_clear_all),
         )
 
     def switch_tab(self):

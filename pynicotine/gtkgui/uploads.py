@@ -47,9 +47,9 @@ class Uploads(TransferList):
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Aborted"), self.on_clear_aborted),
             ("#" + _("Failed"), self.on_clear_failed),
-            ("#" + _("Queued..."), self.on_try_clear_queued),
+            ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All..."), self.on_try_clear_all),
+            ("#" + _("Clear All…"), self.on_try_clear_all),
         )
 
     def on_try_clear_queued(self, *args):
