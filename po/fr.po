@@ -5,36 +5,38 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-17 19:35+0300\n"
-"PO-Revision-Date: 2021-03-20 13:02+0000\n"
-"Last-Translator: Mohamed El Morabity <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2021-10-12 12:59+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/fr/>\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2021-05-18 11:28+0000\n"
-"X-Generator: Launchpad (build 5321c3f40fa4d4b847f4e47fb766e7b95ed5036c)\n"
-"Language: fr\n"
 "X-Poedit-Bookmarks: 1121,180,724,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: nicotine:36
 msgid "Nicotine+ is a Soulseek client"
-msgstr ""
+msgstr "Nicotine+ est un client Soulseek"
 
 #: nicotine:41
 msgid "show this help message and exit"
-msgstr ""
+msgstr "afficher ce message d'aide et quitter"
 
 #: nicotine:44
 msgid "file"
-msgstr ""
+msgstr "fichier"
 
 #: nicotine:45
 msgid "use non-default configuration file"
-msgstr ""
+msgstr "utiliser un fichier de configuration non prédéfini"
 
 #: nicotine:48
 msgid "dir"
-msgstr ""
+msgstr "répertoire"
 
 #: nicotine:49
 msgid "use non-default directory for plugins"
@@ -3679,7 +3681,7 @@ msgstr ""
 #: pynicotine/upnp/portmapper.py:50
 #, python-format
 msgid "UPnP exception: %(error)s"
-msgstr "UPnP exception: %(error)s"
+msgstr "UPnP exception : %(error)s"
 
 #: pynicotine/upnp/portmapper.py:51
 msgid "Failed to automate the creation of UPnP Port Mapping rule."
@@ -5781,15 +5783,15 @@ msgstr "Commande/Profile pour le lecteur"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:83
 msgid "Now playing format:"
-msgstr "Now Playing format:"
+msgstr "Format de lecture en cours :"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:99
 msgid "Legend:"
-msgstr "Légende:"
+msgstr "Légende :"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:115
 msgid "Example:"
-msgstr "Exemple:"
+msgstr "Exemple :"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:131
 msgid "Test the Configuration"
