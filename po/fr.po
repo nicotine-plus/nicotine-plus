@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-17 19:35+0300\n"
-"PO-Revision-Date: 2021-10-12 12:59+0000\n"
+"PO-Revision-Date: 2021-10-12 18:11+0000\n"
 "Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -688,7 +688,7 @@ msgstr "Téléchargement commencé: utilisateur %(user)s, fichier %(file)s"
 #: pynicotine/transfers.py:1093
 #, python-format
 msgid "Upload I/O error: %s"
-msgstr "Erreur d'E/S lors de l'envoi: %s"
+msgstr "Erreur d'E/S lors de l'envoi : %s"
 
 #: pynicotine/transfers.py:1104
 msgid "privileged"
@@ -6121,6 +6121,8 @@ msgstr "Aléatoire"
 msgid ""
 "Queued users will be uploaded one file at a time in a cyclical fashion."
 msgstr ""
+"Les utilisateurs en file d'attente verront leurs fichiers téléversés un par "
+"un de manière cyclique."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:178
 msgid "First In, First Out"
@@ -6129,20 +6131,26 @@ msgstr "Premier arrivé, premier servi"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:181
 msgid "Files will be uploaded in the order they were queued."
 msgstr ""
+"Les fichiers seront téléversés dans l'ordre où ils ont été mis en file "
+"d'attente."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:195
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr ""
+"Mettre en file d'attente les téléversements si la vitesse de transfert "
+"totale atteint (Kio/s) :"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:222
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
 "limitations."
 msgstr ""
+"Si ceci est désactivé, les créneaux seront automatiquement déterminés par "
+"les limites de la bande passante disponible."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:227
 msgid "Limit number of upload slots to:"
-msgstr ""
+msgstr "Limiter le nombre de créneaux de téléversements à :"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:253
 msgid "Each user may queue a maximum of either:"
@@ -6150,15 +6158,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:270
 msgid "Mebibytes (2^17 bytes)."
-msgstr ""
+msgstr "Mebioctets (2^17 octets)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:279
 msgid "MiBs"
-msgstr ""
+msgstr "Mio"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:305
 msgid "files"
-msgstr ""
+msgstr "fichiers"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:322
 msgid "Queue size limit does not apply to friends"
@@ -6193,7 +6201,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/urlcatch.ui:159
 msgid "Handler:"
-msgstr "Logiciel:"
+msgstr "Logiciel :"
 
 #: pynicotine/gtkgui/ui/settings/urlcatch.ui:170
 msgid "Protocol:"
