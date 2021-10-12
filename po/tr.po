@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-12 18:11+0000\n"
+"PO-Revision-Date: 2021-10-12 18:32+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1645,15 +1645,15 @@ msgstr "_Arkadaş Paylaşımlarını Yeniden Tara"
 
 #: pynicotine/gtkgui/frame.py:1141
 msgid "_Configure Shares"
-msgstr ""
+msgstr "Paylaşımları _Yapılandır"
 
 #: pynicotine/gtkgui/frame.py:1148
 msgid "_Browse Public Shares"
-msgstr ""
+msgstr "Genel Paylaşımlara Gö_z At"
 
 #: pynicotine/gtkgui/frame.py:1149
 msgid "Bro_wse Buddy Shares"
-msgstr ""
+msgstr "Arkadaş Paylaşımlarına Göz A_t"
 
 #: pynicotine/gtkgui/frame.py:1165
 msgid "_Search Files"
