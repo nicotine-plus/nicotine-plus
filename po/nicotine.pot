@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-12 00:01+0200\n"
+"POT-Creation-Date: 2021-10-12 20:30+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 msgid ""
-"Nicotine+ aims to be a pleasant, Free and Open Source (FOSS) alternative to "
+"Nicotine+ aims to be a pleasant, free and open source (FOSS) alternative to "
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
@@ -911,7 +911,7 @@ msgid "Qatar"
 msgstr ""
 
 #: pynicotine/geoip/geoip.py:210
-msgid "Reunion"
+msgid "Réunion"
 msgstr ""
 
 #: pynicotine/geoip/geoip.py:211
@@ -1521,7 +1521,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:393 pynicotine/gtkgui/widgets/iconnotebook.py:457
 #: pynicotine/gtkgui/widgets/treeview.py:471
-#: pynicotine/gtkgui/ui/mainwindow.ui:1856
+#: pynicotine/gtkgui/ui/mainwindow.ui:1904
 msgid "Offline"
 msgstr ""
 
@@ -1680,15 +1680,15 @@ msgstr ""
 msgid "_Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:1281 pynicotine/gtkgui/ui/mainwindow.ui:839
+#: pynicotine/gtkgui/frame.py:1281 pynicotine/gtkgui/ui/mainwindow.ui:843
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:105
 msgid "Search Files"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1282 pynicotine/gtkgui/settingswindow.py:3116
 #: pynicotine/gtkgui/widgets/trayicon.py:92
-#: pynicotine/gtkgui/ui/mainwindow.ui:932
-#: pynicotine/gtkgui/ui/mainwindow.ui:1568
+#: pynicotine/gtkgui/ui/mainwindow.ui:942
+#: pynicotine/gtkgui/ui/mainwindow.ui:1616
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:117
 msgid "Downloads"
@@ -1696,37 +1696,37 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1283 pynicotine/gtkgui/settingswindow.py:3117
 #: pynicotine/gtkgui/widgets/trayicon.py:93
-#: pynicotine/gtkgui/ui/mainwindow.ui:1019
-#: pynicotine/gtkgui/ui/mainwindow.ui:1581
+#: pynicotine/gtkgui/ui/mainwindow.ui:1035
+#: pynicotine/gtkgui/ui/mainwindow.ui:1629
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:129
 msgid "Uploads"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/ui/mainwindow.ui:1106
+#: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/ui/mainwindow.ui:1128
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:141
 msgid "User Browse"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1285 pynicotine/gtkgui/settingswindow.py:3107
-#: pynicotine/gtkgui/ui/mainwindow.ui:1199
+#: pynicotine/gtkgui/ui/mainwindow.ui:1227
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:153
 msgid "User Info"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/ui/mainwindow.ui:1292
+#: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/ui/mainwindow.ui:1326
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:165
 msgid "Private Chat"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/buddylist.ui:18
-#: pynicotine/gtkgui/ui/mainwindow.ui:1385
+#: pynicotine/gtkgui/ui/mainwindow.ui:1425
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:177
 msgid "Buddy List"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:1288 pynicotine/gtkgui/ui/mainwindow.ui:1472
+#: pynicotine/gtkgui/frame.py:1288 pynicotine/gtkgui/ui/mainwindow.ui:1518
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:189
 msgid "Chat Rooms"
@@ -1766,7 +1766,7 @@ msgstr ""
 #: pynicotine/gtkgui/frame.py:2181
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
-"the following error and include it in a bug report:"
+"the following message and include it in a bug report:"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:2183
@@ -2438,7 +2438,7 @@ msgid "URL Handlers"
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:3114
-#: pynicotine/gtkgui/ui/mainwindow.ui:1646
+#: pynicotine/gtkgui/ui/mainwindow.ui:1694
 msgid "Transfers"
 msgstr ""
 
@@ -2458,7 +2458,7 @@ msgid "Events"
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:3121
-#: pynicotine/gtkgui/ui/mainwindow.ui:1607
+#: pynicotine/gtkgui/ui/mainwindow.ui:1655
 msgid "Chat"
 msgstr ""
 
@@ -4246,97 +4246,97 @@ msgid ""
 "will be created."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:851
+#: pynicotine/gtkgui/ui/mainwindow.ui:855
 msgid ""
 "Enter a search term to search for files shared by other users on the "
 "Soulseek network"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:944
+#: pynicotine/gtkgui/ui/mainwindow.ui:954
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1031
+#: pynicotine/gtkgui/ui/mainwindow.ui:1047
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1118
+#: pynicotine/gtkgui/ui/mainwindow.ui:1140
 msgid ""
 "Enter the name of a user to browse their list of shared files. You can also "
 "open a list you have previously saved."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1211
+#: pynicotine/gtkgui/ui/mainwindow.ui:1239
 msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1304
+#: pynicotine/gtkgui/ui/mainwindow.ui:1338
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1397
+#: pynicotine/gtkgui/ui/mainwindow.ui:1437
 msgid ""
 "Add users to your buddy list to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1484
+#: pynicotine/gtkgui/ui/mainwindow.ui:1530
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
 "the Soulseek network"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1552
+#: pynicotine/gtkgui/ui/mainwindow.ui:1600
 msgid "Debug Logging"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1594
+#: pynicotine/gtkgui/ui/mainwindow.ui:1642
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1620
-#: pynicotine/gtkgui/ui/mainwindow.ui:1770
+#: pynicotine/gtkgui/ui/mainwindow.ui:1668
+#: pynicotine/gtkgui/ui/mainwindow.ui:1818
 msgid "Connections"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1633
+#: pynicotine/gtkgui/ui/mainwindow.ui:1681
 #: pynicotine/gtkgui/ui/settings/tts.ui:109
 msgid "Messages"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1659
+#: pynicotine/gtkgui/ui/mainwindow.ui:1707
 msgid "Miscellaneous"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1744
+#: pynicotine/gtkgui/ui/mainwindow.ui:1792
 msgid "Scanning Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1753
+#: pynicotine/gtkgui/ui/mainwindow.ui:1801
 msgid "Scanning Buddy Shares"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1798
+#: pynicotine/gtkgui/ui/mainwindow.ui:1846
 msgid "Downloading (speed / active users)"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1825
+#: pynicotine/gtkgui/ui/mainwindow.ui:1873
 msgid "Uploading (speed / active users)"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1870
+#: pynicotine/gtkgui/ui/mainwindow.ui:1918
 msgid "Enable alternative download and upload speed limits"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1888
+#: pynicotine/gtkgui/ui/mainwindow.ui:1936
 msgid "Show log history"
 msgstr ""
 

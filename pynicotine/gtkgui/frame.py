@@ -2179,7 +2179,7 @@ class NicotineFrame(UserInterface):
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
-                      "Please copy the following error and include it in a bug report:") + error,
+                      "Please copy the following message and include it in a bug report:") + error,
             third=_("Copy & Report Bug"),
             cancel=False,
             callback=self.on_critical_error_response,

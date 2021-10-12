@@ -207,7 +207,7 @@ class GeoIP:
         'pw': _('Palau'),
         'py': _('Paraguay'),
         'qa': _('Qatar'),
-        're': _('Reunion'),
+        're': _('Réunion'),
         'ro': _('Romania'),
         'rs': _('Serbia'),
         'ru': _('Russia'),
