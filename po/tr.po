@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-12 12:59+0000\n"
+"PO-Revision-Date: 2021-10-12 18:11+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -66,67 +66,69 @@ msgstr "Nicotine+ bir Soulseek istemcisidir"
 
 #: pynicotine/__init__.py:35
 msgid "show this help message and exit"
-msgstr ""
+msgstr "bu yardım mesajını göster ve çık"
 
 #: pynicotine/__init__.py:38
 msgid "file"
-msgstr ""
+msgstr "dosya"
 
 #: pynicotine/__init__.py:39
 msgid "use non-default configuration file"
-msgstr ""
+msgstr "öntanımlı olmayan yapılandırma dosyası kullan"
 
 #: pynicotine/__init__.py:42 pynicotine/__init__.py:46
 msgid "dir"
-msgstr ""
+msgstr "dizin"
 
 #: pynicotine/__init__.py:43
 msgid "use non-default user data directory for e.g. list of downloads"
 msgstr ""
+"öntanımlı olmayan kullanıcı veri dizini kullan, örn. indirilenler listesi "
+"için"
 
 #: pynicotine/__init__.py:47
 msgid "use non-default directory for plugins"
-msgstr ""
+msgstr "eklentiler için öntanımlı olmayan dizini kullan"
 
 #: pynicotine/__init__.py:51
 msgid "enable the tray icon"
-msgstr ""
+msgstr "tepsi simgesini etkinleştir"
 
 #: pynicotine/__init__.py:55
 msgid "disable the tray icon"
-msgstr ""
+msgstr "tepsi simgesini devre dışı bırak"
 
 #: pynicotine/__init__.py:59
 msgid "start the program without showing window"
-msgstr ""
+msgstr "programı pencereyi göstermeden başlat"
 
 #: pynicotine/__init__.py:62
 msgid "ip"
-msgstr ""
+msgstr "ip"
 
 #: pynicotine/__init__.py:63
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr ""
+msgstr "soketleri verilen IP'ye bağla (VPN için kullanışlıdır)"
 
 #: pynicotine/__init__.py:66
 msgid "port"
-msgstr ""
+msgstr "bağlantı noktası"
 
 #: pynicotine/__init__.py:67
 msgid "listen on the given port"
-msgstr ""
+msgstr "verilen bağlantı noktasında dinle"
 
 #: pynicotine/__init__.py:71
 msgid "rescan shared files"
-msgstr ""
+msgstr "paylaşılan dosyaları yeniden tara"
 
 #: pynicotine/__init__.py:75
 msgid "start the program in headless mode (no GUI)"
-msgstr ""
+msgstr "programı başsız modda başlat (grafiksel kullanıcı arayüzü olmadan)"
 
 #: pynicotine/__init__.py:79
 msgid "display version and exit"
-msgstr ""
+msgstr "sürümü göster ve çık"
 
 #: pynicotine/__init__.py:119
 #, python-format
@@ -134,1050 +136,1054 @@ msgid ""
 "You are using an unsupported version of Python (%(old_version)s).\n"
 "You should install Python %(min_version)s or newer."
 msgstr ""
+"Desteklenmeyen bir Python (%(old_version)s) sürümü kullanıyorsunuz.\n"
+"Python %(min_version)s veya daha yenisini kurmalısınız."
 
 #: pynicotine/__init__.py:128 pynicotine/shares.py:57
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-msgstr ""
+msgstr "%(option1)s veya %(option2)s bulunamıyor, lütfen birini kurun."
 
 #: pynicotine/__init__.py:153
 msgid ""
 "Failed to scan shares. If Nicotine+ is currently running, please close the "
 "program before scanning."
 msgstr ""
+"Paylaşımlar taranamadı. Nicotine+ şu anda çalışıyorsa, lütfen taramadan önce "
+"programı kapatın."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
 msgid "You have been added to a private room: %(room)s"
-msgstr ""
+msgstr "Özel bir odaya eklendiniz: %(room)s"
 
 #: pynicotine/config.py:117 pynicotine/config.py:134
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr ""
+msgstr "'%(path)s' dizini oluşturulamıyor, hata bildirildi: %(error)s"
 
 #: pynicotine/config.py:543
 #, python-format
 msgid "Unknown config section '%s'"
-msgstr ""
+msgstr "Bilinmeyen yapılandırma bölümü '%s'"
 
 #: pynicotine/config.py:547
 #, python-format
 msgid "Unknown config option '%(option)s' in section '%(section)s'"
-msgstr ""
+msgstr "'%(section)s' bölümünde bilinmeyen yapılandırma seçeneği '%(option)s'"
 
 #: pynicotine/geoip/geoip.py:22
 msgid "Andorra"
-msgstr ""
+msgstr "Andorra"
 
 #: pynicotine/geoip/geoip.py:23
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Birleşik Arap Emirlikleri"
 
 #: pynicotine/geoip/geoip.py:24
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afganistan"
 
 #: pynicotine/geoip/geoip.py:25
 msgid "Antigua & Barbuda"
-msgstr ""
+msgstr "Antigua ve Barbuda"
 
 #: pynicotine/geoip/geoip.py:26
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: pynicotine/geoip/geoip.py:27
 msgid "Albania"
-msgstr ""
+msgstr "Arnavutluk"
 
 #: pynicotine/geoip/geoip.py:28
 msgid "Armenia"
-msgstr ""
+msgstr "Ermenistan"
 
 #: pynicotine/geoip/geoip.py:29
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: pynicotine/geoip/geoip.py:30
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktika"
 
 #: pynicotine/geoip/geoip.py:31
 msgid "Argentina"
-msgstr ""
+msgstr "Arjantin"
 
 #: pynicotine/geoip/geoip.py:32
 msgid "American Samoa"
-msgstr ""
+msgstr "Amerikan Samoası"
 
 #: pynicotine/geoip/geoip.py:33
 msgid "Austria"
-msgstr ""
+msgstr "Avusturya"
 
 #: pynicotine/geoip/geoip.py:34
 msgid "Australia"
-msgstr ""
+msgstr "Avustralya"
 
 #: pynicotine/geoip/geoip.py:35
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: pynicotine/geoip/geoip.py:36
 msgid "Åland Islands"
-msgstr ""
+msgstr "Åland Adaları"
 
 #: pynicotine/geoip/geoip.py:37
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbaycan"
 
 #: pynicotine/geoip/geoip.py:38
 msgid "Bosnia & Herzegovina"
-msgstr ""
+msgstr "Bosna-Hersek"
 
 #: pynicotine/geoip/geoip.py:39
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: pynicotine/geoip/geoip.py:40
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladeş"
 
 #: pynicotine/geoip/geoip.py:41
 msgid "Belgium"
-msgstr ""
+msgstr "Belçika"
 
 #: pynicotine/geoip/geoip.py:42
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: pynicotine/geoip/geoip.py:43
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgaristan"
 
 #: pynicotine/geoip/geoip.py:44
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahreyn"
 
 #: pynicotine/geoip/geoip.py:45
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: pynicotine/geoip/geoip.py:46
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: pynicotine/geoip/geoip.py:47
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Saint Barthelemy"
 
 #: pynicotine/geoip/geoip.py:48
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermuda"
 
 #: pynicotine/geoip/geoip.py:49
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Sultanlığı"
 
 #: pynicotine/geoip/geoip.py:50
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivya"
 
 #: pynicotine/geoip/geoip.py:51
 msgid "Bonaire), Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire), Sint Eustatius ve Saba"
 
 #: pynicotine/geoip/geoip.py:52
 msgid "Brazil"
-msgstr ""
+msgstr "Brezilya"
 
 #: pynicotine/geoip/geoip.py:53
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamalar"
 
 #: pynicotine/geoip/geoip.py:54
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #: pynicotine/geoip/geoip.py:55
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Bouvet Adası"
 
 #: pynicotine/geoip/geoip.py:56
 msgid "Botswana"
-msgstr ""
+msgstr "Botsvana"
 
 #: pynicotine/geoip/geoip.py:57
 msgid "Belarus"
-msgstr ""
+msgstr "Belarus"
 
 #: pynicotine/geoip/geoip.py:58
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: pynicotine/geoip/geoip.py:59
 msgid "Canada"
-msgstr ""
+msgstr "Kanada"
 
 #: pynicotine/geoip/geoip.py:60
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Cocos (Keeling) Adaları"
 
 #: pynicotine/geoip/geoip.py:61
 msgid "Democratic Republic of Congo"
-msgstr ""
+msgstr "Kongo Demokratik Cumhuriyeti"
 
 #: pynicotine/geoip/geoip.py:62
 msgid "Central African Republic"
-msgstr ""
+msgstr "Orta Afrika Cumhuriyeti"
 
 #: pynicotine/geoip/geoip.py:63
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #: pynicotine/geoip/geoip.py:64
 msgid "Switzerland"
-msgstr ""
+msgstr "İsviçre"
 
 #: pynicotine/geoip/geoip.py:65
 msgid "Ivory Coast"
-msgstr ""
+msgstr "Fildişi Sahili"
 
 #: pynicotine/geoip/geoip.py:66
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cook Adaları"
 
 #: pynicotine/geoip/geoip.py:67
 msgid "Chile"
-msgstr ""
+msgstr "Şili"
 
 #: pynicotine/geoip/geoip.py:68
 msgid "Cameroon"
-msgstr ""
+msgstr "Kamerun"
 
 #: pynicotine/geoip/geoip.py:69
 msgid "China"
-msgstr ""
+msgstr "Çin"
 
 #: pynicotine/geoip/geoip.py:70
 msgid "Colombia"
-msgstr ""
+msgstr "Kolombiya"
 
 #: pynicotine/geoip/geoip.py:71
 msgid "Costa Rica"
-msgstr ""
+msgstr "Kosta Rika"
 
 #: pynicotine/geoip/geoip.py:72
 msgid "Cuba"
-msgstr ""
+msgstr "Küba"
 
 #: pynicotine/geoip/geoip.py:73
 msgid "Cabo Verde"
-msgstr ""
+msgstr "Yeşil Burun Adaları"
 
 #: pynicotine/geoip/geoip.py:74
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 #: pynicotine/geoip/geoip.py:75
 msgid "Christmas Island"
-msgstr ""
+msgstr "Christmas Adası"
 
 #: pynicotine/geoip/geoip.py:76
 msgid "Cyprus"
-msgstr ""
+msgstr "Kıbrıs"
 
 #: pynicotine/geoip/geoip.py:77
 msgid "Czech Republic"
-msgstr ""
+msgstr "Çek Cumhuriyeti"
 
 #: pynicotine/geoip/geoip.py:78
 msgid "Germany"
-msgstr ""
+msgstr "Almanya"
 
 #: pynicotine/geoip/geoip.py:79
 msgid "Djibouti"
-msgstr ""
+msgstr "Cibuti"
 
 #: pynicotine/geoip/geoip.py:80
 msgid "Denmark"
-msgstr ""
+msgstr "Danimarka"
 
 #: pynicotine/geoip/geoip.py:81
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #: pynicotine/geoip/geoip.py:82
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominik Cumhuriyeti"
 
 #: pynicotine/geoip/geoip.py:83
 msgid "Algeria"
-msgstr ""
+msgstr "Cezayir"
 
 #: pynicotine/geoip/geoip.py:84
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekvador"
 
 #: pynicotine/geoip/geoip.py:85
 msgid "Estonia"
-msgstr ""
+msgstr "Estonya"
 
 #: pynicotine/geoip/geoip.py:86
 msgid "Egypt"
-msgstr ""
+msgstr "Mısır"
 
 #: pynicotine/geoip/geoip.py:87
 msgid "Western Sahara"
-msgstr ""
+msgstr "Batı Sahra"
 
 #: pynicotine/geoip/geoip.py:88
 msgid "Eritrea"
-msgstr ""
+msgstr "Eritre"
 
 #: pynicotine/geoip/geoip.py:89
 msgid "Spain"
-msgstr ""
+msgstr "İspanya"
 
 #: pynicotine/geoip/geoip.py:90
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiyopya"
 
 #: pynicotine/geoip/geoip.py:91
 msgid "Europe"
-msgstr ""
+msgstr "Avrupa"
 
 #: pynicotine/geoip/geoip.py:92
 msgid "Finland"
-msgstr ""
+msgstr "Finlandiya"
 
 #: pynicotine/geoip/geoip.py:93
 msgid "Fiji"
-msgstr ""
+msgstr "Fiji"
 
 #: pynicotine/geoip/geoip.py:94
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Falkland (Malvina) Adaları"
 
 #: pynicotine/geoip/geoip.py:95
 msgid "Micronesia"
-msgstr ""
+msgstr "Mikronezya"
 
 #: pynicotine/geoip/geoip.py:96
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Faroe Adaları"
 
 #: pynicotine/geoip/geoip.py:97
 msgid "France"
-msgstr ""
+msgstr "Fransa"
 
 #: pynicotine/geoip/geoip.py:98
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #: pynicotine/geoip/geoip.py:99
 msgid "Great Britain"
-msgstr ""
+msgstr "Büyük Britanya"
 
 #: pynicotine/geoip/geoip.py:100
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #: pynicotine/geoip/geoip.py:101
 msgid "Georgia"
-msgstr ""
+msgstr "Gürcistan"
 
 #: pynicotine/geoip/geoip.py:102
 msgid "French Guiana"
-msgstr ""
+msgstr "Fransız Guyanası"
 
 #: pynicotine/geoip/geoip.py:103
 msgid "Guernsey"
-msgstr ""
+msgstr "Guernsey"
 
 #: pynicotine/geoip/geoip.py:104
 msgid "Ghana"
-msgstr ""
+msgstr "Gana"
 
 #: pynicotine/geoip/geoip.py:105
 msgid "Gibraltar"
-msgstr ""
+msgstr "Cebelitarık"
 
 #: pynicotine/geoip/geoip.py:106
 msgid "Greenland"
-msgstr ""
+msgstr "Grönland"
 
 #: pynicotine/geoip/geoip.py:107
 msgid "Gambia"
-msgstr ""
+msgstr "Gambiya"
 
 #: pynicotine/geoip/geoip.py:108
 msgid "Guinea"
-msgstr ""
+msgstr "Gine"
 
 #: pynicotine/geoip/geoip.py:109
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Guadeloupe"
 
 #: pynicotine/geoip/geoip.py:110
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Ekvator Ginesi"
 
 #: pynicotine/geoip/geoip.py:111
 msgid "Greece"
-msgstr ""
+msgstr "Yunanistan"
 
 #: pynicotine/geoip/geoip.py:112
 msgid "South Georgia & South Sandwich Islands"
-msgstr ""
+msgstr "Güney Georgia ve Güney Sandwich Adaları"
 
 #: pynicotine/geoip/geoip.py:113
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #: pynicotine/geoip/geoip.py:114
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #: pynicotine/geoip/geoip.py:115
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Gine-Bissau"
 
 #: pynicotine/geoip/geoip.py:116
 msgid "Guyana"
-msgstr ""
+msgstr "Guyana"
 
 #: pynicotine/geoip/geoip.py:117
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hong Kong"
 
 #: pynicotine/geoip/geoip.py:118
 msgid "Heard & McDonald Islands"
-msgstr ""
+msgstr "Heard ve McDonald Adaları"
 
 #: pynicotine/geoip/geoip.py:119
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #: pynicotine/geoip/geoip.py:120
 msgid "Croatia"
-msgstr ""
+msgstr "Hırvatistan"
 
 #: pynicotine/geoip/geoip.py:121
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #: pynicotine/geoip/geoip.py:122
 msgid "Hungary"
-msgstr ""
+msgstr "Macaristan"
 
 #: pynicotine/geoip/geoip.py:123
 msgid "Indonesia"
-msgstr ""
+msgstr "Endonezya"
 
 #: pynicotine/geoip/geoip.py:124
 msgid "Ireland"
-msgstr ""
+msgstr "İrlanda"
 
 #: pynicotine/geoip/geoip.py:125
 msgid "Israel"
-msgstr ""
+msgstr "İsrail"
 
 #: pynicotine/geoip/geoip.py:126
 msgid "Isle of Man"
-msgstr ""
+msgstr "Man Adası"
 
 #: pynicotine/geoip/geoip.py:127
 msgid "India"
-msgstr ""
+msgstr "Hindistan"
 
 #: pynicotine/geoip/geoip.py:128
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Britanya Hint Okyanusu Toprakları"
 
 #: pynicotine/geoip/geoip.py:129
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #: pynicotine/geoip/geoip.py:130
 msgid "Iran"
-msgstr ""
+msgstr "İran"
 
 #: pynicotine/geoip/geoip.py:131
 msgid "Iceland"
-msgstr ""
+msgstr "İzlanda"
 
 #: pynicotine/geoip/geoip.py:132
 msgid "Italy"
-msgstr ""
+msgstr "İtalya"
 
 #: pynicotine/geoip/geoip.py:133
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #: pynicotine/geoip/geoip.py:134
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamaika"
 
 #: pynicotine/geoip/geoip.py:135
 msgid "Jordan"
-msgstr ""
+msgstr "Ürdün"
 
 #: pynicotine/geoip/geoip.py:136
 msgid "Japan"
-msgstr ""
+msgstr "Japonya"
 
 #: pynicotine/geoip/geoip.py:137
 msgid "Kenya"
-msgstr ""
+msgstr "Kenya"
 
 #: pynicotine/geoip/geoip.py:138
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kırgızistan"
 
 #: pynicotine/geoip/geoip.py:139
 msgid "Cambodia"
-msgstr ""
+msgstr "Kamboçya"
 
 #: pynicotine/geoip/geoip.py:140
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #: pynicotine/geoip/geoip.py:141
 msgid "Comoros"
-msgstr ""
+msgstr "Komorlar"
 
 #: pynicotine/geoip/geoip.py:142
 msgid "Saint Kitts & Nevis"
-msgstr ""
+msgstr "Saint Kitts ve Nevis"
 
 #: pynicotine/geoip/geoip.py:143
 msgid "North Korea"
-msgstr ""
+msgstr "Kuzey Kore"
 
 #: pynicotine/geoip/geoip.py:144
 msgid "South Korea"
-msgstr ""
+msgstr "Güney Kore"
 
 #: pynicotine/geoip/geoip.py:145
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuveyt"
 
 #: pynicotine/geoip/geoip.py:146
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Cayman Adaları"
 
 #: pynicotine/geoip/geoip.py:147
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazakistan"
 
 #: pynicotine/geoip/geoip.py:148
 msgid "Laos"
-msgstr ""
+msgstr "Laos"
 
 #: pynicotine/geoip/geoip.py:149
 msgid "Lebanon"
-msgstr ""
+msgstr "Lübnan"
 
 #: pynicotine/geoip/geoip.py:150
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Saint Lucia"
 
 #: pynicotine/geoip/geoip.py:151
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Lihtenştayn"
 
 #: pynicotine/geoip/geoip.py:152
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #: pynicotine/geoip/geoip.py:153
 msgid "Liberia"
-msgstr ""
+msgstr "Liberya"
 
 #: pynicotine/geoip/geoip.py:154
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesotho"
 
 #: pynicotine/geoip/geoip.py:155
 msgid "Lithuania"
-msgstr ""
+msgstr "Litvanya"
 
 #: pynicotine/geoip/geoip.py:156
 msgid "Luxembourg"
-msgstr ""
+msgstr "Lüksemburg"
 
 #: pynicotine/geoip/geoip.py:157
 msgid "Latvia"
-msgstr ""
+msgstr "Letonya"
 
 #: pynicotine/geoip/geoip.py:158
 msgid "Libya"
-msgstr ""
+msgstr "Libya"
 
 #: pynicotine/geoip/geoip.py:159
 msgid "Morocco"
-msgstr ""
+msgstr "Fas"
 
 #: pynicotine/geoip/geoip.py:160
 msgid "Monaco"
-msgstr ""
+msgstr "Monako"
 
 #: pynicotine/geoip/geoip.py:161
 msgid "Moldova"
-msgstr ""
+msgstr "Moldova"
 
 #: pynicotine/geoip/geoip.py:162
 msgid "Montenegro"
-msgstr ""
+msgstr "Karadağ"
 
 #: pynicotine/geoip/geoip.py:163
 msgid "Saint Martin"
-msgstr ""
+msgstr "Saint Martin"
 
 #: pynicotine/geoip/geoip.py:164
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar"
 
 #: pynicotine/geoip/geoip.py:165
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Marshall Adaları"
 
 #: pynicotine/geoip/geoip.py:166
 msgid "North Macedonia"
-msgstr ""
+msgstr "Kuzey Makedonya"
 
 #: pynicotine/geoip/geoip.py:167
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: pynicotine/geoip/geoip.py:168
 msgid "Myanmar"
-msgstr ""
+msgstr "Myanmar"
 
 #: pynicotine/geoip/geoip.py:169
 msgid "Mongolia"
-msgstr ""
+msgstr "Moğolistan"
 
 #: pynicotine/geoip/geoip.py:170
 msgid "Macau"
-msgstr ""
+msgstr "Makao"
 
 #: pynicotine/geoip/geoip.py:171
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Kuzey Mariana Adaları"
 
 #: pynicotine/geoip/geoip.py:172
 msgid "Martinique"
-msgstr ""
+msgstr "Martinik"
 
 #: pynicotine/geoip/geoip.py:173
 msgid "Mauritania"
-msgstr ""
+msgstr "Moritanya"
 
 #: pynicotine/geoip/geoip.py:174
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #: pynicotine/geoip/geoip.py:175
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #: pynicotine/geoip/geoip.py:177
 msgid "Maldives"
-msgstr ""
+msgstr "Maldivler"
 
 #: pynicotine/geoip/geoip.py:178
 msgid "Malawi"
-msgstr ""
+msgstr "Malavi"
 
 #: pynicotine/geoip/geoip.py:179
 msgid "Mexico"
-msgstr ""
+msgstr "Meksika"
 
 #: pynicotine/geoip/geoip.py:180
 msgid "Malaysia"
-msgstr ""
+msgstr "Malezya"
 
 #: pynicotine/geoip/geoip.py:181
 msgid "Mozambique"
-msgstr ""
+msgstr "Mozambik"
 
 #: pynicotine/geoip/geoip.py:182
 msgid "Namibia"
-msgstr ""
+msgstr "Namibya"
 
 #: pynicotine/geoip/geoip.py:183
 msgid "New Caledonia"
-msgstr ""
+msgstr "Yeni Kaledonya"
 
 #: pynicotine/geoip/geoip.py:184
 msgid "Niger"
-msgstr ""
+msgstr "Nijer"
 
 #: pynicotine/geoip/geoip.py:185
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolk Adası"
 
 #: pynicotine/geoip/geoip.py:186
 msgid "Nigeria"
-msgstr ""
+msgstr "Nijerya"
 
 #: pynicotine/geoip/geoip.py:187
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nikaragua"
 
 #: pynicotine/geoip/geoip.py:188
 msgid "Netherlands"
-msgstr ""
+msgstr "Hollanda"
 
 #: pynicotine/geoip/geoip.py:189
 msgid "Norway"
-msgstr ""
+msgstr "Norveç"
 
 #: pynicotine/geoip/geoip.py:190
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: pynicotine/geoip/geoip.py:191
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: pynicotine/geoip/geoip.py:192
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #: pynicotine/geoip/geoip.py:193
 msgid "New Zealand"
-msgstr ""
+msgstr "Yeni Zelanda"
 
 #: pynicotine/geoip/geoip.py:194
 msgid "Oman"
-msgstr ""
+msgstr "Umman"
 
 #: pynicotine/geoip/geoip.py:195
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #: pynicotine/geoip/geoip.py:196
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #: pynicotine/geoip/geoip.py:197
 msgid "French Polynesia"
-msgstr ""
+msgstr "Fransız Polinezyası"
 
 #: pynicotine/geoip/geoip.py:198
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Yeni Gine"
 
 #: pynicotine/geoip/geoip.py:199
 msgid "Philippines"
-msgstr ""
+msgstr "Filipinler"
 
 #: pynicotine/geoip/geoip.py:200
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: pynicotine/geoip/geoip.py:201
 msgid "Poland"
-msgstr ""
+msgstr "Polonya"
 
 #: pynicotine/geoip/geoip.py:202
 msgid "Saint Pierre & Miquelon"
-msgstr ""
+msgstr "Saint Pierre ve Miquelon"
 
 #: pynicotine/geoip/geoip.py:203
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairn"
 
 #: pynicotine/geoip/geoip.py:204
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Porto Riko"
 
 #: pynicotine/geoip/geoip.py:205
 msgid "State of Palestine"
-msgstr ""
+msgstr "Filistin Devleti"
 
 #: pynicotine/geoip/geoip.py:206
 msgid "Portugal"
-msgstr ""
+msgstr "Portekiz"
 
 #: pynicotine/geoip/geoip.py:207
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #: pynicotine/geoip/geoip.py:208
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #: pynicotine/geoip/geoip.py:209
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #: pynicotine/geoip/geoip.py:210
 msgid "Reunion"
-msgstr ""
+msgstr "Reunion"
 
 #: pynicotine/geoip/geoip.py:211
 msgid "Romania"
-msgstr ""
+msgstr "Romanya"
 
 #: pynicotine/geoip/geoip.py:212
 msgid "Serbia"
-msgstr ""
+msgstr "Sırbistan"
 
 #: pynicotine/geoip/geoip.py:213
 msgid "Russia"
-msgstr ""
+msgstr "Rusya"
 
 #: pynicotine/geoip/geoip.py:214
 msgid "Rwanda"
-msgstr ""
+msgstr "Ruanda"
 
 #: pynicotine/geoip/geoip.py:215
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Suudi Arabistan"
 
 #: pynicotine/geoip/geoip.py:216
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Solomon Adaları"
 
 #: pynicotine/geoip/geoip.py:217
 msgid "Seychelles"
-msgstr ""
+msgstr "Seyşeller"
 
 #: pynicotine/geoip/geoip.py:218
 msgid "Sudan"
-msgstr ""
+msgstr "Sudan"
 
 #: pynicotine/geoip/geoip.py:219
 msgid "Sweden"
-msgstr ""
+msgstr "İsveç"
 
 #: pynicotine/geoip/geoip.py:220
 msgid "Singapore"
-msgstr ""
+msgstr "Singapur"
 
 #: pynicotine/geoip/geoip.py:221
 msgid "Saint Helena"
-msgstr ""
+msgstr "Saint Helena"
 
 #: pynicotine/geoip/geoip.py:222
 msgid "Slovenia"
-msgstr ""
+msgstr "Slovenya"
 
 #: pynicotine/geoip/geoip.py:223
 msgid "Svalbard & Jan Mayen Islands"
-msgstr ""
+msgstr "Svalbard ve Jan Mayen Adaları"
 
 #: pynicotine/geoip/geoip.py:224
 msgid "Slovak Republic"
-msgstr ""
+msgstr "Slovak Cumhuriyeti"
 
 #: pynicotine/geoip/geoip.py:225
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #: pynicotine/geoip/geoip.py:226
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #: pynicotine/geoip/geoip.py:227
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: pynicotine/geoip/geoip.py:228
 msgid "Somalia"
-msgstr ""
+msgstr "Somali"
 
 #: pynicotine/geoip/geoip.py:229
 msgid "Suriname"
-msgstr ""
+msgstr "Surinam"
 
 #: pynicotine/geoip/geoip.py:230
 msgid "South Sudan"
-msgstr ""
+msgstr "Güney Sudan"
 
 #: pynicotine/geoip/geoip.py:231
 msgid "Sao Tome & Principe"
-msgstr ""
+msgstr "Sao Tome ve Principe"
 
 #: pynicotine/geoip/geoip.py:232
 msgid "El Salvador"
-msgstr ""
+msgstr "El Salvador"
 
 #: pynicotine/geoip/geoip.py:233
 msgid "Sint Maarten"
-msgstr ""
+msgstr "Sint Maarten"
 
 #: pynicotine/geoip/geoip.py:234
 msgid "Syria"
-msgstr ""
+msgstr "Suriye"
 
 #: pynicotine/geoip/geoip.py:235
 msgid "Eswatini"
-msgstr ""
+msgstr "Esvatini"
 
 #: pynicotine/geoip/geoip.py:236
 msgid "Turks & Caicos Islands"
-msgstr ""
+msgstr "Turks ve Caicos Adaları"
 
 #: pynicotine/geoip/geoip.py:237
 msgid "Chad"
-msgstr ""
+msgstr "Çad"
 
 #: pynicotine/geoip/geoip.py:238
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Fransız Güney Toprakları"
 
 #: pynicotine/geoip/geoip.py:239
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #: pynicotine/geoip/geoip.py:240
 msgid "Thailand"
-msgstr ""
+msgstr "Tayland"
 
 #: pynicotine/geoip/geoip.py:241
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tacikistan"
 
 #: pynicotine/geoip/geoip.py:242
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #: pynicotine/geoip/geoip.py:243
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Doğu Timor"
 
 #: pynicotine/geoip/geoip.py:244
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Türkmenistan"
 
 #: pynicotine/geoip/geoip.py:245
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunus"
 
 #: pynicotine/geoip/geoip.py:246
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: pynicotine/geoip/geoip.py:247
 msgid "Turkey"
-msgstr ""
+msgstr "Türkiye"
 
 #: pynicotine/geoip/geoip.py:248
 msgid "Trinidad & Tobago"
-msgstr ""
+msgstr "Trinidad ve Tobago"
 
 #: pynicotine/geoip/geoip.py:249
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #: pynicotine/geoip/geoip.py:250
 msgid "Taiwan"
-msgstr ""
+msgstr "Tayvan"
 
 #: pynicotine/geoip/geoip.py:251
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzanya"
 
 #: pynicotine/geoip/geoip.py:252
 msgid "Ukraine"
-msgstr ""
+msgstr "Ukrayna"
 
 #: pynicotine/geoip/geoip.py:253
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #: pynicotine/geoip/geoip.py:254
 msgid "U.S. Minor Outlying Islands"
-msgstr ""
+msgstr "Amerika Birleşik Devletleri Küçük Dış Adaları"
 
 #: pynicotine/geoip/geoip.py:255
 msgid "United States"
-msgstr ""
+msgstr "Amerika Birleşik Devletleri"
 
 #: pynicotine/geoip/geoip.py:256
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #: pynicotine/geoip/geoip.py:257
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Özbekistan"
 
 #: pynicotine/geoip/geoip.py:258
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Holy See (Vatikan Şehir Devleti)"
 
 #: pynicotine/geoip/geoip.py:259
 msgid "Saint Vincent & The Grenadines"
-msgstr ""
+msgstr "Saint Vincent ve Grenadinler"
 
 #: pynicotine/geoip/geoip.py:260
 msgid "Venezuela"
-msgstr ""
+msgstr "Venezuela"
 
 #: pynicotine/geoip/geoip.py:261
 msgid "British Virgin Islands"
-msgstr ""
+msgstr "Britanya Virgin Adaları"
 
 #: pynicotine/geoip/geoip.py:262
 msgid "U.S. Virgin Islands"
-msgstr ""
+msgstr "Amerika Birleşik Devletleri Virgin Adaları"
 
 #: pynicotine/geoip/geoip.py:263
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vietnam"
 
 #: pynicotine/geoip/geoip.py:264
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #: pynicotine/geoip/geoip.py:265
 msgid "Wallis & Futuna"
-msgstr ""
+msgstr "Wallis ve Futuna"
 
 #: pynicotine/geoip/geoip.py:266
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #: pynicotine/geoip/geoip.py:267
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosova"
 
 #: pynicotine/geoip/geoip.py:268
 msgid "Yemen"
-msgstr ""
+msgstr "Yemen"
 
 #: pynicotine/geoip/geoip.py:269
 msgid "Mayotte"
-msgstr ""
+msgstr "Mayotte"
 
 #: pynicotine/geoip/geoip.py:270
 msgid "South Africa"
-msgstr ""
+msgstr "Güney Afrika"
 
 #: pynicotine/geoip/geoip.py:271
 msgid "Zambia"
-msgstr ""
+msgstr "Zambiya"
 
 #: pynicotine/geoip/geoip.py:272
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabve"
 
 #: pynicotine/gtkgui/__init__.py:35 pynicotine/gtkgui/__init__.py:42
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr ""
+msgstr "%s bulunamıyor, lütfen kurun."
 
 #: pynicotine/gtkgui/__init__.py:48
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
-msgstr ""
+msgstr "Gtk modülü içe aktarılamıyor. python-gobject modülü hatalı mı kuruldu?"
 
 #: pynicotine/gtkgui/__init__.py:51
 #, python-format
@@ -1185,11 +1191,13 @@ msgid ""
 "You are using an unsupported version of GTK %(major_version)s. You should "
 "install GTK %(complete_version)s or newer."
 msgstr ""
+"Desteklenmeyen bir GTK %(major_version)s sürümü kullanıyorsunuz. GTK "
+"%(complete_version)s veya daha yenisini kurmalısınız."
 
 #: pynicotine/gtkgui/chatrooms.py:430 pynicotine/gtkgui/interests.py:104
 #: pynicotine/gtkgui/transferlist.py:142 pynicotine/gtkgui/userlist.py:78
 msgid "Status"
-msgstr ""
+msgstr "Durum"
 
 #: pynicotine/gtkgui/chatrooms.py:431 pynicotine/gtkgui/search.py:336
 #: pynicotine/gtkgui/userlist.py:79
@@ -1197,7 +1205,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:314
 #: pynicotine/gtkgui/ui/userinfo.ui:304
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #: pynicotine/gtkgui/chatrooms.py:432 pynicotine/gtkgui/interests.py:105
 #: pynicotine/gtkgui/privatechat.py:230 pynicotine/gtkgui/search.py:335
@@ -1207,33 +1215,33 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:47
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:228
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #: pynicotine/gtkgui/chatrooms.py:433 pynicotine/gtkgui/interests.py:106
 #: pynicotine/gtkgui/search.py:337 pynicotine/gtkgui/transferlist.py:146
 #: pynicotine/gtkgui/userlist.py:81
 msgid "Speed"
-msgstr ""
+msgstr "Hız"
 
 #: pynicotine/gtkgui/chatrooms.py:434 pynicotine/gtkgui/interests.py:107
 #: pynicotine/gtkgui/userlist.py:82 pynicotine/gtkgui/ui/mainwindow.ui:206
 #: pynicotine/gtkgui/ui/mainwindow.ui:349
 msgid "Files"
-msgstr ""
+msgstr "Dosyalar"
 
 #: pynicotine/gtkgui/chatrooms.py:457
 msgid "Sear_ch User's Files"
-msgstr ""
+msgstr "Kullanıcının Dosyalarını _Ara"
 
 #: pynicotine/gtkgui/chatrooms.py:458 pynicotine/gtkgui/chatrooms.py:630
 #: pynicotine/gtkgui/userlist.py:143 pynicotine/gtkgui/userlist.py:353
 msgid "Private Rooms"
-msgstr ""
+msgstr "Özel Odalar"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/frame.py:116 pynicotine/gtkgui/privatechat.py:219
 msgid "Find..."
-msgstr ""
+msgstr "Bul..."
 
 #: pynicotine/gtkgui/chatrooms.py:464 pynicotine/gtkgui/chatrooms.py:475
 #: pynicotine/gtkgui/chatrooms.py:666 pynicotine/gtkgui/chatrooms.py:671
@@ -1241,42 +1249,42 @@ msgstr ""
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Copy"
-msgstr ""
+msgstr "Kopyala"
 
 #: pynicotine/gtkgui/chatrooms.py:465 pynicotine/gtkgui/chatrooms.py:477
 #: pynicotine/gtkgui/frame.py:119 pynicotine/gtkgui/privatechat.py:223
 msgid "Copy All"
-msgstr ""
+msgstr "Tümünü Kopyala"
 
 #: pynicotine/gtkgui/chatrooms.py:467
 msgid "Clear Activity View"
-msgstr ""
+msgstr "Etkinlik Görünümünü Temizle"
 
 #: pynicotine/gtkgui/chatrooms.py:469 pynicotine/gtkgui/chatrooms.py:483
 #: pynicotine/gtkgui/chatrooms.py:488
 msgid "_Leave Room"
-msgstr ""
+msgstr "Odadan _Ayrıl"
 
 #: pynicotine/gtkgui/chatrooms.py:476 pynicotine/gtkgui/chatrooms.py:672
 #: pynicotine/gtkgui/privatechat.py:222 pynicotine/gtkgui/privatechat.py:301
 msgid "Copy Link"
-msgstr ""
+msgstr "Bağlantıyı Kopyala"
 
 #: pynicotine/gtkgui/chatrooms.py:479
 msgid "View Room Log"
-msgstr ""
+msgstr "Oda Günlüğünü Görüntüle"
 
 #: pynicotine/gtkgui/chatrooms.py:480
 msgid "Delete Room Log..."
-msgstr ""
+msgstr "Oda Günlüğünü Sil..."
 
 #: pynicotine/gtkgui/chatrooms.py:482 pynicotine/gtkgui/privatechat.py:228
 msgid "Clear Message View"
-msgstr ""
+msgstr "Mesaj Görünümünü Temizle"
 
 #: pynicotine/gtkgui/chatrooms.py:619
 msgid "--- old messages above ---"
-msgstr ""
+msgstr "--- eski mesajlar yukarıda ---"
 
 #: pynicotine/gtkgui/chatrooms.py:680
 msgid "Room wall (personal message set)"
@@ -1284,120 +1292,122 @@ msgstr ""
 
 #: pynicotine/gtkgui/chatrooms.py:683
 msgid "Room wall"
-msgstr ""
+msgstr "Oda duvarı"
 
 #: pynicotine/gtkgui/chatrooms.py:743 pynicotine/gtkgui/notifications.py:98
 #, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
-msgstr ""
+msgstr "%(user)s, %(room)s odasında sizden bahsetti"
 
 #: pynicotine/gtkgui/chatrooms.py:770
 #, python-format
 msgid "Message by %(user)s in the %(room)s room"
-msgstr ""
+msgstr "%(room)s odasında %(user)s tarafından mesaj"
 
 #: pynicotine/gtkgui/chatrooms.py:854
 #, python-format
 msgid "All tickers / wall messages for %(room)s:"
-msgstr ""
+msgstr "%(room)s için tüm bildirimler / duvar mesajları:"
 
 #: pynicotine/gtkgui/chatrooms.py:869
 #, python-format
 msgid "%s joined the room"
-msgstr ""
+msgstr "%s odaya katıldı"
 
 #: pynicotine/gtkgui/chatrooms.py:887
 #, python-format
 msgid "%s left the room"
-msgstr ""
+msgstr "%s odadan ayrıldı"
 
 #: pynicotine/gtkgui/chatrooms.py:926
 #, python-format
 msgid "%s has gone away"
-msgstr ""
+msgstr "%s uzaklaştı"
 
 #: pynicotine/gtkgui/chatrooms.py:928
 #, python-format
 msgid "%s has returned"
-msgstr ""
+msgstr "%s geri döndü"
 
 #: pynicotine/gtkgui/chatrooms.py:1022 pynicotine/gtkgui/privatechat.py:280
 msgid "--- disconnected ---"
-msgstr ""
+msgstr "--- bağlantı kesildi ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1049 pynicotine/gtkgui/privatechat.py:275
 msgid "--- reconnected ---"
-msgstr ""
+msgstr "--- yeniden bağlandı ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1127 pynicotine/gtkgui/privatechat.py:324
 msgid "Delete Logged Messages?"
-msgstr ""
+msgstr "Günlüğe Kaydedilen Mesajlar Silinsin mi?"
 
 #: pynicotine/gtkgui/chatrooms.py:1128
 msgid ""
 "Are you sure you wish to permanently delete all logged messages for this "
 "room?"
 msgstr ""
+"Bu oda için günlüğe kaydedilen tüm mesajları kalıcı olarak silmek "
+"istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/downloads.py:40
 msgid "_Resume"
-msgstr ""
+msgstr "_Devam et"
 
 #: pynicotine/gtkgui/downloads.py:41
 msgid "P_ause"
-msgstr ""
+msgstr "D_uraklat"
 
 #: pynicotine/gtkgui/downloads.py:42 pynicotine/gtkgui/downloads.py:51
 #: pynicotine/gtkgui/transferlist.py:98
 msgid "Paused"
-msgstr ""
+msgstr "Duraklatıldı"
 
 #: pynicotine/gtkgui/downloads.py:48
 msgid "Finished / Filtered"
-msgstr ""
+msgstr "Tamamlandı / Filtrelendi"
 
 #: pynicotine/gtkgui/downloads.py:50 pynicotine/gtkgui/transferlist.py:99
 #: pynicotine/gtkgui/uploads.py:48
 msgid "Finished"
-msgstr ""
+msgstr "Tamamlandı"
 
 #: pynicotine/gtkgui/downloads.py:52 pynicotine/gtkgui/uploads.py:50
 msgid "Failed"
-msgstr ""
+msgstr "Başarısız oldu"
 
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/transferlist.py:100
 msgid "Filtered"
-msgstr ""
+msgstr "Filtrelendi"
 
 #: pynicotine/gtkgui/downloads.py:54 pynicotine/gtkgui/uploads.py:51
 msgid "Queued..."
-msgstr ""
+msgstr "Kuyruğa alındı..."
 
 #: pynicotine/gtkgui/downloads.py:56 pynicotine/gtkgui/uploads.py:53
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:120
 msgid "Clear All..."
-msgstr ""
+msgstr "Tümünü Temizle..."
 
 #: pynicotine/gtkgui/downloads.py:66
 msgid "Clear Queued Downloads"
-msgstr ""
+msgstr "Kuyruğa Alınan İndirmeleri Temizle"
 
 #: pynicotine/gtkgui/downloads.py:67
 msgid "Are you sure you wish to clear all queued downloads?"
-msgstr ""
+msgstr "Kuyruğa alınan tüm indirmeleri temizlemek istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/downloads.py:76
 msgid "Clear All Downloads"
-msgstr ""
+msgstr "Tüm İndirmeleri Temizle"
 
 #: pynicotine/gtkgui/downloads.py:77
 msgid "Are you sure you wish to clear all downloads?"
-msgstr ""
+msgstr "Tüm indirmeleri temizlemek istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/downloads.py:93
 #, python-format
 msgid "Download %(num)i files?"
-msgstr ""
+msgstr "%(num)i dosya indirilsin mi?"
 
 #: pynicotine/gtkgui/downloads.py:94
 #, python-format
@@ -1405,17 +1415,19 @@ msgid ""
 "Are you sure you wish to download %(num)i files from %(user)s's folder "
 "%(folder)s?"
 msgstr ""
+"%(user)s kullanıcısının %(folder)s klasöründen %(num)i dosyayı indirmek "
+"istediğinizden emin misiniz?"
 
 #: pynicotine/gtkgui/fastconfigure.py:65
 #: pynicotine/gtkgui/settingswindow.py:580
 msgid "Virtual Folder"
-msgstr ""
+msgstr "Sanal Klasör"
 
 #: pynicotine/gtkgui/fastconfigure.py:66 pynicotine/gtkgui/search.py:339
 #: pynicotine/gtkgui/settingswindow.py:581
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:64
 msgid "Folder"
-msgstr ""
+msgstr "Klasör"
 
 #: pynicotine/gtkgui/fastconfigure.py:184
 #: pynicotine/gtkgui/fastconfigure.py:203
@@ -1423,70 +1435,70 @@ msgstr ""
 #: pynicotine/gtkgui/settingswindow.py:708
 #: pynicotine/gtkgui/settingswindow.py:738
 msgid "Unable to Share Folder"
-msgstr ""
+msgstr "Klasör Paylaşılamıyor"
 
 #: pynicotine/gtkgui/fastconfigure.py:185
 msgid "The chosen virtual name is empty"
-msgstr ""
+msgstr "Seçilen sanal ad boş"
 
 #: pynicotine/gtkgui/fastconfigure.py:204
 msgid "The chosen virtual name already exists"
-msgstr ""
+msgstr "Seçilen sanal ad zaten var"
 
 #: pynicotine/gtkgui/fastconfigure.py:213
 msgid "The chosen folder is already shared"
-msgstr ""
+msgstr "Seçilen klasör zaten paylaşılıyor"
 
 #: pynicotine/gtkgui/fastconfigure.py:228
 msgid "Virtual Name"
-msgstr ""
+msgstr "Sanal Ad"
 
 #: pynicotine/gtkgui/fastconfigure.py:229
 #: pynicotine/gtkgui/settingswindow.py:746
 #, python-format
 msgid "Enter virtual name for '%(dir)s':"
-msgstr ""
+msgstr "'%(dir)s' için sanal ad girin:"
 
 #: pynicotine/gtkgui/fastconfigure.py:238
 #: pynicotine/gtkgui/settingswindow.py:763
 msgid "Add a Shared Folder"
-msgstr ""
+msgstr "Paylaşılan Klasör Ekle"
 
 #: pynicotine/gtkgui/fileproperties.py:39
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:135
 msgid "File Properties"
-msgstr ""
+msgstr "Dosya Özellikleri"
 
 #: pynicotine/gtkgui/fileproperties.py:70
 #, python-format
 msgid "File Properties (%(num)i of %(total)i)"
-msgstr ""
+msgstr "Dosya Özellikleri (%(num)i / %(total)i)"
 
 #: pynicotine/gtkgui/frame.py:121
 msgid "View Debug Logs"
-msgstr ""
+msgstr "Hata Ayıklama Günlüklerini Görüntüle"
 
 #: pynicotine/gtkgui/frame.py:122
 msgid "View Transfer Log"
-msgstr ""
+msgstr "Aktarım Günlüğünü Görüntüle"
 
 #: pynicotine/gtkgui/frame.py:124
 msgid "Clear Log View"
-msgstr ""
+msgstr "Günlük Görünümünü Temizle"
 
 #: pynicotine/gtkgui/frame.py:190
 #, python-format
 msgid "Downloads: %(speed)s"
-msgstr ""
+msgstr "İndirilenler: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:191
 #, python-format
 msgid "Uploads: %(speed)s"
-msgstr ""
+msgstr "Yüklenenler: %(speed)s"
 
 #: pynicotine/gtkgui/frame.py:299
 msgid "Your config file is corrupt"
-msgstr ""
+msgstr "Yapılandırma dosyanız bozuk"
 
 #: pynicotine/gtkgui/frame.py:300
 #, python-format
@@ -1499,12 +1511,19 @@ msgid ""
 "If you open this file with a text editor you might be able to rescue some of "
 "your settings."
 msgstr ""
+"Üzgünüz, ancak görünüşe göre yapılandırma dosyanız bozuk. Lütfen Nicotine+'ı "
+"yeniden yapılandırın.\n"
+"\n"
+"Eski yapılandırma dosyanızı şu şekilde yeniden adlandırdık:\n"
+"%(corrupt)s\n"
+"Bu dosyayı bir metin düzenleyiciyle açarsanız, bazı ayarlarınızı "
+"kurtarabilirsiniz."
 
 #: pynicotine/gtkgui/frame.py:391 pynicotine/gtkgui/frame.py:498
 #: pynicotine/gtkgui/widgets/iconnotebook.py:457
 #: pynicotine/gtkgui/widgets/treeview.py:469
 msgid "Online"
-msgstr ""
+msgstr "Çevrim içi"
 
 #: pynicotine/gtkgui/frame.py:400 pynicotine/gtkgui/frame.py:501
 #: pynicotine/gtkgui/settingswindow.py:1427
@@ -1513,116 +1532,116 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/treeview.py:466
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:33
 msgid "Away"
-msgstr ""
+msgstr "Uzakta"
 
 #: pynicotine/gtkgui/frame.py:417 pynicotine/gtkgui/widgets/iconnotebook.py:459
 #: pynicotine/gtkgui/widgets/treeview.py:471
 #: pynicotine/gtkgui/ui/mainwindow.ui:1880
 msgid "Offline"
-msgstr ""
+msgstr "Çevrim dışı"
 
 #: pynicotine/gtkgui/frame.py:431
 msgid "Invalid Password"
-msgstr ""
+msgstr "Geçersiz Parola"
 
 #: pynicotine/gtkgui/frame.py:432
 #, python-format
 msgid "The password you've entered is invalid for user %s"
-msgstr ""
+msgstr "Girdiğiniz parola %s kullanıcısı için geçersiz"
 
 #: pynicotine/gtkgui/frame.py:438
 msgid "Change Login Details"
-msgstr ""
+msgstr "Oturum Açma Bilgilerini Değiştir"
 
 #: pynicotine/gtkgui/frame.py:765
 msgid "Error retrieving latest version"
-msgstr ""
+msgstr "En son sürüm alınırken hata oluştu"
 
 #: pynicotine/gtkgui/frame.py:772
 #, python-format
 msgid "Version %s is available"
-msgstr ""
+msgstr "%s sürümü kullanılabilir"
 
 #: pynicotine/gtkgui/frame.py:775
 #, python-format
 msgid "released on %s"
-msgstr ""
+msgstr "%s tarihinde yayınlandı"
 
 #: pynicotine/gtkgui/frame.py:780
 msgid "Out of date"
-msgstr ""
+msgstr "Güncel değil"
 
 #: pynicotine/gtkgui/frame.py:788 pynicotine/gtkgui/frame.py:796
 msgid "Up to date"
-msgstr ""
+msgstr "Güncel"
 
 #: pynicotine/gtkgui/frame.py:789
 msgid "You appear to be using a development version of Nicotine+."
-msgstr ""
+msgstr "Görünüşe göre Nicotine+'ın geliştirme sürümünü kullanıyorsunuz."
 
 #: pynicotine/gtkgui/frame.py:797
 msgid "You are using the latest version of Nicotine+."
-msgstr ""
+msgstr "Nicotine+'ın en son sürümünü kullanıyorsunuz."
 
 #: pynicotine/gtkgui/frame.py:1094
 msgid "_Connect"
-msgstr ""
+msgstr "_Bağlan"
 
 #: pynicotine/gtkgui/frame.py:1095
 msgid "_Disconnect"
-msgstr ""
+msgstr "Bağlantıyı _Kes"
 
 #: pynicotine/gtkgui/frame.py:1096
 msgid "_Away"
-msgstr ""
+msgstr "_Uzakta"
 
 #: pynicotine/gtkgui/frame.py:1097
 msgid "Soulseek _Privileges"
-msgstr ""
+msgstr "Soulseek _Ayrıcalıkları"
 
 #: pynicotine/gtkgui/frame.py:1102 pynicotine/gtkgui/ui/settings/plugin.ui:131
 msgid "_Preferences"
-msgstr ""
+msgstr "_Tercihler"
 
 #: pynicotine/gtkgui/frame.py:1105
 msgid "_Quit"
-msgstr ""
+msgstr "_Çıkış"
 
 #: pynicotine/gtkgui/frame.py:1123
 msgid "Prefer Dark _Mode"
-msgstr ""
+msgstr "Karanlık _Modu Tercih Et"
 
 #: pynicotine/gtkgui/frame.py:1124
 msgid "Use _Header Bar"
-msgstr ""
+msgstr "_Başlık Çubuğu Kullan"
 
 #: pynicotine/gtkgui/frame.py:1126
 msgid "Show _Log Pane"
-msgstr ""
+msgstr "_Günlük Bölmesini Göster"
 
 #: pynicotine/gtkgui/frame.py:1127
 msgid "Show _Debug Log Controls"
-msgstr ""
+msgstr "_Hata Ayıklama Günlüğü Denetimlerini Göster"
 
 #: pynicotine/gtkgui/frame.py:1129
 msgid "Buddy List in Separate Tab"
-msgstr ""
+msgstr "Ayrı Sekmede Arkadaş Listesi"
 
 #: pynicotine/gtkgui/frame.py:1130
 msgid "Buddy List in Chat Rooms"
-msgstr ""
+msgstr "Sohbet Odalarında Arkadaş Listesi"
 
 #: pynicotine/gtkgui/frame.py:1131
 msgid "Buddy List Always Visible"
-msgstr ""
+msgstr "Her Zaman Görünür Arkadaş Listesi"
 
 #: pynicotine/gtkgui/frame.py:1139
 msgid "_Rescan Public Shares"
-msgstr ""
+msgstr "_Genel Paylaşımları Yeniden Tara"
 
 #: pynicotine/gtkgui/frame.py:1140
 msgid "Rescan B_uddy Shares"
-msgstr ""
+msgstr "_Arkadaş Paylaşımlarını Yeniden Tara"
 
 #: pynicotine/gtkgui/frame.py:1141
 msgid "_Configure Shares"
