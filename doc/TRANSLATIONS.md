@@ -2,7 +2,7 @@
 
 ## How to translate
 
-You can help improving our translations at [weblate](https://hosted.weblate.org/translate/nicotine-plus/nicotine-plus). You don't even need an account.
+You can help improving our translations at [Weblate](https://hosted.weblate.org/projects/nicotine-plus/nicotine-plus/). You don't even need an account.
 
 We regularly import the improved translations into the Nicotine+ GitHub repository, especially before a new Nicotine+ release.
 
