@@ -747,6 +747,7 @@ class SharesFrame(UserInterface):
             parent=self.p.dialog,
             title=_("Set Virtual Name"),
             message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
+            default=os.path.basename(os.path.normpath(folder)),
             option=True,
             optionmessage=_("Share with buddies only"),
             callback=self.add_shared_dir_response,
