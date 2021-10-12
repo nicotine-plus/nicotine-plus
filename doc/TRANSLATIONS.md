@@ -43,5 +43,4 @@ python3 po/update_pot.py
 
 ## Add yourself to the translators
 
-If you added a lot of translations, you can add yourself to the translators list via a pull request(PR).
-See [DEVELOPING.md](DEVELOPING.md#translations).
+If you added a lot of translations, you can add yourself to the TRANSLATORS.md list via a pull request(PR).
