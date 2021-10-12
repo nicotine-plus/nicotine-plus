@@ -16,7 +16,7 @@ To be able to use the updated translations when running Nicotine+ from your proj
 python3 setup.py build
 ```
 
-The newly generate files will end up in the `mo/` folder.
+The newly generated files will end up in the `mo/` folder.
 
 If Nicotine+ doesn't find the `.mo` files in your project folder, it will fall back to searching in your system locale path which is OS specific. A GNU/Linux distribution package will put them in the system locale path.
 
