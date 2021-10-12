@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-12 18:11+0000\n"
+"PO-Revision-Date: 2021-10-12 19:10+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3571,11 +3571,11 @@ msgstr ""
 #: pynicotine/pynicotine.py:1287
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
-msgstr ""
+msgstr "Kan niet verbinden met de server. Reden: %s"
 
 #: pynicotine/pynicotine.py:1412
 msgid "Someone logged in to your Soulseek account elsewhere"
-msgstr ""
+msgstr "Iemand heeft ergens anders ingelogd op je Soulseek-account"
 
 #: pynicotine/pynicotine.py:1464
 #, python-format
@@ -3608,7 +3608,7 @@ msgstr "Uw wachtwoord is gewijzigd. Wachtwoord is %s"
 #: pynicotine/pynicotine.py:1704
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr ""
+msgstr "Gebruiker %(user)s doorzoekt je lijst met gedeelde bestanden"
 
 #: pynicotine/pynicotine.py:1759
 #, fuzzy, python-format
@@ -3623,7 +3623,7 @@ msgstr "(Waarschuwing: %(realuser)s probeert %(fakeuser)s te spoofen) "
 #: pynicotine/pynicotine.py:1847
 #, python-format
 msgid "Failed to fetch folder contents of shared folder %(folder)s: %(error)s"
-msgstr ""
+msgstr "Kan mapinhoud van gedeelde map %(folder)s niet ophalen: %(error)s"
 
 #: pynicotine/search.py:122 pynicotine/gtkgui/ui/mainwindow.ui:56
 msgid "Joined Rooms "
@@ -3637,7 +3637,7 @@ msgstr ""
 #: pynicotine/search.py:320
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
-msgstr ""
+msgstr "Verlanglijstje wachttijd ingesteld op %s seconden"
 
 #: pynicotine/search.py:518
 #, python-format
@@ -3724,6 +3724,8 @@ msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
 msgstr ""
+"Poging om index van gedeelde bestanden te resetten vanwege een fout. "
+"Herindexeer je gedeelde bestanden."
 
 #: pynicotine/shares.py:645
 msgid ""
@@ -3731,6 +3733,9 @@ msgid ""
 "several instances of Nicotine+ being active simultaneously, file permission "
 "issues, or another issue in Nicotine+."
 msgstr ""
+"De bestandsindex van gedeelde bestanden kan niet worden geopend. Dit kan "
+"gebeuren als meerder instanties van Nicotine+ tegelijkertijd actief zijn, "
+"problemen met bestandsrechten of een ander probleem in Nicotine+."
 
 #: pynicotine/shares.py:686 pynicotine/slskmessages.py:2245
 #: pynicotine/slskmessages.py:2393
@@ -3739,6 +3744,8 @@ msgid ""
 "Your shares database is corrupted. Please rescan your shares and report any "
 "potential scanning issues to the developers. Error: %s"
 msgstr ""
+"Uw gedeelde bestandenlijst is beschadigd. Scan ze opnieuw en meld eventuele "
+"problemen aan de ontwikkelaars. Fout: %s"
 
 #: pynicotine/shares.py:738 pynicotine/shares.py:790
 #, python-format
