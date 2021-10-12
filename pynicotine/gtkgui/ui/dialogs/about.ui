@@ -10,6 +10,10 @@
     <property name="license-type">GTK_LICENSE_GPL_3_0</property>
     <property name="authors">Nicotine+ Contributors [active]
 
+&gt; Mat (mathiascode)
+   - Maintainer
+   - Developer
+
 &gt; eLvErDe
    - Provided Nicotine+ Trac instance
    - Migrated source code from SVN to Github
@@ -20,10 +24,6 @@
    - Developer
    - Debianization
    - [kip(at)thevertigo(dot)com]
-
-&gt; mathiascode
-   - Developer
-   - [mail(at)mathias(dot)is]
 
 &gt; Han Boetes
    - Tester
