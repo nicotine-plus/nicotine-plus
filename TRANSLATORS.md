@@ -9,6 +9,7 @@
 ## Dutch
 - nince78 (2007)
 - hyriand
+- hboetes
 
 ## German
 - Meokater (2007)
