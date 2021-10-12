@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-12 19:10+0000\n"
+"PO-Revision-Date: 2021-10-12 19:11+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -2043,7 +2043,7 @@ msgstr "_Klasör(ler)i İndir"
 
 #: pynicotine/gtkgui/search.py:374 pynicotine/gtkgui/search.py:1135
 msgid "Download F_older(s) To..."
-msgstr ""
+msgstr "K_lasör(ler)ı Şuraya İndir..."
 
 #: pynicotine/gtkgui/search.py:376 pynicotine/gtkgui/search.py:1135
 #: pynicotine/gtkgui/transferlist.py:196
