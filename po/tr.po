@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-12 18:32+0000\n"
+"PO-Revision-Date: 2021-10-12 18:42+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1693,31 +1693,31 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1175
 msgid "_Transfer Statistics"
-msgstr ""
+msgstr "Aktarım İ_statistikleri"
 
 #: pynicotine/gtkgui/frame.py:1184
 msgid "_Keyboard Shortcuts"
-msgstr ""
+msgstr "_Klavye Kısayolları"
 
 #: pynicotine/gtkgui/frame.py:1185
 msgid "Report a _Bug"
-msgstr ""
+msgstr "_Hata Bildir"
 
 #: pynicotine/gtkgui/frame.py:1186
 msgid "_Setup Assistant"
-msgstr ""
+msgstr "K_urulum Yardımcısı"
 
 #: pynicotine/gtkgui/frame.py:1187
 msgid "Check _Latest Version"
-msgstr ""
+msgstr "_En Son Sürümü Denetle"
 
 #: pynicotine/gtkgui/frame.py:1189
 msgid "About _Nicotine+"
-msgstr ""
+msgstr "_Nicotine+ Hakkında"
 
 #: pynicotine/gtkgui/frame.py:1201 pynicotine/gtkgui/frame.py:1221
 msgid "_View"
-msgstr ""
+msgstr "_Görünüm"
 
 #: pynicotine/gtkgui/frame.py:1202 pynicotine/gtkgui/frame.py:1223
 msgid "_Modes"
@@ -1725,11 +1725,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1209 pynicotine/gtkgui/frame.py:1224
 msgid "_Help"
-msgstr ""
+msgstr "_Yardım"
 
 #: pynicotine/gtkgui/frame.py:1220
 msgid "_File"
-msgstr ""
+msgstr "_Dosya"
 
 #: pynicotine/gtkgui/frame.py:1222
 msgid "_Shares"
