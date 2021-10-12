@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-09 01:11+0300\n"
-"PO-Revision-Date: 2021-10-11 20:44+0000\n"
+"PO-Revision-Date: 2021-10-12 12:59+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -706,171 +706,171 @@ msgstr "Luxemburg"
 
 #: pynicotine/geoip/geoip.py:157
 msgid "Latvia"
-msgstr ""
+msgstr "Letland"
 
 #: pynicotine/geoip/geoip.py:158
 msgid "Libya"
-msgstr ""
+msgstr "Libië"
 
 #: pynicotine/geoip/geoip.py:159
 msgid "Morocco"
-msgstr ""
+msgstr "Marokko"
 
 #: pynicotine/geoip/geoip.py:160
 msgid "Monaco"
-msgstr ""
+msgstr "Monaco"
 
 #: pynicotine/geoip/geoip.py:161
 msgid "Moldova"
-msgstr ""
+msgstr "Moldavië"
 
 #: pynicotine/geoip/geoip.py:162
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: pynicotine/geoip/geoip.py:163
 msgid "Saint Martin"
-msgstr ""
+msgstr "Sint-Maarten"
 
 #: pynicotine/geoip/geoip.py:164
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar"
 
 #: pynicotine/geoip/geoip.py:165
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Marshall eilanden"
 
 #: pynicotine/geoip/geoip.py:166
 msgid "North Macedonia"
-msgstr ""
+msgstr "Noord-Macedonië"
 
 #: pynicotine/geoip/geoip.py:167
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: pynicotine/geoip/geoip.py:168
 msgid "Myanmar"
-msgstr ""
+msgstr "Myanmar"
 
 #: pynicotine/geoip/geoip.py:169
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolië"
 
 #: pynicotine/geoip/geoip.py:170
 msgid "Macau"
-msgstr ""
+msgstr "Macau"
 
 #: pynicotine/geoip/geoip.py:171
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Noordelijke Marianen"
 
 #: pynicotine/geoip/geoip.py:172
 msgid "Martinique"
-msgstr ""
+msgstr "Martinique"
 
 #: pynicotine/geoip/geoip.py:173
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauritanië"
 
 #: pynicotine/geoip/geoip.py:174
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #: pynicotine/geoip/geoip.py:175
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #: pynicotine/geoip/geoip.py:177
 msgid "Maldives"
-msgstr ""
+msgstr "Maldiven"
 
 #: pynicotine/geoip/geoip.py:178
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi"
 
 #: pynicotine/geoip/geoip.py:179
 msgid "Mexico"
-msgstr ""
+msgstr "Mexico"
 
 #: pynicotine/geoip/geoip.py:180
 msgid "Malaysia"
-msgstr ""
+msgstr "Maleisië"
 
 #: pynicotine/geoip/geoip.py:181
 msgid "Mozambique"
-msgstr ""
+msgstr "Mozambique"
 
 #: pynicotine/geoip/geoip.py:182
 msgid "Namibia"
-msgstr ""
+msgstr "Namibië"
 
 #: pynicotine/geoip/geoip.py:183
 msgid "New Caledonia"
-msgstr ""
+msgstr "Nieuw Caledonië"
 
 #: pynicotine/geoip/geoip.py:184
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #: pynicotine/geoip/geoip.py:185
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Norfolk Eiland"
 
 #: pynicotine/geoip/geoip.py:186
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: pynicotine/geoip/geoip.py:187
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nicaragua"
 
 #: pynicotine/geoip/geoip.py:188
 msgid "Netherlands"
-msgstr ""
+msgstr "Nederland"
 
 #: pynicotine/geoip/geoip.py:189
 msgid "Norway"
-msgstr ""
+msgstr "Noorwegen"
 
 #: pynicotine/geoip/geoip.py:190
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: pynicotine/geoip/geoip.py:191
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: pynicotine/geoip/geoip.py:192
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #: pynicotine/geoip/geoip.py:193
 msgid "New Zealand"
-msgstr ""
+msgstr "Nieuw Zeeland"
 
 #: pynicotine/geoip/geoip.py:194
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #: pynicotine/geoip/geoip.py:195
 msgid "Panama"
-msgstr ""
+msgstr "Pamama"
 
 #: pynicotine/geoip/geoip.py:196
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #: pynicotine/geoip/geoip.py:197
 msgid "French Polynesia"
-msgstr ""
+msgstr "Frans Polynesië"
 
 #: pynicotine/geoip/geoip.py:198
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papoea Nieuw Guinea"
 
 #: pynicotine/geoip/geoip.py:199
 msgid "Philippines"
@@ -878,39 +878,39 @@ msgstr "Filippijnen"
 
 #: pynicotine/geoip/geoip.py:200
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: pynicotine/geoip/geoip.py:201
 msgid "Poland"
-msgstr ""
+msgstr "Polen"
 
 #: pynicotine/geoip/geoip.py:202
 msgid "Saint Pierre & Miquelon"
-msgstr ""
+msgstr "Saint Pierre en Miquelon"
 
 #: pynicotine/geoip/geoip.py:203
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairn"
 
 #: pynicotine/geoip/geoip.py:204
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Puerto Rico"
 
 #: pynicotine/geoip/geoip.py:205
 msgid "State of Palestine"
-msgstr ""
+msgstr "Palestina"
 
 #: pynicotine/geoip/geoip.py:206
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #: pynicotine/geoip/geoip.py:207
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #: pynicotine/geoip/geoip.py:208
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #: pynicotine/geoip/geoip.py:209
 msgid "Qatar"
@@ -993,9 +993,8 @@ msgid "Somalia"
 msgstr ""
 
 #: pynicotine/geoip/geoip.py:229
-#, fuzzy
 msgid "Suriname"
-msgstr "Bestandsnaam"
+msgstr "Suriname"
 
 #: pynicotine/geoip/geoip.py:230
 msgid "South Sudan"
@@ -1806,9 +1805,8 @@ msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kan map '%(folder)s' niet aanmaken, fout: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1913
-#, fuzzy
 msgid "Select a Saved Shares List File"
-msgstr "Een lijst met gedeelde bestanden van een gebruiker ophalen"
+msgstr "Selecteer een opgeslagen gedeelde lijstbestand"
 
 #: pynicotine/gtkgui/frame.py:1953
 msgid "Create New Room?"
@@ -1834,9 +1832,8 @@ msgid ""
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:2396
-#, fuzzy
 msgid "Copy & Report Bug"
-msgstr "Rapporteer een _bug"
+msgstr "Kopiëer en rapporteer bug"
 
 #: pynicotine/gtkgui/frame.py:2447
 msgid "Close Nicotine+?"
@@ -1860,9 +1857,8 @@ msgid "Likes"
 msgstr "Houdt van"
 
 #: pynicotine/gtkgui/interests.py:66 pynicotine/gtkgui/userinfo.py:182
-#, fuzzy
 msgid "Dislikes"
-msgstr "Ik haat"
+msgstr "Vind-ik-niet-leuk"
 
 #: pynicotine/gtkgui/interests.py:81
 msgid "Rating"
@@ -1875,35 +1871,30 @@ msgstr "Item"
 #: pynicotine/gtkgui/interests.py:133 pynicotine/gtkgui/interests.py:141
 #, fuzzy
 msgid "_Remove Item"
-msgstr "Verwijde_r dit item"
+msgstr "_Verwijder voorwerp"
 
 #: pynicotine/gtkgui/interests.py:134
-#, fuzzy
 msgid "Re_commendations for Item"
-msgstr "_Aanbevelingen voor dit item"
+msgstr "_Aanbevelingen voor voorwerp"
 
 #: pynicotine/gtkgui/interests.py:136 pynicotine/gtkgui/interests.py:143
 #: pynicotine/gtkgui/interests.py:152 pynicotine/gtkgui/userinfo.py:214
-#, fuzzy
 msgid "_Search for Item"
 msgstr "Hiernaar zoeken"
 
 #: pynicotine/gtkgui/interests.py:148 pynicotine/gtkgui/interests.py:364
 #: pynicotine/gtkgui/userinfo.py:211 pynicotine/gtkgui/userinfo.py:382
-#, fuzzy
 msgid "I _Like This"
-msgstr "Hie_r hou ik van"
+msgstr "Dit vind ik leuk"
 
 #: pynicotine/gtkgui/interests.py:149 pynicotine/gtkgui/interests.py:367
 #: pynicotine/gtkgui/userinfo.py:212 pynicotine/gtkgui/userinfo.py:385
-#, fuzzy
 msgid "I _Dislike This"
-msgstr "Hie_r hou ik van"
+msgstr "Vind ik niet leuk"
 
 #: pynicotine/gtkgui/interests.py:150
-#, fuzzy
 msgid "_Recommendations for Item"
-msgstr "_Aanbevelingen voor dit item"
+msgstr "Aanbevelingen voor voorwerp"
 
 #: pynicotine/gtkgui/notifications.py:85
 #, python-format
@@ -1927,9 +1918,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/privatechat.py:214 pynicotine/gtkgui/search.py:392
 #: pynicotine/gtkgui/userbrowse.py:213 pynicotine/gtkgui/userinfo.py:207
-#, fuzzy
 msgid "_Close Tab"
-msgstr "Deze tab sluiten"
+msgstr "Sluit Tab"
 
 #: pynicotine/gtkgui/privatechat.py:225
 msgid "View Chat Log"
@@ -1940,11 +1930,12 @@ msgid "Delete Chat Log..."
 msgstr ""
 
 #: pynicotine/gtkgui/privatechat.py:325
-#, fuzzy
 msgid ""
 "Are you sure you wish to permanently delete all logged messages for this "
 "user?"
-msgstr "Weet u zeker dat u Nicotine+ op dit moment wilt afsluiten?"
+msgstr ""
+"Weet u zeker dat u alle gelogde berichten voor deze kamer permanent wilt "
+"verwijderen?"
 
 #: pynicotine/gtkgui/privatechat.py:351
 #, python-format
@@ -1995,9 +1986,8 @@ msgid "Buddies"
 msgstr "Vrienden"
 
 #: pynicotine/gtkgui/search.py:199
-#, fuzzy
 msgid "Wish"
-msgstr "wensen"
+msgstr "Wens"
 
 #: pynicotine/gtkgui/search.py:334
 msgid "ID"
@@ -2034,7 +2024,6 @@ msgstr "Lengte"
 
 #: pynicotine/gtkgui/search.py:371 pynicotine/gtkgui/search.py:1131
 #: pynicotine/gtkgui/search.py:1145 pynicotine/gtkgui/userbrowse.py:226
-#, fuzzy
 msgid "_Download File(s)"
 msgstr "_Download bestand(en)"
 
