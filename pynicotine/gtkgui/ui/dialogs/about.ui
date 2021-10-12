@@ -205,11 +205,19 @@ Attributions
   Copyright (c) 2014-2018 Tom Wallroth
   https://github.com/devsnd/tinytag/
 </property>
-    <property name="translator-credits">Dutch
+    <property name="translator-credits">English
+ - mathiascode (2020)
+ - Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
+ - hyriand
+ - daelstorm
+
+Dutch
+ - hboetes (2021)
  - nince78 (2007)
  - hyriand
 
 German
+ - hboetes (2021)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)

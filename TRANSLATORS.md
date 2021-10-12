@@ -7,10 +7,12 @@
 - daelstorm
 
 ## Dutch
+- hboetes (2021)
 - nince78 (2007)
 - hyriand
 
 ## German
+- hboetes (2021)
 - Meokater (2007)
 - (.\_.) (2007)
 - lippel (2004)
