@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-18 23:57+0200\n"
-"PO-Revision-Date: 2021-10-12 12:59+0000\n"
+"PO-Revision-Date: 2021-10-12 18:11+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -81,6 +81,8 @@ msgstr ""
 #: ../pynicotine/config.py:462
 msgid "You need to specify a username and password before connecting..."
 msgstr ""
+"Sie müssen einen Benutzernamen und Passwort angeben, bevor Sie Verbindung "
+"können..."
 
 #: ../pynicotine/config.py:477 ../pynicotine/config.py:681
 #, python-format
@@ -95,12 +97,12 @@ msgstr ""
 #: ../pynicotine/config.py:520
 #, python-format
 msgid "Unknown config section '%s'"
-msgstr ""
+msgstr "Unbekannter Konfigurationsabschnitt '%s'"
 
 #: ../pynicotine/config.py:524
 #, python-format
 msgid "Unknown config option '%(option)s' in section '%(section)s'"
-msgstr ""
+msgstr "Unbekannte Konfigurationsoption '%(option)s' in Abschnitt '%(section)s'"
 
 #: ../pynicotine/config.py:698
 #, python-format
@@ -198,7 +200,7 @@ msgstr ""
 #: ../pynicotine/nowplaying.py:196
 #, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
-msgstr ""
+msgstr "Mehrere MPRIS-Spieler gefunden: %(players)s. Benutzt: %(player)s"
 
 #: ../pynicotine/nowplaying.py:198
 #, python-format
@@ -224,11 +226,12 @@ msgstr ""
 #, python-format
 msgid "It appears '%s' is not a directory, not loading plugins."
 msgstr ""
+"Es scheint, dass '%s' kein Verzeichnis ist, Plugins werden nicht geladen."
 
 #: ../pynicotine/pluginsystem.py:101
 #, python-format
 msgid "Failed to load plugin '%s', could not find it."
-msgstr ""
+msgstr "Fehler beim Laden des Plugins '%s', konnte es nicht finden."
 
 #: ../pynicotine/pluginsystem.py:118
 #, python-format
@@ -264,7 +267,7 @@ msgstr ""
 #: ../pynicotine/pluginsystem.py:255 ../pynicotine/pluginsystem.py:291
 #, python-format
 msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-msgstr ""
+msgstr "Plugin %(module)s gab etwas Seltsames zurück, '%(value)s', ignoriert"
 
 #: ../pynicotine/pluginsystem.py:262 ../pynicotine/pluginsystem.py:301
 #, python-format
@@ -284,7 +287,7 @@ msgstr ""
 
 #: ../pynicotine/pynicotine.py:119
 msgid "Your config file is corrupt"
-msgstr ""
+msgstr "Ihre Konfigurationsdatei ist beschädigt"
 
 #: ../pynicotine/pynicotine.py:120
 #, python-format
@@ -297,6 +300,13 @@ msgid ""
 "If you open this file with a text editor you might be able to rescue some of "
 "your settings."
 msgstr ""
+"Es tut uns leid, aber es scheint, dass Ihre Konfigurationsdatei beschädigt "
+"ist. Bitte konfigurieren Sie Nicotine+ neu.\n"
+"\n"
+"Wir haben Ihre alte Konfigurationsdatei umbenannt in\n"
+"%(corrupt)s\n"
+"Wenn Sie diese Datei mit einem Texteditor öffnen, können Sie vielleicht "
+"einige Ihrer Einstellungen retten."
 
 #. These strings are accessed frequently. We store them to prevent requesting the translation every time.
 #: ../pynicotine/pynicotine.py:125
@@ -422,6 +432,8 @@ msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left."
 msgstr ""
+"%(days)i Tage, %(hours)i Stunden, %(minutes)i Minuten, %(seconds)i Sekunden "
+"verbleibende Download-Rechte."
 
 #: ../pynicotine/pynicotine.py:1386
 msgid ""
