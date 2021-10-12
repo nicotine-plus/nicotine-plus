@@ -4,7 +4,7 @@
 
 You can help improving our translations at [weblate](https://hosted.weblate.org/translate/nicotine-plus/nicotine-plus). You don't even need an account.
 
-We regularly import the improved translations into Nicotine+'s GitHub repository, especially before a new Nicotine+ release.
+We regularly import the improved translations into the Nicotine+ GitHub repository, especially before a new Nicotine+ release.
 
 ## Testing updated translations
 
