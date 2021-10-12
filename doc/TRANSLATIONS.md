@@ -24,7 +24,7 @@ If Nicotine+ doesn't find the `.mo` files in your project folder, it will fall b
 
 * On Windows: `%PYTHONHOME%\share\locale\$(lang)\LC_MESSAGES`.
 
-## Testing a diffent language
+## Testing a different language
 
 Nicotine+ will try to autodetect your language based on what locale you're using. For testing purposes Nicotine+ can be forced to use another language. You can do it by setting your locale before starting Nicotine+, e.g.:
 
