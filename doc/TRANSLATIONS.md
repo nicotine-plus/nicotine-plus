@@ -43,5 +43,4 @@ python3 po/update_pot.py
 
 ## Add yourself to the translators
 
-- If you added a lot of translations, you can add yourself to the TRANSLATORS.md list via a pull request(PR).
-- If you do more than just translations you can add translator to your credits in `pynicotine/gtkgui/ui/dialogs/about.ui` and create a PR, off course.
+If you want you can add yourself to the TRANSLATORS.md and to the credits list in help→about: `pynicotine/gtkgui/ui/dialogs/about.ui`. Add yourself to the top of matching section and then create a PR (pull request).
