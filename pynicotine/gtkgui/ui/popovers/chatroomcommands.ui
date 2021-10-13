@@ -70,7 +70,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/leave /l /part /p</property>
+                        <property name="label">/leave /l /part /p</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -96,7 +96,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/clear /cl</property>
+                        <property name="label">/clear /cl</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -122,7 +122,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/tick /t</property>
+                        <property name="label">/tick /t</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -148,7 +148,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/tickers</property>
+                        <property name="label">/tickers</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -205,7 +205,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/now</property>
+                        <property name="label">/now</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -231,7 +231,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/away /a</property>
+                        <property name="label">/away /a</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -257,7 +257,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/rescan</property>
+                        <property name="label">/rescan</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
@@ -283,7 +283,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">/quit /q /exit</property>
+                        <property name="label">/quit /q /exit</property>
                         <property name="selectable">1</property>
                         <attributes>
                           <attribute name="style" value="italic"/>
