@@ -144,6 +144,6 @@ Unstable macOS installers are generated after every commit to the master branch,
 
 - [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
 
-## Building from git (Unstable)
+## Building from Git (Unstable)
 
-For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.
+For more experienced users and developers who want to test the latest and greatest changes in Nicotine+, building from Git is described in [RUNFROMGIT.md](doc/RUNFROMGIT.md). Also read the next section about getting involved.

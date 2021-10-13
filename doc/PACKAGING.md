@@ -11,7 +11,7 @@ Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 ### Building a Source Distribution
 
-To build source distribution files `.tar.bz2` and `.tar.gz` from the git repository, run:
+To build source distribution files `.tar.bz2` and `.tar.gz` from the Git repository, run:
 
 ```console
 python3 setup.py sdist --formats=bztar,gztar
@@ -57,7 +57,7 @@ GitHub Actions currently builds Nicotine+ installers for Windows. However, the f
 
 Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
-Clone the `nicotine-plus` git repository:
+Clone the `nicotine-plus` Git repository:
 
 ```console
 pacman -S git
@@ -99,4 +99,4 @@ A `Nicotine+-$(version).exe` installer is now present in the `packaging\windows\
 
 Start a MinGW 32-bit terminal, and follow the above instructions again. Replace any instance of `x86_64` with `i686` when installing packages.
 
-You are recommended to clone a fresh copy of the `nicotine-plus` git repository before building a frozen application again.
+You are recommended to clone a fresh copy of the `nicotine-plus` Git repository before building a frozen application again.
