@@ -165,18 +165,16 @@ For more experienced users and developers who want to test the latest and greate
 
 # Getting Involved
 
-If you would like to contribute to Nicotine+, you have a couple of options to get started:
+If you feel like contributing to Nicotine+, several options are available:
 
-* If you find a problem or have a feature request you can
-  * discuss your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/),
-  * [create a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub, 
-  * or post to the project [mailing list](mailto:nicotine-team@lists.launchpad.net).
-* If you would like to translate Nicotine+ into another language, see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
-* If you would like to package Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md) for a list of dependencies.
-* Code contributors, developers and maintainers should read [DEVELOPING.md](doc/DEVELOPING.md) for important information about various aspects of Nicotine+ development.
-* For a list of contributors to Nicotine+ and its predecessors, see [AUTHORS.md](AUTHORS.md).
-* For unofficial documentation of the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
-* For a current list of things to do, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
+* Report a problem or suggest improvements by
+  * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
+  * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
+* Translate Nicotine+ into another language with [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus), see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
+* Package Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md).
+* Implement bug fixes and features, see [DEVELOPING.md](doc/DEVELOPING.md).
+  * For a list of tasks, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
+  * For documentation on the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
 
 # Where did the name Nicotine come from?
 
@@ -196,4 +194,4 @@ I stumbled across this quote:
 
 # License
 
-Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
+Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. For a list of contributors, see [AUTHORS.md](AUTHORS.md).
