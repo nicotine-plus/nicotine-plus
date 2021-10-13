@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-13 19:59+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2021-10-13 20:51+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -3255,12 +3255,11 @@ msgid "Text-to-speech for message failed: %s"
 msgstr "Tekst-naar-spraak voor bericht mislukt: %s"
 
 #: pynicotine/nowplaying.py:86
-#, fuzzy
 msgid ""
 "Could not execute now playing code. Are you sure you picked the right player?"
 msgstr ""
-"ERROR: Kan nu spelende code niet uitvoeren. Weet je zeker dat je de juiste "
-"speler hebt gekozen?"
+"Kan nu spelende code niet uitvoeren. Weet je zeker dat je de juiste speler "
+"hebt gekozen?"
 
 #: pynicotine/nowplaying.py:138 pynicotine/nowplaying.py:136
 msgid "Last.fm: Please provide both your Last.fm username and API key"
