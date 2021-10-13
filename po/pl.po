@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-13 20:21+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -306,8 +306,7 @@ msgstr "Nie można znaleźć %s, zainstaluj go."
 
 #: pynicotine/gtkgui/__init__.py:95
 msgid "No graphical environment available, using headless (no GUI) mode"
-msgstr ""
-"Brak dostępnego środowiska graficznego, użycie trybu headless (bez GUI)"
+msgstr "Brak dostępnego środowiska graficznego, użycie trybu headless (bez GUI)"
 
 #: pynicotine/gtkgui/application.py:287
 #: pynicotine/plugins/core_commands/__init__.py:68
@@ -3734,8 +3733,7 @@ msgstr "Serwer nie pozwala w tej chwili na przeszukiwanie listy życzeń"
 #: pynicotine/search.py:556
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr ""
-"Użytkownik %(user)s wyszukuje \"%(query)s\", znaleziono %(num)i wyników"
+msgstr "Użytkownik %(user)s wyszukuje \"%(query)s\", znaleziono %(num)i wyników"
 
 #: pynicotine/shares.py:73
 #, python-format
@@ -4090,8 +4088,7 @@ msgstr "Dodaj znajomego…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1273
 msgid "Enter the username of the person you want to add to your buddy list"
-msgstr ""
-"Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
+msgstr "Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 msgid "Send message…"
@@ -4950,8 +4947,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Wartości należy wprowadzać wyłącznie jako cyfry. Jednostką jest zawsze Kb/s "
-"(kilobity na sekundę)."
+"Wartości należy wprowadzać wyłącznie jako cyfry. Jednostką jest zawsze Kb/s ("
+"kilobity na sekundę)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 msgid ""
