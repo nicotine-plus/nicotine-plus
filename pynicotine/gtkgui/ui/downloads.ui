@@ -182,6 +182,9 @@
         </child>
       </object>
     </child>
+    <style>
+      <class name="view"/>
+    </style>
   </object>
   <object class="GtkBox" id="ClearTransfersLabel">
     <property name="visible">1</property>
@@ -199,8 +202,5 @@
         <property name="icon-name">pan-up-symbolic</property>
       </object>
     </child>
-    <style>
-      <class name="view"/>
-    </style>
   </object>
 </interface>
