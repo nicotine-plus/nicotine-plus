@@ -189,8 +189,8 @@ I stumbled across this quote:
 
 # Legal and Privacy
 
-- By using Nicotine+, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682), as long as you are using the official Soulseek server.
-- While Nicotine+ does not collect any user data, the official Soulseek server or a user-configured third-party server may potentially do so.
+- When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
+- Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, since the Nicotine+ Team does not operate it.
 
 # License
 
