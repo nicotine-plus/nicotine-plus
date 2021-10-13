@@ -21,7 +21,7 @@ The source distribution files will be located in the `dist` subdirectory of your
 
 #### Building a Debian package
 
-Unstable and stable PPAs are already provided for pre-compiled packages, as described in the `README.md`. However, if you wish to build your own package perform the following.
+Unstable and stable PPAs are already provided for pre-compiled packages, as described in the `README.md`. However, if you want to build your own package, perform the following:
 
 Start by installing the build dependencies:
 

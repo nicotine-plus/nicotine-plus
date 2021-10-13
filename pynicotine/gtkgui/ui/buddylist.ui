@@ -38,7 +38,7 @@
             <property name="height-request">0</property>
             <property name="width-chars">15</property>
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
-            <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
             <signal name="icon-press" handler="on_add_user" swapped="no"/>

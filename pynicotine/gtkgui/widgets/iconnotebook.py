@@ -424,7 +424,7 @@ class IconNotebook:
         option_dialog(
             parent=self.window,
             title=_('Close All Tabs?'),
-            message=_('Are you sure you wish to close all tabs?'),
+            message=_('Do you really want to close all tabs?'),
             callback=self.remove_all_pages_response
         )
 

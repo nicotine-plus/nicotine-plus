@@ -139,7 +139,7 @@ class WishList(UserInterface):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Wishlist?'),
-            message=_('Are you sure you wish to clear your wishlist?'),
+            message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response
         )
 
