@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 00:17+0300\n"
+"POT-Creation-Date: 2021-10-13 04:06+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1681,7 +1681,7 @@ msgid "_Shares"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1281 pynicotine/gtkgui/ui/mainwindow.ui:843
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:105
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:161
 msgid "Search Files"
 msgstr ""
 
@@ -1690,7 +1690,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:942
 #: pynicotine/gtkgui/ui/mainwindow.ui:1616
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:117
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:173
 msgid "Downloads"
 msgstr ""
 
@@ -1699,41 +1699,41 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1035
 #: pynicotine/gtkgui/ui/mainwindow.ui:1629
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:129
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:185
 msgid "Uploads"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/ui/mainwindow.ui:1128
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:141
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 msgid "User Browse"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1285 pynicotine/gtkgui/settingswindow.py:3108
 #: pynicotine/gtkgui/ui/mainwindow.ui:1227
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:153
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/ui/mainwindow.ui:1326
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:165
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/buddylist.ui:18
 #: pynicotine/gtkgui/ui/mainwindow.ui:1425
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:177
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 msgid "Buddy List"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1288 pynicotine/gtkgui/ui/mainwindow.ui:1518
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:189
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:245
 msgid "Chat Rooms"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1289 pynicotine/gtkgui/ui/mainwindow.ui:746
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:201
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:257
 msgid "Interests"
 msgstr ""
 
@@ -3973,7 +3973,6 @@ msgid "Open Context Menu"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:89
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:440
 msgid "Tabs"
 msgstr ""
 
@@ -4100,7 +4099,7 @@ msgid "Pause"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/downloads.ui:124
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2189
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2230
 msgid "Clear"
 msgstr ""
 
@@ -4941,7 +4940,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:26
 msgid ""
-"Prohibit users from accessing your shared files, based on their username, IP "
+"Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
 
@@ -5313,27 +5312,27 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/tts.ui:85
 #: pynicotine/gtkgui/ui/settings/tts.ui:168
 #: pynicotine/gtkgui/ui/settings/tts.ui:225
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:337
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:411
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:703
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:777
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:851
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1012
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1086
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1160
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1234
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1308
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1382
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1456
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1530
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1633
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1707
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1794
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1855
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1916
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1977
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2038
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2099
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:393
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:467
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:803
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:877
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:951
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1025
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1099
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1173
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1247
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1321
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1424
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1498
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1600
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1674
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1748
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1835
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1896
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1957
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2018
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2079
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2140
 msgid "Default"
 msgstr ""
 
@@ -5834,44 +5833,56 @@ msgid "Run in the background"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:83
-msgid "Visible Modes"
+msgid "Primary Tabs"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:226
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:92
+msgid "View previous primary tab on startup"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:111
+msgid "Tab bar position:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:141
+msgid "Visible primary tabs:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:282
 msgid "Lists"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:235
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:291
 msgid "Enable file path tooltips in search and transfer views"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:237
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:293
 msgid ""
 "Displays the complete file path of a search result or file transfer when you "
 "hover a folder path or file name with your cursor."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:243
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:299
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:250
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:306
 msgid "Show privately shared files in search results"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:252
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:308
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
 "not downloadable unless the uploader gives explicit permission, and are ."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:258
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:314
 msgid "Show privately shared files in user shares"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:260
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:316
 msgid ""
 "Other clients may offer an option to send privately shared files when you "
 "browse their shares. Folders containing such files are prefixed with "
@@ -5879,167 +5890,167 @@ msgid ""
 "explicit permission."
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:286
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:342
 msgid "List text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:360
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:416
 msgid "Search with queue text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:449
-msgid "Select previous tab on startup"
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:496
+msgid "Secondary Tabs"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:455
-msgid "Close-buttons on tabs"
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:505
+msgid "Close-buttons on secondary tabs"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:461
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:511
 msgid "Tabs show user status icons instead of status text"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:482
-msgid "Main tab bar position:"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:508
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:532
 msgid "Chat room tab bar position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:534
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:558
 msgid "Private chat tab bar position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:560
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:584
 msgid "Search tab bar position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:586
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:610
 msgid "User info tab bar position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:612
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:636
 msgid "User browse tab bar position:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:652
-msgid "Regular tab label color:"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:726
-msgid "Changed tab label color:"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:800
-msgid "Highlighted tab label color:"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:882
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:673
 msgid "Chats"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:891
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:682
 msgid "Colored and clickable usernames"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:911
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:702
 msgid "Chat username appearance:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:928
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:719
 msgid "bold"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:929
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:720
 msgid "italic"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:930
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:721
 msgid "underline"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:931
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:722
 msgid "normal"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:961
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:752
 msgid "Remote text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1035
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:826
 msgid "Local text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1109
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:900
 msgid "/me action text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1183
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:974
 msgid "Highlighted text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1257
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1048
 msgid "URL link text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1331
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1122
 msgid "Online text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1405
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1196
 msgid "Offline text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1479
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1270
 msgid "Away text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1555
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1346
 msgid "Text Entries"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1582
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1373
 msgid "Text entry background color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1656
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1447
 msgid "Text entry text color:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1732
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1522
+msgid "Tab Labels"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1549
+msgid "Regular tab label color:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1623
+msgid "Changed tab label color:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1697
+msgid "Highlighted tab label color:"
+msgstr ""
+
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1773
 msgid "Fonts"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1752
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1793
 msgid "Global font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1813
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1854
 msgid "Chat font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1874
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1915
 msgid "List font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1935
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:1976
 msgid "Transfers font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:1996
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2037
 msgid "Search font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2057
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2098
 msgid "Browse font:"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2123
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2164
 msgid "Icons"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/settings/userinterface.ui:2150
+#: pynicotine/gtkgui/ui/settings/userinterface.ui:2191
 msgid "Icon theme folder (requires restart):"
 msgstr ""
 
