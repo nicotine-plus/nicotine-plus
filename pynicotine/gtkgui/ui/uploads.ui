@@ -180,9 +180,6 @@
         </child>
       </object>
     </child>
-    <style>
-      <class name="view"/>
-    </style>
   </object>
   <object class="GtkBox" id="ClearTransfersLabel">
     <property name="visible">1</property>
