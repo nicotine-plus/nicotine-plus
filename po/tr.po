@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-13 19:18+0000\n"
+"PO-Revision-Date: 2021-10-13 19:59+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -3519,35 +3519,36 @@ msgstr "Parolanız değiştirildi. Parola: %s"
 #: pynicotine/pynicotine.py:1704
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr ""
+msgstr "%(user)s kullanıcısı paylaşılan dosyalar listenize göz atıyor"
 
 #: pynicotine/pynicotine.py:1759
 #, python-format
 msgid "User %(user)s is reading your user info"
-msgstr ""
+msgstr "%(user)s kullanıcısı kullanıcı bilgilerinizi okuyor"
 
 #: pynicotine/pynicotine.py:1805
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
+"(Uyarı: %(realuser)s, %(fakeuser)s kullanıcısını taklit etmeye çalışıyor) "
 
 #: pynicotine/pynicotine.py:1847
 #, python-format
 msgid "Failed to fetch folder contents of shared folder %(folder)s: %(error)s"
-msgstr ""
+msgstr "%(folder)s paylaşılan klasörünün içeriği alınamadı: %(error)s"
 
 #: pynicotine/search.py:122 pynicotine/gtkgui/ui/mainwindow.ui:56
 msgid "Joined Rooms "
-msgstr ""
+msgstr "Katılınan Odalar "
 
 #: pynicotine/search.py:254
 msgid "The server forbid us from doing wishlist searches."
-msgstr ""
+msgstr "Sunucu, dilek listesi araması yapmamızı yasaklıyor."
 
 #: pynicotine/search.py:320
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
-msgstr ""
+msgstr "Dilek listesi bekleme süresi %s saniyeye ayarlandı"
 
 #: pynicotine/search.py:518
 #, python-format
@@ -3555,11 +3556,15 @@ msgid ""
 "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
 "results"
 msgstr ""
+"%(user)s kullanıcısı doğrudan \"%(query)s\" için arama yapıyor ve %(num)i "
+"sonuç döndürüyor"
 
 #: pynicotine/search.py:525
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
+"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor ve %(num)i sonuç "
+"döndürüyor"
 
 #: pynicotine/shares.py:114
 #, python-format
@@ -3568,11 +3573,14 @@ msgid ""
 "delete %(dir)s/*.db and try again. If that doesn't help, please file a bug "
 "report with this stack trace included: %(trace)s"
 msgstr ""
+"Paylaşımlar yeniden taranırken ciddi bir hata oluştu. Bu sorun devam ederse, "
+"%(dir)s/*.db dosyalarını silin ve tekrar deneyin. Bu işe yaramazsa, lütfen "
+"şu yığın geri izlemesini içeren bir hata bildirimi gönderin: %(trace)s"
 
 #: pynicotine/shares.py:149
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
-msgstr ""
+msgstr "%(filename)s kaydedilemiyor: %(error)s"
 
 #: pynicotine/shares.py:167
 #, python-format
