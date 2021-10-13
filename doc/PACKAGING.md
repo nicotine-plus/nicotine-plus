@@ -1,27 +1,27 @@
 # Packaging
 
-### Note for packagers
+## Note for packagers
 This is a special note for distribution packagers: There is a standard feature of GitHub which enables you to be notified of new package releases: In the top right bar there is the *Watch* option, which has the suboption to be notified of *releases only*. Please subscribe so you won't miss any of our new releases.
 Thanks!
 
-### Dependencies
-The dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
+## Dependencies
+Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
-### GNU/Linux instructions
+## GNU/Linux Instructions
 
-#### Building a source distribution
+### Building a Source Distribution
 
-To build source distribution files (.tar.bz2 & .tar.gz) from the git repository run:
+To build source distribution files `.tar.bz2` and `.tar.gz` from the git repository, run:
 
 ```console
 python3 setup.py sdist --formats=bztar,gztar
 ```
 
-The source distribution files will be located in the `dist` subdirectory of your git repository.
+The source distribution files will be located in the `dist/` subfolder.
 
-#### Building a Debian package
+### Building a Debian Package
 
-Unstable and stable PPAs are already provided for pre-compiled packages, as described in the `README.md`. However, if you wish to build your own package perform the following.
+Unstable and stable PPAs are already provided for pre-compiled packages. However, if you wish to build your own package, perform the following steps.
 
 Start by installing the build dependencies:
 
@@ -49,15 +49,15 @@ sbuild ../nicotine_*.dsc
 ```
 
 
-### Windows
+## Windows
 
-GitHub Actions currently builds Nicotine+ installers for Windows, but the following information may be useful if you want to generate an installer on your own Windows machine.
+GitHub Actions currently builds Nicotine+ installers for Windows. However, the following instructions may be useful if you wish to generate an installer on your own machine.
 
-#### Building a frozen application via PyInstaller
+### Building a Frozen Application via PyInstaller
 
-First, follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
+Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
-Then, clone the Nicotine+ git repository:
+Clone the `nicotine-plus` git repository:
 
 ```console
 pacman -S git
@@ -81,11 +81,11 @@ Run PyInstaller:
 python3 -m pyinstaller packaging/windows/nicotine.spec
 ```
 
-After the frozen application build finished you can find it in the `dist\Nicotine+` subdirectory.
+When the frozen application has finished building, it is located in the `dist\Nicotine+\` subfolder.
 
-If you want to run the frozen application you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
+If you want to run the application, you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
 
-#### Building a NSIS installer from the frozen application
+### Building a NSIS installer from the Frozen Application
 
 Run the following:
 
@@ -93,10 +93,10 @@ Run the following:
 python3 packaging/windows/create_installer.py
 ```
 
-You should now find a `Nicotine+-$(version).exe` installer in the `packaging/windows` directory.
+A `Nicotine+-$(version).exe` installer is now present in the `packaging\windows\` folder.
 
-#### Building a 32-bit (i686) application and installer
+### Building a 32-bit (i686) Application and Installer
 
-Start a MinGW 32-bit terminal, and follow the above instructions again, replacing any instance of "x86_64" with "i686" when installing packages.
+Start a MinGW 32-bit terminal, and follow the above instructions again. Replace any instance of `x86_64` with `i686` when installing packages.
 
-Preferably, clone a fresh copy of the nicotine-plus git repository before freezing Nicotine+ with PyInstaller again.
+You are recommended to clone a fresh copy of the `nicotine-plus` git repository before building a frozen application again.
