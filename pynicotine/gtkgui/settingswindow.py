@@ -189,9 +189,8 @@ class NetworkFrame(UserInterface):
         if self.p.frame.np.logged_in:
             message = _("Enter a new password for your Soulseek account:")
         else:
-            message = (_("You are currently logged out of the Soulseek network. If you are attempting to change "
-                         "the password of an existing Soulseek account, you need to be logged into the account "
-                         "in question.")
+            message = (_("You are currently logged out of the Soulseek network. If you want to change "
+                         "the password of an existing Soulseek account, you need to be logged into that account ")
                        + "\n\n"
                        + _("Enter password to use when logging in:"))
 
@@ -1042,7 +1041,7 @@ class IgnoreListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Ignore User"),
-            message=_("Enter the name of a user you wish to ignore:"),
+            message=_("Enter the name of the user you want to ignore:"),
             callback=self.on_add_ignored_response
         )
 
@@ -1094,7 +1093,7 @@ class IgnoreListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Ignore IP Address"),
-            message=_("Enter an IP address you wish to ignore:") + " " + _("* is a wildcard"),
+            message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
         )
 
@@ -1232,7 +1231,7 @@ class BanListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Ban User"),
-            message=_("Enter the name of a user you wish to ban:"),
+            message=_("Enter the name of the user you want to ban:"),
             callback=self.on_add_banned_response
         )
 
@@ -1285,7 +1284,7 @@ class BanListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Block IP Address"),
-            message=_("Enter an IP address you wish to block:") + " " + _("* is a wildcard"),
+            message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
         )
 
@@ -2239,8 +2238,8 @@ class CensorReplaceListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Censor Pattern"),
-            message=_("Enter a pattern you wish to censor. Add spaces around the pattern if you don't "
-                      "wish to match strings inside words (may fail at the beginning and end of lines)."),
+            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+                      "want to match strings inside words (may fail at the beginning and end of lines)."),
             callback=self.on_add_censored_response
         )
 

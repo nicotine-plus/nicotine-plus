@@ -322,7 +322,7 @@ class PrivateChat(UserInterface):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
-            message=_('Are you sure you wish to permanently delete all logged messages for this user?'),
+            message=_('Do you really want to permanently delete all logged messages for this user?'),
             callback=self.on_delete_chat_log_response
         )
 

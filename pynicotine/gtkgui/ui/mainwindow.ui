@@ -450,7 +450,7 @@
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username…</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_private_chat" swapped="no"/>
                 <signal name="icon-press" handler="on_get_private_chat" swapped="no"/>
@@ -507,7 +507,7 @@
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username…</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_user_info" swapped="no"/>
                 <signal name="icon-press" handler="on_get_user_info" swapped="no"/>
@@ -573,7 +573,7 @@
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username…</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_shares" swapped="no"/>
                 <signal name="icon-press" handler="on_get_shares" swapped="no"/>
@@ -652,7 +652,7 @@
             <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
-            <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
             <signal name="icon-press" handler="on_add_user" swapped="no"/>

@@ -150,7 +150,7 @@ def rescan_shares():
 
     if error:
         print("--------------------------------------------------")
-        print(_("Failed to scan shares. If Nicotine+ is currently running, please close the program before scanning."))
+        print(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
         return 1
 
     return 0
