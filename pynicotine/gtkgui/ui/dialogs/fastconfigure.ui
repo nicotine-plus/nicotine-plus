@@ -125,7 +125,7 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Please keep in mind that certain usernames may be taken. If this is the case, you will be prompted to change your username when connecting to the network.</property>
+        <property name="label" translatable="yes">If your desired username is already taken, you will be prompted to change it.</property>
         <property name="justify">center</property>
         <property name="wrap">1</property>
         <property name="width-chars">36</property>
