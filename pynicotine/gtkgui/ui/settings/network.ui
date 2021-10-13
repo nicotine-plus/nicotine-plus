@@ -54,7 +54,7 @@
               <object class="GtkLabel" id="ServerDescription">
                 <property name="visible">1</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">You can create a new Soulseek account or log in to an existing one by entering your desired details below. Please keep in mind that some usernames may already be taken. If you&apos;re unable to connect with your selected username, try choosing another one.</property>
+                <property name="label" translatable="yes">Log in to an existing Soulseek account or create a new one. Usernames are case-sensitive and unique.</property>
                 <property name="selectable">1</property>
                 <property name="wrap">1</property>
               </object>

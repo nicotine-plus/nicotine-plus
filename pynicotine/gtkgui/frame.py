@@ -405,7 +405,8 @@ class NicotineFrame(UserInterface):
     def invalid_password(self):
 
         title = _("Invalid Password")
-        msg = _("The password you've entered is invalid for user %s") % config.sections["server"]["login"]
+        msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
+                "if this is your first time logging in.") % config.sections["server"]["login"]
 
         option_dialog(
             parent=self.application.get_active_window(),
