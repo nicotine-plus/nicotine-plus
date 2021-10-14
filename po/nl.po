@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-13 22:49+0000\n"
+"PO-Revision-Date: 2021-10-14 18:21+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -108,7 +108,7 @@ msgstr "poort"
 
 #: pynicotine/__init__.py:67
 msgid "listen on the given port"
-msgstr "luister aan de gegeven poort"
+msgstr "luister aan de opgegeven poort"
 
 #: pynicotine/__init__.py:71
 msgid "rescan shared files"
@@ -1278,11 +1278,11 @@ msgstr "Berichtweergave wissen"
 
 #: pynicotine/gtkgui/chatrooms.py:617
 msgid "--- old messages above ---"
-msgstr "--- oude berichten bovenaan ---"
+msgstr "--- oude berichten hierboven ---"
 
 #: pynicotine/gtkgui/chatrooms.py:678
 msgid "Room wall (personal message set)"
-msgstr "Kamerwand (persoonlijke berichtenset)"
+msgstr "Kamerwand (eigen bericht ingesteld)"
 
 #: pynicotine/gtkgui/chatrooms.py:681
 msgid "Room wall"
@@ -1349,7 +1349,7 @@ msgstr "_Hervat"
 
 #: pynicotine/gtkgui/downloads.py:41
 msgid "P_ause"
-msgstr "Pauze"
+msgstr "P_auze"
 
 #: pynicotine/gtkgui/downloads.py:42 pynicotine/gtkgui/downloads.py:50
 #: pynicotine/gtkgui/transferlist.py:99
@@ -1358,7 +1358,7 @@ msgstr "Gepauzeerd"
 
 #: pynicotine/gtkgui/downloads.py:47
 msgid "Finished / Filtered"
-msgstr "Afgewerkt / gefilterd"
+msgstr "Voltooid / gefilterd"
 
 #: pynicotine/gtkgui/downloads.py:49 pynicotine/gtkgui/transferlist.py:100
 #: pynicotine/gtkgui/uploads.py:47
@@ -1780,7 +1780,7 @@ msgstr "Kan map '%(folder)s' niet aanmaken, fout: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1699
 msgid "Select a Saved Shares List File"
-msgstr "Selecteer een opgeslagen gedeelde lijstbestand"
+msgstr "Selecteer een opgeslagen shares bestand"
 
 #: pynicotine/gtkgui/frame.py:1739
 msgid "Create New Room?"
