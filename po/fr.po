@@ -1282,11 +1282,11 @@ msgstr "Supprimer le log du salon…"
 
 #: pynicotine/gtkgui/chatrooms.py:480 pynicotine/gtkgui/privatechat.py:228
 msgid "Clear Message View"
-msgstr "Effacer la vue des messages"
+msgstr "Effacer les messages du salon"
 
 #: pynicotine/gtkgui/chatrooms.py:617
 msgid "--- old messages above ---"
-msgstr "---  anciens messages au-dessus ---"
+msgstr "--- anciens messages au-dessus ---"
 
 #: pynicotine/gtkgui/chatrooms.py:678
 msgid "Room wall (personal message set)"
@@ -1379,7 +1379,7 @@ msgstr "Échoué"
 
 #: pynicotine/gtkgui/downloads.py:52 pynicotine/gtkgui/transferlist.py:101
 msgid "Filtered"
-msgstr "Filtre d'exclusion"
+msgstr "Filtré"
 
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:50
 msgid "Queued…"
