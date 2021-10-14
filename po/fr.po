@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 22:57+0300\n"
-"PO-Revision-Date: 2021-10-14 18:21+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2021-10-14 20:25+0000\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -1650,17 +1650,14 @@ msgid "Show _Debug Log Controls"
 msgstr "Afficher les contrôles du journal de débogage _Debug"
 
 #: pynicotine/gtkgui/frame.py:1032
-#, fuzzy
 msgid "Buddy List in Separate Tab"
 msgstr "Liste de copains dans un onglet séparé"
 
 #: pynicotine/gtkgui/frame.py:1033
-#, fuzzy
 msgid "Buddy List in Chat Rooms"
 msgstr "Liste de copains dans les salles de chat"
 
 #: pynicotine/gtkgui/frame.py:1034
-#, fuzzy
 msgid "Buddy List Always Visible"
 msgstr "Liste de copains toujours visible"
 
@@ -1689,7 +1686,6 @@ msgid "_Keyboard Shortcuts"
 msgstr "_Raccourcis clavier"
 
 #: pynicotine/gtkgui/frame.py:1069
-#, fuzzy
 msgid "_Setup Assistant"
 msgstr "Assistant de configuration"
 
@@ -1789,31 +1785,27 @@ msgstr ""
 "Impossible de créer le répertoire '%(folder)s', l'erreur est: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1699
-#, fuzzy
 msgid "Select a Saved Shares List File"
-msgstr "Sélectionner un fichier de liste d'actions sauvegardées"
+msgstr "Sélectionner un fichier de liste des partages sauvegardées"
 
 #: pynicotine/gtkgui/frame.py:1739
-#, fuzzy
 msgid "Create New Room?"
-msgstr "Créer une nouvelle pièce ?"
+msgstr "Créer un nouveau Salon?"
 
 #: pynicotine/gtkgui/frame.py:1740
-#, fuzzy, python-format
+#, python-format
 msgid "Are you sure you wish to create a new room \"%s\"?"
-msgstr "Êtes-vous sûr de vouloir créer une nouvelle pièce \"%s\" ?"
+msgstr "Êtes-vous sûr de vouloir créer un nouveau Salon \"%s\" ?"
 
 #: pynicotine/gtkgui/frame.py:1741
-#, fuzzy
 msgid "Make room private"
-msgstr "Rendre la pièce privée"
+msgstr "Rendre le Salon privée"
 
 #: pynicotine/gtkgui/frame.py:2181
 msgid "Critical Error"
 msgstr "Erreur critique"
 
 #: pynicotine/gtkgui/frame.py:2182
-#, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -1846,7 +1838,6 @@ msgid "Likes"
 msgstr "Il aime"
 
 #: pynicotine/gtkgui/interests.py:67 pynicotine/gtkgui/userinfo.py:186
-#, fuzzy
 msgid "Dislikes"
 msgstr "N'aime pas"
 
@@ -1863,13 +1854,11 @@ msgid "_Remove Item"
 msgstr "_Retirer l'élément"
 
 #: pynicotine/gtkgui/interests.py:135
-#, fuzzy
 msgid "Re_commendations for Item"
 msgstr "Re_commandations pour l'article"
 
 #: pynicotine/gtkgui/interests.py:137 pynicotine/gtkgui/interests.py:144
 #: pynicotine/gtkgui/interests.py:153 pynicotine/gtkgui/userinfo.py:218
-#, fuzzy
 msgid "_Search for Item"
 msgstr "_Recherche de l'article"
 
@@ -1915,9 +1904,8 @@ msgid "_Close Tab"
 msgstr "_Fermer l'onglet"
 
 #: pynicotine/gtkgui/privatechat.py:225
-#, fuzzy
 msgid "View Chat Log"
-msgstr "Afficher le journal de chat"
+msgstr "Afficher le journal des discussions"
 
 #: pynicotine/gtkgui/privatechat.py:226
 #, fuzzy
@@ -2047,7 +2035,6 @@ msgstr "_Parcourir le(s) répertoire(s)"
 #: pynicotine/gtkgui/transferlist.py:772 pynicotine/gtkgui/userbrowse.py:323
 #: pynicotine/gtkgui/userbrowse.py:336 pynicotine/gtkgui/userbrowse.py:413
 #: pynicotine/gtkgui/userbrowse.py:419
-#, fuzzy
 msgid "F_ile Properties"
 msgstr "Propriétés de F_ile"
 
@@ -2091,29 +2078,25 @@ msgid "Filtered out excluded search result "
 msgstr "Résultat de recherche exclu et filtré "
 
 #: pynicotine/gtkgui/search.py:545
-#, fuzzy
 msgid "Filtered out inexact or incorrect search result "
 msgstr "Filtrage des résultats de recherche inexacts ou incorrects "
 
 #: pynicotine/gtkgui/search.py:895
-#, fuzzy, python-format
+#, python-format
 msgid "_Result Filters [%d]"
 msgstr "Filtres de résultat [%d]"
 
 #: pynicotine/gtkgui/search.py:897 pynicotine/gtkgui/ui/search.ui:102
-#, fuzzy
 msgid "_Result Filters"
-msgstr "Filtres de résultat"
+msgstr "Filtres de _Résultat"
 
 #: pynicotine/gtkgui/search.py:993
-#, fuzzy
 msgid "Add Wi_sh"
-msgstr "Ajouter Wi_sh"
+msgstr "Ajouter _Souhait"
 
 #: pynicotine/gtkgui/search.py:997
-#, fuzzy
 msgid "Remove Wi_sh"
-msgstr "Supprimer Wi_sh"
+msgstr "Supprimer _souhait"
 
 #: pynicotine/gtkgui/search.py:1011 pynicotine/gtkgui/transferlist.py:682
 msgid "Select User's Transfers"
@@ -2125,31 +2108,27 @@ msgid "Listening port is not set"
 msgstr "Le port d'écoute n'est pas défini"
 
 #: pynicotine/gtkgui/settingswindow.py:95
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</"
 "b>"
 msgstr ""
-"L'adresse IP publique est <b>%(ip)s</b> et le port d'écoute active est "
-"<b>%(port)s</b>."
+"L'adresse IP publique est <b>%(ip)s</b> et le port d'écoute actif est "
+"<b>%(port)s</b>"
 
 #: pynicotine/gtkgui/settingswindow.py:96
-#, fuzzy
 msgid "unknown"
 msgstr "inconnu"
 
 #: pynicotine/gtkgui/settingswindow.py:171
-#, fuzzy
 msgid "Password Change Rejected"
 msgstr "Le changement de mot de passe est rejeté"
 
 #: pynicotine/gtkgui/settingswindow.py:190
-#, fuzzy
 msgid "Enter a new password for your Soulseek account:"
 msgstr "Entrez un nouveau mot de passe pour votre compte Soulseek :"
 
 #: pynicotine/gtkgui/settingswindow.py:192
-#, fuzzy
 msgid ""
 "You are currently logged out of the Soulseek network. If you are attempting "
 "to change the password of an existing Soulseek account, you need to be "
@@ -2160,7 +2139,6 @@ msgstr ""
 "connecté au compte en question."
 
 #: pynicotine/gtkgui/settingswindow.py:196
-#, fuzzy
 msgid "Enter password to use when logging in:"
 msgstr "Entrez le mot de passe à utiliser lors de la connexion :"
 
@@ -2190,7 +2168,6 @@ msgid "Edit Download Filter"
 msgstr "Éditer un filtre de téléchargement"
 
 #: pynicotine/gtkgui/settingswindow.py:446
-#, fuzzy
 msgid "Modify the following download filter:"
 msgstr "Modifiez le filtre de téléchargement suivant :"
 
@@ -2200,7 +2177,6 @@ msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d a échoué! %(error)s "
 
 #: pynicotine/gtkgui/settingswindow.py:548
-#, fuzzy
 msgid "Filters Successful"
 msgstr "Filtres réussis"
 
@@ -2221,7 +2197,6 @@ msgid "Set Virtual Name"
 msgstr "Définir un nom virtuel"
 
 #: pynicotine/gtkgui/settingswindow.py:752
-#, fuzzy
 msgid "Share with buddies only"
 msgstr "Partager uniquement avec des amis"
 
@@ -2357,7 +2332,6 @@ msgid "Censor Pattern"
 msgstr "Motif de censure"
 
 #: pynicotine/gtkgui/settingswindow.py:2242
-#, fuzzy
 msgid ""
 "Enter a pattern you wish to censor. Add spaces around the pattern if you "
 "don't wish to match strings inside words (may fail at the beginning and end "
@@ -2369,7 +2343,6 @@ msgstr ""
 "des lignes)."
 
 #: pynicotine/gtkgui/settingswindow.py:2442
-#, fuzzy
 msgid "Username;APIKEY:"
 msgstr "Nom d'utilisateur;APIKEY :"
 
@@ -2470,7 +2443,6 @@ msgid "Plugins"
 msgstr "Extensions"
 
 #: pynicotine/gtkgui/settingswindow.py:2963
-#, fuzzy
 msgid "No description provided"
 msgstr "Aucune description fournie"
 
@@ -2527,7 +2499,6 @@ msgstr "Enregistrement"
 
 #: pynicotine/gtkgui/settingswindow.py:3113
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:20
-#, fuzzy
 msgid "URL Handlers"
 msgstr "Gestionnaires d'URL"
 
@@ -2561,7 +2532,6 @@ msgid "Ignore List"
 msgstr "Liste des utilisateurs ignorés"
 
 #: pynicotine/gtkgui/settingswindow.py:3124
-#, fuzzy
 msgid "Censor & Replace"
 msgstr "Censure et remplacement"
 
