@@ -199,8 +199,5 @@
         <property name="icon-name">pan-up-symbolic</property>
       </object>
     </child>
-    <style>
-      <class name="view"/>
-    </style>
   </object>
 </interface>

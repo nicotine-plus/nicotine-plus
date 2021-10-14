@@ -64,3 +64,6 @@
 
 ## Euskara
 - The Librezale.org Team [librezale(at)librezale(dot)org]
+
+## Turkish
+- Oğuz Ersen (2021)

@@ -7,16 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-12 21:28+0200\n"
-"Last-Translator: mariachini <Unknown>\n"
-"Language-Team: \n"
-"Language: pl_PL\n"
+"POT-Creation-Date: 2021-10-13 22:57+0300\n"
+"PO-Revision-Date: 2021-10-13 17:41+0000\n"
+"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/pl/>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2020-11-18 22:08+0000\n"
-"X-Generator: Poedit 3.0\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -54,7 +57,7 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:56
 msgid "Nicotine+ Team"
-msgstr "Nicotine+ Team"
+msgstr "Zespół Nicotine+"
 
 #: pynicotine/__init__.py:30
 msgid "Nicotine+ is a Soulseek client"
@@ -94,7 +97,7 @@ msgstr "wyłącz ikonę zasobnika"
 
 #: pynicotine/__init__.py:59
 msgid "start the program without showing window"
-msgstr "wystartuj program bez pokazywania okna"
+msgstr "uruchom program bez wyświetlania okna"
 
 #: pynicotine/__init__.py:62
 msgid "ip"
@@ -102,7 +105,7 @@ msgstr "ip"
 
 #: pynicotine/__init__.py:63
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr ""
+msgstr "powiąż gniazda z podanym adresem IP (przydatne dla VPN)"
 
 #: pynicotine/__init__.py:66
 msgid "port"
@@ -114,11 +117,11 @@ msgstr "nasłuchuj na danym porcie"
 
 #: pynicotine/__init__.py:71
 msgid "rescan shared files"
-msgstr "przeskanuj udostępnione zasoby"
+msgstr "przeskanuj udostępnione pliki"
 
 #: pynicotine/__init__.py:75
 msgid "start the program in headless mode (no GUI)"
-msgstr "wystartuj program w trybie bez GUI"
+msgstr "uruchom program w trybie headless (bez GUI)"
 
 #: pynicotine/__init__.py:79
 msgid "display version and exit"
@@ -137,14 +140,15 @@ msgstr ""
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr ""
-"Nie znaleziono %(option1)s lub %(option2)s, proszę zainstalować jedno z nich."
+"Nie można znaleźć %(option1)s lub %(option2)s, proszę zainstalować któryś z "
+"nich."
 
 #: pynicotine/__init__.py:153
 msgid ""
 "Failed to scan shares. If Nicotine+ is currently running, please close the "
 "program before scanning."
 msgstr ""
-"Błąd skanowanie udostępnionych zasobów. Jeśli Nicotine+ jest właśnie "
+"Błąd skanowania udostępnionych zasobów. Jeśli Nicotine+ jest obecnie "
 "uruchomiony, proszę go wyłączyć przed skanowaniem."
 
 #: pynicotine/chatrooms.py:241
@@ -160,7 +164,7 @@ msgstr "Nie można utworzyć katalogu '%(path)s', błąd: %(error)s"
 #: pynicotine/config.py:547
 #, python-format
 msgid "Unknown config section '%s'"
-msgstr "Nieznana sekcja konfiguracji '%s"
+msgstr "Nieznana sekcja konfiguracji '%s'"
 
 #: pynicotine/config.py:551
 #, python-format
@@ -169,1012 +173,1012 @@ msgstr "Nieznana opcja konfiguracji '%(option)s' w sekcji '%(section)s'"
 
 #: pynicotine/geoip/geoip.py:22
 msgid "Andorra"
-msgstr ""
+msgstr "Andora"
 
 #: pynicotine/geoip/geoip.py:23
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Zjednoczone Emiraty Arabskie"
 
 #: pynicotine/geoip/geoip.py:24
 msgid "Afghanistan"
-msgstr ""
+msgstr "Afganistan"
 
 #: pynicotine/geoip/geoip.py:25
 msgid "Antigua & Barbuda"
-msgstr ""
+msgstr "Antigua i Barbuda"
 
 #: pynicotine/geoip/geoip.py:26
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #: pynicotine/geoip/geoip.py:27
 msgid "Albania"
-msgstr ""
+msgstr "Albania"
 
 #: pynicotine/geoip/geoip.py:28
 msgid "Armenia"
-msgstr ""
+msgstr "Armenia"
 
 #: pynicotine/geoip/geoip.py:29
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: pynicotine/geoip/geoip.py:30
 msgid "Antarctica"
-msgstr ""
+msgstr "Antarktyda"
 
 #: pynicotine/geoip/geoip.py:31
 msgid "Argentina"
-msgstr ""
+msgstr "Argentyna"
 
 #: pynicotine/geoip/geoip.py:32
 msgid "American Samoa"
-msgstr ""
+msgstr "Samoa Amerykańskie"
 
 #: pynicotine/geoip/geoip.py:33
 msgid "Austria"
-msgstr ""
+msgstr "Austria"
 
 #: pynicotine/geoip/geoip.py:34
 msgid "Australia"
-msgstr ""
+msgstr "Australia"
 
 #: pynicotine/geoip/geoip.py:35
 msgid "Aruba"
-msgstr ""
+msgstr "Aruba"
 
 #: pynicotine/geoip/geoip.py:36
 msgid "Åland Islands"
-msgstr ""
+msgstr "Wyspy Alandzkie"
 
 #: pynicotine/geoip/geoip.py:37
 msgid "Azerbaijan"
-msgstr ""
+msgstr "Azerbejdżan"
 
 #: pynicotine/geoip/geoip.py:38
 msgid "Bosnia & Herzegovina"
-msgstr ""
+msgstr "Bośnia i Hercegowina"
 
 #: pynicotine/geoip/geoip.py:39
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #: pynicotine/geoip/geoip.py:40
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesz"
 
 #: pynicotine/geoip/geoip.py:41
 msgid "Belgium"
-msgstr ""
+msgstr "Belgia"
 
 #: pynicotine/geoip/geoip.py:42
 msgid "Burkina Faso"
-msgstr ""
+msgstr "Burkina Faso"
 
 #: pynicotine/geoip/geoip.py:43
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bułgaria"
 
 #: pynicotine/geoip/geoip.py:44
 msgid "Bahrain"
-msgstr ""
+msgstr "Bahrajn"
 
 #: pynicotine/geoip/geoip.py:45
 msgid "Burundi"
-msgstr ""
+msgstr "Burundi"
 
 #: pynicotine/geoip/geoip.py:46
 msgid "Benin"
-msgstr ""
+msgstr "Benin"
 
 #: pynicotine/geoip/geoip.py:47
 msgid "Saint Barthelemy"
-msgstr ""
+msgstr "Św Barthelemy"
 
 #: pynicotine/geoip/geoip.py:48
 msgid "Bermuda"
-msgstr ""
+msgstr "Bermudy"
 
 #: pynicotine/geoip/geoip.py:49
 msgid "Brunei Darussalam"
-msgstr ""
+msgstr "Brunei Darussalam"
 
 #: pynicotine/geoip/geoip.py:50
 msgid "Bolivia"
-msgstr ""
+msgstr "Boliwia"
 
 #: pynicotine/geoip/geoip.py:51
 msgid "Bonaire), Sint Eustatius and Saba"
-msgstr ""
+msgstr "Bonaire), Sint Eustatius i Saba"
 
 #: pynicotine/geoip/geoip.py:52
 msgid "Brazil"
-msgstr ""
+msgstr "Brazylia"
 
 #: pynicotine/geoip/geoip.py:53
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamy"
 
 #: pynicotine/geoip/geoip.py:54
 msgid "Bhutan"
-msgstr ""
+msgstr "Bhutan"
 
 #: pynicotine/geoip/geoip.py:55
 msgid "Bouvet Island"
-msgstr ""
+msgstr "Wyspa Bouveta"
 
 #: pynicotine/geoip/geoip.py:56
 msgid "Botswana"
-msgstr ""
+msgstr "Botswana"
 
 #: pynicotine/geoip/geoip.py:57
 msgid "Belarus"
-msgstr ""
+msgstr "Białoruś"
 
 #: pynicotine/geoip/geoip.py:58
 msgid "Belize"
-msgstr ""
+msgstr "Belize"
 
 #: pynicotine/geoip/geoip.py:59
 msgid "Canada"
-msgstr ""
+msgstr "Kanada"
 
 #: pynicotine/geoip/geoip.py:60
 msgid "Cocos (Keeling) Islands"
-msgstr ""
+msgstr "Wyspy Kokosowe (Keelinga)"
 
 #: pynicotine/geoip/geoip.py:61
 msgid "Democratic Republic of Congo"
-msgstr ""
+msgstr "Demokratyczna Republika Konga"
 
 #: pynicotine/geoip/geoip.py:62
 msgid "Central African Republic"
-msgstr ""
+msgstr "Republika Środkowoafrykańska"
 
 #: pynicotine/geoip/geoip.py:63
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #: pynicotine/geoip/geoip.py:64
 msgid "Switzerland"
-msgstr ""
+msgstr "Szwajcaria"
 
 #: pynicotine/geoip/geoip.py:65
 msgid "Ivory Coast"
-msgstr ""
+msgstr "Wybrzeże Kości Słoniowej"
 
 #: pynicotine/geoip/geoip.py:66
 msgid "Cook Islands"
-msgstr ""
+msgstr "Wyspy Cooka"
 
 #: pynicotine/geoip/geoip.py:67
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: pynicotine/geoip/geoip.py:68
 msgid "Cameroon"
-msgstr ""
+msgstr "Kamerun"
 
 #: pynicotine/geoip/geoip.py:69
 msgid "China"
-msgstr ""
+msgstr "Chiny"
 
 #: pynicotine/geoip/geoip.py:70
 msgid "Colombia"
-msgstr ""
+msgstr "Kolumbia"
 
 #: pynicotine/geoip/geoip.py:71
 msgid "Costa Rica"
-msgstr ""
+msgstr "Kostaryka"
 
 #: pynicotine/geoip/geoip.py:72
 msgid "Cuba"
-msgstr ""
+msgstr "Kuba"
 
 #: pynicotine/geoip/geoip.py:73
 msgid "Cabo Verde"
-msgstr ""
+msgstr "Cabo Verde"
 
 #: pynicotine/geoip/geoip.py:74
 msgid "Curaçao"
-msgstr ""
+msgstr "Curaçao"
 
 #: pynicotine/geoip/geoip.py:75
 msgid "Christmas Island"
-msgstr ""
+msgstr "Wyspa Bożego Narodzenia"
 
 #: pynicotine/geoip/geoip.py:76
 msgid "Cyprus"
-msgstr ""
+msgstr "Cypr"
 
 #: pynicotine/geoip/geoip.py:77
 msgid "Czech Republic"
-msgstr ""
+msgstr "Czechy"
 
 #: pynicotine/geoip/geoip.py:78
 msgid "Germany"
-msgstr ""
+msgstr "Niemcy"
 
 #: pynicotine/geoip/geoip.py:79
 msgid "Djibouti"
-msgstr ""
+msgstr "Dżibuti"
 
 #: pynicotine/geoip/geoip.py:80
 msgid "Denmark"
-msgstr ""
+msgstr "Dania"
 
 #: pynicotine/geoip/geoip.py:81
 msgid "Dominica"
-msgstr ""
+msgstr "Dominika"
 
 #: pynicotine/geoip/geoip.py:82
 msgid "Dominican Republic"
-msgstr ""
+msgstr "Dominikana"
 
 #: pynicotine/geoip/geoip.py:83
 msgid "Algeria"
-msgstr ""
+msgstr "Algieria"
 
 #: pynicotine/geoip/geoip.py:84
 msgid "Ecuador"
-msgstr ""
+msgstr "Ekwador"
 
 #: pynicotine/geoip/geoip.py:85
 msgid "Estonia"
-msgstr ""
+msgstr "Estonia"
 
 #: pynicotine/geoip/geoip.py:86
 msgid "Egypt"
-msgstr ""
+msgstr "Egipt"
 
 #: pynicotine/geoip/geoip.py:87
 msgid "Western Sahara"
-msgstr ""
+msgstr "Sahara Zachodnia"
 
 #: pynicotine/geoip/geoip.py:88
 msgid "Eritrea"
-msgstr ""
+msgstr "Erytrea"
 
 #: pynicotine/geoip/geoip.py:89
 msgid "Spain"
-msgstr ""
+msgstr "Hiszpania"
 
 #: pynicotine/geoip/geoip.py:90
 msgid "Ethiopia"
-msgstr ""
+msgstr "Etiopia"
 
 #: pynicotine/geoip/geoip.py:91
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 #: pynicotine/geoip/geoip.py:92
 msgid "Finland"
-msgstr ""
+msgstr "Finlandia"
 
 #: pynicotine/geoip/geoip.py:93
 msgid "Fiji"
-msgstr ""
+msgstr "Fidżi"
 
 #: pynicotine/geoip/geoip.py:94
 msgid "Falkland Islands (Malvinas)"
-msgstr ""
+msgstr "Wyspy Falklandzkie (Malwiny)"
 
 #: pynicotine/geoip/geoip.py:95
 msgid "Micronesia"
-msgstr ""
+msgstr "Mikronezja"
 
 #: pynicotine/geoip/geoip.py:96
 msgid "Faroe Islands"
-msgstr ""
+msgstr "Wyspy Owcze"
 
 #: pynicotine/geoip/geoip.py:97
 msgid "France"
-msgstr ""
+msgstr "Francja"
 
 #: pynicotine/geoip/geoip.py:98
 msgid "Gabon"
-msgstr ""
+msgstr "Gabon"
 
 #: pynicotine/geoip/geoip.py:99
 msgid "Great Britain"
-msgstr ""
+msgstr "Wielka Brytania"
 
 #: pynicotine/geoip/geoip.py:100
 msgid "Grenada"
-msgstr ""
+msgstr "Grenada"
 
 #: pynicotine/geoip/geoip.py:101
 msgid "Georgia"
-msgstr ""
+msgstr "Gruzja"
 
 #: pynicotine/geoip/geoip.py:102
 msgid "French Guiana"
-msgstr ""
+msgstr "Gujana Francuska"
 
 #: pynicotine/geoip/geoip.py:103
 msgid "Guernsey"
-msgstr ""
+msgstr "Guernsey"
 
 #: pynicotine/geoip/geoip.py:104
 msgid "Ghana"
-msgstr ""
+msgstr "Ghana"
 
 #: pynicotine/geoip/geoip.py:105
 msgid "Gibraltar"
-msgstr ""
+msgstr "Gibraltar"
 
 #: pynicotine/geoip/geoip.py:106
 msgid "Greenland"
-msgstr ""
+msgstr "Grenlandia"
 
 #: pynicotine/geoip/geoip.py:107
 msgid "Gambia"
-msgstr ""
+msgstr "Gambia"
 
 #: pynicotine/geoip/geoip.py:108
 msgid "Guinea"
-msgstr ""
+msgstr "Gwinea"
 
 #: pynicotine/geoip/geoip.py:109
 msgid "Guadeloupe"
-msgstr ""
+msgstr "Gwadelupa"
 
 #: pynicotine/geoip/geoip.py:110
 msgid "Equatorial Guinea"
-msgstr ""
+msgstr "Gwinea Równikowa"
 
 #: pynicotine/geoip/geoip.py:111
 msgid "Greece"
-msgstr ""
+msgstr "Grecja"
 
 #: pynicotine/geoip/geoip.py:112
 msgid "South Georgia & South Sandwich Islands"
-msgstr ""
+msgstr "Południowa Georgia i Południowe Wyspy Sandwicha"
 
 #: pynicotine/geoip/geoip.py:113
 msgid "Guatemala"
-msgstr ""
+msgstr "Gwatemala"
 
 #: pynicotine/geoip/geoip.py:114
 msgid "Guam"
-msgstr ""
+msgstr "Guam"
 
 #: pynicotine/geoip/geoip.py:115
 msgid "Guinea-Bissau"
-msgstr ""
+msgstr "Gwinea Bissau"
 
 #: pynicotine/geoip/geoip.py:116
 msgid "Guyana"
-msgstr ""
+msgstr "Gujana"
 
 #: pynicotine/geoip/geoip.py:117
 msgid "Hong Kong"
-msgstr ""
+msgstr "Hongkong"
 
 #: pynicotine/geoip/geoip.py:118
 msgid "Heard & McDonald Islands"
-msgstr ""
+msgstr "Wyspy Heard i McDonalda"
 
 #: pynicotine/geoip/geoip.py:119
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #: pynicotine/geoip/geoip.py:120
 msgid "Croatia"
-msgstr ""
+msgstr "Chorwacja"
 
 #: pynicotine/geoip/geoip.py:121
 msgid "Haiti"
-msgstr ""
+msgstr "Haiti"
 
 #: pynicotine/geoip/geoip.py:122
 msgid "Hungary"
-msgstr ""
+msgstr "Węgry"
 
 #: pynicotine/geoip/geoip.py:123
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonezja"
 
 #: pynicotine/geoip/geoip.py:124
 msgid "Ireland"
-msgstr ""
+msgstr "Irlandia"
 
 #: pynicotine/geoip/geoip.py:125
 msgid "Israel"
-msgstr ""
+msgstr "Izrael"
 
 #: pynicotine/geoip/geoip.py:126
 msgid "Isle of Man"
-msgstr ""
+msgstr "Wyspa Man"
 
 #: pynicotine/geoip/geoip.py:127
 msgid "India"
-msgstr ""
+msgstr "Indie"
 
 #: pynicotine/geoip/geoip.py:128
 msgid "British Indian Ocean Territory"
-msgstr ""
+msgstr "Brytyjskie Terytorium Oceanu Indyjskiego"
 
 #: pynicotine/geoip/geoip.py:129
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #: pynicotine/geoip/geoip.py:130
 msgid "Iran"
-msgstr ""
+msgstr "Iran"
 
 #: pynicotine/geoip/geoip.py:131
 msgid "Iceland"
-msgstr ""
+msgstr "Islandia"
 
 #: pynicotine/geoip/geoip.py:132
 msgid "Italy"
-msgstr ""
+msgstr "Włochy"
 
 #: pynicotine/geoip/geoip.py:133
 msgid "Jersey"
-msgstr ""
+msgstr "Jersey"
 
 #: pynicotine/geoip/geoip.py:134
 msgid "Jamaica"
-msgstr ""
+msgstr "Jamajka"
 
 #: pynicotine/geoip/geoip.py:135
 msgid "Jordan"
-msgstr ""
+msgstr "Jordania"
 
 #: pynicotine/geoip/geoip.py:136
 msgid "Japan"
-msgstr ""
+msgstr "Japonia"
 
 #: pynicotine/geoip/geoip.py:137
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #: pynicotine/geoip/geoip.py:138
 msgid "Kyrgyzstan"
-msgstr ""
+msgstr "Kirgistan"
 
 #: pynicotine/geoip/geoip.py:139
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodża"
 
 #: pynicotine/geoip/geoip.py:140
 msgid "Kiribati"
-msgstr ""
+msgstr "Kiribati"
 
 #: pynicotine/geoip/geoip.py:141
 msgid "Comoros"
-msgstr ""
+msgstr "Komory"
 
 #: pynicotine/geoip/geoip.py:142
 msgid "Saint Kitts & Nevis"
-msgstr ""
+msgstr "Saint Kitts i Nevis"
 
 #: pynicotine/geoip/geoip.py:143
 msgid "North Korea"
-msgstr ""
+msgstr "Korea Północna"
 
 #: pynicotine/geoip/geoip.py:144
 msgid "South Korea"
-msgstr ""
+msgstr "Korea Południowa"
 
 #: pynicotine/geoip/geoip.py:145
 msgid "Kuwait"
-msgstr ""
+msgstr "Kuwejt"
 
 #: pynicotine/geoip/geoip.py:146
 msgid "Cayman Islands"
-msgstr ""
+msgstr "Kajmany"
 
 #: pynicotine/geoip/geoip.py:147
 msgid "Kazakhstan"
-msgstr ""
+msgstr "Kazachstan"
 
 #: pynicotine/geoip/geoip.py:148
 msgid "Laos"
-msgstr ""
+msgstr "Laos"
 
 #: pynicotine/geoip/geoip.py:149
 msgid "Lebanon"
-msgstr ""
+msgstr "Liban"
 
 #: pynicotine/geoip/geoip.py:150
 msgid "Saint Lucia"
-msgstr ""
+msgstr "Saint Lucia"
 
 #: pynicotine/geoip/geoip.py:151
 msgid "Liechtenstein"
-msgstr ""
+msgstr "Liechtenstein"
 
 #: pynicotine/geoip/geoip.py:152
 msgid "Sri Lanka"
-msgstr ""
+msgstr "Sri Lanka"
 
 #: pynicotine/geoip/geoip.py:153
 msgid "Liberia"
-msgstr ""
+msgstr "Liberia"
 
 #: pynicotine/geoip/geoip.py:154
 msgid "Lesotho"
-msgstr ""
+msgstr "Lesoto"
 
 #: pynicotine/geoip/geoip.py:155
 msgid "Lithuania"
-msgstr ""
+msgstr "Litwa"
 
 #: pynicotine/geoip/geoip.py:156
 msgid "Luxembourg"
-msgstr ""
+msgstr "Luksemburg"
 
 #: pynicotine/geoip/geoip.py:157
 msgid "Latvia"
-msgstr ""
+msgstr "Łotwa"
 
 #: pynicotine/geoip/geoip.py:158
 msgid "Libya"
-msgstr ""
+msgstr "Libia"
 
 #: pynicotine/geoip/geoip.py:159
 msgid "Morocco"
-msgstr ""
+msgstr "Maroko"
 
 #: pynicotine/geoip/geoip.py:160
 msgid "Monaco"
-msgstr ""
+msgstr "Monako"
 
 #: pynicotine/geoip/geoip.py:161
 msgid "Moldova"
-msgstr ""
+msgstr "Mołdawia"
 
 #: pynicotine/geoip/geoip.py:162
 msgid "Montenegro"
-msgstr ""
+msgstr "Czarnogóra"
 
 #: pynicotine/geoip/geoip.py:163
 msgid "Saint Martin"
-msgstr ""
+msgstr "Saint Martin"
 
 #: pynicotine/geoip/geoip.py:164
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar"
 
 #: pynicotine/geoip/geoip.py:165
 msgid "Marshall Islands"
-msgstr ""
+msgstr "Wyspy Marshalla"
 
 #: pynicotine/geoip/geoip.py:166
 msgid "North Macedonia"
-msgstr ""
+msgstr "Macedonia Północna"
 
 #: pynicotine/geoip/geoip.py:167
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: pynicotine/geoip/geoip.py:168
 msgid "Myanmar"
-msgstr ""
+msgstr "Myanmar"
 
 #: pynicotine/geoip/geoip.py:169
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #: pynicotine/geoip/geoip.py:170
 msgid "Macau"
-msgstr ""
+msgstr "Makau"
 
 #: pynicotine/geoip/geoip.py:171
 msgid "Northern Mariana Islands"
-msgstr ""
+msgstr "Mariany Północne"
 
 #: pynicotine/geoip/geoip.py:172
 msgid "Martinique"
-msgstr ""
+msgstr "Martynika"
 
 #: pynicotine/geoip/geoip.py:173
 msgid "Mauritania"
-msgstr ""
+msgstr "Mauretania"
 
 #: pynicotine/geoip/geoip.py:174
 msgid "Montserrat"
-msgstr ""
+msgstr "Montserrat"
 
 #: pynicotine/geoip/geoip.py:175
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
 msgid "Mauritius"
-msgstr ""
+msgstr "Mauritius"
 
 #: pynicotine/geoip/geoip.py:177
 msgid "Maldives"
-msgstr ""
+msgstr "Malediwy"
 
 #: pynicotine/geoip/geoip.py:178
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi"
 
 #: pynicotine/geoip/geoip.py:179
 msgid "Mexico"
-msgstr ""
+msgstr "Meksyk"
 
 #: pynicotine/geoip/geoip.py:180
 msgid "Malaysia"
-msgstr ""
+msgstr "Malezja"
 
 #: pynicotine/geoip/geoip.py:181
 msgid "Mozambique"
-msgstr ""
+msgstr "Mozambik"
 
 #: pynicotine/geoip/geoip.py:182
 msgid "Namibia"
-msgstr ""
+msgstr "Namibia"
 
 #: pynicotine/geoip/geoip.py:183
 msgid "New Caledonia"
-msgstr ""
+msgstr "Nowa Kaledonia"
 
 #: pynicotine/geoip/geoip.py:184
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #: pynicotine/geoip/geoip.py:185
 msgid "Norfolk Island"
-msgstr ""
+msgstr "Wyspa Norfolk"
 
 #: pynicotine/geoip/geoip.py:186
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: pynicotine/geoip/geoip.py:187
 msgid "Nicaragua"
-msgstr ""
+msgstr "Nikaragua"
 
 #: pynicotine/geoip/geoip.py:188
 msgid "Netherlands"
-msgstr ""
+msgstr "Niderlandy"
 
 #: pynicotine/geoip/geoip.py:189
 msgid "Norway"
-msgstr ""
+msgstr "Norwegia"
 
 #: pynicotine/geoip/geoip.py:190
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: pynicotine/geoip/geoip.py:191
 msgid "Nauru"
-msgstr ""
+msgstr "Nauru"
 
 #: pynicotine/geoip/geoip.py:192
 msgid "Niue"
-msgstr ""
+msgstr "Niue"
 
 #: pynicotine/geoip/geoip.py:193
 msgid "New Zealand"
-msgstr ""
+msgstr "Nowa Zelandia"
 
 #: pynicotine/geoip/geoip.py:194
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #: pynicotine/geoip/geoip.py:195
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #: pynicotine/geoip/geoip.py:196
 msgid "Peru"
-msgstr ""
+msgstr "Peru"
 
 #: pynicotine/geoip/geoip.py:197
 msgid "French Polynesia"
-msgstr ""
+msgstr "Polinezja Francuska"
 
 #: pynicotine/geoip/geoip.py:198
 msgid "Papua New Guinea"
-msgstr ""
+msgstr "Papua Nowa Gwinea"
 
 #: pynicotine/geoip/geoip.py:199
 msgid "Philippines"
-msgstr ""
+msgstr "Filipiny"
 
 #: pynicotine/geoip/geoip.py:200
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: pynicotine/geoip/geoip.py:201
 msgid "Poland"
-msgstr ""
+msgstr "Polska"
 
 #: pynicotine/geoip/geoip.py:202
 msgid "Saint Pierre & Miquelon"
-msgstr ""
+msgstr "Saint Pierre i Miquelon"
 
 #: pynicotine/geoip/geoip.py:203
 msgid "Pitcairn"
-msgstr ""
+msgstr "Pitcairn"
 
 #: pynicotine/geoip/geoip.py:204
 msgid "Puerto Rico"
-msgstr ""
+msgstr "Portoryko"
 
 #: pynicotine/geoip/geoip.py:205
 msgid "State of Palestine"
-msgstr ""
+msgstr "Państwo Palestyna"
 
 #: pynicotine/geoip/geoip.py:206
 msgid "Portugal"
-msgstr ""
+msgstr "Portugalia"
 
 #: pynicotine/geoip/geoip.py:207
 msgid "Palau"
-msgstr ""
+msgstr "Palau"
 
 #: pynicotine/geoip/geoip.py:208
 msgid "Paraguay"
-msgstr ""
+msgstr "Paragwaj"
 
 #: pynicotine/geoip/geoip.py:209
 msgid "Qatar"
-msgstr ""
+msgstr "Katar"
 
 #: pynicotine/geoip/geoip.py:210
 msgid "Réunion"
-msgstr ""
+msgstr "Réunion"
 
 #: pynicotine/geoip/geoip.py:211
 msgid "Romania"
-msgstr ""
+msgstr "Rumunia"
 
 #: pynicotine/geoip/geoip.py:212
 msgid "Serbia"
-msgstr ""
+msgstr "Serbia"
 
 #: pynicotine/geoip/geoip.py:213
 msgid "Russia"
-msgstr ""
+msgstr "Rosja"
 
 #: pynicotine/geoip/geoip.py:214
 msgid "Rwanda"
-msgstr ""
+msgstr "Rwanda"
 
 #: pynicotine/geoip/geoip.py:215
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Arabia Saudyjska"
 
 #: pynicotine/geoip/geoip.py:216
 msgid "Solomon Islands"
-msgstr ""
+msgstr "Wyspy Salomona"
 
 #: pynicotine/geoip/geoip.py:217
 msgid "Seychelles"
-msgstr ""
+msgstr "Seszele"
 
 #: pynicotine/geoip/geoip.py:218
 msgid "Sudan"
-msgstr ""
+msgstr "Sudan"
 
 #: pynicotine/geoip/geoip.py:219
 msgid "Sweden"
-msgstr ""
+msgstr "Szwecja"
 
 #: pynicotine/geoip/geoip.py:220
 msgid "Singapore"
-msgstr ""
+msgstr "Singapur"
 
 #: pynicotine/geoip/geoip.py:221
 msgid "Saint Helena"
-msgstr ""
+msgstr "Święta Helena"
 
 #: pynicotine/geoip/geoip.py:222
 msgid "Slovenia"
-msgstr ""
+msgstr "Słowenia"
 
 #: pynicotine/geoip/geoip.py:223
 msgid "Svalbard & Jan Mayen Islands"
-msgstr ""
+msgstr "Wyspy Svalbard i Jan Mayen"
 
 #: pynicotine/geoip/geoip.py:224
 msgid "Slovak Republic"
-msgstr ""
+msgstr "Słowacja"
 
 #: pynicotine/geoip/geoip.py:225
 msgid "Sierra Leone"
-msgstr ""
+msgstr "Sierra Leone"
 
 #: pynicotine/geoip/geoip.py:226
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #: pynicotine/geoip/geoip.py:227
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: pynicotine/geoip/geoip.py:228
 msgid "Somalia"
-msgstr ""
+msgstr "Somalia"
 
 #: pynicotine/geoip/geoip.py:229
 msgid "Suriname"
-msgstr ""
+msgstr "Surinam"
 
 #: pynicotine/geoip/geoip.py:230
 msgid "South Sudan"
-msgstr ""
+msgstr "Sudan Południowy"
 
 #: pynicotine/geoip/geoip.py:231
 msgid "Sao Tome & Principe"
-msgstr ""
+msgstr "Wyspy Świętego Tomasza i Książęca"
 
 #: pynicotine/geoip/geoip.py:232
 msgid "El Salvador"
-msgstr ""
+msgstr "Salwador"
 
 #: pynicotine/geoip/geoip.py:233
 msgid "Sint Maarten"
-msgstr ""
+msgstr "Sint Maarten"
 
 #: pynicotine/geoip/geoip.py:234
 msgid "Syria"
-msgstr ""
+msgstr "Syria"
 
 #: pynicotine/geoip/geoip.py:235
 msgid "Eswatini"
-msgstr ""
+msgstr "Eswatini"
 
 #: pynicotine/geoip/geoip.py:236
 msgid "Turks & Caicos Islands"
-msgstr ""
+msgstr "Wyspy Turks i Caicos"
 
 #: pynicotine/geoip/geoip.py:237
 msgid "Chad"
-msgstr ""
+msgstr "Czad"
 
 #: pynicotine/geoip/geoip.py:238
 msgid "French Southern Territories"
-msgstr ""
+msgstr "Francuskie Terytoria Południowe"
 
 #: pynicotine/geoip/geoip.py:239
 msgid "Togo"
-msgstr ""
+msgstr "Togo"
 
 #: pynicotine/geoip/geoip.py:240
 msgid "Thailand"
-msgstr ""
+msgstr "Tajlandia"
 
 #: pynicotine/geoip/geoip.py:241
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tadżykistan"
 
 #: pynicotine/geoip/geoip.py:242
 msgid "Tokelau"
-msgstr ""
+msgstr "Tokelau"
 
 #: pynicotine/geoip/geoip.py:243
 msgid "Timor-Leste"
-msgstr ""
+msgstr "Timor Wschodni"
 
 #: pynicotine/geoip/geoip.py:244
 msgid "Turkmenistan"
-msgstr ""
+msgstr "Turkmenistan"
 
 #: pynicotine/geoip/geoip.py:245
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunezja"
 
 #: pynicotine/geoip/geoip.py:246
 msgid "Tonga"
-msgstr ""
+msgstr "Tonga"
 
 #: pynicotine/geoip/geoip.py:247
 msgid "Turkey"
-msgstr ""
+msgstr "Turcja"
 
 #: pynicotine/geoip/geoip.py:248
 msgid "Trinidad & Tobago"
-msgstr ""
+msgstr "Trynidad i Tobago"
 
 #: pynicotine/geoip/geoip.py:249
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #: pynicotine/geoip/geoip.py:250
 msgid "Taiwan"
-msgstr ""
+msgstr "Tajwan"
 
 #: pynicotine/geoip/geoip.py:251
 msgid "Tanzania"
-msgstr ""
+msgstr "Tanzania"
 
 #: pynicotine/geoip/geoip.py:252
 msgid "Ukraine"
-msgstr ""
+msgstr "Ukraina"
 
 #: pynicotine/geoip/geoip.py:253
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #: pynicotine/geoip/geoip.py:254
 msgid "U.S. Minor Outlying Islands"
-msgstr ""
+msgstr "Dalekie Wyspy Mniejsze Stanów Zjednoczonych"
 
 #: pynicotine/geoip/geoip.py:255
 msgid "United States"
-msgstr ""
+msgstr "Stany Zjednoczone"
 
 #: pynicotine/geoip/geoip.py:256
 msgid "Uruguay"
-msgstr ""
+msgstr "Urugwaj"
 
 #: pynicotine/geoip/geoip.py:257
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistan"
 
 #: pynicotine/geoip/geoip.py:258
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Stolica Apostolska (Państwo Watykańskie)"
 
 #: pynicotine/geoip/geoip.py:259
 msgid "Saint Vincent & The Grenadines"
-msgstr ""
+msgstr "Saint Vincent i Grenadyny"
 
 #: pynicotine/geoip/geoip.py:260
 msgid "Venezuela"
-msgstr ""
+msgstr "Wenezuela"
 
 #: pynicotine/geoip/geoip.py:261
 msgid "British Virgin Islands"
-msgstr ""
+msgstr "Brytyjskie Wyspy Dziewicze"
 
 #: pynicotine/geoip/geoip.py:262
 msgid "U.S. Virgin Islands"
-msgstr ""
+msgstr "Wyspy Dziewicze Stanów Zjednoczonych"
 
 #: pynicotine/geoip/geoip.py:263
 msgid "Viet Nam"
-msgstr ""
+msgstr "Wietnam"
 
 #: pynicotine/geoip/geoip.py:264
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #: pynicotine/geoip/geoip.py:265
 msgid "Wallis & Futuna"
-msgstr ""
+msgstr "Wallis i Futuna"
 
 #: pynicotine/geoip/geoip.py:266
 msgid "Samoa"
-msgstr ""
+msgstr "Samoa"
 
 #: pynicotine/geoip/geoip.py:267
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosowo"
 
 #: pynicotine/geoip/geoip.py:268
 msgid "Yemen"
-msgstr ""
+msgstr "Jemen"
 
 #: pynicotine/geoip/geoip.py:269
 msgid "Mayotte"
-msgstr ""
+msgstr "Majotta"
 
 #: pynicotine/geoip/geoip.py:270
 msgid "South Africa"
-msgstr ""
+msgstr "Republika Południowej Afryki"
 
 #: pynicotine/geoip/geoip.py:271
 msgid "Zambia"
-msgstr ""
+msgstr "Zambia"
 
 #: pynicotine/geoip/geoip.py:272
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabwe"
 
 #: pynicotine/gtkgui/__init__.py:35 pynicotine/gtkgui/__init__.py:42
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "Nie znaleziono %s, zainstaluj je."
+msgstr "Nie można znaleźć %s, zainstaluj go."
 
 #: pynicotine/gtkgui/__init__.py:48
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -1237,9 +1241,8 @@ msgstr "Prywatne pokoje"
 
 #: pynicotine/gtkgui/chatrooms.py:460 pynicotine/gtkgui/chatrooms.py:471
 #: pynicotine/gtkgui/frame.py:115 pynicotine/gtkgui/privatechat.py:219
-#, fuzzy
 msgid "Find…"
-msgstr "Szukaj"
+msgstr "Szukaj…"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/chatrooms.py:669
@@ -1266,20 +1269,19 @@ msgstr "Opuść _pokój"
 #: pynicotine/gtkgui/chatrooms.py:474 pynicotine/gtkgui/chatrooms.py:670
 #: pynicotine/gtkgui/privatechat.py:222 pynicotine/gtkgui/privatechat.py:301
 msgid "Copy Link"
-msgstr "Kopiuj Link"
+msgstr "Kopiuj link"
 
 #: pynicotine/gtkgui/chatrooms.py:477
 msgid "View Room Log"
-msgstr "Przeglądaj logi pokoju"
+msgstr "Wyświetl dziennik pokoju"
 
 #: pynicotine/gtkgui/chatrooms.py:478
-#, fuzzy
 msgid "Delete Room Log…"
-msgstr "Usuń logi pokoju..."
+msgstr "Usuń dziennik pokoju…"
 
 #: pynicotine/gtkgui/chatrooms.py:480 pynicotine/gtkgui/privatechat.py:228
 msgid "Clear Message View"
-msgstr "Wyczyść podgląd wiadomości"
+msgstr "Wyczyść widok wiadomości"
 
 #: pynicotine/gtkgui/chatrooms.py:617
 msgid "--- old messages above ---"
@@ -1301,7 +1303,7 @@ msgstr "%(user)s wspomniał o Tobie w pokoju %(room)s"
 #: pynicotine/gtkgui/chatrooms.py:767
 #, python-format
 msgid "Message by %(user)s in the %(room)s room"
-msgstr "Wiadomość użytkownika %(user)s w pokoju %(room)s"
+msgstr "Wiadomość od %(user)s w pokoju %(room)s"
 
 #: pynicotine/gtkgui/chatrooms.py:851
 #, python-format
@@ -1338,14 +1340,14 @@ msgstr "--- połączony ponownie ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1124 pynicotine/gtkgui/privatechat.py:324
 msgid "Delete Logged Messages?"
-msgstr "Usunąć zalogowane wiadomości?"
+msgstr "Usunąć zarejestrowane wiadomości?"
 
 #: pynicotine/gtkgui/chatrooms.py:1125
 msgid ""
 "Are you sure you wish to permanently delete all logged messages for this "
 "room?"
 msgstr ""
-"Czy jesteś pewien, że chcesz permanentnie usunąć zalogowane wiadomości dla "
+"Czy na pewno chcesz trwale usunąć wszystkie zarejestrowane wiadomości dla "
 "tego pokoju?"
 
 #: pynicotine/gtkgui/downloads.py:40
@@ -1379,23 +1381,21 @@ msgid "Filtered"
 msgstr "Filtrowane"
 
 #: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/uploads.py:50
-#, fuzzy
 msgid "Queued…"
-msgstr "Zakolejkowany"
+msgstr "W kolejce…"
 
 #: pynicotine/gtkgui/downloads.py:55 pynicotine/gtkgui/uploads.py:52
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:120
-#, fuzzy
 msgid "Clear All…"
-msgstr "Wyczyść wszystko"
+msgstr "Wyczyść wszystko…"
 
 #: pynicotine/gtkgui/downloads.py:65
 msgid "Clear Queued Downloads"
-msgstr "Wyczyść zakolejkowane pobrane"
+msgstr "Wyczyść kolejkę pobrań"
 
 #: pynicotine/gtkgui/downloads.py:66
 msgid "Are you sure you wish to clear all queued downloads?"
-msgstr "Jesteś pewien, że chcesz wyczyścić zakolejkowane pobrane?"
+msgstr "Czy na pewno chcesz usunąć wszystkie pliki z kolejki pobierania?"
 
 #: pynicotine/gtkgui/downloads.py:75
 msgid "Clear All Downloads"
@@ -1439,9 +1439,8 @@ msgstr "Sprawdź status portu"
 
 #: pynicotine/gtkgui/fastconfigure.py:109
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:423
-#, fuzzy
 msgid "Get Soulseek Privileges…"
-msgstr "Pobierz przywileje Soulseek..."
+msgstr "Zdobądź przywileje Soulseek…"
 
 #: pynicotine/gtkgui/fastconfigure.py:190
 #: pynicotine/gtkgui/fastconfigure.py:209
@@ -1490,15 +1489,15 @@ msgstr "Właściwości pliku (%(num)i z %(total)i)"
 
 #: pynicotine/gtkgui/frame.py:120
 msgid "View Debug Logs"
-msgstr "Pokaż logi debuggera"
+msgstr "Wyświetl dzienniki debugowania"
 
 #: pynicotine/gtkgui/frame.py:121
 msgid "View Transfer Log"
-msgstr "Pokaż logi transferów"
+msgstr "Wyświetl dziennik transferu"
 
 #: pynicotine/gtkgui/frame.py:123
 msgid "Clear Log View"
-msgstr "Wyczyść log"
+msgstr "Wyczyść widok dziennika"
 
 #: pynicotine/gtkgui/frame.py:168
 #, python-format
@@ -1550,7 +1549,7 @@ msgstr "Zaraz wracam"
 
 #: pynicotine/gtkgui/frame.py:393 pynicotine/gtkgui/widgets/iconnotebook.py:457
 #: pynicotine/gtkgui/widgets/treeview.py:471
-#: pynicotine/gtkgui/ui/mainwindow.ui:1904
+#: pynicotine/gtkgui/ui/mainwindow.ui:1880
 msgid "Offline"
 msgstr "Niedostępny"
 
@@ -1564,10 +1563,12 @@ msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
 msgstr ""
+"Użytkownik %s już istnieje, a podane hasło jest nieprawidłowe. Proszę wybrać "
+"inną nazwę użytkownika, jeśli logujesz się po raz pierwszy."
 
 #: pynicotine/gtkgui/frame.py:415
 msgid "Change Login Details"
-msgstr "Zmień konto użytkownika"
+msgstr "Zmień dane logowania"
 
 #: pynicotine/gtkgui/frame.py:711
 msgid "Error retrieving latest version"
@@ -1576,7 +1577,7 @@ msgstr "Błąd podczas pobierania ostatniej wersji"
 #: pynicotine/gtkgui/frame.py:718
 #, python-format
 msgid "Version %s is available"
-msgstr "Wersja %s jest dostępna"
+msgstr "Dostępna jest wersja %s"
 
 #: pynicotine/gtkgui/frame.py:721
 #, python-format
@@ -1593,7 +1594,7 @@ msgstr "Aktualna"
 
 #: pynicotine/gtkgui/frame.py:735
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Używasz developerskiej wersji Nicotine+."
+msgstr "Wygląda na to, że używasz rozwojowej wersji Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:743
 msgid "You are using the latest version of Nicotine+."
@@ -1625,7 +1626,7 @@ msgstr "_Zamknij"
 
 #: pynicotine/gtkgui/frame.py:1026
 msgid "Prefer Dark _Mode"
-msgstr "Preferuj tryb nocny"
+msgstr "Preferuj ciemny _tryb"
 
 #: pynicotine/gtkgui/frame.py:1027
 msgid "Use _Header Bar"
@@ -1633,7 +1634,7 @@ msgstr "Użyj _Pasku nagłówka"
 
 #: pynicotine/gtkgui/frame.py:1029
 msgid "Show _Log Pane"
-msgstr "Pokaż okno _logów"
+msgstr "Pokaż panel _dziennika"
 
 #: pynicotine/gtkgui/frame.py:1030
 msgid "Show _Debug Log Controls"
@@ -1641,7 +1642,7 @@ msgstr "Pokaż opcje debuggera"
 
 #: pynicotine/gtkgui/frame.py:1032
 msgid "Buddy List in Separate Tab"
-msgstr "Lista znajomych w oddzielnej zakładce"
+msgstr "Lista znajomych w osobnej zakładce"
 
 #: pynicotine/gtkgui/frame.py:1033
 msgid "Buddy List in Chat Rooms"
@@ -1657,7 +1658,7 @@ msgstr "_Przeskanuj ponownie publiczne udostępnienia zasobów"
 
 #: pynicotine/gtkgui/frame.py:1043
 msgid "Rescan B_uddy Shares"
-msgstr "Przeskanuj udostępnienia zasobów z_najomych"
+msgstr "Przeskanuj ponownie udostępnienia zasobów z_najomych"
 
 #: pynicotine/gtkgui/frame.py:1044
 msgid "_Configure Shares"
@@ -1677,7 +1678,7 @@ msgstr "_Skróty klawiszowe"
 
 #: pynicotine/gtkgui/frame.py:1069
 msgid "_Setup Assistant"
-msgstr ""
+msgstr "_Asystent konfiguracji"
 
 #: pynicotine/gtkgui/frame.py:1070
 msgid "_Transfer Statistics"
@@ -1718,8 +1719,8 @@ msgstr "Szukaj plików"
 
 #: pynicotine/gtkgui/frame.py:1283 pynicotine/gtkgui/settingswindow.py:3117
 #: pynicotine/gtkgui/widgets/trayicon.py:92
-#: pynicotine/gtkgui/ui/mainwindow.ui:942
-#: pynicotine/gtkgui/ui/mainwindow.ui:1616
+#: pynicotine/gtkgui/ui/mainwindow.ui:939
+#: pynicotine/gtkgui/ui/mainwindow.ui:1592
 #: pynicotine/gtkgui/ui/settings/downloads.ui:26
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:173
 msgid "Downloads"
@@ -1727,37 +1728,37 @@ msgstr "Pobieranie"
 
 #: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/settingswindow.py:3118
 #: pynicotine/gtkgui/widgets/trayicon.py:93
-#: pynicotine/gtkgui/ui/mainwindow.ui:1035
-#: pynicotine/gtkgui/ui/mainwindow.ui:1629
+#: pynicotine/gtkgui/ui/mainwindow.ui:1029
+#: pynicotine/gtkgui/ui/mainwindow.ui:1605
 #: pynicotine/gtkgui/ui/settings/uploads.ui:47
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:185
 msgid "Uploads"
 msgstr "Wysyłanie"
 
-#: pynicotine/gtkgui/frame.py:1285 pynicotine/gtkgui/ui/mainwindow.ui:1128
+#: pynicotine/gtkgui/frame.py:1285 pynicotine/gtkgui/ui/mainwindow.ui:1119
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 msgid "User Browse"
 msgstr "Przeglądanie użytkownika"
 
 #: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/settingswindow.py:3108
-#: pynicotine/gtkgui/ui/mainwindow.ui:1227
+#: pynicotine/gtkgui/ui/mainwindow.ui:1215
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
 msgstr "Informacje o użytkowniku"
 
-#: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1326
+#: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1311
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr "Czat prywatny"
 
 #: pynicotine/gtkgui/frame.py:1288 pynicotine/gtkgui/ui/buddylist.ui:18
-#: pynicotine/gtkgui/ui/mainwindow.ui:1425
+#: pynicotine/gtkgui/ui/mainwindow.ui:1407
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 msgid "Buddy List"
 msgstr "Lista znajomych"
 
-#: pynicotine/gtkgui/frame.py:1289 pynicotine/gtkgui/ui/mainwindow.ui:1518
+#: pynicotine/gtkgui/frame.py:1289 pynicotine/gtkgui/ui/mainwindow.ui:1497
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:245
 msgid "Chat Rooms"
@@ -1882,9 +1883,8 @@ msgstr "Nie można wyświetlić okienka powiadomień: %s"
 
 #: pynicotine/gtkgui/privatechat.py:213 pynicotine/gtkgui/search.py:397
 #: pynicotine/gtkgui/userbrowse.py:216 pynicotine/gtkgui/userinfo.py:210
-#, fuzzy
 msgid "Close All Tabs…"
-msgstr "Zamknąć wszystkie zakładki?"
+msgstr "Zamknij wszystkie zakładki…"
 
 #: pynicotine/gtkgui/privatechat.py:214 pynicotine/gtkgui/search.py:398
 #: pynicotine/gtkgui/userbrowse.py:217 pynicotine/gtkgui/userinfo.py:211
@@ -1896,9 +1896,8 @@ msgid "View Chat Log"
 msgstr "Pokaż logi czatu"
 
 #: pynicotine/gtkgui/privatechat.py:226
-#, fuzzy
 msgid "Delete Chat Log…"
-msgstr "Usuń logi czatu..."
+msgstr "Usuń dziennik czatu…"
 
 #: pynicotine/gtkgui/privatechat.py:325
 msgid ""
@@ -1945,7 +1944,7 @@ msgstr "Opuść pokój"
 
 #: pynicotine/gtkgui/roomlist.py:80 pynicotine/gtkgui/roomlist.py:201
 msgid "Disown Private Room"
-msgstr ""
+msgstr "Odrzuć prywatny pokój"
 
 #: pynicotine/gtkgui/roomlist.py:81 pynicotine/gtkgui/roomlist.py:202
 msgid "Cancel Room Membership"
@@ -2000,18 +1999,16 @@ msgstr "_Pobierz plik(i)"
 
 #: pynicotine/gtkgui/search.py:378 pynicotine/gtkgui/search.py:1137
 #: pynicotine/gtkgui/search.py:1151
-#, fuzzy
 msgid "Download File(s) _To…"
-msgstr "Pobierz plik(i) _do..."
+msgstr "Pobierz plik(i) _do…"
 
 #: pynicotine/gtkgui/search.py:379 pynicotine/gtkgui/search.py:1141
 msgid "Download _Folder(s)"
 msgstr "Pobierz _folder(y)"
 
 #: pynicotine/gtkgui/search.py:380 pynicotine/gtkgui/search.py:1141
-#, fuzzy
 msgid "Download F_older(s) To…"
-msgstr "Pobierz _folder(y) do..."
+msgstr "Pobierz _folder(y) do…"
 
 #: pynicotine/gtkgui/search.py:382 pynicotine/gtkgui/search.py:1141
 #: pynicotine/gtkgui/transferlist.py:197
@@ -2139,7 +2136,7 @@ msgstr "Filtr"
 
 #: pynicotine/gtkgui/settingswindow.py:269
 msgid "Escaped"
-msgstr ""
+msgstr "Uciekł"
 
 #: pynicotine/gtkgui/settingswindow.py:383
 msgid "Add Download Filter"
@@ -2302,7 +2299,7 @@ msgstr "Protokół"
 
 #: pynicotine/gtkgui/settingswindow.py:1961
 msgid "Handler"
-msgstr ""
+msgstr "Obsługa"
 
 #: pynicotine/gtkgui/settingswindow.py:2094
 #: pynicotine/gtkgui/settingswindow.py:2114
@@ -2325,7 +2322,7 @@ msgid ""
 msgstr ""
 "Wprowadź wzór, który chcesz ocenzurować. Dodaj spacje wokół słów jeśli nie "
 "chcesz uwzględniać poszczególnych ciągów znaków wewnątrz wyrazów (może "
-"skutkować błędami w przypadku końca linii)"
+"skutkować błędami w przypadku końca linii)."
 
 #: pynicotine/gtkgui/settingswindow.py:2442
 msgid "Username;APIKEY:"
@@ -2487,7 +2484,7 @@ msgid "URL Handlers"
 msgstr "Obsługujący protokół"
 
 #: pynicotine/gtkgui/settingswindow.py:3115
-#: pynicotine/gtkgui/ui/mainwindow.ui:1694
+#: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Transfers"
 msgstr "Transfery"
 
@@ -2507,7 +2504,7 @@ msgid "Events"
 msgstr "Zdarzenia"
 
 #: pynicotine/gtkgui/settingswindow.py:3122
-#: pynicotine/gtkgui/ui/mainwindow.ui:1655
+#: pynicotine/gtkgui/ui/mainwindow.ui:1631
 msgid "Chat"
 msgstr "Czat"
 
@@ -2645,7 +2642,7 @@ msgstr "Wszystkie %(ext)s"
 #: pynicotine/gtkgui/transferlist.py:114
 #, python-format
 msgid "%(number)2s files "
-msgstr ""
+msgstr "%(number)2s pliki "
 
 #: pynicotine/gtkgui/transferlist.py:141
 msgid "Path"
@@ -2743,9 +2740,8 @@ msgstr "Folder pobierania"
 #: pynicotine/gtkgui/userbrowse.py:223 pynicotine/gtkgui/userbrowse.py:234
 #: pynicotine/gtkgui/userbrowse.py:257 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:373 pynicotine/gtkgui/userbrowse.py:378
-#, fuzzy
 msgid "Download Folder _To…"
-msgstr "Pobierz _folder(y) do..."
+msgstr "Pobierz _folder(y) do…"
 
 #: pynicotine/gtkgui/userbrowse.py:224 pynicotine/gtkgui/userbrowse.py:235
 #: pynicotine/gtkgui/userbrowse.py:258 pynicotine/gtkgui/userbrowse.py:275
@@ -2756,26 +2752,22 @@ msgstr "Pobieranie _rekursywne"
 #: pynicotine/gtkgui/userbrowse.py:225 pynicotine/gtkgui/userbrowse.py:236
 #: pynicotine/gtkgui/userbrowse.py:259 pynicotine/gtkgui/userbrowse.py:276
 #: pynicotine/gtkgui/userbrowse.py:374 pynicotine/gtkgui/userbrowse.py:379
-#, fuzzy
 msgid "Download R_ecursive To…"
-msgstr "Pobierz r_ekursywnie do..."
+msgstr "Pobierz r_ekursywnie do…"
 
 #: pynicotine/gtkgui/userbrowse.py:231
-#, fuzzy
 msgid "Download _To…"
-msgstr "Pobierz _do..."
+msgstr "Pobierz _do…"
 
 #: pynicotine/gtkgui/userbrowse.py:241 pynicotine/gtkgui/userbrowse.py:247
 #: pynicotine/gtkgui/userbrowse.py:261 pynicotine/gtkgui/userbrowse.py:374
-#, fuzzy
 msgid "Upload Folder To…"
-msgstr "Wyślij katalog do..."
+msgstr "Wyślij katalog do…"
 
 #: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:248
 #: pynicotine/gtkgui/userbrowse.py:262 pynicotine/gtkgui/userbrowse.py:374
-#, fuzzy
 msgid "Upload Folder Recursive To…"
-msgstr "Wyślij katalog rekursywnie do..."
+msgstr "Wyślij katalog rekursywnie do…"
 
 #: pynicotine/gtkgui/userbrowse.py:249
 msgid "Up_load File(s)"
@@ -2905,9 +2897,8 @@ msgid "Picture not saved, %s already exists."
 msgstr "Obraz niezapisany, %s już istnieje."
 
 #: pynicotine/gtkgui/userinfo.py:446
-#, fuzzy
 msgid "Save as…"
-msgstr "Zapisz jako..."
+msgstr "Zapisz jako…"
 
 #: pynicotine/gtkgui/userlist.py:84
 msgid "Trusted"
@@ -2942,9 +2933,8 @@ msgid "_Trusted"
 msgstr "_Zaufany"
 
 #: pynicotine/gtkgui/userlist.py:145
-#, fuzzy
 msgid "Edit _Comments…"
-msgstr "Edytuj komentarze"
+msgstr "Edytuj komentarze…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3012,7 +3002,7 @@ msgstr "_Zapisz"
 #: pynicotine/gtkgui/widgets/filechooser.py:237
 #: pynicotine/gtkgui/widgets/filechooser.py:303
 msgid "(None)"
-msgstr ""
+msgstr "(Nic)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:112
 msgid "Close tab"
@@ -3045,9 +3035,8 @@ msgid "_Browse Files"
 msgstr "Przeglądaj pliki"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:238
-#, fuzzy
 msgid "Gi_ve Privileges…"
-msgstr "Podaruj przywileje"
+msgstr "Podaruj przywileje…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:240
 #: pynicotine/gtkgui/ui/userinfo.ui:519
@@ -3256,78 +3245,71 @@ msgstr "Nie można zapisać do pliku logu \"%(filename)s\": %(error)s"
 msgid "Text-to-speech for message failed: %s"
 msgstr "Błędna zamiana tekstu na mowę dla wiadomości: %s"
 
-#: pynicotine/nowplaying.py:86
-msgid ""
-"Could not execute now playing code. Are you sure you picked the right player?"
-msgstr ""
-"Nie można wywołać opcji Teraz odtwarzanie. Czy aby na pewno wybrałeś "
-"odtwarzacz?"
-
-#: pynicotine/nowplaying.py:138
+#: pynicotine/nowplaying.py:136
 msgid "Last.fm: Please provide both your Last.fm username and API key"
 msgstr "Last.fm: Proszę podać nazwę użytkownika i klucz API"
 
-#: pynicotine/nowplaying.py:148
+#: pynicotine/nowplaying.py:146
 #, python-format
 msgid "Last.fm: Could not connect to Audioscrobbler: %(error)s"
 msgstr "Last.fm: Nie można się połączyć z audioscroblerem: %(error)s"
 
-#: pynicotine/nowplaying.py:167
+#: pynicotine/nowplaying.py:165
 msgid "Last played"
 msgstr "Ostatnio odtwarzane"
 
-#: pynicotine/nowplaying.py:170
+#: pynicotine/nowplaying.py:168
 #, python-format
 msgid "Last.fm: Could not get recent track from Audioscrobbler: %(error)s"
 msgstr ""
 "Last.fm: Nie można pobrać ostatnio odtwarzanego utworu z audioscrobblera: "
 "%(error)s"
 
-#: pynicotine/nowplaying.py:207
+#: pynicotine/nowplaying.py:205
 msgid "MPRIS: Could not find a suitable MPRIS player"
 msgstr "MPRIS: Nie znaleziono odpowiedniego odtwarzacza MPRIS"
 
-#: pynicotine/nowplaying.py:212
+#: pynicotine/nowplaying.py:210
 #, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
 msgstr "Znaleziono kilka odtwarzaczy MPRIS: %(players)s. Używanie: %(player)s"
 
-#: pynicotine/nowplaying.py:215
+#: pynicotine/nowplaying.py:213
 #, python-format
 msgid "Auto-detected MPRIS player: %s"
 msgstr "Automatyczne wybieranie odtwarzacza MPRIS: %s"
 
-#: pynicotine/nowplaying.py:229
+#: pynicotine/nowplaying.py:227
 #, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr ""
 "MPRIS. Coś poszło nie tak podczas odpytywania %(player)s: %(exception)s"
 
-#: pynicotine/nowplaying.py:276
+#: pynicotine/nowplaying.py:274
 msgid "ListenBrainz: Please provide your ListenBrainz username"
 msgstr "ListenBrainz: Podaj nazwę użytkownika"
 
-#: pynicotine/nowplaying.py:285
+#: pynicotine/nowplaying.py:283
 #, python-format
 msgid "ListenBrainz: Could not connect to ListenBrainz: %(error)s"
 msgstr "ListenBrainz: Nie można się połączyć z ListenBrainz: %(error)s"
 
-#: pynicotine/nowplaying.py:292
+#: pynicotine/nowplaying.py:290
 msgid "ListenBrainz: You don't seem to be listening to anything right now"
 msgstr "ListenBrainz: Wygląda na to, że w tej chwili niczego nie słuchasz"
 
-#: pynicotine/nowplaying.py:301
+#: pynicotine/nowplaying.py:299
 msgid "Playing now"
 msgstr "Teraz odtwarzanie"
 
-#: pynicotine/nowplaying.py:306
+#: pynicotine/nowplaying.py:304
 #, python-format
 msgid "ListenBrainz: Could not get current track from ListenBrainz: %(error)s"
 msgstr ""
 "ListenBrainz: Nie można pobrać aktualnie odtwarzanego utworu z ListenBrainz: "
 "%(error)s"
 
-#: pynicotine/nowplaying.py:321
+#: pynicotine/nowplaying.py:319
 #, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "Problem z wywołaniem '%(command)s': %(error)s"
@@ -3401,18 +3383,17 @@ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
 msgstr "Wtyczka %(module)s zwróciła coś dziwnego, '%(value)s', ignorowanie"
 
 #: pynicotine/pynicotine.py:309
-#, fuzzy
 msgid "You need to specify a username and password before connecting…"
-msgstr "Musisz określić nazwę użytkownika i hasło przed połączeniem..."
+msgstr "Musisz określić nazwę użytkownika i hasło przed połączeniem…"
 
 #: pynicotine/pynicotine.py:315
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting Nicotine+ %(version)s, %(status)s…"
-msgstr "Zamykanie Nicotine+ %(version)s, %(status)s..."
+msgstr "Zamykanie Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:317
 msgid "terminating"
-msgstr ""
+msgstr "zakańczanie"
 
 #: pynicotine/pynicotine.py:317
 msgid "application closing"
@@ -3425,7 +3406,7 @@ msgstr "Zamknij Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:349
 msgid "terminated"
-msgstr ""
+msgstr "zakończono"
 
 #: pynicotine/pynicotine.py:349
 msgid "done"
@@ -3472,9 +3453,9 @@ msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "Adres IP użytkownika %(user)s to %(ip)s, port %(port)i%(country)s"
 
 #: pynicotine/pynicotine.py:914
-#, fuzzy, python-format
+#, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
-msgstr "Połączony do serwera %(host)s:%(port)s, logowanie..."
+msgstr "Połączony do serwera %(host)s:%(port)s, logowanie…"
 
 #: pynicotine/pynicotine.py:946
 #, python-format
@@ -3558,7 +3539,7 @@ msgstr "Serwer nie zezwala na wyszukiwanie przy pomocy Listy życzeń."
 #: pynicotine/search.py:320
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
-msgstr ""
+msgstr "Okres oczekiwania na listę życzeń ustawiony na %s sekund"
 
 #: pynicotine/search.py:518
 #, python-format
@@ -3591,10 +3572,10 @@ msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nie można zapisać %(filename)s: %(error)s"
 
 #: pynicotine/shares.py:167
-#, fuzzy, python-format
+#, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr ""
-"Znaleziono %(num)s folderów przed ponownym skanowaniem, ponowne budowanie..."
+"Znaleziono %(num)s folderów przed ponownym skanowaniem, przebudowywanie…"
 
 #: pynicotine/shares.py:179 pynicotine/shares.py:281 pynicotine/shares.py:341
 #, python-format
@@ -3645,6 +3626,8 @@ msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
 msgstr ""
+"Próba zresetowania indeksu udostępnionych plików z powodu błędu. Przeskanuj "
+"ponownie swoje udziały."
 
 #: pynicotine/shares.py:645
 msgid ""
@@ -3652,6 +3635,9 @@ msgid ""
 "several instances of Nicotine+ being active simultaneously, file permission "
 "issues, or another issue in Nicotine+."
 msgstr ""
+"Nie można uzyskać dostępu do indeksu współdzielonych plików. Może się to "
+"zdarzyć z powodu kilku instancji Nicotine+ aktywnych jednocześnie, problemów "
+"z uprawnieniami do plików lub innego problemu w Nicotine+."
 
 #: pynicotine/shares.py:686 pynicotine/slskmessages.py:2245
 #: pynicotine/slskmessages.py:2393
@@ -3682,14 +3668,12 @@ msgid "Progress: %s"
 msgstr "Postęp: %s"
 
 #: pynicotine/shares.py:970
-#, fuzzy
 msgid "Rescanning normal shares…"
-msgstr "Ponowne skanowanie zasobów..."
+msgstr "Ponowne skanowanie zasobów…"
 
 #: pynicotine/shares.py:974
-#, fuzzy
 msgid "Rescanning buddy shares…"
-msgstr "Ponowne skanowanie zasobów znajomego..."
+msgstr "Ponowne skanowanie zasobów znajomego…"
 
 #: pynicotine/shares.py:1020
 msgid "Finished rescanning public shares"
@@ -3717,7 +3701,7 @@ msgstr "Błąd OS: %s"
 #: pynicotine/transfers.py:1079
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
-msgstr ""
+msgstr "Nie można uzyskać wyłącznej blokady na pliku - błąd I/O: %s"
 
 #: pynicotine/transfers.py:1087 pynicotine/transfers.py:1329
 #, python-format
@@ -3850,6 +3834,7 @@ msgstr ""
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
 msgstr ""
+"UPnP: Nie udało się przekazać portu zewnętrznego %(external_port)s: %(error)s"
 
 #: pynicotine/upnp.py:354
 #, python-format
@@ -3857,6 +3842,8 @@ msgid ""
 "UPnP: External port %(external_port)s successfully forwarded to local IP "
 "address %(ip_address)s port %(local_port)s"
 msgstr ""
+"UPnP: Port zewnętrzny %(external_port)s pomyślnie przekierowany na lokalny "
+"adres IP %(ip_address)s port %(local_port)s"
 
 #: pynicotine/upnp.py:394
 #, python-format
@@ -3927,9 +3914,8 @@ msgid "User:"
 msgstr "Użytkownik:"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:40 pynicotine/gtkgui/ui/mainwindow.ui:654
-#, fuzzy
 msgid "Add buddy…"
-msgstr "Dodaj znajomego..."
+msgstr "Dodaj znajomego…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:41 pynicotine/gtkgui/ui/mainwindow.ui:655
 msgid "Enter the username of the person you wish to add to your buddy list"
@@ -3960,9 +3946,8 @@ msgid "Welcome to Nicotine+"
 msgstr "Witaj w Nicotine+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:91
-#, fuzzy
 msgid "_Set Up…"
-msgstr "Ustaw..."
+msgstr "Ustaw…"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:118
 msgid ""
@@ -4037,7 +4022,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:353
 msgid "_Add…"
-msgstr ""
+msgstr "_Dodaj…"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:384
 msgid "You are ready to use Nicotine+!"
@@ -4221,9 +4206,8 @@ msgid "Total"
 msgstr "Łącznie"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:400
-#, fuzzy
 msgid "_Reset Statistics…"
-msgstr "_Zresetuj statystyki..."
+msgstr "_Zresetuj statystyki…"
 
 #: pynicotine/gtkgui/ui/downloads.ui:68
 msgid "Resume"
@@ -4243,27 +4227,24 @@ msgid "Clear Finished"
 msgstr "Wyczyść zakończone"
 
 #: pynicotine/gtkgui/ui/downloads.ui:192
-#, fuzzy
 msgid "Clear _Downloads…"
-msgstr "Wyczyść pobierania..."
+msgstr "Wyczyść pobierania…"
 
 #: pynicotine/gtkgui/ui/interests.ui:23
 msgid "Personal Interests"
 msgstr "Zainteresowania"
 
 #: pynicotine/gtkgui/ui/interests.ui:42
-#, fuzzy
 msgid "Add something you like…"
-msgstr "Dodaj coś, co lubisz..."
+msgstr "Dodaj coś, co lubisz…"
 
 #: pynicotine/gtkgui/ui/interests.ui:81
 msgid "Personal Displeasures"
 msgstr "Osobiste przyjemności"
 
 #: pynicotine/gtkgui/ui/interests.ui:100
-#, fuzzy
 msgid "Add something you dislike…"
-msgstr "Dodaj coś, co nie lubisz..."
+msgstr "Dodaj coś, czego nie lubisz…"
 
 #: pynicotine/gtkgui/ui/interests.ui:159
 msgid "Recommendations"
@@ -4294,21 +4275,18 @@ msgid "Rooms"
 msgstr "Pokoje"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:63
-#, fuzzy
 msgid "Room…"
-msgstr "Pokój"
+msgstr "Pokój…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:83 pynicotine/gtkgui/ui/mainwindow.ui:452
 #: pynicotine/gtkgui/ui/mainwindow.ui:509
 #: pynicotine/gtkgui/ui/mainwindow.ui:575
-#, fuzzy
 msgid "Username…"
-msgstr "Użytkownik"
+msgstr "Użytkownik…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:104
-#, fuzzy
 msgid "Search term…"
-msgstr "Wyszukiwana fraza..."
+msgstr "Wyszukiwana fraza…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:105
 msgid ""
@@ -4381,9 +4359,8 @@ msgid "_Room List"
 msgstr "_Lista pokoi"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:702
-#, fuzzy
 msgid "Create or join room…"
-msgstr "Utwórz lub dołącz do pokoju..."
+msgstr "Utwórz lub dołącz do pokoju…"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:703
 msgid ""
@@ -4401,7 +4378,7 @@ msgstr ""
 "Wprowadź frazę wyszukiwania, aby wyszukać pliki udostępnione przez innych "
 "użytkowników w sieci Soulseek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:954
+#: pynicotine/gtkgui/ui/mainwindow.ui:951
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
@@ -4409,14 +4386,14 @@ msgstr ""
 "Pliki pobierane od innych użytkowników są tutaj umieszczane w kolejce i mogą "
 "być wstrzymywane i wznawiane na żądanie"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1047
+#: pynicotine/gtkgui/ui/mainwindow.ui:1041
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
 msgstr ""
 "Próby pobrania udostępnionych plików przez użytkowników są tutaj kolejkowane "
 "i zarządzane"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1140
+#: pynicotine/gtkgui/ui/mainwindow.ui:1131
 msgid ""
 "Enter the name of a user to browse their list of shared files. You can also "
 "open a list you have previously saved."
@@ -4424,25 +4401,27 @@ msgstr ""
 "Wprowadź nazwę użytkownika, aby przeglądać jego listę udostępnionych plików. "
 "Możesz również otworzyć listę, którą wcześniej zapisałeś."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1239
+#: pynicotine/gtkgui/ui/mainwindow.ui:1227
 msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
 "Wprowadź nazwę użytkownika, aby wyświetlić jego opis, informacje i zdjęcie"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1338
+#: pynicotine/gtkgui/ui/mainwindow.ui:1323
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
 msgstr "Wprowadź nazwę użytkownika, aby rozpocząć z nim czat prywatny"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1437
+#: pynicotine/gtkgui/ui/mainwindow.ui:1419
 msgid ""
 "Add users to your buddy list to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
+"Dodaj użytkowników do swojej listy znajomych, aby udostępniać im określone "
+"foldery i otrzymywać powiadomienia, gdy są online"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1530
+#: pynicotine/gtkgui/ui/mainwindow.ui:1509
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
 "the Soulseek network"
@@ -4450,51 +4429,51 @@ msgstr ""
 "Dołącz do istniejącego pokoju czatowego lub stwórz nowy pokój, aby rozmawiać "
 "z innymi użytkownikami sieci Soulseek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1600
+#: pynicotine/gtkgui/ui/mainwindow.ui:1576
 msgid "Debug Logging"
 msgstr "Logowanie zdarzeń debuggera"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1642
+#: pynicotine/gtkgui/ui/mainwindow.ui:1618
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr "Wyszukiwania"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1668
-#: pynicotine/gtkgui/ui/mainwindow.ui:1818
+#: pynicotine/gtkgui/ui/mainwindow.ui:1644
+#: pynicotine/gtkgui/ui/mainwindow.ui:1794
 msgid "Connections"
 msgstr "Połączenia"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1681
+#: pynicotine/gtkgui/ui/mainwindow.ui:1657
 #: pynicotine/gtkgui/ui/settings/tts.ui:109
 msgid "Messages"
 msgstr "Wiadomości"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1707
+#: pynicotine/gtkgui/ui/mainwindow.ui:1683
 msgid "Miscellaneous"
 msgstr "Różne"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1792
+#: pynicotine/gtkgui/ui/mainwindow.ui:1768
 msgid "Scanning Shares"
 msgstr "Skanowanie udostępnionych zasobów"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1801
+#: pynicotine/gtkgui/ui/mainwindow.ui:1777
 msgid "Scanning Buddy Shares"
 msgstr "Skanowanie zasobów znajomych"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1846
+#: pynicotine/gtkgui/ui/mainwindow.ui:1822
 msgid "Downloading (speed / active users)"
 msgstr "Pobieranie (prędkość / aktywne pobierania)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1873
+#: pynicotine/gtkgui/ui/mainwindow.ui:1849
 msgid "Uploading (speed / active users)"
 msgstr "Wysyłanie (prędkość / aktywne wysyłania)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1918
+#: pynicotine/gtkgui/ui/mainwindow.ui:1894
 msgid "Enable alternative download and upload speed limits"
 msgstr "Włącz alternatywne limity prędkości pobierania i wysyłania"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1936
+#: pynicotine/gtkgui/ui/mainwindow.ui:1912
 msgid "Show log history"
 msgstr "Pokaż historię logów"
 
@@ -4512,35 +4491,18 @@ msgstr "/join /j 'pokój'"
 msgid "Join room 'room'"
 msgstr "Dołącz do pokoju 'pokój'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:73
-msgid "/leave /l /part /p"
-msgstr "/leave /l /part /p"
-
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:84
 msgid "Leave current room"
 msgstr "Opuść ten pokój"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:99
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:72
-msgid "/clear /cl"
-msgstr "/clear /cl"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:110
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:83
 msgid "Clear the chat window"
 msgstr "Wyczyść okno czatu"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
-msgid "/tick /t"
-msgstr "/tick /t"
-
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 msgid "Set your personal ticker"
 msgstr "Ustaw wiadomość na Ścianę pokoju"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:151
-msgid "/tickers"
-msgstr "/tickers"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
 msgid "Show all the tickers"
@@ -4556,40 +4518,20 @@ msgstr "/me 'wiadomość'"
 msgid "Say something in the third-person"
 msgstr "Powiedz coś w trzeciej osobie"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:208
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:124
-msgid "/now"
-msgstr "/now"
-
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
 msgid "Display the Now Playing script's output"
 msgstr "Wyświetl wynik Teraz odtwarzanie"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:234
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:150
-msgid "/away /a"
-msgstr "/away /a"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
 msgid "Toggles your away status"
 msgstr "Przełącza Cię w status Nieobecny"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:176
-msgid "/rescan"
-msgstr "/rescan"
-
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
 msgid "Rescan shares"
 msgstr "Przeskanuj udostępnione zasoby"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:286
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:202
-msgid "/quit /q /exit"
-msgstr "/quit /q /exit"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
@@ -4753,81 +4695,41 @@ msgstr "Otwórz prywatny czat z użytkownikiem 'użytkownik'"
 msgid "Private Chat Commands"
 msgstr "Lista komend w prywatnych rozmowach"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:46
-msgid "/close /c"
-msgstr "/close /c"
-
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
 msgid "Close the current private chat"
 msgstr "Zamknij aktualny prywatny czat"
-
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:244
-msgid "/add /ad"
-msgstr "/add /ad"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
 msgid "Add user to your user list"
 msgstr "Dodaj użytkownika do twojej listy użytkowników"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:270
-msgid "/rem /unbuddy"
-msgstr "/rem /unbuddy"
-
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
 msgid "Remove user from your user list"
 msgstr "Usuń użytkownika z twojej listy użytkowników"
-
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:296
-msgid "/ban"
-msgstr "/ban"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
 msgid "Add user to your ban list"
 msgstr "Dodaj użytkownika do listy zablokowanych"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:322
-msgid "/unban"
-msgstr "/unban"
-
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:333
 msgid "Remove user from your ban list"
-msgstr "Usuń użytkownika  z zablokowanych"
-
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:348
-msgid "/ignore"
-msgstr "/ignore"
+msgstr "Usuń użytkownika z zablokowanych"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:359
 msgid "Add user to your ignore list"
 msgstr "Dodaj użytkownika do listy ignorowanych"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:374
-msgid "/unignore"
-msgstr "/unignore"
-
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:385
 msgid "Remove user from your ignore list"
-msgstr "Usuń użytkownika  z listy ignorowanych"
-
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:400
-msgid "/browse /b"
-msgstr "/browse /b"
+msgstr "Usuń użytkownika z listy ignorowanych"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
 msgid "Browse files of user"
 msgstr "Przeglądaj pliki użytkownika"
 
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:426
-msgid "/whois /w"
-msgstr "/whois /w"
-
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:437
 msgid "Request user info for user"
 msgstr "Pobierz informacje o użytkowniku"
-
-#: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:452
-msgid "/ip"
-msgstr "/ip"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:463
 msgid "Show IP for user"
@@ -4839,7 +4741,7 @@ msgstr "Odśwież listę pokoi"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:79
 msgid "_Show feed of public chat room messages"
-msgstr ""
+msgstr "_Pokaż kanał wiadomości z publicznego pokoju rozmów"
 
 #: pynicotine/gtkgui/ui/popovers/roomlist.ui:93
 msgid "_Accept private room invitations"
@@ -4854,9 +4756,8 @@ msgstr ""
 "innych członków. Ostatnie wiadomości są pokazywane na górze."
 
 #: pynicotine/gtkgui/ui/popovers/roomwall.ui:63
-#, fuzzy
 msgid "Set wall message…"
-msgstr "Ustaw wiadomość ściany pokoju..."
+msgstr "Ustaw wiadomość ściany pokoju…"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:31
 #: pynicotine/gtkgui/ui/settings/search.ui:146
@@ -4909,7 +4810,7 @@ msgid ""
 "show any 'Brittany Spears'"
 msgstr ""
 "Wielkość liter nie ma znaczenia, ale ważna jest kolejność słów: 'Spears "
-"Brittany' nie pokaże żadnej 'Brittany Spears'."
+"Brittany' nie pokaże żadnej 'Brittany Spears'"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:110
 msgid ""
@@ -5057,9 +4958,8 @@ msgstr ""
 "czasu, w celu wykrycia niecodziennych plików."
 
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:27
-#, fuzzy
 msgid "Add Wish…"
-msgstr "Dodaj życzenie"
+msgstr "Dodaj życzenie…"
 
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:86
 msgid "R_emove Wish"
@@ -5082,9 +4982,8 @@ msgid "Result grouping mode"
 msgstr "Tryb grupowania wyników"
 
 #: pynicotine/gtkgui/ui/search.ui:173
-#, fuzzy
 msgid "Include text…"
-msgstr "Uwzględnij tekst"
+msgstr "Uwzględnij tekst…"
 
 #: pynicotine/gtkgui/ui/search.ui:174
 #: pynicotine/gtkgui/ui/settings/search.ui:197
@@ -5098,9 +4997,8 @@ msgstr ""
 "fraza"
 
 #: pynicotine/gtkgui/ui/search.ui:203
-#, fuzzy
 msgid "Exclude text…"
-msgstr "Pomiń tekst"
+msgstr "Pomiń tekst…"
 
 #: pynicotine/gtkgui/ui/search.ui:204
 #: pynicotine/gtkgui/ui/settings/search.ui:224
@@ -5114,9 +5012,8 @@ msgstr ""
 "fraza"
 
 #: pynicotine/gtkgui/ui/search.ui:233
-#, fuzzy
 msgid "File type…"
-msgstr "Typ pliku"
+msgstr "Typ pliku…"
 
 #: pynicotine/gtkgui/ui/search.ui:234
 #: pynicotine/gtkgui/ui/settings/search.ui:254
@@ -5124,23 +5021,20 @@ msgid "File type, e.g. flac|wav|ape or !mp3|!m4a"
 msgstr "Typ pliku, np. flac|wav|ape lub !mp3|!m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:263
-#, fuzzy
 msgid "File size…"
-msgstr "Rozmiar pliku"
+msgstr "Rozmiar pliku…"
 
 #: pynicotine/gtkgui/ui/search.ui:264
 msgid "File size"
 msgstr "Rozmiar pliku"
 
 #: pynicotine/gtkgui/ui/search.ui:293
-#, fuzzy
 msgid "Bitrate…"
-msgstr "Bitrate"
+msgstr "Bitrate…"
 
 #: pynicotine/gtkgui/ui/search.ui:327
-#, fuzzy
 msgid "Country code…"
-msgstr "Kod kraju..."
+msgstr "Kod kraju…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
 #: pynicotine/gtkgui/ui/settings/search.ui:348
@@ -5160,6 +5054,8 @@ msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
 msgstr ""
+"Zabroń użytkownikom dostępu do udostępnionych plików na podstawie nazwy "
+"użytkownika, adresu IP lub kraju."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:47
 msgid "Country codes to block (comma separated):"
@@ -5198,7 +5094,7 @@ msgstr "Zablokowani użytkownicy"
 #: pynicotine/gtkgui/ui/settings/ignore.ui:243
 #: pynicotine/gtkgui/ui/settings/shares.ui:145
 msgid "Add…"
-msgstr ""
+msgstr "Dodaj…"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:267
 #: pynicotine/gtkgui/ui/settings/ban.ui:424
@@ -5394,7 +5290,7 @@ msgid ""
 "buddy)."
 msgstr ""
 "Gdzie pliki przesłane przez znajomych będą zachowane (w podfolderze dla "
-"każdego znajomego)"
+"każdego znajomego)."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:309
 msgid "Download Filters"
@@ -5410,10 +5306,13 @@ msgid ""
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
 msgstr ""
+"<b>Składnia:</b> Wielkość liter nie jest rozróżniana. Wszystkie wyrażenia "
+"regularne Pythona są obsługiwane, jeśli unikanie jest wyłączone. W przypadku "
+"prostych filtrów zaleca się pozostawienie włączonej ucieczki."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:408
 msgid "Edit…"
-msgstr ""
+msgstr "Edytuj…"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:469
 msgid "Load Defaults"
@@ -5446,12 +5345,12 @@ msgstr "Komendy"
 #: pynicotine/gtkgui/ui/settings/events.ui:132
 msgid "Run command after file download finishes ($ for file path):"
 msgstr ""
-"Uruchom komendę po zakończeniu pobierania pliku ($ dla ścieżki do pliku)"
+"Uruchom komendę po zakończeniu pobierania pliku ($ dla ścieżki do pliku):"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:153
 msgid "Run command after folder download finishes ($ for folder path):"
 msgstr ""
-"Uruchom komendę po zakończeniu pobierania folderu ($ dla ścieżki folderu)"
+"Uruchom komendę po zakończeniu pobierania folderu ($ dla ścieżki folderu):"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:174
 msgid "File Manager command ($ for file path):"
@@ -5582,6 +5481,8 @@ msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
+"Zaloguj się do istniejącego konta Soulseek lub utwórz nowe. W nazwach "
+"użytkowników rozróżniana jest wielkość liter i są one unikatowe."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:150
 msgid "Connection"
@@ -5646,6 +5547,10 @@ msgid ""
 "a VPN is used at all times. Leave empty to use any available interface. Only "
 "change this value if you know what you are doing."
 msgstr ""
+"Wiąże połączenia z określonym interfejsem sieciowym, przydatne np. do "
+"zapewnienia, że VPN jest używany przez cały czas. Pozostaw puste, aby użyć "
+"dowolnego dostępnego interfejsu. Zmień tę wartość tylko wtedy, gdy wiesz, co "
+"robisz."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:466
 msgid "Soulseek server:"
@@ -5836,9 +5741,8 @@ msgstr ""
 "Odpowiadaj na zapytania o wyszukiwanie zawierające minimalną liczbę znaków:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
-#, fuzzy
 msgid "Maximum search results to send per search request:"
-msgstr "Maksymalna liczba zachowanych wyników na wyszukiwanie:"
+msgstr "Maksymalna ilość wyników wyszukiwania do wysłania na jedno zapytanie:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:537
 msgid "Result Filter Help"
@@ -5879,16 +5783,20 @@ msgid ""
 "Overrides the per-share option, useful if you temporarily need to prevent "
 "public access to shares."
 msgstr ""
+"Zastępuje opcję na udział, co jest przydatne, jeśli tymczasowo musisz "
+"uniemożliwić publiczny dostęp do udziałów."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:55
 msgid "Limit buddy-only shares to trusted buddies"
-msgstr ""
+msgstr "Ogranicz udostępnianie tylko dla znajomych do zaufanych znajomych"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:56
 msgid ""
 "Only users marked as trusted on your buddy list can access your buddy-only "
 "shares."
 msgstr ""
+"Tylko użytkownicy oznaczeni jako zaufani na twojej liście znajomych mogą "
+"uzyskać dostęp do udziałów tylko dla znajomych."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:74
 #: pynicotine/gtkgui/ui/userinfo.ui:272
@@ -6092,23 +6000,20 @@ msgid "Run in the background"
 msgstr "Uruchom w tle"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:83
-#, fuzzy
 msgid "Primary Tabs"
-msgstr "Zmień główną zakładkę"
+msgstr "Zakładki podstawowe"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "View previous primary tab on startup"
 msgstr "Przywróć ostatnio aktywną zakładkę na starcie"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:111
-#, fuzzy
 msgid "Tab bar position:"
-msgstr "Pozycja głównej zakładki:"
+msgstr "Pozycja paska zakładek:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:141
 msgid "Visible primary tabs:"
-msgstr ""
+msgstr "Widoczne zakładki podstawowe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:282
 msgid "Lists"
@@ -6171,17 +6076,15 @@ msgstr "Kolor tekstu listy:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:416
 msgid "Search with queue text color:"
-msgstr ""
+msgstr "Wyszukiwanie z kolorem tekstu kolejki:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
-#, fuzzy
 msgid "Secondary Tabs"
-msgstr "Zamknij kolejną zakłądkę"
+msgstr "Dodatkowe zakładki"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:505
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
-msgstr "Przyciski zamykania na zakładkach"
+msgstr "Przyciski zamykania na zakładkach pomocniczych"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:511
 msgid "Tabs show user status icons instead of status text"
@@ -6281,7 +6184,7 @@ msgstr "Kolor tekstu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1522
 msgid "Tab Labels"
-msgstr ""
+msgstr "Etykiety zakładek"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1549
 msgid "Regular tab label color:"
@@ -6344,9 +6247,8 @@ msgid "Ban User(s)"
 msgstr "Zablokuj użytkownika/ów"
 
 #: pynicotine/gtkgui/ui/uploads.ui:190
-#, fuzzy
 msgid "Clear Uploa_ds…"
-msgstr "Wyczyść _wysłane..."
+msgstr "Wyczyść wysłane…"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:101
 msgid "Shared"
@@ -6407,6 +6309,67 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:649
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#~ msgid ""
+#~ "Could not execute now playing code. Are you sure you picked the right "
+#~ "player?"
+#~ msgstr ""
+#~ "Nie można wywołać opcji Teraz odtwarzanie. Czy aby na pewno wybrałeś "
+#~ "odtwarzacz?"
+
+#~ msgid "/leave /l /part /p"
+#~ msgstr "/leave /l /part /p"
+
+#~ msgid "/clear /cl"
+#~ msgstr "/clear /cl"
+
+#~ msgid "/tick /t"
+#~ msgstr "/tick /t"
+
+#~ msgid "/tickers"
+#~ msgstr "/tickers"
+
+#~ msgid "/now"
+#~ msgstr "/now"
+
+#~ msgid "/away /a"
+#~ msgstr "/away /a"
+
+#~ msgid "/rescan"
+#~ msgstr "/rescan"
+
+#~ msgid "/quit /q /exit"
+#~ msgstr "/quit /q /exit"
+
+#~ msgid "/close /c"
+#~ msgstr "/close /c"
+
+#~ msgid "/add /ad"
+#~ msgstr "/add /ad"
+
+#~ msgid "/rem /unbuddy"
+#~ msgstr "/rem /unbuddy"
+
+#~ msgid "/ban"
+#~ msgstr "/ban"
+
+#~ msgid "/unban"
+#~ msgstr "/unban"
+
+#~ msgid "/ignore"
+#~ msgstr "/ignore"
+
+#~ msgid "/unignore"
+#~ msgstr "/unignore"
+
+#~ msgid "/browse /b"
+#~ msgstr "/browse /b"
+
+#~ msgid "/whois /w"
+#~ msgstr "/whois /w"
+
+#~ msgid "/ip"
+#~ msgstr "/ip"
 
 #, python-format
 #~ msgid "The password you've entered is invalid for user %s"

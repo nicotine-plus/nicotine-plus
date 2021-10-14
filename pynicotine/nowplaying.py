@@ -72,19 +72,17 @@ class NowPlaying:
 
         result = None
 
-        try:
-            if player == "lastfm":
-                result = self.lastfm(command)
-            elif player == "listenbrainz":
-                result = self.listenbrainz(command)
-            elif player == "other":
-                result = self.other(command)
-            elif player == "mpris":
-                result = self.mpris(command)
+        if player == "lastfm":
+            result = self.lastfm(command)
 
-        except RuntimeError:
-            log.add_important_error(_("Could not execute now playing code. Are you sure you picked the right player?"))
-            return None
+        elif player == "listenbrainz":
+            result = self.listenbrainz(command)
+
+        elif player == "other":
+            result = self.other(command)
+
+        elif player == "mpris":
+            result = self.mpris(command)
 
         if not result:
             return None
