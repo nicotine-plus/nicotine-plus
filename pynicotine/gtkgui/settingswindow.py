@@ -190,7 +190,7 @@ class NetworkFrame(UserInterface):
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
-                         "the password of an existing Soulseek account, you need to be logged into that account ")
+                         "the password of an existing Soulseek account, you need to be logged into that account.")
                        + "\n\n"
                        + _("Enter password to use when logging in:"))
 
