@@ -5,15 +5,17 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 22:57+0300\n"
-"PO-Revision-Date: 2021-10-12 15:04+0000\n"
-"Last-Translator: Mohamed El Morabity <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2021-10-14 18:21+0000\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
+"nicotine-plus/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.9-dev\n"
 "X-Launchpad-Export-Date: 2021-10-12 15:20+0000\n"
-"X-Generator: Launchpad (build 8a94da2fac127f5e46a49fd1140e43759d578803)\n"
 "X-Poedit-Bookmarks: 1121,180,724,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -1566,6 +1568,9 @@ msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
 msgstr ""
+"L'utilisateur %s existe déjà, et le mot de passe que vous avez entré n'est "
+"pas valide. Choisissez un autre nom d'utilisateur si c'est votre premier "
+"essai."
 
 #: pynicotine/gtkgui/frame.py:415
 msgid "Change Login Details"
@@ -1616,7 +1621,7 @@ msgstr "_Absent"
 
 #: pynicotine/gtkgui/frame.py:1000
 msgid "Soulseek _Privileges"
-msgstr ""
+msgstr "Privilèges _Soulseek"
 
 #: pynicotine/gtkgui/frame.py:1005 pynicotine/gtkgui/ui/settings/plugin.ui:131
 msgid "_Preferences"
@@ -1631,9 +1636,8 @@ msgid "Prefer Dark _Mode"
 msgstr "Privilégier le mode _sombre"
 
 #: pynicotine/gtkgui/frame.py:1027
-#, fuzzy
 msgid "Use _Header Bar"
-msgstr "Utiliser la barre d'en-tête"
+msgstr "Utiliser _Header Bar"
 
 #: pynicotine/gtkgui/frame.py:1029
 msgid "Show _Log Pane"
