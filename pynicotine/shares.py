@@ -663,28 +663,23 @@ class Shares:
         shared = self.share_dbs.get("files")
         bshared = self.share_dbs.get("buddyfiles")
 
-        try:
-            if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
-                for row in self.config.sections["server"]["userlist"]:
-                    if row[0] != user:
-                        continue
+        if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
+            for row in self.config.sections["server"]["userlist"]:
+                if row[0] != user:
+                    continue
 
-                    # Check if buddy is trusted
-                    if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                        break
+                # Check if buddy is trusted
+                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                    break
 
-                    for i in bshared.get(str(folder), ''):
-                        if file == i[0]:
-                            return True
-
-            if shared is not None:
-                for i in shared.get(str(folder), ''):
-                    if file == i[0]:
+                for i in bshared.get(str(folder), ""):
+                    if file == i.get(0):
                         return True
 
-        except Exception as error:
-            log.add(_("Your shares database is corrupted. Please rescan your shares and report "
-                      "any potential scanning issues to the developers. Error: %s"), error)
+        if shared is not None:
+            for i in shared.get(str(folder), ""):
+                if file == i.get(0):
+                    return True
 
         log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
             "virtual_name": virtualfilename,

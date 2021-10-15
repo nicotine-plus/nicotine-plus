@@ -22,8 +22,6 @@ import socket
 import struct
 import zlib
 
-from itertools import islice
-
 from pynicotine.config import config
 from pynicotine.logfacility import log
 from pynicotine.utils import debug
@@ -2242,8 +2240,7 @@ class SharedFileList(PeerMessage):
 
             except Exception as error:
                 msg_list = self.pack_object(0)
-                log.add(_("Your shares database is corrupted. Please rescan your shares and report "
-                          "any potential scanning issues to the developers. Error: %s"), error)
+                log.add(_("Unable to read shares database. Please rescan your shares. Error: %s"), error)
 
         msg.extend(msg_list)
 
@@ -2286,22 +2283,20 @@ class FileSearchResult(PeerMessage):
     token/ticket is taken from original FileSearch, UserSearch or
     RoomSearch message. """
 
-    __slots__ = ("conn", "user", "geoip", "token", "list", "privatelist", "fileindex", "freeulslots",
-                 "ulspeed", "inqueue", "fifoqueue", "numresults", "pos")
+    __slots__ = ("conn", "user", "geoip", "token", "list", "privatelist", "freeulslots",
+                 "ulspeed", "inqueue", "fifoqueue")
 
-    def __init__(self, conn=None, user=None, token=None, shares=None, fileindex=None, freeulslots=None,
-                 ulspeed=None, inqueue=None, fifoqueue=None, numresults=None):
+    def __init__(self, conn=None, user=None, token=None, shares=None, freeulslots=None,
+                 ulspeed=None, inqueue=None, fifoqueue=None):
         self.conn = conn
         self.user = user
         self.token = token
         self.list = shares
         self.privatelist = []
-        self.fileindex = fileindex
         self.freeulslots = freeulslots
         self.ulspeed = ulspeed
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
-        self.numresults = numresults
 
     def parse_network_message(self, message):
         try:
@@ -2381,29 +2376,13 @@ class FileSearchResult(PeerMessage):
         return msg
 
     def make_network_message(self):
-        msg_list = bytearray()
-        final_num_results = 0
-
-        for index in islice(self.list, self.numresults):
-            try:
-                fileinfo = self.fileindex[repr(index)]
-                final_num_results += 1
-
-            except Exception as error:
-                log.add(_("Your shares database is corrupted. Please rescan your shares and report "
-                          "any potential scanning issues to the developers. Error: %s"), error)
-                break
-
-            msg_list.extend(self.pack_file_info(fileinfo))
-
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.token))
-        msg.extend(self.pack_object(final_num_results))
+        msg.extend(self.pack_object(len(self.list)))
 
-        # We generate the result list early, so we don't send an incorrect result count
-        # if something goes wrong when reading the file index database
-        msg.extend(msg_list)
+        for fileinfo in self.list:
+            msg.extend(self.pack_file_info(fileinfo))
 
         msg.extend(bytes([self.freeulslots]))
         msg.extend(self.pack_object(self.ulspeed))
