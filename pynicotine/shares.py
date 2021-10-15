@@ -672,13 +672,13 @@ class Shares:
                 if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
                     break
 
-                for i in bshared.get(str(folder), ""):
-                    if file == i.get(0):
+                for fileinfo in bshared.get(str(folder), ""):
+                    if file == fileinfo[0]:
                         return True
 
         if shared is not None:
-            for i in shared.get(str(folder), ""):
-                if file == i.get(0):
+            for fileinfo in shared.get(str(folder), ""):
+                if file == fileinfo[0]:
                     return True
 
         log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
