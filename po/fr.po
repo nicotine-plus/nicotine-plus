@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -5235,8 +5235,7 @@ msgstr "Activer le correcteur (redémarrage nécessaire)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:50
 msgid "Restore previously open private chats on startup"
-msgstr ""
-"Restauration au démarrage des discussions privées précédemment ouvertes"
+msgstr "Restauration au démarrage des discussions privées précédemment ouvertes"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:57
 msgid "Enable CTCP-like private message responses (client version)"
@@ -5674,8 +5673,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:60
 msgid "Show privately shared files in search results"
-msgstr ""
-"Afficher les fichiers partagés en privé dans les résultats de recherche"
+msgstr "Afficher les fichiers partagés en privé dans les résultats de recherche"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:62
 msgid ""
