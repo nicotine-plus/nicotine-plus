@@ -2381,8 +2381,8 @@ msgid ""
 "Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</"
 "b>"
 msgstr ""
-"La dirección IP pública es <b>%(ip)s</b> y el puerto de escucha activo es "
-"<b>%(port)s</b>"
+"La dirección IP pública es <b>%(ip)s</b> y el puerto de escucha activo es <b>"
+"%(port)s</b>"
 
 #: pynicotine/gtkgui/settingswindow.py:96
 #, fuzzy
@@ -4067,7 +4067,8 @@ msgstr "Su contraseña ha sido cambiada. La contraseña es %s"
 #: pynicotine/pynicotine.py:1704
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
-msgstr "El usuario %(user)s está navegando por su lista de archivos compartidos"
+msgstr ""
+"El usuario %(user)s está navegando por su lista de archivos compartidos"
 
 #: pynicotine/pynicotine.py:1759
 #, fuzzy, python-format
@@ -4304,7 +4305,8 @@ msgstr "privilegiado"
 #: pynicotine/transfers.py:1184
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr "Carga iniciada: usuario %(user)s, dirección IP %(ip)s, archivo %(file)s"
+msgstr ""
+"Carga iniciada: usuario %(user)s, dirección IP %(ip)s, archivo %(file)s"
 
 #: pynicotine/transfers.py:1538
 #, python-format
@@ -5624,8 +5626,8 @@ msgid ""
 "    Example: Spears|Brittany|My beautiful album|hello"
 msgstr ""
 "Para el filtrado sensible al orden, así como para filtrar varias frases "
-"exactas, se pueden utilizar barras verticales para separar frases y palabras."
-"\n"
+"exactas, se pueden utilizar barras verticales para separar frases y "
+"palabras.\n"
 "    Ejemplo: Spears|Brittany|Mi hermoso álbum|hola"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:122
@@ -6685,7 +6687,8 @@ msgstr "Activar los filtros de resultados de búsqueda por defecto"
 #: pynicotine/gtkgui/ui/settings/search.ui:163
 #, fuzzy
 msgid "Allow regular expressions for the filter's include and exclude"
-msgstr "Permitir expresiones regulares para la inclusión y exclusión del filtro"
+msgstr ""
+"Permitir expresiones regulares para la inclusión y exclusión del filtro"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:182
 #, fuzzy
@@ -6940,8 +6943,8 @@ msgstr "Los archivos se cargarán en el orden en que se hayan puesto en cola."
 #, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr ""
-"Poner en cola las subidas si la velocidad total de transferencia alcanza ("
-"KiB/s):"
+"Poner en cola las subidas si la velocidad total de transferencia alcanza "
+"(KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:294
 #, fuzzy
