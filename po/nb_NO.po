@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 22:57+0300\n"
-"PO-Revision-Date: 2021-10-14 18:22+0000\n"
+"PO-Revision-Date: 2021-10-16 18:54+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -190,15 +190,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:27
 msgid "Albania"
-msgstr ""
+msgstr "Albania"
 
 #: pynicotine/geoip/geoip.py:28
 msgid "Armenia"
-msgstr ""
+msgstr "Armenia"
 
 #: pynicotine/geoip/geoip.py:29
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: pynicotine/geoip/geoip.py:30
 msgid "Antarctica"
@@ -242,11 +242,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:40
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #: pynicotine/geoip/geoip.py:41
 msgid "Belgium"
-msgstr ""
+msgstr "Belgia"
 
 #: pynicotine/geoip/geoip.py:42
 msgid "Burkina Faso"
@@ -254,7 +254,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:43
 msgid "Bulgaria"
-msgstr ""
+msgstr "Bulgaria"
 
 #: pynicotine/geoip/geoip.py:44
 msgid "Bahrain"
@@ -282,7 +282,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:50
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #: pynicotine/geoip/geoip.py:51
 msgid "Bonaire), Sint Eustatius and Saba"
@@ -290,11 +290,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:52
 msgid "Brazil"
-msgstr ""
+msgstr "Brasil"
 
 #: pynicotine/geoip/geoip.py:53
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #: pynicotine/geoip/geoip.py:54
 msgid "Bhutan"
@@ -310,7 +310,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:57
 msgid "Belarus"
-msgstr ""
+msgstr "Hviterussland"
 
 #: pynicotine/geoip/geoip.py:58
 msgid "Belize"
@@ -334,15 +334,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:63
 msgid "Congo"
-msgstr ""
+msgstr "Kongo"
 
 #: pynicotine/geoip/geoip.py:64
 msgid "Switzerland"
-msgstr ""
+msgstr "Sveits"
 
 #: pynicotine/geoip/geoip.py:65
 msgid "Ivory Coast"
-msgstr ""
+msgstr "Elfenbenskysten"
 
 #: pynicotine/geoip/geoip.py:66
 msgid "Cook Islands"
@@ -358,7 +358,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:69
 msgid "China"
-msgstr ""
+msgstr "Kina"
 
 #: pynicotine/geoip/geoip.py:70
 msgid "Colombia"
@@ -386,7 +386,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:76
 msgid "Cyprus"
-msgstr ""
+msgstr "Kypros"
 
 #: pynicotine/geoip/geoip.py:77
 msgid "Czech Republic"
@@ -394,7 +394,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:78
 msgid "Germany"
-msgstr ""
+msgstr "Tyskland"
 
 #: pynicotine/geoip/geoip.py:79
 msgid "Djibouti"
@@ -402,7 +402,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:80
 msgid "Denmark"
-msgstr ""
+msgstr "Danmark"
 
 #: pynicotine/geoip/geoip.py:81
 msgid "Dominica"
@@ -438,7 +438,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:89
 msgid "Spain"
-msgstr ""
+msgstr "Spania"
 
 #: pynicotine/geoip/geoip.py:90
 msgid "Ethiopia"
@@ -446,11 +446,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:91
 msgid "Europe"
-msgstr ""
+msgstr "Europa"
 
 #: pynicotine/geoip/geoip.py:92
 msgid "Finland"
-msgstr ""
+msgstr "Finland"
 
 #: pynicotine/geoip/geoip.py:93
 msgid "Fiji"
@@ -462,7 +462,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:95
 msgid "Micronesia"
-msgstr ""
+msgstr "Mikronesia"
 
 #: pynicotine/geoip/geoip.py:96
 msgid "Faroe Islands"
@@ -470,7 +470,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:97
 msgid "France"
-msgstr ""
+msgstr "Frankrike"
 
 #: pynicotine/geoip/geoip.py:98
 msgid "Gabon"
@@ -526,7 +526,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:111
 msgid "Greece"
-msgstr ""
+msgstr "Hellas"
 
 #: pynicotine/geoip/geoip.py:112
 msgid "South Georgia & South Sandwich Islands"
@@ -534,7 +534,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:113
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #: pynicotine/geoip/geoip.py:114
 msgid "Guam"
@@ -558,7 +558,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:119
 msgid "Honduras"
-msgstr ""
+msgstr "Honduras"
 
 #: pynicotine/geoip/geoip.py:120
 msgid "Croatia"
@@ -570,19 +570,19 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:122
 msgid "Hungary"
-msgstr ""
+msgstr "Ungarn"
 
 #: pynicotine/geoip/geoip.py:123
 msgid "Indonesia"
-msgstr ""
+msgstr "Indonesia"
 
 #: pynicotine/geoip/geoip.py:124
 msgid "Ireland"
-msgstr ""
+msgstr "Irland"
 
 #: pynicotine/geoip/geoip.py:125
 msgid "Israel"
-msgstr ""
+msgstr "Israel"
 
 #: pynicotine/geoip/geoip.py:126
 msgid "Isle of Man"
@@ -590,7 +590,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:127
 msgid "India"
-msgstr ""
+msgstr "India"
 
 #: pynicotine/geoip/geoip.py:128
 msgid "British Indian Ocean Territory"
@@ -598,19 +598,19 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:129
 msgid "Iraq"
-msgstr ""
+msgstr "Irak"
 
 #: pynicotine/geoip/geoip.py:130
 msgid "Iran"
-msgstr ""
+msgstr "Iran"
 
 #: pynicotine/geoip/geoip.py:131
 msgid "Iceland"
-msgstr ""
+msgstr "Island"
 
 #: pynicotine/geoip/geoip.py:132
 msgid "Italy"
-msgstr ""
+msgstr "Italia"
 
 #: pynicotine/geoip/geoip.py:133
 msgid "Jersey"
@@ -626,7 +626,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:136
 msgid "Japan"
-msgstr ""
+msgstr "Japan"
 
 #: pynicotine/geoip/geoip.py:137
 msgid "Kenya"
@@ -638,7 +638,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:139
 msgid "Cambodia"
-msgstr ""
+msgstr "Kambodsja"
 
 #: pynicotine/geoip/geoip.py:140
 msgid "Kiribati"
@@ -674,11 +674,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:148
 msgid "Laos"
-msgstr ""
+msgstr "Laos"
 
 #: pynicotine/geoip/geoip.py:149
 msgid "Lebanon"
-msgstr ""
+msgstr "Lebanon"
 
 #: pynicotine/geoip/geoip.py:150
 msgid "Saint Lucia"
@@ -694,7 +694,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:153
 msgid "Liberia"
-msgstr ""
+msgstr "Liberia"
 
 #: pynicotine/geoip/geoip.py:154
 msgid "Lesotho"
@@ -710,15 +710,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:157
 msgid "Latvia"
-msgstr ""
+msgstr "Latvia"
 
 #: pynicotine/geoip/geoip.py:158
 msgid "Libya"
-msgstr ""
+msgstr "Libya"
 
 #: pynicotine/geoip/geoip.py:159
 msgid "Morocco"
-msgstr ""
+msgstr "Marokko"
 
 #: pynicotine/geoip/geoip.py:160
 msgid "Monaco"
@@ -726,11 +726,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:161
 msgid "Moldova"
-msgstr ""
+msgstr "Moldova"
 
 #: pynicotine/geoip/geoip.py:162
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #: pynicotine/geoip/geoip.py:163
 msgid "Saint Martin"
@@ -738,7 +738,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:164
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagaskar"
 
 #: pynicotine/geoip/geoip.py:165
 msgid "Marshall Islands"
@@ -750,7 +750,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:167
 msgid "Mali"
-msgstr ""
+msgstr "Mali"
 
 #: pynicotine/geoip/geoip.py:168
 msgid "Myanmar"
@@ -758,7 +758,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:169
 msgid "Mongolia"
-msgstr ""
+msgstr "Mongolia"
 
 #: pynicotine/geoip/geoip.py:170
 msgid "Macau"
@@ -782,7 +782,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:175
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #: pynicotine/geoip/geoip.py:176
 msgid "Mauritius"
@@ -810,7 +810,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:182
 msgid "Namibia"
-msgstr ""
+msgstr "Namibia"
 
 #: pynicotine/geoip/geoip.py:183
 msgid "New Caledonia"
@@ -818,7 +818,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:184
 msgid "Niger"
-msgstr ""
+msgstr "Niger"
 
 #: pynicotine/geoip/geoip.py:185
 msgid "Norfolk Island"
@@ -826,7 +826,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:186
 msgid "Nigeria"
-msgstr ""
+msgstr "Nigeria"
 
 #: pynicotine/geoip/geoip.py:187
 msgid "Nicaragua"
@@ -834,15 +834,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:188
 msgid "Netherlands"
-msgstr ""
+msgstr "Nederland"
 
 #: pynicotine/geoip/geoip.py:189
 msgid "Norway"
-msgstr ""
+msgstr "Norge"
 
 #: pynicotine/geoip/geoip.py:190
 msgid "Nepal"
-msgstr ""
+msgstr "Nepal"
 
 #: pynicotine/geoip/geoip.py:191
 msgid "Nauru"
@@ -858,11 +858,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:194
 msgid "Oman"
-msgstr ""
+msgstr "Oman"
 
 #: pynicotine/geoip/geoip.py:195
 msgid "Panama"
-msgstr ""
+msgstr "Panama"
 
 #: pynicotine/geoip/geoip.py:196
 msgid "Peru"
@@ -882,11 +882,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:200
 msgid "Pakistan"
-msgstr ""
+msgstr "Pakistan"
 
 #: pynicotine/geoip/geoip.py:201
 msgid "Poland"
-msgstr ""
+msgstr "Polen"
 
 #: pynicotine/geoip/geoip.py:202
 msgid "Saint Pierre & Miquelon"
@@ -906,7 +906,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:206
 msgid "Portugal"
-msgstr ""
+msgstr "Portugal"
 
 #: pynicotine/geoip/geoip.py:207
 msgid "Palau"
@@ -926,15 +926,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:211
 msgid "Romania"
-msgstr ""
+msgstr "Romania"
 
 #: pynicotine/geoip/geoip.py:212
 msgid "Serbia"
-msgstr ""
+msgstr "Serbia"
 
 #: pynicotine/geoip/geoip.py:213
 msgid "Russia"
-msgstr ""
+msgstr "Russland"
 
 #: pynicotine/geoip/geoip.py:214
 msgid "Rwanda"
@@ -954,11 +954,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:218
 msgid "Sudan"
-msgstr ""
+msgstr "Sudan"
 
 #: pynicotine/geoip/geoip.py:219
 msgid "Sweden"
-msgstr ""
+msgstr "Sverige"
 
 #: pynicotine/geoip/geoip.py:220
 msgid "Singapore"
@@ -970,7 +970,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:222
 msgid "Slovenia"
-msgstr ""
+msgstr "Slovenia"
 
 #: pynicotine/geoip/geoip.py:223
 msgid "Svalbard & Jan Mayen Islands"
@@ -990,15 +990,15 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:227
 msgid "Senegal"
-msgstr ""
+msgstr "Senegal"
 
 #: pynicotine/geoip/geoip.py:228
 msgid "Somalia"
-msgstr ""
+msgstr "Somalia"
 
 #: pynicotine/geoip/geoip.py:229
 msgid "Suriname"
-msgstr ""
+msgstr "Surinam"
 
 #: pynicotine/geoip/geoip.py:230
 msgid "South Sudan"
@@ -1018,7 +1018,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:234
 msgid "Syria"
-msgstr ""
+msgstr "Syria"
 
 #: pynicotine/geoip/geoip.py:235
 msgid "Eswatini"
@@ -1042,7 +1042,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:240
 msgid "Thailand"
-msgstr ""
+msgstr "Thailand"
 
 #: pynicotine/geoip/geoip.py:241
 msgid "Tajikistan"
@@ -1062,7 +1062,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:245
 msgid "Tunisia"
-msgstr ""
+msgstr "Tunisia"
 
 #: pynicotine/geoip/geoip.py:246
 msgid "Tonga"
@@ -1070,7 +1070,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:247
 msgid "Turkey"
-msgstr ""
+msgstr "Tyrkia"
 
 #: pynicotine/geoip/geoip.py:248
 msgid "Trinidad & Tobago"
@@ -1082,7 +1082,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:250
 msgid "Taiwan"
-msgstr ""
+msgstr "Taiwan"
 
 #: pynicotine/geoip/geoip.py:251
 msgid "Tanzania"
@@ -1090,11 +1090,11 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:252
 msgid "Ukraine"
-msgstr ""
+msgstr "Ukraina"
 
 #: pynicotine/geoip/geoip.py:253
 msgid "Uganda"
-msgstr ""
+msgstr "Uganda"
 
 #: pynicotine/geoip/geoip.py:254
 msgid "U.S. Minor Outlying Islands"
@@ -1106,7 +1106,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:256
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #: pynicotine/geoip/geoip.py:257
 msgid "Uzbekistan"
@@ -1134,7 +1134,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:263
 msgid "Viet Nam"
-msgstr ""
+msgstr "Vietnam"
 
 #: pynicotine/geoip/geoip.py:264
 msgid "Vanuatu"
@@ -1150,7 +1150,7 @@ msgstr ""
 
 #: pynicotine/geoip/geoip.py:267
 msgid "Kosovo"
-msgstr ""
+msgstr "Kosovo"
 
 #: pynicotine/geoip/geoip.py:268
 msgid "Yemen"
@@ -1649,11 +1649,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1044
 msgid "_Configure Shares"
-msgstr ""
+msgstr "_Set opp delinger"
 
 #: pynicotine/gtkgui/frame.py:1051
 msgid "_Browse Public Shares"
-msgstr ""
+msgstr "_Utforsk offentlige delinger"
 
 #: pynicotine/gtkgui/frame.py:1052
 msgid "Bro_wse Buddy Shares"
@@ -1759,7 +1759,7 @@ msgstr "Interesser"
 #: pynicotine/gtkgui/frame.py:1694 pynicotine/gtkgui/userbrowse.py:602
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr ""
+msgstr "Kan ikke opprette mappen «%(folder)s». Feil: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1699
 msgid "Select a Saved Shares List File"
@@ -1772,7 +1772,7 @@ msgstr "Opprett et nytt rom?"
 #: pynicotine/gtkgui/frame.py:1740
 #, python-format
 msgid "Are you sure you wish to create a new room \"%s\"?"
-msgstr ""
+msgstr "Lag nytt rom ved navn «%s»?"
 
 #: pynicotine/gtkgui/frame.py:1741
 msgid "Make room private"
@@ -2690,11 +2690,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/uploads.py:69
 msgid "Clear All Uploads"
-msgstr ""
+msgstr "Fjern alle opplastinger"
 
 #: pynicotine/gtkgui/uploads.py:70
 msgid "Are you sure you wish to clear all uploads?"
-msgstr ""
+msgstr "Fjern alle opplastinger?"
 
 #: pynicotine/gtkgui/userbrowse.py:206
 #: pynicotine/gtkgui/ui/settings/downloads.ui:187
@@ -2704,31 +2704,33 @@ msgstr "Mapper"
 
 #: pynicotine/gtkgui/userbrowse.py:215
 msgid "_Save Shares List to Disk"
-msgstr ""
+msgstr "_Lagre liste over delinger til disk"
 
 #: pynicotine/gtkgui/userbrowse.py:222 pynicotine/gtkgui/userbrowse.py:233
 #: pynicotine/gtkgui/userbrowse.py:256 pynicotine/gtkgui/userbrowse.py:273
 #: pynicotine/gtkgui/userbrowse.py:373 pynicotine/gtkgui/userbrowse.py:378
 msgid "_Download Folder"
-msgstr ""
+msgstr "_Nedlastningsmappe"
 
 #: pynicotine/gtkgui/userbrowse.py:223 pynicotine/gtkgui/userbrowse.py:234
 #: pynicotine/gtkgui/userbrowse.py:257 pynicotine/gtkgui/userbrowse.py:274
 #: pynicotine/gtkgui/userbrowse.py:373 pynicotine/gtkgui/userbrowse.py:378
 msgid "Download Folder _To…"
-msgstr ""
+msgstr "Last ned mappe _til …"
 
 #: pynicotine/gtkgui/userbrowse.py:224 pynicotine/gtkgui/userbrowse.py:235
 #: pynicotine/gtkgui/userbrowse.py:258 pynicotine/gtkgui/userbrowse.py:275
 #: pynicotine/gtkgui/userbrowse.py:373 pynicotine/gtkgui/userbrowse.py:378
+#, fuzzy
 msgid "Download _Recursive"
-msgstr ""
+msgstr "Last ned _rekursivt"
 
 #: pynicotine/gtkgui/userbrowse.py:225 pynicotine/gtkgui/userbrowse.py:236
 #: pynicotine/gtkgui/userbrowse.py:259 pynicotine/gtkgui/userbrowse.py:276
 #: pynicotine/gtkgui/userbrowse.py:374 pynicotine/gtkgui/userbrowse.py:379
+#, fuzzy
 msgid "Download R_ecursive To…"
-msgstr ""
+msgstr "Last ned R_ekursivt til …"
 
 #: pynicotine/gtkgui/userbrowse.py:231
 msgid "Download _To…"
@@ -2742,30 +2744,30 @@ msgstr "Last opp mappe til …"
 #: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:248
 #: pynicotine/gtkgui/userbrowse.py:262 pynicotine/gtkgui/userbrowse.py:374
 msgid "Upload Folder Recursive To…"
-msgstr ""
+msgstr "Last opp mappe rekursivt til …"
 
 #: pynicotine/gtkgui/userbrowse.py:249
 msgid "Up_load File(s)"
-msgstr ""
+msgstr "Last _opp fil(er)"
 
 #: pynicotine/gtkgui/userbrowse.py:264 pynicotine/gtkgui/userbrowse.py:322
 #: pynicotine/gtkgui/userbrowse.py:375 pynicotine/gtkgui/userbrowse.py:417
 msgid "Open in File _Manager"
-msgstr ""
+msgstr "Åpne i fil_behandler"
 
 #: pynicotine/gtkgui/userbrowse.py:266 pynicotine/gtkgui/userbrowse.py:278
 #: pynicotine/gtkgui/userbrowse.py:375 pynicotine/gtkgui/userbrowse.py:379
 msgid "Copy _Folder Path"
-msgstr ""
+msgstr "Kopier _mappesti"
 
 #: pynicotine/gtkgui/userbrowse.py:318 pynicotine/gtkgui/userbrowse.py:334
 #: pynicotine/gtkgui/userbrowse.py:413 pynicotine/gtkgui/userbrowse.py:419
 msgid "Download"
-msgstr ""
+msgstr "Last ned"
 
 #: pynicotine/gtkgui/userbrowse.py:319 pynicotine/gtkgui/userbrowse.py:413
 msgid "Upload"
-msgstr ""
+msgstr "Last opp"
 
 #: pynicotine/gtkgui/userbrowse.py:588
 #, python-format
@@ -2994,7 +2996,7 @@ msgstr "Send m_elding"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:232
 msgid "Show User I_nfo"
-msgstr ""
+msgstr "Vis brukeri_nfo"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
 #: pynicotine/gtkgui/ui/userinfo.ui:494
@@ -3095,7 +3097,7 @@ msgstr "Vis Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:88
 msgid "Alternative Speed Limits"
-msgstr ""
+msgstr "Alternative hastighetsgrenser"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:97
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:19
@@ -3113,7 +3115,7 @@ msgstr "Send melding"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:104
 msgid "Receive a User's IP Address"
-msgstr ""
+msgstr "Motta en brukers IP-adresse"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:105
 msgid "Receive a User's Info"
@@ -3186,17 +3188,17 @@ msgid "Earth"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/ui.py:68
-#, python-format
+#, fuzzy, python-format
 msgid "Failed to load ui file %(file)s: %(error)s"
-msgstr ""
+msgstr "Klarte ikke å laste inn grensesnittsfil %(file)s: %(error)s"
 
 #: pynicotine/gtkgui/wishlist.py:52
 msgid "Wishes"
-msgstr ""
+msgstr "Ønsker"
 
 #: pynicotine/gtkgui/wishlist.py:141
 msgid "Clear Wishlist?"
-msgstr ""
+msgstr "Tøm ønskeliste?"
 
 #: pynicotine/gtkgui/wishlist.py:142
 msgid "Are you sure you wish to clear your wishlist?"
@@ -3550,7 +3552,7 @@ msgstr ""
 
 #: pynicotine/shares.py:562 pynicotine/shares.py:933
 msgid "Downloaded"
-msgstr ""
+msgstr "Nedlastet"
 
 #: pynicotine/shares.py:635
 #, python-format
@@ -3591,7 +3593,7 @@ msgstr ""
 #: pynicotine/shares.py:957
 #, python-format
 msgid "Progress: %s"
-msgstr ""
+msgstr "Framdrift: %s"
 
 #: pynicotine/shares.py:970
 msgid "Rescanning normal shares…"
@@ -3612,17 +3614,17 @@ msgstr ""
 #: pynicotine/slskproto.py:531
 #, python-format
 msgid "Listening on port %i"
-msgstr ""
+msgstr "Lytter til port %i"
 
 #: pynicotine/transfers.py:996
 #, python-format
 msgid "I/O error: %s"
-msgstr ""
+msgstr "I/O-feil: %s"
 
 #: pynicotine/transfers.py:1059 pynicotine/transfers.py:1904
 #, python-format
 msgid "OS error: %s"
-msgstr ""
+msgstr "OS-feil: %s"
 
 #: pynicotine/transfers.py:1079
 #, python-format
@@ -3632,17 +3634,17 @@ msgstr ""
 #: pynicotine/transfers.py:1087 pynicotine/transfers.py:1329
 #, python-format
 msgid "Download I/O error: %s"
-msgstr ""
+msgstr "Nedlastings-I/O-feil: %s"
 
 #: pynicotine/transfers.py:1107
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
-msgstr ""
+msgstr "Nedlasting startet: bruker %(user)s, fil %(file)s"
 
 #: pynicotine/transfers.py:1155
 #, python-format
 msgid "Upload I/O error: %s"
-msgstr ""
+msgstr "Opplastings-I/O-feil: %s"
 
 #: pynicotine/transfers.py:1166
 msgid "privileged"
@@ -3651,7 +3653,7 @@ msgstr ""
 #: pynicotine/transfers.py:1184
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr ""
+msgstr "Opplasting startet: Bruker %(user)s, IP-adresse %(ip)s, fil %(file)s"
 
 #: pynicotine/transfers.py:1538
 #, python-format
@@ -3675,11 +3677,11 @@ msgstr ""
 #: pynicotine/transfers.py:1852
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
-msgstr ""
+msgstr "%(file)s nedlastet fra %(user)s"
 
 #: pynicotine/transfers.py:1856
 msgid "File downloaded"
-msgstr ""
+msgstr "Fil nedlastet"
 
 #: pynicotine/transfers.py:1861
 #, python-format
@@ -3694,11 +3696,11 @@ msgstr ""
 #: pynicotine/transfers.py:1885
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr ""
+msgstr "%(folder)s nedlastet fra %(user)s"
 
 #: pynicotine/transfers.py:1889
 msgid "Folder downloaded"
-msgstr ""
+msgstr "Mappe nedlastet"
 
 #: pynicotine/transfers.py:1894
 #, python-format
@@ -3953,68 +3955,68 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:266
 msgid "Last Speed"
-msgstr ""
+msgstr "Siste hastighet"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:337
 msgid "Download file"
-msgstr ""
+msgstr "Last ned fil"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:358
 msgid "Previous file"
-msgstr ""
+msgstr "Forrige fil"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:374
 msgid "Next file"
-msgstr ""
+msgstr "Neste fil"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:5
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Tastatursnarveier"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
 msgid "Show Log Pane"
-msgstr ""
+msgstr "Vis loggføringsfane"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:69
 msgid "Menus"
-msgstr ""
+msgstr "Menyer"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:74
 msgid "Open Main Menu"
-msgstr ""
+msgstr "Åpne hovedmeny"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:81
 msgid "Open Context Menu"
-msgstr ""
+msgstr "Åpne bindeleddsmeny"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:89
 msgid "Tabs"
-msgstr ""
+msgstr "Faner"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:94
 msgid "Change Primary Tab"
-msgstr ""
+msgstr "Endre hovedfane"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:101
 msgid "Go to Previous Secondary Tab"
-msgstr ""
+msgstr "Gå til forrige sekundære fane"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:108
 msgid "Go to Next Secondary Tab"
-msgstr ""
+msgstr "Gå til neste sekundære fane"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:115
 msgid "Close Secondary Tab"
-msgstr ""
+msgstr "Tøm sekundær fane"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:123
 msgid "File Lists"
-msgstr ""
+msgstr "Fillister"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:128
 msgid "Copy File Path"
-msgstr ""
+msgstr "Kopier filsti"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
 msgid "Resume / Retry Transfer"
@@ -4030,11 +4032,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:162
 msgid "Cut"
-msgstr ""
+msgstr "Klipp ut"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
 msgid "Paste"
-msgstr ""
+msgstr "Lim inn"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:183
 msgid "Insert Emoji"
@@ -4042,19 +4044,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:190
 msgid "Select All"
-msgstr ""
+msgstr "Velg alt"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:197
 msgid "Find"
-msgstr ""
+msgstr "Finn"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:204
 msgid "Find Next Match"
-msgstr ""
+msgstr "Finn neste treff"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:211
 msgid "Find Previous Match"
-msgstr ""
+msgstr "Finn forrige treff"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:224
 msgid "Rescan Public Shares"
@@ -4071,27 +4073,27 @@ msgstr ""
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:35
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:218
 msgid "Started Downloads"
-msgstr ""
+msgstr "Startede nedlastinger"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:62
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:245
 msgid "Completed Downloads"
-msgstr ""
+msgstr "Fullførte nedlastninger"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:89
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:272
 msgid "Downloaded Size"
-msgstr ""
+msgstr "Nedlastingsstørrelse"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:121
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:304
 msgid "Started Uploads"
-msgstr ""
+msgstr "Startede opplastinger"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:148
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:331
 msgid "Completed Uploads"
-msgstr ""
+msgstr "Fullførte opplastinger"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:175
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:358
@@ -4104,28 +4106,28 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:400
 msgid "_Reset Statistics…"
-msgstr ""
+msgstr "_Tilbakestill statistikk …"
 
 #: pynicotine/gtkgui/ui/downloads.ui:68
 msgid "Resume"
-msgstr ""
+msgstr "Fortsett"
 
 #: pynicotine/gtkgui/ui/downloads.ui:96
 msgid "Pause"
-msgstr ""
+msgstr "Pause"
 
 #: pynicotine/gtkgui/ui/downloads.ui:124
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2230
 msgid "Clear"
-msgstr ""
+msgstr "Tøm"
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
-msgstr ""
+msgstr "Tøm fullførte"
 
 #: pynicotine/gtkgui/ui/downloads.ui:192
 msgid "Clear _Downloads…"
-msgstr ""
+msgstr "Tøm _nedlastninger …"
 
 #: pynicotine/gtkgui/ui/interests.ui:23
 msgid "Personal Interests"
@@ -4149,15 +4151,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/interests.ui:234
 msgid "Similar Users"
-msgstr ""
+msgstr "Lignende brukere"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:9
 msgid "Menu"
-msgstr ""
+msgstr "Meny"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:23
 msgid "_Wishlist"
-msgstr ""
+msgstr "_Ønskeliste"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:40
 msgid "Search scope"
@@ -4169,17 +4171,17 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:46
 msgid "Rooms"
-msgstr ""
+msgstr "Rom"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:63
 msgid "Room…"
-msgstr ""
+msgstr "Rom …"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:83 pynicotine/gtkgui/ui/mainwindow.ui:452
 #: pynicotine/gtkgui/ui/mainwindow.ui:509
 #: pynicotine/gtkgui/ui/mainwindow.ui:575
 msgid "Username…"
-msgstr ""
+msgstr "Brukernavn …"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:104
 msgid "Search term…"
@@ -4193,7 +4195,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:133
 msgid "Configure searches"
-msgstr ""
+msgstr "Sett opp søk"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:250
 #: pynicotine/gtkgui/ui/mainwindow.ui:393 pynicotine/gtkgui/ui/search.ui:118
@@ -4241,19 +4243,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:614
 msgid "_Open List"
-msgstr ""
+msgstr "_Åpne liste"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:625
 msgid "Configure shares"
-msgstr ""
+msgstr "Sett opp delinger"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:682
 msgid "_Room List"
-msgstr ""
+msgstr "_Romliste"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:702
 msgid "Create or join room…"
-msgstr ""
+msgstr "Opprett eller ta del i rom …"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:703
 msgid ""
@@ -4353,11 +4355,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1912
 msgid "Show log history"
-msgstr ""
+msgstr "Vis logghistorikk"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:31
 msgid "Chat Room Commands"
-msgstr ""
+msgstr "Ludreromskommandoer"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:47
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:682
@@ -4371,12 +4373,12 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:84
 msgid "Leave current room"
-msgstr ""
+msgstr "Forlat nåværende rom"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:110
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:83
 msgid "Clear the chat window"
-msgstr ""
+msgstr "Tøm sludrevinduet"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 msgid "Set your personal ticker"
@@ -4389,12 +4391,12 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:177
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:98
 msgid "/me 'message'"
-msgstr ""
+msgstr "/me «melding»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:188
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:109
 msgid "Say something in the third-person"
-msgstr ""
+msgstr "Si noe i tredjeperson"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
@@ -4414,7 +4416,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
 msgid "Quit Nicotine+"
-msgstr ""
+msgstr "Avslutt Nicotine+"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
 msgid "/add /ad 'user'"
@@ -4801,7 +4803,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/privatechat.ui:69
 msgid "_Log"
-msgstr ""
+msgstr "_Logg"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:77
 msgid "Private chat command help"
@@ -4867,7 +4869,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/search.ui:328
 #: pynicotine/gtkgui/ui/settings/search.ui:348
 msgid "Country code, e.g. US|GB|ES or !DE|!GB"
-msgstr ""
+msgstr "Landskode, f.eks. US|GB|ES eller !DE|!GB"
 
 #: pynicotine/gtkgui/ui/search.ui:350
 msgid "Free slot"
@@ -4885,11 +4887,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:47
 msgid "Country codes to block (comma separated):"
-msgstr ""
+msgstr "Landskoder å blokkere (kommainndelt):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:60
 msgid "Codes must be in ISO 3166-2 format."
-msgstr ""
+msgstr "Koder må være i ISO 3166-2-format."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
 msgid "Use custom geo block message:"
@@ -4909,7 +4911,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:146
 msgid "Banned Users"
-msgstr ""
+msgstr "Bannlyste brukere"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:206
 #: pynicotine/gtkgui/ui/settings/ban.ui:363
@@ -4920,7 +4922,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/ignore.ui:243
 #: pynicotine/gtkgui/ui/settings/shares.ui:145
 msgid "Add…"
-msgstr ""
+msgstr "Legg til …"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:267
 #: pynicotine/gtkgui/ui/settings/ban.ui:424
@@ -4930,11 +4932,11 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/ignore.ui:304
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:236
 msgid "Clear All"
-msgstr ""
+msgstr "Tøm alt"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:303
 msgid "Blocked IP Addresses"
-msgstr ""
+msgstr "Blokkerte IP-adresser"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:32
 msgid "Censor"
@@ -4962,7 +4964,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:280
 msgid "Replacements"
-msgstr ""
+msgstr "Erstatninger"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:31
 msgid "Enable spell checker (requires a restart)"
@@ -5097,7 +5099,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:250
 msgid "Download folder:"
-msgstr ""
+msgstr "Nedlastningsmappe:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:276
 msgid "Save buddies' uploads to:"
@@ -5126,7 +5128,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:408
 msgid "Edit…"
-msgstr ""
+msgstr "Rediger …"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:469
 msgid "Load Defaults"
@@ -5142,7 +5144,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/events.ui:15
 msgid "Transfer Actions"
-msgstr ""
+msgstr "Overføringshandlinger"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:36
 msgid "Double-click action for downloads:"
@@ -5154,7 +5156,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/events.ui:111
 msgid "Commands"
-msgstr ""
+msgstr "Kommandoer"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:132
 msgid "Run command after file download finishes ($ for file path):"
@@ -5174,27 +5176,27 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
 msgid "Ignored Users"
-msgstr ""
+msgstr "Ignorerte brukere"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:184
 msgid "Ignored IP Addresses"
-msgstr ""
+msgstr "Ignorerte IP-adresser"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:34
 msgid "Log chatrooms by default"
-msgstr ""
+msgstr "Loggfør sludrerom som forvalg"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:41
 msgid "Log private chat by default"
-msgstr ""
+msgstr "Loggfør private sludringer som forvalg"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:48
 msgid "Log transfers to file"
-msgstr ""
+msgstr "Loggfør overføringer til fil"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:55
 msgid "Log debug messages to file"
-msgstr ""
+msgstr "Loggfør avlusningsmeldinger til fil"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:70
 msgid "Folder Locations"
@@ -5218,7 +5220,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/log.ui:200
 msgid "Chat History"
-msgstr ""
+msgstr "Sludrehistorikk"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:209
 msgid "Display logged chat room messages when a room is rejoined"
@@ -5235,15 +5237,15 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/log.ui:306
 msgid "Timestamps"
-msgstr ""
+msgstr "Tidsstempler"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:315
 msgid "Display timestamps"
-msgstr ""
+msgstr "Vis tidsstempler"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:333
 msgid "Chat room format:"
-msgstr ""
+msgstr "Sludreromsformat:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:373
 #: pynicotine/gtkgui/ui/settings/log.ui:432
@@ -5273,19 +5275,19 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2079
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2140
 msgid "Default"
-msgstr ""
+msgstr "Forvalg"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:392
 msgid "Private room format:"
-msgstr ""
+msgstr "Format for private rom:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:451
 msgid "Log file format:"
-msgstr ""
+msgstr "Loggfil-format:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:41
 msgid "Login Details"
-msgstr ""
+msgstr "Innloggingsdetaljer"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:57
 msgid ""
@@ -5295,7 +5297,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:150
 msgid "Connection"
-msgstr ""
+msgstr "Tilkobling"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:161
 msgid "Auto-connect to the server on startup"
@@ -5307,19 +5309,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:206
 msgid "First port"
-msgstr ""
+msgstr "Første port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:212
 msgid "to"
-msgstr ""
+msgstr "til"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:221
 msgid "Last port"
-msgstr ""
+msgstr "Siste port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:279
 msgid "Away Status"
-msgstr ""
+msgstr "Borte-status"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:300
 msgid "Toggle away status after minutes of inactivity:"
@@ -5331,7 +5333,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:366
 msgid "Advanced"
-msgstr ""
+msgstr "Avansert"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:375
 msgid "Enable CTCP-like private message responses (client version)"
@@ -5358,7 +5360,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:466
 msgid "Soulseek server:"
-msgstr ""
+msgstr "Soulseek-tjener:"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:25
 msgid "Show notification for private chats and mentions in the window title"
@@ -5374,7 +5376,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:50
 msgid "Notification Popups"
-msgstr ""
+msgstr "Merknadsoppsprett"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:60
 msgid "Enable sound for notification popups"
@@ -5402,11 +5404,11 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:103
 msgid "Tray"
-msgstr ""
+msgstr "Systemkurv"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:117
 msgid "Display tray icon"
-msgstr ""
+msgstr "Vis systemkurvsikon"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:125
 msgid "Minimize to tray on startup"
@@ -5444,7 +5446,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:96
 msgid "_Add Plugins"
-msgstr ""
+msgstr "_Legg til programtillegg"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:182
 msgid "No Plugin Selected"
@@ -5452,7 +5454,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
 msgid "Version: "
-msgstr ""
+msgstr "Versjon: "
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:221
 msgid "Author(s): "
@@ -5489,27 +5491,27 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:182
 msgid "Include:"
-msgstr ""
+msgstr "Inkluder:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:209
 msgid "Exclude:"
-msgstr ""
+msgstr "Ekskluder:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:236
 msgid "File Type:"
-msgstr ""
+msgstr "Filtype:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:268
 msgid "Size:"
-msgstr ""
+msgstr "Størrelse:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:299
 msgid "Bitrate:"
-msgstr ""
+msgstr "Bitrate:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:330
 msgid "Country Code:"
-msgstr ""
+msgstr "Landskode:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:374
 msgid "Only show results from users with an available upload slot."
@@ -5521,7 +5523,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:433
 msgid "Network Searches"
-msgstr ""
+msgstr "Nettverkssøk"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
 msgid "Respond to search requests from other users"
@@ -5588,7 +5590,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/shares.ui:74
 #: pynicotine/gtkgui/ui/userinfo.ui:272
 msgid "Shared Folders"
-msgstr ""
+msgstr "Delte mapper"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:85
 msgid ""
@@ -5601,23 +5603,23 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:173
 msgid "Rename"
-msgstr ""
+msgstr "Gi nytt navn"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:24
 msgid "Enable Text-to-Speech"
-msgstr ""
+msgstr "Skru på tekst-til-tale"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:43
 msgid "Text-to-Speech command:"
-msgstr ""
+msgstr "Tekst-til-tale-kommando:"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:131
 msgid "Chat room message:"
-msgstr ""
+msgstr "Sludreromsmelding:"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:188
 msgid "Private chat message:"
-msgstr ""
+msgstr "Privat sludremelding:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:56
 msgid "Autoclear finished/cancelled uploads from transfer list"
