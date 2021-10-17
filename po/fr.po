@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-09 10:03+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -2304,8 +2304,7 @@ msgstr "Document/Texte"
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
-msgstr ""
-"Erreur lors du chargement de l'icône personnalisée %(path)s : %(error)s"
+msgstr "Erreur lors du chargement de l'icône personnalisée %(path)s : %(error)s"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:93
 msgid "Show Nicotine+"
@@ -3816,8 +3815,7 @@ msgstr "Erreur lors de l'examen du fichier %(path)s : %(error)s"
 #: pynicotine/shares.py:461
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
-msgstr ""
-"Erreur lors de l'examen des métadonnées du fichier %(path)s : %(error)s"
+msgstr "Erreur lors de l'examen des métadonnées du fichier %(path)s : %(error)s"
 
 #: pynicotine/shares.py:692
 #, python-format
@@ -5266,8 +5264,7 @@ msgstr "Activer la liste déroulante"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:166
 msgid "Minimum characters required to display drop-down:"
-msgstr ""
-"Nombre de caractères minimum requis pour afficher la liste déroulante :"
+msgstr "Nombre de caractères minimum requis pour afficher la liste déroulante :"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:203
 msgid "Allowed chat completions:"
