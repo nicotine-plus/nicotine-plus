@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-14 20:47+0200\n"
+"POT-Creation-Date: 2021-10-17 19:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1709,7 +1709,7 @@ msgid "User Browse"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/settingswindow.py:3107
-#: pynicotine/gtkgui/ui/mainwindow.ui:1227
+#: pynicotine/gtkgui/ui/mainwindow.ui:1215
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
 msgstr ""
@@ -2075,7 +2075,7 @@ msgstr ""
 msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
 "the password of an existing Soulseek account, you need to be logged into "
-"that account "
+"that account."
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:195
@@ -2157,7 +2157,7 @@ msgstr ""
 #: pynicotine/gtkgui/settingswindow.py:1043
 #: pynicotine/gtkgui/widgets/popupmenu.py:250
 #: pynicotine/gtkgui/widgets/popupmenu.py:305
-#: pynicotine/gtkgui/ui/userinfo.ui:593
+#: pynicotine/gtkgui/ui/userinfo.ui:598
 msgid "Ignore User"
 msgstr ""
 
@@ -2181,7 +2181,7 @@ msgstr ""
 #: pynicotine/gtkgui/settingswindow.py:1233
 #: pynicotine/gtkgui/widgets/popupmenu.py:249
 #: pynicotine/gtkgui/widgets/popupmenu.py:302
-#: pynicotine/gtkgui/ui/userinfo.ui:569
+#: pynicotine/gtkgui/ui/userinfo.ui:574
 msgid "Ban User"
 msgstr ""
 
@@ -2437,7 +2437,7 @@ msgid "URL Handlers"
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:3114
-#: pynicotine/gtkgui/ui/mainwindow.ui:1694
+#: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Transfers"
 msgstr ""
 
@@ -2457,7 +2457,7 @@ msgid "Events"
 msgstr ""
 
 #: pynicotine/gtkgui/settingswindow.py:3121
-#: pynicotine/gtkgui/ui/mainwindow.ui:1655
+#: pynicotine/gtkgui/ui/mainwindow.ui:1631
 msgid "Chat"
 msgstr ""
 
@@ -2906,12 +2906,12 @@ msgid "User %s is offline"
 msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:569
-msgid "Edit Comments"
+msgid "Note about user"
 msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:570
 #, python-format
-msgid "Add a few notes associated with user %s:"
+msgid "Add a note about this user %s:"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/filechooser.py:71
@@ -2966,7 +2966,7 @@ msgid "Do you really want to close all tabs?"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:229
-#: pynicotine/gtkgui/ui/userinfo.ui:469
+#: pynicotine/gtkgui/ui/userinfo.ui:474
 msgid "Send M_essage"
 msgstr ""
 
@@ -2975,7 +2975,7 @@ msgid "Show User I_nfo"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
-#: pynicotine/gtkgui/ui/userinfo.ui:494
+#: pynicotine/gtkgui/ui/userinfo.ui:499
 msgid "_Browse Files"
 msgstr ""
 
@@ -2984,7 +2984,7 @@ msgid "Gi_ve Privileges…"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:240
-#: pynicotine/gtkgui/ui/userinfo.ui:519
+#: pynicotine/gtkgui/ui/userinfo.ui:524
 msgid "Show IP A_ddress"
 msgstr ""
 
@@ -2994,7 +2994,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:246
 #: pynicotine/gtkgui/widgets/popupmenu.py:293
-#: pynicotine/gtkgui/ui/userinfo.ui:544
+#: pynicotine/gtkgui/ui/userinfo.ui:549
 msgid "_Add to Buddy List"
 msgstr ""
 
@@ -3163,7 +3163,7 @@ msgstr ""
 msgid "Earth"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/ui.py:68
+#: pynicotine/gtkgui/widgets/ui.py:69
 #, python-format
 msgid "Failed to load ui file %(file)s: %(error)s"
 msgstr ""
@@ -3368,7 +3368,7 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:741
 #, python-format
-msgid "IP address of user %s is unknown, since user is offline"
+msgid "Can't retrieve the IP of user %s, since this user is offline"
 msgstr ""
 
 #: pynicotine/pynicotine.py:744
@@ -3445,30 +3445,30 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:1847
 #, python-format
-msgid "Failed to fetch folder contents of shared folder %(folder)s: %(error)s"
+msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
 
-#: pynicotine/search.py:122 pynicotine/gtkgui/ui/mainwindow.ui:56
+#: pynicotine/search.py:124 pynicotine/gtkgui/ui/mainwindow.ui:56
 msgid "Joined Rooms "
 msgstr ""
 
-#: pynicotine/search.py:254
-msgid "The server forbid us from doing wishlist searches."
+#: pynicotine/search.py:256
+msgid "Server does not permit to add wishlist searches at this time."
 msgstr ""
 
-#: pynicotine/search.py:320
+#: pynicotine/search.py:322
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr ""
 
-#: pynicotine/search.py:518
+#: pynicotine/search.py:538
 #, python-format
 msgid ""
 "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
 "results"
 msgstr ""
 
-#: pynicotine/search.py:525
+#: pynicotine/search.py:545
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
@@ -3526,7 +3526,7 @@ msgstr ""
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:562 pynicotine/shares.py:933
+#: pynicotine/shares.py:562 pynicotine/shares.py:928
 msgid "Downloaded"
 msgstr ""
 
@@ -3548,43 +3548,40 @@ msgid ""
 "issues, or another issue in Nicotine+."
 msgstr ""
 
-#: pynicotine/shares.py:686 pynicotine/slskmessages.py:2245
-#: pynicotine/slskmessages.py:2393
-#, python-format
-msgid ""
-"Your shares database is corrupted. Please rescan your shares and report any "
-"potential scanning issues to the developers. Error: %s"
-msgstr ""
-
-#: pynicotine/shares.py:738 pynicotine/shares.py:790
+#: pynicotine/shares.py:733 pynicotine/shares.py:785
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 
-#: pynicotine/shares.py:889
+#: pynicotine/shares.py:884
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
 
-#: pynicotine/shares.py:957
+#: pynicotine/shares.py:952
 #, python-format
 msgid "Progress: %s"
 msgstr ""
 
-#: pynicotine/shares.py:970
+#: pynicotine/shares.py:965
 msgid "Rescanning normal shares…"
 msgstr ""
 
-#: pynicotine/shares.py:974
+#: pynicotine/shares.py:969
 msgid "Rescanning buddy shares…"
 msgstr ""
 
-#: pynicotine/shares.py:1020
+#: pynicotine/shares.py:1015
 msgid "Finished rescanning public shares"
 msgstr ""
 
-#: pynicotine/shares.py:1022
+#: pynicotine/shares.py:1017
 msgid "Finished rescanning buddy shares"
+msgstr ""
+
+#: pynicotine/slskmessages.py:2243
+#, python-format
+msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 
 #: pynicotine/slskproto.py:531
@@ -3914,8 +3911,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:411
 msgid ""
-"Donating to Soulseek grants you privileges for a certain time period. "
-"Privileges allow your downloads to be queued ahead of non-privileged users."
+"Donating to Soulseek grants you privileges for a certain time period. If you "
+"have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:31
@@ -4256,8 +4253,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1131
 msgid ""
-"Enter the name of a user to browse their list of shared files. You can also "
-"open a list you have previously saved."
+"Enter the name of a user, whose shared files you'd like to browse. You can "
+"also save the list to disk, and inspect it later on."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1227
@@ -4397,7 +4394,7 @@ msgid "/add /ad 'user'"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
-msgid "Add user 'user' to your user list"
+msgid "Add user 'user' to your buddy list"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
@@ -4405,7 +4402,7 @@ msgid "/rem /unbuddy 'user'"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
-msgid "Remove user 'user' from your user list"
+msgid "Remove user 'user' from your buddy list"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
@@ -4453,7 +4450,7 @@ msgid "/whois /w 'user'"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
-msgid "Request user info for user 'user'"
+msgid "Request info for 'user'"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
@@ -4554,11 +4551,11 @@ msgid "Close the current private chat"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
-msgid "Add user to your user list"
+msgid "Add user to your buddy-list"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
-msgid "Remove user from your user list"
+msgid "Remove user from your buddy-list"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
@@ -4578,11 +4575,11 @@ msgid "Remove user from your ignore list"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
-msgid "Browse files of user"
+msgid "Browse shares of user"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:437
-msgid "Request user info for user"
+msgid "Request user's info"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:463
@@ -4705,7 +4702,7 @@ msgid ""
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:234
-msgid "Prepend < or > to find files less-/greater than or equal to the value."
+msgid "Prepend < or > to find files less/greater than the given value."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:244
@@ -5314,7 +5311,7 @@ msgid "Enable CTCP-like private message responses (client version)"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:382
-msgid "Use UPnP to automatically map the port on my router"
+msgid "Use UPnP to automatically map the listening port on your router"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
@@ -5510,7 +5507,7 @@ msgid ""
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
-msgid "Respond to search requests containing minimum character count:"
+msgid "Searches shorter than this will be ignored:"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
@@ -5538,7 +5535,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid ""
 "Enables private shares that only users on your buddy list can access. If "
-"disabled, users will only be able to access your public shares."
+"disabled, all your shares will be public."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
@@ -5636,7 +5633,8 @@ msgid "Round Robin"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:239
-msgid "Queued users will be uploaded one file at a time in a cyclical fashion."
+msgid ""
+"Files will be uploaded in cyclical fashion to the users waiting in queue."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:246
@@ -5788,7 +5786,8 @@ msgstr ""
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
-"not downloadable unless the uploader gives explicit permission, and are ."
+"not downloadable unless the uploader gives explicit permission, and are not "
+"downloadable unless the uploader gives explicit permission."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
@@ -5808,7 +5807,7 @@ msgid "List text color:"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:416
-msgid "Search with queue text color:"
+msgid "Queued search result text color:"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
@@ -6031,14 +6030,14 @@ msgstr ""
 msgid "User Interests"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/userinfo.ui:420
+#: pynicotine/gtkgui/ui/userinfo.ui:423
 msgid "User Picture"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/userinfo.ui:618
+#: pynicotine/gtkgui/ui/userinfo.ui:623
 msgid "Save _Picture"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/userinfo.ui:649
+#: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr ""
