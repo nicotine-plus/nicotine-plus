@@ -1024,7 +1024,7 @@ class ChatRoom(UserInterface):
 
     def rejoined(self, users):
 
-        # Update buddy list with an inexpensive sorting function
+        # Update user list with an inexpensive sorting function
         self.usersmodel.set_default_sort_func(lambda *args: -1)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 

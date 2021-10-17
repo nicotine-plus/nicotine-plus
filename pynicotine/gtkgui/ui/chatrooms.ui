@@ -175,7 +175,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Buddy List</property>
+                        <property name="label" translatable="yes">User List</property>
                         <property name="mnemonic_widget">PeopleButton</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
