@@ -1128,7 +1128,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">Enter the name of a user to browse their list of shared files. You can also open a list you have previously saved.</property>
+                                            <property name="label" translatable="yes">Enter the name of a user, whose shared files you'd like to browse. You can also save the list to disk, and inspect it later on.</property>
                                             <property name="max-width-chars">55</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">1</property>

@@ -566,8 +566,8 @@ class UserList(UserInterface):
 
         entry_dialog(
             parent=self.frame.MainWindow,
-            title=_("Edit Comments"),
-            message=_("Add a few notes associated with user %s:") % user,
+            title=_("Note about user"),
+            message=_("Add a note about this user %s:") % user,
             callback=self.on_edit_comments_response,
             callback_data=user,
             default=comments

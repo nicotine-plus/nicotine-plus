@@ -236,7 +236,7 @@
                       <object class="GtkRadioButton" id="RoundRobin">
                         <property name="label" translatable="yes">Round Robin</property>
                         <property name="visible">1</property>
-                        <property name="tooltip-text" translatable="yes">Queued users will be uploaded one file at a time in a cyclical fashion.</property>
+                        <property name="tooltip-text" translatable="yes">Files will be uploaded in cyclical fashion to the users waiting in queue.</property>
                         <property name="use-underline">1</property>
                         <property name="active">1</property>
                       </object>

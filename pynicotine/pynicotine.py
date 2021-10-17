@@ -738,7 +738,7 @@ class NicotineCore:
             country = ""
 
         if msg.ip_address == "0.0.0.0":
-            log.add(_("IP address of user %s is unknown, since user is offline"), user)
+            log.add(_("Can't retrieve the IP of user %s, since this user is offline"), user)
             return
 
         log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
@@ -1844,7 +1844,7 @@ class NicotineCore:
                     return
 
             except Exception as error:
-                log.add(_("Failed to fetch folder contents of shared folder %(folder)s: %(error)s"),
+                log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
             self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, None))
