@@ -6,7 +6,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 22:57+0300\n"
 "PO-Revision-Date: 2021-10-16 14:04+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -159,7 +159,7 @@ msgstr "Vous avez été invité dans le salon privé: %(room)s"
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr ""
-"Impossible de créer le répertoire « %(path)s », l'erreur est: %(error)s"
+"Impossible de créer le répertoire « %(path)s », l'erreur est : %(error)s"
 
 #: pynicotine/config.py:547
 #, python-format
