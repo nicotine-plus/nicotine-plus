@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-14 18:21+0000\n"
+"PO-Revision-Date: 2021-10-15 02:54+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -112,7 +112,7 @@ msgstr "luister aan de opgegeven poort"
 
 #: pynicotine/__init__.py:71
 msgid "rescan shared files"
-msgstr "gedeelde bestanden opnieuw scannen"
+msgstr "Shares opnieuw scannen"
 
 #: pynicotine/__init__.py:75
 msgid "start the program in headless mode (no GUI)"
@@ -141,8 +141,8 @@ msgid ""
 "Failed to scan shares. If Nicotine+ is currently running, please close the "
 "program before scanning."
 msgstr ""
-"Kan gedeelde mappen niet scannen. Als Nicotine+ momenteel actief is, sluit "
-"dan het programma voordat je gaat scannen."
+"Kan shares niet scannen. Als Nicotine+ momenteel actief is, sluit dan het "
+"programma voordat je gaat scannen."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -1468,7 +1468,7 @@ msgstr "Voer virtuele naam in voor '%(dir)s':"
 #: pynicotine/gtkgui/fastconfigure.py:244
 #: pynicotine/gtkgui/settingswindow.py:767
 msgid "Add a Shared Folder"
-msgstr "Een gedeelde map toevoegen"
+msgstr "Een share toevoegen"
 
 #: pynicotine/gtkgui/fileproperties.py:39
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:135
@@ -1649,23 +1649,23 @@ msgstr "Vriendenlijst altijd zichtbaar"
 
 #: pynicotine/gtkgui/frame.py:1042
 msgid "_Rescan Public Shares"
-msgstr "Gedeelde mappen opnieuw scannen"
+msgstr "Shares opnieuw scannen"
 
 #: pynicotine/gtkgui/frame.py:1043
 msgid "Rescan B_uddy Shares"
-msgstr "Met vrienden gedeelde mappen opnieuw scannen"
+msgstr "_Vrienden-shares opnieuw scannen"
 
 #: pynicotine/gtkgui/frame.py:1044
 msgid "_Configure Shares"
-msgstr "_Configureer gedeelde mappen"
+msgstr "_Configureer shares"
 
 #: pynicotine/gtkgui/frame.py:1051
 msgid "_Browse Public Shares"
-msgstr "_Bladeren door openbare gedeelde mappen"
+msgstr "_Bekijk publieke shares"
 
 #: pynicotine/gtkgui/frame.py:1052
 msgid "Bro_wse Buddy Shares"
-msgstr "Blader met vrienden gedeelde mappen"
+msgstr "Bekijk vrienden-shares"
 
 #: pynicotine/gtkgui/frame.py:1068
 msgid "_Keyboard Shortcuts"
@@ -1705,7 +1705,7 @@ msgstr "_Bestand"
 
 #: pynicotine/gtkgui/frame.py:1107
 msgid "_Shares"
-msgstr "_Aandelen"
+msgstr "_Shares"
 
 #: pynicotine/gtkgui/frame.py:1282 pynicotine/gtkgui/ui/mainwindow.ui:843
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:161
@@ -2497,7 +2497,7 @@ msgstr "Overdrachten"
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:219
 #: pynicotine/gtkgui/ui/settings/shares.ui:16
 msgid "Shares"
-msgstr "Gedeelde mappen"
+msgstr "Shares"
 
 #: pynicotine/gtkgui/settingswindow.py:3119
 #: pynicotine/gtkgui/ui/settings/ban.ui:15
@@ -2735,7 +2735,7 @@ msgstr "Mappen"
 
 #: pynicotine/gtkgui/userbrowse.py:215
 msgid "_Save Shares List to Disk"
-msgstr "De lijst met gedeelde bestanden op_slaan"
+msgstr "Lijst met Shares op_slaan"
 
 #: pynicotine/gtkgui/userbrowse.py:222 pynicotine/gtkgui/userbrowse.py:233
 #: pynicotine/gtkgui/userbrowse.py:256 pynicotine/gtkgui/userbrowse.py:273
@@ -2809,14 +2809,12 @@ msgstr ""
 #: pynicotine/gtkgui/userbrowse.py:607
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
-msgstr ""
-"Opgeslagen lijst van gedeelde bestanden voor gebruiker '%(user)s' naar "
-"%(dir)s"
+msgstr "Shares lijst voor gebruiker '%(user)s' opgeslagen naar %(dir)s"
 
 #: pynicotine/gtkgui/userbrowse.py:611
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Kan gedeelde mappen niet opslaan, '%(user)s', fout: %(error)s"
+msgstr "Kan shares niet opslaan, '%(user)s', fout: %(error)s"
 
 #: pynicotine/gtkgui/userbrowse.py:631
 msgid ""
@@ -2824,16 +2822,16 @@ msgid ""
 "anything, or they are sharing files privately."
 msgstr ""
 "De lijst met gedeelde bestanden van de gebruiker is leeg. Ofwel deelt de "
-"gebruiker niets, ofwel deelt hij privé bestanden."
+"gebruiker niets, ofwel hij deelt de bestanden alleen privé."
 
 #: pynicotine/gtkgui/userbrowse.py:640
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
 msgstr ""
-"Kan geen gedeelde bestanden van gebruiker opvragen. Ofwel is de gebruiker "
-"offline, hebben jullie allebei een gesloten luisterpoort of is er een "
-"tijdelijk verbindingsprobleem."
+"Kan geen shares van gebruiker opvragen. Ofwel is de gebruiker offline, "
+"hebben jullie allebei een gesloten luisterpoort of is er een tijdelijk "
+"verbindingsprobleem."
 
 #: pynicotine/gtkgui/userbrowse.py:891
 msgid "Upload Folder's Contents"
@@ -3163,7 +3161,7 @@ msgstr "Gebruikersinfo opvragen"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:106
 msgid "Receive a User's Shares"
-msgstr "Gedeelde mappen van gebruiker opvragen"
+msgstr "Shares van gebruiker opvragen"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:111
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:61
@@ -3196,7 +3194,7 @@ msgstr "Voer de gebruiker in wiens IP-adres je wilt opvragen:"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:213
 msgid "Request Shares List"
-msgstr "Gedeelde bestanden opvragen"
+msgstr "Shares opvragen"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:214
 msgid "Enter the name of a user whose shares list you wish to receive:"
@@ -3704,7 +3702,7 @@ msgstr "Klaar met het scannen van openbaar gedeelde bestanden"
 
 #: pynicotine/shares.py:1022
 msgid "Finished rescanning buddy shares"
-msgstr "vrienden-shares opnieuw scannen"
+msgstr "Klaar met vrienden-shares opnieuw scannen"
 
 #: pynicotine/slskproto.py:531
 #, python-format
@@ -3753,7 +3751,7 @@ msgstr "Upload gestart: gebruiker %(user)s, IP-adres %(ip)s, bestand %(file)s"
 #: pynicotine/transfers.py:1538
 #, python-format
 msgid "Your buddy, %s, is attempting to upload file(s) to you."
-msgstr "Uw vriend, %s, probeert één of meer bestanden naar je te uploaden."
+msgstr "Jouw vriend, %s, probeert één of meer bestanden naar je te uploaden."
 
 #: pynicotine/transfers.py:1542
 #, python-format
@@ -5904,9 +5902,9 @@ msgid ""
 "Enables private shares that only users on your buddy list can access. If "
 "disabled, users will only be able to access your public shares."
 msgstr ""
-"Schakelt privédelingen in die alleen toegankelijk zijn voor gebruikers op "
+"Schakelt privé shares in die alleen toegankelijk zijn voor gebruikers op "
 "jouw vriendenlijst. Indien uitgeschakeld, zullen gebruikers alleen toegang "
-"hebben tot jouw publieke aandelen."
+"hebben tot jouw publieke shares."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
 msgid "Mark each shared folder as buddy-only"
@@ -5917,12 +5915,12 @@ msgid ""
 "Overrides the per-share option, useful if you temporarily need to prevent "
 "public access to shares."
 msgstr ""
-"Overruled de per-aandeel optie, handig als je tijdelijk publieke toegang tot "
-"aandelen wilt voorkomen."
+"Overschrijft de per-share optie, handig als je tijdelijk publieke toegang "
+"tot shares wilt voorkomen."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:55
 msgid "Limit buddy-only shares to trusted buddies"
-msgstr "Beperk buddy-only delen tot vertrouwde buddies"
+msgstr "Beperk shares voor vrienden tot vertrouwde vrienden"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:56
 msgid ""
@@ -5930,7 +5928,7 @@ msgid ""
 "shares."
 msgstr ""
 "Alleen gebruikers die in jouw vriendenlijst als vertrouwd zijn aangemerkt, "
-"hebben toegang tot jouw \"buddy-only\" aandelen."
+"hebben toegang tot jouw \"buddy-only\" shares."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:74
 #: pynicotine/gtkgui/ui/userinfo.ui:272
@@ -5948,8 +5946,9 @@ msgstr ""
 "Nicotine+ stelt je in staat om mappen direct vanaf jouw computer te delen. "
 "Alle inhoud van deze mappen (met uitzondering van dotfiles) kan worden "
 "gedownload door andere gebruikers op het Soulseek netwerk. Publieke delen "
-"zijn beschikbaar voor elke gebruiker, terwijl gebruikers in jouw buddy-lijst "
-"toegang hebben tot buddy-only delen in aanvulling op publieke delen."
+"zijn beschikbaar voor elke gebruiker, terwijl gebruikers in jouw vrienden-"
+"lijst toegang hebben tot alleen-vrienden shares in aanvulling op publieke "
+"shares."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:173
 msgid "Rename"
