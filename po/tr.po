@@ -6065,8 +6065,8 @@ msgid ""
 "not downloadable unless the uploader gives explicit permission, and are ."
 msgstr ""
 "Diğer istemciler, arama isteklerine yanıt olarak özel olarak paylaşılan "
-"dosyalar gönderme seçeneği sunabilir. Bu tür dosyaların önüne '[PRIVATE FILE]"
-"' eklenir ve yükleyen kişi açıkça izin vermedikçe indirilemezler."
+"dosyalar gönderme seçeneği sunabilir. Bu tür dosyaların önüne '[PRIVATE "
+"FILE]' eklenir ve yükleyen kişi açıkça izin vermedikçe indirilemezler."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
 msgid "Show privately shared files in user shares"
@@ -6080,8 +6080,8 @@ msgid ""
 "explicit permission."
 msgstr ""
 "Diğer istemciler, paylaşımlarına göz atarken özel olarak paylaşılan dosyalar "
-"gönderme seçeneği sunabilir. Bu tür dosyaları içeren klasörlerin önüne '["
-"PRIVATE FOLDER]' eklenir ve yükleyen kişi açıkça izin vermedikçe "
+"gönderme seçeneği sunabilir. Bu tür dosyaları içeren klasörlerin önüne "
+"'[PRIVATE FOLDER]' eklenir ve yükleyen kişi açıkça izin vermedikçe "
 "indirilemezler."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:342

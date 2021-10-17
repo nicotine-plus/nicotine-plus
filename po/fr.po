@@ -3132,7 +3132,8 @@ msgstr "La commande %s n'est pas reconnue"
 #: pynicotine/gtkgui/widgets/theme.py:246
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
-msgstr "Erreur lors du chargement de l'icône personnalisée %(path)s : %(error)s"
+msgstr ""
+"Erreur lors du chargement de l'icône personnalisée %(path)s : %(error)s"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #: pynicotine/gtkgui/widgets/trayicon.py:387
@@ -3645,7 +3646,8 @@ msgstr "Répertoire manquant %(dir)s ignoré"
 #: pynicotine/shares.py:369
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
-msgstr "Erreur lors de l'examen des métadonnées du fichier %(path)s : %(error)s"
+msgstr ""
+"Erreur lors de l'examen des métadonnées du fichier %(path)s : %(error)s"
 
 #: pynicotine/shares.py:388
 #, python-format
@@ -5258,7 +5260,8 @@ msgstr "Cacher la liste déroulante lors d'un seul choix"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:146
 msgid "Minimum characters required to display drop-down:"
-msgstr "Nombre de caractères minimum requis pour afficher la liste déroulante :"
+msgstr ""
+"Nombre de caractères minimum requis pour afficher la liste déroulante :"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:34
 msgid "Autoclear finished/filtered downloads from transfer list"
@@ -5829,8 +5832,8 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/search.ui:468
 msgid "Respond to search requests containing minimum character count:"
 msgstr ""
-"Répondre aux demandes de recherche contenant un nombre minimum de caractères "
-":"
+"Répondre aux demandes de recherche contenant un nombre minimum de "
+"caractères :"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 msgid "Maximum search results to send per search request:"

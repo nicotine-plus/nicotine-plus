@@ -3919,7 +3919,8 @@ msgstr "Dodaj znajomego…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:41 pynicotine/gtkgui/ui/mainwindow.ui:655
 msgid "Enter the username of the person you wish to add to your buddy list"
-msgstr "Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
+msgstr ""
+"Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:133
 msgid "Toggle Text-to-Speech"

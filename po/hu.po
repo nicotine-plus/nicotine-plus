@@ -4068,7 +4068,8 @@ msgstr ""
 #: pynicotine/pynicotine.py:1847
 #, fuzzy, python-format
 msgid "Failed to fetch folder contents of shared folder %(folder)s: %(error)s"
-msgstr "Nem sikerült lekérni a megosztott mappa tartalmát %(folder)s: %(error)s"
+msgstr ""
+"Nem sikerült lekérni a megosztott mappa tartalmát %(folder)s: %(error)s"
 
 #: pynicotine/search.py:122 pynicotine/gtkgui/ui/mainwindow.ui:56
 msgid "Joined Rooms "
@@ -4181,8 +4182,8 @@ msgid ""
 "several instances of Nicotine+ being active simultaneously, file permission "
 "issues, or another issue in Nicotine+."
 msgstr ""
-"A megosztott fájlok fájlindexe nem volt elérhető. Ez előfordulhat a Nicotine+"
-" több példányának egyidejűleg történő aktiválása, fájlengedélyezési "
+"A megosztott fájlok fájlindexe nem volt elérhető. Ez előfordulhat a Nicotine"
+"+ több példányának egyidejűleg történő aktiválása, fájlengedélyezési "
 "problémák vagy a Nicotine+ egyéb problémája miatt."
 
 #: pynicotine/shares.py:686 pynicotine/slskmessages.py:2245
@@ -5546,8 +5547,8 @@ msgid ""
 "list of results.\n"
 "    Example: flac|wav|ape"
 msgstr ""
-"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok listáját."
-"\n"
+"Több fájlkiterjesztés is megadható, ami viszont bővíti a találatok "
+"listáját.\n"
 "    Példa: flac|wav|ape"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:176
@@ -5721,8 +5722,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Azoknak az eredményeknek a szűrése, amelyek fájlútvonalai tartalmazzák a "
-"megadott szöveget. Több kifejezés és szó is megadható, pl. pontos "
-"kifejezés|zene|kifejezés|pontos kifejezés kettő"
+"megadott szöveget. Több kifejezés és szó is megadható, pl. pontos kifejezés|"
+"zene|kifejezés|pontos kifejezés kettő"
 
 #: pynicotine/gtkgui/ui/search.ui:203
 #, fuzzy
@@ -5738,8 +5739,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Kiszűri azokat az eredményeket, amelyek fájlútvonalai tartalmazzák a "
-"megadott szöveget. Több kifejezés és szó is megadható, pl. exact "
-"phrase|music|term|exact phrase two."
+"megadott szöveget. Több kifejezés és szó is megadható, pl. exact phrase|"
+"music|term|exact phrase two."
 
 #: pynicotine/gtkgui/ui/search.ui:233
 #, fuzzy
@@ -5962,8 +5963,8 @@ msgid ""
 "Prevent write access by other programs for files being downloaded (turn off "
 "for NFS)"
 msgstr ""
-"Más programok írási hozzáférésének megakadályozása a letöltött fájlokhoz ("
-"kikapcsolása NFS esetén)"
+"Más programok írási hozzáférésének megakadályozása a letöltött fájlokhoz "
+"(kikapcsolása NFS esetén)"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:48
 msgid "Download folders in reverse alphanumerical order"
@@ -6954,8 +6955,8 @@ msgstr ""
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
-"Fordított fájlútvonalak megjelenítése a keresési és átviteli nézetekben ("
-"újraindítást igényel)"
+"Fordított fájlútvonalak megjelenítése a keresési és átviteli nézetekben "
+"(újraindítást igényel)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:306
 #, fuzzy

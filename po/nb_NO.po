@@ -79,7 +79,8 @@ msgstr ""
 
 #: pynicotine/__init__.py:43
 msgid "use non-default user data directory for e.g. list of downloads"
-msgstr "bruk ikke-forvalgt brukerdatamappe, for f.eks. liste over nedlastninger"
+msgstr ""
+"bruk ikke-forvalgt brukerdatamappe, for f.eks. liste over nedlastninger"
 
 #: pynicotine/__init__.py:47
 msgid "use non-default directory for plugins"
