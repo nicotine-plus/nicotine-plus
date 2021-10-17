@@ -253,7 +253,7 @@ class Search:
     def do_wishlist_search_interval(self):
 
         if self.wishlist_interval == 0:
-            log.add(_("Server does not permit to add wishlist searches at this time."))
+            log.add(_("Server does not permit performing wishlist searches at this time"))
             return False
 
         searches = self.config.sections["server"]["autosearch"]

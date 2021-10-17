@@ -738,7 +738,7 @@ class NicotineCore:
             country = ""
 
         if msg.ip_address == "0.0.0.0":
-            log.add(_("Can't retrieve the IP of user %s, since this user is offline"), user)
+            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
             return
 
         log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {

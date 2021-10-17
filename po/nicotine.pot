@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 19:15+0200\n"
+"POT-Creation-Date: 2021-10-17 19:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2906,12 +2906,12 @@ msgid "User %s is offline"
 msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:569
-msgid "Note about user"
+msgid "Edit Comments"
 msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:570
 #, python-format
-msgid "Add a note about this user %s:"
+msgid "Add a few notes associated with user %s:"
 msgstr ""
 
 #: pynicotine/gtkgui/widgets/filechooser.py:71
@@ -3368,7 +3368,7 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:741
 #, python-format
-msgid "Can't retrieve the IP of user %s, since this user is offline"
+msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 
 #: pynicotine/pynicotine.py:744
@@ -3453,7 +3453,7 @@ msgid "Joined Rooms "
 msgstr ""
 
 #: pynicotine/search.py:256
-msgid "Server does not permit to add wishlist searches at this time."
+msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
 
 #: pynicotine/search.py:322
@@ -5786,8 +5786,7 @@ msgstr ""
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
-"not downloadable unless the uploader gives explicit permission, and are not "
-"downloadable unless the uploader gives explicit permission."
+"not downloadable unless the uploader gives explicit permission."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
