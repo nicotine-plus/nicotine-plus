@@ -465,7 +465,7 @@
                       <object class="GtkLabel" id="MinSearchCharsL1">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Respond to search requests containing minimum character count:</property>
+                        <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
                         <property name="wrap">1</property>
                         <property name="mnemonic_widget">MinSearchChars</property>
                       </object>

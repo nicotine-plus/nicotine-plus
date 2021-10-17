@@ -1737,7 +1737,7 @@ class NicotineFrame(UserInterface):
             option_dialog(
                 parent=self.MainWindow,
                 title=_('Create New Room?'),
-                message=_('Are you sure you wish to create a new room "%s"?') % room,
+                message=_('Do you really want to create a new room "%s"?') % room,
                 checkbox_label=_("Make room private"),
                 callback=self.on_create_room_response,
                 callback_data=room
@@ -2233,7 +2233,7 @@ class NicotineFrame(UserInterface):
         option_dialog(
             parent=self.MainWindow,
             title=_('Close Nicotine+?'),
-            message=_('Are you sure you wish to exit Nicotine+ at this time?'),
+            message=_('Do you really want to exit Nicotine+?'),
             third=_("Run in Background"),
             checkbox_label=_("Remember choice"),
             callback=self.on_quit_response

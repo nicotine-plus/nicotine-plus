@@ -57,7 +57,7 @@ class Uploads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
-            message=_('Are you sure you wish to clear all queued uploads?'),
+            message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_response,
             callback_data="queued"
         )
@@ -67,7 +67,7 @@ class Uploads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear All Uploads'),
-            message=_('Are you sure you wish to clear all uploads?'),
+            message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_response,
             callback_data="all"
         )

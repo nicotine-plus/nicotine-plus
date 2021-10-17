@@ -35,7 +35,7 @@
             <child>
               <object class="GtkCheckButton" id="EnableBuddyShares">
                 <property name="label" translatable="yes">Enable buddy-only shares</property>
-                <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
+                <property name="tooltip-text" translatable="yes">Enables buddy shares that only users on your buddy list can access.</property>
                 <property name="visible">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>

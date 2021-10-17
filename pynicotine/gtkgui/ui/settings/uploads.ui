@@ -236,7 +236,7 @@
                       <object class="GtkRadioButton" id="RoundRobin">
                         <property name="label" translatable="yes">Round Robin</property>
                         <property name="visible">1</property>
-                        <property name="tooltip-text" translatable="yes">Queued users will be uploaded one file at a time in a cyclical fashion.</property>
+                        <property name="tooltip-text" translatable="yes">Files will be uploaded in cyclical fashion to the users waiting in queue.</property>
                         <property name="use-underline">1</property>
                         <property name="active">1</property>
                       </object>
@@ -371,7 +371,7 @@
                     <child>
                       <object class="GtkSpinButton" id="MaxUserQueue">
                         <property name="visible">1</property>
-                        <property name="tooltip_text" translatable="yes">Mebibytes (2^17 bytes).</property>
+                        <property name="tooltip_text" translatable="yes">Mebibytes (2^20 bytes).</property>
                         <property name="adjustment">adjustment_MaxUserQueue</property>
                         <property name="hexpand">1</property>
                         <property name="numeric">1</property>

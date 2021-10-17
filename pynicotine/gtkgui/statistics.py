@@ -72,7 +72,7 @@ class Statistics(UserInterface):
         option_dialog(
             parent=self.dialog,
             title=_('Reset Transfer Statistics?'),
-            message=_('Are you sure you wish to reset transfer statistics?'),
+            message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response
         )
 

@@ -379,7 +379,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="UseUPnP">
-                <property name="label" translatable="yes">Use UPnP to automatically map the port on my router</property>
+                <property name="label" translatable="yes">Use UPnP to automatically map the listening port on your router</property>
                 <property name="visible">1</property>
                 <property name="use-underline">1</property>
                 <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
