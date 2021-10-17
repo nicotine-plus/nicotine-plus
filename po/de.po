@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-16 13:42+0000\n"
+"PO-Revision-Date: 2021-10-16 21:02+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -96,11 +96,11 @@ msgstr "nicht standardmäßiges Verzeichnis für Plugins verwenden"
 
 #: pynicotine/__init__.py:51
 msgid "enable the tray icon"
-msgstr "Tray-Symbol aktivieren"
+msgstr "Aktivieren Sie das Taskleistensymbol"
 
 #: pynicotine/__init__.py:55
 msgid "disable the tray icon"
-msgstr "Tray-Symbol deaktivieren"
+msgstr "Deaktivieren Sie das Taskleistensymbol"
 
 #: pynicotine/__init__.py:59
 msgid "start the program without showing window"
@@ -5124,7 +5124,6 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:346
 #: pynicotine/gtkgui/ui/settings/search.ui:372
-#, fuzzy
 msgid "Free Slot"
 msgstr "Freier Slot"
 
@@ -5137,57 +5136,47 @@ msgstr ""
 "Slot haben. Dieser Filter wird sofort angewendet."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:367
-#, fuzzy
 msgid "See the preferences for more filter options."
 msgstr "In den Einstellungen finden Sie weitere Filteroptionen."
 
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:17
-#, fuzzy
 msgid ""
 "Wishlist items are auto-searched at regular intervals, for discovering "
 "uncommon files."
 msgstr ""
-"Wunschzettel werden in regelmäßigen Abständen automatisch durchsucht, um "
-"ungewöhnliche Dateien zu entdecken."
+"Wunschzetteleinträge werden regelmäßig automatisch gesucht, um ungewöhnliche "
+"Dateien zu entdecken."
 
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:27
-#, fuzzy
 msgid "Add Wish…"
 msgstr "Wunsch hinzufügen…"
 
 #: pynicotine/gtkgui/ui/popovers/wishlist.ui:86
-#, fuzzy
 msgid "R_emove Wish"
-msgstr "Einen Alias entfernen"
+msgstr "_Wunsch entfernen"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:69
-#, fuzzy
 msgid "_Log"
-msgstr "_Log"
+msgstr "_Protokoll"
 
 #: pynicotine/gtkgui/ui/privatechat.ui:77
-#, fuzzy
 msgid "Private chat command help"
-msgstr "Hilfe zum Befehl \"Privater Chat"
+msgstr "Hilfe zu privaten Chat-Befehlen"
 
 #: pynicotine/gtkgui/ui/search.ui:28
-#, fuzzy
 msgid "Results"
 msgstr "Ergebnisse"
 
 #: pynicotine/gtkgui/ui/search.ui:134
-#, fuzzy
 msgid "Result grouping mode"
-msgstr "Modus der Ergebnisgruppierung"
+msgstr "Ergebnisgruppierungsmodus"
 
 #: pynicotine/gtkgui/ui/search.ui:173
-#, fuzzy
 msgid "Include text…"
-msgstr "Text einfügen…"
+msgstr "Text einschließen…"
 
 #: pynicotine/gtkgui/ui/search.ui:174
 #: pynicotine/gtkgui/ui/settings/search.ui:197
-#, fuzzy
 msgid ""
 "Filter in results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
@@ -5198,13 +5187,11 @@ msgstr ""
 "Phrase|Musik|Begriff|exakte Phrase zwei"
 
 #: pynicotine/gtkgui/ui/search.ui:203
-#, fuzzy
 msgid "Exclude text…"
 msgstr "Text ausschließen…"
 
 #: pynicotine/gtkgui/ui/search.ui:204
 #: pynicotine/gtkgui/ui/settings/search.ui:224
-#, fuzzy
 msgid ""
 "Filter out results whose file paths contain the specified text. Multiple "
 "phrases and words can be specified, e.g. exact phrase|music|term|exact "
@@ -5215,25 +5202,21 @@ msgstr ""
 "Phrase|Musik|Begriff|exakte Phrase zwei"
 
 #: pynicotine/gtkgui/ui/search.ui:233
-#, fuzzy
 msgid "File type…"
 msgstr "Dateityp…"
 
 #: pynicotine/gtkgui/ui/search.ui:234
 #: pynicotine/gtkgui/ui/settings/search.ui:254
-#, fuzzy
 msgid "File type, e.g. flac|wav|ape or !mp3|!m4a"
 msgstr "Dateityp, z. B. flac|wav|ape oder !mp3|!m4a"
 
 #: pynicotine/gtkgui/ui/search.ui:263
-#, fuzzy
 msgid "File size…"
 msgstr "Dateigröße…"
 
 #: pynicotine/gtkgui/ui/search.ui:264
-#, fuzzy
 msgid "File size"
-msgstr "Dateien"
+msgstr "Dateigröße"
 
 #: pynicotine/gtkgui/ui/search.ui:293
 msgid "Bitrate…"
@@ -5245,21 +5228,18 @@ msgstr "Landesvorwahl…"
 
 #: pynicotine/gtkgui/ui/search.ui:328
 #: pynicotine/gtkgui/ui/settings/search.ui:348
-#, fuzzy
 msgid "Country code, e.g. US|GB|ES or !DE|!GB"
-msgstr "Ländercode, z. B. US|GB|ES oder !DE|!GB"
+msgstr "Ländercode, z.B. US|GB|ES oder !DE|!GB"
 
 #: pynicotine/gtkgui/ui/search.ui:350
 msgid "Free slot"
 msgstr "Freier Slot"
 
 #: pynicotine/gtkgui/ui/search.ui:382
-#, fuzzy
 msgid "Clear all active filters"
-msgstr "Suchergebnisse entfernen"
+msgstr "Alle aktiven Filter löschen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:26
-#, fuzzy
 msgid ""
 "Prohibit users from accessing your shared files, based on username, IP "
 "address or country."
@@ -5272,17 +5252,14 @@ msgid "Country codes to block (comma separated):"
 msgstr "Zu sperrende Ländercodes (getrennt durch Kommata):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:60
-#, fuzzy
 msgid "Codes must be in ISO 3166-2 format."
-msgstr "Die Codes müssen im Format ISO 3166-2 vorliegen."
+msgstr "Codes müssen im ISO 3166-2-Format vorliegen."
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:71
-#, fuzzy
 msgid "Use custom geo block message:"
-msgstr "Eigene Sperr-Nachricht verwenden:"
+msgstr "Benutzerdefinierte Geoblockierungsnachricht verwenden:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:73
-#, fuzzy
 msgid "Sent to users as the reason for being geo blocked."
 msgstr "Wird den Nutzern als Grund für die Geoblockade mitgeteilt."
 
@@ -5291,7 +5268,6 @@ msgid "Use custom ban message:"
 msgstr "Eigene Sperr-Nachricht verwenden:"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:101
-#, fuzzy
 msgid "Sent to users as the reason for being banned."
 msgstr "Wird den Benutzern als Grund für die Sperrung mitgeteilt."
 
@@ -5307,7 +5283,6 @@ msgstr "Verbannte Benutzer"
 #: pynicotine/gtkgui/ui/settings/ignore.ui:87
 #: pynicotine/gtkgui/ui/settings/ignore.ui:243
 #: pynicotine/gtkgui/ui/settings/shares.ui:145
-#, fuzzy
 msgid "Add…"
 msgstr "Hinzufügen…"
 
@@ -5318,21 +5293,18 @@ msgstr "Hinzufügen…"
 #: pynicotine/gtkgui/ui/settings/ignore.ui:148
 #: pynicotine/gtkgui/ui/settings/ignore.ui:304
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:236
-#, fuzzy
 msgid "Clear All"
-msgstr "Protokoll leeren"
+msgstr "Alles löschen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:303
 msgid "Blocked IP Addresses"
 msgstr "Geblockte IP-Adressen"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:32
-#, fuzzy
 msgid "Censor"
-msgstr "Zensurliste"
+msgstr "Zensur"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:41
-#, fuzzy
 msgid "Enable censoring of text patterns"
 msgstr "Zensur von Textmustern ermöglichen"
 
@@ -5341,22 +5313,18 @@ msgid "Replace censored letters with:"
 msgstr "Zensierte Zeichen ersetzen durch:"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:98
-#, fuzzy
 msgid "Censored Patterns"
-msgstr "Zensierte Patterns"
+msgstr "Zensierte Muster"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:256
-#, fuzzy
 msgid "Auto-Replace"
-msgstr "Auto-Ersetzen-Liste"
+msgstr "Automatisch ersetzen"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:266
-#, fuzzy
 msgid "Enable automatic replacement of words"
 msgstr "Automatische Ersetzung von Wörtern einschalten"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:280
-#, fuzzy
 msgid "Replacements"
 msgstr "Ersetzung"
 
@@ -5369,41 +5337,34 @@ msgid "Enable tab-key completion"
 msgstr "Tab-Tasten-Vervollständigung aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:44
-#, fuzzy
 msgid "Cycle through completions when pressing tab-key"
 msgstr "Beim Drücken der Tabulatortaste durch die Vervollständigungen blättern"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:59
-#, fuzzy
 msgid "Allowed Completions"
-msgstr "Vervollständigung"
+msgstr "Erlaubte Vervollständigungen"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:68
-#, fuzzy
 msgid "Complete buddy names"
-msgstr "Vollständige Kumpelnamen"
+msgstr "Vervollständige Freundennamen"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:75
 msgid "Complete usernames in chat rooms"
 msgstr "Benutzernamen vervollständigen"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:82
-#, fuzzy
 msgid "Complete room names"
-msgstr "Benutzernamen vervollständigen"
+msgstr "Vervollständige Raumnamen"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:89
-#, fuzzy
 msgid "Complete built-in /commands"
-msgstr "Interne Befehle vervollständigen"
+msgstr "Vervollständige integrierte /Befehle"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:96
-#, fuzzy
 msgid "Complete alias /commands"
-msgstr "Aliase/Befehle vervollständigen"
+msgstr "Alias /Befehle vervollständigen"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:111
-#, fuzzy
 msgid "Drop-down List"
 msgstr "Auswahlliste"
 
@@ -5420,13 +5381,11 @@ msgid "Minimum characters required to display drop-down:"
 msgstr "Minimum eingegebener Zeichen zum Auslösen der Drop-Down-Liste:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:34
-#, fuzzy
 msgid "Autoclear finished/filtered downloads from transfer list"
 msgstr ""
 "Beendete/gefilterte Downloads automatisch aus der Übertragungsliste löschen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:41
-#, fuzzy
 msgid ""
 "Prevent write access by other programs for files being downloaded (turn off "
 "for NFS)"
@@ -5435,7 +5394,6 @@ msgstr ""
 "verhindern (für NFS ausschalten)"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:48
-#, fuzzy
 msgid "Download folders in reverse alphanumerical order"
 msgstr "Herunterladen von Ordnern in umgekehrter alphanumerischer Reihenfolge"
 
@@ -5452,56 +5410,48 @@ msgid "Everyone"
 msgstr "Jeder"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:84
-#, fuzzy
 msgid "Trusted Buddies"
-msgstr "Vertrauenswürdige"
+msgstr "Vertrauenswürdige Freunde"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:103
 msgid "Download Speed Limits"
 msgstr "Download Geschwindigkeitsbegrenzungen"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:123
-#, fuzzy
 msgid "Limit download speed to (KiB/s):"
-msgstr "Upload-Geschwindigkeit begrenzen auf:"
+msgstr "Download-Geschwindigkeit auf (KiB/s) begrenzen:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:138
 #: pynicotine/gtkgui/ui/settings/downloads.ui:167
 #: pynicotine/gtkgui/ui/settings/uploads.ui:147
 #: pynicotine/gtkgui/ui/settings/uploads.ui:177
 #: pynicotine/gtkgui/ui/settings/uploads.ui:279
-#, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibibytes (2^10 Bytes) pro Sekunde."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:152
-#, fuzzy
 msgid "Alternative download speed limit (KiB/s):"
 msgstr "Alternative Geschwindigkeitsbegrenzung beim Herunterladen (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:195
-#, fuzzy
 msgid "Automatically share downloads"
-msgstr "Automatisch Downloads freigeben"
+msgstr "Downloads automatisch freigeben"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:197
-#, fuzzy
 msgid ""
 "The equivalent of adding your download folder as a public share, however "
 "files downloaded to this folder will be automatically accessible to others "
 "(no rescan required)."
 msgstr ""
-"Dies entspricht dem Hinzufügen Ihres Download-Ordners als öffentliche "
-"Freigabe, wobei die in diesen Ordner heruntergeladenen Dateien automatisch "
-"für andere zugänglich sind (kein erneuter Scan erforderlich)."
+"Das Äquivalent zum Hinzufügen Ihres Download-Ordners als öffentliche "
+"Freigabe, jedoch sind Dateien, die in diesen Ordner heruntergeladen wurden, "
+"automatisch für andere zugänglich (kein erneuter Scan erforderlich)."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:203
-#, fuzzy
 msgid "Store downloads in username subfolders"
-msgstr "Downloads in Unterordnern des Benutzernamens speichern"
+msgstr "Speichern von Downloads in Benutzernamen-Unterordnern"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:205
-#, fuzzy
 msgid ""
 "Creates subfolders based on the user you are downloading from, and stores "
 "the downloaded file / folder there."
@@ -5510,55 +5460,49 @@ msgstr ""
 "herunterladen, und speichert die heruntergeladene Datei/Ordner dort."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:223
-#, fuzzy
 msgid "Incomplete file folder:"
-msgstr "Unvollständiger Aktenordner:"
+msgstr "Unvollständiger Dateiordner:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:238
 msgid "Where incomplete downloads are temporarily stored."
 msgstr "Ort für temporäre Download-Dateien."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:250
-#, fuzzy
 msgid "Download folder:"
-msgstr "Ordner herunterladen:"
+msgstr "Downloadordner:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:276
-#, fuzzy
 msgid "Save buddies' uploads to:"
-msgstr "Speichern Sie die Uploads Ihrer Freunde auf:"
+msgstr "Uploads von Freunden speichern unter:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:291
-#, fuzzy
 msgid ""
 "Where buddies' uploads will be stored (with a subfolder created for each "
 "buddy)."
 msgstr ""
-"Wo die Uploads der Buddies gespeichert werden (für jeden Buddy wird ein "
-"Unterordner erstellt)."
+"Wo die Uploads der Freunde gespeichert werden (mit einem Unterordner, der "
+"für jeden Freund erstellt wird)."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:309
-#, fuzzy
 msgid "Download Filters"
-msgstr "Datei(en) herunterladen"
+msgstr "Download Filters"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:318
 msgid "Enable download filters"
 msgstr "Downloadfilter aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:328
-#, fuzzy
 msgid ""
 "<b>Syntax:</b> Letters are case-insensitive. All Python regular expressions "
 "are supported if escaping is disabled. For simple filters, keeping escaping "
 "enabled is recommended."
 msgstr ""
-"<b>Syntax:</b> Großschreibung spielt keine Rolle. Alle regulären Ausdrücke "
-"(Python)werden unterstützt, wenn Escaping deaktiviert ist. Lasse für "
-"einfache Filter Escaping aktiviert."
+"<b>Syntax:</b> Bei Buchstaben wird die Groß-/Kleinschreibung nicht beachtet. "
+"Alle regulären Python-Ausdrücke werden unterstützt, wenn die Escape-Funktion "
+"deaktiviert ist. Für einfache Filter wird empfohlen, die Escape-Funktion "
+"aktiviert zu lassen."
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:408
-#, fuzzy
 msgid "Edit…"
 msgstr "Bearbeiten…"
 
@@ -5571,49 +5515,44 @@ msgid "Verify Filters"
 msgstr "Überprüfe Filter"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:520
-#, fuzzy
 msgid "Unverified"
-msgstr "<b>Unüberprüft</b>"
+msgstr "Ungeprüft"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:15
-#, fuzzy
 msgid "Transfer Actions"
-msgstr "Transfers"
+msgstr "Übertragungsaktionen"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:36
 msgid "Double-click action for downloads:"
 msgstr "Doppelklick Aktion für Downloads:"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:71
-#, fuzzy
 msgid "Double-click action for uploads:"
 msgstr "Doppelklick-Aktion für Uploads:"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:111
-#, fuzzy
 msgid "Commands"
-msgstr "Kommentar"
+msgstr "Befehle"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:132
-#, fuzzy
 msgid "Run command after file download finishes ($ for file path):"
-msgstr "Befehl ausführen nach erfolgreichem Download ($ für Dateiname):"
+msgstr ""
+"Befehl ausführen, nachdem der Dateidownload abgeschlossen ist ($ für "
+"Dateipfad):"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:153
-#, fuzzy
 msgid "Run command after folder download finishes ($ for folder path):"
 msgstr ""
-"Befehl ausführen nach heruntergeladenem Verzeichnis ($ für Verzeichnispfad):"
+"Befehl ausführen, nachdem der Ordner-Download abgeschlossen ist ($ für "
+"Ordnerpfad):"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:174
-#, fuzzy
 msgid "File Manager command ($ for file path):"
-msgstr "Befehl für Dateimanager ($ für Verzeichnispfad):"
+msgstr "Dateimanager-Befehl ($ für Dateipfad):"
 
 #: pynicotine/gtkgui/ui/settings/events.ui:207
-#, fuzzy
 msgid "Media Player command ($ for file path):"
-msgstr "Befehl für Audio-Player ($ für Dateiname):"
+msgstr "Media Player-Befehl ($ für Dateipfad):"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
 msgid "Ignored Users"
@@ -5632,41 +5571,34 @@ msgid "Log private chat by default"
 msgstr "Privaten Chat standardmäßig protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:48
-#, fuzzy
 msgid "Log transfers to file"
 msgstr "Übertragungen in eine Datei protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:55
-#, fuzzy
 msgid "Log debug messages to file"
-msgstr "Debug-Meldungen in einer Datei protokollieren"
+msgstr "Debugmeldungen in Datei protokollieren"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:70
-#, fuzzy
 msgid "Folder Locations"
-msgstr "Ordner Standorte"
+msgstr "Ordnerspeicherorte"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:91
-#, fuzzy
 msgid "Chatroom logs folder:"
-msgstr "Verzeichnis für Chat-Raum-Protokolle:"
+msgstr "Ordner für Chatroomprotokolle:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:117
-#, fuzzy
 msgid "Private chat logs folder:"
-msgstr "Privat-Chat-Format:"
+msgstr "Ordner für private Chatprotokolle:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:143
-#, fuzzy
 msgid "Transfer logs folder:"
-msgstr "Schrift für Transfers:"
+msgstr "Ordner für Übertragungsprotokolle:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:169
 msgid "Debug logs folder:"
 msgstr "Ordner mit Debug-Logs:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:200
-#, fuzzy
 msgid "Chat History"
 msgstr "Chat-Verlauf"
 
@@ -5677,19 +5609,16 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/log.ui:227
 #: pynicotine/gtkgui/ui/settings/log.ui:272
-#, fuzzy
 msgid "Number of recent chat lines to show:"
 msgstr "Anzahl der zuletzt angezeigten Chatzeilen:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:253
-#, fuzzy
 msgid "Restore previously open private chats on startup"
 msgstr "Zuvor geöffnete private Chats beim Start wiederherstellen"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:306
-#, fuzzy
 msgid "Timestamps"
-msgstr "<b>Zeitstempel</b>"
+msgstr "Zeitstempel"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:315
 msgid "Display timestamps"
@@ -5730,7 +5659,6 @@ msgid "Default"
 msgstr "Standard"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:392
-#, fuzzy
 msgid "Private room format:"
 msgstr "Chat-Raum-Format:"
 
@@ -5739,27 +5667,23 @@ msgid "Log file format:"
 msgstr "Logdatei-Format:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:41
-#, fuzzy
 msgid "Login Details"
-msgstr "Details zur Anmeldung"
+msgstr "Login-Daten"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:57
-#, fuzzy
 msgid ""
 "Log in to an existing Soulseek account or create a new one. Usernames are "
 "case-sensitive and unique."
 msgstr ""
-"Melden Sie sich bei einem bestehenden Soulseek-Konto an oder erstellen Sie "
-"ein neues. Bei Benutzernamen wird zwischen Groß- und Kleinschreibung "
-"unterschieden, und sie sind eindeutig."
+"Melde dich bei einem bestehenden Soulseek-Konto an oder erstelle ein neues. "
+"Bei Benutzernamen wird zwischen Groß- und Kleinschreibung unterschieden und "
+"sie sind eindeutig."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:150
-#, fuzzy
 msgid "Connection"
-msgstr "Verbinde"
+msgstr "Verbindung"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:161
-#, fuzzy
 msgid "Auto-connect to the server on startup"
 msgstr "Automatische Verbindung zum Server beim Starten"
 
@@ -5768,23 +5692,20 @@ msgid "Listening port range (requires a restart):"
 msgstr "Empfangsportenbereich (erfordert einen Neustart):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:206
-#, fuzzy
 msgid "First port"
-msgstr "Erster Hafen"
+msgstr "Erster Port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:212
 msgid "to"
 msgstr "bis"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:221
-#, fuzzy
 msgid "Last port"
-msgstr "Zuletzt gespielt"
+msgstr "Letzter Port"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:279
-#, fuzzy
 msgid "Away Status"
-msgstr "Status"
+msgstr "Abwesend-Status"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:300
 msgid "Toggle away status after minutes of inactivity:"
@@ -5795,31 +5716,26 @@ msgid "Auto-reply message when away:"
 msgstr "Automatische Antwort bei Abwesenheit:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:366
-#, fuzzy
 msgid "Advanced"
 msgstr "Fortgeschrittene"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:375
-#, fuzzy
 msgid "Enable CTCP-like private message responses (client version)"
 msgstr "Aktiviere CTCP-ähnliche PN-Antworten (Client-Version)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:382
-#, fuzzy
 msgid "Use UPnP to automatically map the port on my router"
 msgstr "UPnP verwenden, um den Port auf meinem Router automatisch zuzuordnen"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
-#, fuzzy
 msgid "Port mapping renewal interval in hours:"
-msgstr "Intervall für die Erneuerung der Portzuordnung in Stunden:"
+msgstr "Erneuerungsintervall für die Portzuordnung in Stunden:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:439
 msgid "Network interface (requires a restart):"
 msgstr "Netzwerkschnittstelle (erfordert einen Neustart):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:454
-#, fuzzy
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
 "a VPN is used at all times. Leave empty to use any available interface. Only "
@@ -5831,18 +5747,15 @@ msgstr ""
 "Sie diesen Wert nur, wenn Sie wissen, was Sie tun."
 
 #: pynicotine/gtkgui/ui/settings/network.ui:466
-#, fuzzy
 msgid "Soulseek server:"
 msgstr "Soulseek-Server:"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:25
-#, fuzzy
 msgid "Show notification for private chats and mentions in the window title"
 msgstr ""
 "Benachrichtigung für private Chats und Erwähnungen im Fenstertitel anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:31
-#, fuzzy
 msgid "Show notification icons on tabs"
 msgstr "Benachrichtigungssymbole auf Tabs anzeigen"
 
@@ -5851,59 +5764,49 @@ msgid "Notification changes the tab's text color"
 msgstr "Benachrichtigung verändert die Textfarbe des Tabs"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:50
-#, fuzzy
 msgid "Notification Popups"
 msgstr "Benachrichtigungs-Popups"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:60
-#, fuzzy
 msgid "Enable sound for notification popups"
 msgstr "Ton für Benachrichtigungs-Popups aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:66
-#, fuzzy
 msgid "Show notification popup when a file has finished downloading"
 msgstr ""
 "Popup-Benachrichtigung anzeigen, wenn das Herunterladen einer Datei "
 "abgeschlossen ist"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:72
-#, fuzzy
 msgid "Show notification popup when a folder has finished downloading"
 msgstr ""
 "Popup-Benachrichtigung anzeigen, wenn ein Ordner fertig heruntergeladen ist"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:78
-#, fuzzy
 msgid "Show notification popup when you receive a private message"
 msgstr ""
 "Benachrichtigungs-Popup anzeigen, wenn Sie eine private Nachricht erhalten"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:84
-#, fuzzy
 msgid "Show notification popup when someone sends a message in a chat room"
 msgstr ""
 "Benachrichtigungs-Popup anzeigen, wenn jemand eine Nachricht in einem "
 "Chatraum sendet"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:90
-#, fuzzy
 msgid "Show notification popup when you are mentioned in a chat room"
 msgstr ""
 "Benachrichtigungs-Popup anzeigen, wenn Sie in einem Chat-Raum erwähnt werden"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:103
-#, fuzzy
 msgid "Tray"
-msgstr "Tablett"
+msgstr "Taskleiste"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:117
-#, fuzzy
 msgid "Display tray icon"
-msgstr "Tray-Symbol anzeigen"
+msgstr "Taskleistensymbol anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:125
-#, fuzzy
 msgid "Minimize to tray on startup"
 msgstr "Beim Starten in die Taskleiste minimieren"
 
@@ -5924,57 +5827,46 @@ msgid "Now Playing Format"
 msgstr "Jetzt spielendes Format"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:142
-#, fuzzy
 msgid "Now Playing message format:"
-msgstr "Format:"
+msgstr "Nachrichtenformat für Wiedergeben:"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:193
-#, fuzzy
 msgid "Test Configuration"
 msgstr "Test-Konfiguration"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:27
-#, fuzzy
 msgid "Plugin List"
 msgstr "Plugin-Liste"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:37
-#, fuzzy
 msgid "Enable plugins"
-msgstr "Filter aktivieren"
+msgstr "Plugins einschalten"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:96
-#, fuzzy
 msgid "_Add Plugins"
-msgstr "Plugins hinzufügen"
+msgstr "_Plugins hinzufügen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:182
-#, fuzzy
 msgid "No Plugin Selected"
 msgstr "Kein Plugin ausgewählt"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
-#, fuzzy
 msgid "Version: "
 msgstr "Version: "
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:221
-#, fuzzy
 msgid "Author(s): "
 msgstr "Autor(en): "
 
 #: pynicotine/gtkgui/ui/settings/search.ui:50
-#, fuzzy
 msgid "Enable search history"
 msgstr "Suchverlauf aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:56
-#, fuzzy
 msgid "Remove special characters from search terms"
 msgstr "Entfernen von Sonderzeichen aus Suchbegriffen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:58
-#, fuzzy
 msgid ""
 "Certain clients don't send search results if special characters are included."
 msgstr ""
@@ -5982,37 +5874,31 @@ msgstr ""
 "sind."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:77
-#, fuzzy
 msgid "Limit number of results per search:"
-msgstr "Upload-Slots begrenzen auf:"
+msgstr "Anzahl der Ergebnisse pro Suche begrenzen:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:121
-#, fuzzy
 msgid "Clear Search History"
 msgstr "Suchverlauf löschen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:155
-#, fuzzy
 msgid "Enable search result filters by default"
-msgstr "Filter standardmäßig aktivieren"
+msgstr "Suchergebnisfilter standardmäßig aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:163
-#, fuzzy
 msgid "Allow regular expressions for the filter's include and exclude"
-msgstr "Benutze reguläre Ausdrücke zum Ein- und Ausfiltern"
+msgstr ""
+"Reguläre Ausdrücke für das Einschließen und Ausschließen des Filters zulassen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:182
-#, fuzzy
 msgid "Include:"
 msgstr "Einschließen:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:209
-#, fuzzy
 msgid "Exclude:"
-msgstr "Ausgeschlossen:"
+msgstr "Ausschließen:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:236
-#, fuzzy
 msgid "File Type:"
 msgstr "Dateityp:"
 
@@ -6025,33 +5911,27 @@ msgid "Bitrate:"
 msgstr "Bitrate:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:330
-#, fuzzy
 msgid "Country Code:"
-msgstr "Land:"
+msgstr "Landescode:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:374
-#, fuzzy
 msgid "Only show results from users with an available upload slot."
 msgstr ""
 "Zeigen Sie nur Ergebnisse von Nutzern an, die einen freien Upload-Slot haben."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:408
-#, fuzzy
 msgid "Clear Filter History"
-msgstr "Entferne Gefilterte"
+msgstr "Filterverlauf löschen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:433
-#, fuzzy
 msgid "Network Searches"
-msgstr "Suche"
+msgstr "Netzwerksuchen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:447
-#, fuzzy
 msgid "Respond to search requests from other users"
 msgstr "Reagieren Sie auf Suchanfragen von anderen Nutzern"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:448
-#, fuzzy
 msgid ""
 "If a user on the Soulseek network searches for a file that exists in your "
 "shares, search results will be sent to the user."
@@ -6069,7 +5949,6 @@ msgid "Maximum search results to send per search request:"
 msgstr "Maximal zu sendende Suchergebnisse pro Suchanfrage:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:537
-#, fuzzy
 msgid "Result Filter Help"
 msgstr "Ergebnisfilter-Hilfe"
 
@@ -6078,7 +5957,6 @@ msgid "Rescan shares on startup"
 msgstr "Freigaben beim Programmstart aktualisieren"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:30
-#, fuzzy
 msgid ""
 "Automatically rescans the contents of your shared folders on startup. If "
 "disabled, your shares are only updated when you manually initiate a rescan."
@@ -6088,12 +5966,10 @@ msgstr ""
 "Sie manuell eine erneute Überprüfung einleiten."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:37
-#, fuzzy
 msgid "Enable buddy-only shares"
-msgstr "Private Freigaben aktivieren"
+msgstr "Freigaben nur für Freunde aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
-#, fuzzy
 msgid ""
 "Enables private shares that only users on your buddy list can access. If "
 "disabled, users will only be able to access your public shares."
@@ -6103,9 +5979,8 @@ msgstr ""
 "auf Ihre öffentlichen Freigaben zugreifen."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
-#, fuzzy
 msgid "Mark each shared folder as buddy-only"
-msgstr "Markieren Sie jeden freigegebenen Ordner als \"Buddy-only"
+msgstr "Markieren Sie jeden freigegebenen Ordner als nur für Freunde"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:47
 msgid ""
@@ -6116,27 +5991,23 @@ msgstr ""
 "vorübergehend den öffentlichen Zugriff auf Freigaben verhindern müssen."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:55
-#, fuzzy
 msgid "Limit buddy-only shares to trusted buddies"
-msgstr "Beschränkung der Freigabe auf vertrauenswürdige Freunde"
+msgstr "Beschränkung der Freundenfreigaben auf vertrauenswürdige Freunde"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:56
-#, fuzzy
 msgid ""
 "Only users marked as trusted on your buddy list can access your buddy-only "
 "shares."
 msgstr ""
-"Nur Benutzer, die in Ihrer Buddy-Liste als vertrauenswürdig markiert sind, "
-"können auf Ihre Buddy-Freigaben zugreifen."
+"Nur Benutzer, die in Ihrer Freudenliste als vertrauenswürdig markiert sind, "
+"können auf Ihre Freundenfreigaben zugreifen."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:74
 #: pynicotine/gtkgui/ui/userinfo.ui:272
-#, fuzzy
 msgid "Shared Folders"
 msgstr "Freigaben"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:85
-#, fuzzy
 msgid ""
 "Nicotine+ allows you to share folders directly from your computer. All the "
 "contents of these folders (with the exception of dotfiles) can be downloaded "
@@ -6145,26 +6016,23 @@ msgid ""
 "addition to public shares."
 msgstr ""
 "Mit Nicotine+ können Sie Ordner direkt von Ihrem Computer aus freigeben. Der "
-"gesamte Inhalt dieser Ordner (mit Ausnahme von Dotfiles) kann von anderen "
-"Benutzern im Soulseek-Netzwerk heruntergeladen werden. Öffentliche Freigaben "
-"sind für jeden Benutzer verfügbar, während Benutzer in Ihrer Buddy-Liste "
-"zusätzlich zu den öffentlichen Freigaben auch Zugriff auf Freigaben haben, "
-"die nur für Buddy-Mitglieder bestimmt sind."
+"gesamte Inhalt dieser Ordner (mit Ausnahme von Punktdateien) können von "
+"anderen Benutzern im Soulseek-Netzwerk heruntergeladen werden. Öffentliche "
+"Freigaben sind für jeden Benutzer verfügbar, während Benutzer in Ihrer Buddy-"
+"Liste zusätzlich zu den öffentlichen Freigaben auch Zugriff auf Freigaben "
+"haben, die nur für Freunden-Mitglieder bestimmt sind."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:173
-#, fuzzy
 msgid "Rename"
 msgstr "Umbenennen"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:24
-#, fuzzy
 msgid "Enable Text-to-Speech"
-msgstr "Sprachausgabe aktivieren"
+msgstr "Text-zu-Sprache aktivieren"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:43
-#, fuzzy
 msgid "Text-to-Speech command:"
-msgstr "Befehl für Sprachausgabe:"
+msgstr "Befehl für Text-zu-Sprache:"
 
 #: pynicotine/gtkgui/ui/settings/tts.ui:131
 msgid "Chat room message:"
@@ -6175,50 +6043,41 @@ msgid "Private chat message:"
 msgstr "Nachricht in privaten Chats:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:56
-#, fuzzy
 msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr ""
 "Beendete/abgebrochene Uploads automatisch aus der Übertragungsliste löschen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:70
-#, fuzzy
 msgid "Upload Speed Limits"
 msgstr "Upload-Geschwindigkeitsbegrenzungen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
-#, fuzzy
 msgid "Limit upload speed:"
 msgstr "Upload-Geschwindigkeit begrenzen auf:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:108
-#, fuzzy
 msgid "Per transfer"
-msgstr "pro Transfer"
+msgstr "Pro Übertragung"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:116
-#, fuzzy
 msgid "Total transfers"
-msgstr "Transfers insgesamt"
+msgstr "Übertragungen Insgesamt"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:132
-#, fuzzy
 msgid "Limit upload speed to (KiB/s):"
-msgstr "Upload-Geschwindigkeit begrenzen auf:"
+msgstr "Upload-Geschwindigkeit begrenzen auf (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:162
-#, fuzzy
 msgid "Alternative upload speed limit (KiB/s):"
 msgstr "Alternative Upload-Geschwindigkeitsgrenze (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:198
-#, fuzzy
 msgid "Queue Behavior"
-msgstr "Verhalten in der Warteschlange"
+msgstr "Warteschlangenverhalten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:218
-#, fuzzy
 msgid "Upload queue type:"
-msgstr "Warteschlangensystem:"
+msgstr "Typ der Upload-Warteschlange:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:237
 msgid "Round Robin"
@@ -6250,7 +6109,6 @@ msgstr ""
 "Gesamtübertragungsgeschwindigkeit (KiB/s) erreicht:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:294
-#, fuzzy
 msgid "Limit number of upload slots to:"
 msgstr "Upload-Slots begrenzen auf:"
 
@@ -6263,12 +6121,10 @@ msgstr ""
 "zugestandenen Bandbreite ermittelt."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:320
-#, fuzzy
 msgid "Privilege all users in buddy list"
 msgstr "Alle meine Freunde bevorzugen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:321
-#, fuzzy
 msgid ""
 "Buddies will have higher priority in the queue, the same as globally "
 "privileged users."
@@ -6286,26 +6142,22 @@ msgstr ""
 "Jeder Benutzer kann maximal eines des folgendes in die Warteschlange stellen:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:374
-#, fuzzy
 msgid "Mebibytes (2^17 bytes)."
-msgstr "Mebibytes (2^17 Bytes)."
+msgstr "Mebibytes (2^20 Bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
 msgid "MiBs"
 msgstr "MiBs"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:421
-#, fuzzy
 msgid "files"
 msgstr "Dateien"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:435
-#, fuzzy
 msgid "Queue limits do not apply to users in buddy list"
-msgstr "Einschränkungen gelten nicht für Freunde"
+msgstr "Warteschlangenbeschränkungen gelten nicht für Freunde"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:32
-#, fuzzy
 msgid ""
 "Instances of $ will be replaced by the link. The default web browser of the "
 "system will be used in cases where a protocol has not been configured."
@@ -6327,52 +6179,42 @@ msgid "Self Description"
 msgstr "Selbstbeschreibung"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:64
-#, fuzzy
 msgid "Picture:"
 msgstr "Bild:"
 
 #: pynicotine/gtkgui/ui/settings/userinfo.ui:98
-#, fuzzy
 msgid "Reset Picture"
 msgstr "Bild zurücksetzen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:24
-#, fuzzy
 msgid "Prefer dark mode"
 msgstr "Dunklen Modus bevorzugen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:26
-#, fuzzy
 msgid "Note that the operating system's theme may take precedence."
 msgstr "Beachten Sie, dass das Thema des Betriebssystems Vorrang haben kann."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:43
-#, fuzzy
 msgid "When closing Nicotine+:"
 msgstr "Beim Schließen von Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:58
-#, fuzzy
 msgid "Quit program"
 msgstr "Programm beenden"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:59
-#, fuzzy
 msgid "Show confirmation dialog"
-msgstr "Vorm Schließen des Hauptfensters nachfragen"
+msgstr "Bestätigungsdialog anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:60
-#, fuzzy
 msgid "Run in the background"
 msgstr "Im Hintergrund laufen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:83
-#, fuzzy
 msgid "Primary Tabs"
 msgstr "Primäre Tabs"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
-#, fuzzy
 msgid "View previous primary tab on startup"
 msgstr "Vorherige primäre Tab beim Starten anzeigen"
 
@@ -6381,22 +6223,18 @@ msgid "Tab bar position:"
 msgstr "Position der Tableiste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:141
-#, fuzzy
 msgid "Visible primary tabs:"
 msgstr "Sichtbare primäre Tabs:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:282
-#, fuzzy
 msgid "Lists"
-msgstr "Verzeichnisse"
+msgstr "Listen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:291
-#, fuzzy
 msgid "Enable file path tooltips in search and transfer views"
 msgstr "Aktivieren von Dateipfad-Tooltips in Such- und Übertragungsansichten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:293
-#, fuzzy
 msgid ""
 "Displays the complete file path of a search result or file transfer when you "
 "hover a folder path or file name with your cursor."
@@ -6406,7 +6244,6 @@ msgstr ""
 "einen Dateinamen fahren."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:299
-#, fuzzy
 msgid ""
 "Show reverse file paths in search and transfer views (requires a restart)"
 msgstr ""
@@ -6414,7 +6251,6 @@ msgstr ""
 "einen Neustart)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:306
-#, fuzzy
 msgid "Show privately shared files in search results"
 msgstr "Privat freigegebene Dateien in den Suchergebnissen anzeigen"
 
@@ -6432,12 +6268,10 @@ msgstr ""
 "dazu, und sie sind ."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
-#, fuzzy
 msgid "Show privately shared files in user shares"
 msgstr "Privat freigegebene Dateien in Benutzerfreigaben anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:316
-#, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files when you "
 "browse their shares. Folders containing such files are prefixed with "
@@ -6460,29 +6294,24 @@ msgid "Search with queue text color:"
 msgstr "Suche mit Textfarbe der Warteschlange:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
-#, fuzzy
 msgid "Secondary Tabs"
 msgstr "Sekundäre Tabs"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:505
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
-msgstr "Schließen-Knöpfe auf Tabs"
+msgstr "Schließen-Schaltflächen auf sekundären Tabs"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:511
-#, fuzzy
 msgid "Tabs show user status icons instead of status text"
-msgstr "Tabs zeigen Benutzerstatussymbole anstelle von Statustext"
+msgstr "Tabs zeigen Benutzerstatussymbole anstelle von Statustext an"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:532
-#, fuzzy
 msgid "Chat room tab bar position:"
 msgstr "Position der Chatraum-Tabsleiste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:558
-#, fuzzy
 msgid "Private chat tab bar position:"
-msgstr "Privat-Chat-Format:"
+msgstr "Position der privaten Chat-Tab-Leiste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:584
 #, fuzzy
@@ -6500,12 +6329,10 @@ msgid "User browse tab bar position:"
 msgstr "Position der Tabsleiste für die Benutzersuche:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:673
-#, fuzzy
 msgid "Chats"
-msgstr "Chat"
+msgstr "Chats"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:682
-#, fuzzy
 msgid "Colored and clickable usernames"
 msgstr "Farbige und anklickbare Benutzernamen"
 
@@ -6515,22 +6342,18 @@ msgid "Chat username appearance:"
 msgstr "Aussehen des Chat-Benutzernamens:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:719
-#, fuzzy
 msgid "bold"
 msgstr "fett"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:720
-#, fuzzy
 msgid "italic"
 msgstr "kursiv"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:721
-#, fuzzy
 msgid "underline"
-msgstr "Online"
+msgstr "unterstreichen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:722
-#, fuzzy
 msgid "normal"
 msgstr "normal"
 
@@ -6548,67 +6371,54 @@ msgid "/me action text color:"
 msgstr "/me Aktion Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:974
-#, fuzzy
 msgid "Highlighted text color:"
 msgstr "Hervorgehobene Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1048
-#, fuzzy
 msgid "URL link text color:"
 msgstr "Textfarbe des URL-Links:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1122
-#, fuzzy
 msgid "Online text color:"
 msgstr "Online-Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1196
-#, fuzzy
 msgid "Offline text color:"
 msgstr "Offline-Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1270
-#, fuzzy
 msgid "Away text color:"
-msgstr "Textfarbe Away:"
+msgstr "Textfarbe abwesend:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1346
-#, fuzzy
 msgid "Text Entries"
-msgstr "Text-Einträge"
+msgstr "Texteinträge"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1373
-#, fuzzy
 msgid "Text entry background color:"
 msgstr "Hintergrundfarbe des Texteintrags:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1447
-#, fuzzy
 msgid "Text entry text color:"
 msgstr "Farbe der Texteingabe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1522
-#, fuzzy
 msgid "Tab Labels"
-msgstr "Tabs-Etiketten"
+msgstr "Tabsbeschriftung"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1549
-#, fuzzy
 msgid "Regular tab label color:"
-msgstr "Normale Farbe des Etiketts:"
+msgstr "Reguläre Farbe der Tab-Beschriftung:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1623
-#, fuzzy
 msgid "Changed tab label color:"
 msgstr "Die Farbe der Tabsbeschriftung wurde geändert:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1697
-#, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Farbe der hervorgehobenen Tabsbeschriftung:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1773
-#, fuzzy
 msgid "Fonts"
 msgstr "Schriftarten"
 
@@ -6617,36 +6427,30 @@ msgid "Global font:"
 msgstr "Globale Schriftart:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1854
-#, fuzzy
 msgid "Chat font:"
-msgstr "Schrift für Chats:"
+msgstr "Schriftart für Chats:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1915
-#, fuzzy
 msgid "List font:"
-msgstr "Schrift für Listen:"
+msgstr "Schriftart für Listen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1976
-#, fuzzy
 msgid "Transfers font:"
-msgstr "Schrift für Transfers:"
+msgstr "Schriftart für Transfers:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2037
-#, fuzzy
 msgid "Search font:"
-msgstr "Schrift für Suche:"
+msgstr "Schriftart für Suche:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2098
-#, fuzzy
 msgid "Browse font:"
-msgstr "Schrift für Freigaben-Browser:"
+msgstr "Schriftart für Durchsuchen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2164
 msgid "Icons"
 msgstr "Symbole"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2191
-#, fuzzy
 msgid "Icon theme folder (requires restart):"
 msgstr "Icon-Themenordner (Neustart erforderlich):"
 
@@ -6655,9 +6459,8 @@ msgid "Abort"
 msgstr "Abbrechen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:96
-#, fuzzy
 msgid "Abort User(s)"
-msgstr "Benutzer"
+msgstr "Benutzer abbrechen"
 
 #: pynicotine/gtkgui/ui/uploads.ui:123
 msgid "Ban User(s)"
@@ -6668,22 +6471,18 @@ msgid "Clear Uploa_ds…"
 msgstr "Uploa_ds löschen…"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:101
-#, fuzzy
 msgid "Shared"
-msgstr "Gemeinsame"
+msgstr "Freigegeben"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:147
-#, fuzzy
 msgid "Search files and folders (exact match)"
 msgstr "Suche in Dateien und Ordnern (exakte Übereinstimmung)"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:155
-#, fuzzy
 msgid "Save shares list to disk"
-msgstr "Aktienliste auf der Festplatte speichern"
+msgstr "Freigabeliste speichern"
 
 #: pynicotine/gtkgui/ui/userbrowse.ui:171
-#, fuzzy
 msgid "Refresh files"
 msgstr "Dateien aktualisieren"
 
@@ -6692,54 +6491,44 @@ msgid "User Description"
 msgstr "Benutzer Beschreibung"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:91
-#, fuzzy
 msgid "User Information"
-msgstr "Benutzerinfo"
+msgstr "Benutzerinformationen"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:112
-#, fuzzy
 msgid "Upload Slots"
-msgstr "Uploads"
+msgstr "Slots hochladen"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:144
-#, fuzzy
 msgid "Free Upload Slots"
-msgstr "Freier Slot"
+msgstr "Freier Hochlad-Slot"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:176
-#, fuzzy
 msgid "Queued Uploads"
-msgstr "Uploads"
+msgstr "Uploads in der Warteschlange"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:208
-#, fuzzy
 msgid "Upload Speed"
-msgstr "Hochladen"
+msgstr "Upload-Geschwindigkeit"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:240
-#, fuzzy
 msgid "Shared Files"
-msgstr "Suche"
+msgstr "Freigegebene Dateien"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:358
-#, fuzzy
 msgid "User Interests"
-msgstr "Interessen"
+msgstr "Benutzerinteressen"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:420
-#, fuzzy
 msgid "User Picture"
-msgstr "Freigaben"
+msgstr "Benutzerbild"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:618
-#, fuzzy
 msgid "Save _Picture"
-msgstr "Speichern _Bild"
+msgstr "_Bild speichern"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:649
-#, fuzzy
 msgid "_Refresh Info"
-msgstr "Aktualisieren"
+msgstr "_Info aktualisieren"
 
 #~ msgid "Cannot find the pynicotine.utils module."
 #~ msgstr "Kann Modul pynicotine.utils nicht finden"
