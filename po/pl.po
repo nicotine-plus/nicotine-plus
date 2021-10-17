@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 22:57+0300\n"
-"PO-Revision-Date: 2021-10-14 18:21+0000\n"
+"PO-Revision-Date: 2021-10-15 18:05+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -3252,7 +3252,7 @@ msgstr "Last.fm: Proszę podać nazwę użytkownika i klucz API"
 #: pynicotine/nowplaying.py:146
 #, python-format
 msgid "Last.fm: Could not connect to Audioscrobbler: %(error)s"
-msgstr "Last.fm: Nie można się połączyć z audioscroblerem: %(error)s"
+msgstr "Last.fm: Nie można się połączyć z Audioscroblerem: %(error)s"
 
 #: pynicotine/nowplaying.py:165
 msgid "Last played"
@@ -3262,7 +3262,7 @@ msgstr "Ostatnio odtwarzane"
 #, python-format
 msgid "Last.fm: Could not get recent track from Audioscrobbler: %(error)s"
 msgstr ""
-"Last.fm: Nie można pobrać ostatnio odtwarzanego utworu z audioscrobblera: "
+"Last.fm: Nie można pobrać ostatnio odtwarzanego utworu z Audioscrobblera: "
 "%(error)s"
 
 #: pynicotine/nowplaying.py:205
@@ -3323,7 +3323,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:115
 #, python-format
 msgid "Failed to load plugin '%s', could not find it."
-msgstr "Błąd ładowania wtyczki '%s', nie znaleziono jej."
+msgstr "Nie udało się załadować wtyczki '%s', nie można jej znaleźć."
 
 #: pynicotine/pluginsystem.py:148
 #, python-format
@@ -3331,13 +3331,13 @@ msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
 "characters: %(characters)s"
 msgstr ""
-"Nie można aktywować wtyczki %(name)s. Folder z wtyczkami zawiera "
-"niedozwolone znaki: %(characters)s"
+"Nie można załadować wtyczki %(name)s. Nazwa folderu wtyczki zawiera "
+"nieprawidłowe znaki: %(characters)s"
 
 #: pynicotine/pluginsystem.py:178
 #, python-format
 msgid "Loaded plugin %s"
-msgstr "Aktywna wtyczka %s"
+msgstr "Załadowana wtyczka %s"
 
 #: pynicotine/pluginsystem.py:182
 #, python-format
@@ -3345,7 +3345,7 @@ msgid ""
 "Unable to load plugin %(module)s\n"
 "%(exc_trace)s"
 msgstr ""
-"Nie można aktywować wtyczki %(module)s\n"
+"Nie można załadować wtyczki %(module)s\n"
 "%(exc_trace)s"
 
 #: pynicotine/pluginsystem.py:217
@@ -3384,7 +3384,7 @@ msgstr "Wtyczka %(module)s zwróciła coś dziwnego, '%(value)s', ignorowanie"
 
 #: pynicotine/pynicotine.py:309
 msgid "You need to specify a username and password before connecting…"
-msgstr "Musisz określić nazwę użytkownika i hasło przed połączeniem…"
+msgstr "Musisz podać nazwę użytkownika i hasło przed połączeniem…"
 
 #: pynicotine/pynicotine.py:315
 #, python-format
