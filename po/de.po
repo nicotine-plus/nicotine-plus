@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-16 21:02+0000\n"
+"PO-Revision-Date: 2021-10-17 12:22+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -4598,7 +4598,7 @@ msgstr "Raum betreten"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:73
 msgid "/leave /l /part /p"
-msgstr ""
+msgstr "/leave /l /part /p"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:84
 msgid "Leave current room"
@@ -4607,7 +4607,7 @@ msgstr "Aktuellen Raum verlassen"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:99
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:72
 msgid "/clear /cl"
-msgstr ""
+msgstr "/clear /cl"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:110
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:83
@@ -4616,7 +4616,7 @@ msgstr "Chat-Fenster leeren"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
 msgid "/tick /t"
-msgstr ""
+msgstr "/tick /t"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 msgid "Set your personal ticker"
@@ -4624,7 +4624,7 @@ msgstr "Eigenen Ticker setzen"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:151
 msgid "/tickers"
-msgstr ""
+msgstr "/tickers"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
 msgid "Show all the tickers"
@@ -4643,7 +4643,7 @@ msgstr "Etwas in der dritten Person sagen"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:208
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:124
 msgid "/now"
-msgstr ""
+msgstr "/now"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
@@ -4653,7 +4653,7 @@ msgstr "Zeige Ausgabe des Now-Playing-Skripts"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:234
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:150
 msgid "/away /a"
-msgstr ""
+msgstr "/away /a"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
@@ -4663,7 +4663,7 @@ msgstr "Schalte Anwesenheitsstatus um"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:176
 msgid "/rescan"
-msgstr ""
+msgstr "/rescan"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
@@ -4673,7 +4673,7 @@ msgstr "Freigaben aktualisieren"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:286
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:202
 msgid "/quit /q /exit"
-msgstr ""
+msgstr "/quit /q /exit"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
@@ -4839,7 +4839,7 @@ msgstr "Private Chat-Befehle"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:46
 msgid "/close /c"
-msgstr ""
+msgstr "/close /c"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
 msgid "Close the current private chat"
@@ -4847,7 +4847,7 @@ msgstr "Den aktuellen privaten Chat schließen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:244
 msgid "/add /ad"
-msgstr ""
+msgstr "/add /ad"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
 msgid "Add user to your user list"
@@ -4855,7 +4855,7 @@ msgstr "Benutzer zu Ihrer Benutzerliste hinzufügen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:270
 msgid "/rem /unbuddy"
-msgstr ""
+msgstr "/rem /unbuddy"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
 msgid "Remove user from your user list"
@@ -4863,7 +4863,7 @@ msgstr "Benutzer aus der Freunde-Liste entfernen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:296
 msgid "/ban"
-msgstr ""
+msgstr "/ban"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
 msgid "Add user to your ban list"
@@ -4871,7 +4871,7 @@ msgstr "Benutzer zu Ihrer Sperrliste hinzufügen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:322
 msgid "/unban"
-msgstr ""
+msgstr "/unban"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:333
 msgid "Remove user from your ban list"
@@ -4879,7 +4879,7 @@ msgstr "Benutzer aus Sperrliste entfernen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:348
 msgid "/ignore"
-msgstr ""
+msgstr "/ignore"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:359
 msgid "Add user to your ignore list"
@@ -4887,7 +4887,7 @@ msgstr "Benutzer zur Ingnorierliste hinzufügen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:374
 msgid "/unignore"
-msgstr ""
+msgstr "/unignore"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:385
 msgid "Remove user from your ignore list"
@@ -4895,7 +4895,7 @@ msgstr "Benutzer aus Ignorierliste entfernen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:400
 msgid "/browse /b"
-msgstr ""
+msgstr "/browse /b"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
 msgid "Browse files of user"
@@ -4903,7 +4903,7 @@ msgstr "Dateien des Benutzers durchsuchen"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:426
 msgid "/whois /w"
-msgstr ""
+msgstr "/whois /w"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:437
 msgid "Request user info for user"
@@ -4911,7 +4911,7 @@ msgstr "Benutzerinformationen anfordern"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:452
 msgid "/ip"
-msgstr ""
+msgstr "/ip"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:463
 msgid "Show IP for user"
@@ -5940,9 +5940,8 @@ msgstr ""
 "Freigaben vorhanden ist, werden die Suchergebnisse an den Benutzer gesendet."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
-#, fuzzy
 msgid "Respond to search requests containing minimum character count:"
-msgstr "Beantworten Sie Suchanfragen mit einer Mindestanzahl von Zeichen:"
+msgstr "Suchanfragen mit weniger als diese Anzahl von Zeichen werden ignoriert:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 msgid "Maximum search results to send per search request:"
@@ -6084,7 +6083,6 @@ msgid "Round Robin"
 msgstr "Rundlauf-Verfahren (Round Robin)"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:239
-#, fuzzy
 msgid "Queued users will be uploaded one file at a time in a cyclical fashion."
 msgstr ""
 "Benutzer in der Warteschlange werden zyklisch eine Datei nach der anderen "
@@ -6255,17 +6253,15 @@ msgid "Show privately shared files in search results"
 msgstr "Privat freigegebene Dateien in den Suchergebnissen anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:308
-#, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
 "not downloadable unless the uploader gives explicit permission, and are ."
 msgstr ""
 "Andere Clients bieten möglicherweise eine Option zum Senden von privat "
-"freigegebenen Dateien als Antwort auf Suchanfragen. Solche Dateien sind mit "
-"dem Präfix \"[PRIVATE DATEI]\" versehen und können nicht heruntergeladen "
-"werden, es sei denn, der Hochladende gibt seine ausdrückliche Erlaubnis "
-"dazu, und sie sind ."
+"freigegebenen Dateien als Reaktion auf Suchanfragen an. Solche Dateien haben "
+"das Präfix '[PRIVATE FILE]' und können nicht heruntergeladen werden, es sei "
+"denn, der Uploader gibt die ausdrückliche Erlaubnis und sind ."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
 msgid "Show privately shared files in user shares"
@@ -6289,9 +6285,8 @@ msgid "List text color:"
 msgstr "Textfarbe der Liste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:416
-#, fuzzy
 msgid "Search with queue text color:"
-msgstr "Suche mit Textfarbe der Warteschlange:"
+msgstr "Suche mit Warteschlangentextfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
 msgid "Secondary Tabs"
@@ -6314,19 +6309,16 @@ msgid "Private chat tab bar position:"
 msgstr "Position der privaten Chat-Tab-Leiste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:584
-#, fuzzy
 msgid "Search tab bar position:"
-msgstr "Position der Tabsleiste für die Suche:"
+msgstr "Position der Suchregisterkarte:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:610
-#, fuzzy
 msgid "User info tab bar position:"
-msgstr "Position der Tabsleiste für die Benutzerinformation:"
+msgstr "Position der Registerkarten für Benutzerinformationen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:636
-#, fuzzy
 msgid "User browse tab bar position:"
-msgstr "Position der Tabsleiste für die Benutzersuche:"
+msgstr "Position der Registerkarten für Benutzerinfos:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:673
 msgid "Chats"
@@ -6337,7 +6329,6 @@ msgid "Colored and clickable usernames"
 msgstr "Farbige und anklickbare Benutzernamen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:702
-#, fuzzy
 msgid "Chat username appearance:"
 msgstr "Aussehen des Chat-Benutzernamens:"
 
@@ -6358,9 +6349,8 @@ msgid "normal"
 msgstr "normal"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:752
-#, fuzzy
 msgid "Remote text color:"
-msgstr "Entfernte Textfarbe:"
+msgstr "Remote-Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:826
 msgid "Local text color:"

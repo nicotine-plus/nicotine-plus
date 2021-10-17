@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-13 04:28+0300\n"
-"PO-Revision-Date: 2021-10-15 02:54+0000\n"
+"PO-Revision-Date: 2021-10-17 13:04+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4547,7 +4547,7 @@ msgstr "Verlaat deze kamer"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:99
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:72
 msgid "/clear /cl"
-msgstr "/wis /cl"
+msgstr "/clear /cl"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:110
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:83
@@ -4583,7 +4583,7 @@ msgstr "Zeg iets in de derde-persoon"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:208
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:124
 msgid "/now"
-msgstr "/nu"
+msgstr "/now"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
@@ -4593,7 +4593,7 @@ msgstr "Toon wat je mediaspeler nu afspeelt"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:234
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:150
 msgid "/away /a"
-msgstr "/weg /a"
+msgstr "/away /a"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
@@ -4603,7 +4603,7 @@ msgstr "Schakelt de status aanwezig / afwezig om"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:176
 msgid "/rescan"
-msgstr "/herscan"
+msgstr "/rescan"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
@@ -4613,7 +4613,7 @@ msgstr "Herlees gedeelde bestanden"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:286
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:202
 msgid "/quit /q /exit"
-msgstr "/stop /q /exit"
+msgstr "/quit /q /exit"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
@@ -4638,7 +4638,7 @@ msgstr "Verwijder gebruiker 'user' uit jouw vriendenlijst"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 msgid "/ban 'user'"
-msgstr "/verban gebruiker'"
+msgstr "/ban 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
 msgid "Add user 'user' to your ban list"
@@ -4654,7 +4654,7 @@ msgstr "Hef de verbanning van gebruiker 'user' op"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 msgid "/ignore 'user'"
-msgstr "/negeer gebruiker'"
+msgstr "/ignore 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 msgid "Add user 'user' to your ignore list"
@@ -4662,7 +4662,7 @@ msgstr "Negeer gebruiker 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
 msgid "/unignore 'user'"
-msgstr "/ negeer 'gebruiker'"
+msgstr "/unignore 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
 msgid "Remove user 'user' from your ignore list"
@@ -4670,7 +4670,7 @@ msgstr "Gebruiker 'user' niet meer negeren"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
 msgid "/browse /b 'user'"
-msgstr "/ blader /b 'gebruiker'"
+msgstr "/browse /b 'user'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
 msgid "Browse files of user 'user'"
@@ -4720,7 +4720,7 @@ msgstr "Verwijder een alias"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:562
 msgid "/search /s 'query'"
-msgstr "/zoek /s 'zoekopdracht'"
+msgstr "/search /s 'zoekopdracht'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:573
@@ -4779,7 +4779,7 @@ msgstr "Privé Chat Commando's"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:46
 msgid "/close /c"
-msgstr "/sluiten /c"
+msgstr "/close /c"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
 msgid "Close the current private chat"
@@ -4819,7 +4819,7 @@ msgstr "Ontban gebruiker"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:348
 msgid "/ignore"
-msgstr "/negeer"
+msgstr "/ignore"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:359
 msgid "Add user to your ignore list"
@@ -4835,7 +4835,7 @@ msgstr "Gebruiker niet meer negeren"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:400
 msgid "/browse /b"
-msgstr "/ blader /b 'gebruiker'"
+msgstr "/browse /b"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
 msgid "Browse files of user"
@@ -4843,7 +4843,7 @@ msgstr "Bestanden van gebruiker bekijken"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:426
 msgid "/whois /w"
-msgstr "/whois /w 'gebruiker'"
+msgstr "/whois /w"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:437
 msgid "Request user info for user"
