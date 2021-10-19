@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nicotine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 22:57+0300\n"
+"POT-Creation-Date: 2021-10-17 20:23+0200\n"
 "PO-Revision-Date: 2021-10-17 12:09+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -144,11 +144,8 @@ msgstr ""
 
 #: pynicotine/__init__.py:153
 msgid ""
-"Failed to scan shares. If Nicotine+ is currently running, please close the "
-"program before scanning."
+"Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Échec de l'examen des partages. Si Nicotine+ est en cours d'exécution, "
-"veuillez fermer le programme avant de lancer un examen."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -1345,9 +1342,9 @@ msgid "Delete Logged Messages?"
 msgstr "Supprimer les messages enregistrés ?"
 
 #: pynicotine/gtkgui/chatrooms.py:1125
+#, fuzzy
 msgid ""
-"Are you sure you wish to permanently delete all logged messages for this "
-"room?"
+"Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer définitivement tous les messages "
 "enregistrés de ce salon ?"
@@ -1396,7 +1393,8 @@ msgid "Clear Queued Downloads"
 msgstr "Effacer les téléchargements en attente"
 
 #: pynicotine/gtkgui/downloads.py:66
-msgid "Are you sure you wish to clear all queued downloads?"
+#, fuzzy
+msgid "Do you really want to clear all queued downloads?"
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer tous les téléchargements en attente ?"
 
@@ -1405,7 +1403,8 @@ msgid "Clear All Downloads"
 msgstr "Effacer tous les téléchargements"
 
 #: pynicotine/gtkgui/downloads.py:76
-msgid "Are you sure you wish to clear all downloads?"
+#, fuzzy
+msgid "Do you really want to clear all downloads?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les téléchargements ?"
 
 #: pynicotine/gtkgui/downloads.py:92
@@ -1414,21 +1413,21 @@ msgid "Download %(num)i files?"
 msgstr "Télécharger %(num)i fichiers ?"
 
 #: pynicotine/gtkgui/downloads.py:93
-#, python-format
+#, fuzzy, python-format
 msgid ""
-"Are you sure you wish to download %(num)i files from %(user)s's folder "
+"Do you really want to download %(num)i files from %(user)s's folder "
 "%(folder)s?"
 msgstr ""
 "Êtes-vous sûr de vouloir télécharger %(num)i fichiers depuis le répertoire "
 "%(folder)s de l'utilisateur %(user)s ?"
 
 #: pynicotine/gtkgui/fastconfigure.py:65
-#: pynicotine/gtkgui/settingswindow.py:583
+#: pynicotine/gtkgui/settingswindow.py:582
 msgid "Virtual Folder"
 msgstr "Répertoire virtuel"
 
 #: pynicotine/gtkgui/fastconfigure.py:66 pynicotine/gtkgui/search.py:345
-#: pynicotine/gtkgui/settingswindow.py:584
+#: pynicotine/gtkgui/settingswindow.py:583
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:64
 msgid "Folder"
 msgstr "Répertoire"
@@ -1448,8 +1447,8 @@ msgstr "Obtenez les privilèges de Soulseek…"
 #: pynicotine/gtkgui/fastconfigure.py:190
 #: pynicotine/gtkgui/fastconfigure.py:209
 #: pynicotine/gtkgui/fastconfigure.py:218
-#: pynicotine/gtkgui/settingswindow.py:711
-#: pynicotine/gtkgui/settingswindow.py:741
+#: pynicotine/gtkgui/settingswindow.py:710
+#: pynicotine/gtkgui/settingswindow.py:740
 msgid "Unable to Share Folder"
 msgstr "Impossible de partager le répertoire"
 
@@ -1470,13 +1469,13 @@ msgid "Virtual Name"
 msgstr "Nom virtuel"
 
 #: pynicotine/gtkgui/fastconfigure.py:235
-#: pynicotine/gtkgui/settingswindow.py:749
+#: pynicotine/gtkgui/settingswindow.py:748
 #, python-format
 msgid "Enter virtual name for '%(dir)s':"
 msgstr "Choisissez un nom virtuel pour '%(dir)s'  :"
 
 #: pynicotine/gtkgui/fastconfigure.py:244
-#: pynicotine/gtkgui/settingswindow.py:767
+#: pynicotine/gtkgui/settingswindow.py:766
 msgid "Add a Shared Folder"
 msgstr "Ajouter un répertoire partagé"
 
@@ -1542,7 +1541,7 @@ msgid "Online"
 msgstr "Présent"
 
 #: pynicotine/gtkgui/frame.py:376 pynicotine/gtkgui/frame.py:478
-#: pynicotine/gtkgui/settingswindow.py:1423
+#: pynicotine/gtkgui/settingswindow.py:1422
 #: pynicotine/gtkgui/widgets/iconnotebook.py:453
 #: pynicotine/gtkgui/widgets/trayicon.py:99
 #: pynicotine/gtkgui/widgets/treeview.py:466
@@ -1722,7 +1721,7 @@ msgstr "_Partages"
 msgid "Search Files"
 msgstr "Rechercher des fichiers"
 
-#: pynicotine/gtkgui/frame.py:1283 pynicotine/gtkgui/settingswindow.py:3117
+#: pynicotine/gtkgui/frame.py:1283 pynicotine/gtkgui/settingswindow.py:3116
 #: pynicotine/gtkgui/widgets/trayicon.py:92
 #: pynicotine/gtkgui/ui/mainwindow.ui:939
 #: pynicotine/gtkgui/ui/mainwindow.ui:1592
@@ -1731,7 +1730,7 @@ msgstr "Rechercher des fichiers"
 msgid "Downloads"
 msgstr "Téléchargements"
 
-#: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/settingswindow.py:3118
+#: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/settingswindow.py:3117
 #: pynicotine/gtkgui/widgets/trayicon.py:93
 #: pynicotine/gtkgui/ui/mainwindow.ui:1029
 #: pynicotine/gtkgui/ui/mainwindow.ui:1605
@@ -1745,7 +1744,7 @@ msgstr "Envois"
 msgid "User Browse"
 msgstr "Partages utilisateur"
 
-#: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/settingswindow.py:3108
+#: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/settingswindow.py:3107
 #: pynicotine/gtkgui/ui/mainwindow.ui:1215
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
@@ -1789,8 +1788,8 @@ msgid "Create New Room?"
 msgstr "Créer un nouveau Salon  ?"
 
 #: pynicotine/gtkgui/frame.py:1740
-#, python-format
-msgid "Are you sure you wish to create a new room \"%s\"?"
+#, fuzzy, python-format
+msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Êtes-vous sûr de vouloir créer un nouveau Salon \"%s\" ?"
 
 #: pynicotine/gtkgui/frame.py:1741
@@ -1818,8 +1817,9 @@ msgid "Close Nicotine+?"
 msgstr "Fermer Nicotine+  ?"
 
 #: pynicotine/gtkgui/frame.py:2236
-msgid "Are you sure you wish to exit Nicotine+ at this time?"
-msgstr "Etes vous sûr de vouloir fermer Nicotine+  ?"
+#, fuzzy
+msgid "Do you really want to exit Nicotine+?"
+msgstr "Vous êtes prêt à utiliser Nicotine+ !"
 
 #: pynicotine/gtkgui/frame.py:2237
 msgid "Run in Background"
@@ -1906,9 +1906,9 @@ msgid "Delete Chat Log…"
 msgstr "Supprimer le journal de discussion…"
 
 #: pynicotine/gtkgui/privatechat.py:325
+#, fuzzy
 msgid ""
-"Are you sure you wish to permanently delete all logged messages for this "
-"user?"
+"Do you really want to permanently delete all logged messages for this user?"
 msgstr ""
 "Êtes-vous sûr de vouloir effacer définitivement tous les messages "
 "enregistrés de cet utilisateur ?"
@@ -1930,10 +1930,10 @@ msgstr ""
 msgid "Room"
 msgstr "Salon"
 
-#: pynicotine/gtkgui/roomlist.py:69 pynicotine/gtkgui/settingswindow.py:981
-#: pynicotine/gtkgui/settingswindow.py:994
-#: pynicotine/gtkgui/settingswindow.py:1147
-#: pynicotine/gtkgui/settingswindow.py:1160
+#: pynicotine/gtkgui/roomlist.py:69 pynicotine/gtkgui/settingswindow.py:980
+#: pynicotine/gtkgui/settingswindow.py:993
+#: pynicotine/gtkgui/settingswindow.py:1146
+#: pynicotine/gtkgui/settingswindow.py:1159
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:309
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:312
@@ -1984,7 +1984,7 @@ msgstr "Nom de fichier"
 msgid "Size"
 msgstr "Taille"
 
-#: pynicotine/gtkgui/search.py:348 pynicotine/gtkgui/settingswindow.py:2469
+#: pynicotine/gtkgui/search.py:348 pynicotine/gtkgui/settingswindow.py:2468
 #: pynicotine/gtkgui/userbrowse.py:304
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:165
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:266
@@ -1992,7 +1992,7 @@ msgstr "Taille"
 msgid "Bitrate"
 msgstr "Taux d'encodage"
 
-#: pynicotine/gtkgui/search.py:349 pynicotine/gtkgui/settingswindow.py:2467
+#: pynicotine/gtkgui/search.py:349 pynicotine/gtkgui/settingswindow.py:2466
 #: pynicotine/gtkgui/userbrowse.py:305
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:130
 msgid "Length"
@@ -2119,212 +2119,218 @@ msgid "Enter a new password for your Soulseek account:"
 msgstr "Entrez un nouveau mot de passe pour votre compte Soulseek  :"
 
 #: pynicotine/gtkgui/settingswindow.py:192
+#, fuzzy
 msgid ""
-"You are currently logged out of the Soulseek network. If you are attempting "
-"to change the password of an existing Soulseek account, you need to be "
-"logged into the account in question."
+"You are currently logged out of the Soulseek network. If you want to change "
+"the password of an existing Soulseek account, you need to be logged into "
+"that account."
 msgstr ""
 "Vous êtes actuellement déconnecté du réseau Soulseek. Si vous tentez de "
 "modifier le mot de passe d'un compte Soulseek existant, vous devez être "
 "connecté au compte en question."
 
-#: pynicotine/gtkgui/settingswindow.py:196
+#: pynicotine/gtkgui/settingswindow.py:195
 msgid "Enter password to use when logging in:"
 msgstr "Entrez le mot de passe à utiliser lors de la connexion  :"
 
-#: pynicotine/gtkgui/settingswindow.py:200
+#: pynicotine/gtkgui/settingswindow.py:199
 #: pynicotine/gtkgui/ui/settings/network.ui:115
 msgid "Change Password"
 msgstr "Modifier le mot de passe"
 
-#: pynicotine/gtkgui/settingswindow.py:268
+#: pynicotine/gtkgui/settingswindow.py:267
 msgid "Filter"
 msgstr "Filtrer"
 
-#: pynicotine/gtkgui/settingswindow.py:269
+#: pynicotine/gtkgui/settingswindow.py:268
 msgid "Escaped"
 msgstr "Sélection des filtres (echap.)"
 
-#: pynicotine/gtkgui/settingswindow.py:383
+#: pynicotine/gtkgui/settingswindow.py:382
 msgid "Add Download Filter"
 msgstr "Ajouter un filtre de téléchargement"
 
-#: pynicotine/gtkgui/settingswindow.py:384
+#: pynicotine/gtkgui/settingswindow.py:383
 msgid "Enter a new download filter:"
 msgstr "Entrer un nouveau filtre de téléchargement  :"
 
-#: pynicotine/gtkgui/settingswindow.py:445
+#: pynicotine/gtkgui/settingswindow.py:444
 msgid "Edit Download Filter"
 msgstr "Éditer un filtre de téléchargement"
 
-#: pynicotine/gtkgui/settingswindow.py:446
+#: pynicotine/gtkgui/settingswindow.py:445
 msgid "Modify the following download filter:"
 msgstr "Modifiez le filtre de téléchargement suivant  :"
 
-#: pynicotine/gtkgui/settingswindow.py:541
+#: pynicotine/gtkgui/settingswindow.py:540
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d a échoué  ! %(error)s "
 
-#: pynicotine/gtkgui/settingswindow.py:548
+#: pynicotine/gtkgui/settingswindow.py:547
 msgid "Filters Successful"
 msgstr "Filtres réussis"
 
-#: pynicotine/gtkgui/settingswindow.py:585
+#: pynicotine/gtkgui/settingswindow.py:584
 msgid "Buddy-only"
 msgstr "Pour amis uniquement"
 
-#: pynicotine/gtkgui/settingswindow.py:712
+#: pynicotine/gtkgui/settingswindow.py:711
 msgid "The chosen virtual name is either empty or already exists"
 msgstr "Le nom virtuel choisi est vide ou bien existe déjà"
 
-#: pynicotine/gtkgui/settingswindow.py:742
+#: pynicotine/gtkgui/settingswindow.py:741
 msgid "The chosen folder is already shared."
 msgstr "Le répertoire sélectionné est déjà partagé."
 
-#: pynicotine/gtkgui/settingswindow.py:748
+#: pynicotine/gtkgui/settingswindow.py:747
 msgid "Set Virtual Name"
 msgstr "Définir un nom virtuel"
 
-#: pynicotine/gtkgui/settingswindow.py:752
+#: pynicotine/gtkgui/settingswindow.py:751
 msgid "Share with buddies only"
 msgstr "Partager uniquement avec des amis"
 
-#: pynicotine/gtkgui/settingswindow.py:811
+#: pynicotine/gtkgui/settingswindow.py:810
 msgid "Edit Virtual Name"
 msgstr "Éditer un nom virtuel"
 
-#: pynicotine/gtkgui/settingswindow.py:812
+#: pynicotine/gtkgui/settingswindow.py:811
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Choisissez un nouveau nom virtuel pour '%(dir)s'  :"
 
-#: pynicotine/gtkgui/settingswindow.py:993
-#: pynicotine/gtkgui/settingswindow.py:1159
+#: pynicotine/gtkgui/settingswindow.py:992
+#: pynicotine/gtkgui/settingswindow.py:1158
 msgid "Addresses"
 msgstr "Adresses"
 
-#: pynicotine/gtkgui/settingswindow.py:1044
+#: pynicotine/gtkgui/settingswindow.py:1043
 #: pynicotine/gtkgui/widgets/popupmenu.py:250
 #: pynicotine/gtkgui/widgets/popupmenu.py:305
-#: pynicotine/gtkgui/ui/userinfo.ui:593
+#: pynicotine/gtkgui/ui/userinfo.ui:598
 msgid "Ignore User"
 msgstr "Ignorer l'utilisateur"
 
-#: pynicotine/gtkgui/settingswindow.py:1045
-msgid "Enter the name of a user you wish to ignore:"
+#: pynicotine/gtkgui/settingswindow.py:1044
+#, fuzzy
+msgid "Enter the name of the user you want to ignore:"
 msgstr "Saisir le nom d'un utilisateur que vous souhaitez ignorer  :"
 
-#: pynicotine/gtkgui/settingswindow.py:1096
+#: pynicotine/gtkgui/settingswindow.py:1095
 msgid "Ignore IP Address"
 msgstr "Ignorer l'adresse IP"
 
-#: pynicotine/gtkgui/settingswindow.py:1097
-msgid "Enter an IP address you wish to ignore:"
+#: pynicotine/gtkgui/settingswindow.py:1096
+#, fuzzy
+msgid "Enter an IP address you want to ignore:"
 msgstr "Saisir une adresse IP que vous souhaitez ignorer  :"
 
-#: pynicotine/gtkgui/settingswindow.py:1097
-#: pynicotine/gtkgui/settingswindow.py:1288
+#: pynicotine/gtkgui/settingswindow.py:1096
+#: pynicotine/gtkgui/settingswindow.py:1287
 msgid "* is a wildcard"
 msgstr "* implique tout le monde"
 
-#: pynicotine/gtkgui/settingswindow.py:1234
+#: pynicotine/gtkgui/settingswindow.py:1233
 #: pynicotine/gtkgui/widgets/popupmenu.py:249
 #: pynicotine/gtkgui/widgets/popupmenu.py:302
-#: pynicotine/gtkgui/ui/userinfo.ui:569
+#: pynicotine/gtkgui/ui/userinfo.ui:574
 msgid "Ban User"
 msgstr "Banir l'utilisateur"
 
-#: pynicotine/gtkgui/settingswindow.py:1235
-msgid "Enter the name of a user you wish to ban:"
+#: pynicotine/gtkgui/settingswindow.py:1234
+#, fuzzy
+msgid "Enter the name of the user you want to ban:"
 msgstr "Saisir le nom d'un utilisateur que vous souhaitez bannir  :"
 
-#: pynicotine/gtkgui/settingswindow.py:1287
+#: pynicotine/gtkgui/settingswindow.py:1286
 msgid "Block IP Address"
 msgstr "Bloquer l'adresse IP"
 
-#: pynicotine/gtkgui/settingswindow.py:1288
-msgid "Enter an IP address you wish to block:"
+#: pynicotine/gtkgui/settingswindow.py:1287
+#, fuzzy
+msgid "Enter an IP address you want to block:"
 msgstr "Saisir une adresse IP que vous souhaitez bloquer  :"
 
-#: pynicotine/gtkgui/settingswindow.py:1385
+#: pynicotine/gtkgui/settingswindow.py:1384
 msgid "Top"
 msgstr "Haut"
 
-#: pynicotine/gtkgui/settingswindow.py:1385
+#: pynicotine/gtkgui/settingswindow.py:1384
 msgid "Bottom"
 msgstr "Bas"
 
-#: pynicotine/gtkgui/settingswindow.py:1385
+#: pynicotine/gtkgui/settingswindow.py:1384
 msgid "Left"
 msgstr "Gauche"
 
-#: pynicotine/gtkgui/settingswindow.py:1385
+#: pynicotine/gtkgui/settingswindow.py:1384
 msgid "Right"
 msgstr "Droite"
 
-#: pynicotine/gtkgui/settingswindow.py:1421
+#: pynicotine/gtkgui/settingswindow.py:1420
 msgid "Connected"
 msgstr "Connecté"
 
-#: pynicotine/gtkgui/settingswindow.py:1422
+#: pynicotine/gtkgui/settingswindow.py:1421
 msgid "Disconnected"
 msgstr "Déconnecté"
 
+#: pynicotine/gtkgui/settingswindow.py:1423
 #: pynicotine/gtkgui/settingswindow.py:1424
-#: pynicotine/gtkgui/settingswindow.py:1425
 msgid "Highlight"
 msgstr "Mettre en évidence"
 
-#: pynicotine/gtkgui/settingswindow.py:1426
+#: pynicotine/gtkgui/settingswindow.py:1425
 msgid "Window"
 msgstr "Fenêtre"
 
-#: pynicotine/gtkgui/settingswindow.py:1427
+#: pynicotine/gtkgui/settingswindow.py:1426
 msgid "Notification"
 msgstr "Notification"
 
-#: pynicotine/gtkgui/settingswindow.py:1434
+#: pynicotine/gtkgui/settingswindow.py:1433
 msgid "Connected (Tray)"
 msgstr "Connecté (zone de notification)"
 
-#: pynicotine/gtkgui/settingswindow.py:1436
+#: pynicotine/gtkgui/settingswindow.py:1435
 msgid "Disconnected (Tray)"
 msgstr "Déconnecté (zone de notification)"
 
-#: pynicotine/gtkgui/settingswindow.py:1438
+#: pynicotine/gtkgui/settingswindow.py:1437
 msgid "Away (Tray)"
 msgstr "Absent (zone de notification)"
 
-#: pynicotine/gtkgui/settingswindow.py:1440
+#: pynicotine/gtkgui/settingswindow.py:1439
 msgid "Message (Tray)"
 msgstr "Message (zone de notification)"
 
-#: pynicotine/gtkgui/settingswindow.py:1960
+#: pynicotine/gtkgui/settingswindow.py:1959
 msgid "Protocol"
 msgstr "Protocole"
 
-#: pynicotine/gtkgui/settingswindow.py:1961
+#: pynicotine/gtkgui/settingswindow.py:1960
 msgid "Handler"
 msgstr "Logiciel"
 
-#: pynicotine/gtkgui/settingswindow.py:2094
-#: pynicotine/gtkgui/settingswindow.py:2114
+#: pynicotine/gtkgui/settingswindow.py:2093
+#: pynicotine/gtkgui/settingswindow.py:2113
 msgid "Pattern"
 msgstr "Motif"
 
-#: pynicotine/gtkgui/settingswindow.py:2095
+#: pynicotine/gtkgui/settingswindow.py:2094
 msgid "Replacement"
 msgstr "Remplacement"
 
-#: pynicotine/gtkgui/settingswindow.py:2241
+#: pynicotine/gtkgui/settingswindow.py:2240
 msgid "Censor Pattern"
 msgstr "Motif de censure"
 
-#: pynicotine/gtkgui/settingswindow.py:2242
+#: pynicotine/gtkgui/settingswindow.py:2241
+#, fuzzy
 msgid ""
-"Enter a pattern you wish to censor. Add spaces around the pattern if you "
-"don't wish to match strings inside words (may fail at the beginning and end "
+"Enter a pattern you want to censor. Add spaces around the pattern if you "
+"don't want to match strings inside words (may fail at the beginning and end "
 "of lines)."
 msgstr ""
 "Saisissez le motif que vous souhaitez censurer. Ajoutez des espaces autour "
@@ -2332,85 +2338,85 @@ msgstr ""
 "caractères à l'intérieur des mots (cela peut échouer au début et à la fin "
 "des lignes)."
 
-#: pynicotine/gtkgui/settingswindow.py:2442
+#: pynicotine/gtkgui/settingswindow.py:2441
 msgid "Username;APIKEY:"
 msgstr "Nom d'utilisateur ;APIKEY  :"
 
-#: pynicotine/gtkgui/settingswindow.py:2446
+#: pynicotine/gtkgui/settingswindow.py:2445
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
 msgstr ""
 "Nom du client (par exemple amarok, audacious, exaile) ou laisser à vide pour "
 "une sélection automatique  :"
 
-#: pynicotine/gtkgui/settingswindow.py:2450
+#: pynicotine/gtkgui/settingswindow.py:2449
 #: pynicotine/gtkgui/ui/settings/network.ui:75
 msgid "Username:"
 msgstr "Nom d’utilisateur :"
 
-#: pynicotine/gtkgui/settingswindow.py:2454
+#: pynicotine/gtkgui/settingswindow.py:2453
 msgid "Command:"
 msgstr "Commande :"
 
-#: pynicotine/gtkgui/settingswindow.py:2462
-#: pynicotine/gtkgui/settingswindow.py:2465
+#: pynicotine/gtkgui/settingswindow.py:2461
+#: pynicotine/gtkgui/settingswindow.py:2464
 msgid "Title"
 msgstr "Titre"
 
-#: pynicotine/gtkgui/settingswindow.py:2464
+#: pynicotine/gtkgui/settingswindow.py:2463
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Joué actuellement (typiquement \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/settingswindow.py:2465
-#: pynicotine/gtkgui/settingswindow.py:2473
+#: pynicotine/gtkgui/settingswindow.py:2464
+#: pynicotine/gtkgui/settingswindow.py:2472
 msgid "Artist"
 msgstr "Artiste"
 
-#: pynicotine/gtkgui/settingswindow.py:2471
+#: pynicotine/gtkgui/settingswindow.py:2470
 msgid "Comment"
 msgstr "Commentaires"
 
-#: pynicotine/gtkgui/settingswindow.py:2475
+#: pynicotine/gtkgui/settingswindow.py:2474
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/settingswindow.py:2477
+#: pynicotine/gtkgui/settingswindow.py:2476
 msgid "Track Number"
 msgstr "Numéro de piste"
 
-#: pynicotine/gtkgui/settingswindow.py:2479
+#: pynicotine/gtkgui/settingswindow.py:2478
 msgid "Year"
 msgstr "Année"
 
-#: pynicotine/gtkgui/settingswindow.py:2481
+#: pynicotine/gtkgui/settingswindow.py:2480
 msgid "Filename (URI)"
 msgstr "Nom de fichier (URI)"
 
-#: pynicotine/gtkgui/settingswindow.py:2483
+#: pynicotine/gtkgui/settingswindow.py:2482
 msgid "Program"
 msgstr "Programme"
 
-#: pynicotine/gtkgui/settingswindow.py:2596
+#: pynicotine/gtkgui/settingswindow.py:2595
 #, python-format
 msgid "%s Properties"
 msgstr "Propriétés %s"
 
-#: pynicotine/gtkgui/settingswindow.py:2605
-#: pynicotine/gtkgui/settingswindow.py:3072
+#: pynicotine/gtkgui/settingswindow.py:2604
+#: pynicotine/gtkgui/settingswindow.py:3071
 msgid "Cancel"
 msgstr "Annuler"
 
-#: pynicotine/gtkgui/settingswindow.py:2605
-#: pynicotine/gtkgui/settingswindow.py:3075
+#: pynicotine/gtkgui/settingswindow.py:2604
+#: pynicotine/gtkgui/settingswindow.py:3074
 msgid "OK"
 msgstr "Valider"
 
-#: pynicotine/gtkgui/settingswindow.py:2686
+#: pynicotine/gtkgui/settingswindow.py:2685
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:137
 msgid "Add"
 msgstr "Ajouter"
 
-#: pynicotine/gtkgui/settingswindow.py:2687
+#: pynicotine/gtkgui/settingswindow.py:2686
 #: pynicotine/gtkgui/ui/settings/ban.ui:234
 #: pynicotine/gtkgui/ui/settings/ban.ui:391
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:181
@@ -2423,138 +2429,138 @@ msgstr "Ajouter"
 msgid "Remove"
 msgstr "Enlever"
 
-#: pynicotine/gtkgui/settingswindow.py:2904
+#: pynicotine/gtkgui/settingswindow.py:2903
 msgid "Enabled"
 msgstr "Activé"
 
-#: pynicotine/gtkgui/settingswindow.py:2905
-#: pynicotine/gtkgui/settingswindow.py:3111
+#: pynicotine/gtkgui/settingswindow.py:2904
+#: pynicotine/gtkgui/settingswindow.py:3110
 msgid "Plugins"
 msgstr "Extensions"
 
-#: pynicotine/gtkgui/settingswindow.py:2963
+#: pynicotine/gtkgui/settingswindow.py:2962
 msgid "No description provided"
 msgstr "Aucune description fournie"
 
-#: pynicotine/gtkgui/settingswindow.py:2977
+#: pynicotine/gtkgui/settingswindow.py:2976
 msgid "Could not enable plugin."
 msgstr "Ne peut activer l'extension."
 
-#: pynicotine/gtkgui/settingswindow.py:2981
+#: pynicotine/gtkgui/settingswindow.py:2980
 msgid "Could not disable plugin."
 msgstr "Ne peut désactiver l'extension."
 
-#: pynicotine/gtkgui/settingswindow.py:3066
+#: pynicotine/gtkgui/settingswindow.py:3065
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:54
 msgid "Preferences"
 msgstr "Préférences"
 
-#: pynicotine/gtkgui/settingswindow.py:3073
+#: pynicotine/gtkgui/settingswindow.py:3072
 msgid "Export"
 msgstr "Exporter"
 
-#: pynicotine/gtkgui/settingswindow.py:3074
+#: pynicotine/gtkgui/settingswindow.py:3073
 msgid "Apply"
 msgstr "Appliquer"
 
-#: pynicotine/gtkgui/settingswindow.py:3105
+#: pynicotine/gtkgui/settingswindow.py:3104
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:14
 msgid "General"
 msgstr "Général"
 
-#: pynicotine/gtkgui/settingswindow.py:3106
+#: pynicotine/gtkgui/settingswindow.py:3105
 msgid "Network"
 msgstr "Réseau"
 
-#: pynicotine/gtkgui/settingswindow.py:3107
+#: pynicotine/gtkgui/settingswindow.py:3106
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:16
 msgid "User Interface"
 msgstr "Interface utilisateur"
 
-#: pynicotine/gtkgui/settingswindow.py:3109
+#: pynicotine/gtkgui/settingswindow.py:3108
 #: pynicotine/gtkgui/ui/settings/search.ui:41
 msgid "Searches"
 msgstr "Recherches"
 
-#: pynicotine/gtkgui/settingswindow.py:3110
+#: pynicotine/gtkgui/settingswindow.py:3109
 #: pynicotine/gtkgui/ui/settings/notifications.ui:15
 msgid "Notifications"
 msgstr "Notifications"
 
-#: pynicotine/gtkgui/settingswindow.py:3112
+#: pynicotine/gtkgui/settingswindow.py:3111
 #: pynicotine/gtkgui/ui/settings/log.ui:25
 msgid "Logging"
 msgstr "Enregistrement"
 
-#: pynicotine/gtkgui/settingswindow.py:3113
+#: pynicotine/gtkgui/settingswindow.py:3112
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:20
 msgid "URL Handlers"
 msgstr "Gestionnaires d'URL"
 
-#: pynicotine/gtkgui/settingswindow.py:3115
+#: pynicotine/gtkgui/settingswindow.py:3114
 #: pynicotine/gtkgui/ui/mainwindow.ui:1670
 msgid "Transfers"
 msgstr "Transferts"
 
-#: pynicotine/gtkgui/settingswindow.py:3116
+#: pynicotine/gtkgui/settingswindow.py:3115
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:219
 #: pynicotine/gtkgui/ui/settings/shares.ui:16
 msgid "Shares"
 msgstr "Partages"
 
-#: pynicotine/gtkgui/settingswindow.py:3119
+#: pynicotine/gtkgui/settingswindow.py:3118
 #: pynicotine/gtkgui/ui/settings/ban.ui:15
 msgid "Ban List"
 msgstr "Liste des bannis"
 
-#: pynicotine/gtkgui/settingswindow.py:3120
+#: pynicotine/gtkgui/settingswindow.py:3119
 msgid "Events"
 msgstr "Événements"
 
-#: pynicotine/gtkgui/settingswindow.py:3122
+#: pynicotine/gtkgui/settingswindow.py:3121
 #: pynicotine/gtkgui/ui/mainwindow.ui:1631
 msgid "Chat"
 msgstr "Discussion"
 
-#: pynicotine/gtkgui/settingswindow.py:3123
+#: pynicotine/gtkgui/settingswindow.py:3122
 msgid "Ignore List"
 msgstr "Liste des utilisateurs ignorés"
 
-#: pynicotine/gtkgui/settingswindow.py:3124
+#: pynicotine/gtkgui/settingswindow.py:3123
 msgid "Censor & Replace"
 msgstr "Censure et remplacement"
 
-#: pynicotine/gtkgui/settingswindow.py:3125
+#: pynicotine/gtkgui/settingswindow.py:3124
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:15
 msgid "Now Playing"
 msgstr "En cours de lecture"
 
-#: pynicotine/gtkgui/settingswindow.py:3126
+#: pynicotine/gtkgui/settingswindow.py:3125
 #: pynicotine/gtkgui/ui/settings/completion.ui:22
 msgid "Completion"
 msgstr "Complétion"
 
-#: pynicotine/gtkgui/settingswindow.py:3127
+#: pynicotine/gtkgui/settingswindow.py:3126
 #: pynicotine/gtkgui/ui/settings/tts.ui:15
 msgid "Text-to-Speech"
 msgstr "Synthèse vocale"
 
-#: pynicotine/gtkgui/settingswindow.py:3131
+#: pynicotine/gtkgui/settingswindow.py:3130
 msgid "Categories"
 msgstr "Catégories"
 
-#: pynicotine/gtkgui/settingswindow.py:3444
+#: pynicotine/gtkgui/settingswindow.py:3443
 #, python-format
 msgid "Error backing up config: %s"
 msgstr "Erreur à la sauvegarde de la configuration : %s"
 
-#: pynicotine/gtkgui/settingswindow.py:3446
+#: pynicotine/gtkgui/settingswindow.py:3445
 #, python-format
 msgid "Config backed up to: %s"
 msgstr "Configuration sauvegardée dans %s"
 
-#: pynicotine/gtkgui/settingswindow.py:3455
+#: pynicotine/gtkgui/settingswindow.py:3454
 msgid "Pick a File Name for Config Backup"
 msgstr "Sélectionnez un nom de fichier pour la sauvegarde de la configuration"
 
@@ -2567,7 +2573,8 @@ msgid "Reset Transfer Statistics?"
 msgstr "Réinitialiser les statistiques de transfert ?"
 
 #: pynicotine/gtkgui/statistics.py:75
-msgid "Are you sure you wish to reset transfer statistics?"
+#, fuzzy
+msgid "Do you really want to reset transfer statistics?"
 msgstr "Souhaitez-vous vraiment réinitialiser les statistiques de transfert ?"
 
 #: pynicotine/gtkgui/transferlist.py:89
@@ -2719,7 +2726,8 @@ msgid "Clear Queued Uploads"
 msgstr "Effacer les envois en attente"
 
 #: pynicotine/gtkgui/uploads.py:60
-msgid "Are you sure you wish to clear all queued uploads?"
+#, fuzzy
+msgid "Do you really want to clear all queued uploads?"
 msgstr "Êtes-vous sûr de vouloir effacter tous les envois en attente ?"
 
 #: pynicotine/gtkgui/uploads.py:69
@@ -2727,7 +2735,8 @@ msgid "Clear All Uploads"
 msgstr "Effacer tous les envois"
 
 #: pynicotine/gtkgui/uploads.py:70
-msgid "Are you sure you wish to clear all uploads?"
+#, fuzzy
+msgid "Do you really want to clear all uploads?"
 msgstr "Êtes-vous sûr de vouloir effacer tous les envois ?"
 
 #: pynicotine/gtkgui/userbrowse.py:206
@@ -2843,7 +2852,8 @@ msgid "Upload Folder's Contents"
 msgstr "Envoyer le contenu du répertoire"
 
 #: pynicotine/gtkgui/userbrowse.py:892 pynicotine/gtkgui/userbrowse.py:963
-msgid "Enter the name of a user you wish to upload to:"
+#, fuzzy
+msgid "Enter the name of the user you want to upload to:"
 msgstr ""
 "Saisir le nom d'un utilisateur à qui vous souhaitez envoyer des fichiers  :"
 
@@ -3030,11 +3040,12 @@ msgid "Close All Tabs?"
 msgstr "Fermer tous les onglets ?"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:427
-msgid "Are you sure you wish to close all tabs?"
+#, fuzzy
+msgid "Do you really want to close all tabs?"
 msgstr "Souhaitez-vous vraiment fermer tous les onglets ?"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:229
-#: pynicotine/gtkgui/ui/userinfo.ui:469
+#: pynicotine/gtkgui/ui/userinfo.ui:474
 msgid "Send M_essage"
 msgstr "Envoyer M_essage"
 
@@ -3043,7 +3054,7 @@ msgid "Show User I_nfo"
 msgstr "Afficher les i_nformation utilisateur"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
-#: pynicotine/gtkgui/ui/userinfo.ui:494
+#: pynicotine/gtkgui/ui/userinfo.ui:499
 msgid "_Browse Files"
 msgstr "_Parcourir les fichiers"
 
@@ -3052,7 +3063,7 @@ msgid "Gi_ve Privileges…"
 msgstr "_Donner des privilèges…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:240
-#: pynicotine/gtkgui/ui/userinfo.ui:519
+#: pynicotine/gtkgui/ui/userinfo.ui:524
 msgid "Show IP A_ddress"
 msgstr "Afficher l'a_dresse IP"
 
@@ -3062,7 +3073,7 @@ msgstr "Version du client"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:246
 #: pynicotine/gtkgui/widgets/popupmenu.py:293
-#: pynicotine/gtkgui/ui/userinfo.ui:544
+#: pynicotine/gtkgui/ui/userinfo.ui:549
 msgid "_Add to Buddy List"
 msgstr "_Ajouter à la liste d'amis"
 
@@ -3159,15 +3170,18 @@ msgid "Send Message"
 msgstr "Envoyer un message"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:104
-msgid "Receive a User's IP Address"
-msgstr "Recevoir l'adresse IP d'un utilisateur"
+#, fuzzy
+msgid "Request User's IP Address"
+msgstr "Demander l'adresse IP"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:105
-msgid "Receive a User's Info"
-msgstr "Recevoir les informations d'un utilisateur"
+#, fuzzy
+msgid "Request User's Info"
+msgstr "Demander des informations sur l'utilisateur"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:106
-msgid "Receive a User's Shares"
+#, fuzzy
+msgid "Request User's Shares"
 msgstr "Recevoir le partage d'un utilisateur"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:111
@@ -3180,7 +3194,8 @@ msgid "Start Messaging"
 msgstr "Démarrer la messagerie"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:148
-msgid "Enter the name of a user who you wish to send a message:"
+#, fuzzy
+msgid "Enter the name of the user whom you want to send a message:"
 msgstr ""
 "Saisisser le nom de l'utilisateur auquel vous souhaitez envoyer un message :"
 
@@ -3189,7 +3204,8 @@ msgid "Request User Info"
 msgstr "Demander des informations sur l'utilisateur"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:170
-msgid "Enter the name of a user whose info you wish to receive:"
+#, fuzzy
+msgid "Enter the name of the user whose info you want to see:"
 msgstr ""
 "Saisisser le nom d'un utilisateur dont vous souhaitez recevoir les "
 "informations :"
@@ -3199,7 +3215,8 @@ msgid "Request IP Address"
 msgstr "Demander l'adresse IP"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:192
-msgid "Enter the name of a user whose IP address you wish to receive:"
+#, fuzzy
+msgid "Enter the name of the user whose IP address you want to see:"
 msgstr ""
 "Saisisser le nom d'un utilisateur dont vous souhaitez recevoir l'adresse IP :"
 
@@ -3208,7 +3225,8 @@ msgid "Request Shares List"
 msgstr "Demander la liste du partage"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:214
-msgid "Enter the name of a user whose shares list you wish to receive:"
+#, fuzzy
+msgid "Enter the name of the user whose shares you want to see:"
 msgstr ""
 "Saisisser le nom d'un utilisateur dont vous souhaitez recevoir la liste du "
 "partage :"
@@ -3238,7 +3256,7 @@ msgstr "Colonne #%i"
 msgid "Earth"
 msgstr "Terre"
 
-#: pynicotine/gtkgui/widgets/ui.py:68
+#: pynicotine/gtkgui/widgets/ui.py:69
 #, python-format
 msgid "Failed to load ui file %(file)s: %(error)s"
 msgstr "Échec du chargement du fichier d'interface %(file)s : %(error)s"
@@ -3252,7 +3270,8 @@ msgid "Clear Wishlist?"
 msgstr "Effacer la liste de souhaits ?"
 
 #: pynicotine/gtkgui/wishlist.py:142
-msgid "Are you sure you wish to clear your wishlist?"
+#, fuzzy
+msgid "Do you really want to clear your wishlist?"
 msgstr "Souhaitez-vous vraiment effacer votre liste de souhaits ?"
 
 #: pynicotine/logfacility.py:168
@@ -3472,8 +3491,8 @@ msgid "Connecting to %(host)s:%(port)s"
 msgstr "En cours de connexion à %(host)s :%(port)s"
 
 #: pynicotine/pynicotine.py:741
-#, python-format
-msgid "IP address of user %s is unknown, since user is offline"
+#, fuzzy, python-format
+msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "L'adresse IP de l'utilisateur %s est inconnue, car l'utilisateur est hors "
 "ligne"
@@ -3561,25 +3580,25 @@ msgstr ""
 "(Avertissement : %(realuser)s tente d'usurper l'identité de %(fakeuser)s) "
 
 #: pynicotine/pynicotine.py:1847
-#, python-format
-msgid "Failed to fetch folder contents of shared folder %(folder)s: %(error)s"
+#, fuzzy, python-format
+msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
 "Échec de la récupération du contenu du dossier partagé %(folder)s : %(error)s"
 
-#: pynicotine/search.py:122 pynicotine/gtkgui/ui/mainwindow.ui:56
+#: pynicotine/search.py:124 pynicotine/gtkgui/ui/mainwindow.ui:56
 msgid "Joined Rooms "
 msgstr "Salons joints "
 
-#: pynicotine/search.py:254
-msgid "The server forbid us from doing wishlist searches."
-msgstr "Le serveur interdit les recherches sur les listes de souhaits."
+#: pynicotine/search.py:256
+msgid "Server does not permit performing wishlist searches at this time"
+msgstr ""
 
-#: pynicotine/search.py:320
+#: pynicotine/search.py:322
 #, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "La période d'attente de la liste de souhaits est fixée à %s secondes"
 
-#: pynicotine/search.py:518
+#: pynicotine/search.py:538
 #, python-format
 msgid ""
 "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
@@ -3588,7 +3607,7 @@ msgstr ""
 "L'utilisateur %(user)s effectue une recherche directe sur « %(query)s », "
 "%(num)i résultats renvoyés"
 
-#: pynicotine/search.py:525
+#: pynicotine/search.py:545
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
@@ -3654,7 +3673,7 @@ msgstr ""
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Erreur lors de l'examen du fichier %(path)s : %(error)s"
 
-#: pynicotine/shares.py:562 pynicotine/shares.py:933
+#: pynicotine/shares.py:562 pynicotine/shares.py:928
 msgid "Downloaded"
 msgstr "Téléchargé"
 
@@ -3681,49 +3700,45 @@ msgstr ""
 "fait que plusieurs instances de Nicotine+ sont actives simultanément, à des "
 "problèmes de permission de fichiers ou à un autre problème dans Nicotine+."
 
-#: pynicotine/shares.py:686 pynicotine/slskmessages.py:2245
-#: pynicotine/slskmessages.py:2393
-#, python-format
-msgid ""
-"Your shares database is corrupted. Please rescan your shares and report any "
-"potential scanning issues to the developers. Error: %s"
-msgstr ""
-"La base de données de vos partages est corrompue. Veuillez analyser à "
-"nouveau vos partages et signaler tout problème d'analyse potentiel aux "
-"développeurs. Erreur : %s"
-
-#: pynicotine/shares.py:738 pynicotine/shares.py:790
+#: pynicotine/shares.py:733 pynicotine/shares.py:785
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Impossible d'ajouter le téléchargement %(filename)s aux fichiers partagés : "
 "%(error)s"
 
-#: pynicotine/shares.py:889
+#: pynicotine/shares.py:884
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Échec d'envoi du nombre de fichiers partagés au serveur : %s"
 
-#: pynicotine/shares.py:957
+#: pynicotine/shares.py:952
 #, python-format
 msgid "Progress: %s"
 msgstr "Progression : %s"
 
-#: pynicotine/shares.py:970
+#: pynicotine/shares.py:965
 msgid "Rescanning normal shares…"
 msgstr "Réexamen des partages normaux…"
 
-#: pynicotine/shares.py:974
+#: pynicotine/shares.py:969
 msgid "Rescanning buddy shares…"
 msgstr "Réexamen des partages pour amis…"
 
-#: pynicotine/shares.py:1020
+#: pynicotine/shares.py:1015
 msgid "Finished rescanning public shares"
 msgstr "Réexamen des partages publics terminé"
 
-#: pynicotine/shares.py:1022
+#: pynicotine/shares.py:1017
 msgid "Finished rescanning buddy shares"
 msgstr "Réexamen des partages pour amis terminé"
+
+#: pynicotine/slskmessages.py:2243
+#, fuzzy, python-format
+msgid "Unable to read shares database. Please rescan your shares. Error: %s"
+msgstr ""
+"Tentative de réinitialisation de l'index des fichiers partagés en raison "
+"d'une erreur. Veuillez rescanner vos partages."
 
 #: pynicotine/slskproto.py:531
 #, python-format
@@ -3964,7 +3979,8 @@ msgid "Add buddy…"
 msgstr "Ajouter un ami…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:41 pynicotine/gtkgui/ui/mainwindow.ui:655
-msgid "Enter the username of the person you wish to add to your buddy list"
+#, fuzzy
+msgid "Enter the username of the person you want to add to your buddy list"
 msgstr ""
 "Saisissez le nom d'utilisateur de la personne que vous souhaitez à votre "
 "liste d'amis"
@@ -4009,13 +4025,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:128
 msgid ""
-"Please keep in mind that certain usernames may be taken. If this is the "
-"case, you will be prompted to change your username when connecting to the "
-"network."
+"If your desired username is already taken, you will be prompted to change it."
 msgstr ""
-"Veuillez garder à l'esprit que certains noms d'utilisateur peuvent être "
-"pris. Si tel est le cas, vous serez invité à changer votre nom d'utilisateur "
-"lors de la connexion au réseau."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:156
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:198
@@ -4088,9 +4099,10 @@ msgstr ""
 "rapides, tandis que d'autres seront lents."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:411
+#, fuzzy
 msgid ""
-"Donating to Soulseek grants you privileges for a certain time period. "
-"Privileges allow your downloads to be queued ahead of non-privileged users."
+"Donating to Soulseek grants you privileges for a certain time period. If you "
+"have privileges, your downloads will be queued ahead of non-privileged users."
 msgstr ""
 "Faire un don à Soulseek vous donne des privilèges pour une certaine période. "
 "Ces privilèges permettent à vos téléchargements d'être mis en file d'attente "
@@ -4290,7 +4302,8 @@ msgid "Add something you like…"
 msgstr "Ajoutez ce que vous aimez…"
 
 #: pynicotine/gtkgui/ui/interests.ui:81
-msgid "Personal Displeasures"
+#, fuzzy
+msgid "Personal Dislikes"
 msgstr "Désintérêts personnels"
 
 #: pynicotine/gtkgui/ui/interests.ui:100
@@ -4371,7 +4384,8 @@ msgid "Configure uploads"
 msgstr "Configuration des envois"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:453
-msgid "Enter the username of the person you wish to send a message to"
+#, fuzzy
+msgid "Enter the username of the person you want to send a message to"
 msgstr ""
 "Saisissez le nom d'utilisateur de la personne à qui vous souhaitez envoyer "
 "un message"
@@ -4382,17 +4396,19 @@ msgid "Configure logging"
 msgstr "Configurer l'enregistrement des messages"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:510
-msgid "Enter the username of the person you to receive information about"
+#, fuzzy
+msgid "Enter the username of the person whose information you want to see"
 msgstr ""
-"Saisissez le nom d'utilisateur de la personne dont vous souhaitez des "
-"informations"
+"Saisissez le nom d'utilisateur de la personne dont vous souhaitez voir les "
+"fichiers"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:547
 msgid "Update I_nfo"
 msgstr "Mise à jour de l'I_nfo"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:576
-msgid "Enter the username of the person whose files you wish to see"
+#, fuzzy
+msgid "Enter the username of the person whose files you want to see"
 msgstr ""
 "Saisissez le nom d'utilisateur de la personne dont vous souhaitez voir les "
 "fichiers"
@@ -4451,9 +4467,10 @@ msgstr ""
 "mises en file d'attente et gérées ici"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1131
+#, fuzzy
 msgid ""
-"Enter the name of a user to browse their list of shared files. You can also "
-"open a list you have previously saved."
+"Enter the name of a user, whose shared files you'd like to browse. You can "
+"also save the list to disk, and inspect it later on."
 msgstr ""
 "Saisissez le nom d'un utilisateur pour parcourir sa liste de fichiers "
 "partagés. Vous pouvez également ouvrir une liste que vous avez précédemment "
@@ -4604,16 +4621,18 @@ msgid "/add /ad 'user'"
 msgstr "/add /ad 'utilisateur'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
-msgid "Add user 'user' to your user list"
-msgstr "Ajoute l'utilisateur 'utilisateur' à votre liste d'utilisateurs"
+#, fuzzy
+msgid "Add user 'user' to your buddy list"
+msgstr "Ajoute l'utilisateur 'utilisateur' à votre liste de bannissement"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
 msgid "/rem /unbuddy 'user'"
 msgstr "/rem /unbuddy 'utilisateur'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
-msgid "Remove user 'user' from your user list"
-msgstr "Retire l'utilisateur 'utilisateur' de votre liste d'utilisateurs"
+#, fuzzy
+msgid "Remove user 'user' from your buddy list"
+msgstr "Retire l'utilisateur 'utilisateur' de votre liste de bannissement"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 msgid "/ban 'user'"
@@ -4660,8 +4679,9 @@ msgid "/whois /w 'user'"
 msgstr "/whois /w 'utilisateur'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
-msgid "Request user info for user 'user'"
-msgstr "Demande les informations de l'utilisateur 'utilisateur'"
+#, fuzzy
+msgid "Request info for 'user'"
+msgstr "Obtenir des informations sur l'utilisateur"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
 msgid "/ip 'user'"
@@ -4761,12 +4781,14 @@ msgid "Close the current private chat"
 msgstr "Ferme la fenêtre de dialogue privé courante"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
-msgid "Add user to your user list"
-msgstr "Ajouter l'utilisateur à votre liste d'utilisateurs"
+#, fuzzy
+msgid "Add user to your buddy-list"
+msgstr "Ajouter l'utilisateur à votre liste de bannissement"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
-msgid "Remove user from your user list"
-msgstr "Retirer l'utilisateur de votre liste d'utilisateurs"
+#, fuzzy
+msgid "Remove user from your buddy-list"
+msgstr "Retirer l'utilisateur de votre liste de bannissement"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
 msgid "Add user to your ban list"
@@ -4785,12 +4807,14 @@ msgid "Remove user from your ignore list"
 msgstr "Retirer l'utilisateur de votre liste d'utilisateurs ignorés"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
-msgid "Browse files of user"
+#, fuzzy
+msgid "Browse shares of user"
 msgstr "Parcourir les fichiers de l'utilisateur"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:437
-msgid "Request user info for user"
-msgstr "Obtenir des informations sur l'utilisateur"
+#, fuzzy
+msgid "Request user's info"
+msgstr "Demander des informations sur l'utilisateur"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:463
 msgid "Show IP for user"
@@ -4947,7 +4971,8 @@ msgstr ""
 "dire 1 kibibyte)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:234
-msgid "Prepend < or > to find files less-/greater than or equal to the value."
+#, fuzzy
+msgid "Prepend < or > to find files less/greater than the given value."
 msgstr ""
 "Ajouter < ou > pour trouver des fichiers inférieurs/supérieurs ou égaux à la "
 "valeur."
@@ -5239,11 +5264,13 @@ msgid "Complete room names"
 msgstr "Compléter les noms de salons"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:89
-msgid "Complete built-in /commands"
+#, fuzzy
+msgid "Complete built-in commands"
 msgstr "Compléter les /commandes intégrées"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:96
-msgid "Complete alias /commands"
+#, fuzzy
+msgid "Complete command aliases"
 msgstr "Compléter l'alias /commandes"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:111
@@ -5610,7 +5637,8 @@ msgid "Enable CTCP-like private message responses (client version)"
 msgstr "Activer les réponses aux messages privés de type CTCP (version client)"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:382
-msgid "Use UPnP to automatically map the port on my router"
+#, fuzzy
+msgid "Use UPnP to automatically map the listening port on your router"
 msgstr "Utiliser UPnP pour rediriger automatiquement le port sur mon routeur"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
@@ -5830,10 +5858,8 @@ msgstr ""
 "vos partages, les résultats de la recherche seront envoyés à l'utilisateur."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
-msgid "Respond to search requests containing minimum character count:"
+msgid "Searches shorter than this number of characters will be ignored:"
 msgstr ""
-"Répondre aux demandes de recherche contenant un nombre minimum de "
-"caractères :"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 msgid "Maximum search results to send per search request:"
@@ -5862,9 +5888,8 @@ msgid "Enable buddy-only shares"
 msgstr "Activer les partages réservés aux amis"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
-msgid ""
-"Enables private shares that only users on your buddy list can access. If "
-"disabled, users will only be able to access your public shares."
+#, fuzzy
+msgid "Enables buddy shares that only users on your buddy list can access."
 msgstr ""
 "Active les partages privés auxquels seuls les utilisateurs de votre liste "
 "d'amis peuvent accéder. S'il est désactivé, les utilisateurs pourront "
@@ -5977,8 +6002,12 @@ msgid "Round Robin"
 msgstr "Aléatoire"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:239
-msgid "Queued users will be uploaded one file at a time in a cyclical fashion."
-msgstr "Les fichiers en attente seront envoyés un à un de manière cyclique."
+#, fuzzy
+msgid ""
+"Files will be uploaded in cyclical fashion to the users waiting in queue."
+msgstr ""
+"Les fichiers seront envoyés dans l'ordre où ils ont été mis en file "
+"d'attente."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:246
 msgid "First In, First Out"
@@ -6029,7 +6058,8 @@ msgid "Each user may queue a maximum of either:"
 msgstr "Chaque utilisateur peut mettre en file d'attente un maximum de :"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:374
-msgid "Mebibytes (2^17 bytes)."
+#, fuzzy
+msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebioctets (2^17 bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
@@ -6147,10 +6177,11 @@ msgstr ""
 "Afficher les fichiers partagés en privé dans les résultats de recherche"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:308
+#, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
-"not downloadable unless the uploader gives explicit permission, and are ."
+"not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "D'autres clients peuvent proposer une option permettant d'envoyer des "
 "fichiers partagés en privé en réponse à des demandes de recherche. Ces "
@@ -6180,7 +6211,8 @@ msgid "List text color:"
 msgstr "Couleur du texte de la liste :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:416
-msgid "Search with queue text color:"
+#, fuzzy
+msgid "Queued search result text color:"
 msgstr "Couleur du texte de recherche en file d'attente :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
@@ -6404,17 +6436,83 @@ msgstr "Fichiers partagés"
 msgid "User Interests"
 msgstr "Intérêts de l'utilisateur"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:420
+#: pynicotine/gtkgui/ui/userinfo.ui:423
 msgid "User Picture"
 msgstr "Image de l'utilisateur"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:618
+#: pynicotine/gtkgui/ui/userinfo.ui:623
 msgid "Save _Picture"
 msgstr "Sauvegarder l'_image"
 
-#: pynicotine/gtkgui/ui/userinfo.ui:649
+#: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "_Rafraîchir les informations"
+
+#~ msgid ""
+#~ "Failed to scan shares. If Nicotine+ is currently running, please close "
+#~ "the program before scanning."
+#~ msgstr ""
+#~ "Échec de l'examen des partages. Si Nicotine+ est en cours d'exécution, "
+#~ "veuillez fermer le programme avant de lancer un examen."
+
+#~ msgid "Are you sure you wish to exit Nicotine+ at this time?"
+#~ msgstr "Etes vous sûr de vouloir fermer Nicotine+  ?"
+
+#~ msgid "Receive a User's IP Address"
+#~ msgstr "Recevoir l'adresse IP d'un utilisateur"
+
+#~ msgid "Receive a User's Info"
+#~ msgstr "Recevoir les informations d'un utilisateur"
+
+#~ msgid "The server forbid us from doing wishlist searches."
+#~ msgstr "Le serveur interdit les recherches sur les listes de souhaits."
+
+#, python-format
+#~ msgid ""
+#~ "Your shares database is corrupted. Please rescan your shares and report "
+#~ "any potential scanning issues to the developers. Error: %s"
+#~ msgstr ""
+#~ "La base de données de vos partages est corrompue. Veuillez analyser à "
+#~ "nouveau vos partages et signaler tout problème d'analyse potentiel aux "
+#~ "développeurs. Erreur : %s"
+
+#~ msgid ""
+#~ "Please keep in mind that certain usernames may be taken. If this is the "
+#~ "case, you will be prompted to change your username when connecting to the "
+#~ "network."
+#~ msgstr ""
+#~ "Veuillez garder à l'esprit que certains noms d'utilisateur peuvent être "
+#~ "pris. Si tel est le cas, vous serez invité à changer votre nom "
+#~ "d'utilisateur lors de la connexion au réseau."
+
+#~ msgid "Enter the username of the person you to receive information about"
+#~ msgstr ""
+#~ "Saisissez le nom d'utilisateur de la personne dont vous souhaitez des "
+#~ "informations"
+
+#~ msgid "Add user 'user' to your user list"
+#~ msgstr "Ajoute l'utilisateur 'utilisateur' à votre liste d'utilisateurs"
+
+#~ msgid "Remove user 'user' from your user list"
+#~ msgstr "Retire l'utilisateur 'utilisateur' de votre liste d'utilisateurs"
+
+#~ msgid "Request user info for user 'user'"
+#~ msgstr "Demande les informations de l'utilisateur 'utilisateur'"
+
+#~ msgid "Add user to your user list"
+#~ msgstr "Ajouter l'utilisateur à votre liste d'utilisateurs"
+
+#~ msgid "Remove user from your user list"
+#~ msgstr "Retirer l'utilisateur de votre liste d'utilisateurs"
+
+#~ msgid "Respond to search requests containing minimum character count:"
+#~ msgstr ""
+#~ "Répondre aux demandes de recherche contenant un nombre minimum de "
+#~ "caractères :"
+
+#~ msgid ""
+#~ "Queued users will be uploaded one file at a time in a cyclical fashion."
+#~ msgstr "Les fichiers en attente seront envoyés un à un de manière cyclique."
 
 #~ msgid "/close /c"
 #~ msgstr "/close /c"
