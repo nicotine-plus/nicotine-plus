@@ -419,12 +419,6 @@ class ChatEntry:
             if config.sections["transfers"]["enablebuddyshares"]:
                 self.frame.on_buddy_rescan()
 
-        elif cmd in ("/tick", "/t"):
-            self.frame.np.queue.append(slskmessages.RoomTickerSet(self.entity, args))
-
-        elif cmd == "/tickers":
-            self.frame.chatrooms.pages[self.entity].show_tickers()
-
         elif cmd == "/toggle":
             if args:
                 self.frame.np.pluginhandler.toggle_plugin(args)

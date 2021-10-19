@@ -1,12 +1,14 @@
-# Copyright (C) 2021 Nicotine+ Translators
-# This file is distributed under the same license as the Nicotine+ package.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 20:23+0200\n"
+"POT-Creation-Date: 2021-10-19 21:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1285,44 +1287,39 @@ msgstr ""
 msgid "Message by %(user)s in the %(room)s room"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:851
-#, python-format
-msgid "All tickers / wall messages for %(room)s:"
-msgstr ""
-
-#: pynicotine/gtkgui/chatrooms.py:866
+#: pynicotine/gtkgui/chatrooms.py:861
 #, python-format
 msgid "%s joined the room"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:884
+#: pynicotine/gtkgui/chatrooms.py:879
 #, python-format
 msgid "%s left the room"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:923
+#: pynicotine/gtkgui/chatrooms.py:918
 #, python-format
 msgid "%s has gone away"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:925
+#: pynicotine/gtkgui/chatrooms.py:920
 #, python-format
 msgid "%s has returned"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1019 pynicotine/gtkgui/privatechat.py:280
+#: pynicotine/gtkgui/chatrooms.py:1014 pynicotine/gtkgui/privatechat.py:280
 msgid "--- disconnected ---"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1046 pynicotine/gtkgui/privatechat.py:275
+#: pynicotine/gtkgui/chatrooms.py:1041 pynicotine/gtkgui/privatechat.py:275
 msgid "--- reconnected ---"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1124 pynicotine/gtkgui/privatechat.py:324
+#: pynicotine/gtkgui/chatrooms.py:1119 pynicotine/gtkgui/privatechat.py:324
 msgid "Delete Logged Messages?"
 msgstr ""
 
-#: pynicotine/gtkgui/chatrooms.py:1125
+#: pynicotine/gtkgui/chatrooms.py:1120
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -1713,7 +1710,7 @@ msgid "User Info"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1311
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr ""
@@ -1889,7 +1886,7 @@ msgstr ""
 #: pynicotine/gtkgui/settingswindow.py:1159
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:309
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:312
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 msgid "Users"
 msgstr ""
 
@@ -4283,7 +4280,7 @@ msgid "Debug Logging"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1618
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr ""
@@ -4349,194 +4346,186 @@ msgstr ""
 msgid "Clear the chat window"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
-msgid "Set your personal ticker"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
-msgid "Show all the tickers"
-msgstr ""
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:177
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:98
 msgid "/me 'message'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:188
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:109
 msgid "Say something in the third-person"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:167
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
 msgid "Display the Now Playing script's output"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:193
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
 msgid "Toggles your away status"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
 msgid "Rescan shares"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
 msgid "Quit Nicotine+"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:276
 msgid "/add /ad 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:287
 msgid "Add user 'user' to your buddy list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:302
 msgid "/rem /unbuddy 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:313
 msgid "Remove user 'user' from your buddy list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
 msgid "/ban 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
 msgid "Add user 'user' to your ban list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
 msgid "/unban 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
 msgid "Remove user 'user' from your ban list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 msgid "/ignore 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
 msgid "Add user 'user' to your ignore list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
 msgid "/unignore 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
 msgid "Remove user 'user' from your ignore list"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 msgid "/browse /b 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 msgid "Browse files of user 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
 msgid "/whois /w 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
 msgid "Request info for 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
 msgid "/ip 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:547
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
 msgid "Show IP for user 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:562
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:478
 msgid "Aliases"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:526
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:494
 msgid "/alias /al 'command' 'definition'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:537
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:505
 msgid "Add a new alias"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:604
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:552
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:520
 msgid "/unalias /un 'command'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:615
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:563
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:531
 msgid "Remove an alias"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:594
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:562
 msgid "/search /s 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:605
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:573
 msgid "Start a new search for 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:620
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:588
 msgid "/rsearch /rs 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:631
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:599
 msgid "Search the joined rooms for 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:614
 msgid "/bsearch /bs 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:709
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:625
 msgid "Search the buddy list for 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:724
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:640
 msgid "/usearch /us 'user' 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:735
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:651
 msgid "Search a user's shares for 'query'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:766
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:714
 msgid "/msg 'user' 'message'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:777
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:725
 msgid "Send message 'message' to user 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:792
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:740
 msgid "/pm 'user'"
 msgstr ""
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:803
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:751
 msgid "Open private chat window for user 'user'"
 msgstr ""
 

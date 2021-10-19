@@ -846,11 +846,6 @@ class ChatRoom(UserInterface):
 
         self.chat_textview.append_line(text, tag, timestamp_format=timestamp_format)
 
-    def show_tickers(self):
-        tickers = self.tickers.get_tickers()
-        header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
-        log.add("%s\n%s", (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
-
     def user_joined_room(self, userdata):
 
         username = userdata.username
