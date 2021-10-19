@@ -2356,7 +2356,6 @@ msgstr "Tiedoston nimi"
 msgid "Size"
 msgstr "Koko"
 
-# a little arbitrary translation, could as well use bitrate i think
 #: pynicotine/gtkgui/search.py:348 pynicotine/gtkgui/settingswindow.py:2468
 #: pynicotine/gtkgui/userbrowse.py:304
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:165
@@ -4283,7 +4282,6 @@ msgstr "Kuunnellaan porttia %i"
 msgid "I/O error: %s"
 msgstr "I/O -virhe: %s"
 
-# OS error=Operating System error? If so, correct
 #: pynicotine/transfers.py:1059 pynicotine/transfers.py:1904
 #, python-format
 msgid "OS error: %s"
@@ -5199,7 +5197,6 @@ msgstr "Poistu huoneesta 'huone'"
 msgid "Clear the chat window"
 msgstr "Tyhjennä keskusteluikkuna"
 
-# OK except for word ticker, thou i dont know of any good translation..
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 msgid "Set your personal ticker"
 msgstr "Aseta henkilökohtainen ticker"
@@ -5816,7 +5813,6 @@ msgstr "Tiedostokoko…"
 msgid "File size"
 msgstr "Tiedosto(a)/(t)"
 
-# a little arbitrary translation, could as well use bitrate i think
 #: pynicotine/gtkgui/ui/search.ui:293
 #, fuzzy
 msgid "Bitrate…"
@@ -7699,7 +7695,6 @@ msgstr "Virkistä"
 #~ msgid "About search filters"
 #~ msgstr "Hakusuotimista"
 
-# also possible to use "Tilat" which is better finnish maybe ;)
 #~ msgid "_Modes"
 #~ msgstr "_Moodit"
 

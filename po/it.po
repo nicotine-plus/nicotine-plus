@@ -1760,7 +1760,6 @@ msgstr "Lista Amici"
 msgid "Chat Rooms"
 msgstr "Canali"
 
-# next msg added for version 1.0.6rc1 and later
 #: pynicotine/gtkgui/frame.py:1290 pynicotine/gtkgui/ui/mainwindow.ui:746
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:257
 msgid "Interests"
@@ -2160,7 +2159,6 @@ msgstr "Modifica il seguente filtro download:"
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d Fallito! %(error)s "
 
-# next msg added for version 1.0.6rc1 and later
 #: pynicotine/gtkgui/settingswindow.py:547
 msgid "Filters Successful"
 msgstr "Filtri Riusciti"
@@ -4254,7 +4252,6 @@ msgstr "Pulisci Completati"
 msgid "Clear _Downloads…"
 msgstr "Pulisci Download…"
 
-# next msg added for version 1.0.6rc1 and later
 #: pynicotine/gtkgui/ui/interests.ui:23
 msgid "Personal Interests"
 msgstr "Mi Interessa"
@@ -6442,7 +6439,6 @@ msgstr "Aggiorna Dettagli"
 #~ msgid "/tick /t"
 #~ msgstr "/tick /t"
 
-# next msg added for version 1.0.7rc2 and later
 #~ msgid "/tickers"
 #~ msgstr "/tickers"
 
@@ -6588,7 +6584,6 @@ msgstr "Aggiorna Dettagli"
 #~ msgid "_Chat Rooms"
 #~ msgstr "Canali _Chat"
 
-# next msg added for version 1.0.6rc1 and later
 #~ msgid "_Interests"
 #~ msgstr "_Interessi"
 
