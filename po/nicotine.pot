@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-20 21:29+0300\n"
+"POT-Creation-Date: 2021-10-20 22:04+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3297,16 +3297,6 @@ msgid ""
 "Trace: %(trace)s"
 msgstr ""
 
-#: pynicotine/pluginsystem.py:324
-#, python-format
-msgid "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-msgstr ""
-
-#: pynicotine/pluginsystem.py:369 pynicotine/pluginsystem.py:415
-#, python-format
-msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-msgstr ""
-
 #: pynicotine/pynicotine.py:309
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3564,7 +3554,7 @@ msgstr ""
 msgid "Finished rescanning buddy shares"
 msgstr ""
 
-#: pynicotine/slskmessages.py:2244
+#: pynicotine/slskmessages.py:2243
 #, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""

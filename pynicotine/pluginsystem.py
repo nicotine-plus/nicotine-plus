@@ -321,7 +321,7 @@ class PluginHandler:
                     plugin.settings[key] = customsettings[key]
 
                 else:
-                    log.add_debug(_("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"), {
+                    log.add_debug("Stored setting '%(key)s' is no longer present in the '%(name)s' plugin", {
                         'key': key,
                         'name': plugin_name
                     })
@@ -366,7 +366,7 @@ class PluginHandler:
             if return_value == returncode['pass']:
                 continue
 
-            log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
                           {'module': module, 'value': str(return_value)})
 
         self.command_source = None
@@ -412,7 +412,7 @@ class PluginHandler:
             if return_value == returncode['pass']:
                 continue
 
-            log.add_debug(_("Plugin %(module)s returned something weird, '%(value)s', ignoring"),
+            log.add_debug("Plugin %(module)s returned something weird, '%(value)s', ignoring",
                           {'module': module, 'value': return_value})
 
         return args
