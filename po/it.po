@@ -139,9 +139,12 @@ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr "Impossibile trovare %(option1)s o %(option2)s,, installa uno dei due."
 
 #: pynicotine/__init__.py:153
+#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
+"Impossibile eseguire la scansione delle condivisioni. Chiudi altre istanze "
+"di Nicotina+ e riprova."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -3559,8 +3562,11 @@ msgid "Joined Rooms "
 msgstr "Canali Acceduti "
 
 #: pynicotine/search.py:256
+#, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
+"Il server non consente di eseguire ricerche nella lista dei desideri in "
+"questo momento"
 
 #: pynicotine/search.py:322
 #, python-format
@@ -3985,9 +3991,12 @@ msgstr ""
 "che desideri. Se hai già un account, inserisci i dettagli di accesso."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:128
+#, fuzzy
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
 msgstr ""
+"Se il nome utente desiderato è già stato preso, ti verrà richiesto di "
+"cambiarlo."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:156
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:198
@@ -5772,8 +5781,9 @@ msgstr ""
 "condivisioni, i risultati della ricerca verranno inviati all'utente."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
+#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
-msgstr ""
+msgstr "Le ricerche più brevi di questo numero di caratteri verranno ignorate:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 msgid "Maximum search results to send per search request:"

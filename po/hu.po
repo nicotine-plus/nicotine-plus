@@ -165,9 +165,12 @@ msgstr ""
 "valamelyiket."
 
 #: pynicotine/__init__.py:153
+#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
+"Nem sikerült beolvasni a megosztásokat. Kérjük, zárja be a többi Nicotine+ "
+"példányt, és próbálkozzon újra."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -4061,8 +4064,9 @@ msgid "Joined Rooms "
 msgstr "Belépett szobák "
 
 #: pynicotine/search.py:256
+#, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
-msgstr ""
+msgstr "A kiszolgáló jelenleg nem engedélyezi a kívánságlista keresését"
 
 #: pynicotine/search.py:322
 #, fuzzy, python-format
@@ -4503,9 +4507,11 @@ msgstr ""
 "jelszót. Ha már rendelkezik fiókkal, adja meg meglévő bejelentkezési adatait."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:128
+#, fuzzy
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
 msgstr ""
+"Ha a kívánt felhasználónevet már átvette, a rendszer kéri annak módosítását."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:156
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:198
@@ -6574,8 +6580,11 @@ msgstr ""
 "felhasználónak."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
+#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
 msgstr ""
+"Az ennél a karakterszámnál rövidebb kereséseket a következő figyelmen kívül "
+"hagyja:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 #, fuzzy
