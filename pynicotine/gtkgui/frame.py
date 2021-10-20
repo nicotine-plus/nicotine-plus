@@ -1461,6 +1461,9 @@ class NicotineFrame(UserInterface):
             if page.get_visible():
                 visible_pages.append(page)
 
+        if len(visible_pages) < tab_num:
+            return False
+
         page_num = self.MainNotebook.page_num(visible_pages[tab_num - 1])
         self.MainNotebook.set_current_page(page_num)
         return True
