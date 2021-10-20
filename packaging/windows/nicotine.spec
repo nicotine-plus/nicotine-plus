@@ -30,7 +30,7 @@ from pkgutil import walk_packages
 import pynicotine.plugins
 
 from pynicotine.config import config
-from setup import generate_translations
+from pynicotine.i18n import generate_translations
 from stdlib_list import stdlib_list
 
 

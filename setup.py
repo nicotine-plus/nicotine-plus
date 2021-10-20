@@ -28,8 +28,6 @@
 """
 
 import glob
-import os
-import sys
 
 from setuptools import setup
 from pkgutil import walk_packages
@@ -37,39 +35,7 @@ from pkgutil import walk_packages
 import pynicotine
 
 from pynicotine.config import config
-
-
-def generate_translations():
-
-    mo_entries = []
-    languages = []
-
-    for po_file in glob.glob("po/*.po"):
-        lang = os.path.basename(po_file[:-3])
-        languages.append(lang)
-
-        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
-        mo_file = os.path.join(mo_dir, "nicotine.mo")
-
-        if not os.path.exists(mo_dir):
-            os.makedirs(mo_dir)
-
-        exit_code = os.system("msgfmt --check " + po_file + " -o " + mo_file)
-
-        if exit_code > 0:
-            sys.exit(exit)
-
-        targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
-        mo_entries.append((targetpath, [mo_file]))
-
-    # Merge translations into .desktop and metainfo files
-    for desktop_file in glob.glob("data/*.desktop.in"):
-        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
-
-    for metainfo_file in glob.glob("data/*.metainfo.xml.in"):
-        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
-
-    return mo_entries, languages
+from pynicotine.i18n import generate_translations
 
 
 if __name__ == '__main__':

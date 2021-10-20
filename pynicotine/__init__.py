@@ -19,7 +19,7 @@
 import importlib.util
 import sys
 
-from pynicotine.i18n import apply_translation
+from pynicotine.i18n import apply_translations
 
 
 def check_arguments():
@@ -236,4 +236,4 @@ binary package and what you try to run Nicotine+ with).""")
     return run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
 
 
-apply_translation()
+apply_translations()
