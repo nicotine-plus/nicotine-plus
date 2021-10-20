@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
 "Language: sk\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3993,8 +3993,7 @@ msgstr "MPRIS: Nepodarilo sa nájsť vhodný MPRIS prehrávač"
 #: pynicotine/nowplaying.py:196
 #, fuzzy, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
-msgstr ""
-"Našiel som viacero mpris prehrávačov: %(players)s. Použitie: %(player)s"
+msgstr "Našiel som viacero mpris prehrávačov: %(players)s. Použitie: %(player)s"
 
 #: pynicotine/nowplaying.py:199
 #, fuzzy, python-format
@@ -4352,8 +4351,7 @@ msgstr ""
 #: pynicotine/shares.py:73
 #, fuzzy, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-msgstr ""
-"Nedá sa nájsť %(option1)s alebo %(option2)s, nainštalujte jednu z nich."
+msgstr "Nedá sa nájsť %(option1)s alebo %(option2)s, nainštalujte jednu z nich."
 
 #: pynicotine/shares.py:143
 #, fuzzy
