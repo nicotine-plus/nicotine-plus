@@ -319,7 +319,7 @@ class Search:
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
 
-        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
+        log.add_search("Wishlist wait period set to %s seconds", msg.seconds)
 
     def file_search_result(self, msg):
 
@@ -535,14 +535,14 @@ class Search:
 
         if direct:
             log.add_search(
-                _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
+                "User %(user)s is directly searching for \"%(query)s\", returning %(num)i results", {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults
                 })
         else:
             log.add_search(
-                _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
+                "User %(user)s is searching for \"%(query)s\", returning %(num)i results", {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults

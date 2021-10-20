@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-20 22:04+0300\n"
+"POT-Creation-Date: 2021-10-20 22:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2013,14 +2013,6 @@ msgstr ""
 msgid "Clear All Results"
 msgstr ""
 
-#: pynicotine/gtkgui/search.py:540
-msgid "Filtered out excluded search result "
-msgstr ""
-
-#: pynicotine/gtkgui/search.py:545
-msgid "Filtered out inexact or incorrect search result "
-msgstr ""
-
 #: pynicotine/gtkgui/search.py:895
 #, python-format
 msgid "_Result Filters [%d]"
@@ -3439,23 +3431,6 @@ msgstr ""
 
 #: pynicotine/search.py:256
 msgid "Server does not permit performing wishlist searches at this time"
-msgstr ""
-
-#: pynicotine/search.py:322
-#, python-format
-msgid "Wishlist wait period set to %s seconds"
-msgstr ""
-
-#: pynicotine/search.py:538
-#, python-format
-msgid ""
-"User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-"results"
-msgstr ""
-
-#: pynicotine/search.py:545
-#, python-format
-msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
 
 #: pynicotine/shares.py:116
