@@ -29,6 +29,7 @@ def install_brew():
 
     gtk_version = os.environ.get("NICOTINE_GTK_VERSION") or 3
     packages = ["adwaita-icon-theme",
+                "gettext",
                 "gtk+" + str(gtk_version)]
 
     subprocess.check_call(["brew", "install"] + packages)
