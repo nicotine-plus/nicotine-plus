@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 20:23+0200\n"
+"POT-Creation-Date: 2021-10-19 21:15+0300\n"
 "PO-Revision-Date: 2021-10-15 18:05+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1521,6 +1521,7 @@ msgstr "Találat"
 #: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1845
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
+#: pynicotine/gtkgui/frame.py:1848
 msgid "Copy"
 msgstr "Másolás"
 
@@ -1585,45 +1586,40 @@ msgstr "%(user)s említette Önt a(z) %(room)s szobában"
 msgid "Message by %(user)s in the %(room)s room"
 msgstr "%(user)s említette Önt a(z) %(room)s szobában"
 
-#: pynicotine/gtkgui/chatrooms.py:851
-#, fuzzy, python-format
-msgid "All tickers / wall messages for %(room)s:"
-msgstr "A %(room)s összes futó / fali üzenete:"
-
-#: pynicotine/gtkgui/chatrooms.py:866
+#: pynicotine/gtkgui/chatrooms.py:861
 #, python-format
 msgid "%s joined the room"
 msgstr "%s belépett a szobába"
 
-#: pynicotine/gtkgui/chatrooms.py:884
+#: pynicotine/gtkgui/chatrooms.py:879
 #, python-format
 msgid "%s left the room"
 msgstr "%s elhagyta a szobát"
 
-#: pynicotine/gtkgui/chatrooms.py:923
+#: pynicotine/gtkgui/chatrooms.py:918
 #, python-format
 msgid "%s has gone away"
 msgstr "%s nincs a gépnél"
 
-#: pynicotine/gtkgui/chatrooms.py:925
+#: pynicotine/gtkgui/chatrooms.py:920
 #, python-format
 msgid "%s has returned"
 msgstr "%s visszajött"
 
-#: pynicotine/gtkgui/chatrooms.py:1019 pynicotine/gtkgui/privatechat.py:280
+#: pynicotine/gtkgui/chatrooms.py:1014 pynicotine/gtkgui/privatechat.py:280
 msgid "--- disconnected ---"
 msgstr "--- szétkapcsolva ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1046 pynicotine/gtkgui/privatechat.py:275
+#: pynicotine/gtkgui/chatrooms.py:1041 pynicotine/gtkgui/privatechat.py:275
 msgid "--- reconnected ---"
 msgstr "--- újrakapcsolódva ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1124 pynicotine/gtkgui/privatechat.py:324
+#: pynicotine/gtkgui/chatrooms.py:1119 pynicotine/gtkgui/privatechat.py:324
 #, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "Naplózott üzenetek törlése?"
 
-#: pynicotine/gtkgui/chatrooms.py:1125
+#: pynicotine/gtkgui/chatrooms.py:1120
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
@@ -2078,7 +2074,7 @@ msgid "User Info"
 msgstr "Felhasználói információk"
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1311
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr "Privát Chat"
@@ -2101,36 +2097,37 @@ msgid "Interests"
 msgstr "Érdeklődések"
 
 #: pynicotine/gtkgui/frame.py:1694 pynicotine/gtkgui/userbrowse.py:602
+#: pynicotine/gtkgui/frame.py:1697
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nem lehet létrehozni a '%(folder)s' könyvtárat, hiba: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1699
+#: pynicotine/gtkgui/frame.py:1699 pynicotine/gtkgui/frame.py:1702
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "Mentett részvénylistafájl kiválasztása"
 
-#: pynicotine/gtkgui/frame.py:1739
+#: pynicotine/gtkgui/frame.py:1739 pynicotine/gtkgui/frame.py:1742
 #, fuzzy
 msgid "Create New Room?"
 msgstr "Privát Szoba Létrehozás"
 
-#: pynicotine/gtkgui/frame.py:1740
+#: pynicotine/gtkgui/frame.py:1740 pynicotine/gtkgui/frame.py:1743
 #, fuzzy, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
-#: pynicotine/gtkgui/frame.py:1741
+#: pynicotine/gtkgui/frame.py:1741 pynicotine/gtkgui/frame.py:1744
 #, fuzzy
 msgid "Make room private"
 msgstr "Tegye a szobát priváttá"
 
-#: pynicotine/gtkgui/frame.py:2181
+#: pynicotine/gtkgui/frame.py:2181 pynicotine/gtkgui/frame.py:2184
 #, fuzzy
 msgid "Critical Error"
 msgstr "Kritikus hiba"
 
-#: pynicotine/gtkgui/frame.py:2182
+#: pynicotine/gtkgui/frame.py:2182 pynicotine/gtkgui/frame.py:2185
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -2139,26 +2136,26 @@ msgstr ""
 "A Nicotine+ kritikus hibát észlelt, és ki kell lépnie. Kérjük, másolja ki az "
 "alábbi üzenetet, és írja be a hibajelentésbe:"
 
-#: pynicotine/gtkgui/frame.py:2184
+#: pynicotine/gtkgui/frame.py:2184 pynicotine/gtkgui/frame.py:2187
 #, fuzzy
 msgid "Copy & Report Bug"
 msgstr "Hi_bajelentés"
 
-#: pynicotine/gtkgui/frame.py:2235
+#: pynicotine/gtkgui/frame.py:2235 pynicotine/gtkgui/frame.py:2238
 msgid "Close Nicotine+?"
 msgstr "Kilép a Nicotine+-ból?"
 
-#: pynicotine/gtkgui/frame.py:2236
+#: pynicotine/gtkgui/frame.py:2236 pynicotine/gtkgui/frame.py:2239
 #, fuzzy
 msgid "Do you really want to exit Nicotine+?"
 msgstr "<b>Most már készen áll a Nicotine+ használatára!</b>"
 
-#: pynicotine/gtkgui/frame.py:2237
+#: pynicotine/gtkgui/frame.py:2237 pynicotine/gtkgui/frame.py:2240
 #, fuzzy
 msgid "Run in Background"
 msgstr "Fut a háttérben"
 
-#: pynicotine/gtkgui/frame.py:2238
+#: pynicotine/gtkgui/frame.py:2238 pynicotine/gtkgui/frame.py:2241
 #, fuzzy
 msgid "Remember choice"
 msgstr "Emlékezzen a választásra"
@@ -2279,7 +2276,7 @@ msgstr "Szoba"
 #: pynicotine/gtkgui/settingswindow.py:1159
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:309
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:312
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 msgid "Users"
 msgstr "Felhasználók"
 
@@ -4087,7 +4084,7 @@ msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
 "Az %(user)s felhasználó a \"%(query)s\" keres, és %(num)i eredményt ad vissza"
 
-#: pynicotine/shares.py:114
+#: pynicotine/shares.py:114 pynicotine/shares.py:116
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4099,27 +4096,28 @@ msgstr ""
 "ez nem segít, kérjük, küldjön hibajelentést, amelyben szerepel ez a stack "
 "trace: %(trace)s"
 
-#: pynicotine/shares.py:149
+#: pynicotine/shares.py:149 pynicotine/shares.py:151
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nem lehetett mozgatni '%(tempfile)s' ide: '%(file)s', %(error)s"
 
-#: pynicotine/shares.py:167
+#: pynicotine/shares.py:167 pynicotine/shares.py:169
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mappákat találtak az újraszkennelés előtt, újraépítés…"
 
 #: pynicotine/shares.py:179 pynicotine/shares.py:281 pynicotine/shares.py:341
+#: pynicotine/shares.py:181 pynicotine/shares.py:283 pynicotine/shares.py:343
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Hiba a %(path)s mappa beolvasása közben: %(error)s"
 
-#: pynicotine/shares.py:202
+#: pynicotine/shares.py:202 pynicotine/shares.py:204
 #, fuzzy, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "%(num)s mappákat találtak az újbóli szkennelés után"
 
-#: pynicotine/shares.py:268
+#: pynicotine/shares.py:268 pynicotine/shares.py:270
 #, fuzzy, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Hiba az %(path)s beolvasásakor: %(error)s"
@@ -4134,26 +4132,27 @@ msgstr "Inkonzisztens gyorsítótár '%(vdir)s' számára, '%(dir)s' újraépít
 msgid "Dropping missing folder %(dir)s"
 msgstr "Hiányzó mappa elhagyása %(dir)s"
 
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:369 pynicotine/shares.py:371
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Hiba a %(path)s fájl metaadatainak keresése közben: %(error)s"
 
-#: pynicotine/shares.py:388
+#: pynicotine/shares.py:388 pynicotine/shares.py:399
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Hiba a %(path)s fájl beolvasásakor: %(error)s"
 
-#: pynicotine/shares.py:562 pynicotine/shares.py:928
+#: pynicotine/shares.py:562 pynicotine/shares.py:928 pynicotine/shares.py:570
+#: pynicotine/shares.py:936
 msgid "Downloaded"
 msgstr "Letöltve"
 
-#: pynicotine/shares.py:635
+#: pynicotine/shares.py:635 pynicotine/shares.py:643
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Az alábbi adatbázisok feldolgozása sikertelen: %(names)s"
 
-#: pynicotine/shares.py:641
+#: pynicotine/shares.py:641 pynicotine/shares.py:649
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4162,7 +4161,7 @@ msgstr ""
 "Megpróbálja visszaállítani a megosztott fájlok indexét hiba miatt. Kérjük, "
 "vizsgálja újra a megosztásokat."
 
-#: pynicotine/shares.py:645
+#: pynicotine/shares.py:645 pynicotine/shares.py:653
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4173,44 +4172,45 @@ msgstr ""
 "+ több példányának egyidejűleg történő aktiválása, fájlengedélyezési "
 "problémák vagy a Nicotine+ egyéb problémája miatt."
 
-#: pynicotine/shares.py:733 pynicotine/shares.py:785
+#: pynicotine/shares.py:733 pynicotine/shares.py:785 pynicotine/shares.py:741
+#: pynicotine/shares.py:793
 #, fuzzy, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Nem sikerült hozzáadni a letöltést %(filename)s a megosztott fájlokhoz: "
 "%(error)s"
 
-#: pynicotine/shares.py:884
+#: pynicotine/shares.py:884 pynicotine/shares.py:892
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nem sikerült elküldeni a megosztott fájlok számát a kiszolgálónak: %s"
 
-#: pynicotine/shares.py:952
+#: pynicotine/shares.py:952 pynicotine/shares.py:960
 #, fuzzy, python-format
 msgid "Progress: %s"
 msgstr "Mappák: %s"
 
-#: pynicotine/shares.py:965
+#: pynicotine/shares.py:965 pynicotine/shares.py:973
 #, fuzzy
 msgid "Rescanning normal shares…"
 msgstr "Aktualizálás elindult"
 
-#: pynicotine/shares.py:969
+#: pynicotine/shares.py:969 pynicotine/shares.py:977
 #, fuzzy
 msgid "Rescanning buddy shares…"
 msgstr "Barát-_megosztás frissítése"
 
-#: pynicotine/shares.py:1015
+#: pynicotine/shares.py:1015 pynicotine/shares.py:1023
 #, fuzzy
 msgid "Finished rescanning public shares"
 msgstr "Publikus megosztás _frissítése"
 
-#: pynicotine/shares.py:1017
+#: pynicotine/shares.py:1017 pynicotine/shares.py:1025
 #, fuzzy
 msgid "Finished rescanning buddy shares"
 msgstr "Aktualizálás elindult"
 
-#: pynicotine/slskmessages.py:2243
+#: pynicotine/slskmessages.py:2243 pynicotine/slskmessages.py:2244
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -5059,7 +5059,7 @@ msgid "Debug Logging"
 msgstr "Naplózás"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1618
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr "Keresés"
@@ -5133,215 +5133,207 @@ msgstr "Kilépés a szobából"
 msgid "Clear the chat window"
 msgstr "Chat-ablak törlése"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
-msgid "Set your personal ticker"
-msgstr "Személyes futószöveg beállítása"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
-msgid "Show all the tickers"
-msgstr "Összes futószöveg mutatása"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:177
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:98
 #, fuzzy
 msgid "/me 'message'"
 msgstr "/me 'üzenet'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:188
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:109
 msgid "Say something in the third-person"
 msgstr "Mond valamit harmadik személyben"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:167
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
 msgid "Display the Now Playing script's output"
 msgstr "Now Playing script kimenetének megjelenítése"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:193
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
 msgid "Toggles your away status"
 msgstr "Átkapcsolja a távoli állapotot"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
 msgid "Rescan shares"
 msgstr "Megosztás aktualizálása"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
 msgid "Quit Nicotine+"
 msgstr "Kilépés"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:276
 #, fuzzy
 msgid "/add /ad 'user'"
 msgstr "/add /ad 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:287
 #, fuzzy
 msgid "Add user 'user' to your buddy list"
 msgstr "'User' user hozzáadása a tiltólistához"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:302
 #, fuzzy
 msgid "/rem /unbuddy 'user'"
 msgstr "/rem /unbuddy 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:313
 #, fuzzy
 msgid "Remove user 'user' from your buddy list"
 msgstr "'User' user eltávolítása a tiltólistáról"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
 #, fuzzy
 msgid "/ban 'user'"
 msgstr "/ban 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
 msgid "Add user 'user' to your ban list"
 msgstr "'User' user hozzáadása a tiltólistához"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
 #, fuzzy
 msgid "/unban 'user'"
 msgstr "/unban 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
 msgid "Remove user 'user' from your ban list"
 msgstr "'User' user eltávolítása a tiltólistáról"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 #, fuzzy
 msgid "/ignore 'user'"
 msgstr "/ignore 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
 msgid "Add user 'user' to your ignore list"
 msgstr "'User' user hozzáadása a mellőzőlistához"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
 #, fuzzy
 msgid "/unignore 'user'"
 msgstr "/unignore 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
 msgid "Remove user 'user' from your ignore list"
 msgstr "'User' user eltávolítása a mellőzőlistáról"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 #, fuzzy
 msgid "/browse /b 'user'"
 msgstr "/browse /b 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 msgid "Browse files of user 'user'"
 msgstr "'User' user fájljainak böngészése"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
 #, fuzzy
 msgid "/whois /w 'user'"
 msgstr "/whois /w 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
 #, fuzzy
 msgid "Request info for 'user'"
 msgstr "'User' userinfójának lekérése"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
 #, fuzzy
 msgid "/ip 'user'"
 msgstr "/ip 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:547
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
 msgid "Show IP for user 'user'"
 msgstr "'User' user IP-címének lekérése"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:562
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:478
 msgid "Aliases"
 msgstr "Álnevek"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:526
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:494
 #, fuzzy
 msgid "/alias /al 'command' 'definition'"
 msgstr "/alias /al 'parancs' 'definíció'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:537
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:505
 msgid "Add a new alias"
 msgstr "Új álnév hozzáadása"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:604
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:552
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:520
 #, fuzzy
 msgid "/unalias /un 'command'"
 msgstr "/unalias /un 'parancs'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:615
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:563
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:531
 msgid "Remove an alias"
 msgstr "Egy álnév eltávolítása"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:594
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:562
 #, fuzzy
 msgid "/search /s 'query'"
 msgstr "/search /s 'lekérdezés'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:605
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:573
 msgid "Start a new search for 'query'"
 msgstr "Új keresés indítása 'kérés' kéréshez"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:620
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:588
 #, fuzzy
 msgid "/rsearch /rs 'query'"
 msgstr "/rsearch /rs 'lekérdezés'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:631
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:599
 msgid "Search the joined rooms for 'query'"
 msgstr "Keresés a belépett szobákban"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:614
 #, fuzzy
 msgid "/bsearch /bs 'query'"
 msgstr "Keresés a barátlistában"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:709
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:625
 msgid "Search the buddy list for 'query'"
 msgstr "Keresés a barátlistában"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:724
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:640
 #, fuzzy
 msgid "/usearch /us 'user' 'query'"
 msgstr "/usearch /us 'felhasználó' 'lekérdezés'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:735
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:651
 msgid "Search a user's shares for 'query'"
 msgstr "Keresés egy user megosztásában"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:766
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:714
 #, fuzzy
 msgid "/msg 'user' 'message'"
 msgstr "/msg 'felhasználó' 'üzenet'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:777
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:725
 msgid "Send message 'message' to user 'user'"
 msgstr "Üzenet küldése az usernek"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:792
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:740
 #, fuzzy
 msgid "/pm 'user'"
 msgstr "/pm 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:803
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:751
 msgid "Open private chat window for user 'user'"
 msgstr "Privát chat-ablak nyitása az usernek"
 
@@ -7269,6 +7261,16 @@ msgstr "Mentés _Kép"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Frissít"
+
+#, fuzzy, python-format
+#~ msgid "All tickers / wall messages for %(room)s:"
+#~ msgstr "A %(room)s összes futó / fali üzenete:"
+
+#~ msgid "Set your personal ticker"
+#~ msgstr "Személyes futószöveg beállítása"
+
+#~ msgid "Show all the tickers"
+#~ msgstr "Összes futószöveg mutatása"
 
 #, fuzzy
 #~ msgid ""
