@@ -29,8 +29,8 @@
 
 import glob
 
-from setuptools import setup
 from pkgutil import walk_packages
+from setuptools import setup
 
 import pynicotine
 
