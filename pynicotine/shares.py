@@ -60,6 +60,8 @@ else:
     })
     sys.exit()
 
+UINT_LIMIT = 4294967295
+
 
 class Scanner:
     """ Separate process responsible for building shares. It handles scanning of
@@ -312,12 +314,12 @@ class Scanner:
                             streams[virtualdir] = oldstreams[virtualdir]
                             continue
                         except KeyError:
-                            self.queue.put((_("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"), {
+                            self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
                                 'vdir': virtualdir,
                                 'dir': folder
-                            }, "debug"))
+                            }, "miscellaneous"))
                     else:
-                        self.queue.put((_("Dropping missing folder %(dir)s"), {'dir': folder}, "debug"))
+                        self.queue.put(("Dropping missing folder %(dir)s", {'dir': folder}, "miscellaneous"))
                         continue
 
                 files[virtualdir] = []
@@ -350,8 +352,8 @@ class Scanner:
 
         size = 0
         audio = None
-        bitrateinfo = None
-        duration = None
+        bitrate_info = None
+        duration_info = None
 
         try:
             if file:
@@ -367,36 +369,42 @@ class Scanner:
 
                 except Exception as errtuple:
                     error = _("Error while scanning metadata for file %(path)s: %(error)s")
-                    args = {
-                        'path': pathname,
-                        'error': errtuple
-                    }
+                    args = {'path': pathname, 'error': errtuple}
 
                     if queue:
                         queue.put((error, args, None))
                     else:
                         log.add(error, args)
 
-            if audio is not None:
-                if audio.bitrate is not None:
-                    bitrateinfo = (int(audio.bitrate), int(False))  # Second argument used to be VBR (variable bitrate)
+            if audio is not None and audio.bitrate is not None and audio.duration is not None:
+                bitrate = int(audio.bitrate)
+                duration = int(audio.duration)
 
-                if audio.duration is not None:
-                    duration = int(audio.duration)
+                if UINT_LIMIT > bitrate > 0:
+                    bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
+
+                if UINT_LIMIT > duration > 0:
+                    duration_info = duration
+
+                if bitrate_info is None or duration_info is None:
+                    error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
+                    args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
+
+                    if queue:
+                        queue.put((error, args, "miscellaneous"))
+                    else:
+                        log.add(error, args)
 
         except Exception as errtuple:
             error = _("Error while scanning file %(path)s: %(error)s")
-            args = {
-                'path': pathname,
-                'error': errtuple
-            }
+            args = {'path': pathname, 'error': errtuple}
 
             if queue:
                 queue.put((error, args, None))
             else:
                 log.add(error, args)
 
-        return (name, size, bitrateinfo, duration)
+        return (name, size, bitrate_info, duration_info)
 
     @staticmethod
     def get_dir_stream(folder):
