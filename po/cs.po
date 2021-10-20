@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -138,8 +138,8 @@ msgstr ""
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Nepodařilo se skenovat sdílené složky. Zavřete prosím další případy Nicotine"
-"+ a zkuste to znovu."
+"Nepodařilo se skenovat sdílené složky. Zavřete prosím další případy Nicotine+"
+" a zkuste to znovu."
 
 #: pynicotine/chatrooms.py:254
 #, fuzzy, python-format
@@ -4776,8 +4776,7 @@ msgstr "Přidat kamaráda…"
 #: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1273
 #, fuzzy
 msgid "Enter the username of the person you want to add to your buddy list"
-msgstr ""
-"Zadejte uživatelské jméno osoby, kterou chcete přidat do seznamu přátel"
+msgstr "Zadejte uživatelské jméno osoby, kterou chcete přidat do seznamu přátel"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 #, fuzzy
@@ -5474,8 +5473,7 @@ msgstr "Konfigurace sdílených složek"
 #, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
-msgstr ""
-"Zadejte jméno uživatele a začněte s ním textovou konverzaci v soukromí."
+msgstr "Zadejte jméno uživatele a začněte s ním textovou konverzaci v soukromí."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1303
 #, fuzzy
@@ -6655,8 +6653,7 @@ msgstr "Kód země:"
 #: pynicotine/gtkgui/ui/settings/search.ui:376
 #, fuzzy
 msgid "Only show results from users with an available upload slot."
-msgstr ""
-"Zorazděte pouze výsledky od uživatelů s dostupným slotem pro nahrávání."
+msgstr "Zorazděte pouze výsledky od uživatelů s dostupným slotem pro nahrávání."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:403
 #, fuzzy
