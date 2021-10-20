@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 20:23+0200\n"
+"POT-Creation-Date: 2021-10-20 22:10+0300\n"
 "PO-Revision-Date: 2021-10-18 19:12+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1241,7 +1241,7 @@ msgstr "Bul…"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/chatrooms.py:669
-#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1845
+#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1848
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Copy"
@@ -1300,44 +1300,39 @@ msgstr "%(user)s, %(room)s odasında sizden bahsetti"
 msgid "Message by %(user)s in the %(room)s room"
 msgstr "%(room)s odasında %(user)s tarafından mesaj"
 
-#: pynicotine/gtkgui/chatrooms.py:851
-#, python-format
-msgid "All tickers / wall messages for %(room)s:"
-msgstr "%(room)s için tüm durum / duvar mesajları:"
-
-#: pynicotine/gtkgui/chatrooms.py:866
+#: pynicotine/gtkgui/chatrooms.py:861
 #, python-format
 msgid "%s joined the room"
 msgstr "%s odaya katıldı"
 
-#: pynicotine/gtkgui/chatrooms.py:884
+#: pynicotine/gtkgui/chatrooms.py:879
 #, python-format
 msgid "%s left the room"
 msgstr "%s odadan ayrıldı"
 
-#: pynicotine/gtkgui/chatrooms.py:923
+#: pynicotine/gtkgui/chatrooms.py:918
 #, python-format
 msgid "%s has gone away"
 msgstr "%s uzaklaştı"
 
-#: pynicotine/gtkgui/chatrooms.py:925
+#: pynicotine/gtkgui/chatrooms.py:920
 #, python-format
 msgid "%s has returned"
 msgstr "%s geri döndü"
 
-#: pynicotine/gtkgui/chatrooms.py:1019 pynicotine/gtkgui/privatechat.py:280
+#: pynicotine/gtkgui/chatrooms.py:1014 pynicotine/gtkgui/privatechat.py:280
 msgid "--- disconnected ---"
 msgstr "--- bağlantı kesildi ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1046 pynicotine/gtkgui/privatechat.py:275
+#: pynicotine/gtkgui/chatrooms.py:1041 pynicotine/gtkgui/privatechat.py:275
 msgid "--- reconnected ---"
 msgstr "--- yeniden bağlandı ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1124 pynicotine/gtkgui/privatechat.py:324
+#: pynicotine/gtkgui/chatrooms.py:1119 pynicotine/gtkgui/privatechat.py:324
 msgid "Delete Logged Messages?"
 msgstr "Kayıtlı Mesajlar Silinsin mi?"
 
-#: pynicotine/gtkgui/chatrooms.py:1125
+#: pynicotine/gtkgui/chatrooms.py:1120
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -1741,7 +1736,7 @@ msgid "User Info"
 msgstr "Kullanıcı Bilgileri"
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1311
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr "Özel Sohbet"
@@ -1763,33 +1758,33 @@ msgstr "Sohbet Odaları"
 msgid "Interests"
 msgstr "İlgi Alanları"
 
-#: pynicotine/gtkgui/frame.py:1694 pynicotine/gtkgui/userbrowse.py:602
+#: pynicotine/gtkgui/frame.py:1697 pynicotine/gtkgui/userbrowse.py:602
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "'%(folder)s' dizini oluşturulamıyor, hata bildirildi: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1699
+#: pynicotine/gtkgui/frame.py:1702
 msgid "Select a Saved Shares List File"
 msgstr "Kaydedilen Paylaşımlar Listesi Dosyası Seç"
 
-#: pynicotine/gtkgui/frame.py:1739
+#: pynicotine/gtkgui/frame.py:1742
 msgid "Create New Room?"
 msgstr "Yeni Oda Oluşturulsun mu?"
 
-#: pynicotine/gtkgui/frame.py:1740
+#: pynicotine/gtkgui/frame.py:1743
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "\"%s\" adlı yeni bir oda oluşturmak istediğinizden emin misiniz?"
 
-#: pynicotine/gtkgui/frame.py:1741
+#: pynicotine/gtkgui/frame.py:1744
 msgid "Make room private"
 msgstr "Odayı özel yap"
 
-#: pynicotine/gtkgui/frame.py:2181
+#: pynicotine/gtkgui/frame.py:2184
 msgid "Critical Error"
 msgstr "Kritik Hata"
 
-#: pynicotine/gtkgui/frame.py:2182
+#: pynicotine/gtkgui/frame.py:2185
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -1797,23 +1792,23 @@ msgstr ""
 "Nicotine+ kritik bir hatayla karşılaştı ve çıkması gerekiyor. Lütfen "
 "aşağıdaki mesajı kopyalayın ve hata bildirimine ekleyin:"
 
-#: pynicotine/gtkgui/frame.py:2184
+#: pynicotine/gtkgui/frame.py:2187
 msgid "Copy & Report Bug"
 msgstr "Kopyala ve Hatayı Bildir"
 
-#: pynicotine/gtkgui/frame.py:2235
+#: pynicotine/gtkgui/frame.py:2238
 msgid "Close Nicotine+?"
 msgstr "Nicotine+ kapatılsın mı?"
 
-#: pynicotine/gtkgui/frame.py:2236
+#: pynicotine/gtkgui/frame.py:2239
 msgid "Do you really want to exit Nicotine+?"
 msgstr "Nikotin+'tan gerçekten çıkmak istiyor musunuz?"
 
-#: pynicotine/gtkgui/frame.py:2237
+#: pynicotine/gtkgui/frame.py:2240
 msgid "Run in Background"
 msgstr "Arka Planda Çalıştır"
 
-#: pynicotine/gtkgui/frame.py:2238
+#: pynicotine/gtkgui/frame.py:2241
 msgid "Remember choice"
 msgstr "Seçimi hatırla"
 
@@ -1923,7 +1918,7 @@ msgstr "Oda"
 #: pynicotine/gtkgui/settingswindow.py:1159
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:309
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:312
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 msgid "Users"
 msgstr "Kullanıcılar"
 
@@ -2049,14 +2044,6 @@ msgstr "Arama Terimini Kopyala"
 #: pynicotine/gtkgui/search.py:396
 msgid "Clear All Results"
 msgstr "Tüm Sonuçları Temizle"
-
-#: pynicotine/gtkgui/search.py:540
-msgid "Filtered out excluded search result "
-msgstr "Hariç tutulan arama sonucu filtrelendi: "
-
-#: pynicotine/gtkgui/search.py:545
-msgid "Filtered out inexact or incorrect search result "
-msgstr "Hatalı veya yanlış arama sonucu filtrelendi: "
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
@@ -3364,17 +3351,6 @@ msgstr ""
 "%(module)s eklentisi %(errortype)s hatasıyla başarısız oldu: %(error)s.\n"
 "Geri izleme: %(trace)s"
 
-#: pynicotine/pluginsystem.py:324
-#, python-format
-msgid "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-msgstr "Depolanan '%(key)s' ayarı artık '%(name)s' eklentisinde yok"
-
-#: pynicotine/pluginsystem.py:369 pynicotine/pluginsystem.py:415
-#, python-format
-msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-msgstr ""
-"%(module)s eklentisi garip bir şey döndürdü, '%(value)s', yok sayılıyor"
-
 #: pynicotine/pynicotine.py:309
 msgid "You need to specify a username and password before connecting…"
 msgstr "Bağlanmadan önce bir kullanıcı adı ve parola belirtmeniz gerekir…"
@@ -3535,28 +3511,7 @@ msgstr "Katılınan Odalar "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Sunucu şu anda dilek listesi aramalarına izin vermiyor"
 
-#: pynicotine/search.py:322
-#, python-format
-msgid "Wishlist wait period set to %s seconds"
-msgstr "Dilek listesi bekleme süresi %s saniyeye ayarlandı"
-
-#: pynicotine/search.py:538
-#, python-format
-msgid ""
-"User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-"results"
-msgstr ""
-"%(user)s kullanıcısı doğrudan \"%(query)s\" için arama yapıyor ve %(num)i "
-"sonuç döndürüyor"
-
-#: pynicotine/search.py:545
-#, python-format
-msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
-msgstr ""
-"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor ve %(num)i sonuç "
-"döndürüyor"
-
-#: pynicotine/shares.py:114
+#: pynicotine/shares.py:116
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3567,61 +3522,51 @@ msgstr ""
 "%(dir)s/*.db dosyalarını silin ve tekrar deneyin. Bu işe yaramazsa, lütfen "
 "şu yığın geri izlemesini içeren bir hata bildirimi gönderin: %(trace)s"
 
-#: pynicotine/shares.py:149
+#: pynicotine/shares.py:151
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "%(filename)s kaydedilemiyor: %(error)s"
 
-#: pynicotine/shares.py:167
+#: pynicotine/shares.py:169
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "Yeniden taramadan önce %(num)s klasör bulundu, yeniden oluşturuluyor…"
 
-#: pynicotine/shares.py:179 pynicotine/shares.py:281 pynicotine/shares.py:341
+#: pynicotine/shares.py:181 pynicotine/shares.py:283 pynicotine/shares.py:343
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "%(path)s klasörü taranırken hata oluştu: %(error)s"
 
-#: pynicotine/shares.py:202
+#: pynicotine/shares.py:204
 #, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "Yeniden taramadan sonra %(num)s klasör bulundu"
 
-#: pynicotine/shares.py:268
+#: pynicotine/shares.py:270
 #, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "%(path)s taranırken hata oluştu: %(error)s"
 
-#: pynicotine/shares.py:315
-#, python-format
-msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-msgstr "'%(vdir)s' için tutarsız önbellek, '%(dir)s' yeniden oluşturuluyor"
-
-#: pynicotine/shares.py:320
-#, python-format
-msgid "Dropping missing folder %(dir)s"
-msgstr "Eksik klasör %(dir)s bırakılıyor"
-
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:371
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "%(path)s dosyası için üst veriler taranırken hata oluştu: %(error)s"
 
-#: pynicotine/shares.py:388
+#: pynicotine/shares.py:399
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "%(path)s dosyası taranırken hata oluştu: %(error)s"
 
-#: pynicotine/shares.py:562 pynicotine/shares.py:928
+#: pynicotine/shares.py:570 pynicotine/shares.py:936
 msgid "Downloaded"
 msgstr "İndirildi"
 
-#: pynicotine/shares.py:635
+#: pynicotine/shares.py:643
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Şu veri tabanları işlenemedi: %(names)s"
 
-#: pynicotine/shares.py:641
+#: pynicotine/shares.py:649
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3629,7 +3574,7 @@ msgstr ""
 "Bir hata nedeniyle paylaşılan dosyaların dizini sıfırlanmaya çalışılıyor. "
 "Lütfen paylaşımlarınızı yeniden tarayın."
 
-#: pynicotine/shares.py:645
+#: pynicotine/shares.py:653
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3639,34 +3584,34 @@ msgstr ""
 "örneğinin aynı anda etkin olması, dosya izni sorunları veya Nicotine+'taki "
 "başka bir sorun nedeniyle oluşabilir."
 
-#: pynicotine/shares.py:733 pynicotine/shares.py:785
+#: pynicotine/shares.py:741 pynicotine/shares.py:793
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr "İndirilen %(filename)s, paylaşılan dosyalara eklenemedi: %(error)s"
 
-#: pynicotine/shares.py:884
+#: pynicotine/shares.py:892
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Paylaşılan dosya sayısı sunucuya gönderilemedi: %s"
 
-#: pynicotine/shares.py:952
+#: pynicotine/shares.py:960
 #, python-format
 msgid "Progress: %s"
 msgstr "İlerleme: %s"
 
-#: pynicotine/shares.py:965
+#: pynicotine/shares.py:973
 msgid "Rescanning normal shares…"
 msgstr "Normal paylaşımlar yeniden taranıyor…"
 
-#: pynicotine/shares.py:969
+#: pynicotine/shares.py:977
 msgid "Rescanning buddy shares…"
 msgstr "Arkadaş paylaşımları yeniden taranıyor…"
 
-#: pynicotine/shares.py:1015
+#: pynicotine/shares.py:1023
 msgid "Finished rescanning public shares"
 msgstr "Genel paylaşımların yeniden taranması tamamlandı"
 
-#: pynicotine/shares.py:1017
+#: pynicotine/shares.py:1025
 msgid "Finished rescanning buddy shares"
 msgstr "Arkadaş paylaşımlarının yeniden taranması tamamlandı"
 
@@ -4424,7 +4369,7 @@ msgid "Debug Logging"
 msgstr "Hata Ayıklama Günlüğü"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1618
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr "Arama"
@@ -4490,194 +4435,186 @@ msgstr "Geçerli odadan ayrıl"
 msgid "Clear the chat window"
 msgstr "Sohbet penceresini temizle"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
-msgid "Set your personal ticker"
-msgstr "Kişisel durum mesajınızı ayarlayın"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
-msgid "Show all the tickers"
-msgstr "Tüm durum mesajlarını göster"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:177
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:98
 msgid "/me 'message'"
 msgstr "/me 'mesaj'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:188
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:109
 msgid "Say something in the third-person"
 msgstr "Üçüncü şahıs ağzından bir şey söyle"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:167
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
 msgid "Display the Now Playing script's output"
 msgstr "Şimdi Oynatılıyor betiğinin çıktısını görüntüle"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:193
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
 msgid "Toggles your away status"
 msgstr "Uzakta durumunuzu değiştirir"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
 msgid "Rescan shares"
 msgstr "Paylaşımları yeniden tara"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
 msgid "Quit Nicotine+"
 msgstr "Nicotine+'tan çık"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:276
 msgid "/add /ad 'user'"
 msgstr "/add /ad 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:287
 msgid "Add user 'user' to your buddy list"
 msgstr "'kullanıcı' kullanıcısını arkadaş listenize ekleyin"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:302
 msgid "/rem /unbuddy 'user'"
 msgstr "/rem /unbuddy 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:313
 msgid "Remove user 'user' from your buddy list"
 msgstr "'kullanıcı' kullanıcısını arkadaş listenizden kaldırın"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
 msgid "/ban 'user'"
 msgstr "/ban 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
 msgid "Add user 'user' to your ban list"
 msgstr "'kullanıcı' kullanıcısını yasaklama listenize ekleyin"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
 msgid "/unban 'user'"
 msgstr "/unban 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
 msgid "Remove user 'user' from your ban list"
 msgstr "'kullanıcı' kullanıcısını yasaklama listenizden kaldırın"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 msgid "/ignore 'user'"
 msgstr "/ignore 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
 msgid "Add user 'user' to your ignore list"
 msgstr "'kullanıcı' kullanıcısını yok sayılan listenize ekleyin"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
 msgid "/unignore 'user'"
 msgstr "/unignore 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
 msgid "Remove user 'user' from your ignore list"
 msgstr "'kullanıcı' kullanıcısını yok sayılan listenizden kaldırın"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 msgid "/browse /b 'user'"
 msgstr "/browse /b 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 msgid "Browse files of user 'user'"
 msgstr "'kullanıcı' kullanıcısının dosyalarına göz at"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
 msgid "/whois /w 'user'"
 msgstr "/whois /w 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
 msgid "Request info for 'user'"
 msgstr "'kullanıcı' için bilgi iste"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
 msgid "/ip 'user'"
 msgstr "/ip 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:547
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
 msgid "Show IP for user 'user'"
 msgstr "'kullanıcı' kullanıcısının IP adresini göster"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:562
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:478
 msgid "Aliases"
 msgstr "Takma adlar"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:526
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:494
 msgid "/alias /al 'command' 'definition'"
 msgstr "/alias /al 'komut' 'tanım'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:537
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:505
 msgid "Add a new alias"
 msgstr "Yeni bir takma ad ekle"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:604
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:552
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:520
 msgid "/unalias /un 'command'"
 msgstr "/unalias /un 'komut'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:615
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:563
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:531
 msgid "Remove an alias"
 msgstr "Takma adı kaldır"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:594
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:562
 msgid "/search /s 'query'"
 msgstr "/search /s 'sorgu'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:605
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:573
 msgid "Start a new search for 'query'"
 msgstr "'sorgu' için yeni bir arama başlat"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:620
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:588
 msgid "/rsearch /rs 'query'"
 msgstr "/rsearch /rs 'sorgu'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:631
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:599
 msgid "Search the joined rooms for 'query'"
 msgstr "'sorgu' için katılınan odaları ara"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:614
 msgid "/bsearch /bs 'query'"
 msgstr "/bsearch /bs 'sorgu'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:709
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:625
 msgid "Search the buddy list for 'query'"
 msgstr "'sorgu' için arkadaş listesini ara"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:724
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:640
 msgid "/usearch /us 'user' 'query'"
 msgstr "/usearch /us 'kullanıcı' 'sorgu'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:735
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:651
 msgid "Search a user's shares for 'query'"
 msgstr "'sorgu' için bir kullanıcının paylaşımlarını ara"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:766
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:714
 msgid "/msg 'user' 'message'"
 msgstr "/msg 'kullanıcı' 'mesaj'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:777
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:725
 msgid "Send message 'message' to user 'user'"
 msgstr "'kullanıcı' kullanıcısına 'mesaj' mesajını gönder"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:792
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:740
 msgid "/pm 'user'"
 msgstr "/pm 'kullanıcı'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:803
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:751
 msgid "Open private chat window for user 'user'"
 msgstr "'kullanıcı' kullanıcısı için özel sohbet penceresi aç"
 
@@ -6051,8 +5988,8 @@ msgid ""
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Diğer istemciler, arama isteklerine yanıt olarak özel olarak paylaşılan "
-"dosyalar gönderme seçeneği sunabilir. Bu tür dosyaların önüne '[PRIVATE FILE]"
-"' eklenir ve yükleyen kişi açıkça izin vermedikçe indirilemezler."
+"dosyalar gönderme seçeneği sunabilir. Bu tür dosyaların önüne '[PRIVATE "
+"FILE]' eklenir ve yükleyen kişi açıkça izin vermedikçe indirilemezler."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
 msgid "Show privately shared files in user shares"
@@ -6309,6 +6246,59 @@ msgstr "Resmi _Kaydet"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Bilgileri _Yenile"
+
+#~ msgid "Filtered out excluded search result "
+#~ msgstr "Hariç tutulan arama sonucu filtrelendi: "
+
+#~ msgid "Filtered out inexact or incorrect search result "
+#~ msgstr "Hatalı veya yanlış arama sonucu filtrelendi: "
+
+#, python-format
+#~ msgid "Wishlist wait period set to %s seconds"
+#~ msgstr "Dilek listesi bekleme süresi %s saniyeye ayarlandı"
+
+#, python-format
+#~ msgid ""
+#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
+#~ "results"
+#~ msgstr ""
+#~ "%(user)s kullanıcısı doğrudan \"%(query)s\" için arama yapıyor ve %(num)i "
+#~ "sonuç döndürüyor"
+
+#, python-format
+#~ msgid ""
+#~ "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
+#~ msgstr ""
+#~ "%(user)s kullanıcısı \"%(query)s\" için arama yapıyor ve %(num)i sonuç "
+#~ "döndürüyor"
+
+#, python-format
+#~ msgid ""
+#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
+#~ msgstr "Depolanan '%(key)s' ayarı artık '%(name)s' eklentisinde yok"
+
+#, python-format
+#~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
+#~ msgstr ""
+#~ "%(module)s eklentisi garip bir şey döndürdü, '%(value)s', yok sayılıyor"
+
+#, python-format
+#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
+#~ msgstr "'%(vdir)s' için tutarsız önbellek, '%(dir)s' yeniden oluşturuluyor"
+
+#, python-format
+#~ msgid "Dropping missing folder %(dir)s"
+#~ msgstr "Eksik klasör %(dir)s bırakılıyor"
+
+#, python-format
+#~ msgid "All tickers / wall messages for %(room)s:"
+#~ msgstr "%(room)s için tüm durum / duvar mesajları:"
+
+#~ msgid "Set your personal ticker"
+#~ msgstr "Kişisel durum mesajınızı ayarlayın"
+
+#~ msgid "Show all the tickers"
+#~ msgstr "Tüm durum mesajlarını göster"
 
 #~ msgid ""
 #~ "Failed to scan shares. If Nicotine+ is currently running, please close "

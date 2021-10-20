@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-17 20:23+0200\n"
+"POT-Creation-Date: 2021-10-20 22:10+0300\n"
 "PO-Revision-Date: 2021-10-19 17:11+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1242,7 +1242,7 @@ msgstr "Szukaj…"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/chatrooms.py:669
-#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1845
+#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1848
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Copy"
@@ -1301,44 +1301,39 @@ msgstr "%(user)s wspomniał o Tobie w pokoju %(room)s"
 msgid "Message by %(user)s in the %(room)s room"
 msgstr "Wiadomość od %(user)s w pokoju %(room)s"
 
-#: pynicotine/gtkgui/chatrooms.py:851
-#, python-format
-msgid "All tickers / wall messages for %(room)s:"
-msgstr "Wszystkie wiadomości ze ściany pokoju %(room)s:"
-
-#: pynicotine/gtkgui/chatrooms.py:866
+#: pynicotine/gtkgui/chatrooms.py:861
 #, python-format
 msgid "%s joined the room"
 msgstr "%s dołączył do pokoju"
 
-#: pynicotine/gtkgui/chatrooms.py:884
+#: pynicotine/gtkgui/chatrooms.py:879
 #, python-format
 msgid "%s left the room"
 msgstr "%s opuścił pokój"
 
-#: pynicotine/gtkgui/chatrooms.py:923
+#: pynicotine/gtkgui/chatrooms.py:918
 #, python-format
 msgid "%s has gone away"
 msgstr "%s stał się nieobecny"
 
-#: pynicotine/gtkgui/chatrooms.py:925
+#: pynicotine/gtkgui/chatrooms.py:920
 #, python-format
 msgid "%s has returned"
 msgstr "%s powrócił"
 
-#: pynicotine/gtkgui/chatrooms.py:1019 pynicotine/gtkgui/privatechat.py:280
+#: pynicotine/gtkgui/chatrooms.py:1014 pynicotine/gtkgui/privatechat.py:280
 msgid "--- disconnected ---"
 msgstr "--- rozłączony ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1046 pynicotine/gtkgui/privatechat.py:275
+#: pynicotine/gtkgui/chatrooms.py:1041 pynicotine/gtkgui/privatechat.py:275
 msgid "--- reconnected ---"
 msgstr "--- połączony ponownie ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1124 pynicotine/gtkgui/privatechat.py:324
+#: pynicotine/gtkgui/chatrooms.py:1119 pynicotine/gtkgui/privatechat.py:324
 msgid "Delete Logged Messages?"
 msgstr "Usunąć zarejestrowane wiadomości?"
 
-#: pynicotine/gtkgui/chatrooms.py:1125
+#: pynicotine/gtkgui/chatrooms.py:1120
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -1742,7 +1737,7 @@ msgid "User Info"
 msgstr "Informacje o użytkowniku"
 
 #: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1311
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:750
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr "Czat prywatny"
@@ -1764,33 +1759,33 @@ msgstr "Lista pokoi"
 msgid "Interests"
 msgstr "Zainteresowania"
 
-#: pynicotine/gtkgui/frame.py:1694 pynicotine/gtkgui/userbrowse.py:602
+#: pynicotine/gtkgui/frame.py:1697 pynicotine/gtkgui/userbrowse.py:602
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nie można utworzyć katalogu '%(folder)s', błąd: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1699
+#: pynicotine/gtkgui/frame.py:1702
 msgid "Select a Saved Shares List File"
 msgstr "Wybierz zapisaną listę udostępnień z pliku"
 
-#: pynicotine/gtkgui/frame.py:1739
+#: pynicotine/gtkgui/frame.py:1742
 msgid "Create New Room?"
 msgstr "Utworzyć nowy pokój?"
 
-#: pynicotine/gtkgui/frame.py:1740
+#: pynicotine/gtkgui/frame.py:1743
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Jesteś pewien, że chcesz utworzyć nowy pokój \"%s\"?"
 
-#: pynicotine/gtkgui/frame.py:1741
+#: pynicotine/gtkgui/frame.py:1744
 msgid "Make room private"
 msgstr "Uczyń pokój prywatnym"
 
-#: pynicotine/gtkgui/frame.py:2181
+#: pynicotine/gtkgui/frame.py:2184
 msgid "Critical Error"
 msgstr "Błąd krytyczny"
 
-#: pynicotine/gtkgui/frame.py:2182
+#: pynicotine/gtkgui/frame.py:2185
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -1798,23 +1793,23 @@ msgstr ""
 "Program Nicotine+ napotkał błąd krytyczny i musi zostać zamknięty. Proszę "
 "skopiować poniższy błąd i dołączyć go do raportu o błędzie:"
 
-#: pynicotine/gtkgui/frame.py:2184
+#: pynicotine/gtkgui/frame.py:2187
 msgid "Copy & Report Bug"
 msgstr "Skopiuj i zgłoś błąd"
 
-#: pynicotine/gtkgui/frame.py:2235
+#: pynicotine/gtkgui/frame.py:2238
 msgid "Close Nicotine+?"
 msgstr "Zamknąć Nicotine+?"
 
-#: pynicotine/gtkgui/frame.py:2236
+#: pynicotine/gtkgui/frame.py:2239
 msgid "Do you really want to exit Nicotine+?"
 msgstr "Czy na pewno chcesz wyjść z Nicotine+?"
 
-#: pynicotine/gtkgui/frame.py:2237
+#: pynicotine/gtkgui/frame.py:2240
 msgid "Run in Background"
 msgstr "Uruchom w tle"
 
-#: pynicotine/gtkgui/frame.py:2238
+#: pynicotine/gtkgui/frame.py:2241
 msgid "Remember choice"
 msgstr "Zapamiętaj wybór"
 
@@ -1924,7 +1919,7 @@ msgstr "Pokój"
 #: pynicotine/gtkgui/settingswindow.py:1159
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:309
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:312
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
 msgid "Users"
 msgstr "Użytkownicy"
 
@@ -2050,14 +2045,6 @@ msgstr "Kopiuj wyszukiwane hasło"
 #: pynicotine/gtkgui/search.py:396
 msgid "Clear All Results"
 msgstr "Wyczyść wszystkie wyniki"
-
-#: pynicotine/gtkgui/search.py:540
-msgid "Filtered out excluded search result "
-msgstr "Przefiltrowane wykluczone wyniki wyszukiwania "
-
-#: pynicotine/gtkgui/search.py:545
-msgid "Filtered out inexact or incorrect search result "
-msgstr "Przefiltrowane niedokładne lub nieprawidłowe wyniki wyszukiwania "
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
@@ -3365,17 +3352,6 @@ msgstr ""
 "Wtyczka %(module)s z błędem %(errortype)s: %(error)s.\n"
 "Trace: %(trace)s"
 
-#: pynicotine/pluginsystem.py:324
-#, python-format
-msgid "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
-msgstr ""
-"Zapisane ustawienie '%(key)s' nie jest już obecne we wtyczce '%(name)s'"
-
-#: pynicotine/pluginsystem.py:369 pynicotine/pluginsystem.py:415
-#, python-format
-msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
-msgstr "Wtyczka %(module)s zwróciła coś dziwnego, '%(value)s', ignorowanie"
-
 #: pynicotine/pynicotine.py:309
 msgid "You need to specify a username and password before connecting…"
 msgstr "Musisz podać nazwę użytkownika i hasło przed połączeniem…"
@@ -3530,26 +3506,7 @@ msgstr "Dołączony do pokoi "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Serwer nie pozwala w tej chwili na przeszukiwanie listy życzeń"
 
-#: pynicotine/search.py:322
-#, python-format
-msgid "Wishlist wait period set to %s seconds"
-msgstr "Okres oczekiwania na listę życzeń ustawiony na %s sekund"
-
-#: pynicotine/search.py:538
-#, python-format
-msgid ""
-"User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
-"results"
-msgstr ""
-"Użytkownik %(user)s szuka bezpośrednio \"%(query)s\", zwrócono %(num)i "
-"wyników"
-
-#: pynicotine/search.py:545
-#, python-format
-msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
-msgstr "Użytkownik %(user)s szuka \"%(query)s\", zwrócono %(num)i wyników"
-
-#: pynicotine/shares.py:114
+#: pynicotine/shares.py:116
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3560,62 +3517,52 @@ msgstr ""
 "będzie się utrzymywać, usuń %(dir)s/*.db i spróbuj ponownie. Jeśli to nie "
 "pomoże, utwórz plik z raportem błędu z danymi: %(trace)s"
 
-#: pynicotine/shares.py:149
+#: pynicotine/shares.py:151
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nie można zapisać %(filename)s: %(error)s"
 
-#: pynicotine/shares.py:167
+#: pynicotine/shares.py:169
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr ""
 "Znaleziono %(num)s folderów przed ponownym skanowaniem, przebudowywanie…"
 
-#: pynicotine/shares.py:179 pynicotine/shares.py:281 pynicotine/shares.py:341
+#: pynicotine/shares.py:181 pynicotine/shares.py:283 pynicotine/shares.py:343
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania folderu %(path)s: %(error)s"
 
-#: pynicotine/shares.py:202
+#: pynicotine/shares.py:204
 #, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "Znaleziono %(num)s folderów podczas ponownego skanowania"
 
-#: pynicotine/shares.py:268
+#: pynicotine/shares.py:270
 #, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania %(path)s: %(error)s"
 
-#: pynicotine/shares.py:315
-#, python-format
-msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
-msgstr "Niespójna pamięć podręczna dla '%(vdir)s', ponowne budowanie '%(dir)s'"
-
-#: pynicotine/shares.py:320
-#, python-format
-msgid "Dropping missing folder %(dir)s"
-msgstr "Porzucanie brakujących folderów %(dir)s"
-
-#: pynicotine/shares.py:369
+#: pynicotine/shares.py:371
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania metadanych dla pliku %(path)s: %(error)s"
 
-#: pynicotine/shares.py:388
+#: pynicotine/shares.py:399
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania pliku %(path)s: %(error)s"
 
-#: pynicotine/shares.py:562 pynicotine/shares.py:928
+#: pynicotine/shares.py:570 pynicotine/shares.py:936
 msgid "Downloaded"
 msgstr "Pobrane"
 
-#: pynicotine/shares.py:635
+#: pynicotine/shares.py:643
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Błąd podczas procesowania następujących baz danych: %(names)s"
 
-#: pynicotine/shares.py:641
+#: pynicotine/shares.py:649
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3623,7 +3570,7 @@ msgstr ""
 "Próba zresetowania indeksu udostępnionych plików z powodu błędu. Przeskanuj "
 "ponownie swoje udziały."
 
-#: pynicotine/shares.py:645
+#: pynicotine/shares.py:653
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3633,36 +3580,36 @@ msgstr ""
 "zdarzyć z powodu kilku instancji Nicotine+ aktywnych jednocześnie, problemów "
 "z uprawnieniami do plików lub innego problemu w Nicotine+."
 
-#: pynicotine/shares.py:733 pynicotine/shares.py:785
+#: pynicotine/shares.py:741 pynicotine/shares.py:793
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Błąd podczas dodawania pobierania %(filename)s do udostępnionych plików: "
 "%(error)s"
 
-#: pynicotine/shares.py:884
+#: pynicotine/shares.py:892
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nie udało się wysłać liczby udostępnionych plików do serwera: %s"
 
-#: pynicotine/shares.py:952
+#: pynicotine/shares.py:960
 #, python-format
 msgid "Progress: %s"
 msgstr "Postęp: %s"
 
-#: pynicotine/shares.py:965
+#: pynicotine/shares.py:973
 msgid "Rescanning normal shares…"
 msgstr "Ponowne skanowanie zasobów…"
 
-#: pynicotine/shares.py:969
+#: pynicotine/shares.py:977
 msgid "Rescanning buddy shares…"
 msgstr "Ponowne skanowanie zasobów znajomego…"
 
-#: pynicotine/shares.py:1015
+#: pynicotine/shares.py:1023
 msgid "Finished rescanning public shares"
 msgstr "Zakończono ponowne skanowanie publiczne udostępnienia zasobów"
 
-#: pynicotine/shares.py:1017
+#: pynicotine/shares.py:1025
 msgid "Finished rescanning buddy shares"
 msgstr "Zakończono ponowne skanowanie zasobów znajomych"
 
@@ -3909,7 +3856,8 @@ msgstr "Dodaj znajomego…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:41 pynicotine/gtkgui/ui/mainwindow.ui:655
 msgid "Enter the username of the person you want to add to your buddy list"
-msgstr "Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
+msgstr ""
+"Wprowadź nazwę użytkownika osoby, którą chcesz dodać do listy znajomych"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:133
 msgid "Toggle Text-to-Speech"
@@ -4422,7 +4370,7 @@ msgid "Debug Logging"
 msgstr "Logowanie zdarzeń debuggera"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1618
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:630
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
 msgstr "Wyszukiwania"
@@ -4488,194 +4436,186 @@ msgstr "Opuść ten pokój"
 msgid "Clear the chat window"
 msgstr "Wyczyść okno czatu"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
-msgid "Set your personal ticker"
-msgstr "Ustaw wiadomość na Ścianę pokoju"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:162
-msgid "Show all the tickers"
-msgstr "Pokaż wszystkie wiadomości Ściany pokoju"
-
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:177
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:125
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:98
 msgid "/me 'message'"
 msgstr "/me 'wiadomość'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:188
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:136
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:109
 msgid "Say something in the third-person"
 msgstr "Powiedz coś w trzeciej osobie"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:167
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:135
 msgid "Display the Now Playing script's output"
 msgstr "Wyświetl wynik Teraz odtwarzanie"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:193
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:161
 msgid "Toggles your away status"
 msgstr "Przełącza Cię w status Nieobecny"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:271
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:219
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:187
 msgid "Rescan shares"
 msgstr "Przeskanuj udostępnione zasoby"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:297
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:245
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:213
 msgid "Quit Nicotine+"
 msgstr "Zamknij Nicotine+"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:276
 msgid "/add /ad 'user'"
 msgstr "/add /ad 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:287
 msgid "Add user 'user' to your buddy list"
 msgstr "Dodaj użytkownika 'user' do listy znajomych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:302
 msgid "/rem /unbuddy 'user'"
 msgstr "/rem /unbuddy 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:313
 msgid "Remove user 'user' from your buddy list"
 msgstr "Usuń użytkownika 'user' z listy znajomych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:328
 msgid "/ban 'user'"
 msgstr "/ban 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:339
 msgid "Add user 'user' to your ban list"
 msgstr "Dodaj użytkownika 'użytkownik' do listy zablokowanych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:354
 msgid "/unban 'user'"
 msgstr "/unban 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:365
 msgid "Remove user 'user' from your ban list"
 msgstr "Usuń użytkownika 'użytkownik' z zablokowanych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
 msgid "/ignore 'user'"
 msgstr "/ignore 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
 msgid "Add user 'user' to your ignore list"
 msgstr "Dodaj użytkownika 'użytkownik' do listy ignorowanych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
 msgid "/unignore 'user'"
 msgstr "/unignore 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
 msgid "Remove user 'user' from your ignore list"
 msgstr "Usuń użytkownika 'użytkownik' z listy ignorowanych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
 msgid "/browse /b 'user'"
 msgstr "/browse /b 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 msgid "Browse files of user 'user'"
 msgstr "Przeglądaj pliki użytkownika 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:458
 msgid "/whois /w 'user'"
 msgstr "/whois /w 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:521
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:469
 msgid "Request info for 'user'"
 msgstr "Żądanie informacji dla 'user'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:536
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
 msgid "/ip 'user'"
 msgstr "/ip 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:547
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
 msgid "Show IP for user 'user'"
 msgstr "Pokaż IP użytkownika 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:562
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:478
 msgid "Aliases"
 msgstr "Aliasy"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:526
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:494
 msgid "/alias /al 'command' 'definition'"
 msgstr "/alias /al 'komenda' 'definicja'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:589
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:537
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:505
 msgid "Add a new alias"
 msgstr "Dodaj nowy alias"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:604
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:552
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:520
 msgid "/unalias /un 'command'"
 msgstr "/unalias /un 'komenda'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:615
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:563
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:531
 msgid "Remove an alias"
 msgstr "Usuń alias"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:594
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:562
 msgid "/search /s 'query'"
 msgstr "/search /s 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:605
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:573
 msgid "Start a new search for 'query'"
 msgstr "Zacznij szukać frazy 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:620
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:588
 msgid "/rsearch /rs 'query'"
 msgstr "/rsearch /rs 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:631
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:599
 msgid "Search the joined rooms for 'query'"
 msgstr "Zacznij szukać frazy 'zapytanie' wśród dołączonych pokoi"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:646
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:614
 msgid "/bsearch /bs 'query'"
 msgstr "/bsearch /bs 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:709
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:657
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:625
 msgid "Search the buddy list for 'query'"
 msgstr "Zacznij szukać frazy 'zapytanie' wśród Listy znajomych"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:724
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:672
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:640
 msgid "/usearch /us 'user' 'query'"
 msgstr "/usearch /us 'użytkownik' 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:735
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:683
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:651
 msgid "Search a user's shares for 'query'"
 msgstr "Przeszukaj zasoby użytkownika pod kątem frazy 'zapytanie'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:766
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:714
 msgid "/msg 'user' 'message'"
 msgstr "/msg 'użytkownik' 'wiadomość'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:777
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:725
 msgid "Send message 'message' to user 'user'"
 msgstr "Wyślij wiadomość 'wiadomość' do użytkownika 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:792
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:740
 msgid "/pm 'user'"
 msgstr "/pm 'użytkownik'"
 
-#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:803
+#: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:751
 msgid "Open private chat window for user 'user'"
 msgstr "Otwórz prywatny czat z użytkownikiem 'użytkownik'"
 
@@ -6292,6 +6232,58 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#~ msgid "Filtered out excluded search result "
+#~ msgstr "Przefiltrowane wykluczone wyniki wyszukiwania "
+
+#~ msgid "Filtered out inexact or incorrect search result "
+#~ msgstr "Przefiltrowane niedokładne lub nieprawidłowe wyniki wyszukiwania "
+
+#, python-format
+#~ msgid "Wishlist wait period set to %s seconds"
+#~ msgstr "Okres oczekiwania na listę życzeń ustawiony na %s sekund"
+
+#, python-format
+#~ msgid ""
+#~ "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
+#~ "results"
+#~ msgstr ""
+#~ "Użytkownik %(user)s szuka bezpośrednio \"%(query)s\", zwrócono %(num)i "
+#~ "wyników"
+
+#, python-format
+#~ msgid ""
+#~ "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
+#~ msgstr "Użytkownik %(user)s szuka \"%(query)s\", zwrócono %(num)i wyników"
+
+#, python-format
+#~ msgid ""
+#~ "Stored setting '%(key)s' is no longer present in the '%(name)s' plugin"
+#~ msgstr ""
+#~ "Zapisane ustawienie '%(key)s' nie jest już obecne we wtyczce '%(name)s'"
+
+#, python-format
+#~ msgid "Plugin %(module)s returned something weird, '%(value)s', ignoring"
+#~ msgstr "Wtyczka %(module)s zwróciła coś dziwnego, '%(value)s', ignorowanie"
+
+#, python-format
+#~ msgid "Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'"
+#~ msgstr ""
+#~ "Niespójna pamięć podręczna dla '%(vdir)s', ponowne budowanie '%(dir)s'"
+
+#, python-format
+#~ msgid "Dropping missing folder %(dir)s"
+#~ msgstr "Porzucanie brakujących folderów %(dir)s"
+
+#, python-format
+#~ msgid "All tickers / wall messages for %(room)s:"
+#~ msgstr "Wszystkie wiadomości ze ściany pokoju %(room)s:"
+
+#~ msgid "Set your personal ticker"
+#~ msgstr "Ustaw wiadomość na Ścianę pokoju"
+
+#~ msgid "Show all the tickers"
+#~ msgstr "Pokaż wszystkie wiadomości Ściany pokoju"
 
 #~ msgid ""
 #~ "Failed to scan shares. If Nicotine+ is currently running, please close "
