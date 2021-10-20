@@ -614,7 +614,7 @@ class Search(UserInterface):
             h_queue = humanize(inqueue)
 
         h_speed = ""
-        ulspeed = msg.ulspeed
+        ulspeed = msg.ulspeed or 0
 
         if ulspeed > 0:
             h_speed = human_speed(ulspeed)

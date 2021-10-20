@@ -2171,7 +2171,8 @@ class SharedFileList(PeerMessage):
         except Exception as error:
             log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'SharedFileList', 'exception': error})
-            self.list = {}
+            self.list = []
+            self.privatelist = []
 
     def _parse_result_list(self, message, pos=0):
         pos, ndir = self.get_object(message, int, pos)
@@ -2302,10 +2303,12 @@ class FileSearchResult(PeerMessage):
         try:
             message = memoryview(zlib.decompress(message))
             self._parse_network_message(message)
+
         except Exception as error:
             log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'FileSearchResult', 'exception': error})
-            self.list = {}
+            self.list = []
+            self.privatelist = []
 
     def _parse_result_list(self, message, pos):
         pos, nfiles = self.get_object(message, int, pos)
@@ -2519,6 +2522,7 @@ class FolderContentsResponse(PeerMessage):
         try:
             message = memoryview(zlib.decompress(message))
             self._parse_network_message(message)
+
         except Exception as error:
             log.add("Exception during parsing %(area)s: %(exception)s",
                     {'area': 'FolderContentsResponse', 'exception': error})
