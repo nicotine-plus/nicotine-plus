@@ -59,7 +59,7 @@ Section "Core" Core
   SectionIn RO
   SetOverwrite on
   SetOutPath "$INSTDIR"
-  File /r "..\..\dist\Nicotine+\"
+  File /r "..\..\build\"
 SectionEnd
 
 Section -Post
