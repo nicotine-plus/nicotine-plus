@@ -101,7 +101,7 @@ jobs:
           rm -rf bdist.*
           mv build/exe.* build/Nicotine+
           mv build/Nicotine+/lib/*.dll build/Nicotine+/
-          rm -rf build/Nicotine+/lib/gi/*.dll
+          mv build/Nicotine+/lib/gi/*.dll build/Nicotine+/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2

@@ -66,8 +66,7 @@ def add_files_by_pattern(rel_path, starts_with, ends_with, output_path=None, rec
 def add_gtk_libraries():
 
     required_dlls = (
-        "libgtk-" + str(gtk_version),
-        "libgirepository-"
+        "libgtk-" + str(gtk_version)
     )
 
     if sys.platform == "win32":
@@ -105,10 +104,17 @@ def add_pixbuf_loaders():
 
     with open(temp_loaders_file, "w") as file_handle:
         data = open(os.path.join(sys_base, loaders_file)).read()
-        file_handle.write(data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", ""))
+
+        if sys.platform == "win32":
+            data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", "")
+
+        elif sys.platform == "darwin":
+            data = data.replace(os.path.join(sys_base, "lib/gdk-pixbuf-2.0/2.10.0/loaders/"), "")
+
+        file_handle.write(data)
 
     include_files.append((temp_loaders_file, loaders_file))
-    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", (".dll", ".dylib"), output_path="")
+    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", (".dll", ".so"), output_path="")
 
 
 def add_icon_packs():
@@ -183,7 +189,7 @@ setup(
         "build_exe": dict(
             packages=["gi"] + plugin_packages,
             excludes=["pygtkcompat", "tkinter"],
-            include_files=include_files,
+            include_files=include_files
         ),
         "bdist_msi": dict(
             all_users=True,
