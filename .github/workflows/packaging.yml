@@ -94,16 +94,15 @@ jobs:
 
       - name: Build installer
         run: |
-          python3 packaging/windows/setup.py build_exe
-          python3 packaging/windows/create_installer.py
-          mkdir installer
-          cp -r packaging/windows/Nicotine*.exe installer/
+          python3 packaging/windows/setup.py bdist_msi
+          mv build/exe.* build/Nicotine+
+          rm -rf bdist.*
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: installer
+          path: dist
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v2

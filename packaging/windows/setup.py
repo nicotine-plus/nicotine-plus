@@ -154,6 +154,12 @@ setup(
             excludes=["pygtkcompat", "tkinter"],
             include_files=include_files,
         ),
+        "bdist_msi": dict(
+            all_users=True,
+            install_icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
+            target_name="Nicotine+-%s.msi" % config.version,
+            upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
+        ),
         "bdist_mac": dict(
             iconfile=os.path.join(pynicotine_path, "packaging/macos/nicotine.icns"),
             bundle_name="Nicotine+"
@@ -167,7 +173,9 @@ setup(
             script=os.path.join(pynicotine_path, "nicotine"),
             target_name="Nicotine+",
             base=gui_base,
-            icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico")
+            icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
+            shortcut_name="Nicotine+",
+            shortcut_dir="StartMenuFolder"
         )
     ],
 )
