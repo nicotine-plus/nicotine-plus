@@ -95,8 +95,13 @@ jobs:
       - name: Build installer
         run: |
           python3 packaging/windows/setup.py bdist_msi
-          mv build/exe.* build/Nicotine+
+
+      - name: Post-build cleanup
+        run: |
           rm -rf bdist.*
+          mv build/exe.* build/Nicotine+
+          mv build/Nicotine+/lib/*.dll build/Nicotine+/
+          rm -rf build/Nicotine+/lib/gi/*.dll
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
