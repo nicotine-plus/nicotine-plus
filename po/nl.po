@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-20 22:10+0300\n"
-"PO-Revision-Date: 2021-10-17 20:26+0000\n"
+"PO-Revision-Date: 2021-10-22 09:50+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1817,7 +1817,7 @@ msgstr "Houdt van"
 
 #: pynicotine/gtkgui/interests.py:67 pynicotine/gtkgui/userinfo.py:186
 msgid "Dislikes"
-msgstr "Vind-ik-niet-leuk"
+msgstr "Houdt niet van"
 
 #: pynicotine/gtkgui/interests.py:82
 msgid "Rating"
@@ -1825,7 +1825,7 @@ msgstr "Score"
 
 #: pynicotine/gtkgui/interests.py:83
 msgid "Item"
-msgstr "Item"
+msgstr "Voorwerp"
 
 #: pynicotine/gtkgui/interests.py:134 pynicotine/gtkgui/interests.py:142
 msgid "_Remove Item"
@@ -1843,7 +1843,7 @@ msgstr "Hiernaar zoeken"
 #: pynicotine/gtkgui/interests.py:149 pynicotine/gtkgui/interests.py:365
 #: pynicotine/gtkgui/userinfo.py:215 pynicotine/gtkgui/userinfo.py:386
 msgid "I _Like This"
-msgstr "Dit vind ik leuk"
+msgstr "Vind ik leuk"
 
 #: pynicotine/gtkgui/interests.py:150 pynicotine/gtkgui/interests.py:368
 #: pynicotine/gtkgui/userinfo.py:216 pynicotine/gtkgui/userinfo.py:389
@@ -1903,8 +1903,8 @@ msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
 msgstr ""
-"* Bericht(en) gestuurd toen je afgemeld was. Tijdstempels zijn gerapporteerd "
-"door de server."
+"* Bericht(en) gestuurd terwijl je afgemeld was. Tijdstempels zijn "
+"gerapporteerd door de server en kunnen afwijken."
 
 #: pynicotine/gtkgui/roomlist.py:68
 msgid "Room"
@@ -2685,7 +2685,7 @@ msgstr "Voltooid / Afgebroken"
 
 #: pynicotine/gtkgui/uploads.py:59
 msgid "Clear Queued Uploads"
-msgstr "In wachtrij geplaatste uploads wissen"
+msgstr "Uploads in wachtrij wissen"
 
 #: pynicotine/gtkgui/uploads.py:60
 msgid "Do you really want to clear all queued uploads?"
