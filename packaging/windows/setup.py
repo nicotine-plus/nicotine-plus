@@ -134,10 +134,15 @@ required_themes = (
     "Mac"
 )
 
-add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
-add_files_by_pattern("lib", required_dlls, ".dylib", output_path="")
+if sys.platform == "win32":
+    add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
+
+elif sys.platform == "darwin":
+    add_files_by_pattern("lib", required_dlls, ".dylib", output_path="")
+
 add_files_by_pattern("lib/girepository-1.0", required_typelibs, ".typelib")
 include_files.append((os.path.join(sys_base, "lib/gdk-pixbuf-2.0"), "lib/gdk-pixbuf-2.0"))
+add_files_by_pattern("share/glib-2.0/schemas", "gschemas", ".compiled")
 add_files_by_pattern("share/icons", required_icon_packs, (".theme", ".svg"), recursive=True)
 add_files_by_pattern("share/themes", required_themes, ".css", recursive=True)
 
