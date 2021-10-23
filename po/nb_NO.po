@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 01:47+0300\n"
-"PO-Revision-Date: 2021-10-16 18:54+0000\n"
+"PO-Revision-Date: 2021-10-23 23:43+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -1254,7 +1254,7 @@ msgstr "Uganda"
 #: pynicotine/geoip/geoip.py:254
 #, fuzzy
 msgid "U.S. Minor Outlying Islands"
-msgstr "UsAs mindre ytre øyer"
+msgstr "USAs mindre ytre øyer"
 
 #: pynicotine/geoip/geoip.py:255
 #, fuzzy
@@ -1400,9 +1400,8 @@ msgid "Files"
 msgstr "Filer"
 
 #: pynicotine/gtkgui/chatrooms.py:455
-#, fuzzy
 msgid "Sear_ch User's Files"
-msgstr "Sear_ch brukerens filer"
+msgstr "_Søk i brukerens filer"
 
 #: pynicotine/gtkgui/chatrooms.py:456 pynicotine/gtkgui/chatrooms.py:628
 #: pynicotine/gtkgui/userlist.py:144 pynicotine/gtkgui/userlist.py:354
@@ -1458,7 +1457,6 @@ msgid "--- old messages above ---"
 msgstr "--- gamle meldinger ovenfor ---"
 
 #: pynicotine/gtkgui/chatrooms.py:678
-#, fuzzy
 msgid "Room wall (personal message set)"
 msgstr "Romvegg (personlig melding satt)"
 
@@ -1577,11 +1575,11 @@ msgid "Download %(num)i files?"
 msgstr "Last ned %(num)i filer?"
 
 #: pynicotine/gtkgui/downloads.py:93
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to download %(num)i files from %(user)s's folder "
 "%(folder)s?"
-msgstr "Vil du laste ned %(num)i filer fra %(user)s sin %(folder)s-mappe?"
+msgstr "Last ned %(num)i filer fra %(user)s sin %(folder)s-mappe?"
 
 #: pynicotine/gtkgui/fastconfigure.py:65
 #: pynicotine/gtkgui/settingswindow.py:582
@@ -1679,7 +1677,7 @@ msgid "Your config file is corrupt"
 msgstr "Oppsettsfilen din er skadet"
 
 #: pynicotine/gtkgui/frame.py:276
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "We're sorry, but it seems your configuration file is corrupt. Please "
 "reconfigure Nicotine+.\n"
@@ -1689,10 +1687,10 @@ msgid ""
 "If you open this file with a text editor you might be able to rescue some of "
 "your settings."
 msgstr ""
-"Beklager, men det ser ut til at konfigurasjonsfilen er skadet. Konfigurer "
-"Nikotin+på nytt.\n"
+"Beklager, men det ser ut til at oppsettsfilen er skadet. Sett opp Nicotine+"
+"på nytt.\n"
 "\n"
-"Vi har gitt den gamle konfigurasjonsfilen nytt navn til\n"
+"Navn på gammel oppsettsfil har blitt endret til\n"
 "%(corrupt)s\n"
 "Hvis du åpner denne filen med et tekstredigeringsprogram, kan det hende du "
 "kan redde noen av innstillingene dine."
@@ -1758,9 +1756,8 @@ msgid "Up to date"
 msgstr "Ikke utdatert"
 
 #: pynicotine/gtkgui/frame.py:735
-#, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Det ser ut til at du bruker en utviklingsversjon av Nikotin+."
+msgstr "Det ser ut til at du bruker en utviklingsversjon av Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:743
 msgid "You are using the latest version of Nicotine+."
@@ -1819,14 +1816,12 @@ msgid "Buddy List Always Visible"
 msgstr "Alltid synlig kontaktliste"
 
 #: pynicotine/gtkgui/frame.py:1042
-#, fuzzy
 msgid "_Rescan Public Shares"
-msgstr "_Rescan offentlige aksjer"
+msgstr "Skann _offentlige delinger på ny"
 
 #: pynicotine/gtkgui/frame.py:1043
-#, fuzzy
 msgid "Rescan B_uddy Shares"
-msgstr "Skann B_uddy aksjer på nytt"
+msgstr "Skann _kontaktdelinger på ny"
 
 #: pynicotine/gtkgui/frame.py:1044
 msgid "_Configure Shares"
@@ -1837,9 +1832,8 @@ msgid "_Browse Public Shares"
 msgstr "_Utforsk offentlige delinger"
 
 #: pynicotine/gtkgui/frame.py:1052
-#, fuzzy
 msgid "Bro_wse Buddy Shares"
-msgstr "Bro_wse Buddy-ressurser"
+msgstr "_Utforsk delinger fra kontakter"
 
 #: pynicotine/gtkgui/frame.py:1068
 msgid "_Keyboard Shortcuts"
@@ -2031,15 +2025,13 @@ msgstr "_Søk etter element"
 
 #: pynicotine/gtkgui/interests.py:149 pynicotine/gtkgui/interests.py:365
 #: pynicotine/gtkgui/userinfo.py:215 pynicotine/gtkgui/userinfo.py:386
-#, fuzzy
 msgid "I _Like This"
-msgstr "Jeg _Like dette"
+msgstr "Jeg _liker dette"
 
 #: pynicotine/gtkgui/interests.py:150 pynicotine/gtkgui/interests.py:368
 #: pynicotine/gtkgui/userinfo.py:216 pynicotine/gtkgui/userinfo.py:389
-#, fuzzy
 msgid "I _Dislike This"
-msgstr "Jeg _Dislike dette"
+msgstr "Jeg _misliker dette"
 
 #: pynicotine/gtkgui/interests.py:151
 #, fuzzy
@@ -2904,9 +2896,8 @@ msgid "_Retry"
 msgstr "_Prøv igjen"
 
 #: pynicotine/gtkgui/uploads.py:38
-#, fuzzy
 msgid "_Abort"
-msgstr "_Avbryte"
+msgstr "_Avbryt"
 
 #: pynicotine/gtkgui/uploads.py:44
 #, fuzzy
@@ -6232,6 +6223,8 @@ msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Del mapper med alle Soulseek-brukere eller kontakter, noe som tillater "
+"nedlasting direkte fra enheten din. Skjulte filer deles aldri."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 #, fuzzy
