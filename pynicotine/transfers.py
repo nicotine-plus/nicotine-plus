@@ -2260,9 +2260,10 @@ class Transfers:
             return
 
         user = transfer.user
+        filename = transfer.filename
 
         for i in self.uploads:
-            if i.user != user:
+            if i.user != user or i.filename != filename:
                 continue
 
             if i.req is not None or i.conn is not None or i.status == "Getting status":
