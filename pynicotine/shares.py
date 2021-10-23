@@ -577,13 +577,12 @@ class Shares:
                           and not self.config.need_config())
 
         # Rescan public shares if necessary
-        if not self.config.sections["transfers"]["friendsonly"]:
-            if rescan_startup and not self.public_rescanning:
-                self.rescan_public_shares()
-            else:
-                self.load_shares(self.share_dbs, self.public_share_dbs)
-                self.create_compressed_shares_message("normal")
-                self.compress_shares("normal")
+        if rescan_startup and not self.public_rescanning:
+            self.rescan_public_shares()
+        else:
+            self.load_shares(self.share_dbs, self.public_share_dbs)
+            self.create_compressed_shares_message("normal")
+            self.compress_shares("normal")
 
         # Rescan buddy shares if necessary
         if self.config.sections["transfers"]["enablebuddyshares"]:
@@ -864,12 +863,6 @@ class Shares:
 
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
-
-        if self.config.sections["transfers"]["friendsonly"]:
-            # No public shares
-            files = folders = 0
-            self.queue.append(slskmessages.SharedFoldersFiles(folders, files))
-            return
 
         try:
             shared = self.share_dbs.get("files")

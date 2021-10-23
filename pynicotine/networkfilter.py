@@ -174,9 +174,6 @@ class NetworkFilter:
             # Buddy list users bypass geoblock
             return 1, ""
 
-        if self.config.sections["transfers"]["friendsonly"]:
-            return 0, "Sorry, friends only"
-
         if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
 

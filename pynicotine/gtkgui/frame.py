@@ -881,11 +881,6 @@ class NicotineFrame(UserInterface):
         self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
         self.application.add_action(self.browse_buddy_shares_action)
 
-        # Deactivate public shares related menu entries if we don't use them
-        if config.sections["transfers"]["friendsonly"]:
-            self.rescan_public_action.set_enabled(False)
-            self.browse_public_shares_action.set_enabled(False)
-
         # Deactivate buddy shares related menu entries if we don't use them
         if not config.sections["transfers"]["enablebuddyshares"]:
             self.rescan_buddy_action.set_enabled(False)
@@ -2103,16 +2098,12 @@ class NicotineFrame(UserInterface):
         self.np.transfers.check_upload_queue()
 
         if msg == "ok" and needrescan:
-
-            # Rescan public shares if needed
-            if not config.sections["transfers"]["friendsonly"]:
-                self.on_rescan()
-            else:
-                self.np.shares.close_shares("normal")
+            # Rescan public shares
+            self.np.shares.rescan_public_shares()
 
             # Rescan buddy shares if needed
             if config.sections["transfers"]["enablebuddyshares"]:
-                self.on_buddy_rescan()
+                self.np.shares.rescan_buddy_shares()
             else:
                 self.np.shares.close_shares("buddy")
 

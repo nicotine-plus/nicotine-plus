@@ -270,15 +270,14 @@ class FastConfigureAssistant(UserInterface):
 
         dialog_hide(self.FastConfigureDialog)
 
-        # Rescan public shares if needed
-        if not config.sections["transfers"]["friendsonly"]:
-            self.frame.on_rescan()
+        # Rescan public shares
+        self.frame.np.shares.rescan_public_shares()
 
         # Rescan buddy shares if needed
         if config.sections["transfers"]["enablebuddyshares"]:
-            self.frame.on_buddy_rescan()
+            self.frame.np.shares.rescan_buddy_shares()
 
-        self.frame.on_connect()
+        self.frame.np.connect()
 
     def on_cancel(self, *args):
         dialog_hide(self.FastConfigureDialog)

@@ -593,7 +593,6 @@ class SharesFrame(UserInterface):
 
         self.options = {
             "transfers": {
-                "friendsonly": self.FriendsOnly,
                 "rescanonstartup": self.RescanOnStartup,
                 "enablebuddyshares": self.EnableBuddyShares,
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly
@@ -631,12 +630,6 @@ class SharesFrame(UserInterface):
 
     def get_settings(self):
 
-        # Public shares related menus are deactivated if we only share with friends
-        friendsonly = self.FriendsOnly.get_active()
-
-        self.frame.rescan_public_action.set_enabled(not friendsonly)
-        self.frame.browse_public_shares_action.set_enabled(not friendsonly)
-
         # Buddy shares related menus are activated if needed
         buddies = self.EnableBuddyShares.get_active()
 
@@ -649,7 +642,6 @@ class SharesFrame(UserInterface):
                 "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddyshared": self.bshareddirs[:],
                 "enablebuddyshares": buddies,
-                "friendsonly": friendsonly,
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
@@ -678,16 +670,8 @@ class SharesFrame(UserInterface):
     def on_enabled_buddy_shares_toggled(self, widget):
 
         buddies = widget.get_active()
-
-        if not buddies:
-            self.FriendsOnly.set_active(buddies)
-
-        self.FriendsOnly.set_sensitive(buddies)
         self.BuddySharesTrustedOnly.set_sensitive(buddies)
 
-        self.needrescan = True
-
-    def on_friends_only_toggled(self, widget):
         self.needrescan = True
 
     def add_shared_dir_response(self, dialog, response_id, data):

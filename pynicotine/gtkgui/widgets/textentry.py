@@ -411,13 +411,12 @@ class ChatEntry:
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif cmd == "/rescan":
-            # Rescan public shares if needed
-            if not config.sections["transfers"]["friendsonly"] and config.sections["transfers"]["shared"]:
-                self.frame.on_rescan()
+            # Rescan public shares
+            self.frame.np.shares.rescan_public_shares()
 
             # Rescan buddy shares if needed
             if config.sections["transfers"]["enablebuddyshares"]:
-                self.frame.on_buddy_rescan()
+                self.frame.np.shares.rescan_buddy_shares()
 
         elif cmd == "/toggle":
             if args:

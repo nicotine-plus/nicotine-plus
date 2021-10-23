@@ -2,7 +2,7 @@
 <interface>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">30</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
@@ -51,15 +51,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="FriendsOnly">
-                <property name="label" translatable="yes">Mark each shared folder as buddy-only</property>
-                <property name="tooltip-text" translatable="yes">Overrides the per-share option, useful if you temporarily need to prevent public access to shares.</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
-              </object>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="BuddySharesTrustedOnly">
                 <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
                 <property name="tooltip-text" translatable="yes">Only users marked as trusted on your buddy list can access your buddy-only shares.</property>
@@ -76,17 +67,6 @@
         <property name="visible">1</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Shared Folders</property>
-            <property name="mnemonic_widget">Shares</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
         <child>
           <object class="GtkFrame">
             <property name="visible">1</property>

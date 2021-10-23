@@ -73,12 +73,7 @@ class UserBrowse:
         username = self.config.sections["server"]["login"]
 
         if username not in self.users or new_request:
-            # Deactivate if we only share with buddies
-            if self.config.sections["transfers"]["friendsonly"]:
-                msg = slskmessages.SharedFileList(None, {})
-            else:
-                msg = self.core.shares.get_compressed_shares_message("normal")
-
+            msg = self.core.shares.get_compressed_shares_message("normal")
             thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
             thread.name = "LocalShareParser"
             thread.daemon = True
