@@ -20,6 +20,15 @@
           </object>
         </child>
         <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Share folders with every Soulseek user or buddies, allowing contents to be downloaded directly from your device. Hidden files are never shared.</property>
+            <property name="selectable">1</property>
+            <property name="wrap">1</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">12</property>
@@ -76,16 +85,6 @@
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access buddy-only shares in addition to public shares.</property>
-            <property name="margin-bottom">12</property>
-            <property name="selectable">1</property>
-            <property name="wrap">1</property>
           </object>
         </child>
         <child>
