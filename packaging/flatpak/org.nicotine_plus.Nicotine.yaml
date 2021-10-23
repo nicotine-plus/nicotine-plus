@@ -138,8 +138,8 @@ modules:
           - /bin
           - /share/man
         sources:
-          - url: https://github.com/AbiWord/enchant/releases/download/v2.2.15/enchant-2.2.15.tar.gz
-            sha256: 3b0f2215578115f28e2a6aa549b35128600394304bd79d6f28b0d3b3d6f46c03
+          - url: https://github.com/AbiWord/enchant/releases/download/v2.3.1/enchant-2.3.1.tar.gz
+            sha256: 7b4b1afcf2cd8bfa691deea6188404d337f23174bbc39b9c2add2bf340736e9c
             type: archive
 
   # Nicotine+
