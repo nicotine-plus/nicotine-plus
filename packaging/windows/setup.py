@@ -136,12 +136,8 @@ def add_themes():
 
 
 def add_ssl_certs():
-
     ssl_paths = ssl.get_default_verify_paths()
-    include_files.append((ssl_paths.openssl_cafile, "etc/ssl/cert.pem"))
-
-    if os.path.exists(ssl_paths.openssl_capath):
-        include_files.append((ssl_paths.openssl_capath, "etc/ssl/certs"))
+    include_files.append((ssl_paths.openssl_cafile, "ssl/cert.pem"))
 
 
 def add_translations():

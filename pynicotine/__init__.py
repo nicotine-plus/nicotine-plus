@@ -190,9 +190,14 @@ def run():
     # Always use UTF-8 for print()
     sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
-    # Support file scanning process in frozen Windows and macOS binaries
-    if getattr(sys, "frozen", False):
+    if getattr(sys, 'frozen', False):
+        import os
         import multiprocessing
+
+        # Support SSL in frozen Windows and macOS binaries
+        os.environ["SSL_CERT_FILE"] = "ssl/cert.pem"
+
+        # Support file scanning process in frozen Windows and macOS binaries
         multiprocessing.freeze_support()
 
     # Require pynicotine module
