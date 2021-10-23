@@ -133,6 +133,11 @@ def set_global_css():
         border-spacing: 6px;
     }
 
+    window.dialog.message .dialog-action-area {
+        /* Undo spacing change for message dialogs */
+        border-spacing: 0;
+    }
+
     button box {
         /* Remove unwanted spacing from buttons */
         border-spacing: 0;
