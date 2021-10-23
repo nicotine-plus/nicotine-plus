@@ -562,6 +562,7 @@ class Transfers:
 
         i.status = "Cannot connect"
         i.req = None
+        i.place = 0
         curtime = time.time()
 
         for j in self.uploads:
@@ -901,6 +902,7 @@ class Transfers:
 
                 i.status = msg.reason
                 i.req = None
+                i.place = 0
 
                 if self.uploadsview:
                     self.uploadsview.update(i)
@@ -968,6 +970,7 @@ class Transfers:
             self.downloadsview.update(transfer)
 
         elif transfer in self.uploads:
+            transfer.place = 0
             curtime = time.time()
 
             for j in self.uploads:
