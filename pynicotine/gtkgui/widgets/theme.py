@@ -133,8 +133,8 @@ def set_global_css():
         border-spacing: 6px;
     }
 
-    menubutton box {
-        /* Remove unwanted spacing from menu buttons */
+    button box {
+        /* Remove unwanted spacing from buttons */
         border-spacing: 0;
     }
     """

@@ -75,6 +75,7 @@ class WishList(UserInterface):
             button = frame.WishList.get_first_child()
             button.connect("clicked", self.on_show)
             button.set_child(frame.WishListLabel)
+            button.get_style_context().add_class("image-text-button")
             button.get_style_context().remove_class("image-button")
         else:
             frame.WishList.add(frame.WishListLabel)

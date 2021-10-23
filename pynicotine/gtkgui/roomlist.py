@@ -92,6 +92,7 @@ class RoomList(UserInterface):
         if Gtk.get_major_version() == 4:
             button = frame.RoomList.get_first_child()
             button.set_child(frame.RoomListLabel)
+            button.get_style_context().add_class("image-text-button")
             button.get_style_context().remove_class("image-button")
         else:
             frame.RoomList.add(frame.RoomListLabel)
