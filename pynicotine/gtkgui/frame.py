@@ -293,7 +293,6 @@ class NicotineFrame(UserInterface):
 
         if not connect_ready:
             self.connect_action.set_enabled(False)
-            self.rescan_public_action.set_enabled(True)
 
             # Set up fast configure dialog
             self.on_fast_configure()
@@ -863,28 +862,23 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_configure_shares)
         self.application.add_action(action)
 
-        self.rescan_public_action = Gio.SimpleAction.new("publicrescan", None)
-        self.rescan_public_action.connect("activate", self.on_rescan)
-        self.application.add_action(self.rescan_public_action)
+        action = Gio.SimpleAction.new("publicrescan", None)
+        action.connect("activate", self.on_rescan)
+        self.application.add_action(action)
         self.application.set_accels_for_action("app.publicrescan", ["<Shift><Primary>p"])
 
-        self.rescan_buddy_action = Gio.SimpleAction.new("buddyrescan", None)
-        self.rescan_buddy_action.connect("activate", self.on_buddy_rescan)
-        self.application.add_action(self.rescan_buddy_action)
+        action = Gio.SimpleAction.new("buddyrescan", None)
+        action.connect("activate", self.on_buddy_rescan)
+        self.application.add_action(action)
         self.application.set_accels_for_action("app.buddyrescan", ["<Shift><Primary>b"])
 
-        self.browse_public_shares_action = Gio.SimpleAction.new("browsepublicshares", None)
-        self.browse_public_shares_action.connect("activate", self.on_browse_public_shares)
-        self.application.add_action(self.browse_public_shares_action)
+        action = Gio.SimpleAction.new("browsepublicshares", None)
+        action.connect("activate", self.on_browse_public_shares)
+        self.application.add_action(action)
 
-        self.browse_buddy_shares_action = Gio.SimpleAction.new("browsebuddyshares", None)
-        self.browse_buddy_shares_action.connect("activate", self.on_browse_buddy_shares)
-        self.application.add_action(self.browse_buddy_shares_action)
-
-        # Deactivate buddy shares related menu entries if we don't use them
-        if not config.sections["transfers"]["enablebuddyshares"]:
-            self.rescan_buddy_action.set_enabled(False)
-            self.browse_buddy_shares_action.set_enabled(False)
+        action = Gio.SimpleAction.new("browsebuddyshares", None)
+        action.connect("activate", self.on_browse_buddy_shares)
+        self.application.add_action(action)
 
         # Help
 

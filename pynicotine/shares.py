@@ -918,6 +918,10 @@ class Shares:
 
     def get_shared_folders(self, sharestype):
 
+        if sharestype == "buddy" and not self.config.sections["transfers"]["enablebuddyshares"]:
+            # Buddy shares are disabled, don't return any folders
+            return []
+
         if sharestype == "normal":
             shared_folders = self.config.sections["transfers"]["shared"][:]
 

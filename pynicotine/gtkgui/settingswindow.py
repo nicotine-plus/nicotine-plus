@@ -630,18 +630,12 @@ class SharesFrame(UserInterface):
 
     def get_settings(self):
 
-        # Buddy shares related menus are activated if needed
-        buddies = self.EnableBuddyShares.get_active()
-
-        self.frame.rescan_buddy_action.set_enabled(buddies)
-        self.frame.browse_buddy_shares_action.set_enabled(buddies)
-
         return {
             "transfers": {
                 "shared": self.shareddirs[:],
                 "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddyshared": self.bshareddirs[:],
-                "enablebuddyshares": buddies,
+                "enablebuddyshares": self.EnableBuddyShares.get_active(),
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
