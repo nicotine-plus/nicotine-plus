@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-19 21:15+0300\n"
-"PO-Revision-Date: 2021-10-13 17:41+0000\n"
+"PO-Revision-Date: 2021-10-23 22:48+0000\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
@@ -139,12 +139,11 @@ msgid "Cannot find %(option1)s or %(option2)s, please install either one."
 msgstr "Impossibile trovare %(option1)s o %(option2)s,, installa uno dei due."
 
 #: pynicotine/__init__.py:153
-#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Impossibile eseguire la scansione delle condivisioni. Chiudi altre istanze "
-"di Nicotina+ e riprova."
+"Impossibile eseguire la scansione dei condivisi. Chiudi altre istanze di "
+"Nicotina+ e riprova."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -1336,7 +1335,6 @@ msgid "Delete Logged Messages?"
 msgstr "Eliminare i Messaggi Registrati?"
 
 #: pynicotine/gtkgui/chatrooms.py:1120
-#, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
@@ -1396,7 +1394,6 @@ msgid "Clear All Downloads"
 msgstr "Pulisci Tutti i Download"
 
 #: pynicotine/gtkgui/downloads.py:76
-#, fuzzy
 msgid "Do you really want to clear all downloads?"
 msgstr "Sei sicuro di voler pulire tutti i download?"
 
@@ -1780,7 +1777,7 @@ msgid "Create New Room?"
 msgstr "Creare Nuovo Canale?"
 
 #: pynicotine/gtkgui/frame.py:1740 pynicotine/gtkgui/frame.py:1743
-#, fuzzy, python-format
+#, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Sei sicuro di voler creare un nuovo canale \"%s\"?"
 
@@ -1809,9 +1806,8 @@ msgid "Close Nicotine+?"
 msgstr "Chiudere Nicotine+?"
 
 #: pynicotine/gtkgui/frame.py:2236 pynicotine/gtkgui/frame.py:2239
-#, fuzzy
 msgid "Do you really want to exit Nicotine+?"
-msgstr "Sei pronto ad usare Nicotine+!"
+msgstr "Vuoi davvero uscire da Nicotine+?"
 
 #: pynicotine/gtkgui/frame.py:2237 pynicotine/gtkgui/frame.py:2240
 msgid "Run in Background"
@@ -3562,7 +3558,6 @@ msgid "Joined Rooms "
 msgstr "Canali Acceduti "
 
 #: pynicotine/search.py:256
-#, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
 "Il server non consente di eseguire ricerche nella lista dei desideri in "
@@ -3707,11 +3702,11 @@ msgid "Finished rescanning buddy shares"
 msgstr "Indicizzazione dei condivisi con amici completata"
 
 #: pynicotine/slskmessages.py:2243 pynicotine/slskmessages.py:2244
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
-"Tentativo di reimpostare l'indice dei file condivisi a causa di un errore. "
-"Per favore, scansiona di nuovo i tuoi condivisi."
+"Impossibile leggere database dei condivisi. Scansiona di nuovo i tuoi "
+"condivisi. Errore: %s"
 
 #: pynicotine/slskproto.py:531
 #, python-format
@@ -3991,7 +3986,6 @@ msgstr ""
 "che desideri. Se hai già un account, inserisci i dettagli di accesso."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:128
-#, fuzzy
 msgid ""
 "If your desired username is already taken, you will be prompted to change it."
 msgstr ""
@@ -5781,7 +5775,6 @@ msgstr ""
 "condivisioni, i risultati della ricerca verranno inviati all'utente."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
-#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
 msgstr "Le ricerche più brevi di questo numero di caratteri verranno ignorate:"
 
