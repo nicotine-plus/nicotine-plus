@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 08:39+0300\n"
-"PO-Revision-Date: 2021-10-24 05:39+0000\n"
+"PO-Revision-Date: 2021-10-24 08:48+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -2889,12 +2889,11 @@ msgstr "Bildir"
 
 #: pynicotine/gtkgui/userlist.py:86
 msgid "Prioritized"
-msgstr ""
+msgstr "Öncelikli"
 
 #: pynicotine/gtkgui/userlist.py:87
-#, fuzzy
 msgid "Last Seen"
-msgstr "Son görüldü"
+msgstr "Son Görüldü"
 
 #: pynicotine/gtkgui/userlist.py:88
 msgid "Note"
@@ -2906,12 +2905,11 @@ msgstr "_Çevrim İçi Bildir"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
 msgid "_Prioritize User"
-msgstr ""
+msgstr "Kullanıcıya Öncelik _Ver"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-#, fuzzy
 msgid "_Trust User"
-msgstr "_Güvenilir"
+msgstr "Kullanıcıya _Güven"
 
 #: pynicotine/gtkgui/userlist.py:145
 msgid "Add User _Note…"
@@ -3661,7 +3659,7 @@ msgstr "ayrıcalıklı"
 
 #: pynicotine/transfers.py:1169
 msgid "prioritized"
-msgstr ""
+msgstr "öncelikli"
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -5738,9 +5736,8 @@ msgid "Queue Behavior"
 msgstr "Kuyruk Davranışı"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-#, fuzzy
 msgid "Prioritize all users in buddy list"
-msgstr "Arkadaş listesindeki tüm kullanıcılara ayrıcalık tanı"
+msgstr "Arkadaş listesindeki tüm kullanıcılara öncelik ver"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
 msgid ""
