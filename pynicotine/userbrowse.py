@@ -107,7 +107,7 @@ class UserBrowse:
             return
 
         if username == self.config.sections["server"]["login"]:
-            if local_shares_type == "normal" or not self.config.sections["transfers"]["enablebuddyshares"]:
+            if local_shares_type == "normal":
                 self.browse_local_public_shares(folder, new_request)
                 return
 

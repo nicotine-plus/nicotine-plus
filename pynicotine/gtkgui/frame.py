@@ -654,11 +654,9 @@ class NicotineFrame(UserInterface):
     def on_configure_shares(self, *args):
         self.on_settings(page='Shares')
 
-    def on_rescan(self, *args, rebuild=False):
-        self.np.shares.rescan_public_shares(rebuild)
-
-    def on_buddy_rescan(self, *args, rebuild=False):
-        self.np.shares.rescan_buddy_shares(rebuild)
+    def on_rescan_shares(self, *args):
+        self.np.shares.rescan_public_shares()
+        self.np.shares.rescan_buddy_shares()
 
     def on_browse_public_shares(self, *args):
         self.np.userbrowse.browse_local_public_shares(new_request=True)
@@ -862,15 +860,10 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_configure_shares)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("publicrescan", None)
-        action.connect("activate", self.on_rescan)
+        action = Gio.SimpleAction.new("rescanshares", None)
+        action.connect("activate", self.on_rescan_shares)
         self.application.add_action(action)
-        self.application.set_accels_for_action("app.publicrescan", ["<Shift><Primary>p"])
-
-        action = Gio.SimpleAction.new("buddyrescan", None)
-        action.connect("activate", self.on_buddy_rescan)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.buddyrescan", ["<Shift><Primary>b"])
+        self.application.set_accels_for_action("app.rescanshares", ["<Shift><Primary>r"])
 
         action = Gio.SimpleAction.new("browsepublicshares", None)
         action.connect("activate", self.on_browse_public_shares)
@@ -1028,8 +1021,7 @@ class NicotineFrame(UserInterface):
     def add_configure_shares_section(self, menu):
 
         menu.setup(
-            ("#" + _("_Rescan Public Shares"), "app.publicrescan"),
-            ("#" + _("Rescan B_uddy Shares"), "app.buddyrescan"),
+            ("#" + _("_Rescan Shares"), "app.rescanshares"),
             ("#" + _("_Configure Shares"), "app.configureshares"),
             ("", None)
         )

@@ -270,12 +270,9 @@ class FastConfigureAssistant(UserInterface):
 
         dialog_hide(self.FastConfigureDialog)
 
-        # Rescan public shares
+        # Rescan shares
         self.frame.np.shares.rescan_public_shares()
-
-        # Rescan buddy shares if needed
-        if config.sections["transfers"]["enablebuddyshares"]:
-            self.frame.np.shares.rescan_buddy_shares()
+        self.frame.np.shares.rescan_buddy_shares()
 
         self.frame.np.connect()
 

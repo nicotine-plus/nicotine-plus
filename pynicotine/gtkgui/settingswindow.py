@@ -662,9 +662,7 @@ class SharesFrame(UserInterface):
         self.bshareddirs.append(share)
 
     def on_enabled_buddy_shares_toggled(self, widget):
-
-        buddies = widget.get_active()
-        self.BuddySharesTrustedOnly.set_sensitive(buddies)
+        self.BuddySharesTrustedOnly.set_sensitive(widget.get_active())
 
         self.needrescan = True
 

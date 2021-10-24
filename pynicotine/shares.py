@@ -585,13 +585,12 @@ class Shares:
             self.compress_shares("normal")
 
         # Rescan buddy shares if necessary
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            if rescan_startup and not self.buddy_rescanning:
-                self.rescan_buddy_shares()
-            else:
-                self.load_shares(self.share_dbs, self.buddy_share_dbs)
-                self.create_compressed_shares_message("buddy")
-                self.compress_shares("buddy")
+        if rescan_startup and not self.buddy_rescanning:
+            self.rescan_buddy_shares()
+        else:
+            self.load_shares(self.share_dbs, self.buddy_share_dbs)
+            self.create_compressed_shares_message("buddy")
+            self.compress_shares("buddy")
 
     def convert_shares(self):
         """ Convert fs-based shared to virtual shared (pre 1.4.0) """
@@ -918,10 +917,6 @@ class Shares:
 
     def get_shared_folders(self, sharestype):
 
-        if sharestype == "buddy" and not self.config.sections["transfers"]["enablebuddyshares"]:
-            # Buddy shares are disabled, don't return any folders
-            return []
-
         if sharestype == "normal":
             shared_folders = self.config.sections["transfers"]["shared"][:]
 
@@ -963,8 +958,9 @@ class Shares:
         if sharestype == "normal" and self.public_rescanning:
             return None
 
-        if sharestype == "buddy" and self.buddy_rescanning:
-            return None
+        if sharestype == "buddy":
+            if self.buddy_rescanning or not self.config.sections["transfers"]["enablebuddyshares"]:
+                return None
 
         if sharestype == "normal":
             log.add(_("Rescanning normal shares…"))
