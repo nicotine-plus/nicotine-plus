@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
@@ -869,7 +868,7 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.userbrowse.send_upload_attempt_notification(user)
         self.upload_directory_to(user, folder, recurse)
 
     def on_upload_directory_to(self, *args, recurse=False):
@@ -937,7 +936,7 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.userbrowse.send_upload_attempt_notification(user)
 
         locally_queued = False
         prefix = ""

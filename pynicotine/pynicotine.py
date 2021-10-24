@@ -224,7 +224,7 @@ class NicotineCore:
             slskmessages.IncConn: self.inc_conn,
             slskmessages.PlaceholdUpload: self.dummy_message,
             slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
-            slskmessages.UploadQueueNotification: self.upload_queue_notification,
+            slskmessages.UploadQueueNotification: self.dummy_message,
             slskmessages.EmbeddedMessage: self.embedded_message,
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.search_request,
@@ -1913,12 +1913,6 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.transfers.place_in_queue_request(msg)
-
-    def upload_queue_notification(self, msg):
-        """ Peer code: 52 """
-
-        log.add_msg_contents(msg)
-        self.transfers.upload_queue_notification(msg)
 
     def file_request(self, msg):
 

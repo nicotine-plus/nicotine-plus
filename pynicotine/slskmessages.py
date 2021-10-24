@@ -2737,7 +2737,8 @@ class PlaceInQueueRequest(PlaceholdUpload):
 
 class UploadQueueNotification(PeerMessage):
     """ Peer code: 52 """
-    """ DEPRECATED """
+    """ This message is sent to inform a peer about an upload attempt initiated by us. """
+    """ DEPRECATED, no longer sent by SoulseekQt """
 
     def __init__(self, conn):
         self.conn = conn

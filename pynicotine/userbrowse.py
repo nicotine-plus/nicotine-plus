@@ -43,6 +43,11 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
+    def send_upload_attempt_notification(self, username):
+        """ Send notification to user when attempting to initiate upload from our end """
+
+        self.core.send_message_to_peer(username, slskmessages.UploadQueueNotification(None))
+
     def add_user(self, user):
 
         if user not in self.users:

@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on August 25, 2021
+Last updated on October 24, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -3142,7 +3142,9 @@ Nicotine: UploadQueueNotification
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, no longer sent by SoulseekQt**
+
+This message is sent to inform a peer about an upload attempt initiated by us.
 
 #### Data Order
 

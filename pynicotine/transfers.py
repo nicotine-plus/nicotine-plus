@@ -1533,17 +1533,6 @@ class Transfers:
 
                 return
 
-    def upload_queue_notification(self, msg):
-
-        username = msg.conn.init.target_user
-
-        if self.can_upload(username):
-            log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
-
-        else:
-            self.core.privatechats.send_automatic_message(username, "You are not allowed to send me files.")
-            log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
-
     """ Transfer Actions """
 
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
