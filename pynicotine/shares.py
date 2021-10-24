@@ -96,10 +96,16 @@ class Scanner:
                 ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
             ])
 
-            new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
+            self.queue.put((_("Rescanning shares…"), None, None))
+            new_mtimes, new_files, new_streams, old_num_folders = self.rescan_dirs("normal", rebuild=self.rebuild)
+            self.queue.put((_("Finished rescanning shares"), None, None))
 
-            if self.config.sections["transfers"]["enablebuddyshares"]:
-                self.rescan_dirs("buddy", new_mtimes, new_files, new_streams, self.rebuild)
+            if not self.config.sections["transfers"]["enablebuddyshares"]:
+                return
+
+            self.queue.put((_("Rescanning buddy shares…"), None, None))
+            self.rescan_dirs("buddy", new_mtimes, new_files, new_streams, old_num_folders, self.rebuild)
+            self.queue.put((_("Finished rescanning buddy shares"), None, None))
 
         except Exception:
             from traceback import format_exc
@@ -126,25 +132,27 @@ class Scanner:
         ]
 
         for source, destination in storable_objects:
-            if source is not None:
-                try:
-                    if share_type == "buddy":
-                        destination = "buddy" + destination
+            if source is None:
+                continue
 
-                    # Close old db
-                    self.share_dbs[destination].close()
+            try:
+                if share_type == "buddy":
+                    destination = "buddy" + destination
 
-                    database = shelve.open(os.path.join(self.config.data_dir, destination + ".db"),
-                                           flag='n', protocol=pickle.HIGHEST_PROTOCOL)
-                    database.update(source)
-                    database.close()
+                # Close old db
+                self.share_dbs[destination].close()
 
-                except Exception as error:
-                    self.queue.put((_("Can't save %(filename)s: %(error)s"),
-                                    {"filename": destination + ".db", "error": error}, None))
-                    return
+                database = shelve.open(os.path.join(self.config.data_dir, destination + ".db"),
+                                       flag='n', protocol=pickle.HIGHEST_PROTOCOL)
+                database.update(source)
+                database.close()
 
-    def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
+            except Exception as error:
+                self.queue.put((_("Can't save %(filename)s: %(error)s"),
+                                {"filename": destination + ".db", "error": error}, None))
+                return
+
+    def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, old_num_folders=None, rebuild=False):
         """
         Check for modified or new files via OS's last mtime on a directory,
         or, if rebuild is True, all directories
@@ -158,11 +166,14 @@ class Scanner:
             prefix = ""
 
         try:
-            num_folders = len(self.share_dbs[prefix + "mtimes"])
+            start_num_folders = len(self.share_dbs[prefix + "mtimes"])
         except TypeError:
-            num_folders = len(list(self.share_dbs[prefix + "mtimes"]))
+            start_num_folders = len(list(self.share_dbs[prefix + "mtimes"]))
 
-        self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": num_folders}, None))
+        if old_num_folders is not None:
+            start_num_folders = start_num_folders - old_num_folders
+
+        self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": start_num_folders}, None))
 
         new_mtimes = {}
 
@@ -186,6 +197,7 @@ class Scanner:
             new_mtimes, self.share_dbs[prefix + "mtimes"], self.share_dbs[prefix + "files"],
             self.share_dbs[prefix + "streams"], rebuild
         )
+        end_num_folders = len(new_files)
 
         # Save data to databases
         if files is not None:
@@ -206,12 +218,12 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(share_type, wordindex=wordindex)
-        self.queue.put((_("%(num)s folders found after rescan"), {"num": len(new_files)}, None))
+        self.queue.put((_("%(num)s folders found after rescan"), {"num": end_num_folders}, None))
 
         del wordindex
         gc.collect()
 
-        return new_mtimes, new_files, new_streams
+        return new_mtimes, new_files, new_streams, start_num_folders
 
     @staticmethod
     def is_hidden(folder, filename=None, folder_obj=None):
@@ -942,7 +954,6 @@ class Shares:
 
     def rescan_shares(self, rebuild=False, use_thread=True):
 
-        log.add(_("Rescanning shares…"))
         self.rescanning = True
 
         shared_folders = self.get_shared_folders()
@@ -990,8 +1001,6 @@ class Shares:
                 step here, it will be done once we log in instead ("login" function in pynicotine.py). """
 
                 self.send_num_shared_folders_files()
-
-            log.add(_("Finished rescanning shares"))
 
         self.rescanning = False
 
