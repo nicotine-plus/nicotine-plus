@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 17:09+0300\n"
-"PO-Revision-Date: 2021-10-19 17:11+0000\n"
+"PO-Revision-Date: 2021-10-24 15:17+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -1643,7 +1643,6 @@ msgid "Buddy List Always Visible"
 msgstr "Lista znajomych zawsze widoczna"
 
 #: pynicotine/gtkgui/frame.py:1023
-#, fuzzy
 msgid "_Rescan Shares"
 msgstr "Przeskanuj udostępnione zasoby"
 
@@ -2888,35 +2887,31 @@ msgstr "Powiadom"
 
 #: pynicotine/gtkgui/userlist.py:86
 msgid "Prioritized"
-msgstr ""
+msgstr "Priorytetowe"
 
 #: pynicotine/gtkgui/userlist.py:87
-#, fuzzy
 msgid "Last Seen"
 msgstr "Ostatnio widziany"
 
 #: pynicotine/gtkgui/userlist.py:88
 msgid "Note"
-msgstr ""
+msgstr "Notatka"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 msgid "_Online Notify"
 msgstr "_Powiadomienie dostępności"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-#, fuzzy
 msgid "_Prioritize User"
-msgstr "Ignoruj użytkownika"
+msgstr "_Nadaj priorytet użytkownikowi"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-#, fuzzy
 msgid "_Trust User"
-msgstr "_Zaufany"
+msgstr "_Zaufany użytkownik"
 
 #: pynicotine/gtkgui/userlist.py:145
-#, fuzzy
 msgid "Add User _Note…"
-msgstr "_Dodaj użytkownika do listy"
+msgstr "Dodaj _notatkę użytkownika…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -2943,14 +2938,13 @@ msgid "User %s is offline"
 msgstr "Użytkownik %s jest niedostępny"
 
 #: pynicotine/gtkgui/userlist.py:569
-#, fuzzy
 msgid "Add User Note"
-msgstr "_Dodaj użytkownika do listy"
+msgstr "Dodaj notatkę użytkownika"
 
 #: pynicotine/gtkgui/userlist.py:570
-#, fuzzy, python-format
+#, python-format
 msgid "Add a note about user %s:"
-msgstr "Przypisz notatkę do użytkownika %s:"
+msgstr "Dodaj notatkę o użytkowniku %s:"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:71
 msgid "Select a Folder"
@@ -3024,7 +3018,6 @@ msgstr "Pokaż adres IP"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:239
 #: pynicotine/gtkgui/widgets/popupmenu.py:292
-#, fuzzy
 msgid "_Gift Privileges…"
 msgstr "Podaruj przywileje…"
 
@@ -3070,14 +3063,15 @@ msgid "Add as Operator of %s"
 msgstr "Dodaj jako operatora %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:577
-#, fuzzy
 msgid "Please enter number of days!"
-msgstr "Wprowadź liczbę całkowitą!"
+msgstr "Proszę podać liczbę dni!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Podaruj dni swoich przywilejów Soulseek użytkownikowi %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3085,9 +3079,8 @@ msgid "%(days)s days left"
 msgstr "%(days)s pozostało"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:596
-#, fuzzy
 msgid "Gift Privileges"
-msgstr "Podaruj przywileje"
+msgstr "Przywileje prezentowe"
 
 #: pynicotine/gtkgui/widgets/textentry.py:235
 #, python-format
@@ -3509,22 +3502,18 @@ msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Serwer nie pozwala w tej chwili na przeszukiwanie listy życzeń"
 
 #: pynicotine/shares.py:99
-#, fuzzy
 msgid "Rescanning shares…"
-msgstr "Ponowne skanowanie zasobów znajomego…"
+msgstr "Ponowne skanowanie zasobów…"
 
 #: pynicotine/shares.py:101
-#, fuzzy
 msgid "Finished rescanning shares"
-msgstr "Zakończono ponowne skanowanie zasobów znajomych"
+msgstr "Zakończono ponowne skanowanie zasobów"
 
 #: pynicotine/shares.py:103
-#, fuzzy
 msgid "Rescanning buddy shares…"
 msgstr "Ponowne skanowanie zasobów znajomego…"
 
 #: pynicotine/shares.py:105
-#, fuzzy
 msgid "Finished rescanning buddy shares"
 msgstr "Zakończono ponowne skanowanie zasobów znajomych"
 
@@ -3667,7 +3656,7 @@ msgstr "uprzywilejowany"
 
 #: pynicotine/transfers.py:1169
 msgid "prioritized"
-msgstr ""
+msgstr "priorytetowe"
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -4022,7 +4011,6 @@ msgid "Keyboard Shortcuts"
 msgstr "Skróty klawiszowe"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
-#, fuzzy
 msgid "Rescan Shares"
 msgstr "Przeskanuj udostępnione zasoby"
 
@@ -5132,9 +5120,8 @@ msgid "Download folders in reverse alphanumerical order"
 msgstr "Pobierz foldery w odwrotnej kolejności alfabetycznej"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:47
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "Zachowaj pobrane w folderach o nazwach użytkowników"
+msgstr "Przechowuj ukończone pobrania w podfolderach z nazwą użytkownika"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:54
 msgid ""
@@ -5421,14 +5408,12 @@ msgid "Auto-reply message when away:"
 msgstr "Automatyczna odpowiedź, gdy nieobecny:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:358
-#, fuzzy
 msgid "Auto-connect to server on startup"
-msgstr "Automatycznie łączenie z serwerem podczas startu"
+msgstr "Automatyczne łączenie z serwerem podczas uruchamiania"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:375
-#, fuzzy
 msgid "Use UPnP to forward listening port (interval in hours):"
-msgstr "Użyj UPnP do automatycznego mapowania portów na routerze"
+msgstr "Użyj UPnP, aby przekierować port nasłuchiwania (interwał w godzinach):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
 msgid "Enable CTCP-like private message responses (client version)"
@@ -5650,6 +5635,9 @@ msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Udostępniaj foldery każdemu użytkownikowi Soulseek lub znajomym, "
+"umożliwiając pobieranie zawartości bezpośrednio z Twojego urządzenia. Ukryte "
+"pliki nigdy nie są udostępniane."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"
@@ -5665,7 +5653,6 @@ msgstr ""
 "przy manualnym skanowaniu."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
-#, fuzzy
 msgid "Automatically share completed downloads"
 msgstr "Automatycznie udostępniaj pobrane"
 
@@ -5738,9 +5725,8 @@ msgid "Queue Behavior"
 msgstr "Zachowanie kolejki"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-#, fuzzy
 msgid "Prioritize all buddies"
-msgstr "Uprzywilejuj wszystkich moich znajomych"
+msgstr "Nadaj priorytet wszystkim znajomym"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:224
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
@@ -5763,14 +5749,15 @@ msgid "Upload queue type:"
 msgstr "Typ kolejki wysyłania:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:297
-#, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Pliki będą przesyłane w sposób cykliczny do użytkowników oczekujących w "
-"kolejce."
+"Round Robin: Pliki będą przesyłane w sposób cykliczny do użytkowników "
+"oczekujących w kolejce.\n"
+"Pierwsze weszło, pierwsze wyszło: Pliki zostaną przesłane w kolejności, w "
+"jakiej zostały umieszczone w kolejce."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:300
 msgid "Round Robin"
@@ -5785,9 +5772,8 @@ msgid "Queue Limits"
 msgstr "Limity kolejek"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:329
-#, fuzzy
 msgid "Queue limits do not apply to buddies"
-msgstr "Wielkość limitu kolejki nie dotyczy znajomych"
+msgstr "Limity kolejek nie dotyczą znajomych"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:346
 msgid "Each user may queue a maximum of either:"
