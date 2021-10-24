@@ -204,8 +204,7 @@
         <child>
           <object class="GtkCheckButton" id="PreferFriends">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Prioritize all users in buddy list</property>
-            <property name="tooltip-text" translatable="yes">Buddies will have higher priority in the queue, the same as globally privileged users.</property>
+            <property name="label" translatable="yes">Prioritize all buddies</property>
           </object>
         </child>
         <child>
@@ -327,7 +326,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
         <child>
           <object class="GtkCheckButton" id="FriendsNoLimits">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Queue limits do not apply to users in buddy list</property>
+            <property name="label" translatable="yes">Queue limits do not apply to buddies</property>
           </object>
         </child>
         <child>
