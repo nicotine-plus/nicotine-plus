@@ -237,7 +237,6 @@ class PopupMenu(Gio.Menu):
         self.setup(
             ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
-            ("#" + _("Client Version"), self.on_version),
             ("", None)
         )
 
@@ -553,10 +552,6 @@ class PopupMenu(Gio.Menu):
             self.frame.np.network_filter.unignore_user(self.user)
 
         action.set_state(state)
-
-    def on_version(self, *args):
-        self.frame.np.privatechats.show_user(self.user)
-        self.frame.np.privatechats.send_message(self.user, self.frame.np.privatechats.CTCP_VERSION)
 
     def on_copy_user(self, *args):
         copy_text(self.user)
