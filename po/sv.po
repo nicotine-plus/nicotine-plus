@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 03:25+0300\n"
+"POT-Creation-Date: 2021-10-24 05:23+0300\n"
 "PO-Revision-Date: 2021-10-18 19:12+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -166,7 +166,7 @@ msgstr ""
 "Kan inte finna %(option1)s eller %(option2)s, var snäll installera någon av "
 "de två."
 
-#: pynicotine/__init__.py:151
+#: pynicotine/__init__.py:150
 #, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
@@ -1524,7 +1524,7 @@ msgstr "Sök…"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/chatrooms.py:669
-#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1829
+#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1828
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
 #, fuzzy
@@ -1860,7 +1860,7 @@ msgstr "Away"
 
 #: pynicotine/gtkgui/frame.py:392 pynicotine/gtkgui/widgets/iconnotebook.py:457
 #: pynicotine/gtkgui/widgets/treeview.py:471
-#: pynicotine/gtkgui/ui/mainwindow.ui:1890
+#: pynicotine/gtkgui/ui/mainwindow.ui:1881
 msgid "Offline"
 msgstr "Offline"
 
@@ -1883,180 +1883,180 @@ msgstr ""
 msgid "Change Login Details"
 msgstr "Ändra inloggningsuppgifter"
 
-#: pynicotine/gtkgui/frame.py:708
+#: pynicotine/gtkgui/frame.py:707
 #, fuzzy
 msgid "Error retrieving latest version"
 msgstr "Fel vid hämtning av senaste versionen"
 
-#: pynicotine/gtkgui/frame.py:715
+#: pynicotine/gtkgui/frame.py:714
 #, fuzzy, python-format
 msgid "Version %s is available"
 msgstr "Version %s är tillgänglig"
 
-#: pynicotine/gtkgui/frame.py:718
+#: pynicotine/gtkgui/frame.py:717
 #, fuzzy, python-format
 msgid "released on %s"
 msgstr "Släppt den %s"
 
-#: pynicotine/gtkgui/frame.py:723
+#: pynicotine/gtkgui/frame.py:722
 #, fuzzy
 msgid "Out of date"
 msgstr "Föråldrad"
 
-#: pynicotine/gtkgui/frame.py:731 pynicotine/gtkgui/frame.py:739
+#: pynicotine/gtkgui/frame.py:730 pynicotine/gtkgui/frame.py:738
 #, fuzzy
 msgid "Up to date"
 msgstr "Uppdaterad"
 
-#: pynicotine/gtkgui/frame.py:732
+#: pynicotine/gtkgui/frame.py:731
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
 msgstr "Du verkar använda en utvecklingsversion av Nicotine+."
 
-#: pynicotine/gtkgui/frame.py:740
+#: pynicotine/gtkgui/frame.py:739
 #, fuzzy
 msgid "You are using the latest version of Nicotine+."
 msgstr "Du använder den senaste versionen av Nicotine+."
 
-#: pynicotine/gtkgui/frame.py:979
+#: pynicotine/gtkgui/frame.py:978
 msgid "_Connect"
 msgstr "Anslut"
 
-#: pynicotine/gtkgui/frame.py:980
+#: pynicotine/gtkgui/frame.py:979
 msgid "_Disconnect"
 msgstr "Koppla ned"
 
-#: pynicotine/gtkgui/frame.py:981
+#: pynicotine/gtkgui/frame.py:980
 #, fuzzy
 msgid "_Away"
 msgstr "_Away"
 
-#: pynicotine/gtkgui/frame.py:982
+#: pynicotine/gtkgui/frame.py:981
 #, fuzzy
 msgid "Soulseek _Privileges"
 msgstr "_Privilegierad"
 
-#: pynicotine/gtkgui/frame.py:987 pynicotine/gtkgui/ui/settings/plugin.ui:131
+#: pynicotine/gtkgui/frame.py:986 pynicotine/gtkgui/ui/settings/plugin.ui:131
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Inställningar"
 
-#: pynicotine/gtkgui/frame.py:990
+#: pynicotine/gtkgui/frame.py:989
 #, fuzzy
 msgid "_Quit"
 msgstr "_Avsluta"
 
-#: pynicotine/gtkgui/frame.py:1008
+#: pynicotine/gtkgui/frame.py:1007
 #, fuzzy
 msgid "Prefer Dark _Mode"
 msgstr "Föredrar mörkt _Mode"
 
-#: pynicotine/gtkgui/frame.py:1009
+#: pynicotine/gtkgui/frame.py:1008
 #, fuzzy
 msgid "Use _Header Bar"
 msgstr "Använd _Header Bar"
 
-#: pynicotine/gtkgui/frame.py:1011
+#: pynicotine/gtkgui/frame.py:1010
 #, fuzzy
 msgid "Show _Log Pane"
 msgstr "Visa rutan _Log"
 
-#: pynicotine/gtkgui/frame.py:1012
+#: pynicotine/gtkgui/frame.py:1011
 #, fuzzy
 msgid "Show _Debug Log Controls"
 msgstr "Visa _Debug Log Controls"
 
-#: pynicotine/gtkgui/frame.py:1014
+#: pynicotine/gtkgui/frame.py:1013
 #, fuzzy
 msgid "Buddy List in Separate Tab"
 msgstr "Kompislista i separat flik"
 
-#: pynicotine/gtkgui/frame.py:1015
+#: pynicotine/gtkgui/frame.py:1014
 #, fuzzy
 msgid "Buddy List in Chat Rooms"
 msgstr "Kompislista i chattrum"
 
-#: pynicotine/gtkgui/frame.py:1016
+#: pynicotine/gtkgui/frame.py:1015
 #, fuzzy
 msgid "Buddy List Always Visible"
 msgstr "Kompislistan är alltid synlig"
 
-#: pynicotine/gtkgui/frame.py:1024
+#: pynicotine/gtkgui/frame.py:1023
 #, fuzzy
 msgid "_Rescan Shares"
 msgstr "Indexera om delade filer"
 
-#: pynicotine/gtkgui/frame.py:1025
+#: pynicotine/gtkgui/frame.py:1024
 #, fuzzy
 msgid "_Configure Shares"
 msgstr "_Konfigurera andelar"
 
-#: pynicotine/gtkgui/frame.py:1032
+#: pynicotine/gtkgui/frame.py:1031
 #, fuzzy
 msgid "_Browse Public Shares"
 msgstr "_Bläddra bland offentliga aktier"
 
-#: pynicotine/gtkgui/frame.py:1033
+#: pynicotine/gtkgui/frame.py:1032
 #, fuzzy
 msgid "Bro_wse Buddy Shares"
 msgstr "Bro_wse Buddy-andelar"
 
-#: pynicotine/gtkgui/frame.py:1049
+#: pynicotine/gtkgui/frame.py:1048
 #, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Tangentbordsgenvägar"
 
-#: pynicotine/gtkgui/frame.py:1050
+#: pynicotine/gtkgui/frame.py:1049
 #, fuzzy
 msgid "_Setup Assistant"
 msgstr "_Inställningsassistent"
 
-#: pynicotine/gtkgui/frame.py:1051
+#: pynicotine/gtkgui/frame.py:1050
 #, fuzzy
 msgid "_Transfer Statistics"
 msgstr "_Överföringsstatistik"
 
-#: pynicotine/gtkgui/frame.py:1053
+#: pynicotine/gtkgui/frame.py:1052
 #, fuzzy
 msgid "Report a _Bug"
 msgstr "Rapportera en bugg"
 
-#: pynicotine/gtkgui/frame.py:1054
+#: pynicotine/gtkgui/frame.py:1053
 #, fuzzy
 msgid "Check _Latest Version"
 msgstr "Kontrollera _den senaste versionen"
 
-#: pynicotine/gtkgui/frame.py:1056
+#: pynicotine/gtkgui/frame.py:1055
 #, fuzzy
 msgid "About _Nicotine+"
 msgstr "Om _Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1068 pynicotine/gtkgui/frame.py:1087
+#: pynicotine/gtkgui/frame.py:1067 pynicotine/gtkgui/frame.py:1086
 #, fuzzy
 msgid "_View"
 msgstr "_Visa"
 
-#: pynicotine/gtkgui/frame.py:1075 pynicotine/gtkgui/frame.py:1089
+#: pynicotine/gtkgui/frame.py:1074 pynicotine/gtkgui/frame.py:1088
 #, fuzzy
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: pynicotine/gtkgui/frame.py:1086
+#: pynicotine/gtkgui/frame.py:1085
 msgid "_File"
 msgstr "Arkiv"
 
-#: pynicotine/gtkgui/frame.py:1088
+#: pynicotine/gtkgui/frame.py:1087
 #, fuzzy
 msgid "_Shares"
 msgstr "_Aktier"
 
-#: pynicotine/gtkgui/frame.py:1263 pynicotine/gtkgui/ui/mainwindow.ui:853
+#: pynicotine/gtkgui/frame.py:1262 pynicotine/gtkgui/ui/mainwindow.ui:853
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:161
 #, fuzzy
 msgid "Search Files"
 msgstr "Sök filer"
 
-#: pynicotine/gtkgui/frame.py:1264 pynicotine/gtkgui/settingswindow.py:3092
+#: pynicotine/gtkgui/frame.py:1263 pynicotine/gtkgui/settingswindow.py:3092
 #: pynicotine/gtkgui/widgets/trayicon.py:92
 #: pynicotine/gtkgui/ui/mainwindow.ui:949
 #: pynicotine/gtkgui/ui/mainwindow.ui:1602
@@ -2065,7 +2065,7 @@ msgstr "Sök filer"
 msgid "Downloads"
 msgstr "Nedladdningar"
 
-#: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/settingswindow.py:3093
+#: pynicotine/gtkgui/frame.py:1264 pynicotine/gtkgui/settingswindow.py:3093
 #: pynicotine/gtkgui/widgets/trayicon.py:93
 #: pynicotine/gtkgui/ui/mainwindow.ui:1039
 #: pynicotine/gtkgui/ui/mainwindow.ui:1615
@@ -2074,76 +2074,76 @@ msgstr "Nedladdningar"
 msgid "Uploads"
 msgstr "Uppladdningar"
 
-#: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/ui/mainwindow.ui:1129
+#: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 #, fuzzy
 msgid "User Browse"
 msgstr "Användare Bläddra"
 
-#: pynicotine/gtkgui/frame.py:1267 pynicotine/gtkgui/settingswindow.py:3083
+#: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3083
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 #, fuzzy
 msgid "User Info"
 msgstr "Användarinformation"
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/mainwindow.ui:1321
+#: pynicotine/gtkgui/frame.py:1267 pynicotine/gtkgui/ui/mainwindow.ui:1321
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 #, fuzzy
 msgid "Private Chat"
 msgstr "Privat chatt"
 
-#: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 #, fuzzy
 msgid "Buddy List"
 msgstr "Buddy-lista"
 
-#: pynicotine/gtkgui/frame.py:1270 pynicotine/gtkgui/ui/mainwindow.ui:1507
+#: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:245
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Chattrum"
 
-#: pynicotine/gtkgui/frame.py:1271 pynicotine/gtkgui/ui/mainwindow.ui:756
+#: pynicotine/gtkgui/frame.py:1270 pynicotine/gtkgui/ui/mainwindow.ui:756
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:257
 msgid "Interests"
 msgstr "Intressen"
 
-#: pynicotine/gtkgui/frame.py:1678 pynicotine/gtkgui/userbrowse.py:602
+#: pynicotine/gtkgui/frame.py:1677 pynicotine/gtkgui/userbrowse.py:602
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kunde inte skapa katalogen '%(folder)s', rapporterat fel: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1683
+#: pynicotine/gtkgui/frame.py:1682
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "Välj en fil med en lista över sparade andelar"
 
-#: pynicotine/gtkgui/frame.py:1723
+#: pynicotine/gtkgui/frame.py:1722
 #, fuzzy
 msgid "Create New Room?"
 msgstr "Skapa ett nytt rum?"
 
-#: pynicotine/gtkgui/frame.py:1724
+#: pynicotine/gtkgui/frame.py:1723
 #, fuzzy, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Vill du verkligen skapa ett nytt rum \"%s\"?"
 
-#: pynicotine/gtkgui/frame.py:1725
+#: pynicotine/gtkgui/frame.py:1724
 #, fuzzy
 msgid "Make room private"
 msgstr "Gör rummet privat"
 
-#: pynicotine/gtkgui/frame.py:2161
+#: pynicotine/gtkgui/frame.py:2138
 #, fuzzy
 msgid "Critical Error"
 msgstr "Kritiskt fel"
 
-#: pynicotine/gtkgui/frame.py:2162
+#: pynicotine/gtkgui/frame.py:2139
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -2152,27 +2152,27 @@ msgstr ""
 "Nicotine+ har stött på ett kritiskt fel och måste avslutas. Vänligen kopiera "
 "följande meddelande och inkludera det i en felrapport:"
 
-#: pynicotine/gtkgui/frame.py:2164
+#: pynicotine/gtkgui/frame.py:2141
 #, fuzzy
 msgid "Copy & Report Bug"
 msgstr "Kopiera och rapportera fel"
 
-#: pynicotine/gtkgui/frame.py:2215
+#: pynicotine/gtkgui/frame.py:2192
 #, fuzzy
 msgid "Close Nicotine+?"
 msgstr "Stäng Nicotine+?"
 
-#: pynicotine/gtkgui/frame.py:2216
+#: pynicotine/gtkgui/frame.py:2193
 #, fuzzy
 msgid "Do you really want to exit Nicotine+?"
 msgstr "Vill du verkligen sluta med Nicotine+?"
 
-#: pynicotine/gtkgui/frame.py:2217
+#: pynicotine/gtkgui/frame.py:2194
 #, fuzzy
 msgid "Run in Background"
 msgstr "Kör i bakgrunden"
 
-#: pynicotine/gtkgui/frame.py:2218
+#: pynicotine/gtkgui/frame.py:2195
 #, fuzzy
 msgid "Remember choice"
 msgstr "Kom ihåg valet"
@@ -4121,7 +4121,7 @@ msgstr "Sammanfogade rum "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Servern tillåter inte sökningar i önskelistan för närvarande."
 
-#: pynicotine/shares.py:116
+#: pynicotine/shares.py:108
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4132,52 +4132,52 @@ msgstr ""
 "kvarstår tar du bort %(dir)s/*.db och försöker igen. Om det inte hjälper kan "
 "du skicka in en felrapport med denna stacktrace inkluderad: %(trace)s"
 
-#: pynicotine/shares.py:151
+#: pynicotine/shares.py:143
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Kunde inte skapa katalogen '%(user)s', rapporterat fel: %(error)s"
 
-#: pynicotine/shares.py:169
+#: pynicotine/shares.py:165
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mappar hittades före omskanning, återuppbyggnad…"
 
-#: pynicotine/shares.py:181 pynicotine/shares.py:283 pynicotine/shares.py:343
+#: pynicotine/shares.py:177 pynicotine/shares.py:290 pynicotine/shares.py:350
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Fel vid skanning av mapp %(path)s: %(error)s"
 
-#: pynicotine/shares.py:204
+#: pynicotine/shares.py:209
 #, fuzzy, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "%(num)s mappar hittades efter omskanning"
 
-#: pynicotine/shares.py:270
+#: pynicotine/shares.py:277
 #, fuzzy, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Fel vid skanning %(path)s: %(error)s"
 
-#: pynicotine/shares.py:371
+#: pynicotine/shares.py:378
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Fel vid skanning av metadata för filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:399
+#: pynicotine/shares.py:406
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Fel vid skanning av filen %(path)s: %(error)s"
 
-#: pynicotine/shares.py:570 pynicotine/shares.py:928
+#: pynicotine/shares.py:571 pynicotine/shares.py:915
 #, fuzzy
 msgid "Downloaded"
 msgstr "Nedladdat"
 
-#: pynicotine/shares.py:641
+#: pynicotine/shares.py:642
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Följande databaser kunde inte bearbetas: %(names)s"
 
-#: pynicotine/shares.py:647
+#: pynicotine/shares.py:648
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4186,7 +4186,7 @@ msgstr ""
 "Försöker återställa indexet för delade filer på grund av ett fel. Skanna om "
 "dina delningar."
 
-#: pynicotine/shares.py:651
+#: pynicotine/shares.py:652
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4197,41 +4197,31 @@ msgstr ""
 "instanser av Nicotine+ är aktiva samtidigt, problem med filbehörighet eller "
 "ett annat problem i Nicotine+."
 
-#: pynicotine/shares.py:739 pynicotine/shares.py:791
+#: pynicotine/shares.py:740 pynicotine/shares.py:792
 #, fuzzy, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Det gick inte att lägga till nedladdningen %(filename)s i de delade filerna: "
 "%(error)s"
 
-#: pynicotine/shares.py:884
+#: pynicotine/shares.py:885
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Det gick inte att skicka antalet delade filer till servern: %s"
 
-#: pynicotine/shares.py:952
+#: pynicotine/shares.py:939
 #, fuzzy, python-format
 msgid "Progress: %s"
 msgstr "Framsteg: %s"
 
-#: pynicotine/shares.py:966
+#: pynicotine/shares.py:945
 #, fuzzy
-msgid "Rescanning normal shares…"
-msgstr "Indexera om delade filer"
-
-#: pynicotine/shares.py:970
-#, fuzzy
-msgid "Rescanning buddy shares…"
+msgid "Rescanning shares…"
 msgstr "Indexering påbörjad"
 
-#: pynicotine/shares.py:1016
+#: pynicotine/shares.py:994
 #, fuzzy
-msgid "Finished rescanning public shares"
-msgstr "Slutförd omskanning av offentliga aktier"
-
-#: pynicotine/shares.py:1018
-#, fuzzy
-msgid "Finished rescanning buddy shares"
+msgid "Finished rescanning shares"
 msgstr "Slutförd omskanning av kompisandelar"
 
 #: pynicotine/slskmessages.py:2244
@@ -5100,7 +5090,7 @@ msgid "Search"
 msgstr "Sök"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1654
-#: pynicotine/gtkgui/ui/mainwindow.ui:1804
+#: pynicotine/gtkgui/ui/mainwindow.ui:1795
 #, fuzzy
 msgid "Connections"
 msgstr "Anslutningar"
@@ -5120,26 +5110,22 @@ msgstr "Diverse"
 msgid "Scanning Shares"
 msgstr "Indexering påbörjad"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1787
-msgid "Scanning Buddy Shares"
-msgstr "Indexering påbörjad"
-
-#: pynicotine/gtkgui/ui/mainwindow.ui:1832
+#: pynicotine/gtkgui/ui/mainwindow.ui:1823
 #, fuzzy
 msgid "Downloading (speed / active users)"
 msgstr "Nedladdning (hastighet/aktiva användare)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1859
+#: pynicotine/gtkgui/ui/mainwindow.ui:1850
 #, fuzzy
 msgid "Uploading (speed / active users)"
 msgstr "Uppladdning (hastighet/aktiva användare)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1904
+#: pynicotine/gtkgui/ui/mainwindow.ui:1895
 #, fuzzy
 msgid "Enable alternative download and upload speed limits"
 msgstr "Aktivera alternativa hastighetsgränser för nedladdning och uppladdning"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1922
+#: pynicotine/gtkgui/ui/mainwindow.ui:1913
 #, fuzzy
 msgid "Show log history"
 msgstr "Visa logghistorik"
@@ -7266,6 +7252,17 @@ msgstr "Spara _Bild"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh Info"
+
+#, fuzzy
+#~ msgid "Rescanning normal shares…"
+#~ msgstr "Indexera om delade filer"
+
+#, fuzzy
+#~ msgid "Finished rescanning public shares"
+#~ msgstr "Slutförd omskanning av offentliga aktier"
+
+#~ msgid "Scanning Buddy Shares"
+#~ msgstr "Indexering påbörjad"
 
 #, fuzzy
 #~ msgid "_Rescan Public Shares"
