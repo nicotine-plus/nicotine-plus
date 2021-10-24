@@ -34,7 +34,7 @@ class Plugin(BasePlugin):
         }
         self.metasettings = {
             'maxpubliclines': {
-                "description": 'The maximum number of lines that will pasted in public',
+                "description": 'The maximum number of lines that will be pasted in public',
                 'type': 'int'
             },
             'maxprivatelines': {

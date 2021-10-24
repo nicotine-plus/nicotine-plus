@@ -58,6 +58,7 @@
                                 <property name="search-column">1</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
+                                    <property name="mode">browse</property>
                                     <signal name="changed" handler="on_select_plugin" swapped="no"/>
                                   </object>
                                 </child>
@@ -199,13 +200,15 @@
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Version: </property>
+                                    <property name="label" translatable="yes">Version:</property>
+                                    <property name="mnemonic_widget">PluginVersion</property>
                                     <property name="width-chars">15</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="PluginVersion">
                                     <property name="visible">1</property>
+                                    <property name="selectable">1</property>
                                     <property name="xalign">0</property>
                                   </object>
                                 </child>
@@ -218,13 +221,15 @@
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="xalign">0</property>
-                                    <property name="label" translatable="yes">Author(s): </property>
+                                    <property name="label" translatable="yes">Author(s):</property>
+                                    <property name="mnemonic_widget">PluginAuthor</property>
                                     <property name="width-chars">15</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="PluginAuthor">
                                     <property name="visible">1</property>
+                                    <property name="selectable">1</property>
                                     <property name="xalign">0</property>
                                   </object>
                                 </child>

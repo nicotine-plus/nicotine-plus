@@ -2592,6 +2592,7 @@ class PluginsFrame(UserInterface):
         def generate_label(self, text):
 
             label = Gtk.Label.new(text)
+            label.set_use_markup(True)
             label.set_hexpand(True)
             label.set_xalign(0)
 
@@ -2614,7 +2615,7 @@ class PluginsFrame(UserInterface):
             container.add(label)
             self.primary_container.add(container)
 
-            return container
+            return (container, label)
 
         def generate_tree_view(self, name, description, value):
 
@@ -2693,7 +2694,7 @@ class PluginsFrame(UserInterface):
                 value = config.sections["plugins"][config_name][name]
 
                 if data["type"] in ("integer", "int", "float"):
-                    container = self.generate_widget_container(data["description"])
+                    container, label = self.generate_widget_container(data["description"])
 
                     minimum = data.get("minimum") or 0
                     maximum = data.get("maximum") or 99999
@@ -2703,10 +2704,12 @@ class PluginsFrame(UserInterface):
                     if data["type"] in ("integer", "int"):
                         decimals = 0
 
-                    self.tw[name] = Gtk.SpinButton.new(
+                    self.tw[name] = button = Gtk.SpinButton.new(
                         Gtk.Adjustment.new(0, minimum, maximum, stepsize, 10, 0),
                         1, decimals)
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    button.set_valign(Gtk.Align.CENTER)
+                    label.set_mnemonic_widget(button)
+                    self.settings.set_widget(button, config.sections["plugins"][config_name][name])
 
                     container.add(self.tw[name])
 
@@ -2720,7 +2723,7 @@ class PluginsFrame(UserInterface):
                     container.add(self.tw[name])
 
                 elif data["type"] in ("radio",):
-                    container = self.generate_widget_container(data["description"])
+                    container, label = self.generate_widget_container(data["description"])
 
                     vbox = Gtk.Box()
                     vbox.set_spacing(6)
@@ -2746,35 +2749,51 @@ class PluginsFrame(UserInterface):
                         group_radios.append(radio)
                         vbox.add(radio)
 
+                    label.set_mnemonic_widget(self.tw[name])
                     self.tw[name].group_radios = group_radios
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                 elif data["type"] in ("dropdown",):
-                    container = self.generate_widget_container(data["description"])
+                    container, label = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = Gtk.ComboBoxText()
+                    self.tw[name] = combobox = Gtk.ComboBoxText()
+                    label.set_mnemonic_widget(combobox)
+                    combobox.set_valign(Gtk.Align.CENTER)
 
-                    for label in data["options"]:
-                        self.tw[name].append_text(label)
+                    for text_label in data["options"]:
+                        combobox.append_text(text_label)
 
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    self.settings.set_widget(combobox, config.sections["plugins"][config_name][name])
 
                     container.add(self.tw[name])
 
                 elif data["type"] in ("str", "string"):
-                    container = self.generate_widget_container(data["description"])
+                    container, label = self.generate_widget_container(data["description"])
 
                     self.tw[name] = entry = Gtk.Entry()
                     entry.set_hexpand(True)
+                    entry.set_valign(Gtk.Align.CENTER)
+                    label.set_mnemonic_widget(entry)
                     self.settings.set_widget(entry, config.sections["plugins"][config_name][name])
 
                     container.add(entry)
 
                 elif data["type"] in ("textview"):
-                    container = self.generate_widget_container(data["description"], vertical=True)
+                    container, label = self.generate_widget_container(data["description"], vertical=True)
 
-                    self.tw[name] = Gtk.TextView()
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    self.tw[name] = textview = Gtk.TextView()
+                    textview.set_accepts_tab(False)
+                    textview.set_pixels_above_lines(1)
+                    textview.set_pixels_below_lines(1)
+                    textview.set_left_margin(8)
+                    textview.set_right_margin(8)
+                    textview.set_top_margin(5)
+                    textview.set_bottom_margin(5)
+
+                    label.set_mnemonic_widget(textview)
+                    self.settings.set_widget(textview, config.sections["plugins"][config_name][name])
+
+                    frame_container = Gtk.Frame()
 
                     scrolled_window = Gtk.ScrolledWindow()
                     scrolled_window.set_hexpand(True)
@@ -2783,22 +2802,20 @@ class PluginsFrame(UserInterface):
                     scrolled_window.set_min_content_width(600)
 
                     if Gtk.get_major_version() == 4:
-                        scrolled_window.set_has_frame(True)
-
-                        scrolled_window.set_child(self.tw[name])
+                        frame_container.set_child(textview)
+                        scrolled_window.set_child(frame_container)
                         container.append(scrolled_window)
 
                     else:
-                        scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
-
-                        scrolled_window.add(self.tw[name])
+                        frame_container.add(textview)
+                        scrolled_window.add(frame_container)
                         container.add(scrolled_window)
 
                 elif data["type"] in ("list string",):
                     self.generate_tree_view(name, data["description"], value)
 
                 elif data["type"] in ("file",):
-                    container = self.generate_widget_container(data["description"])
+                    container, label = self.generate_widget_container(data["description"])
 
                     button_widget = Gtk.Button()
                     button_widget.set_hexpand(True)
@@ -2809,6 +2826,8 @@ class PluginsFrame(UserInterface):
                         chooser = None
 
                     self.tw[name] = FileChooserButton(button_widget, self, chooser)
+                    button_widget.set_valign(Gtk.Align.CENTER)
+                    label.set_mnemonic_widget(button_widget)
                     self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
 
                     container.add(button_widget)
@@ -2971,6 +2990,7 @@ class PluginsFrame(UserInterface):
                 info = self.frame.np.pluginhandler.get_plugin_info(plugin)
             except IOError:
                 continue
+
             enabled = (plugin in config.sections["plugins"]["enabled"])
             self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
                 -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
