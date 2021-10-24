@@ -302,11 +302,11 @@ class SlskProtoThread(threading.Thread):
         QueuedDownloads: 40,          # Obsolete
         Relogged: 41,
         UserSearch: 42,
-        AddThingILike: 51,
-        RemoveThingILike: 52,
-        Recommendations: 54,
-        GlobalRecommendations: 56,
-        UserInterests: 57,
+        AddThingILike: 51,            # Deprecated
+        RemoveThingILike: 52,         # Deprecated
+        Recommendations: 54,          # Deprecated
+        GlobalRecommendations: 56,    # Deprecated
+        UserInterests: 57,            # Deprecated
         AdminCommand: 58,
         PlaceInLineResponse: 60,      # Obsolete
         RoomAdded: 62,                # Obsolete
@@ -332,15 +332,15 @@ class SlskProtoThread(threading.Thread):
         PossibleParents: 102,
         WishlistSearch: 103,
         WishlistInterval: 104,
-        SimilarUsers: 110,
-        ItemRecommendations: 111,
-        ItemSimilarUsers: 112,
+        SimilarUsers: 110,            # Deprecated
+        ItemRecommendations: 111,     # Deprecated
+        ItemSimilarUsers: 112,        # Deprecated
         RoomTickerState: 113,
         RoomTickerAdd: 114,
         RoomTickerRemove: 115,
         RoomTickerSet: 116,
-        AddThingIHate: 117,
-        RemoveThingIHate: 118,
+        AddThingIHate: 117,           # Deprecated
+        RemoveThingIHate: 118,        # Deprecated
         RoomSearch: 120,
         SendUploadSpeed: 121,
         UserPrivileged: 122,          # Deprecated
@@ -367,9 +367,9 @@ class SlskProtoThread(threading.Thread):
         PrivateRoomOperatorRemoved: 146,
         PrivateRoomOwned: 148,
         MessageUsers: 149,
-        JoinPublicRoom: 150,
-        LeavePublicRoom: 151,
-        PublicRoomMessage: 152,
+        JoinPublicRoom: 150,          # Deprecated
+        LeavePublicRoom: 151,         # Deprecated
+        PublicRoomMessage: 152,       # Deprecated
         RelatedSearch: 153,           # Obsolete
         CantConnectToPeer: 1001,
         CantCreateRoom: 1003

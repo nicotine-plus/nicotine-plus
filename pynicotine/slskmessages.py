@@ -896,6 +896,7 @@ class UserSearch(ServerMessage):
 class AddThingILike(ServerMessage):
     """ Server code: 51 """
     """ We send this to the server when we add an item to our likes list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self, thing=None):
         self.thing = thing
@@ -907,6 +908,7 @@ class AddThingILike(ServerMessage):
 class RemoveThingILike(ServerMessage):
     """ Server code: 52 """
     """ We send this to the server when we remove an item from our likes list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self, thing=None):
         self.thing = thing
@@ -919,6 +921,7 @@ class Recommendations(ServerMessage):
     """ Server code: 54 """
     """ The server sends us a list of personal recommendations and a number
     for each. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
         self.recommendations = {}
@@ -959,12 +962,14 @@ class GlobalRecommendations(Recommendations):
     """ Server code: 56 """
     """ The server sends us a list of global recommendations and a number
     for each. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
 
 class UserInterests(ServerMessage):
     """ Server code: 57 """
     """ We ask the server for a user's liked and hated interests. The server
     responds with a list of interests. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self, user=None):
         self.user = user
@@ -1455,6 +1460,7 @@ class WishlistInterval(ServerMessage):
 class SimilarUsers(ServerMessage):
     """ Server code: 110 """
     """ The server sends us a list of similar users related to our interests. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
         self.users = None
@@ -1478,6 +1484,7 @@ class ItemRecommendations(Recommendations):
     """ The server sends us a list of recommendations related to a specific
     item, which is usually present in the like/dislike list or an existing
     recommendation list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self, thing=None):
         super().__init__()
@@ -1495,6 +1502,7 @@ class ItemSimilarUsers(ServerMessage):
     """ Server code: 112 """
     """ The server sends us a list of similar users related to a specific item,
     which is usually present in the like/dislike list or recommendation list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self, thing=None):
         self.thing = thing
@@ -1595,11 +1603,13 @@ class RoomTickerSet(ServerMessage):
 class AddThingIHate(AddThingILike):
     """ Server code: 117 """
     """ We send this to the server when we add an item to our hate list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
 
 class RemoveThingIHate(RemoveThingILike):
     """ Server code: 118 """
     """ We send this to the server when we remove an item from our hate list. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
 
 class RoomSearch(ServerMessage):
@@ -1960,6 +1970,7 @@ class JoinPublicRoom(ServerMessage):
     """ Server code: 150 """
     """ We ask the server to send us messages from all public rooms, also
     known as public chat. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def make_network_message(self):
         return b""
@@ -1969,6 +1980,7 @@ class LeavePublicRoom(ServerMessage):
     """ Server code: 151 """
     """ We ask the server to stop sending us messages from all public rooms,
     also known as public chat. """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def make_network_message(self):
         return b""
@@ -1978,6 +1990,7 @@ class PublicRoomMessage(ServerMessage):
     """ Server code: 152 """
     """ The server sends this when a new message has been written in a public
     room (every single line written in every public room). """
+    """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
         self.room = None

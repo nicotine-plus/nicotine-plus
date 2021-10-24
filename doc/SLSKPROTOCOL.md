@@ -125,11 +125,11 @@ and callbacks for the messages are set in pynicotine.py.
 | 40   | [Queued Downloads](#server-code-40)               | Obsolete   |
 | 41   | [Kicked from Server](#server-code-41)             |            |
 | 42   | [User Search](#server-code-42)                    |            |
-| 51   | [Interest Add](#server-code-51)                   |            |
-| 52   | [Interest Remove](#server-code-52)                |            |
-| 54   | [Get Recommendations](#server-code-54)            |            |
-| 56   | [Get Global Recommendations](#server-code-56)     |            |
-| 57   | [Get User Interests](#server-code-57)             |            |
+| 51   | [Interest Add](#server-code-51)                   | Deprecated |
+| 52   | [Interest Remove](#server-code-52)                | Deprecated |
+| 54   | [Get Recommendations](#server-code-54)            | Deprecated |
+| 56   | [Get Global Recommendations](#server-code-56)     | Deprecated |
+| 57   | [Get User Interests](#server-code-57)             | Deprecated |
 | 58   | [Admin Command](#server-code-58)                  |            |
 | 60   | [Place In Line Response](#server-code-60)         | Obsolete   |
 | 62   | [Room Added](#server-code-62)                     | Obsolete   |
@@ -155,15 +155,15 @@ and callbacks for the messages are set in pynicotine.py.
 | 102  | [Possible Parents](#server-code-102)              |            |
 | 103  | [Wishlist Search](#server-code-103)               |            |
 | 104  | [Wishlist Interval](#server-code-104)             |            |
-| 110  | [Get Similar Users](#server-code-110)             |            |
-| 111  | [Get Item Recommendations](#server-code-111)      |            |
-| 112  | [Get Item Similar Users](#server-code-112)        |            |
+| 110  | [Get Similar Users](#server-code-110)             | Deprecated |
+| 111  | [Get Item Recommendations](#server-code-111)      | Deprecated |
+| 112  | [Get Item Similar Users](#server-code-112)        | Deprecated |
 | 113  | [Room Tickers](#server-code-113)                  |            |
 | 114  | [Room Ticker Add](#server-code-114)               |            |
 | 115  | [Room Ticker Remove](#server-code-115)            |            |
 | 116  | [Set Room Ticker](#server-code-116)               |            |
-| 117  | [Hated Interest Add](#server-code-117)            |            |
-| 118  | [Hated Interest Remove](#server-code-118)         |            |
+| 117  | [Hated Interest Add](#server-code-117)            | Deprecated |
+| 118  | [Hated Interest Remove](#server-code-118)         | Deprecated |
 | 120  | [Room Search](#server-code-120)                   |            |
 | 121  | [Send Upload Speed](#server-code-121)             |            |
 | 122  | [User Privileges](#server-code-122)               | Deprecated |
@@ -190,9 +190,9 @@ and callbacks for the messages are set in pynicotine.py.
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
 | 148  | [Private Room Owned](#server-code-148)            |            |
 | 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Ask Public Chat](#server-code-150)               |            |
-| 151  | [Stop Public Chat](#server-code-151)              |            |
-| 152  | [Public Chat Message](#server-code-152)           |            |
+| 150  | [Ask Public Chat](#server-code-150)               | Deprecated |
+| 151  | [Stop Public Chat](#server-code-151)              | Deprecated |
+| 152  | [Public Chat Message](#server-code-152)           | Deprecated |
 | 153  | [Related Searches](#server-code-153)              | Obsolete   |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
@@ -843,6 +843,8 @@ Nicotine: AddThingILike
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we add an item to our likes list.
 
 #### Data Order
@@ -863,6 +865,8 @@ Nicotine: RemoveThingILike
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we remove an item from our likes list.
 
 #### Data Order
@@ -882,6 +886,8 @@ Museekd: SGetRecommendations
 Nicotine: Recommendations
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
@@ -916,6 +922,8 @@ Nicotine: GlobalRecommendations
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 The server sends us a list of global recommendations and a number for each.
 
 #### Data Order
@@ -948,6 +956,8 @@ Museekd: SUserInterests
 Nicotine: UserInterests
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds with a list of interests.
 
@@ -1583,6 +1593,8 @@ Nicotine: SimilarUsers
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 The server sends us a list of similar users related to our interests.
 
 #### Data Order
@@ -1605,6 +1617,8 @@ Museekd: SGetItemRecommendations
 Nicotine: ItemRecommendations
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
 
@@ -1632,6 +1646,8 @@ Museekd: SGetItemSimilarUsers
 Nicotine: ItemSimilarUsers
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
 
@@ -1752,6 +1768,8 @@ Nicotine: AddThingIHate
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we add an item to our hate list.
 
 #### Data Order
@@ -1771,6 +1789,8 @@ Museekd: SInterestHatedRemove
 Nicotine: RemoveThingIHate
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
 
@@ -2337,6 +2357,8 @@ Nicotine: MessageUsers
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We ask the server to send us messages from all public rooms, also known as public chat.
 
 #### Function Names
@@ -2357,6 +2379,8 @@ Nicotine: JoinPublicRoom
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We ask the server to stop sending us messages from all public rooms, also known as public chat.
 
 #### Function Names
@@ -2376,6 +2400,8 @@ Nicotine: LeavePublicRoom
 **Public Chat Message**
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends this when a new message has been written in a public room (every single line written in every public room).
 
