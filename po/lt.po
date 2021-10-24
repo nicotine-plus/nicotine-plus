@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 05:23+0300\n"
+"POT-Creation-Date: 2021-10-24 06:06+0300\n"
 "PO-Revision-Date: 2020-11-23 11:47+0000\n"
 "Last-Translator: Mantas Kriaučiūnas <baltix@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -4037,7 +4037,27 @@ msgstr "Kambariai, kuriuose esate "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Serveris šiuo metu neleidžia atlikti pageidavimų sąrašo paieškų"
 
+#: pynicotine/shares.py:99
+#, fuzzy
+msgid "Rescanning shares…"
+msgstr "Skenuojami bičiulių viešiniai"
+
+#: pynicotine/shares.py:101
+#, fuzzy
+msgid "Finished rescanning shares"
+msgstr "Baigta perrašinėti bičiulių akcijas"
+
+#: pynicotine/shares.py:106
+#, fuzzy
+msgid "Rescanning buddy shares…"
+msgstr "Skenuojami bičiulių viešiniai"
+
 #: pynicotine/shares.py:108
+#, fuzzy
+msgid "Finished rescanning buddy shares"
+msgstr "Baigta perrašinėti bičiulių akcijas"
+
+#: pynicotine/shares.py:114
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4048,52 +4068,52 @@ msgstr ""
 "panaikinkite %(dir)s/*.db ir bandykite dar kartą. Jei tai nepadeda, "
 "pateikite klaidos ataskaitą su šiuo rietuvės sekimas įtrauktas: %(trace)s"
 
-#: pynicotine/shares.py:143
+#: pynicotine/shares.py:151
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nepavyko perkelti „%(tempfile)s“ į „%(file)s“: %(error)s"
 
-#: pynicotine/shares.py:165
+#: pynicotine/shares.py:176
 #, fuzzy, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s aplankai rasti prieš rescan, atstatyti …"
 
-#: pynicotine/shares.py:177 pynicotine/shares.py:290 pynicotine/shares.py:350
+#: pynicotine/shares.py:188 pynicotine/shares.py:302 pynicotine/shares.py:362
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Klaida nuskaitant aplanką %(path)s: %(error)s"
 
-#: pynicotine/shares.py:209
+#: pynicotine/shares.py:221
 #, fuzzy, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "%(num)s aplankai rasti po rescan"
 
-#: pynicotine/shares.py:277
+#: pynicotine/shares.py:289
 #, fuzzy, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Klaida nuskaitant %(path)s: %(error)s"
 
-#: pynicotine/shares.py:378
+#: pynicotine/shares.py:390
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Klaida nuskaitant failo %(path)s metaduomenis: %(error)s"
 
-#: pynicotine/shares.py:406
+#: pynicotine/shares.py:418
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Klaida nuskaitant failą %(path)s: %(error)s"
 
-#: pynicotine/shares.py:571 pynicotine/shares.py:915
+#: pynicotine/shares.py:586 pynicotine/shares.py:930
 #, fuzzy
 msgid "Downloaded"
 msgstr "Atsisiuntė"
 
-#: pynicotine/shares.py:642
+#: pynicotine/shares.py:657
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Nepavyko apdoroti šių duomenų bazių: %(names)s"
 
-#: pynicotine/shares.py:648
+#: pynicotine/shares.py:663
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4102,7 +4122,7 @@ msgstr ""
 "Bandoma iš naujo nustatyti bendrinamų failų rodyklę dėl klaidos. Prašome "
 "perskirstyti savo akcijas."
 
-#: pynicotine/shares.py:652
+#: pynicotine/shares.py:667
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4113,32 +4133,22 @@ msgstr ""
 "kelių atvejų, kai Nikotinas+ yra aktyvus vienu metu, failų teisių problemos "
 "arba kita Nikotino+problema."
 
-#: pynicotine/shares.py:740 pynicotine/shares.py:792
+#: pynicotine/shares.py:755 pynicotine/shares.py:807
 #, fuzzy, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Nepavyko pridėti atsisiųsti %(filename)s į bendrai naudojamus failus: "
 "%(error)s"
 
-#: pynicotine/shares.py:885
+#: pynicotine/shares.py:900
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nepavyko nusiųsti bendrai naudojamų failų skaičiaus į serverį: %s"
 
-#: pynicotine/shares.py:939
+#: pynicotine/shares.py:954
 #, fuzzy, python-format
 msgid "Progress: %s"
 msgstr "Pažanga: %s"
-
-#: pynicotine/shares.py:945
-#, fuzzy
-msgid "Rescanning shares…"
-msgstr "Skenuojami bičiulių viešiniai"
-
-#: pynicotine/shares.py:994
-#, fuzzy
-msgid "Finished rescanning shares"
-msgstr "Baigta perrašinėti bičiulių akcijas"
 
 #: pynicotine/slskmessages.py:2244
 #, fuzzy, python-format

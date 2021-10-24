@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 05:23+0300\n"
+"POT-Creation-Date: 2021-10-24 06:06+0300\n"
 "PO-Revision-Date: 2021-10-19 17:11+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3502,7 +3502,27 @@ msgstr "Dołączony do pokoi "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Serwer nie pozwala w tej chwili na przeszukiwanie listy życzeń"
 
+#: pynicotine/shares.py:99
+#, fuzzy
+msgid "Rescanning shares…"
+msgstr "Ponowne skanowanie zasobów znajomego…"
+
+#: pynicotine/shares.py:101
+#, fuzzy
+msgid "Finished rescanning shares"
+msgstr "Zakończono ponowne skanowanie zasobów znajomych"
+
+#: pynicotine/shares.py:106
+#, fuzzy
+msgid "Rescanning buddy shares…"
+msgstr "Ponowne skanowanie zasobów znajomego…"
+
 #: pynicotine/shares.py:108
+#, fuzzy
+msgid "Finished rescanning buddy shares"
+msgstr "Zakończono ponowne skanowanie zasobów znajomych"
+
+#: pynicotine/shares.py:114
 #, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -3513,52 +3533,52 @@ msgstr ""
 "będzie się utrzymywać, usuń %(dir)s/*.db i spróbuj ponownie. Jeśli to nie "
 "pomoże, utwórz plik z raportem błędu z danymi: %(trace)s"
 
-#: pynicotine/shares.py:143
+#: pynicotine/shares.py:151
 #, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nie można zapisać %(filename)s: %(error)s"
 
-#: pynicotine/shares.py:165
+#: pynicotine/shares.py:176
 #, python-format
 msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr ""
 "Znaleziono %(num)s folderów przed ponownym skanowaniem, przebudowywanie…"
 
-#: pynicotine/shares.py:177 pynicotine/shares.py:290 pynicotine/shares.py:350
+#: pynicotine/shares.py:188 pynicotine/shares.py:302 pynicotine/shares.py:362
 #, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania folderu %(path)s: %(error)s"
 
-#: pynicotine/shares.py:209
+#: pynicotine/shares.py:221
 #, python-format
 msgid "%(num)s folders found after rescan"
 msgstr "Znaleziono %(num)s folderów podczas ponownego skanowania"
 
-#: pynicotine/shares.py:277
+#: pynicotine/shares.py:289
 #, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania %(path)s: %(error)s"
 
-#: pynicotine/shares.py:378
+#: pynicotine/shares.py:390
 #, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania metadanych dla pliku %(path)s: %(error)s"
 
-#: pynicotine/shares.py:406
+#: pynicotine/shares.py:418
 #, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Błąd podczas skanowania pliku %(path)s: %(error)s"
 
-#: pynicotine/shares.py:571 pynicotine/shares.py:915
+#: pynicotine/shares.py:586 pynicotine/shares.py:930
 msgid "Downloaded"
 msgstr "Pobrane"
 
-#: pynicotine/shares.py:642
+#: pynicotine/shares.py:657
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Błąd podczas procesowania następujących baz danych: %(names)s"
 
-#: pynicotine/shares.py:648
+#: pynicotine/shares.py:663
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3566,7 +3586,7 @@ msgstr ""
 "Próba zresetowania indeksu udostępnionych plików z powodu błędu. Przeskanuj "
 "ponownie swoje udziały."
 
-#: pynicotine/shares.py:652
+#: pynicotine/shares.py:667
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3576,32 +3596,22 @@ msgstr ""
 "zdarzyć z powodu kilku instancji Nicotine+ aktywnych jednocześnie, problemów "
 "z uprawnieniami do plików lub innego problemu w Nicotine+."
 
-#: pynicotine/shares.py:740 pynicotine/shares.py:792
+#: pynicotine/shares.py:755 pynicotine/shares.py:807
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Błąd podczas dodawania pobierania %(filename)s do udostępnionych plików: "
 "%(error)s"
 
-#: pynicotine/shares.py:885
+#: pynicotine/shares.py:900
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nie udało się wysłać liczby udostępnionych plików do serwera: %s"
 
-#: pynicotine/shares.py:939
+#: pynicotine/shares.py:954
 #, python-format
 msgid "Progress: %s"
 msgstr "Postęp: %s"
-
-#: pynicotine/shares.py:945
-#, fuzzy
-msgid "Rescanning shares…"
-msgstr "Ponowne skanowanie zasobów znajomego…"
-
-#: pynicotine/shares.py:994
-#, fuzzy
-msgid "Finished rescanning shares"
-msgstr "Zakończono ponowne skanowanie zasobów znajomych"
 
 #: pynicotine/slskmessages.py:2244
 #, python-format
