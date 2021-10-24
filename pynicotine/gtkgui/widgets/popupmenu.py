@@ -235,8 +235,8 @@ class PopupMenu(Gio.Menu):
             self.append_item(("#" + _("_Browse Files"), self.on_browse_user))
 
         self.setup(
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
+            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("", None)
         )
 
@@ -288,6 +288,11 @@ class PopupMenu(Gio.Menu):
     def toggle_user_items(self):
 
         self.editing = True
+
+        self.actions[_("_Gift Privileges…")].set_enabled(
+            GLib.Variant.new_boolean(self.frame.np.privileges_left)
+        )
+
         add_to_list = _("_Add to Buddy List")
 
         if add_to_list in self.actions:
@@ -569,7 +574,7 @@ class PopupMenu(Gio.Menu):
             self.frame.np.request_give_privileges(self.user, days)
 
         except ValueError:
-            self.on_give_privileges(error=_("Please enter a whole number!"))
+            self.on_give_privileges(error=_("Please enter number of days!"))
 
     def on_give_privileges(self, *args, error=None):
 
@@ -580,8 +585,8 @@ class PopupMenu(Gio.Menu):
         else:
             days = self.frame.np.privileges_left // 60 // 60 // 24
 
-        message = (_("How many days of privileges should user %s be gifted?") %
-                   self.user + " (" + _("%(days)s days left") % {'days': days} + ")")
+        message = (_("Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):") %
+                   {"user": self.user, "days_left": _("%(days)s days left") % {"days": days}})
 
         if error:
             message += "\n\n" + error
