@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 01:47+0300\n"
+"POT-Creation-Date: 2021-10-24 03:00+0300\n"
 "PO-Revision-Date: 2021-10-23 22:57+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1247,7 +1247,7 @@ msgstr "Finden…"
 
 #: pynicotine/gtkgui/chatrooms.py:462 pynicotine/gtkgui/chatrooms.py:473
 #: pynicotine/gtkgui/chatrooms.py:664 pynicotine/gtkgui/chatrooms.py:669
-#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1848
+#: pynicotine/gtkgui/frame.py:117 pynicotine/gtkgui/frame.py:1837
 #: pynicotine/gtkgui/privatechat.py:221 pynicotine/gtkgui/privatechat.py:300
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:169
 msgid "Copy"
@@ -1440,8 +1440,8 @@ msgstr "Soulseek-Privilegien erhalten…"
 #: pynicotine/gtkgui/fastconfigure.py:190
 #: pynicotine/gtkgui/fastconfigure.py:209
 #: pynicotine/gtkgui/fastconfigure.py:218
-#: pynicotine/gtkgui/settingswindow.py:710
-#: pynicotine/gtkgui/settingswindow.py:740
+#: pynicotine/gtkgui/settingswindow.py:688
+#: pynicotine/gtkgui/settingswindow.py:718
 msgid "Unable to Share Folder"
 msgstr "Freigabe des Ordners nicht möglich"
 
@@ -1462,13 +1462,13 @@ msgid "Virtual Name"
 msgstr "Virtueller Name"
 
 #: pynicotine/gtkgui/fastconfigure.py:235
-#: pynicotine/gtkgui/settingswindow.py:748
+#: pynicotine/gtkgui/settingswindow.py:726
 #, python-format
 msgid "Enter virtual name for '%(dir)s':"
 msgstr "Virtuellen Namen für '%(dir)s' eingeben:"
 
 #: pynicotine/gtkgui/fastconfigure.py:244
-#: pynicotine/gtkgui/settingswindow.py:766
+#: pynicotine/gtkgui/settingswindow.py:744
 msgid "Add a Shared Folder"
 msgstr "Freigabe hinzufügen"
 
@@ -1527,14 +1527,14 @@ msgstr ""
 "Wenn Sie diese Datei mit einem Texteditor öffnen, können Sie vielleicht "
 "einige Ihrer Einstellungen retten."
 
-#: pynicotine/gtkgui/frame.py:367 pynicotine/gtkgui/frame.py:475
+#: pynicotine/gtkgui/frame.py:366 pynicotine/gtkgui/frame.py:474
 #: pynicotine/gtkgui/widgets/iconnotebook.py:455
 #: pynicotine/gtkgui/widgets/treeview.py:469
 msgid "Online"
 msgstr "Online"
 
-#: pynicotine/gtkgui/frame.py:376 pynicotine/gtkgui/frame.py:478
-#: pynicotine/gtkgui/settingswindow.py:1422
+#: pynicotine/gtkgui/frame.py:375 pynicotine/gtkgui/frame.py:477
+#: pynicotine/gtkgui/settingswindow.py:1400
 #: pynicotine/gtkgui/widgets/iconnotebook.py:453
 #: pynicotine/gtkgui/widgets/trayicon.py:99
 #: pynicotine/gtkgui/widgets/treeview.py:466
@@ -1542,17 +1542,17 @@ msgstr "Online"
 msgid "Away"
 msgstr "Abwesend"
 
-#: pynicotine/gtkgui/frame.py:393 pynicotine/gtkgui/widgets/iconnotebook.py:457
+#: pynicotine/gtkgui/frame.py:392 pynicotine/gtkgui/widgets/iconnotebook.py:457
 #: pynicotine/gtkgui/widgets/treeview.py:471
 #: pynicotine/gtkgui/ui/mainwindow.ui:1890
 msgid "Offline"
 msgstr "Offline"
 
-#: pynicotine/gtkgui/frame.py:407
+#: pynicotine/gtkgui/frame.py:406
 msgid "Invalid Password"
 msgstr "Ungültiges Passwort"
 
-#: pynicotine/gtkgui/frame.py:408
+#: pynicotine/gtkgui/frame.py:407
 #, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -1562,158 +1562,158 @@ msgstr ""
 "ist ungültig. Bitte wählen Sie einen anderen Benutzernamen, wenn Sie sich "
 "zum ersten Mal anmelden."
 
-#: pynicotine/gtkgui/frame.py:415
+#: pynicotine/gtkgui/frame.py:414
 msgid "Change Login Details"
 msgstr "Anmeldedaten ändern"
 
-#: pynicotine/gtkgui/frame.py:711
+#: pynicotine/gtkgui/frame.py:710
 msgid "Error retrieving latest version"
 msgstr "Fehler beim Abrufen der neuesten Version"
 
-#: pynicotine/gtkgui/frame.py:718
+#: pynicotine/gtkgui/frame.py:717
 #, python-format
 msgid "Version %s is available"
 msgstr "Version %s ist verfügbar"
 
-#: pynicotine/gtkgui/frame.py:721
+#: pynicotine/gtkgui/frame.py:720
 #, python-format
 msgid "released on %s"
 msgstr "freigegeben am %s"
 
-#: pynicotine/gtkgui/frame.py:726
+#: pynicotine/gtkgui/frame.py:725
 msgid "Out of date"
 msgstr "Veraltet"
 
-#: pynicotine/gtkgui/frame.py:734 pynicotine/gtkgui/frame.py:742
+#: pynicotine/gtkgui/frame.py:733 pynicotine/gtkgui/frame.py:741
 msgid "Up to date"
 msgstr "Aktuäl"
 
-#: pynicotine/gtkgui/frame.py:735
+#: pynicotine/gtkgui/frame.py:734
 msgid "You appear to be using a development version of Nicotine+."
 msgstr "Sie scheinen eine Entwicklungsversion von Nicotine+ zu verwenden."
 
-#: pynicotine/gtkgui/frame.py:743
+#: pynicotine/gtkgui/frame.py:742
 msgid "You are using the latest version of Nicotine+."
 msgstr "Du verwendest die aktuellste Version von Nicotine+."
 
-#: pynicotine/gtkgui/frame.py:997
+#: pynicotine/gtkgui/frame.py:986
 msgid "_Connect"
 msgstr "Verbindung herstellen"
 
-#: pynicotine/gtkgui/frame.py:998
+#: pynicotine/gtkgui/frame.py:987
 msgid "_Disconnect"
 msgstr "Verbindung trennen"
 
-#: pynicotine/gtkgui/frame.py:999
+#: pynicotine/gtkgui/frame.py:988
 msgid "_Away"
 msgstr "_Weg"
 
-#: pynicotine/gtkgui/frame.py:1000
+#: pynicotine/gtkgui/frame.py:989
 msgid "Soulseek _Privileges"
 msgstr "Soulseek _Privilegien"
 
-#: pynicotine/gtkgui/frame.py:1005 pynicotine/gtkgui/ui/settings/plugin.ui:131
+#: pynicotine/gtkgui/frame.py:994 pynicotine/gtkgui/ui/settings/plugin.ui:131
 msgid "_Preferences"
 msgstr "_Einstellungen"
 
-#: pynicotine/gtkgui/frame.py:1008
+#: pynicotine/gtkgui/frame.py:997
 msgid "_Quit"
 msgstr "_Beenden"
 
-#: pynicotine/gtkgui/frame.py:1026
+#: pynicotine/gtkgui/frame.py:1015
 msgid "Prefer Dark _Mode"
 msgstr "Dunkle _Mode bevorzugen"
 
-#: pynicotine/gtkgui/frame.py:1027
+#: pynicotine/gtkgui/frame.py:1016
 msgid "Use _Header Bar"
 msgstr "_Kopfleiste verwenden"
 
-#: pynicotine/gtkgui/frame.py:1029
+#: pynicotine/gtkgui/frame.py:1018
 msgid "Show _Log Pane"
 msgstr "_Log-Fenster anzeigen"
 
-#: pynicotine/gtkgui/frame.py:1030
+#: pynicotine/gtkgui/frame.py:1019
 msgid "Show _Debug Log Controls"
 msgstr "_Debug-Log-Steuerelemente anzeigen"
 
-#: pynicotine/gtkgui/frame.py:1032
+#: pynicotine/gtkgui/frame.py:1021
 msgid "Buddy List in Separate Tab"
 msgstr "Freundeliste in separatem Tab"
 
-#: pynicotine/gtkgui/frame.py:1033
+#: pynicotine/gtkgui/frame.py:1022
 msgid "Buddy List in Chat Rooms"
 msgstr "Freundesliste in Chatrooms"
 
-#: pynicotine/gtkgui/frame.py:1034
+#: pynicotine/gtkgui/frame.py:1023
 msgid "Buddy List Always Visible"
 msgstr "Freundeliste immer sichtbar"
 
-#: pynicotine/gtkgui/frame.py:1042
+#: pynicotine/gtkgui/frame.py:1031
 msgid "_Rescan Public Shares"
 msgstr "_Publike Freigaben aktualisieren"
 
-#: pynicotine/gtkgui/frame.py:1043
+#: pynicotine/gtkgui/frame.py:1032
 msgid "Rescan B_uddy Shares"
 msgstr "Freundenfreigaben aktualisieren"
 
-#: pynicotine/gtkgui/frame.py:1044
+#: pynicotine/gtkgui/frame.py:1033
 msgid "_Configure Shares"
 msgstr "_Freigaben konfigurieren"
 
-#: pynicotine/gtkgui/frame.py:1051
+#: pynicotine/gtkgui/frame.py:1040
 msgid "_Browse Public Shares"
 msgstr "_Öffentliche Freigaben durchsuchen"
 
-#: pynicotine/gtkgui/frame.py:1052
+#: pynicotine/gtkgui/frame.py:1041
 msgid "Bro_wse Buddy Shares"
 msgstr "Freundenfreigaben durchsuchen"
 
-#: pynicotine/gtkgui/frame.py:1068
+#: pynicotine/gtkgui/frame.py:1057
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturkürzel"
 
-#: pynicotine/gtkgui/frame.py:1069
+#: pynicotine/gtkgui/frame.py:1058
 msgid "_Setup Assistant"
 msgstr "_Einrichtungsassistent"
 
-#: pynicotine/gtkgui/frame.py:1070
+#: pynicotine/gtkgui/frame.py:1059
 msgid "_Transfer Statistics"
 msgstr "_Übertragungsstatistiken"
 
-#: pynicotine/gtkgui/frame.py:1072
+#: pynicotine/gtkgui/frame.py:1061
 msgid "Report a _Bug"
 msgstr "Einen _Bug melden"
 
-#: pynicotine/gtkgui/frame.py:1073
+#: pynicotine/gtkgui/frame.py:1062
 msgid "Check _Latest Version"
 msgstr "_Neueste Version Überprüfen"
 
-#: pynicotine/gtkgui/frame.py:1075
+#: pynicotine/gtkgui/frame.py:1064
 msgid "About _Nicotine+"
 msgstr "Über _Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1087 pynicotine/gtkgui/frame.py:1106
+#: pynicotine/gtkgui/frame.py:1076 pynicotine/gtkgui/frame.py:1095
 msgid "_View"
 msgstr "_Ansicht"
 
-#: pynicotine/gtkgui/frame.py:1094 pynicotine/gtkgui/frame.py:1108
+#: pynicotine/gtkgui/frame.py:1083 pynicotine/gtkgui/frame.py:1097
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: pynicotine/gtkgui/frame.py:1105
+#: pynicotine/gtkgui/frame.py:1094
 msgid "_File"
 msgstr "Datei"
 
-#: pynicotine/gtkgui/frame.py:1107
+#: pynicotine/gtkgui/frame.py:1096
 msgid "_Shares"
 msgstr "_Freigaben"
 
-#: pynicotine/gtkgui/frame.py:1282 pynicotine/gtkgui/ui/mainwindow.ui:853
+#: pynicotine/gtkgui/frame.py:1271 pynicotine/gtkgui/ui/mainwindow.ui:853
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:161
 msgid "Search Files"
 msgstr "Dateien suchen"
 
-#: pynicotine/gtkgui/frame.py:1283 pynicotine/gtkgui/settingswindow.py:3116
+#: pynicotine/gtkgui/frame.py:1272 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/widgets/trayicon.py:92
 #: pynicotine/gtkgui/ui/mainwindow.ui:949
 #: pynicotine/gtkgui/ui/mainwindow.ui:1602
@@ -1722,7 +1722,7 @@ msgstr "Dateien suchen"
 msgid "Downloads"
 msgstr "Downloads"
 
-#: pynicotine/gtkgui/frame.py:1284 pynicotine/gtkgui/settingswindow.py:3117
+#: pynicotine/gtkgui/frame.py:1273 pynicotine/gtkgui/settingswindow.py:3095
 #: pynicotine/gtkgui/widgets/trayicon.py:93
 #: pynicotine/gtkgui/ui/mainwindow.ui:1039
 #: pynicotine/gtkgui/ui/mainwindow.ui:1615
@@ -1731,67 +1731,67 @@ msgstr "Downloads"
 msgid "Uploads"
 msgstr "Uploads"
 
-#: pynicotine/gtkgui/frame.py:1285 pynicotine/gtkgui/ui/mainwindow.ui:1129
+#: pynicotine/gtkgui/frame.py:1274 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 msgid "User Browse"
 msgstr "Benutzer suchen"
 
-#: pynicotine/gtkgui/frame.py:1286 pynicotine/gtkgui/settingswindow.py:3107
+#: pynicotine/gtkgui/frame.py:1275 pynicotine/gtkgui/settingswindow.py:3085
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
 msgstr "Benutzerinformationen"
 
-#: pynicotine/gtkgui/frame.py:1287 pynicotine/gtkgui/ui/mainwindow.ui:1321
+#: pynicotine/gtkgui/frame.py:1276 pynicotine/gtkgui/ui/mainwindow.ui:1321
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:221
 msgid "Private Chat"
 msgstr "Privater Chat"
 
-#: pynicotine/gtkgui/frame.py:1288 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1277 pynicotine/gtkgui/ui/buddylist.ui:18
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
 msgid "Buddy List"
 msgstr "Freundeliste"
 
-#: pynicotine/gtkgui/frame.py:1289 pynicotine/gtkgui/ui/mainwindow.ui:1507
+#: pynicotine/gtkgui/frame.py:1278 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:245
 msgid "Chat Rooms"
 msgstr "Chat-Räume"
 
-#: pynicotine/gtkgui/frame.py:1290 pynicotine/gtkgui/ui/mainwindow.ui:756
+#: pynicotine/gtkgui/frame.py:1279 pynicotine/gtkgui/ui/mainwindow.ui:756
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:257
 msgid "Interests"
 msgstr "Interessen"
 
-#: pynicotine/gtkgui/frame.py:1697 pynicotine/gtkgui/userbrowse.py:602
+#: pynicotine/gtkgui/frame.py:1686 pynicotine/gtkgui/userbrowse.py:602
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Kann Verzeichnis „%(folder)s“ nicht erstellen, Fehler: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1702
+#: pynicotine/gtkgui/frame.py:1691
 msgid "Select a Saved Shares List File"
 msgstr "Wählen Sie eine gespeicherte Freigabeliste"
 
-#: pynicotine/gtkgui/frame.py:1742
+#: pynicotine/gtkgui/frame.py:1731
 msgid "Create New Room?"
 msgstr "Neuen Raum erstellen?"
 
-#: pynicotine/gtkgui/frame.py:1743
+#: pynicotine/gtkgui/frame.py:1732
 #, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Möchten Sie wirklich einen neuen Raum \"%s\" erstellen?"
 
-#: pynicotine/gtkgui/frame.py:1744
+#: pynicotine/gtkgui/frame.py:1733
 msgid "Make room private"
 msgstr "Raum privat machen"
 
-#: pynicotine/gtkgui/frame.py:2184
+#: pynicotine/gtkgui/frame.py:2169
 msgid "Critical Error"
 msgstr "Kritischer Fehler"
 
-#: pynicotine/gtkgui/frame.py:2185
+#: pynicotine/gtkgui/frame.py:2170
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
@@ -1800,23 +1800,23 @@ msgstr ""
 "Bitte kopieren Sie die folgende Meldung und fügen Sie sie in einen "
 "Fehlerbericht ein:"
 
-#: pynicotine/gtkgui/frame.py:2187
+#: pynicotine/gtkgui/frame.py:2172
 msgid "Copy & Report Bug"
 msgstr "Fehler kopieren und melden"
 
-#: pynicotine/gtkgui/frame.py:2238
+#: pynicotine/gtkgui/frame.py:2223
 msgid "Close Nicotine+?"
 msgstr "Nicotine+ schließen?"
 
-#: pynicotine/gtkgui/frame.py:2239
+#: pynicotine/gtkgui/frame.py:2224
 msgid "Do you really want to exit Nicotine+?"
 msgstr "Möchten Sie Nikotin+ wirklich beenden?"
 
-#: pynicotine/gtkgui/frame.py:2240
+#: pynicotine/gtkgui/frame.py:2225
 msgid "Run in Background"
 msgstr "Im Hintergrund ausführen"
 
-#: pynicotine/gtkgui/frame.py:2241
+#: pynicotine/gtkgui/frame.py:2226
 msgid "Remember choice"
 msgstr "Auswahl merken"
 
@@ -1920,10 +1920,10 @@ msgstr ""
 msgid "Room"
 msgstr "Raum"
 
-#: pynicotine/gtkgui/roomlist.py:69 pynicotine/gtkgui/settingswindow.py:980
-#: pynicotine/gtkgui/settingswindow.py:993
-#: pynicotine/gtkgui/settingswindow.py:1146
-#: pynicotine/gtkgui/settingswindow.py:1159
+#: pynicotine/gtkgui/roomlist.py:69 pynicotine/gtkgui/settingswindow.py:958
+#: pynicotine/gtkgui/settingswindow.py:971
+#: pynicotine/gtkgui/settingswindow.py:1124
+#: pynicotine/gtkgui/settingswindow.py:1137
 #: pynicotine/gtkgui/ui/mainwindow.ui:166
 #: pynicotine/gtkgui/ui/mainwindow.ui:310
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:260
@@ -1974,7 +1974,7 @@ msgstr "Dateiname"
 msgid "Size"
 msgstr "Größe"
 
-#: pynicotine/gtkgui/search.py:348 pynicotine/gtkgui/settingswindow.py:2468
+#: pynicotine/gtkgui/search.py:348 pynicotine/gtkgui/settingswindow.py:2446
 #: pynicotine/gtkgui/userbrowse.py:304
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:165
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:266
@@ -1982,7 +1982,7 @@ msgstr "Größe"
 msgid "Bitrate"
 msgstr "Bitrate"
 
-#: pynicotine/gtkgui/search.py:349 pynicotine/gtkgui/settingswindow.py:2466
+#: pynicotine/gtkgui/search.py:349 pynicotine/gtkgui/settingswindow.py:2444
 #: pynicotine/gtkgui/userbrowse.py:305
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:130
 msgid "Length"
@@ -2157,154 +2157,154 @@ msgstr "Filter Erfolgreich"
 msgid "Buddy-only"
 msgstr "Nur für Freunde"
 
-#: pynicotine/gtkgui/settingswindow.py:711
+#: pynicotine/gtkgui/settingswindow.py:689
 msgid "The chosen virtual name is either empty or already exists"
 msgstr "Der gewählte virtuelle Name ist entweder leer oder existiert bereits"
 
-#: pynicotine/gtkgui/settingswindow.py:741
+#: pynicotine/gtkgui/settingswindow.py:719
 msgid "The chosen folder is already shared."
 msgstr "Der gewählte Ordner ist bereits freigegeben."
 
-#: pynicotine/gtkgui/settingswindow.py:747
+#: pynicotine/gtkgui/settingswindow.py:725
 msgid "Set Virtual Name"
 msgstr "Virtuellen Namen festlegen"
 
-#: pynicotine/gtkgui/settingswindow.py:751
+#: pynicotine/gtkgui/settingswindow.py:729
 msgid "Share with buddies only"
 msgstr "Nur mit Freunden teilen"
 
-#: pynicotine/gtkgui/settingswindow.py:810
+#: pynicotine/gtkgui/settingswindow.py:788
 msgid "Edit Virtual Name"
 msgstr "Virtuellen Namen bearbeiten"
 
-#: pynicotine/gtkgui/settingswindow.py:811
+#: pynicotine/gtkgui/settingswindow.py:789
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Neuen virtuellen Namen für '%(dir)s' eingeben:"
 
-#: pynicotine/gtkgui/settingswindow.py:992
-#: pynicotine/gtkgui/settingswindow.py:1158
+#: pynicotine/gtkgui/settingswindow.py:970
+#: pynicotine/gtkgui/settingswindow.py:1136
 msgid "Addresses"
 msgstr "Adressen"
 
-#: pynicotine/gtkgui/settingswindow.py:1043
+#: pynicotine/gtkgui/settingswindow.py:1021
 #: pynicotine/gtkgui/widgets/popupmenu.py:250
 #: pynicotine/gtkgui/widgets/popupmenu.py:305
 #: pynicotine/gtkgui/ui/userinfo.ui:598
 msgid "Ignore User"
 msgstr "Benutzer ignorieren"
 
-#: pynicotine/gtkgui/settingswindow.py:1044
+#: pynicotine/gtkgui/settingswindow.py:1022
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Geben Sie den Namen des Benutzers ein, den Sie ignorieren möchten:"
 
-#: pynicotine/gtkgui/settingswindow.py:1095
+#: pynicotine/gtkgui/settingswindow.py:1073
 msgid "Ignore IP Address"
 msgstr "IP-Adresse ignorieren"
 
-#: pynicotine/gtkgui/settingswindow.py:1096
+#: pynicotine/gtkgui/settingswindow.py:1074
 msgid "Enter an IP address you want to ignore:"
 msgstr "Geben Sie eine IP-Adresse ein, die Sie ignorieren möchten:"
 
-#: pynicotine/gtkgui/settingswindow.py:1096
-#: pynicotine/gtkgui/settingswindow.py:1287
+#: pynicotine/gtkgui/settingswindow.py:1074
+#: pynicotine/gtkgui/settingswindow.py:1265
 msgid "* is a wildcard"
 msgstr "* ist eine Wildcard"
 
-#: pynicotine/gtkgui/settingswindow.py:1233
+#: pynicotine/gtkgui/settingswindow.py:1211
 #: pynicotine/gtkgui/widgets/popupmenu.py:249
 #: pynicotine/gtkgui/widgets/popupmenu.py:302
 #: pynicotine/gtkgui/ui/userinfo.ui:574
 msgid "Ban User"
 msgstr "Benutzer blocken"
 
-#: pynicotine/gtkgui/settingswindow.py:1234
+#: pynicotine/gtkgui/settingswindow.py:1212
 msgid "Enter the name of the user you want to ban:"
 msgstr "Geben Sie den Namen des Benutzers ein, den Sie blockieren möchten:"
 
-#: pynicotine/gtkgui/settingswindow.py:1286
+#: pynicotine/gtkgui/settingswindow.py:1264
 msgid "Block IP Address"
 msgstr "IP-Adresse blockieren"
 
-#: pynicotine/gtkgui/settingswindow.py:1287
+#: pynicotine/gtkgui/settingswindow.py:1265
 msgid "Enter an IP address you want to block:"
 msgstr "Geben Sie eine IP-Adresse ein, die Sie blockieren möchten:"
 
-#: pynicotine/gtkgui/settingswindow.py:1384
+#: pynicotine/gtkgui/settingswindow.py:1362
 msgid "Top"
 msgstr "Oben"
 
-#: pynicotine/gtkgui/settingswindow.py:1384
+#: pynicotine/gtkgui/settingswindow.py:1362
 msgid "Bottom"
 msgstr "Unten"
 
-#: pynicotine/gtkgui/settingswindow.py:1384
+#: pynicotine/gtkgui/settingswindow.py:1362
 msgid "Left"
 msgstr "Links"
 
-#: pynicotine/gtkgui/settingswindow.py:1384
+#: pynicotine/gtkgui/settingswindow.py:1362
 msgid "Right"
 msgstr "Rechts"
 
-#: pynicotine/gtkgui/settingswindow.py:1420
+#: pynicotine/gtkgui/settingswindow.py:1398
 msgid "Connected"
 msgstr "Verbunden"
 
-#: pynicotine/gtkgui/settingswindow.py:1421
+#: pynicotine/gtkgui/settingswindow.py:1399
 msgid "Disconnected"
 msgstr "Nicht verbunden"
 
-#: pynicotine/gtkgui/settingswindow.py:1423
-#: pynicotine/gtkgui/settingswindow.py:1424
+#: pynicotine/gtkgui/settingswindow.py:1401
+#: pynicotine/gtkgui/settingswindow.py:1402
 msgid "Highlight"
 msgstr "Hervorgehoben"
 
-#: pynicotine/gtkgui/settingswindow.py:1425
+#: pynicotine/gtkgui/settingswindow.py:1403
 msgid "Window"
 msgstr "Fenster"
 
-#: pynicotine/gtkgui/settingswindow.py:1426
+#: pynicotine/gtkgui/settingswindow.py:1404
 msgid "Notification"
 msgstr "Benachrichtigung"
 
-#: pynicotine/gtkgui/settingswindow.py:1433
+#: pynicotine/gtkgui/settingswindow.py:1411
 msgid "Connected (Tray)"
 msgstr "Verbunden (Fach)"
 
-#: pynicotine/gtkgui/settingswindow.py:1435
+#: pynicotine/gtkgui/settingswindow.py:1413
 msgid "Disconnected (Tray)"
 msgstr "Getrennt (Fach)"
 
-#: pynicotine/gtkgui/settingswindow.py:1437
+#: pynicotine/gtkgui/settingswindow.py:1415
 msgid "Away (Tray)"
 msgstr "Abwesend (Fach)"
 
-#: pynicotine/gtkgui/settingswindow.py:1439
+#: pynicotine/gtkgui/settingswindow.py:1417
 msgid "Message (Tray)"
 msgstr "Nachricht (Fach)"
 
-#: pynicotine/gtkgui/settingswindow.py:1959
+#: pynicotine/gtkgui/settingswindow.py:1937
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: pynicotine/gtkgui/settingswindow.py:1960
+#: pynicotine/gtkgui/settingswindow.py:1938
 msgid "Handler"
 msgstr "Programm"
 
-#: pynicotine/gtkgui/settingswindow.py:2093
-#: pynicotine/gtkgui/settingswindow.py:2113
+#: pynicotine/gtkgui/settingswindow.py:2071
+#: pynicotine/gtkgui/settingswindow.py:2091
 msgid "Pattern"
 msgstr "Muster"
 
-#: pynicotine/gtkgui/settingswindow.py:2094
+#: pynicotine/gtkgui/settingswindow.py:2072
 msgid "Replacement"
 msgstr "Ersetzung"
 
-#: pynicotine/gtkgui/settingswindow.py:2240
+#: pynicotine/gtkgui/settingswindow.py:2218
 msgid "Censor Pattern"
 msgstr "Zensurmuster"
 
-#: pynicotine/gtkgui/settingswindow.py:2241
+#: pynicotine/gtkgui/settingswindow.py:2219
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
 "don't want to match strings inside words (may fail at the beginning and end "
@@ -2314,83 +2314,83 @@ msgstr ""
 "Leerzeichen um das Muster herum hinzu, wenn Sie Zeichenfolgen in Wörtern "
 "nicht abgleichen möchten (kann am Anfang und Ende von Zeilen fehlschlagen)."
 
-#: pynicotine/gtkgui/settingswindow.py:2441
+#: pynicotine/gtkgui/settingswindow.py:2419
 msgid "Username;APIKEY:"
 msgstr "Benutzername;APIKEY:"
 
-#: pynicotine/gtkgui/settingswindow.py:2445
+#: pynicotine/gtkgui/settingswindow.py:2423
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
 msgstr "Klientname (z. B. amarok, audacious, exaile) oder leer für auto:"
 
-#: pynicotine/gtkgui/settingswindow.py:2449
+#: pynicotine/gtkgui/settingswindow.py:2427
 #: pynicotine/gtkgui/ui/settings/network.ui:75
 msgid "Username:"
 msgstr "Benutzername:"
 
-#: pynicotine/gtkgui/settingswindow.py:2453
+#: pynicotine/gtkgui/settingswindow.py:2431
 msgid "Command:"
 msgstr "Befehl:"
 
-#: pynicotine/gtkgui/settingswindow.py:2461
-#: pynicotine/gtkgui/settingswindow.py:2464
+#: pynicotine/gtkgui/settingswindow.py:2439
+#: pynicotine/gtkgui/settingswindow.py:2442
 msgid "Title"
 msgstr "Titel"
 
-#: pynicotine/gtkgui/settingswindow.py:2463
+#: pynicotine/gtkgui/settingswindow.py:2441
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Wird gerade abgespielt (typischerweise \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/settingswindow.py:2464
-#: pynicotine/gtkgui/settingswindow.py:2472
+#: pynicotine/gtkgui/settingswindow.py:2442
+#: pynicotine/gtkgui/settingswindow.py:2450
 msgid "Artist"
 msgstr "Künstler"
 
-#: pynicotine/gtkgui/settingswindow.py:2470
+#: pynicotine/gtkgui/settingswindow.py:2448
 msgid "Comment"
 msgstr "Kommentar"
 
-#: pynicotine/gtkgui/settingswindow.py:2474
+#: pynicotine/gtkgui/settingswindow.py:2452
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/settingswindow.py:2476
+#: pynicotine/gtkgui/settingswindow.py:2454
 msgid "Track Number"
 msgstr "Track"
 
-#: pynicotine/gtkgui/settingswindow.py:2478
+#: pynicotine/gtkgui/settingswindow.py:2456
 msgid "Year"
 msgstr "Jahr"
 
-#: pynicotine/gtkgui/settingswindow.py:2480
+#: pynicotine/gtkgui/settingswindow.py:2458
 msgid "Filename (URI)"
 msgstr "Dateiname (URI)"
 
-#: pynicotine/gtkgui/settingswindow.py:2482
+#: pynicotine/gtkgui/settingswindow.py:2460
 msgid "Program"
 msgstr "Programm"
 
-#: pynicotine/gtkgui/settingswindow.py:2595
+#: pynicotine/gtkgui/settingswindow.py:2573
 #, python-format
 msgid "%s Properties"
 msgstr "%s Eigenschaften"
 
-#: pynicotine/gtkgui/settingswindow.py:2604
-#: pynicotine/gtkgui/settingswindow.py:3071
+#: pynicotine/gtkgui/settingswindow.py:2582
+#: pynicotine/gtkgui/settingswindow.py:3049
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: pynicotine/gtkgui/settingswindow.py:2604
-#: pynicotine/gtkgui/settingswindow.py:3074
+#: pynicotine/gtkgui/settingswindow.py:2582
+#: pynicotine/gtkgui/settingswindow.py:3052
 msgid "OK"
 msgstr "Okay"
 
-#: pynicotine/gtkgui/settingswindow.py:2685
+#: pynicotine/gtkgui/settingswindow.py:2663
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:137
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: pynicotine/gtkgui/settingswindow.py:2686
+#: pynicotine/gtkgui/settingswindow.py:2664
 #: pynicotine/gtkgui/ui/settings/ban.ui:233
 #: pynicotine/gtkgui/ui/settings/ban.ui:390
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:181
@@ -2398,143 +2398,143 @@ msgstr "Hinzufügen"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:436
 #: pynicotine/gtkgui/ui/settings/ignore.ui:115
 #: pynicotine/gtkgui/ui/settings/ignore.ui:271
-#: pynicotine/gtkgui/ui/settings/shares.ui:200
+#: pynicotine/gtkgui/ui/settings/shares.ui:178
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:203
 msgid "Remove"
 msgstr "Entfernen"
 
-#: pynicotine/gtkgui/settingswindow.py:2903
+#: pynicotine/gtkgui/settingswindow.py:2881
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: pynicotine/gtkgui/settingswindow.py:2904
-#: pynicotine/gtkgui/settingswindow.py:3110
+#: pynicotine/gtkgui/settingswindow.py:2882
+#: pynicotine/gtkgui/settingswindow.py:3088
 msgid "Plugins"
 msgstr "Plugins"
 
-#: pynicotine/gtkgui/settingswindow.py:2962
+#: pynicotine/gtkgui/settingswindow.py:2940
 msgid "No description provided"
 msgstr "Keine Beschreibung vorhanden"
 
-#: pynicotine/gtkgui/settingswindow.py:2976
+#: pynicotine/gtkgui/settingswindow.py:2954
 msgid "Could not enable plugin."
 msgstr "Das Plugin konnte nicht aktiviert werden."
 
-#: pynicotine/gtkgui/settingswindow.py:2980
+#: pynicotine/gtkgui/settingswindow.py:2958
 msgid "Could not disable plugin."
 msgstr "Das Plugin konnte nicht deaktiviert werden."
 
-#: pynicotine/gtkgui/settingswindow.py:3065
+#: pynicotine/gtkgui/settingswindow.py:3043
 #: pynicotine/gtkgui/widgets/trayicon.py:110
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:54
 msgid "Preferences"
 msgstr "Präferenzen"
 
-#: pynicotine/gtkgui/settingswindow.py:3072
+#: pynicotine/gtkgui/settingswindow.py:3050
 msgid "Export"
 msgstr "Export"
 
-#: pynicotine/gtkgui/settingswindow.py:3073
+#: pynicotine/gtkgui/settingswindow.py:3051
 msgid "Apply"
 msgstr "Anwenden"
 
-#: pynicotine/gtkgui/settingswindow.py:3104
+#: pynicotine/gtkgui/settingswindow.py:3082
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:14
 msgid "General"
 msgstr "Allgemein"
 
-#: pynicotine/gtkgui/settingswindow.py:3105
+#: pynicotine/gtkgui/settingswindow.py:3083
 msgid "Network"
 msgstr "Netzwerk"
 
-#: pynicotine/gtkgui/settingswindow.py:3106
+#: pynicotine/gtkgui/settingswindow.py:3084
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:16
 msgid "User Interface"
 msgstr "Oberfläche"
 
-#: pynicotine/gtkgui/settingswindow.py:3108
+#: pynicotine/gtkgui/settingswindow.py:3086
 #: pynicotine/gtkgui/ui/settings/search.ui:41
 msgid "Searches"
 msgstr "Suche"
 
-#: pynicotine/gtkgui/settingswindow.py:3109
+#: pynicotine/gtkgui/settingswindow.py:3087
 #: pynicotine/gtkgui/ui/settings/notifications.ui:15
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: pynicotine/gtkgui/settingswindow.py:3111
+#: pynicotine/gtkgui/settingswindow.py:3089
 #: pynicotine/gtkgui/ui/settings/log.ui:25
 msgid "Logging"
 msgstr "Aufzeichnung"
 
-#: pynicotine/gtkgui/settingswindow.py:3112
+#: pynicotine/gtkgui/settingswindow.py:3090
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:20
 msgid "URL Handlers"
 msgstr "URL-Handler"
 
-#: pynicotine/gtkgui/settingswindow.py:3114
+#: pynicotine/gtkgui/settingswindow.py:3092
 #: pynicotine/gtkgui/ui/mainwindow.ui:1680
 msgid "Transfers"
 msgstr "Überträgt"
 
-#: pynicotine/gtkgui/settingswindow.py:3115
+#: pynicotine/gtkgui/settingswindow.py:3093
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:219
 #: pynicotine/gtkgui/ui/settings/shares.ui:16
 msgid "Shares"
 msgstr "Freigaben"
 
-#: pynicotine/gtkgui/settingswindow.py:3118
+#: pynicotine/gtkgui/settingswindow.py:3096
 #: pynicotine/gtkgui/ui/settings/ban.ui:15
 msgid "Ban List"
 msgstr "Sperrliste"
 
-#: pynicotine/gtkgui/settingswindow.py:3119
+#: pynicotine/gtkgui/settingswindow.py:3097
 msgid "Events"
 msgstr "Ereignisse"
 
-#: pynicotine/gtkgui/settingswindow.py:3121
+#: pynicotine/gtkgui/settingswindow.py:3099
 #: pynicotine/gtkgui/ui/mainwindow.ui:1641
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/settingswindow.py:3122
+#: pynicotine/gtkgui/settingswindow.py:3100
 msgid "Ignore List"
 msgstr "Ignorier-Liste"
 
-#: pynicotine/gtkgui/settingswindow.py:3123
+#: pynicotine/gtkgui/settingswindow.py:3101
 msgid "Censor & Replace"
 msgstr "Zensieren & Ersetzen"
 
-#: pynicotine/gtkgui/settingswindow.py:3124
+#: pynicotine/gtkgui/settingswindow.py:3102
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:15
 msgid "Now Playing"
 msgstr "Jetzt spielt"
 
-#: pynicotine/gtkgui/settingswindow.py:3125
+#: pynicotine/gtkgui/settingswindow.py:3103
 #: pynicotine/gtkgui/ui/settings/completion.ui:22
 msgid "Completion"
 msgstr "Vervollständigung"
 
-#: pynicotine/gtkgui/settingswindow.py:3126
+#: pynicotine/gtkgui/settingswindow.py:3104
 #: pynicotine/gtkgui/ui/settings/tts.ui:15
 msgid "Text-to-Speech"
 msgstr "Text-zu-Sprache"
 
-#: pynicotine/gtkgui/settingswindow.py:3130
+#: pynicotine/gtkgui/settingswindow.py:3108
 msgid "Categories"
 msgstr "Kategorien"
 
-#: pynicotine/gtkgui/settingswindow.py:3443
+#: pynicotine/gtkgui/settingswindow.py:3421
 #, python-format
 msgid "Error backing up config: %s"
 msgstr "Fehler beim Sichern der Konfiguration: %s"
 
-#: pynicotine/gtkgui/settingswindow.py:3445
+#: pynicotine/gtkgui/settingswindow.py:3423
 #, python-format
 msgid "Config backed up to: %s"
 msgstr "Konfiguration gesichert auf: %s"
 
-#: pynicotine/gtkgui/settingswindow.py:3454
+#: pynicotine/gtkgui/settingswindow.py:3432
 msgid "Pick a File Name for Config Backup"
 msgstr "Wählen Sie einen Dateinamen für die Konfigurationssicherung"
 
@@ -3590,16 +3590,16 @@ msgstr "Fehler beim Scannen der Metadaten für die Datei %(path)s: %(error)s"
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Fehler beim Scannen der Datei %(path)s: %(error)s"
 
-#: pynicotine/shares.py:570 pynicotine/shares.py:936
+#: pynicotine/shares.py:570 pynicotine/shares.py:933
 msgid "Downloaded"
 msgstr "Heruntergeladen"
 
-#: pynicotine/shares.py:643
+#: pynicotine/shares.py:642
 #, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Die folgenden Datenbanken konnten nicht verarbeitet werden: %(names)s"
 
-#: pynicotine/shares.py:649
+#: pynicotine/shares.py:648
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
 "your shares."
@@ -3607,7 +3607,7 @@ msgstr ""
 "Der Versuch, den Index der freigegebenen Dateien aufgrund eines Fehlers "
 "zurückzusetzen. Bitte scannen Sie Ihre Freigaben erneut."
 
-#: pynicotine/shares.py:653
+#: pynicotine/shares.py:652
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
@@ -3618,38 +3618,38 @@ msgstr ""
 "gleichzeitig aktiv sind, Probleme mit der Dateiberechtigung oder ein anderes "
 "Problem in Nicotine+ auftreten ist."
 
-#: pynicotine/shares.py:741 pynicotine/shares.py:793
+#: pynicotine/shares.py:740 pynicotine/shares.py:792
 #, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Der Download %(filename)s konnte nicht zu den freigegebenen Dateien "
 "hinzugefügt werden: %(error)s"
 
-#: pynicotine/shares.py:892
+#: pynicotine/shares.py:885
 #, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr ""
 "Die Anzahl der freigegebenen Dateien konnte nicht an den Server gesendet "
 "werden: %s"
 
-#: pynicotine/shares.py:960
+#: pynicotine/shares.py:957
 #, python-format
 msgid "Progress: %s"
 msgstr "Fortschritt: %s"
 
-#: pynicotine/shares.py:973
+#: pynicotine/shares.py:970
 msgid "Rescanning normal shares…"
 msgstr "Normale Freigaben erneut scannen…"
 
-#: pynicotine/shares.py:977
+#: pynicotine/shares.py:974
 msgid "Rescanning buddy shares…"
 msgstr "Freunden-Freigaben werden erneut gescannt…"
 
-#: pynicotine/shares.py:1023
+#: pynicotine/shares.py:1020
 msgid "Finished rescanning public shares"
 msgstr "Erneutes Scannen öffentlicher Freigaben abgeschlossen"
 
-#: pynicotine/shares.py:1025
+#: pynicotine/shares.py:1022
 msgid "Finished rescanning buddy shares"
 msgstr "Aktualisierung privater Freigaben beendet"
 
@@ -3829,7 +3829,7 @@ msgstr ""
 msgid "Failed to map the external WAN port: %(error)s"
 msgstr "Fehler beim Zuordnen des externen WAN-Ports: %(error)s"
 
-#: pynicotine/userbrowse.py:151
+#: pynicotine/userbrowse.py:146
 #, python-format
 msgid "Loading Shares from disk failed: %(error)s"
 msgstr "Laden der Freigaben von der Festplatte schlug fehl: %(error)s"
@@ -5084,7 +5084,7 @@ msgstr "Verbannte Benutzer"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:380
 #: pynicotine/gtkgui/ui/settings/ignore.ui:87
 #: pynicotine/gtkgui/ui/settings/ignore.ui:243
-#: pynicotine/gtkgui/ui/settings/shares.ui:144
+#: pynicotine/gtkgui/ui/settings/shares.ui:122
 msgid "Add…"
 msgstr "Hinzufügen…"
 
@@ -5781,42 +5781,11 @@ msgstr ""
 msgid "Enable buddy-only shares"
 msgstr "Freigaben nur für Freunde aktivieren"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:47
-msgid "Enables buddy shares that only users on your buddy list can access."
-msgstr ""
-"Aktiviert Freunden freigaben, auf die nur Benutzer in Ihrer Freundesliste "
-"zugreifen können."
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:55
-msgid "Mark each shared folder as buddy-only"
-msgstr "Markieren Sie jeden freigegebenen Ordner als nur für Freunde"
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:56
-msgid ""
-"Overrides the per-share option, useful if you temporarily need to prevent "
-"public access to shares."
-msgstr ""
-"Überschreibt die Option pro Freigabe, die nützlich ist, wenn Sie "
-"vorübergehend den öffentlichen Zugriff auf Freigaben verhindern müssen."
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:64
+#: pynicotine/gtkgui/ui/settings/shares.ui:54
 msgid "Limit buddy-only shares to trusted buddies"
 msgstr "Beschränkung der Freundenfreigaben auf vertrauenswürdige Freunde"
 
-#: pynicotine/gtkgui/ui/settings/shares.ui:65
-msgid ""
-"Only users marked as trusted on your buddy list can access your buddy-only "
-"shares."
-msgstr ""
-"Nur Benutzer, die in Ihrer Freudenliste als vertrauenswürdig markiert sind, "
-"können auf Ihre Freundenfreigaben zugreifen."
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:83
-#: pynicotine/gtkgui/ui/userinfo.ui:272
-msgid "Shared Folders"
-msgstr "Freigaben"
-
-#: pynicotine/gtkgui/ui/settings/shares.ui:172
+#: pynicotine/gtkgui/ui/settings/shares.ui:150
 msgid "Rename"
 msgstr "Umbenennen"
 
@@ -6300,6 +6269,10 @@ msgstr "Upload-Geschwindigkeit"
 msgid "Shared Files"
 msgstr "Freigegebene Dateien"
 
+#: pynicotine/gtkgui/ui/userinfo.ui:272
+msgid "Shared Folders"
+msgstr "Freigaben"
+
 #: pynicotine/gtkgui/ui/userinfo.ui:358
 msgid "User Interests"
 msgstr "Benutzerinteressen"
@@ -6315,6 +6288,28 @@ msgstr "_Bild speichern"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "_Info aktualisieren"
+
+#~ msgid "Enables buddy shares that only users on your buddy list can access."
+#~ msgstr ""
+#~ "Aktiviert Freunden freigaben, auf die nur Benutzer in Ihrer Freundesliste "
+#~ "zugreifen können."
+
+#~ msgid "Mark each shared folder as buddy-only"
+#~ msgstr "Markieren Sie jeden freigegebenen Ordner als nur für Freunde"
+
+#~ msgid ""
+#~ "Overrides the per-share option, useful if you temporarily need to prevent "
+#~ "public access to shares."
+#~ msgstr ""
+#~ "Überschreibt die Option pro Freigabe, die nützlich ist, wenn Sie "
+#~ "vorübergehend den öffentlichen Zugriff auf Freigaben verhindern müssen."
+
+#~ msgid ""
+#~ "Only users marked as trusted on your buddy list can access your buddy-"
+#~ "only shares."
+#~ msgstr ""
+#~ "Nur Benutzer, die in Ihrer Freudenliste als vertrauenswürdig markiert "
+#~ "sind, können auf Ihre Freundenfreigaben zugreifen."
 
 #~ msgid ""
 #~ "Nicotine+ allows you to share folders directly from your computer. All "
