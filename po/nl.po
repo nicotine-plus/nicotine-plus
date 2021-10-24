@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 17:09+0300\n"
-"PO-Revision-Date: 2021-10-24 08:48+0000\n"
+"PO-Revision-Date: 2021-10-24 15:53+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1642,7 +1642,7 @@ msgstr "Vriendenlijst altijd zichtbaar"
 
 #: pynicotine/gtkgui/frame.py:1023
 msgid "_Rescan Shares"
-msgstr "Gedeelde bestanden opnieuw scannen"
+msgstr "Shares opnieuw scannen"
 
 #: pynicotine/gtkgui/frame.py:1024
 msgid "_Configure Shares"
@@ -2909,7 +2909,7 @@ msgstr "_Gebruiker vertrouwen"
 
 #: pynicotine/gtkgui/userlist.py:145
 msgid "Add User _Note…"
-msgstr "Notitie over Gebruiker toevoegen"
+msgstr "Notitie over Gebruiker toevoegen…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3016,7 +3016,6 @@ msgstr "Toon IP-a_dres"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:239
 #: pynicotine/gtkgui/widgets/popupmenu.py:292
-#, fuzzy
 msgid "_Gift Privileges…"
 msgstr "_Geef privileges…"
 
@@ -3062,14 +3061,14 @@ msgid "Add as Operator of %s"
 msgstr "Toevoegen als operator van %s"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:577
-#, fuzzy
 msgid "Please enter number of days!"
-msgstr "Voer een geheel getal in!"
+msgstr "Vul het aantal dagen in!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Geef dagen van uw Soulseek-privileges aan gebruiker %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3077,7 +3076,6 @@ msgid "%(days)s days left"
 msgstr "%(days)s dagen over"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:596
-#, fuzzy
 msgid "Gift Privileges"
 msgstr "Geef privileges"
 
@@ -5742,9 +5740,8 @@ msgid "Queue Behavior"
 msgstr "Wachtrij Gedrag"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-#, fuzzy
 msgid "Prioritize all buddies"
-msgstr "Geef prioriteit aan alle gebruikers in de vriendenlijst"
+msgstr "Geef prioriteit aan alle vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:224
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
@@ -5792,9 +5789,8 @@ msgid "Queue Limits"
 msgstr "Wachtrijlimieten"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:329
-#, fuzzy
 msgid "Queue limits do not apply to buddies"
-msgstr "Wachtrij-beperkingen gelden niet voor vrienden"
+msgstr "Wachtrijbeperkingen gelden niet voor vrienden"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:346
 msgid "Each user may queue a maximum of either:"
