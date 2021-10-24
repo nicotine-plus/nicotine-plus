@@ -768,7 +768,7 @@ class ServerPing(ServerMessage):
 
 class SendConnectToken(ServerMessage):
     """ Server code: 33 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer used """
 
     def __init__(self, user, token):
         self.user = user
@@ -786,7 +786,7 @@ class SendDownloadSpeed(ServerMessage):
     """ Server code: 34 """
     """ We used to send this after a finished download to let the server update
     the speed statistics for a user. """
-    """ DEPRECATED """
+    """ OBSOLETE, use SendUploadSpeed server message """
 
     def __init__(self, user=None, speed=None):
         self.user = user
@@ -846,7 +846,7 @@ class QueuedDownloads(ServerMessage):
     """ Server code: 40 """
     """ The server sends this to indicate if someone has download slots available
     or not. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.user = None
@@ -1013,7 +1013,7 @@ class PlaceInLineResponse(ServerMessage):
     """ Server code: 60 """
     """ The server sends this to indicate change in place in queue while we're
     waiting for files from another peer. """
-    """ DEPRECATED """
+    """ OBSOLETE, use PlaceInQueue peer message """
 
     def __init__(self, user=None, req=None, place=None):
         self.req = req
@@ -1037,7 +1037,7 @@ class PlaceInLineResponse(ServerMessage):
 class RoomAdded(ServerMessage):
     """ Server code: 62 """
     """ The server tells us a new room has been added. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.room = None
@@ -1049,7 +1049,7 @@ class RoomAdded(ServerMessage):
 class RoomRemoved(ServerMessage):
     """ Server code: 63 """
     """ The server tells us a room has been removed. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.room = None
@@ -1123,7 +1123,7 @@ class ExactFileSearch(ServerMessage):
     """ Server code: 65 """
     """ We send this to search for an exact file name and folder,
     to find other sources. """
-    """ DEPRECATED (no results even with official client) """
+    """ OBSOLETE, no results even with official client """
 
     def __init__(self, req=None, file=None, folder=None, size=None, checksum=None):
         self.req = req
@@ -1166,7 +1166,7 @@ class AdminMessage(ServerMessage):
 class GlobalUserList(ServerMessage):
     """ Server code: 67 """
     """ We send this to get a global list of all users online. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer used """
 
     def __init__(self):
         self.users = None
@@ -1211,7 +1211,7 @@ class GlobalUserList(ServerMessage):
 class TunneledMessage(ServerMessage):
     """ Server code: 68 """
     """ Server message for tunneling a chat message. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer used """
 
     def __init__(self, user=None, req=None, code=None, msg=None):
         self.user = user
@@ -1275,7 +1275,7 @@ class HaveNoParent(ServerMessage):
 class SearchParent(ServerMessage):
     """ Server code: 73 """
     """ We send the IP address of our parent to the server. """
-    """ DEPRECATED """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     def __init__(self, parentip=None):
         self.parentip = parentip
@@ -1317,7 +1317,7 @@ class ParentSpeedRatio(ServerMessage):
 
 class ParentInactivityTimeout(ServerMessage):
     """ Server code: 86 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.seconds = None
@@ -1328,7 +1328,7 @@ class ParentInactivityTimeout(ServerMessage):
 
 class SearchInactivityTimeout(ServerMessage):
     """ Server code: 87 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.seconds = None
@@ -1339,7 +1339,7 @@ class SearchInactivityTimeout(ServerMessage):
 
 class MinParentsInCache(ServerMessage):
     """ Server code: 88 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.num = None
@@ -1350,7 +1350,7 @@ class MinParentsInCache(ServerMessage):
 
 class DistribAliveInterval(ServerMessage):
     """ Server code: 90 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.seconds = None
@@ -1363,7 +1363,7 @@ class AddToPrivileged(ServerMessage):
     """ Server code: 91 """
     """ The server sends us the username of a new privileged user, which we
     add to our list of global privileged users. """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer sent by the server """
 
     def __init__(self):
         self.user = None
@@ -1644,7 +1644,7 @@ class SendUploadSpeed(ServerMessage):
 class UserPrivileged(ServerMessage):
     """ Server code: 122 """
     """ We ask the server whether a user is privileged or not. """
-    """ DEPRECATED """
+    """ DEPRECATED, use AddUser and GetUserStatus server messages """
 
     def __init__(self, user=None):
         self.user = user
@@ -1677,7 +1677,7 @@ class GivePrivileges(ServerMessage):
 
 class NotifyPrivileges(ServerMessage):
     """ Server code: 124 """
-    """ DEPRECATED """
+    """ DEPRECATED, no longer used """
 
     def __init__(self, token=None, user=None):
         self.token = token
@@ -1697,7 +1697,7 @@ class NotifyPrivileges(ServerMessage):
 
 class AckNotifyPrivileges(ServerMessage):
     """ Server code: 125 """
-    """ DEPRECATED """
+    """ DEPRECATED, no longer used """
 
     def __init__(self, token=None):
         self.token = token
@@ -1823,7 +1823,7 @@ class PrivateRoomDisown(ServerMessage):
 
 class PrivateRoomSomething(ServerMessage):
     """ Server code: 138 """
-    """ UNKNOWN """
+    """ OBSOLETE, no longer used """
 
     def __init__(self, room=None):
         self.room = room
@@ -1993,7 +1993,7 @@ class PublicRoomMessage(ServerMessage):
 class RelatedSearch(ServerMessage):
     """ Server code: 153 """
     """ The server returns a list of related search terms for a search query. """
-    """ DEPRECATED ? (empty list from server as of 2018) """
+    """ OBSOLETE, server sends empty list as of 2018 """
 
     def __init__(self, query=None):
         self.query = query
@@ -2257,7 +2257,7 @@ class FileSearchRequest(PeerMessage):
     """ We send this to the peer when we search for a file.
     Alternatively, the peer sends this to tell us it is
     searching for a file. """
-    """ DEPRECATED, use UserSearch server message """
+    """ OBSOLETE, use UserSearch server message """
 
     def __init__(self, conn, requestid=None, text=None):
         self.conn = conn
@@ -2658,7 +2658,7 @@ class TransferResponse(PeerMessage):
 
 class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
-    """ DEPRECATED """
+    """ OBSOLETE, no longer used """
 
     def __init__(self, conn, file=None, legacy_client=False):
         self.conn = conn
@@ -2738,7 +2738,7 @@ class PlaceInQueueRequest(PlaceholdUpload):
 class UploadQueueNotification(PeerMessage):
     """ Peer code: 52 """
     """ This message is sent to inform a peer about an upload attempt initiated by us. """
-    """ DEPRECATED, no longer sent by SoulseekQt """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     def __init__(self, conn):
         self.conn = conn
