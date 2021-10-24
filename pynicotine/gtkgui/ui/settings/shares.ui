@@ -42,6 +42,15 @@
               </object>
             </child>
             <child>
+              <object class="GtkCheckButton" id="ShareDownloadDir">
+                <property name="label" translatable="yes">Automatically share completed downloads</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">The equivalent of adding your download folder as a public share, however files downloaded to this folder will be automatically accessible to others (no rescan required).</property>
+                <property name="use-underline">1</property>
+                <signal name="toggled" handler="on_share_download_dir_toggled" swapped="no"/>
+              </object>
+            </child>
+            <child>
               <object class="GtkCheckButton" id="BuddySharesTrustedOnly">
                 <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
                 <property name="visible">1</property>

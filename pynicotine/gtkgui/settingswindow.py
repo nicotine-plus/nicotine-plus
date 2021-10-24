@@ -244,7 +244,6 @@ class DownloadsFrame(UserInterface):
                 "uploadallowed": self.UploadsAllowed,
                 "incompletedir": self.IncompleteDir,
                 "downloaddir": self.DownloadDir,
-                "sharedownloaddir": self.ShareDownloadDir,
                 "uploaddir": self.UploadDir,
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
@@ -316,7 +315,6 @@ class DownloadsFrame(UserInterface):
                 "uploadallowed": uploadallowed,
                 "incompletedir": self.IncompleteDir.get_path(),
                 "downloaddir": self.DownloadDir.get_path(),
-                "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "uploaddir": self.UploadDir.get_path(),
                 "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
@@ -333,7 +331,7 @@ class DownloadsFrame(UserInterface):
 
         # This function will be called upon creating the settings window,
         # so only force a scan if the user changes his donwload directory
-        if self.ShareDownloadDir.get_active() and self.DownloadDir.get_path() != transfers["downloaddir"]:
+        if transfers["sharedownloaddir"] and self.DownloadDir.get_path() != transfers["downloaddir"]:
             self.needrescan = True
 
     def on_remote_downloads(self, widget):
@@ -341,9 +339,6 @@ class DownloadsFrame(UserInterface):
         sensitive = widget.get_active()
 
         self.UploadsAllowed.set_sensitive(sensitive)
-
-    def on_share_download_dir_toggled(self, widget):
-        self.needrescan = True
 
     def on_enable_filters_toggle(self, widget):
 
@@ -594,6 +589,7 @@ class SharesFrame(UserInterface):
         self.options = {
             "transfers": {
                 "rescanonstartup": self.RescanOnStartup,
+                "sharedownloaddir": self.ShareDownloadDir,
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly
             }
         }
@@ -633,9 +629,13 @@ class SharesFrame(UserInterface):
                 "shared": self.shareddirs[:],
                 "buddyshared": self.bshareddirs[:],
                 "rescanonstartup": self.RescanOnStartup.get_active(),
+                "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
+
+    def on_share_download_dir_toggled(self, widget):
+        self.needrescan = True
 
     def cell_toggle_callback(self, widget, index, treeview):
 
