@@ -111,6 +111,7 @@ class NetworkFrame(UserInterface):
             self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
 
         self.needportmap = False
+        self.on_toggle_upnp(self.UseUPnP)
 
         if sys.platform not in ("linux", "darwin"):
             for widget in (self.InterfaceLabel, self.Interface):
@@ -208,7 +209,6 @@ class NetworkFrame(UserInterface):
         active = widget.get_active()
         self.needportmap = active
 
-        self.UPnPIntervalL1.set_sensitive(active)
         self.UPnPInterval.set_sensitive(active)
 
     def on_modify_upnp_interval(self, widget, *args):

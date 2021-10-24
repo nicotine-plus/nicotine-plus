@@ -38,7 +38,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Login Details</property>
+            <property name="label" translatable="yes">Network</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -48,71 +48,144 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">18</property>
+            <property name="spacing">24</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="ServerDescription">
+              <object class="GtkBox">
                 <property name="visible">1</property>
-                <property name="xalign">0</property>
-                <property name="label" translatable="yes">Log in to an existing Soulseek account or create a new one. Usernames are case-sensitive and unique.</property>
-                <property name="selectable">1</property>
-                <property name="wrap">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBox">
-                <property name="visible">1</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="spacing">18</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel" id="ServerDescription">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Username:</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">Login</property>
-                      </object>
-                    </child>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Log in to an existing Soulseek account or create a new one. Usernames are case-sensitive and unique.</property>
+                    <property name="selectable">1</property>
+                    <property name="wrap">1</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="spacing">12</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkFlowBox">
                         <property name="visible">1</property>
-                        <property name="spacing">12</property>
+                        <property name="row-spacing">12</property>
+                        <property name="max-children-per-line">2</property>
+                        <property name="selection-mode">none</property>
                         <child>
-                          <object class="GtkEntry" id="Login">
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="hexpand">1</property>
-                            <property name="max-length">28</property>
+                            <property name="focusable">0</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Username:</property>
+                                <property name="xalign">0</property>
+                                <property name="mnemonic_widget">Login</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="ChangePassword">
-                            <property name="halign">end</property>
+                          <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <signal name="clicked" handler="on_change_password" swapped="no"/>
+                            <property name="focusable">0</property>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">1</property>
-                                <property name="spacing">6</property>
+                                <property name="spacing">12</property>
                                 <child>
-                                  <object class="GtkImage">
+                                  <object class="GtkEntry" id="Login">
                                     <property name="visible">1</property>
-                                    <property name="icon-name">dialog-password-symbolic</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="max-length">28</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="ChangePassword">
+                                    <property name="halign">end</property>
+                                    <property name="visible">1</property>
+                                    <signal name="clicked" handler="on_change_password" swapped="no"/>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">1</property>
+                                        <property name="spacing">6</property>
+                                        <child>
+                                          <object class="GtkImage">
+                                            <property name="visible">1</property>
+                                            <property name="icon-name">dialog-password-symbolic</property>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Change Password</property>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBox">
+                        <property name="visible">1</property>
+                        <property name="row-spacing">12</property>
+                        <property name="max-children-per-line">2</property>
+                        <property name="selection-mode">none</property>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">1</property>
+                            <property name="focusable">0</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">1</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Listening port range (requires a restart):</property>
+                                <property name="wrap">1</property>
+                                <property name="mnemonic_widget">FirstPort</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkFlowBoxChild">
+                            <property name="visible">1</property>
+                            <property name="focusable">0</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">1</property>
+                                <property name="spacing">12</property>
+                                <child>
+                                  <object class="GtkSpinButton" id="FirstPort">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="adjustment">adjustment_FirstPort</property>
+                                    <property name="numeric">1</property>
+                                    <property name="tooltip-text" translatable="yes">First port</property>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
-                                    <property name="label" translatable="yes">Change Password</property>
+                                    <property name="label" translatable="yes">to</property>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkSpinButton" id="LastPort">
+                                    <property name="visible">1</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="adjustment">adjustment_LastPort</property>
+                                    <property name="numeric">1</property>
+                                    <property name="tooltip-text" translatable="yes">Last port</property>
                                   </object>
                                 </child>
                               </object>
@@ -123,44 +196,6 @@
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">36</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">1</property>
-            <property name="spacing">12</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">6</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Connection</property>
-                    <property name="xalign">0</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                    </attributes>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="AutoConnectStartup">
-                <property name="label" translatable="yes">Auto-connect to the server on startup</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
               </object>
             </child>
             <child>
@@ -169,88 +204,36 @@
                 <property name="spacing">18</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkFlowBox">
-                    <property name="visible">1</property>
-                    <property name="row-spacing">12</property>
-                    <property name="max-children-per-line">2</property>
-                    <property name="selection-mode">none</property>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">1</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Listening port range (requires a restart):</property>
-                            <property name="wrap">1</property>
-                            <property name="mnemonic_widget">FirstPort</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">1</property>
-                            <property name="spacing">12</property>
-                            <child>
-                              <object class="GtkSpinButton" id="FirstPort">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="adjustment">adjustment_FirstPort</property>
-                                <property name="numeric">1</property>
-                                <property name="tooltip-text" translatable="yes">First port</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">1</property>
-                                <property name="label" translatable="yes">to</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSpinButton" id="LastPort">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="adjustment">adjustment_LastPort</property>
-                                <property name="numeric">1</property>
-                                <property name="tooltip-text" translatable="yes">Last port</property>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkBox">
                     <property name="visible">1</property>
-                    <property name="spacing">6</property>
+                    <property name="spacing">18</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">1</property>
                         <property name="spacing">6</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkLabel" id="CurrentPort">
+                          <object class="GtkBox">
                             <property name="visible">1</property>
-                            <property name="hexpand">1</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Listening port is not set</property>
-                            <property name="selectable">1</property>
-                            <property name="wrap">1</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="CheckPortLabel">
-                            <property name="visible">1</property>
-                            <property name="label" translatable="yes">Check Port Status</property>
-                            <property name="use-markup">1</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkLabel" id="CurrentPort">
+                                <property name="visible">1</property>
+                                <property name="hexpand">1</property>
+                                <property name="xalign">0</property>
+                                <property name="label" translatable="yes">Listening port is not set</property>
+                                <property name="selectable">1</property>
+                                <property name="wrap">1</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="CheckPortLabel">
+                                <property name="visible">1</property>
+                                <property name="label" translatable="yes">Check Port Status</property>
+                                <property name="use-markup">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -271,7 +254,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">6</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
@@ -363,7 +346,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">Advanced</property>
+                <property name="label" translatable="yes">Miscellaneous</property>
                 <property name="xalign">0</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -371,18 +354,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="ctcptogglebutton">
-                <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
+              <object class="GtkCheckButton" id="AutoConnectStartup">
+                <property name="label" translatable="yes">Auto-connect to server on startup</property>
                 <property name="visible">1</property>
                 <property name="use-underline">1</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="UseUPnP">
-                <property name="label" translatable="yes">Use UPnP to automatically map the listening port on your router</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
               </object>
             </child>
             <child>
@@ -396,12 +371,11 @@
                     <property name="visible">1</property>
                     <property name="focusable">0</property>
                     <child>
-                      <object class="GtkLabel" id="UPnPIntervalL1">
+                      <object class="GtkCheckButton" id="UseUPnP">
+                        <property name="label" translatable="yes">Use UPnP to forward listening port (interval in hours):</property>
                         <property name="visible">1</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Port mapping renewal interval in hours:</property>
-                        <property name="wrap">1</property>
-                        <property name="mnemonic_widget">UPnPInterval</property>
+                        <property name="use-underline">1</property>
+                        <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -424,11 +398,43 @@
               </object>
             </child>
             <child>
+              <object class="GtkCheckButton" id="ctcptogglebutton">
+                <property name="label" translatable="yes">Enable CTCP-like private message responses (client version)</property>
+                <property name="visible">1</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
                 <property name="row-spacing">12</property>
                 <property name="max-children-per-line">2</property>
                 <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Soulseek server:</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">Server</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkEntry" id="Server">
+                        <property name="visible">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
@@ -452,31 +458,6 @@
                         <property name="visible">1</property>
                         <property name="has-entry">1</property>
                         <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Soulseek server:</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">Server</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">1</property>
-                    <property name="focusable">0</property>
-                    <child>
-                      <object class="GtkEntry" id="Server">
-                        <property name="visible">1</property>
                       </object>
                     </child>
                   </object>
