@@ -142,7 +142,7 @@ def rescan_shares():
 
     config.load_config()
 
-    shares = Shares(None, config, deque())
+    shares = Shares(None, config, deque(), init_shares=False)
     error = shares.rescan_shares(use_thread=False)
 
     if error:

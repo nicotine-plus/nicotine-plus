@@ -488,7 +488,7 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, ui_callback=None):
+    def __init__(self, core, config, queue, init_shares=True, ui_callback=None):
 
         self.core = core
         self.ui_callback = ui_callback
@@ -517,6 +517,9 @@ class Shares:
             ("buddyfileindex", os.path.join(self.config.data_dir, "buddyfileindex.db")),
             ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
         ]
+
+        if not init_shares:
+            return
 
         if ui_callback:
             # Slight delay to prevent minor performance hit when compressing large file share

@@ -285,7 +285,7 @@ class NicotineCore:
         self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
 
-        self.shares = Shares(self, config, self.queue, ui_callback)
+        self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
         self.transfers = transfers.Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)

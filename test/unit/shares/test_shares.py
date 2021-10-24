@@ -111,7 +111,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["rescanonstartup"] = False
         config.sections["transfers"]["sharedownloaddir"] = True
 
-        shares = Shares(None, config, deque(), None)
+        shares = Shares(None, config, deque())
         shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
 
         self.assertIn(('nicotinetestdata.mp3', 80919, None, None), shares.share_dbs["files"]["Downloaded"])
