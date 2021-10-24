@@ -449,10 +449,6 @@ class TransferList(UserInterface):
             size = 0
 
         hsize = "%s / %s" % (human_size(currentbytes), human_size(size))
-
-        if transfer.modifier:
-            hsize += " (%s)" % transfer.modifier
-
         speed = transfer.speed or 0
         elapsed = transfer.timeelapsed or 0
         left = transfer.timeleft or ""
@@ -475,6 +471,10 @@ class TransferList(UserInterface):
         # Modify old transfer
         if transfer.iterator is not None:
             initer = transfer.iterator
+
+            if transfer.modifier:
+                user = transfer.user + " (%s)" % transfer.modifier
+                self.transfersmodel.set_value(initer, 0, user)
 
             self.transfersmodel.set_value(initer, 3, hstatus)
             self.transfersmodel.set_value(initer, 4, hplace)

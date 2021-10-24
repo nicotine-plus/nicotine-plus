@@ -204,7 +204,7 @@
         <child>
           <object class="GtkCheckButton" id="PreferFriends">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Privilege all users in buddy list</property>
+            <property name="label" translatable="yes">Prioritize all users in buddy list</property>
             <property name="tooltip-text" translatable="yes">Buddies will have higher priority in the queue, the same as globally privileged users.</property>
           </object>
         </child>

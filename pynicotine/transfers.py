@@ -322,9 +322,9 @@ class Transfers:
         if user in self.privilegedusers:
             return True
 
-        return self.is_buddy_privileged(user)
+        return self.is_buddy_prioritized(user)
 
-    def is_buddy_privileged(self, user):
+    def is_buddy_prioritized(self, user):
 
         if not user:
             return False
@@ -338,9 +338,9 @@ class Transfers:
                 if self.config.sections["transfers"]["preferfriends"]:
                     return True
 
-                # Only privileged users
+                # Only explicitly prioritized users
                 try:
-                    return bool(row[3])  # Privileged column
+                    return bool(row[3])  # Prioritized column
                 except IndexError:
                     return False
 
@@ -1166,7 +1166,7 @@ class Transfers:
                 i.place = 0
 
                 if self.is_privileged(i.user):
-                    i.modifier = _("privileged")
+                    i.modifier = _("privileged") if i.user in self.privilegedusers else _("prioritized")
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
