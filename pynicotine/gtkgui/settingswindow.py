@@ -2883,6 +2883,7 @@ class PluginsFrame(UserInterface):
         self.plugins = []
         self.pluginsiters = {}
         self.selected_plugin = None
+        self.descr_textview = TextView(self.PluginDescription)
 
         self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(
@@ -2901,7 +2902,6 @@ class PluginsFrame(UserInterface):
             render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
 
         self.PluginTreeView.set_model(self.plugins_model)
-        self.descr_textview = TextView(self.PluginDescription)
 
     def on_add_plugins(self, widget):
 
@@ -2933,20 +2933,19 @@ class PluginsFrame(UserInterface):
 
         model, iterator = selection.get_selected()
         if iterator is None:
-            self.selected_plugin = None
-            self.check_properties_button(self.selected_plugin)
-            return
+            self.selected_plugin = _("No Plugin Selected")
+            info = {}
+        else:
+            self.selected_plugin = model.get_value(iterator, 2)
+            info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
 
-        self.selected_plugin = model.get_value(iterator, 2)
-        info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
-
-        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get('Version', '-')})
-        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get('Name', self.selected_plugin)})
-        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get('Authors', '-'))})
+        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
+        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
+        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get("Authors", '-'))})
 
         self.descr_textview.clear()
         self.descr_textview.append_line("%(description)s" % {
-            "description": info.get('Description', _('No description provided')).replace(r'\n', "\n")},
+            "description": info.get("Description", '').replace(r'\n', '\n')},
             showstamp=False, scroll=False)
 
         self.check_properties_button(self.selected_plugin)
