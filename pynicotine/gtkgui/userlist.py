@@ -65,7 +65,7 @@ class UserList(UserInterface):
             bool,                 # (6)  notify
             bool,                 # (7)  privileged
             str,                  # (8)  hlast seen
-            str,                  # (9)  comments
+            str,                  # (9)  note
             int,                  # (10) status
             GObject.TYPE_UINT64,  # (11) speed
             GObject.TYPE_UINT64,  # (12) file count
@@ -85,7 +85,7 @@ class UserList(UserInterface):
             ["notify", _("Notify"), 0, "toggle", None],
             ["privileged", _("Privileged"), 0, "toggle", None],
             ["last_seen", _("Last seen"), 160, "text", None],
-            ["comments", _("Comments"), 400, "edit", None]
+            ["comments", _("Note"), 400, "edit", None]
         )
 
         cols["status"].set_sort_column_id(10)
@@ -142,7 +142,7 @@ class UserList(UserInterface):
             ("$" + _("_Trusted"), self.on_trusted),
             ("", None),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
-            ("#" + _("Edit _Comments…"), self.on_edit_comments),
+            ("#" + _("Add User _Note…"), self.on_add_note),
             ("#" + _("_Remove"), self.on_remove_user)
         )
 
@@ -159,9 +159,9 @@ class UserList(UserInterface):
             return
 
         try:
-            comment = str(row[1])
+            note = str(row[1])
         except IndexError:
-            comment = ""
+            note = ""
 
         try:
             notify = bool(row[2])
@@ -204,7 +204,7 @@ class UserList(UserInterface):
             notify,
             privileged,
             last_seen,
-            comment,
+            note,
             0,
             0,
             0,
@@ -276,7 +276,7 @@ class UserList(UserInterface):
         store = treeview.get_model()
         iterator = store.get_iter(index)
 
-        self.set_comment(iterator, store, value)
+        self.set_note(iterator, store, value)
 
     def set_last_seen(self, user, online=False):
 
@@ -298,10 +298,10 @@ class UserList(UserInterface):
         if not online:
             self.save_user_list()
 
-    def set_comment(self, iterator, store, comments=None):
+    def set_note(self, iterator, store, note=None):
 
-        if comments is not None:
-            store.set_value(iterator, 9, comments)
+        if note is not None:
+            store.set_value(iterator, 9, note)
             self.save_user_list()
 
     def get_selected_username(self, treeview):
@@ -491,8 +491,8 @@ class UserList(UserInterface):
 
         for i in self.usersmodel:
             (status_icon, flag, user, hspeed, hfile_count, trusted, notify, privileged,
-                hlast_seen, comments, status, speed, file_count, last_seen, country) = i
-            user_list.append([user, comments, notify, privileged, trusted, hlast_seen, country])
+                hlast_seen, note, status, speed, file_count, last_seen, country) = i
+            user_list.append([user, note, notify, privileged, trusted, hlast_seen, country])
 
         self.frame.np.userlist.save_user_list(user_list)
 
@@ -538,23 +538,23 @@ class UserList(UserInterface):
         self.save_user_list()
         action.set_state(state)
 
-    def on_edit_comments_response(self, dialog, response_id, user):
+    def on_add_note_response(self, dialog, response_id, user):
 
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
             return
 
-        comments = dialog.get_response_value()
+        note = dialog.get_response_value()
         dialog.destroy()
 
-        if comments is None:
+        if note is None:
             return
 
-        self.usersmodel.set_value(iterator, 9, comments)
+        self.usersmodel.set_value(iterator, 9, note)
         self.save_user_list()
 
-    def on_edit_comments(self, *args):
+    def on_add_note(self, *args):
 
         user = self.popup_menu.get_user()
         iterator = self.user_iterators.get(user)
@@ -562,15 +562,15 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        comments = self.usersmodel.get_value(iterator, 9) or ""
+        note = self.usersmodel.get_value(iterator, 9) or ""
 
         entry_dialog(
             parent=self.frame.MainWindow,
-            title=_("Edit Comments"),
-            message=_("Add a few notes associated with user %s:") % user,
-            callback=self.on_edit_comments_response,
+            title=_("Add User Note"),
+            message=_("Add a note about user %s:") % user,
+            callback=self.on_add_note_response,
             callback_data=user,
-            default=comments
+            default=note
         )
 
     def on_remove_user(self, *args):
