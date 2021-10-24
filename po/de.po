@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 17:09+0300\n"
-"PO-Revision-Date: 2021-10-24 08:47+0000\n"
+"PO-Revision-Date: 2021-10-24 15:47+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -3030,7 +3030,6 @@ msgstr "IP-_Adresse anzeigen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:239
 #: pynicotine/gtkgui/widgets/popupmenu.py:292
-#, fuzzy
 msgid "_Gift Privileges…"
 msgstr "Privilegien geben…"
 
@@ -3076,14 +3075,15 @@ msgid "Add as Operator of %s"
 msgstr "Als Operator von %s hinzufügen"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:577
-#, fuzzy
 msgid "Please enter number of days!"
-msgstr "Bitte geben Sie eine ganze Zahl ein!"
+msgstr "Bitte geben Sie die Anzahl der Tage ein!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Verschenke Tage deiner Soulseek-Privilegien an den Benutzer %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3091,7 +3091,6 @@ msgid "%(days)s days left"
 msgstr "%(days)s Tage verbleiben"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:596
-#, fuzzy
 msgid "Gift Privileges"
 msgstr "Privilegien geben"
 
