@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 08:07+0300\n"
-"PO-Revision-Date: 2021-10-18 19:12+0000\n"
+"PO-Revision-Date: 2021-10-24 05:39+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1642,9 +1642,8 @@ msgid "Buddy List Always Visible"
 msgstr "Her Zaman Görünür Arkadaş Listesi"
 
 #: pynicotine/gtkgui/frame.py:1023
-#, fuzzy
 msgid "_Rescan Shares"
-msgstr "Paylaşımları yeniden tara"
+msgstr "Paylaşımları Yeniden _Tara"
 
 #: pynicotine/gtkgui/frame.py:1024
 msgid "_Configure Shares"
@@ -2898,7 +2897,7 @@ msgstr "Son görüldü"
 
 #: pynicotine/gtkgui/userlist.py:88
 msgid "Note"
-msgstr ""
+msgstr "Not"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 msgid "_Online Notify"
@@ -2914,7 +2913,7 @@ msgstr "_Güvenilir"
 
 #: pynicotine/gtkgui/userlist.py:145
 msgid "Add User _Note…"
-msgstr ""
+msgstr "Kullanıcı _Notu Ekle…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -2942,12 +2941,12 @@ msgstr "%s kullanıcısı çevrim dışı"
 
 #: pynicotine/gtkgui/userlist.py:569
 msgid "Add User Note"
-msgstr ""
+msgstr "Kullanıcı Notu Ekle"
 
 #: pynicotine/gtkgui/userlist.py:570
-#, fuzzy, python-format
+#, python-format
 msgid "Add a note about user %s:"
-msgstr "%s kullanıcısı ile ilişkili birkaç not ekleyin:"
+msgstr "%s kullanıcısı hakkında bir not ekleyin:"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:71
 msgid "Select a Folder"
@@ -3509,22 +3508,18 @@ msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Sunucu şu anda dilek listesi aramalarına izin vermiyor"
 
 #: pynicotine/shares.py:99
-#, fuzzy
 msgid "Rescanning shares…"
-msgstr "Arkadaş paylaşımları yeniden taranıyor…"
+msgstr "Paylaşımlar yeniden taranıyor…"
 
 #: pynicotine/shares.py:101
-#, fuzzy
 msgid "Finished rescanning shares"
-msgstr "Arkadaş paylaşımlarının yeniden taranması tamamlandı"
+msgstr "Paylaşımların yeniden taranması tamamlandı"
 
 #: pynicotine/shares.py:103
-#, fuzzy
 msgid "Rescanning buddy shares…"
 msgstr "Arkadaş paylaşımları yeniden taranıyor…"
 
 #: pynicotine/shares.py:105
-#, fuzzy
 msgid "Finished rescanning buddy shares"
 msgstr "Arkadaş paylaşımlarının yeniden taranması tamamlandı"
 
@@ -4012,9 +4007,8 @@ msgid "Keyboard Shortcuts"
 msgstr "Klavye Kısayolları"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
-#, fuzzy
 msgid "Rescan Shares"
-msgstr "Paylaşımları yeniden tara"
+msgstr "Paylaşımları Yeniden Tara"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
 msgid "Show Log Pane"
@@ -5125,9 +5119,8 @@ msgid "Download folders in reverse alphanumerical order"
 msgstr "Klasörleri ters alfabetik sırada indir"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:47
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "İndirilenleri kullanıcı adı alt klasörlerinde depola"
+msgstr "Tamamlanan indirmeleri kullanıcı adı alt klasörlerinde depola"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:54
 msgid ""
@@ -5417,16 +5410,13 @@ msgid "Auto-reply message when away:"
 msgstr "Uzaktayken otomatik yanıt mesajı:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:358
-#, fuzzy
 msgid "Auto-connect to server on startup"
 msgstr "Başlangıçta sunucuya otomatik bağlan"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:375
-#, fuzzy
 msgid "Use UPnP to forward listening port (interval in hours):"
 msgstr ""
-"Yönlendiricinizdeki dinleme bağlantı noktasını otomatik olarak eşleştirmek "
-"için UPnP kullanın"
+"Dinleme bağlantı noktasını iletmek için UPnP kullan (saat cinsinden aralık):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
 msgid "Enable CTCP-like private message responses (client version)"
@@ -5652,6 +5642,9 @@ msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"İçeriğin doğrudan aygıtınızdan indirilmesine izin vererek klasörleri her "
+"Soulseek kullanıcısı veya arkadaşlarınızla paylaşın. Gizli dosyalar asla "
+"paylaşılmaz."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"
@@ -5667,9 +5660,8 @@ msgstr ""
 "başlattığınızda güncellenir."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
-#, fuzzy
 msgid "Automatically share completed downloads"
-msgstr "İndirilenleri otomatik olarak paylaş"
+msgstr "Tamamlanan indirmeleri otomatik olarak paylaş"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:48
 msgid ""
@@ -5773,14 +5765,14 @@ msgid "Upload queue type:"
 msgstr "Yükleme kuyruğu türü:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:298
-#, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Dosyalar, kuyrukta bekleyen kullanıcılara çevrimsel bir sırayla "
-"yüklenecektir."
+"Herkes Sırayla: Dosyalar, kuyrukta bekleyen kullanıcılara çevrimsel bir "
+"sırayla yüklenecektir.\n"
+"İlk Giren İlk Çıkar: Dosyalar kuyruğa alındıkları sırayla yüklenecektir."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:301
 msgid "Round Robin"
