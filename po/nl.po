@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 08:39+0300\n"
-"PO-Revision-Date: 2021-10-23 22:57+0000\n"
+"PO-Revision-Date: 2021-10-24 08:48+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1641,9 +1641,8 @@ msgid "Buddy List Always Visible"
 msgstr "Vriendenlijst altijd zichtbaar"
 
 #: pynicotine/gtkgui/frame.py:1023
-#, fuzzy
 msgid "_Rescan Shares"
-msgstr "Herlees gedeelde bestanden"
+msgstr "Gedeelde bestanden opnieuw scannen"
 
 #: pynicotine/gtkgui/frame.py:1024
 msgid "_Configure Shares"
@@ -2886,16 +2885,15 @@ msgstr "Geef melding"
 
 #: pynicotine/gtkgui/userlist.py:86
 msgid "Prioritized"
-msgstr ""
+msgstr "Met prioriteit"
 
 #: pynicotine/gtkgui/userlist.py:87
-#, fuzzy
 msgid "Last Seen"
 msgstr "Laatst gezien"
 
 #: pynicotine/gtkgui/userlist.py:88
 msgid "Note"
-msgstr ""
+msgstr "Notitie"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 msgid "_Online Notify"
@@ -2903,17 +2901,15 @@ msgstr "_Online Melden"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Prioriteer Gebruiker"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-#, fuzzy
 msgid "_Trust User"
-msgstr "Ver_trouwd"
+msgstr "_Gebruiker vertrouwen"
 
 #: pynicotine/gtkgui/userlist.py:145
-#, fuzzy
 msgid "Add User _Note…"
-msgstr "Gebruiker toevoegen aan lijst"
+msgstr "Notitie over Gebruiker toevoegen"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -2940,14 +2936,13 @@ msgid "User %s is offline"
 msgstr "Gebruiker %s heeft afgemeld"
 
 #: pynicotine/gtkgui/userlist.py:569
-#, fuzzy
 msgid "Add User Note"
-msgstr "Gebruiker toevoegen aan lijst"
+msgstr "Notitie over Gebruiker toevoegen"
 
 #: pynicotine/gtkgui/userlist.py:570
-#, fuzzy, python-format
+#, python-format
 msgid "Add a note about user %s:"
-msgstr "Voeg een paar notities toe die zijn gekoppeld aan gebruiker %s:"
+msgstr "Voeg een notitie toe over gebruiker %s:"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:71
 msgid "Select a Folder"
@@ -3512,22 +3507,18 @@ msgstr ""
 "moment niet toe"
 
 #: pynicotine/shares.py:99
-#, fuzzy
 msgid "Rescanning shares…"
-msgstr "Met vrienden gedeelde mappen opnieuw scannen…"
+msgstr "Shares worden opnieuw gescand…"
 
 #: pynicotine/shares.py:101
-#, fuzzy
 msgid "Finished rescanning shares"
-msgstr "Klaar met vrienden-shares opnieuw scannen"
+msgstr "Klaar met shares opnieuw scannen"
 
 #: pynicotine/shares.py:103
-#, fuzzy
 msgid "Rescanning buddy shares…"
-msgstr "Met vrienden gedeelde mappen opnieuw scannen…"
+msgstr "Vrienden-shares opnieuw scannen…"
 
 #: pynicotine/shares.py:105
-#, fuzzy
 msgid "Finished rescanning buddy shares"
 msgstr "Klaar met vrienden-shares opnieuw scannen"
 
@@ -3671,7 +3662,7 @@ msgstr "bevoorrecht"
 
 #: pynicotine/transfers.py:1169
 msgid "prioritized"
-msgstr ""
+msgstr "geprioriteerd"
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -4027,9 +4018,8 @@ msgid "Keyboard Shortcuts"
 msgstr "Sneltoetsen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:40
-#, fuzzy
 msgid "Rescan Shares"
-msgstr "Herlees gedeelde bestanden"
+msgstr "Shares opnieuw scannen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:47
 msgid "Show Log Pane"
@@ -5146,9 +5136,8 @@ msgid "Download folders in reverse alphanumerical order"
 msgstr "Download mappen in omgekeerde alfanumerieke volgorde"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:47
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
-msgstr "Downloads opslaan in submappen met gebruikersnaam"
+msgstr "Voltooide downloads opslaan in submappen met gebruikersnaam"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:54
 msgid ""
@@ -5438,14 +5427,12 @@ msgid "Auto-reply message when away:"
 msgstr "Automatisch antwoord bij afwezigheid:"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:358
-#, fuzzy
 msgid "Auto-connect to server on startup"
 msgstr "Automatisch verbinden met de server bij het opstarten"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:375
-#, fuzzy
 msgid "Use UPnP to forward listening port (interval in hours):"
-msgstr "Gebruik UPnP om automatisch de luisterpoort op uw router toe te wijzen"
+msgstr "Gebruik UPnP om de luisterpoort door te sturen (interval in uren):"
 
 #: pynicotine/gtkgui/ui/settings/network.ui:402
 msgid "Enable CTCP-like private message responses (client version)"
@@ -5684,9 +5671,8 @@ msgstr ""
 "bijgewerkt wanneer je handmatig een nieuwe scan uitvoert."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:46
-#, fuzzy
 msgid "Automatically share completed downloads"
-msgstr "Automatisch delen van downloads"
+msgstr "Automatisch delen van voltooide downloads"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:48
 msgid ""
@@ -5756,9 +5742,8 @@ msgid "Queue Behavior"
 msgstr "Wachtrij Gedrag"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-#, fuzzy
 msgid "Prioritize all users in buddy list"
-msgstr "Geef al mijn vrienden privileges"
+msgstr "Geef prioriteit aan alle gebruikers in de vriendenlijst"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
 msgid ""
@@ -5791,14 +5776,15 @@ msgid "Upload queue type:"
 msgstr "Upload wachtrij type:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:298
-#, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
 "in queue.\n"
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr ""
-"Bestanden worden cyclisch geüpload naar de gebruikers die in de wachtrij "
-"staan."
+"Round Robin: Bestanden worden cyclisch geüpload naar de gebruikers die in de "
+"wachtrij staan.\n"
+"First In, First Out: Bestanden worden geüpload in de volgorde waarin ze in "
+"de wachtrij staan."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:301
 msgid "Round Robin"
