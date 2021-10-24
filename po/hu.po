@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-15 18:05+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3358,11 +3358,12 @@ msgid "Notify"
 msgstr "Értesítés"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Elsőbbségi"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Utoljára aktív"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -3375,11 +3376,12 @@ msgid "_Online Notify"
 msgstr "_Online-figyelmeztetés"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Elsőbbségi"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "_Megbízható"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -4200,6 +4202,10 @@ msgstr "Feltöltési I/O hiba: %s"
 #, fuzzy
 msgid "privileged"
 msgstr "(elsőbbségi)"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, fuzzy, python-format
@@ -6589,7 +6595,7 @@ msgstr "Sorban állás viselkedése"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Privilege all users in buddy list"
+msgid "Prioritize all users in buddy list"
 msgstr "Minden barátnak elsőbbség"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -7123,6 +7129,12 @@ msgstr "Mentés _Kép"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Frissít"
+
+#~ msgid "Privileged"
+#~ msgstr "Elsőbbségi"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Elsőbbségi"
 
 #~ msgid "Comments"
 #~ msgstr "Megjegyzések"

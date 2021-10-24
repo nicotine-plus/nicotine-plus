@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-17 12:09+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2915,11 +2915,12 @@ msgid "Notify"
 msgstr "Notifier"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Privilégié"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Vu pour la dernière fois"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -2931,11 +2932,12 @@ msgid "_Online Notify"
 msgstr "N_otifier de la présence en ligne"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Privilégié"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "Marquer comme confi_ant"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -3720,6 +3722,10 @@ msgstr "Erreur d'E/S lors de l'envoi  : %s"
 #: pynicotine/transfers.py:1169
 msgid "privileged"
 msgstr "privilégié"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -5855,7 +5861,8 @@ msgid "Queue Behavior"
 msgstr "Comportement de la file d'attente"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-msgid "Privilege all users in buddy list"
+#, fuzzy
+msgid "Prioritize all users in buddy list"
 msgstr "Privilégier tous les utilisateurs dans la liste d'amis"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -6308,6 +6315,12 @@ msgstr "Sauvegarder l'_image"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "_Rafraîchir les informations"
+
+#~ msgid "Privileged"
+#~ msgstr "Privilégié"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Privilégié"
 
 #~ msgid "Comments"
 #~ msgstr "Commentaires"

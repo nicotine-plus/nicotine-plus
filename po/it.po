@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-23 22:48+0000\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2902,11 +2902,12 @@ msgid "Notify"
 msgstr "Notifica"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Privilegiato"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Ultima visita"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -2918,11 +2919,12 @@ msgid "_Online Notify"
 msgstr "Notifica Connessione"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Privilegiati"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "Fida_ti"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -3691,6 +3693,10 @@ msgstr "Errore I/O in Invio: %s"
 #: pynicotine/transfers.py:1169
 msgid "privileged"
 msgstr "privilegiato"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -5780,7 +5786,8 @@ msgid "Queue Behavior"
 msgstr "Comportamento Coda"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-msgid "Privilege all users in buddy list"
+#, fuzzy
+msgid "Prioritize all users in buddy list"
 msgstr "Privilegia tutti gli amici"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -6226,6 +6233,12 @@ msgstr "Salva Immagine"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Aggiorna Dettagli"
+
+#~ msgid "Privileged"
+#~ msgstr "Privilegiato"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Privilegiati"
 
 #~ msgid "Comments"
 #~ msgstr "Commenti"

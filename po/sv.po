@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-18 19:12+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3433,13 +3433,12 @@ msgid "Notify"
 msgstr "Avisera"
 
 #: pynicotine/gtkgui/userlist.py:86
-#, fuzzy
-msgid "Privileged"
-msgstr "Privilegierad"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
-msgid "Last seen"
+msgid "Last Seen"
 msgstr "Senast använd"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -3452,12 +3451,12 @@ msgid "_Online Notify"
 msgstr "_Online-anmälan"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Privilegierad"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
-msgid "_Trusted"
+msgid "_Trust User"
 msgstr "_Trusted"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -4278,6 +4277,10 @@ msgstr "Fel vid uppladdning av I/O: %s"
 #, fuzzy
 msgid "privileged"
 msgstr "privilegierad"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, fuzzy, python-format
@@ -6696,7 +6699,7 @@ msgstr "Beteende i köer"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Privilege all users in buddy list"
+msgid "Prioritize all users in buddy list"
 msgstr "Mina kompisar går före i nedladdningskön"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -7225,6 +7228,13 @@ msgstr "Spara _Bild"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh Info"
+
+#, fuzzy
+#~ msgid "Privileged"
+#~ msgstr "Privilegierad"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Privilegierad"
 
 #~ msgid "Comments"
 #~ msgstr "Kommentarer"

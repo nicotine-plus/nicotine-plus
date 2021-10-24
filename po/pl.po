@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-19 17:11+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2887,11 +2887,12 @@ msgid "Notify"
 msgstr "Powiadom"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Uprzywilejowany"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Ostatnio widziany"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -2903,11 +2904,13 @@ msgid "_Online Notify"
 msgstr "_Powiadomienie dostępności"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Uprzywilejowany"
+#, fuzzy
+msgid "_Prioritize User"
+msgstr "Ignoruj użytkownika"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "_Zaufany"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -3661,6 +3664,10 @@ msgstr "Błąd wysyłania I/O: %s"
 #: pynicotine/transfers.py:1169
 msgid "privileged"
 msgstr "uprzywilejowany"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -5731,7 +5738,8 @@ msgid "Queue Behavior"
 msgstr "Zachowanie kolejki"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-msgid "Privilege all users in buddy list"
+#, fuzzy
+msgid "Prioritize all users in buddy list"
 msgstr "Uprzywilejuj wszystkich moich znajomych"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -6172,6 +6180,12 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#~ msgid "Privileged"
+#~ msgstr "Uprzywilejowany"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Uprzywilejowany"
 
 #~ msgid "Comments"
 #~ msgstr "Komentarze"
@@ -6912,9 +6926,6 @@ msgstr "Odśwież informacje"
 
 #~ msgid "_Ban User"
 #~ msgstr "Zablokuj użytkownika"
-
-#~ msgid "_Ignore User"
-#~ msgstr "Ignoruj użytkownika"
 
 #~ msgid "Give privileges"
 #~ msgstr "Podaruj przywileje"

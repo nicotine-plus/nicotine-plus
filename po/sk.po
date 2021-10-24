@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2020-09-02 01:33+0000\n"
 "Last-Translator: daelstorm <Unknown>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3368,11 +3368,12 @@ msgid "Notify"
 msgstr "Upozornenie"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Privilegovaný"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Naposledy videný"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -3385,11 +3386,12 @@ msgid "_Online Notify"
 msgstr "Upo_zornenie pri prihlásení"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "Privile_govaný"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "_Dôveryhodný"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -4203,6 +4205,10 @@ msgstr "Vstupno-výstupná chyba pri uploade: %s"
 #, fuzzy
 msgid "privileged"
 msgstr "(privilegovaný)"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, fuzzy, python-format
@@ -6592,7 +6598,7 @@ msgstr "Správanie frontu"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Privilege all users in buddy list"
+msgid "Prioritize all users in buddy list"
 msgstr "Privilégia pre všetkých mojich priateľov"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -7118,6 +7124,12 @@ msgstr "Uložiť _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Obnoviť"
+
+#~ msgid "Privileged"
+#~ msgstr "Privilegovaný"
+
+#~ msgid "_Privileged"
+#~ msgstr "Privile_govaný"
 
 #~ msgid "Comments"
 #~ msgstr "Komentáre"

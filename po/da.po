@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2020-09-02 01:33+0000\n"
 "Last-Translator: daelstorm <Unknown>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3421,13 +3421,12 @@ msgid "Notify"
 msgstr "Melde"
 
 #: pynicotine/gtkgui/userlist.py:86
-#, fuzzy
-msgid "Privileged"
-msgstr "Privilegeret"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
-msgid "Last seen"
+msgid "Last Seen"
 msgstr "Sidst set"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -3440,12 +3439,12 @@ msgid "_Online Notify"
 msgstr "_Online-notifiering"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "_Priveligiered"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
-msgid "_Trusted"
+msgid "_Trust User"
 msgstr "_Trusted"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -4265,6 +4264,10 @@ msgstr "Overfør I/O-fejl: %s"
 #, fuzzy
 msgid "privileged"
 msgstr "(priveligieret)"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, fuzzy, python-format
@@ -6675,7 +6678,7 @@ msgstr "Funktionsmåde for kø"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Privilege all users in buddy list"
+msgid "Prioritize all users in buddy list"
 msgstr "Mine venner går forrest i downloadkøen"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -7206,6 +7209,13 @@ msgstr "Gem _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Opdatere"
+
+#, fuzzy
+#~ msgid "Privileged"
+#~ msgstr "Privilegeret"
+
+#~ msgid "_Privileged"
+#~ msgstr "_Priveligiered"
 
 #~ msgid "Comments"
 #~ msgstr "Kommentarer"

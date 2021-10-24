@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:07+0300\n"
+"POT-Creation-Date: 2021-10-24 08:39+0300\n"
 "PO-Revision-Date: 2021-10-23 22:57+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2885,11 +2885,12 @@ msgid "Notify"
 msgstr "Geef melding"
 
 #: pynicotine/gtkgui/userlist.py:86
-msgid "Privileged"
-msgstr "Heeft privileges"
+msgid "Prioritized"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:87
-msgid "Last seen"
+#, fuzzy
+msgid "Last Seen"
 msgstr "Laatst gezien"
 
 #: pynicotine/gtkgui/userlist.py:88
@@ -2901,11 +2902,12 @@ msgid "_Online Notify"
 msgstr "_Online Melden"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-msgid "_Privileged"
-msgstr "Heeft _Privileges"
+msgid "_Prioritize User"
+msgstr ""
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-msgid "_Trusted"
+#, fuzzy
+msgid "_Trust User"
 msgstr "Ver_trouwd"
 
 #: pynicotine/gtkgui/userlist.py:145
@@ -3666,6 +3668,10 @@ msgstr "Upload I/O fout: %s"
 #: pynicotine/transfers.py:1169
 msgid "privileged"
 msgstr "bevoorrecht"
+
+#: pynicotine/transfers.py:1169
+msgid "prioritized"
+msgstr ""
 
 #: pynicotine/transfers.py:1187
 #, python-format
@@ -5750,7 +5756,8 @@ msgid "Queue Behavior"
 msgstr "Wachtrij Gedrag"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-msgid "Privilege all users in buddy list"
+#, fuzzy
+msgid "Prioritize all users in buddy list"
 msgstr "Geef al mijn vrienden privileges"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:208
@@ -6191,6 +6198,12 @@ msgstr "Bewaar _Beeld"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Info _vernieuwen"
+
+#~ msgid "Privileged"
+#~ msgstr "Heeft privileges"
+
+#~ msgid "_Privileged"
+#~ msgstr "Heeft _Privileges"
 
 #~ msgid "Comments"
 #~ msgstr "Commentaar"
