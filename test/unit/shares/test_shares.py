@@ -43,7 +43,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["rescanonstartup"] = False
 
         shares = Shares(None, config, deque())
-        shares.rescan_public_shares(thread=False)
+        shares.rescan_shares(use_thread=False)
 
         # Verify that modification time was saved for shares folder
         self.assertIn(SHARES_DIR, list(shares.share_dbs["mtimes"]))
@@ -80,7 +80,7 @@ class SharesTest(unittest.TestCase):
         config.sections["transfers"]["rescanonstartup"] = False
 
         shares = Shares(None, config, deque())
-        shares.rescan_public_shares(thread=False)
+        shares.rescan_shares(use_thread=False)
 
         # Check folders
         mtimes = list(shares.share_dbs["mtimes"])

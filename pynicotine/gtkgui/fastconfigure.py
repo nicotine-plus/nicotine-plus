@@ -271,8 +271,7 @@ class FastConfigureAssistant(UserInterface):
         dialog_hide(self.FastConfigureDialog)
 
         # Rescan shares
-        self.frame.np.shares.rescan_public_shares()
-        self.frame.np.shares.rescan_buddy_shares()
+        self.frame.np.shares.rescan_shares()
 
         self.frame.np.connect()
 

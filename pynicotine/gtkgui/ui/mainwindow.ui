@@ -1779,15 +1779,6 @@
                     <property name="show-text">1</property>
                   </object>
                 </child>
-                <child>
-                  <object class="GtkProgressBar" id="BuddySharesProgress">
-                    <property name="visible">0</property>
-                    <property name="valign">center</property>
-                    <property name="pulse-step">0.10000000149</property>
-                    <property name="text" translatable="yes">Scanning Buddy Shares</property>
-                    <property name="show-text">1</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>

@@ -655,8 +655,7 @@ class NicotineFrame(UserInterface):
         self.on_settings(page='Shares')
 
     def on_rescan_shares(self, *args):
-        self.np.shares.rescan_public_shares()
-        self.np.shares.rescan_buddy_shares()
+        self.np.shares.rescan_shares()
 
     def on_browse_public_shares(self, *args):
         self.np.userbrowse.browse_local_public_shares(new_request=True)
@@ -1902,43 +1901,28 @@ class NicotineFrame(UserInterface):
     def set_socket_status(self, status):
         self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
 
-    def show_scan_progress(self, sharestype):
+    def show_scan_progress(self):
 
         self.scan_progress_indeterminate = True
+        GLib.idle_add(self.SharesProgress.show)
 
-        if sharestype == "normal":
-            GLib.idle_add(self.SharesProgress.show)
-        else:
-            GLib.idle_add(self.BuddySharesProgress.show)
-
-    def set_scan_progress(self, sharestype, value):
+    def set_scan_progress(self, value):
 
         self.scan_progress_indeterminate = False
+        GLib.idle_add(self.SharesProgress.set_fraction, value)
 
-        if sharestype == "normal":
-            GLib.idle_add(self.SharesProgress.set_fraction, value)
-        else:
-            GLib.idle_add(self.BuddySharesProgress.set_fraction, value)
+    def set_scan_indeterminate(self):
+        GLib.timeout_add(100, self.pulse_scan_progress)
 
-    def set_scan_indeterminate(self, sharestype):
-        GLib.timeout_add(100, self.pulse_scan_progress, sharestype)
+    def pulse_scan_progress(self):
 
-    def pulse_scan_progress(self, sharestype):
-
-        if sharestype == "normal":
-            self.SharesProgress.pulse()
-        else:
-            self.BuddySharesProgress.pulse()
+        self.SharesProgress.pulse()
 
         if self.scan_progress_indeterminate:
-            self.set_scan_indeterminate(sharestype)
+            self.set_scan_indeterminate()
 
-    def hide_scan_progress(self, sharestype):
-
-        if sharestype == "normal":
-            GLib.idle_add(self.SharesProgress.hide)
-        else:
-            GLib.idle_add(self.BuddySharesProgress.hide)
+    def hide_scan_progress(self):
+        GLib.idle_add(self.SharesProgress.hide)
 
     def update_bandwidth(self):
 
@@ -2084,14 +2068,7 @@ class NicotineFrame(UserInterface):
         self.np.transfers.check_upload_queue()
 
         if msg == "ok" and needrescan:
-            # Rescan public shares
-            self.np.shares.rescan_public_shares()
-
-            # Rescan buddy shares if needed
-            if config.sections["transfers"]["enablebuddyshares"]:
-                self.np.shares.rescan_buddy_shares()
-            else:
-                self.np.shares.close_shares("buddy")
+            self.np.shares.rescan_shares()
 
         if config.need_config():
             self.connect_action.set_enabled(False)
