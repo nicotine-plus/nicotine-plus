@@ -254,6 +254,7 @@ class FastConfigureAssistant(UserInterface):
 
     def on_set_up(self, *args):
         self.FastConfigureDialog.next_page()
+        self.username.grab_focus()
 
     def on_prepare(self, *args):
         self.reset_completeness()
