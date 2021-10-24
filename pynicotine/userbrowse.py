@@ -87,12 +87,7 @@ class UserBrowse:
         username = self.config.sections["server"]["login"]
 
         if username not in self.users or new_request:
-            # Show public shares if we don't have specific shares for buddies
-            if not self.config.sections["transfers"]["enablebuddyshares"]:
-                msg = self.core.shares.get_compressed_shares_message("normal")
-            else:
-                msg = self.core.shares.get_compressed_shares_message("buddy")
-
+            msg = self.core.shares.get_compressed_shares_message("buddy")
             thread = threading.Thread(target=self.parse_local_shares, args=(username, msg))
             thread.name = "LocalBuddyShareParser"
             thread.daemon = True

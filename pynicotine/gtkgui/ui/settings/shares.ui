@@ -42,14 +42,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="EnableBuddyShares">
-                <property name="label" translatable="yes">Enable buddy-only shares</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
-              </object>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="BuddySharesTrustedOnly">
                 <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
                 <property name="visible">1</property>

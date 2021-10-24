@@ -594,7 +594,6 @@ class SharesFrame(UserInterface):
         self.options = {
             "transfers": {
                 "rescanonstartup": self.RescanOnStartup,
-                "enablebuddyshares": self.EnableBuddyShares,
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly
             }
         }
@@ -605,7 +604,6 @@ class SharesFrame(UserInterface):
         self.shareslist.clear()
 
         self.p.set_widgets_data(self.options)
-        self.on_enabled_buddy_shares_toggled(self.EnableBuddyShares)
 
         for (virtual, actual, *unused) in transfers["buddyshared"]:
 
@@ -633,9 +631,8 @@ class SharesFrame(UserInterface):
         return {
             "transfers": {
                 "shared": self.shareddirs[:],
-                "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddyshared": self.bshareddirs[:],
-                "enablebuddyshares": self.EnableBuddyShares.get_active(),
+                "rescanonstartup": self.RescanOnStartup.get_active(),
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
@@ -660,11 +657,6 @@ class SharesFrame(UserInterface):
 
         self.shareddirs.remove(share)
         self.bshareddirs.append(share)
-
-    def on_enabled_buddy_shares_toggled(self, widget):
-        self.BuddySharesTrustedOnly.set_sensitive(widget.get_active())
-
-        self.needrescan = True
 
     def add_shared_dir_response(self, dialog, response_id, data):
 

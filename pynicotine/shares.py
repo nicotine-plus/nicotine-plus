@@ -100,9 +100,6 @@ class Scanner:
             new_mtimes, new_files, new_streams, old_num_folders = self.rescan_dirs("normal", rebuild=self.rebuild)
             self.queue.put((_("Finished rescanning shares"), None, None))
 
-            if not self.config.sections["transfers"]["enablebuddyshares"]:
-                return
-
             self.queue.put((_("Rescanning buddy shares…"), None, None))
             self.rescan_dirs("buddy", new_mtimes, new_files, new_streams, old_num_folders, self.rebuild)
             self.queue.put((_("Finished rescanning buddy shares"), None, None))
@@ -578,9 +575,7 @@ class Shares:
     def _virtualmapping(config):
 
         mapping = config.sections["transfers"]["shared"][:]
-
-        if config.sections["transfers"]["enablebuddyshares"]:
-            mapping += config.sections["transfers"]["buddyshared"]
+        mapping += config.sections["transfers"]["buddyshared"]
 
         if config.sections["transfers"]["sharedownloaddir"]:
             mapping += [(_("Downloaded"), config.sections["transfers"]["downloaddir"])]
@@ -600,9 +595,6 @@ class Shares:
         self.load_shares(self.share_dbs, self.public_share_dbs)
         self.create_compressed_shares_message("normal")
         self.compress_shares("normal")
-
-        if not self.config.sections["transfers"]["enablebuddyshares"]:
-            return
 
         self.load_shares(self.share_dbs, self.buddy_share_dbs)
         self.create_compressed_shares_message("buddy")
@@ -685,7 +677,7 @@ class Shares:
         shared = self.share_dbs.get("files")
         bshared = self.share_dbs.get("buddyfiles")
 
-        if self.config.sections["transfers"]["enablebuddyshares"] and bshared is not None:
+        if bshared is not None:
             for row in self.config.sections["server"]["userlist"]:
                 if row[0] != user:
                     continue
@@ -759,9 +751,6 @@ class Shares:
         """ Add a file to the buddy shares database """
 
         if not self.config.sections["transfers"]["sharedownloaddir"]:
-            return
-
-        if not self.config.sections["transfers"]["enablebuddyshares"]:
             return
 
         bshared = self.share_dbs.get("buddyfiles")
@@ -992,11 +981,10 @@ class Shares:
         self.create_compressed_shares_message("normal")
         self.compress_shares("normal")
 
-        if self.config.sections["transfers"]["enablebuddyshares"]:
-            self.load_shares(self.share_dbs, self.buddy_share_dbs)
+        self.load_shares(self.share_dbs, self.buddy_share_dbs)
 
-            self.create_compressed_shares_message("buddy")
-            self.compress_shares("buddy")
+        self.create_compressed_shares_message("buddy")
+        self.compress_shares("buddy")
 
         if not error:
             if self.core and self.core.logged_in:

@@ -167,12 +167,8 @@ class NetworkFilter:
                 # Only trusted buddies allowed, and user isn't trusted
                 return 1, ""
 
-            if self.config.sections["transfers"]["enablebuddyshares"]:
-                # For sending buddy-only shares
-                return 2, ""
-
-            # Buddy list users bypass geoblock
-            return 1, ""
+            # For sending buddy-only shares
+            return 2, ""
 
         if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
