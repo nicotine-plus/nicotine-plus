@@ -235,8 +235,7 @@ class PopupMenu(Gio.Menu):
             self.append_item(("#" + _("_Browse Files"), self.on_browse_user))
 
         self.setup(
-            ("#" + _("Gi_ve Privileges…"), self.on_give_privileges),
-            ("", None),
+            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
             ("#" + _("Client Version"), self.on_version),
             ("", None)
@@ -594,7 +593,7 @@ class PopupMenu(Gio.Menu):
 
         entry_dialog(
             parent=self.get_window(),
-            title=_("Give Privileges"),
+            title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response
         )
