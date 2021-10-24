@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:39+0300\n"
+"POT-Creation-Date: 2021-10-24 17:09+0300\n"
 "PO-Revision-Date: 2021-10-24 08:47+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1906,7 +1906,8 @@ msgstr "Eguneratuta"
 #: pynicotine/gtkgui/frame.py:731
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Badirudi Nicotine + bertsioaren garapen bertsioa erabiltzen ari zarela."
+msgstr ""
+"Badirudi Nicotine + bertsioaren garapen bertsioa erabiltzen ari zarela."
 
 #: pynicotine/gtkgui/frame.py:739
 msgid "You are using the latest version of Nicotine+."
@@ -2590,8 +2591,8 @@ msgid "Addresses"
 msgstr "Helbideak"
 
 #: pynicotine/gtkgui/settingswindow.py:1011
-#: pynicotine/gtkgui/widgets/popupmenu.py:250
-#: pynicotine/gtkgui/widgets/popupmenu.py:305
+#: pynicotine/gtkgui/widgets/popupmenu.py:248
+#: pynicotine/gtkgui/widgets/popupmenu.py:308
 #: pynicotine/gtkgui/ui/userinfo.ui:598
 #, fuzzy
 msgid "Ignore User"
@@ -2619,8 +2620,8 @@ msgid "* is a wildcard"
 msgstr "* komodina da"
 
 #: pynicotine/gtkgui/settingswindow.py:1201
-#: pynicotine/gtkgui/widgets/popupmenu.py:249
-#: pynicotine/gtkgui/widgets/popupmenu.py:302
+#: pynicotine/gtkgui/widgets/popupmenu.py:247
+#: pynicotine/gtkgui/widgets/popupmenu.py:305
 #: pynicotine/gtkgui/ui/userinfo.ui:574
 #, fuzzy
 msgid "Ban User"
@@ -3363,7 +3364,7 @@ msgstr "Gorde argazkia"
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Huts egin du %(user)s erabiltzailearen argazkia kargatzean: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:585
+#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:584
 #: pynicotine/gtkgui/widgets/treeview.py:450
 #: pynicotine/gtkgui/ui/userinfo.ui:129 pynicotine/gtkgui/ui/userinfo.ui:161
 #: pynicotine/gtkgui/ui/userinfo.ui:193 pynicotine/gtkgui/ui/userinfo.ui:225
@@ -3565,82 +3566,79 @@ msgid "_Browse Files"
 msgstr "A_rakatu fitxategiak"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:238
-#, fuzzy
-msgid "Gi_ve Privileges…"
-msgstr "Em_an pribilegioak"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:240
 #: pynicotine/gtkgui/ui/userinfo.ui:524
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "IP helbi_dea ikusi"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:241
-msgid "Client Version"
-msgstr "Bezeroaren Bertsioa"
+#: pynicotine/gtkgui/widgets/popupmenu.py:239
+#: pynicotine/gtkgui/widgets/popupmenu.py:292
+#, fuzzy
+msgid "_Gift Privileges…"
+msgstr "Em_an pribilegioak"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:246
-#: pynicotine/gtkgui/widgets/popupmenu.py:293
+#: pynicotine/gtkgui/widgets/popupmenu.py:244
+#: pynicotine/gtkgui/widgets/popupmenu.py:296
 #: pynicotine/gtkgui/ui/userinfo.ui:549
 #, fuzzy
 msgid "_Add to Buddy List"
 msgstr "Lagunen Zerrenda"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:251
-#: pynicotine/gtkgui/widgets/popupmenu.py:308
+#: pynicotine/gtkgui/widgets/popupmenu.py:249
+#: pynicotine/gtkgui/widgets/popupmenu.py:311
 #, fuzzy
 msgid "Block User's IP Address"
 msgstr "Blokeatu erabiltzailearen IP helbidea"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:252
-#: pynicotine/gtkgui/widgets/popupmenu.py:311
+#: pynicotine/gtkgui/widgets/popupmenu.py:250
+#: pynicotine/gtkgui/widgets/popupmenu.py:314
 #, fuzzy
 msgid "Ignore User's IP Address"
 msgstr "Ez ikusi egin Erabiltzailearen IP helbideari"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:260
+#: pynicotine/gtkgui/widgets/popupmenu.py:258
 #, fuzzy, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Hautatutako fitxategia"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:335
+#: pynicotine/gtkgui/widgets/popupmenu.py:338
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Kendu gela pribatutik %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:337
+#: pynicotine/gtkgui/widgets/popupmenu.py:340
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Gehitu gela pribatura %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:344
+#: pynicotine/gtkgui/widgets/popupmenu.py:347
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Kendu %s -ren operadore gisa"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:346
+#: pynicotine/gtkgui/widgets/popupmenu.py:349
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Gehitu operadore gisa %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:578
+#: pynicotine/gtkgui/widgets/popupmenu.py:577
 #, fuzzy
-msgid "Please enter a whole number!"
+msgid "Please enter number of days!"
 msgstr "Mesedez, sartu zenbaki osoa!"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:589
-#, fuzzy, python-format
-msgid "How many days of privileges should user %s be gifted?"
-msgstr "Pribilegio globaleko zenbat egun eman erabiltzaile honi?"
+#: pynicotine/gtkgui/widgets/popupmenu.py:588
+#, python-format
+msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
+msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:590
+#: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, fuzzy, python-format
 msgid "%(days)s days left"
 msgstr "%(days)s egun falta dira"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:597
+#: pynicotine/gtkgui/widgets/popupmenu.py:596
 #, fuzzy
-msgid "Give Privileges"
+msgid "Gift Privileges"
 msgstr "Eman pribilegioak"
 
 #: pynicotine/gtkgui/widgets/textentry.py:235
@@ -4382,7 +4380,8 @@ msgstr ""
 #: pynicotine/upnp.py:347
 #, fuzzy, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
-msgstr "UPnP: Ezin izan da kanpoko ataka birbidali %(external_port)s: %(error)s"
+msgstr ""
+"UPnP: Ezin izan da kanpoko ataka birbidali %(external_port)s: %(error)s"
 
 #: pynicotine/upnp.py:354
 #, fuzzy, python-format
@@ -5637,8 +5636,8 @@ msgid ""
 "    'US' will only return files from users connected via the United States. "
 "Similarly, 'GB' returns files from users with IPs in the United Kingdom."
 msgstr ""
-"ISO 3166-2-k definitutako herrialde-kodeak erabiltzen ditu (ikus Wikipedia):"
-"\n"
+"ISO 3166-2-k definitutako herrialde-kodeak erabiltzen ditu (ikus "
+"Wikipedia):\n"
 "    \"AEB\" k Estatu Batuetatik konektatutako erabiltzaileen fitxategiak "
 "soilik itzuliko ditu. Era berean, \"GB\" k Erresuma Batuko IPak dituzten "
 "erabiltzaileen fitxategiak itzultzen ditu."
@@ -6008,7 +6007,7 @@ msgstr "Mugatu igoeren abiadura"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
 #: pynicotine/gtkgui/ui/settings/uploads.ui:104
 #: pynicotine/gtkgui/ui/settings/uploads.ui:134
-#: pynicotine/gtkgui/ui/settings/uploads.ui:240
+#: pynicotine/gtkgui/ui/settings/uploads.ui:239
 #, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibibyte (2 ^ 10 byte) segundoko."
@@ -6375,7 +6374,8 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/notifications.ui:72
 #, fuzzy
 msgid "Show notification popup when a folder has finished downloading"
-msgstr "Erakutsi jakinarazpenen leihoa karpeta bat deskargatzen amaitzen denean"
+msgstr ""
+"Erakutsi jakinarazpenen leihoa karpeta bat deskargatzen amaitzen denean"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:78
 #, fuzzy
@@ -6694,29 +6694,20 @@ msgstr "Ilararen portaera"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Prioritize all users in buddy list"
+msgid "Prioritize all buddies"
 msgstr "Eman pribilegioak nire lagun guztiei"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:208
-#, fuzzy
-msgid ""
-"Buddies will have higher priority in the queue, the same as globally "
-"privileged users."
-msgstr ""
-"Lagunek lehentasun handiagoa dute ilaran, orokorki baimenduriko "
-"erabiltzaileek bezala"
-
-#: pynicotine/gtkgui/ui/settings/uploads.ui:225
+#: pynicotine/gtkgui/ui/settings/uploads.ui:224
 #, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr "Ilaratu Igoerak transferentzia-abiadura hona iristen bada"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:255
+#: pynicotine/gtkgui/ui/settings/uploads.ui:254
 #, fuzzy
 msgid "Limit number of upload slots to:"
 msgstr "Mugatu igoera erretenen kopurua"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:256
+#: pynicotine/gtkgui/ui/settings/uploads.ui:255
 #, fuzzy
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
@@ -6725,12 +6716,12 @@ msgstr ""
 "Ezgaituta badago, erretenak automatikoki finkatuko dira eskuragarri dagoen "
 "banda-zabaleraren arabera"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:283
+#: pynicotine/gtkgui/ui/settings/uploads.ui:282
 #, fuzzy
 msgid "Upload queue type:"
 msgstr "Igoera-ilara mota:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:298
+#: pynicotine/gtkgui/ui/settings/uploads.ui:297
 #, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
@@ -6738,40 +6729,40 @@ msgid ""
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr "Fitxategiak ilaratutako ordena berean bidaliko dira"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:301
+#: pynicotine/gtkgui/ui/settings/uploads.ui:300
 msgid "Round Robin"
 msgstr "Round Robin"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:302
+#: pynicotine/gtkgui/ui/settings/uploads.ui:301
 msgid "First In, First Out"
 msgstr "Lehena Sartzen, Lehena Ateratzen (FIFO)"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:321
+#: pynicotine/gtkgui/ui/settings/uploads.ui:320
 #, fuzzy
 msgid "Queue Limits"
 msgstr "Ilararen tamaina: %i"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:330
+#: pynicotine/gtkgui/ui/settings/uploads.ui:329
 #, fuzzy
-msgid "Queue limits do not apply to users in buddy list"
+msgid "Queue limits do not apply to buddies"
 msgstr "Ilara tamainaren mugak ez du eraginik lagunengan"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:347
+#: pynicotine/gtkgui/ui/settings/uploads.ui:346
 #, fuzzy
 msgid "Each user may queue a maximum of either:"
 msgstr "Erabiltzaile bakoitzak gehienez"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:366
+#: pynicotine/gtkgui/ui/settings/uploads.ui:365
 #, fuzzy
 msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2 ^ 20 byte)."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:375
+#: pynicotine/gtkgui/ui/settings/uploads.ui:374
 #, fuzzy
 msgid "MiBs"
 msgstr "MiBak"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:413
+#: pynicotine/gtkgui/ui/settings/uploads.ui:412
 #, fuzzy
 msgid "files"
 msgstr "Fitxategiak"
@@ -6899,8 +6890,8 @@ msgid ""
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Beste bezero batzuek modu pribatuan partekatutako fitxategiak bidaltzeko "
-"aukera eskain dezakete bilaketa eskaerei erantzunez. Fitxategi horiek \"["
-"FITXATU PRIBATUA]\" izenarekin aurrez zehaztuta daude, eta ezin dira "
+"aukera eskain dezakete bilaketa eskaerei erantzunez. Fitxategi horiek "
+"\"[FITXATU PRIBATUA]\" izenarekin aurrez zehaztuta daude, eta ezin dira "
 "deskargatu kargatzaileak baimen esplizitua eman ezean."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:314
@@ -7225,6 +7216,21 @@ msgstr "Gorde _Irudia"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Berritu"
+
+#~ msgid "Client Version"
+#~ msgstr "Bezeroaren Bertsioa"
+
+#, fuzzy, python-format
+#~ msgid "How many days of privileges should user %s be gifted?"
+#~ msgstr "Pribilegio globaleko zenbat egun eman erabiltzaile honi?"
+
+#, fuzzy
+#~ msgid ""
+#~ "Buddies will have higher priority in the queue, the same as globally "
+#~ "privileged users."
+#~ msgstr ""
+#~ "Lagunek lehentasun handiagoa dute ilaran, orokorki baimenduriko "
+#~ "erabiltzaileek bezala"
 
 #~ msgid "_Privileged"
 #~ msgstr "_Pribilegiatua"

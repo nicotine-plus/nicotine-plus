@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:39+0300\n"
+"POT-Creation-Date: 2021-10-24 17:09+0300\n"
 "PO-Revision-Date: 2020-09-02 01:33+0000\n"
 "Last-Translator: daelstorm <Unknown>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2589,8 +2589,8 @@ msgid "Addresses"
 msgstr "Adresser"
 
 #: pynicotine/gtkgui/settingswindow.py:1011
-#: pynicotine/gtkgui/widgets/popupmenu.py:250
-#: pynicotine/gtkgui/widgets/popupmenu.py:305
+#: pynicotine/gtkgui/widgets/popupmenu.py:248
+#: pynicotine/gtkgui/widgets/popupmenu.py:308
 #: pynicotine/gtkgui/ui/userinfo.ui:598
 #, fuzzy
 msgid "Ignore User"
@@ -2618,8 +2618,8 @@ msgid "* is a wildcard"
 msgstr "* er et wildcard"
 
 #: pynicotine/gtkgui/settingswindow.py:1201
-#: pynicotine/gtkgui/widgets/popupmenu.py:249
-#: pynicotine/gtkgui/widgets/popupmenu.py:302
+#: pynicotine/gtkgui/widgets/popupmenu.py:247
+#: pynicotine/gtkgui/widgets/popupmenu.py:305
 #: pynicotine/gtkgui/ui/userinfo.ui:574
 #, fuzzy
 msgid "Ban User"
@@ -3365,7 +3365,7 @@ msgstr "Gem billede"
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Billedet for brugeren %(user)s kunne ikke indlæses: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:585
+#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:584
 #: pynicotine/gtkgui/widgets/treeview.py:450
 #: pynicotine/gtkgui/ui/userinfo.ui:129 pynicotine/gtkgui/ui/userinfo.ui:161
 #: pynicotine/gtkgui/ui/userinfo.ui:193 pynicotine/gtkgui/ui/userinfo.ui:225
@@ -3567,83 +3567,79 @@ msgid "_Browse Files"
 msgstr "Kig i filer"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:238
-#, fuzzy
-msgid "Gi_ve Privileges…"
-msgstr "indrømme privilegier"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:240
 #: pynicotine/gtkgui/ui/userinfo.ui:524
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Vis IP-a_dresse"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:241
+#: pynicotine/gtkgui/widgets/popupmenu.py:239
+#: pynicotine/gtkgui/widgets/popupmenu.py:292
 #, fuzzy
-msgid "Client Version"
-msgstr "Klientversion"
+msgid "_Gift Privileges…"
+msgstr "indrømme privilegier"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:246
-#: pynicotine/gtkgui/widgets/popupmenu.py:293
+#: pynicotine/gtkgui/widgets/popupmenu.py:244
+#: pynicotine/gtkgui/widgets/popupmenu.py:296
 #: pynicotine/gtkgui/ui/userinfo.ui:549
 #, fuzzy
 msgid "_Add to Buddy List"
 msgstr "Venner"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:251
-#: pynicotine/gtkgui/widgets/popupmenu.py:308
+#: pynicotine/gtkgui/widgets/popupmenu.py:249
+#: pynicotine/gtkgui/widgets/popupmenu.py:311
 #, fuzzy
 msgid "Block User's IP Address"
 msgstr "Bloker brugerens IP-adresse"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:252
-#: pynicotine/gtkgui/widgets/popupmenu.py:311
+#: pynicotine/gtkgui/widgets/popupmenu.py:250
+#: pynicotine/gtkgui/widgets/popupmenu.py:314
 #, fuzzy
 msgid "Ignore User's IP Address"
 msgstr "Ignorer brugerens IP-adresse"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:260
+#: pynicotine/gtkgui/widgets/popupmenu.py:258
 #, fuzzy, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Filer er markeret"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:335
+#: pynicotine/gtkgui/widgets/popupmenu.py:338
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Fjern fra privat rum %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:337
+#: pynicotine/gtkgui/widgets/popupmenu.py:340
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Føj til privatrum %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:344
+#: pynicotine/gtkgui/widgets/popupmenu.py:347
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Fjern som operatør af %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:346
+#: pynicotine/gtkgui/widgets/popupmenu.py:349
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Tilføj som operatør af %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:578
+#: pynicotine/gtkgui/widgets/popupmenu.py:577
 #, fuzzy
-msgid "Please enter a whole number!"
+msgid "Please enter number of days!"
 msgstr "Angiv et helt tal!"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:589
-#, fuzzy, python-format
-msgid "How many days of privileges should user %s be gifted?"
-msgstr "Hvor mange dage med privilegier skal brugeren %s være begavet?"
+#: pynicotine/gtkgui/widgets/popupmenu.py:588
+#, python-format
+msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
+msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:590
+#: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, fuzzy, python-format
 msgid "%(days)s days left"
 msgstr "%(days)s dage tilbage"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:597
+#: pynicotine/gtkgui/widgets/popupmenu.py:596
 #, fuzzy
-msgid "Give Privileges"
+msgid "Gift Privileges"
 msgstr "indrømme privilegier"
 
 #: pynicotine/gtkgui/widgets/textentry.py:235
@@ -6008,7 +6004,7 @@ msgstr "Begræns uploadhastigheden til"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
 #: pynicotine/gtkgui/ui/settings/uploads.ui:104
 #: pynicotine/gtkgui/ui/settings/uploads.ui:134
-#: pynicotine/gtkgui/ui/settings/uploads.ui:240
+#: pynicotine/gtkgui/ui/settings/uploads.ui:239
 #, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibibytes (2^10 byte) pr. sekund."
@@ -6678,29 +6674,20 @@ msgstr "Funktionsmåde for kø"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Prioritize all users in buddy list"
+msgid "Prioritize all buddies"
 msgstr "Mine venner går forrest i downloadkøen"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:208
-#, fuzzy
-msgid ""
-"Buddies will have higher priority in the queue, the same as globally "
-"privileged users."
-msgstr ""
-"Venner har højere prioritet i køen, det samme som globalt privilegerede "
-"brugere."
-
-#: pynicotine/gtkgui/ui/settings/uploads.ui:225
+#: pynicotine/gtkgui/ui/settings/uploads.ui:224
 #, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr "Kø uploads, hvis den samlede overførselshastighed når (KiB/s):"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:255
+#: pynicotine/gtkgui/ui/settings/uploads.ui:254
 #, fuzzy
 msgid "Limit number of upload slots to:"
 msgstr "Begræns uploadhastigheden til"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:256
+#: pynicotine/gtkgui/ui/settings/uploads.ui:255
 #, fuzzy
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
@@ -6709,12 +6696,12 @@ msgstr ""
 "Hvis deaktiveret, vil slots automatisk blive bestemt af tilgængelige "
 "båndbredde begrænsninger."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:283
+#: pynicotine/gtkgui/ui/settings/uploads.ui:282
 #, fuzzy
 msgid "Upload queue type:"
 msgstr "Overfør køtype:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:298
+#: pynicotine/gtkgui/ui/settings/uploads.ui:297
 #, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
@@ -6723,42 +6710,42 @@ msgid ""
 msgstr ""
 "Filer vil blive uploadet på cyklisk måde til de brugere, der venter i kø."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:301
+#: pynicotine/gtkgui/ui/settings/uploads.ui:300
 #, fuzzy
 msgid "Round Robin"
 msgstr "Runde Robin"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:302
+#: pynicotine/gtkgui/ui/settings/uploads.ui:301
 #, fuzzy
 msgid "First In, First Out"
 msgstr "Først ind, først ud"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:321
+#: pynicotine/gtkgui/ui/settings/uploads.ui:320
 #, fuzzy
 msgid "Queue Limits"
 msgstr "Køstørrelse: %i"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:330
+#: pynicotine/gtkgui/ui/settings/uploads.ui:329
 #, fuzzy
-msgid "Queue limits do not apply to users in buddy list"
+msgid "Queue limits do not apply to buddies"
 msgstr "Mine venner slipper kørestriktioner"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:347
+#: pynicotine/gtkgui/ui/settings/uploads.ui:346
 #, fuzzy
 msgid "Each user may queue a maximum of either:"
 msgstr "En bruger kan max. køe"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:366
+#: pynicotine/gtkgui/ui/settings/uploads.ui:365
 #, fuzzy
 msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 byte)."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:375
+#: pynicotine/gtkgui/ui/settings/uploads.ui:374
 #, fuzzy
 msgid "MiBs"
 msgstr "MiBs"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:413
+#: pynicotine/gtkgui/ui/settings/uploads.ui:412
 #, fuzzy
 msgid "files"
 msgstr "Filer"
@@ -7209,6 +7196,22 @@ msgstr "Gem _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Opdatere"
+
+#, fuzzy
+#~ msgid "Client Version"
+#~ msgstr "Klientversion"
+
+#, fuzzy, python-format
+#~ msgid "How many days of privileges should user %s be gifted?"
+#~ msgstr "Hvor mange dage med privilegier skal brugeren %s være begavet?"
+
+#, fuzzy
+#~ msgid ""
+#~ "Buddies will have higher priority in the queue, the same as globally "
+#~ "privileged users."
+#~ msgstr ""
+#~ "Venner har højere prioritet i køen, det samme som globalt privilegerede "
+#~ "brugere."
 
 #, fuzzy
 #~ msgid "Privileged"

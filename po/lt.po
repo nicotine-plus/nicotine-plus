@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-24 08:39+0300\n"
+"POT-Creation-Date: 2021-10-24 17:09+0300\n"
 "PO-Revision-Date: 2020-11-23 11:47+0000\n"
 "Last-Translator: Mantas Kriaučiūnas <baltix@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2575,8 +2575,8 @@ msgid "Addresses"
 msgstr "Adresai"
 
 #: pynicotine/gtkgui/settingswindow.py:1011
-#: pynicotine/gtkgui/widgets/popupmenu.py:250
-#: pynicotine/gtkgui/widgets/popupmenu.py:305
+#: pynicotine/gtkgui/widgets/popupmenu.py:248
+#: pynicotine/gtkgui/widgets/popupmenu.py:308
 #: pynicotine/gtkgui/ui/userinfo.ui:598
 #, fuzzy
 msgid "Ignore User"
@@ -2603,8 +2603,8 @@ msgid "* is a wildcard"
 msgstr "* yra kaitos simbolis"
 
 #: pynicotine/gtkgui/settingswindow.py:1201
-#: pynicotine/gtkgui/widgets/popupmenu.py:249
-#: pynicotine/gtkgui/widgets/popupmenu.py:302
+#: pynicotine/gtkgui/widgets/popupmenu.py:247
+#: pynicotine/gtkgui/widgets/popupmenu.py:305
 #: pynicotine/gtkgui/ui/userinfo.ui:574
 #, fuzzy
 msgid "Ban User"
@@ -3314,7 +3314,7 @@ msgstr "Įrašyti paveikslėlį"
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "Nepavyko įkelti vartotojo %(user)s: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:585
+#: pynicotine/gtkgui/userinfo.py:317 pynicotine/gtkgui/widgets/popupmenu.py:584
 #: pynicotine/gtkgui/widgets/treeview.py:450
 #: pynicotine/gtkgui/ui/userinfo.ui:129 pynicotine/gtkgui/ui/userinfo.ui:161
 #: pynicotine/gtkgui/ui/userinfo.ui:193 pynicotine/gtkgui/ui/userinfo.ui:225
@@ -3508,82 +3508,79 @@ msgid "_Browse Files"
 msgstr "_Ieškoti failų"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:238
-#, fuzzy
-msgid "Gi_ve Privileges…"
-msgstr "Suteikti privilegijas"
-
-#: pynicotine/gtkgui/widgets/popupmenu.py:240
 #: pynicotine/gtkgui/ui/userinfo.ui:524
 #, fuzzy
 msgid "Show IP A_ddress"
 msgstr "Rodyti IP A_ddress"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:241
-msgid "Client Version"
-msgstr "Kliento versija"
+#: pynicotine/gtkgui/widgets/popupmenu.py:239
+#: pynicotine/gtkgui/widgets/popupmenu.py:292
+#, fuzzy
+msgid "_Gift Privileges…"
+msgstr "Suteikti privilegijas"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:246
-#: pynicotine/gtkgui/widgets/popupmenu.py:293
+#: pynicotine/gtkgui/widgets/popupmenu.py:244
+#: pynicotine/gtkgui/widgets/popupmenu.py:296
 #: pynicotine/gtkgui/ui/userinfo.ui:549
 #, fuzzy
 msgid "_Add to Buddy List"
 msgstr "Bičiulių sąrašas"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:251
-#: pynicotine/gtkgui/widgets/popupmenu.py:308
+#: pynicotine/gtkgui/widgets/popupmenu.py:249
+#: pynicotine/gtkgui/widgets/popupmenu.py:311
 #, fuzzy
 msgid "Block User's IP Address"
 msgstr "Blokuoti IP adresą..."
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:252
-#: pynicotine/gtkgui/widgets/popupmenu.py:311
+#: pynicotine/gtkgui/widgets/popupmenu.py:250
+#: pynicotine/gtkgui/widgets/popupmenu.py:314
 #, fuzzy
 msgid "Ignore User's IP Address"
 msgstr "Nepaisyti vartotojo IP adreso"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:260
+#: pynicotine/gtkgui/widgets/popupmenu.py:258
 #, fuzzy, python-format
 msgid "%s File(s) Selected"
 msgstr "%s Pasirinktas (-i) failas (-ai)"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:335
+#: pynicotine/gtkgui/widgets/popupmenu.py:338
 #, fuzzy, python-format
 msgid "Remove from Private Room %s"
 msgstr "Pašalinti iš asmeninio kambario %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:337
+#: pynicotine/gtkgui/widgets/popupmenu.py:340
 #, fuzzy, python-format
 msgid "Add to Private Room %s"
 msgstr "Įtraukti į asmeninį kambarį %s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:344
+#: pynicotine/gtkgui/widgets/popupmenu.py:347
 #, fuzzy, python-format
 msgid "Remove as Operator of %s"
 msgstr "Pašalinti kaip %s operatorių"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:346
+#: pynicotine/gtkgui/widgets/popupmenu.py:349
 #, fuzzy, python-format
 msgid "Add as Operator of %s"
 msgstr "Įtraukti kaip %s operatorių"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:578
+#: pynicotine/gtkgui/widgets/popupmenu.py:577
 #, fuzzy
-msgid "Please enter a whole number!"
+msgid "Please enter number of days!"
 msgstr "Įveskite sveikąjį skaičių!"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:589
-#, fuzzy, python-format
-msgid "How many days of privileges should user %s be gifted?"
-msgstr "Nurodykite kiek dienų privilegijų norite suteikti šiam naudotojui?"
+#: pynicotine/gtkgui/widgets/popupmenu.py:588
+#, python-format
+msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
+msgstr ""
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:590
+#: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
 msgid "%(days)s days left"
 msgstr "liko %(days)s"
 
-#: pynicotine/gtkgui/widgets/popupmenu.py:597
+#: pynicotine/gtkgui/widgets/popupmenu.py:596
 #, fuzzy
-msgid "Give Privileges"
+msgid "Gift Privileges"
 msgstr "Suteikti privilegijas"
 
 #: pynicotine/gtkgui/widgets/textentry.py:235
@@ -5919,7 +5916,7 @@ msgstr "Apriboti atsisiuntimo greitį iki (KiB/s):"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:174
 #: pynicotine/gtkgui/ui/settings/uploads.ui:104
 #: pynicotine/gtkgui/ui/settings/uploads.ui:134
-#: pynicotine/gtkgui/ui/settings/uploads.ui:240
+#: pynicotine/gtkgui/ui/settings/uploads.ui:239
 #, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibibytes (2^10 baitų) per sekundę."
@@ -6583,29 +6580,20 @@ msgstr "Eilės veikimas"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
 #, fuzzy
-msgid "Prioritize all users in buddy list"
+msgid "Prioritize all buddies"
 msgstr "Privilegijuoti visus mano draugus"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:208
-#, fuzzy
-msgid ""
-"Buddies will have higher priority in the queue, the same as globally "
-"privileged users."
-msgstr ""
-"Bičiuliai turės didesnį prioritetą eilėje, kaip ir visame pasaulyje "
-"privilegijuoti vartotojai."
-
-#: pynicotine/gtkgui/ui/settings/uploads.ui:225
+#: pynicotine/gtkgui/ui/settings/uploads.ui:224
 #, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr "Eilė įkeliama, jei pasiekiamas bendras perkėlimo greitis (KiB/s):"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:255
+#: pynicotine/gtkgui/ui/settings/uploads.ui:254
 #, fuzzy
 msgid "Limit number of upload slots to:"
 msgstr "Apriboti įkėlimo laiko tarpsnių skaičių iki:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:256
+#: pynicotine/gtkgui/ui/settings/uploads.ui:255
 #, fuzzy
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
@@ -6614,12 +6602,12 @@ msgstr ""
 "Jei išjungta, laiko tarpsniai bus automatiškai nustatomi pagal galimus "
 "pralaidumo apribojimus."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:283
+#: pynicotine/gtkgui/ui/settings/uploads.ui:282
 #, fuzzy
 msgid "Upload queue type:"
 msgstr "Nusiuntimo eilės tipas:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:298
+#: pynicotine/gtkgui/ui/settings/uploads.ui:297
 #, fuzzy
 msgid ""
 "Round Robin: Files will be uploaded in cyclical fashion to the users waiting "
@@ -6627,40 +6615,40 @@ msgid ""
 "First In, First Out: Files will be uploaded in the order they were queued."
 msgstr "Failai bus įkeliami cikliškai eilėje laukiantiems vartotojams."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:301
+#: pynicotine/gtkgui/ui/settings/uploads.ui:300
 msgid "Round Robin"
 msgstr "Round Robin"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:302
+#: pynicotine/gtkgui/ui/settings/uploads.ui:301
 msgid "First In, First Out"
 msgstr "First In, First Out"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:321
+#: pynicotine/gtkgui/ui/settings/uploads.ui:320
 #, fuzzy
 msgid "Queue Limits"
 msgstr "Eilės padėtis"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:330
+#: pynicotine/gtkgui/ui/settings/uploads.ui:329
 #, fuzzy
-msgid "Queue limits do not apply to users in buddy list"
+msgid "Queue limits do not apply to buddies"
 msgstr "Eilių dydžio limitas netaikomas draugams"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:347
+#: pynicotine/gtkgui/ui/settings/uploads.ui:346
 #, fuzzy
 msgid "Each user may queue a maximum of either:"
 msgstr "Kiekvienas vartotojas gali stovėti eilėje ne daugiau kaip:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:366
+#: pynicotine/gtkgui/ui/settings/uploads.ui:365
 #, fuzzy
 msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 baitų)."
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:375
+#: pynicotine/gtkgui/ui/settings/uploads.ui:374
 #, fuzzy
 msgid "MiBs"
 msgstr "MiBs"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:413
+#: pynicotine/gtkgui/ui/settings/uploads.ui:412
 #, fuzzy
 msgid "files"
 msgstr "Failus"
@@ -7112,6 +7100,21 @@ msgstr "Įrašyti _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh informacija"
+
+#~ msgid "Client Version"
+#~ msgstr "Kliento versija"
+
+#, fuzzy, python-format
+#~ msgid "How many days of privileges should user %s be gifted?"
+#~ msgstr "Nurodykite kiek dienų privilegijų norite suteikti šiam naudotojui?"
+
+#, fuzzy
+#~ msgid ""
+#~ "Buddies will have higher priority in the queue, the same as globally "
+#~ "privileged users."
+#~ msgstr ""
+#~ "Bičiuliai turės didesnį prioritetą eilėje, kaip ir visame pasaulyje "
+#~ "privilegijuoti vartotojai."
 
 #~ msgid "Privileged"
 #~ msgstr "Privilegijuotas"
