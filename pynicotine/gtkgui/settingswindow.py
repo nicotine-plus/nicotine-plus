@@ -854,7 +854,7 @@ class UploadsFrame(UserInterface):
                 "uselimit": self.Limit.get_active(),
                 "uploadlimit": self.LimitSpeed.get_value_as_int(),
                 "uploadlimitalt": self.LimitSpeedAlternative.get_value_as_int(),
-                "fifoqueue": self.FirstInFirstOut.get_active(),
+                "fifoqueue": bool(self.FirstInFirstOut.get_active()),
                 "limitby": self.LimitTotalTransfers.get_active(),
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
                 "filelimit": self.MaxUserFiles.get_value_as_int(),
