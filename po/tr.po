@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-24 17:09+0300\n"
-"PO-Revision-Date: 2021-10-24 08:48+0000\n"
+"PO-Revision-Date: 2021-10-24 15:17+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -3020,9 +3020,8 @@ msgstr "IP _Adresini Göster"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:239
 #: pynicotine/gtkgui/widgets/popupmenu.py:292
-#, fuzzy
 msgid "_Gift Privileges…"
-msgstr "Ayrıcalıklar _Ver…"
+msgstr "Ayrıcalık _Hediye Et…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:244
 #: pynicotine/gtkgui/widgets/popupmenu.py:296
@@ -3066,14 +3065,15 @@ msgid "Add as Operator of %s"
 msgstr "%s İşleticisi Olarak Ekle"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:577
-#, fuzzy
 msgid "Please enter number of days!"
-msgstr "Lütfen bir tam sayı girin!"
+msgstr "Lütfen gün sayısını girin!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"%(user)s kullanıcısına Soulseek ayrıcalıklarınızın şu kadar gününü hediye "
+"edin (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3081,9 +3081,8 @@ msgid "%(days)s days left"
 msgstr "%(days)s gün kaldı"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:596
-#, fuzzy
 msgid "Gift Privileges"
-msgstr "Ayrıcalıklar Ver"
+msgstr "Ayrıcalık Hediye Et"
 
 #: pynicotine/gtkgui/widgets/textentry.py:235
 #, python-format
@@ -5736,9 +5735,8 @@ msgid "Queue Behavior"
 msgstr "Kuyruk Davranışı"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:207
-#, fuzzy
 msgid "Prioritize all buddies"
-msgstr "Arkadaş listesindeki tüm kullanıcılara öncelik ver"
+msgstr "Tüm arkadaşlara öncelik ver"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:224
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
@@ -5784,10 +5782,8 @@ msgid "Queue Limits"
 msgstr "Kuyruk Sınırları"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:329
-#, fuzzy
 msgid "Queue limits do not apply to buddies"
-msgstr ""
-"Kuyruk sınırları arkadaş listesindeki kullanıcılar için geçerli değildir"
+msgstr "Kuyruk sınırları arkadaşlar için geçerli değildir"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:346
 msgid "Each user may queue a maximum of either:"
