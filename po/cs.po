@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:20+0300\n"
+"POT-Creation-Date: 2021-10-25 22:28+0300\n"
 "PO-Revision-Date: 2021-10-19 17:11+0000\n"
 "Last-Translator: Patrik <burnmail123@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2075,8 +2075,8 @@ msgstr "Obrázky"
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 #, fuzzy
-msgid "User Browse"
-msgstr "Procházení uživatelem"
+msgid "Browse Shares"
+msgstr "akcie Bro_wse Buddy"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -7261,6 +7261,10 @@ msgstr "Uložit _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh Informace"
+
+#, fuzzy
+#~ msgid "User Browse"
+#~ msgstr "Procházení uživatelem"
 
 #, fuzzy
 #~ msgid "Buddy List"

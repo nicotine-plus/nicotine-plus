@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:20+0300\n"
+"POT-Creation-Date: 2021-10-25 22:28+0300\n"
 "PO-Revision-Date: 2021-10-25 19:23+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1721,8 +1721,8 @@ msgstr "Uploads"
 
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
-msgid "User Browse"
-msgstr "Gebruiker bladeren"
+msgid "Browse Shares"
+msgstr "Verken gedeelde bestanden"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -6159,6 +6159,9 @@ msgstr "Bewaar _Beeld"
 msgid "_Refresh Info"
 msgstr "Info _vernieuwen"
 
+#~ msgid "User Browse"
+#~ msgstr "Gebruiker bladeren"
+
 #~ msgid "Buddy List"
 #~ msgstr "Vriendenlijst"
 
@@ -7326,9 +7329,6 @@ msgstr "Info _vernieuwen"
 
 #~ msgid "Configure user info"
 #~ msgstr "Gebruikersinfo configureren"
-
-#~ msgid "Browse Shares"
-#~ msgstr "Verken gedeelde bestanden"
 
 #~ msgid "Load from Disk"
 #~ msgstr "Laden vanaf schijf"

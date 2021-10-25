@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:20+0300\n"
+"POT-Creation-Date: 2021-10-25 22:28+0300\n"
 "PO-Revision-Date: 2021-10-14 18:21+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1910,8 +1910,8 @@ msgstr "Subidas"
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 #, fuzzy
-msgid "User Browse"
-msgstr "Búsqueda de usuarios"
+msgid "Browse Shares"
+msgstr "Bro_wse Acciones de amigos"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -7051,6 +7051,10 @@ msgstr "Guardar _Imagen"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Actualizar la información"
+
+#, fuzzy
+#~ msgid "User Browse"
+#~ msgstr "Búsqueda de usuarios"
 
 #~ msgid "Buddy List"
 #~ msgstr "Lista de amigos"

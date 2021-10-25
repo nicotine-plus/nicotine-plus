@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:20+0300\n"
+"POT-Creation-Date: 2021-10-25 22:28+0300\n"
 "PO-Revision-Date: 2020-11-23 11:47+0000\n"
 "Last-Translator: Mantas Kriaučiūnas <baltix@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2065,8 +2065,8 @@ msgstr "Išsiuntimai"
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
 #, fuzzy
-msgid "User Browse"
-msgstr "Vartotojo naršymas"
+msgid "Browse Shares"
+msgstr "Bro_wse Buddy Akcijos"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -7085,6 +7085,10 @@ msgstr "Įrašyti _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh informacija"
+
+#, fuzzy
+#~ msgid "User Browse"
+#~ msgstr "Vartotojo naršymas"
 
 #~ msgid "Buddy List"
 #~ msgstr "Bičiulių sąrašas"

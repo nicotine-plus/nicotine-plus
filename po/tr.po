@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:20+0300\n"
+"POT-Creation-Date: 2021-10-25 22:28+0300\n"
 "PO-Revision-Date: 2021-10-25 19:30+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1722,8 +1722,9 @@ msgstr "Yüklenenler"
 
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
-msgid "User Browse"
-msgstr "Kullanıcıya Göz At"
+#, fuzzy
+msgid "Browse Shares"
+msgstr "Arkadaş Paylaşımlarına Göz A_t"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -6149,6 +6150,9 @@ msgstr "Resmi _Kaydet"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Bilgileri _Yenile"
+
+#~ msgid "User Browse"
+#~ msgstr "Kullanıcıya Göz At"
 
 #~ msgid "Buddy List"
 #~ msgstr "Arkadaş Listesi"
