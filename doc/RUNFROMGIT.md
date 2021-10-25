@@ -15,12 +15,17 @@ cd nicotine-plus
 ./nicotine
 ```
 
-To update to newer versions of Nicotine+, run the following:
-
+## Using the latest stable version of Nicotine+
+To run the latest stable version of git, run:
 ```console
+git clone https://github.com/nicotine-plus/nicotine-plus.git # Skip this if you have already checked out Nicotine+
 cd nicotine-plus
 git pull
+git checkout $(git describe --tags --abbrev=0)
+./nicotine
 ```
+This is recommended for users who run Nicotine+ on a not-supported platform.
+
 
 ## Install Nicotine+ for the current user
 To install Nicotine+ locally (no root required), run the following:
