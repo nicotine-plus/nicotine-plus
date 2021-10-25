@@ -1,6 +1,6 @@
 # Download Nicotine+
 
-## GNU/Linux, *BSD, Solaris
+## GNU/Linux
 
 If you have no need to modify the Nicotine+ source, you are strongly recommended to use packages for your distribution/operating system. This will save you time.
 
@@ -85,6 +85,12 @@ If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
 Unstable Flatpak packages are generated after every commit to the master branch, and should only be used for testing.
 
 - [Download Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+
+## *BSD, Solaris
+
+Currently there are no up to date and stable packages available for any of the BSD versions, nor for Solaris.
+
+Not to worry, with a bit of fidgeting you run Nicotine+ from git: [RUNFROMGIT.md](doc/RUNFROMGIT.md)
 
 ## Windows
 
