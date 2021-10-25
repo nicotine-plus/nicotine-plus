@@ -90,7 +90,7 @@ Unstable Flatpak packages are generated after every commit to the master branch,
 
 Currently there are no up to date and stable packages available for any of the BSD versions, nor for Solaris.
 
-Not to worry, with a bit of fidgeting you run Nicotine+ from git: [RUNFROMGIT.md](doc/RUNFROMGIT.md)
+Not to worry, with a bit of fidgeting can you run Nicotine+ from git: [RUNFROMGIT.md](doc/RUNFROMGIT.md)
 
 ## Windows
 
