@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-25 20:05+0000\n"
+"PO-Revision-Date: 2021-10-26 02:51+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -3501,39 +3501,36 @@ msgid "Last.fm: Could not get recent track from Audioscrobbler: %(error)s"
 msgstr "Last.fm: Kan ikke hente nylig spor fra Audioscrobbler: %(error)s"
 
 #: pynicotine/nowplaying.py:205
-#, fuzzy
 msgid "MPRIS: Could not find a suitable MPRIS player"
 msgstr "MPRIS: Finner ikke en passende MPRIS-spiller"
 
 #: pynicotine/nowplaying.py:210
-#, fuzzy, python-format
+#, python-format
 msgid "Found multiple MPRIS players: %(players)s. Using: %(player)s"
-msgstr "Fant flere MPRIS-spillere: %(players)s. Bruke: %(player)s"
+msgstr "Fant flere MPRIS-spillere: %(players)s. Bruker: %(player)s"
 
 #: pynicotine/nowplaying.py:213
-#, fuzzy, python-format
+#, python-format
 msgid "Auto-detected MPRIS player: %s"
 msgstr "Automatisk oppdaget MPRIS-spiller: %s"
 
 #: pynicotine/nowplaying.py:227
-#, fuzzy, python-format
+#, python-format
 msgid "MPRIS: Something went wrong while querying %(player)s: %(exception)s"
 msgstr "MPRIS: Noe gikk galt under spørring %(player)s: %(exception)s"
 
 #: pynicotine/nowplaying.py:274
-#, fuzzy
 msgid "ListenBrainz: Please provide your ListenBrainz username"
-msgstr "ListenBrainz: Oppgi ditt ListenBrainz-brukernavn"
+msgstr "ListenBrainz: Angi ditt ListenBrainz-brukernavn"
 
 #: pynicotine/nowplaying.py:283
-#, fuzzy, python-format
+#, python-format
 msgid "ListenBrainz: Could not connect to ListenBrainz: %(error)s"
-msgstr "ListenBrainz: Kan ikke koble til ListenBrainz: %(error)s"
+msgstr "ListenBrainz: Kunne ikke koble til ListenBrainz: %(error)s"
 
 #: pynicotine/nowplaying.py:290
-#, fuzzy
 msgid "ListenBrainz: You don't seem to be listening to anything right now"
-msgstr "ListenBrainz: Du ser ikke ut til å høre på noe akkurat nå"
+msgstr "ListenBrainz: Det virker ikke som om du lytter til noe akkurat nå"
 
 #: pynicotine/nowplaying.py:299
 #, fuzzy
@@ -3541,15 +3538,15 @@ msgid "Playing now"
 msgstr "Spiller nå"
 
 #: pynicotine/nowplaying.py:304
-#, fuzzy, python-format
+#, python-format
 msgid "ListenBrainz: Could not get current track from ListenBrainz: %(error)s"
 msgstr ""
 "ListenBrainz: Kunne ikke hente gjeldende spor fra ListenBrainz: %(error)s"
 
 #: pynicotine/nowplaying.py:319
-#, fuzzy, python-format
+#, python-format
 msgid "Executing '%(command)s' failed: %(error)s"
-msgstr "Utføring av %(command)s mislyktes: %(error)s"
+msgstr "Utføring av \"%(command)s\" mislyktes: %(error)s"
 
 #: pynicotine/pluginsystem.py:72
 #, fuzzy, python-format
@@ -3557,31 +3554,31 @@ msgid "It appears '%s' is not a directory, not loading plugins."
 msgstr "Det ser ut til at %s ikke er en katalog, ikke innlasting av plugins."
 
 #: pynicotine/pluginsystem.py:115
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to load plugin '%s', could not find it."
-msgstr "Finner ikke plugin-modulen %s."
+msgstr "Finner ikke programtilleggsmodulen «%s»."
 
 #: pynicotine/pluginsystem.py:148
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
 "characters: %(characters)s"
 msgstr ""
-"Kan ikke laste plugin-modulen %(name)s. Navnet på plugin-modulen inneholder "
-"ugyldige tegn: %(characters)s"
+"Kan ikke laste inn programtillegget %(name)s. Navnet på programtillegget "
+"inneholder ugyldige tegn: %(characters)s"
 
 #: pynicotine/pluginsystem.py:178
 #, fuzzy, python-format
 msgid "Loaded plugin %s"
-msgstr "Lastet plugin %s"
+msgstr "Innlastet programtillegget %s"
 
 #: pynicotine/pluginsystem.py:182
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Unable to load plugin %(module)s\n"
 "%(exc_trace)s"
 msgstr ""
-"Kan ikke laste plugin-modulen %(module)s\n"
+"Kan ikke laste inn programtillegget %(module)s\n"
 "%(exc_trace)s"
 
 #: pynicotine/pluginsystem.py:217
@@ -3608,9 +3605,8 @@ msgstr ""
 "Spor: %(trace)s"
 
 #: pynicotine/pynicotine.py:309
-#, fuzzy
 msgid "You need to specify a username and password before connecting…"
-msgstr "Du må spesifisere et brukernavn og passord før du kobler til …"
+msgstr "Du må angi et brukernavn og passord før du kobler til …"
 
 #: pynicotine/pynicotine.py:315
 #, python-format
@@ -3741,9 +3737,9 @@ msgstr ""
 "med nedlastingsrettigheter igjen."
 
 #: pynicotine/pynicotine.py:1646
-#, fuzzy, python-format
+#, python-format
 msgid "Your password has been changed. Password is %s"
-msgstr "Passordet er endret. Passordet er %s"
+msgstr "Passordet ditt har blitt endret. Passordet er %s"
 
 #: pynicotine/pynicotine.py:1704
 #, fuzzy, python-format
@@ -3877,9 +3873,9 @@ msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr "Kan ikke legge til nedlasting %(filename)s i delte filer: %(error)s"
 
 #: pynicotine/shares.py:889
-#, fuzzy, python-format
+#, python-format
 msgid "Failed to send number of shared files to the server: %s"
-msgstr "Kan ikke sende antall delte filer til serveren: %s"
+msgstr "Klarte ikke å sende antall delte filer til tjeneren: %s"
 
 #: pynicotine/shares.py:943
 #, python-format
@@ -4152,9 +4148,8 @@ msgid "Welcome to Nicotine+"
 msgstr "Velkommen til Nikotin+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:91
-#, fuzzy
 msgid "_Set Up…"
-msgstr "_Set opp…"
+msgstr "_Sett opp …"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:118
 #, fuzzy
@@ -4352,7 +4347,6 @@ msgid "Pause / Abort Transfer"
 msgstr "Stans overføring midlertidig / avbryt"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:164
-#, fuzzy
 msgid "Editing"
 msgstr "Redigering"
 
@@ -4365,7 +4359,6 @@ msgid "Paste"
 msgstr "Lim inn"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:190
-#, fuzzy
 msgid "Insert Emoji"
 msgstr "Sett inn emoji"
 
@@ -4386,7 +4379,6 @@ msgid "Find Previous Match"
 msgstr "Finn forrige treff"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:19
-#, fuzzy
 msgid "Current Session"
 msgstr "Gjeldende økt"
 
@@ -4417,7 +4409,6 @@ msgstr "Fullførte opplastinger"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:175
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:358
-#, fuzzy
 msgid "Uploaded Size"
 msgstr "Opplastet størrelse"
 
@@ -4452,12 +4443,10 @@ msgid "Clear _Downloads…"
 msgstr "Tøm _nedlastninger …"
 
 #: pynicotine/gtkgui/ui/interests.ui:23
-#, fuzzy
 msgid "Personal Interests"
 msgstr "Personlige interesser"
 
 #: pynicotine/gtkgui/ui/interests.ui:42
-#, fuzzy
 msgid "Add something you like…"
 msgstr "Legg til noe du liker…"
 
@@ -4558,9 +4547,8 @@ msgstr "Skriv inn navnet på brukeren du ønsker å ignorere:"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:477
 #: pynicotine/gtkgui/ui/mainwindow.ui:734
-#, fuzzy
 msgid "Configure logging"
-msgstr "Konfigurere logging"
+msgstr "Sett opp loggføring"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:511
 #, fuzzy
@@ -4568,9 +4556,8 @@ msgid "Enter the username of the person whose information you want to see"
 msgstr "Skriv inn navnet på brukeren du ønsker å ignorere:"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:549
-#, fuzzy
 msgid "Update I_nfo"
-msgstr "Oppdater I_nfo"
+msgstr "Oppdater i_nfo"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:581
 #, fuzzy
@@ -4697,15 +4684,13 @@ msgstr "Tilkoblinger"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1667
 #: pynicotine/gtkgui/ui/settings/tts.ui:109
-#, fuzzy
 msgid "Messages"
 msgstr "Meldinger"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1693
 #: pynicotine/gtkgui/ui/settings/network.ui:349
-#, fuzzy
 msgid "Miscellaneous"
-msgstr "Diverse"
+msgstr "Ymse"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1778
 #, fuzzy
@@ -4830,29 +4815,24 @@ msgid "Remove user 'user' from your ban list"
 msgstr "Fjern brukerens bruker fra utestengingslisten"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:380
-#, fuzzy
 msgid "/ignore 'user'"
-msgstr "/ignorer bruker"
+msgstr "/ignore «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:391
-#, fuzzy
 msgid "Add user 'user' to your ignore list"
-msgstr "Legge til brukerbruker i ignoreringslisten"
+msgstr "Legg til bruker «bruker» i ignoreringslisten din"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:406
-#, fuzzy
 msgid "/unignore 'user'"
-msgstr "/unignore 'bruker'"
+msgstr "/unignore «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:417
-#, fuzzy
 msgid "Remove user 'user' from your ignore list"
-msgstr "Fjerne brukerbrukeren fra ignoreringslisten"
+msgstr "Fjern bruker «bruker» fra ignoreringslisten"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:432
-#, fuzzy
 msgid "/browse /b 'user'"
-msgstr "/browse /b 'bruker'"
+msgstr "/browse /b «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:443
 #, fuzzy
@@ -4870,14 +4850,12 @@ msgid "Request info for 'user'"
 msgstr "Be om informasjon for bruker"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:484
-#, fuzzy
 msgid "/ip 'user'"
-msgstr "/ip 'bruker'"
+msgstr "/ip «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:495
-#, fuzzy
 msgid "Show IP for user 'user'"
-msgstr "Vis IP for brukerbruker"
+msgstr "Vis IP for bruker «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:510
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:478
@@ -4968,54 +4946,45 @@ msgid "Send message 'message' to user 'user'"
 msgstr "Send meldingen \"message\" til brukeren \"user\""
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:740
-#, fuzzy
 msgid "/pm 'user'"
-msgstr "/pm 'bruker'"
+msgstr "/pm «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:751
 #, fuzzy
 msgid "Open private chat window for user 'user'"
-msgstr "Åpne privat chatvindu for brukeren 'bruker'"
+msgstr "Åpne privat sludrevindu med brukeren «bruker»"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:31
-#, fuzzy
 msgid "Private Chat Commands"
-msgstr "Kommandoer for privat chat"
+msgstr "Kommandoer for privat sludring"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:57
-#, fuzzy
 msgid "Close the current private chat"
-msgstr "Lukk gjeldende private chat"
+msgstr "Lukk gjeldende private sludring"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
-#, fuzzy
 msgid "Add user to your buddy-list"
-msgstr "_Legg til på kontaktliste"
+msgstr "_Legg til på kontaktlisten"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
-#, fuzzy
 msgid "Remove user from your buddy-list"
-msgstr "Fjerne bruker fra vennelisten"
+msgstr "Fjern bruk fra din kontaktliste"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
-#, fuzzy
 msgid "Add user to your ban list"
-msgstr "Legg til bruker i forbudslisten"
+msgstr "Legg til bruker på bannlysningslisten din"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:333
-#, fuzzy
 msgid "Remove user from your ban list"
-msgstr "Fjern brukeren fra utestengingslisten"
+msgstr "Fjern bruker fra bannlysningslisten din"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:359
-#, fuzzy
 msgid "Add user to your ignore list"
-msgstr "Legge til bruker i ignoreringslisten"
+msgstr "Legg til bruker på ignoreringslisten"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:385
-#, fuzzy
 msgid "Remove user from your ignore list"
-msgstr "Fjerne bruker fra ignoreringslisten"
+msgstr "Fjern bruker fra ignoreringslisten"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:411
 #, fuzzy
@@ -5368,7 +5337,6 @@ msgid "File size…"
 msgstr "Filstørrelse…"
 
 #: pynicotine/gtkgui/ui/search.ui:264
-#, fuzzy
 msgid "File size"
 msgstr "Filstørrelse"
 
@@ -5518,17 +5486,14 @@ msgid "Allowed Completions"
 msgstr "Tillatte fullføringer"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:68
-#, fuzzy
 msgid "Complete buddy names"
-msgstr "Fullfør vennenavn"
+msgstr "Fullstendige kontaktlistenavn"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:75
-#, fuzzy
 msgid "Complete usernames in chat rooms"
-msgstr "Fullstendige brukernavn i chatterom"
+msgstr "Fullstendige brukernavn i sludrerom"
 
 #: pynicotine/gtkgui/ui/settings/completion.ui:82
-#, fuzzy
 msgid "Complete room names"
 msgstr "Fullstendige romnavn"
 
@@ -5972,14 +5937,12 @@ msgid "Show notification popup when you receive a private message"
 msgstr "Vis popup-vindu for varsling når du mottar en privat melding"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:84
-#, fuzzy
 msgid "Show notification popup when someone sends a message in a chat room"
-msgstr "Vis popup-varsel når noen sender en melding i et chatterom"
+msgstr "Vis oppsprettsmerknad når noen sender en melding i et sludrerom"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:90
-#, fuzzy
 msgid "Show notification popup when you are mentioned in a chat room"
-msgstr "Vis popup-vindu for varsling når du er nevnt i et chatterom"
+msgstr "Vis oppsprettsmerknadsvindu for varsling når du nevnes i et sludrerom"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:103
 msgid "Tray"
@@ -5990,9 +5953,8 @@ msgid "Display tray icon"
 msgstr "Vis systemkurvsikon"
 
 #: pynicotine/gtkgui/ui/settings/notifications.ui:125
-#, fuzzy
 msgid "Minimize to tray on startup"
-msgstr "Minimer til skuff ved oppstart"
+msgstr "Minimer til systemkurv ved oppstart"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:26
 #, fuzzy
@@ -6004,9 +5966,8 @@ msgstr ""
 "kommandoen /now i chatten."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:61
-#, fuzzy
 msgid "Other"
-msgstr "Annen"
+msgstr "Annet"
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:113
 #, fuzzy
@@ -6038,24 +5999,20 @@ msgid "_Add Plugins"
 msgstr "_Legg til programtillegg"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
-#, fuzzy
 msgid "Version:"
-msgstr "Versjon: "
+msgstr "Versjon:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:223
-#, fuzzy
 msgid "Author(s):"
-msgstr "Forfatter(e): "
+msgstr "Forfatter(e):"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:50
-#, fuzzy
 msgid "Enable search history"
-msgstr "Aktivere søkelogg"
+msgstr "Aktiver søkehistorikk"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:56
-#, fuzzy
 msgid "Remove special characters from search terms"
-msgstr "Fjerne spesialtegn fra søkeord"
+msgstr "Fjern spesialtegn fra søkeord"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:58
 #, fuzzy
@@ -6070,14 +6027,12 @@ msgid "Limit number of results per search:"
 msgstr "Begrens antall resultater per søk:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:121
-#, fuzzy
 msgid "Clear Search History"
-msgstr "Tøm søkelogg"
+msgstr "Tøm søkehistorikk"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:155
-#, fuzzy
 msgid "Enable search result filters by default"
-msgstr "Aktiver søkeresultatfiltre som standard"
+msgstr "Aktiver søkeresultatfiltre som forvalg"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:163
 #, fuzzy
@@ -6367,9 +6322,8 @@ msgid "Reset Picture"
 msgstr "Tilbakestill bilde"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:24
-#, fuzzy
 msgid "Prefer dark mode"
-msgstr "Foretrekker mørk modus"
+msgstr "Foretrekk mørk drakt"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:26
 #, fuzzy
@@ -6377,9 +6331,8 @@ msgid "Note that the operating system's theme may take precedence."
 msgstr "Vær oppmerksom på at operativsystemets tema kan ha forrang."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:43
-#, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Når du lukker Nikotin+:"
+msgstr "Når du lukker Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:58
 #, fuzzy
@@ -6392,14 +6345,13 @@ msgid "Show confirmation dialog"
 msgstr "Vis bekreftelsesdialogboks"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:60
-#, fuzzy
 msgid "Run in the background"
 msgstr "Kjør i bakgrunnen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:83
 #, fuzzy
 msgid "Primary Tabs"
-msgstr "Primære kategorier"
+msgstr "Hovedfaner"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:92
 #, fuzzy
@@ -6486,14 +6438,12 @@ msgid "Queued search result text color:"
 msgstr "Tekstfarge for søkeresultat i kø:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:496
-#, fuzzy
 msgid "Secondary Tabs"
-msgstr "Sekundære kategorier"
+msgstr "Sekundærfaner"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:505
-#, fuzzy
 msgid "Close-buttons on secondary tabs"
-msgstr "Lukkeknapper i sekundære faner"
+msgstr "Lukkeknapper i sekundærfaner"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:511
 #, fuzzy
@@ -6526,9 +6476,8 @@ msgid "User browse tab bar position:"
 msgstr "Plassering av fanelinje for bruker bla gjennom:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:673
-#, fuzzy
 msgid "Chats"
-msgstr "Samtaler"
+msgstr "Sludringer"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:682
 #, fuzzy
