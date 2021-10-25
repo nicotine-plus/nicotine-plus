@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:20+0300\n"
-"PO-Revision-Date: 2021-10-24 15:17+0000\n"
+"PO-Revision-Date: 2021-10-25 19:30+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -2576,9 +2576,8 @@ msgid "Aborted"
 msgstr "İptal edildi"
 
 #: pynicotine/gtkgui/transferlist.py:99
-#, fuzzy
 msgid "Cancelled"
-msgstr "İptal"
+msgstr "İptal edildi"
 
 #: pynicotine/gtkgui/transferlist.py:103
 msgid "Banned"
@@ -4332,13 +4331,12 @@ msgstr ""
 "girin"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
-#, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 "Belirli klasörleri onlarla paylaşmak ve çevrim içi olduklarında bildirim "
-"almak için kullanıcıları arkadaş listenize ekleyin"
+"almak için kullanıcıları arkadaş olarak ekleyin"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1519
 msgid ""
@@ -5525,14 +5523,12 @@ msgid "_Add Plugins"
 msgstr "_Eklenti Ekle"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
-#, fuzzy
 msgid "Version:"
-msgstr "Sürüm: "
+msgstr "Sürüm:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:223
-#, fuzzy
 msgid "Author(s):"
-msgstr "Yazar(lar): "
+msgstr "Yazar(lar):"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:50
 msgid "Enable search history"
