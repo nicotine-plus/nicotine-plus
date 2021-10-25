@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-23 23:43+0000\n"
+"PO-Revision-Date: 2021-10-25 20:05+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -3128,7 +3128,7 @@ msgstr "Varsle"
 
 #: pynicotine/gtkgui/userlist.py:86
 msgid "Prioritized"
-msgstr ""
+msgstr "Prioritert"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3137,7 +3137,7 @@ msgstr "Sist sett"
 
 #: pynicotine/gtkgui/userlist.py:88
 msgid "Note"
-msgstr ""
+msgstr "Notis"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 #, fuzzy
@@ -3146,7 +3146,7 @@ msgstr "_Online Varsle"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Prioriter bruker"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3155,7 +3155,7 @@ msgstr "_Betrodd"
 
 #: pynicotine/gtkgui/userlist.py:145
 msgid "Add User _Note…"
-msgstr ""
+msgstr "Legg til bruker_notis …"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3183,7 +3183,7 @@ msgstr "Brukeren %s er frakoblet"
 
 #: pynicotine/gtkgui/userlist.py:569
 msgid "Add User Note"
-msgstr ""
+msgstr "Legg til brukernotis"
 
 #: pynicotine/gtkgui/userlist.py:570
 #, fuzzy, python-format
@@ -3318,6 +3318,8 @@ msgstr "Skriv inn et heltall!"
 #, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Gi et par dager av dine Soulseek-privilegier til brukeren %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3933,7 +3935,7 @@ msgstr "Privilegert"
 
 #: pynicotine/transfers.py:1169
 msgid "prioritized"
-msgstr ""
+msgstr "prioritert"
 
 #: pynicotine/transfers.py:1187
 #, python-format
