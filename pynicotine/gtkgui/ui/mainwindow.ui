@@ -1064,7 +1064,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- User Browse -->
+                    <!-- Browse Shares -->
                     <child>
                       <object class="GtkBox" id="userbrowsevbox">
                         <property name="visible">1</property>
@@ -1126,7 +1126,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">User Browse</property>
+                                            <property name="label" translatable="yes">Browse Shares</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">1</property>
                                             <attributes>

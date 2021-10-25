@@ -1262,7 +1262,7 @@ class NicotineFrame(UserInterface):
             ("search", _("Search Files"), "system-search-symbolic"),
             ("downloads", _("Downloads"), "document-save-symbolic"),
             ("uploads", _("Uploads"), "emblem-shared-symbolic"),
-            ("userbrowse", _("User Browse"), "folder-symbolic"),
+            ("userbrowse", _("Browse Shares"), "folder-symbolic"),
             ("userinfo", _("User Info"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-send-symbolic"),
             ("userlist", _("Buddies"), "contact-new-symbolic"),
@@ -1644,7 +1644,7 @@ class NicotineFrame(UserInterface):
         self.np.userinfo.request_user_info(username)
         widget.set_text("")
 
-    """ User Browse """
+    """ Browse Shares """
 
     def on_get_shares(self, widget, *args):
 

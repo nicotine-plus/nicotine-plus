@@ -194,7 +194,7 @@
                     <property name="focusable">0</property>
                     <child>
                       <object class="GtkCheckButton" id="EnableUserBrowseTab">
-                        <property name="label" translatable="yes">User Browse</property>
+                        <property name="label" translatable="yes">Browse Shares</property>
                         <property name="visible">1</property>
                       </object>
                     </child>
