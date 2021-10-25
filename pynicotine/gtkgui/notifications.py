@@ -131,7 +131,7 @@ class Notifications:
                 Gdk.beep()
 
         except Exception as error:
-            log.add(_("Unable to show notification popup: %s"), str(error))
+            log.add(_("Unable to show popup: %s"), str(error))
 
 
 class WinNotify:
