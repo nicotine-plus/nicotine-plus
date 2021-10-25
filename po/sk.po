@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 21:15+0300\n"
+"POT-Creation-Date: 2021-10-25 22:20+0300\n"
 "PO-Revision-Date: 2020-09-02 01:33+0000\n"
 "Last-Translator: daelstorm <Unknown>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2075,11 +2075,13 @@ msgstr "Informácie o používateľovi"
 msgid "Private Chat"
 msgstr "Súkromný chat"
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/search.py:141
+#: pynicotine/gtkgui/ui/buddylist.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:46
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
+#: pynicotine/gtkgui/ui/settings/downloads.ui:90
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
-msgid "Buddy List"
-msgstr "Zoznam kamarátov"
+msgid "Buddies"
+msgstr "Kamaráti"
 
 #: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
@@ -2297,11 +2299,6 @@ msgstr "Zriecť sa súkromnej miestnosti"
 #, fuzzy
 msgid "Cancel Room Membership"
 msgstr "Zrušiť členstvo v miestnosti"
-
-#: pynicotine/gtkgui/search.py:141 pynicotine/gtkgui/ui/mainwindow.ui:46
-#: pynicotine/gtkgui/ui/settings/downloads.ui:90
-msgid "Buddies"
-msgstr "Kamaráti"
 
 #: pynicotine/gtkgui/search.py:205
 #, fuzzy
@@ -4978,7 +4975,7 @@ msgstr "Zadajte meno používateľa a začnite s ním textovú konverzáciu v s�
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
 #, fuzzy
 msgid ""
-"Add users to your buddy list to share specific folders with them and receive "
+"Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 "Pridanie používateľov do zoznamu kamarátov na zdieľanie konkrétnych "
@@ -7098,6 +7095,9 @@ msgstr "Uložiť _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Obnoviť"
+
+#~ msgid "Buddy List"
+#~ msgstr "Zoznam kamarátov"
 
 #, fuzzy
 #~ msgid "No description provided"

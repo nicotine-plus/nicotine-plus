@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 21:15+0300\n"
+"POT-Creation-Date: 2021-10-25 22:20+0300\n"
 "PO-Revision-Date: 2021-10-25 18:16+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2089,11 +2089,13 @@ msgstr "Erabiltzailearen informazioa"
 msgid "Private Chat"
 msgstr "Txata pribatua"
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/search.py:141
+#: pynicotine/gtkgui/ui/buddylist.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:46
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
+#: pynicotine/gtkgui/ui/settings/downloads.ui:90
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
-msgid "Buddy List"
-msgstr "Lagunen Zerrenda"
+msgid "Buddies"
+msgstr "Lagunak"
 
 #: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
@@ -2315,11 +2317,6 @@ msgstr "Disown gela pribatua"
 #, fuzzy
 msgid "Cancel Room Membership"
 msgstr "Utzi gelako kide izatea"
-
-#: pynicotine/gtkgui/search.py:141 pynicotine/gtkgui/ui/mainwindow.ui:46
-#: pynicotine/gtkgui/ui/settings/downloads.ui:90
-msgid "Buddies"
-msgstr "Lagunak"
 
 #: pynicotine/gtkgui/search.py:205
 #, fuzzy
@@ -5047,7 +5044,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
 #, fuzzy
 msgid ""
-"Add users to your buddy list to share specific folders with them and receive "
+"Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 "Gehitu erabiltzaileak zure lagunen zerrendara karpeta zehatzak haiekin "
@@ -7204,6 +7201,9 @@ msgstr "Gorde _Irudia"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Berritu"
+
+#~ msgid "Buddy List"
+#~ msgstr "Lagunen Zerrenda"
 
 #, fuzzy
 #~ msgid "No description provided"

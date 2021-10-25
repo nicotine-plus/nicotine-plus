@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 21:15+0300\n"
+"POT-Creation-Date: 2021-10-25 22:20+0300\n"
 "PO-Revision-Date: 2020-09-02 01:33+0000\n"
 "Last-Translator: daelstorm <Unknown>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -2084,12 +2084,13 @@ msgstr "Brugeroplysninger"
 msgid "Private Chat"
 msgstr "Privat chat"
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/search.py:141
+#: pynicotine/gtkgui/ui/buddylist.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:46
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
+#: pynicotine/gtkgui/ui/settings/downloads.ui:90
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
-#, fuzzy
-msgid "Buddy List"
-msgstr "Venneliste"
+msgid "Buddies"
+msgstr "Venner"
 
 #: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
@@ -2309,11 +2310,6 @@ msgstr "Afslået privat værelse"
 #, fuzzy
 msgid "Cancel Room Membership"
 msgstr "Annuller værelsesmedlemskab"
-
-#: pynicotine/gtkgui/search.py:141 pynicotine/gtkgui/ui/mainwindow.ui:46
-#: pynicotine/gtkgui/ui/settings/downloads.ui:90
-msgid "Buddies"
-msgstr "Venner"
 
 #: pynicotine/gtkgui/search.py:205
 #, fuzzy
@@ -5044,7 +5040,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
 #, fuzzy
 msgid ""
-"Add users to your buddy list to share specific folders with them and receive "
+"Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 "Føje brugere til din venneliste for at dele bestemte mapper med dem og "
@@ -7182,6 +7178,10 @@ msgstr "Gem _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Opdatere"
+
+#, fuzzy
+#~ msgid "Buddy List"
+#~ msgstr "Venneliste"
 
 #, fuzzy
 #~ msgid "No description provided"

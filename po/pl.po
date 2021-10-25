@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 21:15+0300\n"
+"POT-Creation-Date: 2021-10-25 22:20+0300\n"
 "PO-Revision-Date: 2021-10-24 15:17+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1738,11 +1738,13 @@ msgstr "Informacje o użytkowniku"
 msgid "Private Chat"
 msgstr "Czat prywatny"
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/search.py:141
+#: pynicotine/gtkgui/ui/buddylist.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:46
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
+#: pynicotine/gtkgui/ui/settings/downloads.ui:90
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
-msgid "Buddy List"
-msgstr "Lista znajomych"
+msgid "Buddies"
+msgstr "Znajomi"
 
 #: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:666
@@ -1934,11 +1936,6 @@ msgstr "Odrzuć prywatny pokój"
 #: pynicotine/gtkgui/roomlist.py:81 pynicotine/gtkgui/roomlist.py:203
 msgid "Cancel Room Membership"
 msgstr "Anuluj członkostwo w pokoju"
-
-#: pynicotine/gtkgui/search.py:141 pynicotine/gtkgui/ui/mainwindow.ui:46
-#: pynicotine/gtkgui/ui/settings/downloads.ui:90
-msgid "Buddies"
-msgstr "Znajomi"
 
 #: pynicotine/gtkgui/search.py:205
 msgid "Wish"
@@ -4338,8 +4335,9 @@ msgid ""
 msgstr "Wprowadź nazwę użytkownika, aby rozpocząć z nim czat prywatny"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
+#, fuzzy
 msgid ""
-"Add users to your buddy list to share specific folders with them and receive "
+"Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 "Dodaj użytkowników do swojej listy znajomych, aby udostępniać im określone "
@@ -6150,6 +6148,9 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#~ msgid "Buddy List"
+#~ msgstr "Lista znajomych"
 
 #~ msgid "No description provided"
 #~ msgstr "Nie podano opisu"
