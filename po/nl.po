@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-25 19:23+0000\n"
+"PO-Revision-Date: 2021-10-25 20:05+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4337,13 +4337,12 @@ msgid ""
 msgstr "Voer de naam van een gebruiker voor een privégesprek"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
-#, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
-"Voeg gebruikers toe aan je vriendenlijst om specifieke mappen met hen te "
-"delen en meldingen te ontvangen wanneer ze online zijn"
+"Voeg gebruikers toe als vrienden om specifieke mappen met hen te delen en "
+"meldingen te ontvangen wanneer ze online zijn"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1519
 msgid ""
