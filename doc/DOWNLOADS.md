@@ -86,7 +86,15 @@ Unstable Flatpak packages are generated after every commit to the master branch,
 
 - [Download Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
-## *BSD, Solaris
+## *BSD and solaris
+
+### FreeBSD
+
+```sh
+doas pkg install py-nicotine-plus
+```
+
+### Other BSDs, like OpenBSD, NetBSD, DragonflyBSD and Solaris
 
 Currently there are no up to date and stable packages available for any of the BSD versions, nor for Solaris.
 
