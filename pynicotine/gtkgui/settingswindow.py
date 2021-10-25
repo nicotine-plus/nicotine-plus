@@ -1061,7 +1061,7 @@ class IgnoreListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Ignore IP Address"),
-            message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
+            message=_("Enter the IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
         )
 
@@ -1252,7 +1252,7 @@ class BanListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Block IP Address"),
-            message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
+            message=_("Enter the IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
         )
 
@@ -2206,7 +2206,7 @@ class CensorReplaceListFrame(UserInterface):
         entry_dialog(
             parent=self.p.dialog,
             title=_("Censor Pattern"),
-            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+            message=_("Enter the pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             callback=self.on_add_censored_response
         )

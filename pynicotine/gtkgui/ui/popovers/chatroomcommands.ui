@@ -466,7 +466,7 @@
                       <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Request info for &apos;user&apos;</property>
+                        <property name="label" translatable="yes">Request info about &apos;user&apos;</property>
                         <property name="selectable">1</property>
                       </object>
                     </child>
