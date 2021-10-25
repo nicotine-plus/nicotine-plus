@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-25 20:05+0000\n"
+"PO-Revision-Date: 2021-10-26 02:51+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -1728,7 +1728,7 @@ msgstr "Verken gedeelde bestanden"
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:209
 msgid "User Info"
-msgstr "gebruikers informatie"
+msgstr "Gebruikersinfo"
 
 #: pynicotine/gtkgui/frame.py:1267 pynicotine/gtkgui/ui/mainwindow.ui:1321
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:698
@@ -4328,8 +4328,8 @@ msgid ""
 "Enter the name of a user to view their user description, information and "
 "personal picture"
 msgstr ""
-"Voer de naam van een gebruiker in om de gebruikersbeschrijving, informatie "
-"en persoonlijke foto te bekijken"
+"Voer de naam van een gebruiker in om de beschrijving, informatie en "
+"persoonlijke foto te bekijken"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1333
 msgid ""
