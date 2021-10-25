@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-24 15:53+0000\n"
+"PO-Revision-Date: 2021-10-25 20:05+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1729,9 +1729,8 @@ msgstr "Uploads"
 
 #: pynicotine/gtkgui/frame.py:1265 pynicotine/gtkgui/ui/mainwindow.ui:1129
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:197
-#, fuzzy
 msgid "Browse Shares"
-msgstr "Freundenfreigaben durchsuchen"
+msgstr "Freigaben durchsuchen"
 
 #: pynicotine/gtkgui/frame.py:1266 pynicotine/gtkgui/settingswindow.py:3094
 #: pynicotine/gtkgui/ui/mainwindow.ui:1225
@@ -4387,13 +4386,12 @@ msgstr ""
 "mit ihm zu beginnen"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
-#, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
-"Fügen Sie Benutzer zu Ihrer Freundesliste hinzu, um bestimmte Ordner für sie "
-"freizugeben und Benachrichtigungen zu erhalten, wenn sie online sind"
+"Benutzer als Freunde hinzufügen, um bestimmte Ordner für sie freizugeben und "
+"Benachrichtigungen zu erhalten, wenn sie online sind"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1519
 msgid ""
