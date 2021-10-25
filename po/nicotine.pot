@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 21:15+0300\n"
+"POT-Creation-Date: 2021-10-25 22:20+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1711,10 +1711,12 @@ msgstr ""
 msgid "Private Chat"
 msgstr ""
 
-#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/ui/buddylist.ui:18
+#: pynicotine/gtkgui/frame.py:1268 pynicotine/gtkgui/search.py:141
+#: pynicotine/gtkgui/ui/buddylist.ui:18 pynicotine/gtkgui/ui/mainwindow.ui:46
 #: pynicotine/gtkgui/ui/mainwindow.ui:1417
+#: pynicotine/gtkgui/ui/settings/downloads.ui:90
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:233
-msgid "Buddy List"
+msgid "Buddies"
 msgstr ""
 
 #: pynicotine/gtkgui/frame.py:1269 pynicotine/gtkgui/ui/mainwindow.ui:1507
@@ -1900,11 +1902,6 @@ msgstr ""
 
 #: pynicotine/gtkgui/roomlist.py:81 pynicotine/gtkgui/roomlist.py:203
 msgid "Cancel Room Membership"
-msgstr ""
-
-#: pynicotine/gtkgui/search.py:141 pynicotine/gtkgui/ui/mainwindow.ui:46
-#: pynicotine/gtkgui/ui/settings/downloads.ui:90
-msgid "Buddies"
 msgstr ""
 
 #: pynicotine/gtkgui/search.py:205
@@ -4205,7 +4202,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
 msgid ""
-"Add users to your buddy list to share specific folders with them and receive "
+"Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
 msgstr ""
 

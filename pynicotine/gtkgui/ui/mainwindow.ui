@@ -1352,7 +1352,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- Buddy List -->
+                    <!-- Buddies -->
                     <child>
                       <object class="GtkBox" id="userlistvbox">
                         <property name="visible">1</property>
@@ -1414,7 +1414,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">Buddy List</property>
+                                            <property name="label" translatable="yes">Buddies</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">1</property>
                                             <attributes>
@@ -1426,7 +1426,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">Add users to your buddy list to share specific folders with them and receive notifications when they are online</property>
+                                            <property name="label" translatable="yes">Add users as buddies to share specific folders with them and receive notifications when they are online</property>
                                             <property name="max-width-chars">55</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">1</property>

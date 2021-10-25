@@ -1265,7 +1265,7 @@ class NicotineFrame(UserInterface):
             ("userbrowse", _("User Browse"), "folder-symbolic"),
             ("userinfo", _("User Info"), "avatar-default-symbolic"),
             ("private", _("Private Chat"), "mail-send-symbolic"),
-            ("userlist", _("Buddy List"), "contact-new-symbolic"),
+            ("userlist", _("Buddies"), "contact-new-symbolic"),
             ("chatrooms", _("Chat Rooms"), "user-available-symbolic"),
             ("interests", _("Interests"), "emblem-default-symbolic")
         ]

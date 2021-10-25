@@ -230,7 +230,7 @@
                     <property name="focusable">0</property>
                     <child>
                       <object class="GtkCheckButton" id="EnableUserListTab">
-                        <property name="label" translatable="yes">Buddy List</property>
+                        <property name="label" translatable="yes">Buddies</property>
                         <property name="visible">1</property>
                       </object>
                     </child>
