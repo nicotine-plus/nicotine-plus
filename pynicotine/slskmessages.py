@@ -882,7 +882,7 @@ class UserSearch(ServerMessage):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
         msg.extend(self.pack_object(self.searchid))
-        msg.extend(self.pack_object(self.searchterm))
+        msg.extend(self.pack_object(self.searchterm, latin1=True))
 
         return msg
 
@@ -2604,20 +2604,19 @@ class TransferRequest(PeerMessage):
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 
-    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None, legacy_client=False):
+    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None):
         self.conn = conn
         self.direction = direction
         self.req = req
         self.file = file  # virtual file
         self.realfile = realfile
         self.filesize = filesize
-        self.legacy_client = legacy_client
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.direction))
         msg.extend(self.pack_object(self.req))
-        msg.extend(self.pack_object(self.file, latin1=self.legacy_client))
+        msg.extend(self.pack_object(self.file))
 
         if self.filesize is not None and self.direction == 1:
             msg.extend(self.pack_object(self.filesize, unsignedlonglong=True))
@@ -2673,6 +2672,23 @@ class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
     """ OBSOLETE, no longer used """
 
+    def __init__(self, conn, file=None):
+        self.conn = conn
+        self.file = file
+
+    def make_network_message(self):
+        return self.pack_object(self.file)
+
+    def parse_network_message(self, message):
+        _pos, self.file = self.get_object(message, str)
+
+
+class QueueUpload(PeerMessage):
+    """ Peer code: 43 """
+    """ This message is used to tell a peer that an upload should be queued on their end.
+    Once the recipient is ready to transfer the requested file, they will send an upload
+    request. """
+
     def __init__(self, conn, file=None, legacy_client=False):
         self.conn = conn
         self.file = file
@@ -2683,13 +2699,6 @@ class PlaceholdUpload(PeerMessage):
 
     def parse_network_message(self, message):
         _pos, self.file = self.get_object(message, str)
-
-
-class QueueUpload(PlaceholdUpload):
-    """ Peer code: 43 """
-    """ This message is used to tell a peer that an upload should be queued on their end.
-    Once the recipient is ready to transfer the requested file, they will send an upload
-    request."""
 
 
 class PlaceInQueue(PeerMessage):
@@ -2743,7 +2752,7 @@ class UploadDenied(PeerMessage):
         pos, self.reason = self.get_object(message, str, pos)
 
 
-class PlaceInQueueRequest(PlaceholdUpload):
+class PlaceInQueueRequest(QueueUpload):
     """ Peer code: 51 """
     """ This message is sent when asking for the upload queue placement of a file. """
 

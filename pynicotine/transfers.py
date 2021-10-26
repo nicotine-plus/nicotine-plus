@@ -1404,7 +1404,7 @@ class Transfers:
                     """ Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
                     intentionally cancelled, the peer should ignore this message. """
                     self.core.send_message_to_peer(
-                        i.user, slskmessages.UploadFailed(None, i.filename, i.legacy_attempt))
+                        i.user, slskmessages.UploadFailed(None, i.filename))
 
                 auto_clear = True
 
