@@ -96,13 +96,17 @@ class Scanner:
                 ("buddymtimes", os.path.join(self.config.data_dir, "buddymtimes.db"))
             ])
 
-            self.queue.put((_("Rescanning shares…"), None, None))
-            new_mtimes, new_files, new_streams, old_num_folders = self.rescan_dirs("normal", rebuild=self.rebuild)
-            self.queue.put((_("Finished rescanning shares"), None, None))
+            start_num_folders = len(list(self.share_dbs["buddymtimes"]))
 
-            self.queue.put((_("Rescanning buddy shares…"), None, None))
-            self.rescan_dirs("buddy", new_mtimes, new_files, new_streams, old_num_folders, self.rebuild)
-            self.queue.put((_("Finished rescanning buddy shares"), None, None))
+            self.queue.put((_("Rescanning shares…"), None, None))
+            self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": start_num_folders}, None))
+
+            new_mtimes, new_files, new_streams = self.rescan_dirs("normal", rebuild=self.rebuild)
+            _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
+                                                                    new_streams, self.rebuild)
+
+            self.queue.put((_("%(num)s folders found after rescan"), {"num": len(new_files)}, None))
+            self.queue.put((_("Finished rescanning shares"), None, None))
 
         except Exception:
             from traceback import format_exc
@@ -149,7 +153,7 @@ class Scanner:
                                 {"filename": destination + ".db", "error": error}, None))
                 return
 
-    def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, old_num_folders=None, rebuild=False):
+    def rescan_dirs(self, share_type, mtimes=None, files=None, streams=None, rebuild=False):
         """
         Check for modified or new files via OS's last mtime on a directory,
         or, if rebuild is True, all directories
@@ -161,13 +165,6 @@ class Scanner:
         else:
             shared_folders = (x[1] for x in self.shared_folders)
             prefix = ""
-
-        try:
-            start_num_folders = len(self.share_dbs[prefix + "mtimes"])
-        except TypeError:
-            start_num_folders = len(list(self.share_dbs[prefix + "mtimes"]))
-
-        self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": start_num_folders}, None))
 
         new_mtimes = {}
 
@@ -211,12 +208,11 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(share_type, wordindex=wordindex)
-        self.queue.put((_("%(num)s folders found after rescan"), {"num": len(new_files)}, None))
 
         del wordindex
         gc.collect()
 
-        return new_mtimes, new_files, new_streams, start_num_folders
+        return new_mtimes, new_files, new_streams
 
     @staticmethod
     def is_hidden(folder, filename=None, folder_obj=None):
