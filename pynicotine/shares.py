@@ -588,7 +588,7 @@ class Shares:
                           and not self.config.need_config())
 
         # Rescan shares if necessary
-        if rescan_startup and not self.rescanning:
+        if rescan_startup:
             self.rescan_shares()
             return
 
@@ -946,8 +946,10 @@ class Shares:
 
     def rescan_shares(self, rebuild=False, use_thread=True):
 
-        self.rescanning = True
+        if self.rescanning:
+            return None
 
+        self.rescanning = True
         shared_folders = self.get_shared_folders()
 
         # Hand over database control to the scanner process
