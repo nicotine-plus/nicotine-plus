@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-25 22:28+0300\n"
+"POT-Creation-Date: 2021-10-26 07:23+0300\n"
 "PO-Revision-Date: 2021-10-19 17:11+0000\n"
 "Last-Translator: Patrik <burnmail123@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3122,7 +3122,7 @@ msgstr "Příliš mnoho megabajtů"
 msgid "File not shared"
 msgstr "Soubor, který není sdílen"
 
-#: pynicotine/gtkgui/transferlist.py:109 pynicotine/transfers.py:1896
+#: pynicotine/gtkgui/transferlist.py:109 pynicotine/transfers.py:1875
 #, fuzzy
 msgid "Download folder error"
 msgstr "Chyba stažení složky"
@@ -3914,17 +3914,12 @@ msgstr "ListenBrainz: Nelze získat aktuální skladbu z ListenBrainz: %(error)s
 msgid "Executing '%(command)s' failed: %(error)s"
 msgstr "Provedení '%(command)s' se nezdařilo: %(error)s"
 
-#: pynicotine/pluginsystem.py:72
-#, fuzzy, python-format
-msgid "It appears '%s' is not a directory, not loading plugins."
-msgstr "Zdá se, že \"%s\" není adresář, nenačítá pluginy."
-
-#: pynicotine/pluginsystem.py:115
+#: pynicotine/pluginsystem.py:112
 #, fuzzy, python-format
 msgid "Failed to load plugin '%s', could not find it."
 msgstr "Nepodařilo se načíst plugin '%s\", nemohl ho najít."
 
-#: pynicotine/pluginsystem.py:148
+#: pynicotine/pluginsystem.py:145
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(name)s. Plugin folder name contains invalid "
@@ -3933,12 +3928,12 @@ msgstr ""
 "Nelze načíst plugin %(name)s. Název složky pluginu obsahuje neplatné znaky: "
 "%(characters)s"
 
-#: pynicotine/pluginsystem.py:178
+#: pynicotine/pluginsystem.py:175
 #, fuzzy, python-format
 msgid "Loaded plugin %s"
 msgstr "Načtený plugin %s"
 
-#: pynicotine/pluginsystem.py:182
+#: pynicotine/pluginsystem.py:179
 #, fuzzy, python-format
 msgid ""
 "Unable to load plugin %(module)s\n"
@@ -3947,12 +3942,12 @@ msgstr ""
 "Nelze načíst plugin %(module)s\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:217
+#: pynicotine/pluginsystem.py:214
 #, fuzzy, python-format
 msgid "Unloaded plugin %s"
 msgstr "Uvolněný plugin %s"
 
-#: pynicotine/pluginsystem.py:221
+#: pynicotine/pluginsystem.py:218
 #, fuzzy, python-format
 msgid ""
 "Unable to unload plugin %(module)s\n"
@@ -3961,7 +3956,7 @@ msgstr ""
 "Nelze uvolnit plugin %(module)s\n"
 "%(exc_trace)s"
 
-#: pynicotine/pluginsystem.py:279
+#: pynicotine/pluginsystem.py:276
 #, fuzzy, python-format
 msgid ""
 "Plugin %(module)s failed with error %(errortype)s: %(error)s.\n"
@@ -4135,27 +4130,27 @@ msgstr "Spojené pokoje "
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "Server v tuto chvíli neumožňuje provádět vyhledávání na seznamu přání"
 
-#: pynicotine/shares.py:99
+#: pynicotine/shares.py:101
 #, fuzzy
 msgid "Rescanning shares…"
 msgstr "Rescanning buddy sdílí…"
 
-#: pynicotine/shares.py:101
+#: pynicotine/shares.py:102
+#, fuzzy, python-format
+msgid "%(num)s folders found before rescan, rebuilding…"
+msgstr "Složky %(num)s nalezené před opětovnou šněnováním, přestavbou…"
+
+#: pynicotine/shares.py:108
+#, fuzzy, python-format
+msgid "%(num)s folders found after rescan"
+msgstr "Složky %(num)s nalezené po opětovném prohlenání"
+
+#: pynicotine/shares.py:109
 #, fuzzy
 msgid "Finished rescanning shares"
 msgstr "Dokončené opětovné prosazení sdílení kamarádů"
 
-#: pynicotine/shares.py:103
-#, fuzzy
-msgid "Rescanning buddy shares…"
-msgstr "Rescanning buddy sdílí…"
-
-#: pynicotine/shares.py:105
-#, fuzzy
-msgid "Finished rescanning buddy shares"
-msgstr "Dokončené opětovné prosazení sdílení kamarádů"
-
-#: pynicotine/shares.py:111
+#: pynicotine/shares.py:115
 #, fuzzy, python-format
 msgid ""
 "Serious error occurred while rescanning shares. If this problem persists, "
@@ -4166,52 +4161,42 @@ msgstr ""
 "přetrvává, odstraňte %(dir)s/*.db a zkuste to znovu. Pokud to nepomůže, "
 "zadejte zprávu o chybě s tímto trasováním zásobníku: %(trace)s"
 
-#: pynicotine/shares.py:148
+#: pynicotine/shares.py:152
 #, fuzzy, python-format
 msgid "Can't save %(filename)s: %(error)s"
 msgstr "Nelze uložit %(filename)s: %(error)s"
 
-#: pynicotine/shares.py:173
-#, fuzzy, python-format
-msgid "%(num)s folders found before rescan, rebuilding…"
-msgstr "Složky %(num)s nalezené před opětovnou šněnováním, přestavbou…"
-
-#: pynicotine/shares.py:185 pynicotine/shares.py:299 pynicotine/shares.py:359
+#: pynicotine/shares.py:179 pynicotine/shares.py:291 pynicotine/shares.py:351
 #, fuzzy, python-format
 msgid "Error while scanning folder %(path)s: %(error)s"
 msgstr "Chyba při skenování složky %(path)s: %(error)s"
 
-#: pynicotine/shares.py:218
-#, fuzzy, python-format
-msgid "%(num)s folders found after rescan"
-msgstr "Složky %(num)s nalezené po opětovném prohlenání"
-
-#: pynicotine/shares.py:286
+#: pynicotine/shares.py:278
 #, fuzzy, python-format
 msgid "Error while scanning %(path)s: %(error)s"
 msgstr "Chyba při skenování %(path)s: %(error)s"
 
-#: pynicotine/shares.py:387
+#: pynicotine/shares.py:379
 #, fuzzy, python-format
 msgid "Error while scanning metadata for file %(path)s: %(error)s"
 msgstr "Chyba při skenování metadat pro soubor %(path)s: %(error)s"
 
-#: pynicotine/shares.py:415
+#: pynicotine/shares.py:407
 #, fuzzy, python-format
 msgid "Error while scanning file %(path)s: %(error)s"
 msgstr "Chyba při skenování souboru %(path)s: %(error)s"
 
-#: pynicotine/shares.py:581 pynicotine/shares.py:919
+#: pynicotine/shares.py:573 pynicotine/shares.py:911
 #, fuzzy
 msgid "Downloaded"
 msgstr "Stažený"
 
-#: pynicotine/shares.py:649
+#: pynicotine/shares.py:641
 #, fuzzy, python-format
 msgid "Failed to process the following databases: %(names)s"
 msgstr "Nepodařilo se zpracovat následující databáze: %(names)s"
 
-#: pynicotine/shares.py:655
+#: pynicotine/shares.py:647
 #, fuzzy
 msgid ""
 "Attempting to reset index of shared files due to an error. Please rescan "
@@ -4220,7 +4205,7 @@ msgstr ""
 "Pokus o resetování indexu sdílených souborů z důvodu chyby. Prosím, znovu "
 "prozývejte své akcie."
 
-#: pynicotine/shares.py:659
+#: pynicotine/shares.py:651
 #, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
@@ -4231,18 +4216,18 @@ msgstr ""
 "dojít v důsledku několika případů, kdy je Nikotin + aktivní současně, "
 "problémy s oprávněním k souborům nebo jiný problém v nikotinu +."
 
-#: pynicotine/shares.py:747 pynicotine/shares.py:796
+#: pynicotine/shares.py:739 pynicotine/shares.py:788
 #, fuzzy, python-format
 msgid "Failed to add download %(filename)s to shared files: %(error)s"
 msgstr ""
 "Nepodařilo se přidat ke stažení %(filename)s do sdílených souborů: %(error)s"
 
-#: pynicotine/shares.py:889
+#: pynicotine/shares.py:881
 #, fuzzy, python-format
 msgid "Failed to send number of shared files to the server: %s"
 msgstr "Nepodařilo se odeslat počet sdílených souborů na server: %s"
 
-#: pynicotine/shares.py:943
+#: pynicotine/shares.py:935
 #, fuzzy, python-format
 msgid "Progress: %s"
 msgstr "Pokrok: %s"
@@ -4259,53 +4244,53 @@ msgstr ""
 msgid "Listening on port %i"
 msgstr "Poslech na portu %i"
 
-#: pynicotine/transfers.py:999
+#: pynicotine/transfers.py:978
 #, fuzzy, python-format
 msgid "I/O error: %s"
 msgstr "Chyba I/O: %s"
 
-#: pynicotine/transfers.py:1062 pynicotine/transfers.py:1896
+#: pynicotine/transfers.py:1041 pynicotine/transfers.py:1875
 #, fuzzy, python-format
 msgid "OS error: %s"
 msgstr "Chyba operačního systému: %s"
 
-#: pynicotine/transfers.py:1082
+#: pynicotine/transfers.py:1061
 #, fuzzy, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr ""
 "Nelze získat exkluzivní zámek v souboru - chyba vstupně-výstupních vstupů: %s"
 
-#: pynicotine/transfers.py:1090 pynicotine/transfers.py:1332
+#: pynicotine/transfers.py:1069 pynicotine/transfers.py:1311
 #, fuzzy, python-format
 msgid "Download I/O error: %s"
 msgstr "Chyba stahování I/O: %s"
 
-#: pynicotine/transfers.py:1110
+#: pynicotine/transfers.py:1089
 #, fuzzy, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Stahování zahájeno: uživatel %(user)s, soubor %(file)s"
 
-#: pynicotine/transfers.py:1158
+#: pynicotine/transfers.py:1137
 #, fuzzy, python-format
 msgid "Upload I/O error: %s"
 msgstr "Chyba nahrát I/O: %s"
 
-#: pynicotine/transfers.py:1169
+#: pynicotine/transfers.py:1148
 #, fuzzy
 msgid "privileged"
 msgstr "privilegovaný"
 
-#: pynicotine/transfers.py:1169
+#: pynicotine/transfers.py:1148
 msgid "prioritized"
 msgstr ""
 
-#: pynicotine/transfers.py:1187
+#: pynicotine/transfers.py:1166
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Nahrávání zahájeno: uživatel %(user)s, IP adresa %(ip)s, soubor %(file)s"
 
-#: pynicotine/transfers.py:1789
+#: pynicotine/transfers.py:1768
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -4314,83 +4299,83 @@ msgstr ""
 "Nelze uložit podsložku stahování do podsložky uživatelského jména a vrátit "
 "se zpět do výchozí složky pro stahování. Chyba: %s"
 
-#: pynicotine/transfers.py:1844
+#: pynicotine/transfers.py:1823
 #, fuzzy, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s staženo z %(user)s"
 
-#: pynicotine/transfers.py:1848
+#: pynicotine/transfers.py:1827
 #, fuzzy
 msgid "File downloaded"
 msgstr "Stažený soubor"
 
-#: pynicotine/transfers.py:1853
+#: pynicotine/transfers.py:1832
 #, fuzzy, python-format
 msgid "Trouble executing '%s'"
 msgstr "Potíže s prováděním '%s'"
 
-#: pynicotine/transfers.py:1855
+#: pynicotine/transfers.py:1834
 #, fuzzy, python-format
 msgid "Executed: %s"
 msgstr "Provedeno: %s"
 
-#: pynicotine/transfers.py:1877
+#: pynicotine/transfers.py:1856
 #, fuzzy, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s staženo z %(user)s"
 
-#: pynicotine/transfers.py:1881
+#: pynicotine/transfers.py:1860
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "Stažená složka"
 
-#: pynicotine/transfers.py:1886
+#: pynicotine/transfers.py:1865
 #, fuzzy, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Potíže s prováděním ve složce: %s"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1867
 #, fuzzy, python-format
 msgid "Executed on folder: %s"
 msgstr "Spuštěno ve složce: %s"
 
-#: pynicotine/transfers.py:1914
+#: pynicotine/transfers.py:1893
 #, fuzzy, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Nelze přesunout '%(tempfile)s' na '%(file)s': %(error)s"
 
-#: pynicotine/transfers.py:1949
+#: pynicotine/transfers.py:1928
 #, fuzzy, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Stahování dokončeno: uživatel %(user)s, soubor %(file)s"
 
-#: pynicotine/transfers.py:1984
+#: pynicotine/transfers.py:1963
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
 "Nahrávání dokončeno: uživatel %(user)s, IP adresa %(ip)s, soubor %(file)s"
 
-#: pynicotine/transfers.py:2295
+#: pynicotine/transfers.py:2274
 #, fuzzy, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Nahrát přerušený, uživatelský soubor %(user)s %(file)s"
 
-#: pynicotine/transfers.py:2302
+#: pynicotine/transfers.py:2281
 #, fuzzy, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Stáhnout přerušeno, uživatel %(user)s soubor %(file)s"
 
-#: pynicotine/transfers.py:2327
+#: pynicotine/transfers.py:2306
 #, fuzzy, python-format
 msgid "Invalid Soulseek URL: %s"
 msgstr "Neplatná adresa URL Soulseek: %s"
 
-#: pynicotine/transfers.py:2377
+#: pynicotine/transfers.py:2356
 #, fuzzy, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Chyba: %(num)d Filtry stahování se nezdařily! %(error)s "
 
-#: pynicotine/transfers.py:2381
+#: pynicotine/transfers.py:2360
 #, fuzzy, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Chyba: Filtr stahování se nezdařil! Ověřte filtry. Důvod: %s"
@@ -7261,6 +7246,18 @@ msgstr "Uložit _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh Informace"
+
+#, fuzzy, python-format
+#~ msgid "It appears '%s' is not a directory, not loading plugins."
+#~ msgstr "Zdá se, že \"%s\" není adresář, nenačítá pluginy."
+
+#, fuzzy
+#~ msgid "Rescanning buddy shares…"
+#~ msgstr "Rescanning buddy sdílí…"
+
+#, fuzzy
+#~ msgid "Finished rescanning buddy shares"
+#~ msgstr "Dokončené opětovné prosazení sdílení kamarádů"
 
 #, fuzzy
 #~ msgid "User Browse"
