@@ -167,9 +167,6 @@ class Scanner:
         except TypeError:
             start_num_folders = len(list(self.share_dbs[prefix + "mtimes"]))
 
-        if old_num_folders is not None:
-            start_num_folders = start_num_folders - old_num_folders
-
         self.queue.put((_("%(num)s folders found before rescan, rebuilding…"), {"num": start_num_folders}, None))
 
         new_mtimes = {}
@@ -194,7 +191,6 @@ class Scanner:
             new_mtimes, self.share_dbs[prefix + "mtimes"], self.share_dbs[prefix + "files"],
             self.share_dbs[prefix + "streams"], rebuild
         )
-        end_num_folders = len(new_files)
 
         # Save data to databases
         if files is not None:
@@ -215,7 +211,7 @@ class Scanner:
 
         # Save data to databases
         self.set_shares(share_type, wordindex=wordindex)
-        self.queue.put((_("%(num)s folders found after rescan"), {"num": end_num_folders}, None))
+        self.queue.put((_("%(num)s folders found after rescan"), {"num": len(new_files)}, None))
 
         del wordindex
         gc.collect()
