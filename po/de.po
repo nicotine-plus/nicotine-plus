@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-26 16:40+0300\n"
-"PO-Revision-Date: 2021-10-26 13:40+0000\n"
+"PO-Revision-Date: 2021-10-26 14:59+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1682,14 +1682,13 @@ msgstr "Einen _Bug melden"
 
 #: pynicotine/gtkgui/frame.py:1060
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Übersetzung _verbessern"
 
 #: pynicotine/gtkgui/frame.py:1061
 msgid "Check _Latest Version"
 msgstr "_Neueste Version Überprüfen"
 
 #: pynicotine/gtkgui/frame.py:1063
-#, fuzzy
 msgid "_About Nicotine+"
 msgstr "Über _Nicotine+"
 
