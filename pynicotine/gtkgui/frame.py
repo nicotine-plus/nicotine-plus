@@ -684,15 +684,11 @@ class NicotineFrame(UserInterface):
     def on_transfer_statistics(self, *args):
         self.statistics.show()
 
-    def on_check_latest(self, *args):
+    def on_report_bug(self, *args):
+        open_uri(config.issue_tracker_url)
 
-        if not self.checking_update:
-            thread = threading.Thread(target=self._on_check_latest)
-            thread.name = "UpdateChecker"
-            thread.daemon = True
-            thread.start()
-
-            self.checking_update = True
+    def on_improve_translations(self, *args):
+        open_uri(config.translations_url)
 
     def _on_check_latest(self):
 
@@ -741,8 +737,15 @@ class NicotineFrame(UserInterface):
 
         self.checking_update = False
 
-    def on_report_bug(self, *args):
-        open_uri(config.issue_tracker_url)
+    def on_check_latest(self, *args):
+
+        if not self.checking_update:
+            thread = threading.Thread(target=self._on_check_latest)
+            thread.name = "UpdateChecker"
+            thread.daemon = True
+            thread.start()
+
+            self.checking_update = True
 
     def on_about(self, *args):
 
@@ -884,12 +887,16 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_transfer_statistics)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("checklatest", None)
-        action.connect("activate", self.on_check_latest)
-        self.application.add_action(action)
-
         action = Gio.SimpleAction.new("reportbug", None)
         action.connect("activate", self.on_report_bug)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("improvetranslations", None)
+        action.connect("activate", self.on_improve_translations)
+        self.application.add_action(action)
+
+        action = Gio.SimpleAction.new("checklatest", None)
+        action.connect("activate", self.on_check_latest)
         self.application.add_action(action)
 
         action = Gio.SimpleAction.new("about", None)
@@ -1050,9 +1057,10 @@ class NicotineFrame(UserInterface):
             ("#" + _("_Transfer Statistics"), "app.transferstatistics"),
             ("", None),
             ("#" + _("Report a _Bug"), "app.reportbug"),
+            ("#" + _("Improve T_ranslations"), "app.improvetranslations"),
             ("#" + _("Check _Latest Version"), "app.checklatest"),
             ("", None),
-            ("#" + _("About _Nicotine+"), "app.about")
+            ("#" + _("_About Nicotine+"), "app.about")
         )
 
         return menu
