@@ -28,7 +28,6 @@ from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
-from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_file_url
@@ -39,6 +38,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -66,6 +66,8 @@ class UserBrowses(IconNotebook):
             show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.userbrowse_notebook
         )
+
+        CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
 
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
@@ -103,7 +105,7 @@ class UserBrowses(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.UserBrowseStatusPage.hide()
+                self.frame.userbrowse_status_page.hide()
 
         page = self.pages[user]
 
@@ -231,39 +233,39 @@ class UserBrowse(UserInterface):
         popup.setup(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
         self.popup_menu_downloads_folders = PopupMenu(self.frame)
         self.popup_menu_downloads_folders.setup(
             ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
             ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
+            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_downloads_files = PopupMenu(self.frame)
         self.popup_menu_downloads_files.setup(
             ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download _To..."), self.on_download_files_to),
+            ("#" + _("Download _To…"), self.on_download_files_to),
             ("", None),
             ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
             ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to)
+            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
         )
 
         self.popup_menu_uploads_folders = PopupMenu(self.frame)
         self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to)
+            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to)
         )
 
         self.popup_menu_uploads_files = PopupMenu(self.frame)
         self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
+            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
             ("#" + _("Up_load File(s)"), self.on_upload_files)
         )
 
@@ -272,12 +274,12 @@ class UserBrowse(UserInterface):
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
+                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
-                ("#" + _("Upload Folder To..."), self.on_upload_directory_to),
-                ("#" + _("Upload Folder Recursive To..."), self.on_upload_directory_recursive_to),
+                ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+                ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("", None),
@@ -289,9 +291,9 @@ class UserBrowse(UserInterface):
         else:
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To..."), self.on_download_directory_to),
+                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To..."), self.on_download_directory_recursive_to),
+                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
@@ -441,13 +443,13 @@ class UserBrowse(UserInterface):
         actions = menu.get_actions()
 
         if self.user == config.sections["server"]["login"]:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
-                      _("Download R_ecursive To..."), _("Upload Folder To..."), _("Upload Folder Recursive To..."),
+            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
+                      _("Download R_ecursive To…"), _("Upload Folder To…"), _("Upload Folder Recursive To…"),
                       _("Open in File _Manager"), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
         else:
-            for i in (_("_Download Folder"), _("Download Folder _To..."), _("Download _Recursive"),
-                      _("Download R_ecursive To..."), _("Copy _Folder Path"), _("Copy _URL")):
+            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
+                      _("Download R_ecursive To…"), _("Copy _Folder Path"), _("Copy _URL")):
                 actions[i].set_enabled(self.selected_folder)
 
         self.user_popup.toggle_user_items()
@@ -1167,7 +1169,7 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.userbrowse.send_upload_attempt_notification(user)
         self.upload_directory_to(user, folder, recurse)
 
     def on_upload_directory_to(self, *args, recurse=False):
@@ -1193,7 +1195,8 @@ class UserBrowse(UserInterface):
         entry_dialog(
             parent=self.frame.MainWindow,
             title=str_title,
-            message=_("Enter the name of the user you wish to upload to:"),
+            message=_('Enter the name of the user you wish to upload to:'),
+
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=users
@@ -1241,7 +1244,7 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.send_message_to_peer(user, slskmessages.UploadQueueNotification(None))
+        self.frame.np.userbrowse.send_upload_attempt_notification(user)
 
         locally_queued = False
         prefix = ""
@@ -1264,7 +1267,7 @@ class UserBrowse(UserInterface):
         entry_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s) To User'),
-            message=_('Enter the name of a user you wish to upload to:'),
+            message=_('Enter the name of the user you wish to upload to:'),
             callback=self.on_upload_files_response,
             droplist=users
         )
@@ -1437,7 +1440,7 @@ class UserBrowse(UserInterface):
         self.userbrowses.remove_page(self.Main)
 
         if self.userbrowses.get_n_pages() == 0:
-            self.frame.UserBrowseStatusPage.show()
+            self.frame.userbrowse_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.userbrowses.remove_all_pages()

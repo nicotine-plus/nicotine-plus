@@ -18,7 +18,7 @@
                 <property name="has-tooltip">1</property>
                 <property name="enable-tree-lines">1</property>
                 <property name="rubber-banding">1</property>
-                <property name="search-column">2</property>
+                <property name="search-column">0</property>
                 <property name="sensitive">0</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
@@ -187,7 +187,7 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Clear Uploa_ds...</property>
+        <property name="label" translatable="yes">Clear Uploa_ds…</property>
         <property name="use-underline">1</property>
       </object>
     </child>

@@ -60,7 +60,7 @@
               <object class="GtkEntry" id="message_entry">
                 <property name="visible">1</property>
                 <property name="hexpand">1</property>
-                <property name="placeholder-text" translatable="yes">Set wall message...</property>
+                <property name="placeholder-text" translatable="yes">Set wall message…</property>
                 <property name="primary-icon-name">user-available-symbolic</property>
                 <property name="secondary-icon-name">edit-clear-symbolic</property>
                 <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>

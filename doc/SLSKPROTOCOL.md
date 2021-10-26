@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on August 25, 2021
+Last updated on October 24, 2021
 
 As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -118,52 +118,52 @@ and callbacks for the messages are set in pynicotine.py.
 | 26   | [File Search](#server-code-26)                    |            |
 | 28   | [Set Online Status](#server-code-28)              |            |
 | 32   | [Ping](#server-code-32)                           | Deprecated |
-| 33   | [Send Connect Token](#server-code-33)             | Deprecated |
-| 34   | [Send Download Speed](#server-code-34)            | Deprecated |
+| 33   | [Send Connect Token](#server-code-33)             | Obsolete   |
+| 34   | [Send Download Speed](#server-code-34)            | Obsolete   |
 | 35   | [Shared Folders & Files](#server-code-35)         |            |
 | 36   | [Get User Stats](#server-code-36)                 |            |
-| 40   | [Queued Downloads](#server-code-40)               | Deprecated |
+| 40   | [Queued Downloads](#server-code-40)               | Obsolete   |
 | 41   | [Kicked from Server](#server-code-41)             |            |
 | 42   | [User Search](#server-code-42)                    |            |
-| 51   | [Interest Add](#server-code-51)                   |            |
-| 52   | [Interest Remove](#server-code-52)                |            |
-| 54   | [Get Recommendations](#server-code-54)            |            |
-| 56   | [Get Global Recommendations](#server-code-56)     |            |
-| 57   | [Get User Interests](#server-code-57)             |            |
+| 51   | [Interest Add](#server-code-51)                   | Deprecated |
+| 52   | [Interest Remove](#server-code-52)                | Deprecated |
+| 54   | [Get Recommendations](#server-code-54)            | Deprecated |
+| 56   | [Get Global Recommendations](#server-code-56)     | Deprecated |
+| 57   | [Get User Interests](#server-code-57)             | Deprecated |
 | 58   | [Admin Command](#server-code-58)                  |            |
-| 60   | [Place In Line Response](#server-code-60)         | Deprecated |
-| 62   | [Room Added](#server-code-62)                     | Deprecated |
-| 63   | [Room Removed](#server-code-63)                   | Deprecated |
+| 60   | [Place In Line Response](#server-code-60)         | Obsolete   |
+| 62   | [Room Added](#server-code-62)                     | Obsolete   |
+| 63   | [Room Removed](#server-code-63)                   | Obsolete   |
 | 64   | [Room List](#server-code-64)                      |            |
-| 65   | [Exact File Search](#server-code-65)              | Deprecated |
+| 65   | [Exact File Search](#server-code-65)              | Obsolete   |
 | 66   | [Global/Admin Message](#server-code-66)           |            |
-| 67   | [Global User List](#server-code-67)               | Deprecated |
-| 68   | [Tunneled Message](#server-code-68)               | Deprecated |
+| 67   | [Global User List](#server-code-67)               | Obsolete   |
+| 68   | [Tunneled Message](#server-code-68)               | Obsolete   |
 | 69   | [Privileged Users](#server-code-69)               |            |
 | 71   | [Have No Parents](#server-code-71)                |            |
 | 73   | [Parent's IP](#server-code-73)                    | Deprecated |
 | 83   | [Parent Min Speed](#server-code-83)               |            |
 | 84   | [Parent Speed Ratio](#server-code-84)             |            |
-| 86   | [Parent Inactivity Timeout](#server-code-86)      | Deprecated |
-| 87   | [Search Inactivity Timeout](#server-code-87)      | Deprecated |
-| 88   | [Minimum Parents In Cache](#server-code-88)       | Deprecated |
-| 90   | [Distributed Alive Interval](#server-code-90)     | Deprecated |
-| 91   | [Add Privileged User](#server-code-91)            | Deprecated |
+| 86   | [Parent Inactivity Timeout](#server-code-86)      | Obsolete   |
+| 87   | [Search Inactivity Timeout](#server-code-87)      | Obsolete   |
+| 88   | [Minimum Parents In Cache](#server-code-88)       | Obsolete   |
+| 90   | [Distributed Alive Interval](#server-code-90)     | Obsolete   |
+| 91   | [Add Privileged User](#server-code-91)            | Obsolete   |
 | 92   | [Check Privileges](#server-code-92)               |            |
 | 93   | [Embedded Message](#server-code-93)               |            |
 | 100  | [Accept Children](#server-code-100)               |            |
 | 102  | [Possible Parents](#server-code-102)              |            |
 | 103  | [Wishlist Search](#server-code-103)               |            |
 | 104  | [Wishlist Interval](#server-code-104)             |            |
-| 110  | [Get Similar Users](#server-code-110)             |            |
-| 111  | [Get Item Recommendations](#server-code-111)      |            |
-| 112  | [Get Item Similar Users](#server-code-112)        |            |
+| 110  | [Get Similar Users](#server-code-110)             | Deprecated |
+| 111  | [Get Item Recommendations](#server-code-111)      | Deprecated |
+| 112  | [Get Item Similar Users](#server-code-112)        | Deprecated |
 | 113  | [Room Tickers](#server-code-113)                  |            |
 | 114  | [Room Ticker Add](#server-code-114)               |            |
 | 115  | [Room Ticker Remove](#server-code-115)            |            |
 | 116  | [Set Room Ticker](#server-code-116)               |            |
-| 117  | [Hated Interest Add](#server-code-117)            |            |
-| 118  | [Hated Interest Remove](#server-code-118)         |            |
+| 117  | [Hated Interest Add](#server-code-117)            | Deprecated |
+| 118  | [Hated Interest Remove](#server-code-118)         | Deprecated |
 | 120  | [Room Search](#server-code-120)                   |            |
 | 121  | [Send Upload Speed](#server-code-121)             |            |
 | 122  | [User Privileges](#server-code-122)               | Deprecated |
@@ -179,7 +179,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 135  | [Private Room Remove User](#server-code-135)      |            |
 | 136  | [Private Room Drop Membership](#server-code-136)  |            |
 | 137  | [Private Room Drop Ownership](#server-code-137)   |            |
-| 138  | [Private Room Unknown](#server-code-138)          |            |
+| 138  | [Private Room Unknown](#server-code-138)          | Obsolete   |
 | 139  | [Private Room Added](#server-code-139)            |            |
 | 140  | [Private Room Removed](#server-code-140)          |            |
 | 141  | [Private Room Toggle](#server-code-141)           |            |
@@ -190,10 +190,10 @@ and callbacks for the messages are set in pynicotine.py.
 | 146  | [Private Room Operator Removed](#server-code-146) |            |
 | 148  | [Private Room Owned](#server-code-148)            |            |
 | 149  | [Message Users](#server-code-149)                 |            |
-| 150  | [Ask Public Chat](#server-code-150)               |            |
-| 151  | [Stop Public Chat](#server-code-151)              |            |
-| 152  | [Public Chat Message](#server-code-152)           |            |
-| 153  | [Related Searches](#server-code-153)              | Deprecated |
+| 150  | [Ask Public Chat](#server-code-150)               | Deprecated |
+| 151  | [Stop Public Chat](#server-code-151)              | Deprecated |
+| 152  | [Public Chat Message](#server-code-152)           | Deprecated |
+| 153  | [Related Searches](#server-code-153)              | Obsolete   |
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
@@ -687,7 +687,7 @@ Nicotine: SendConnectToken
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer used**
 
 #### Data Order
 
@@ -709,7 +709,7 @@ Nicotine: SendDownloadSpeed
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, use [SendUploadSpeed](#server-code-121) server message**
 
 We used to send this after a finished download to let the server update the speed statistics for a user.
 
@@ -777,7 +777,7 @@ Nicotine: QueuedDownloads
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 The server sends this to indicate if someone has download slots available or not.
 
@@ -843,6 +843,8 @@ Nicotine: AddThingILike
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we add an item to our likes list.
 
 #### Data Order
@@ -863,6 +865,8 @@ Nicotine: RemoveThingILike
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we remove an item from our likes list.
 
 #### Data Order
@@ -882,6 +886,8 @@ Museekd: SGetRecommendations
 Nicotine: Recommendations
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
@@ -916,6 +922,8 @@ Nicotine: GlobalRecommendations
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 The server sends us a list of global recommendations and a number for each.
 
 #### Data Order
@@ -948,6 +956,8 @@ Museekd: SUserInterests
 Nicotine: UserInterests
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds with a list of interests.
 
@@ -993,7 +1003,7 @@ Nicotine: AdminCommand
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, use [PlaceInQueue](#peer-code-44) peer message**
 
 The server sends this to indicate change in place in queue while we're waiting for files from another peer.
 
@@ -1019,7 +1029,7 @@ Nicotine: PlaceInLineResponse
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 The server tells us a new room has been added.
 
@@ -1041,7 +1051,7 @@ Nicotine: RoomAdded
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 The server tells us a room has been removed.
 
@@ -1128,7 +1138,7 @@ Nicotine: ExactFileSearch
 
 #### Description
 
-**DEPRECATED (no results even with official client)**
+**OBSOLETE, no results even with official client**
 
 We send this to search for an exact file name and folder, to find other sources.
 
@@ -1179,7 +1189,7 @@ Nicotine: GlobalUserList
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer used**
 
 We send this to get a global list of all users online.
 
@@ -1219,7 +1229,7 @@ Nicotine: TunneledMessage
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer used**
 
 Server message for tunneling a chat message.
 
@@ -1291,7 +1301,7 @@ Nicotine: SearchParent
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We send the IP address of our parent to the server.
 
@@ -1348,7 +1358,7 @@ Nicotine: ParentSpeedRatio
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 #### Function Names
 
@@ -1368,7 +1378,7 @@ Nicotine: ParentInactivityTimeout
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 #### Function Names
 
@@ -1388,7 +1398,7 @@ Nicotine: SearchInactivityTimeout
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 #### Function Names
 
@@ -1410,7 +1420,7 @@ Nicotine: MinParentsInCache
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 #### Function Names
 
@@ -1437,7 +1447,7 @@ Nicotine: AddToPrivileged
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer sent by the server**
 
 The server sends us the username of a new privileged user, which we add to our list of global privileged users.
 
@@ -1583,6 +1593,8 @@ Nicotine: SimilarUsers
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 The server sends us a list of similar users related to our interests.
 
 #### Data Order
@@ -1605,6 +1617,8 @@ Museekd: SGetItemRecommendations
 Nicotine: ItemRecommendations
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
 
@@ -1632,6 +1646,8 @@ Museekd: SGetItemSimilarUsers
 Nicotine: ItemSimilarUsers
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
 
@@ -1752,6 +1768,8 @@ Nicotine: AddThingIHate
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We send this to the server when we add an item to our hate list.
 
 #### Data Order
@@ -1771,6 +1789,8 @@ Museekd: SInterestHatedRemove
 Nicotine: RemoveThingIHate
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
 
@@ -1834,7 +1854,7 @@ Nicotine: UserPrivileged
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
 
@@ -1878,7 +1898,7 @@ Nicotine: NotifyPrivileges
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, no longer used**
 
 #### Data Order
 
@@ -1900,7 +1920,7 @@ Nicotine: AckNotifyPrivileges
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, no longer used**
 
 #### Data Order
 
@@ -2101,6 +2121,8 @@ Nicotine: PrivateRoomDisown
 **Private Room Unknown**
 
 #### Description
+
+**OBSOLETE, no longer used**
 
 Unknown purporse
 
@@ -2335,6 +2357,8 @@ Nicotine: MessageUsers
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We ask the server to send us messages from all public rooms, also known as public chat.
 
 #### Function Names
@@ -2355,6 +2379,8 @@ Nicotine: JoinPublicRoom
 
 #### Description
 
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
+
 We ask the server to stop sending us messages from all public rooms, also known as public chat.
 
 #### Function Names
@@ -2374,6 +2400,8 @@ Nicotine: LeavePublicRoom
 **Public Chat Message**
 
 #### Description
+
+**DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends this when a new message has been written in a public room (every single line written in every public room).
 
@@ -2397,7 +2425,7 @@ Nicotine: PublicRoomMessage
 
 #### Description
 
-**DEPRECATED ? (empty list from server as of 2018)**
+**OBSOLETE, server sends empty list as of 2018**
 
 The server returns a list of related search terms for a search query.
 
@@ -2571,7 +2599,7 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 | ---- | ------------------------------------------ | ---------- |
 | 4    | [Shares Request](#peer-code-4)             |            |
 | 5    | [Shares Reply](#peer-code-5)               |            |
-| 8    | [Search Request](#peer-code-8)             | Deprecated |
+| 8    | [Search Request](#peer-code-8)             | Obsolete   |
 | 9    | [Search Reply](#peer-code-9)               |            |
 | 15   | [User Info Request](#peer-code-15)         |            |
 | 16   | [User Info Reply](#peer-code-16)           |            |
@@ -2581,7 +2609,7 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 | 41   | [Upload Reply](#peer-code-41-a)            |            |
 | 41   | [Download Reply](#peer-code-41-b)          | Deprecated |
 | 41   | [Transfer Reply](#peer-code-41-c)          |            |
-| 42   | [Upload Placehold](#peer-code-42)          |            |
+| 42   | [Upload Placehold](#peer-code-42)          | Obsolete   |
 | 43   | [Queue Upload](#peer-code-43)              |            |
 | 44   | [Place In Queue Reply](#peer-code-44)      |            |
 | 46   | [Upload Failed](#peer-code-46)             |            |
@@ -2678,7 +2706,7 @@ Nicotine: FileSearchRequest
 
 #### Description
 
-**DEPRECATED, use [UserSearch](#server-code-42) server message**
+**OBSOLETE, use [UserSearch](#server-code-42) server message**
 
 We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
 
@@ -3018,7 +3046,7 @@ Nicotine: PlaceholdUpload
 
 #### Description
 
-**DEPRECATED**
+**OBSOLETE, no longer used**
 
 #### Data Order
 
@@ -3142,7 +3170,9 @@ Nicotine: UploadQueueNotification
 
 #### Description
 
-**DEPRECATED**
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+This message is sent to inform a peer about an upload attempt initiated by us.
 
 #### Data Order
 

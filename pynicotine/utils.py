@@ -139,8 +139,8 @@ def open_file_path(file_path, command=None):
         elif sys.platform == "darwin":
             execute_command("open $", file_path)
 
-        else:
-            webbrowser.open(file_path)
+        elif not webbrowser.open(file_path):
+            raise webbrowser.Error("no known URL provider available")
 
     except Exception as error:
         log.add(_("Failed to open file path: %s"), error)
@@ -157,20 +157,26 @@ def open_uri(uri):
     if protocol in protocol_handlers and protocol_handlers[protocol]:
         try:
             execute_command(protocol_handlers[protocol], uri)
-            return
+            return True
+
         except RuntimeError as error:
             log.add(error)
 
     if protocol == "slsk":
         OPEN_SOULSEEK_URL(uri.strip())
-        return
+        return True
 
     # Situation 2, user did not define a way of handling the protocol
     try:
-        webbrowser.open(uri)
+        if not webbrowser.open(uri):
+            raise webbrowser.Error("no known URL provider available")
+
+        return True
 
     except Exception as error:
         log.add(_("Failed to open URL: %s"), error)
+
+    return False
 
 
 def open_log(folder, filename):
@@ -409,30 +415,7 @@ def human_speed(filesize):
 
 
 def humanize(number):
-
-    fashion = config.sections["ui"]["decimalsep"]
-
-    if fashion in ("", "<None>"):
-        return str(number)
-
-    if fashion == "<space>":
-        fashion = " "
-
-    number = str(number)
-
-    if number[0] == "-":
-        neg = "-"
-        number = number[1:]
-    else:
-        neg = ""
-
-    ret = ""
-
-    while number[-3:]:
-        part, number = number[-3:], number[:-3]
-        ret = "%s%s%s" % (part, fashion, ret)
-
-    return neg + ret[:-1]
+    return "{:n}".format(number)
 
 
 def unescape(string):

@@ -85,49 +85,6 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Limit upload speed:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">LimitPerTransfer</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkRadioButton" id="LimitPerTransfer">
-                        <property name="label" translatable="yes">Per transfer</property>
-                        <property name="visible">1</property>
-                        <property name="use-underline">1</property>
-                        <property name="active">1</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkRadioButton" id="LimitTotalTransfers">
-                        <property name="label" translatable="yes">Total transfers</property>
-                        <property name="visible">1</property>
-                        <property name="use-underline">1</property>
-                        <property name="group">LimitPerTransfer</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
                   <object class="GtkCheckButton" id="Limit">
                     <property name="label" translatable="yes">Limit upload speed to (KiB/s):</property>
                     <property name="visible">1</property>
@@ -182,6 +139,49 @@
                 </child>
               </object>
             </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Limit upload speed:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">LimitPerTransfer</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkRadioButton" id="LimitPerTransfer">
+                        <property name="label" translatable="yes">Per transfer</property>
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                        <property name="active">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="LimitTotalTransfers">
+                        <property name="label" translatable="yes">Total transfers</property>
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                        <property name="group">LimitPerTransfer</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -202,58 +202,18 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="PreferFriends">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Prioritize all buddies</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Upload queue type:</property>
-                    <property name="wrap">1</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic_widget">RoundRobin</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">1</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">4</property>
-                    <child>
-                      <object class="GtkRadioButton" id="RoundRobin">
-                        <property name="label" translatable="yes">Round Robin</property>
-                        <property name="visible">1</property>
-                        <property name="tooltip-text" translatable="yes">Queued users will be uploaded one file at a time in a cyclical fashion.</property>
-                        <property name="use-underline">1</property>
-                        <property name="active">1</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkRadioButton" id="FirstInFirstOut">
-                        <property name="label" translatable="yes">First In, First Out</property>
-                        <property name="visible">1</property>
-                        <property name="tooltip-text" translatable="yes">Files will be uploaded in the order they were queued.</property>
-                        <property name="use-underline">1</property>
-                        <property name="group">RoundRobin</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
@@ -312,13 +272,38 @@
                 </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="PreferFriends">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Privilege all users in buddy list</property>
-            <property name="tooltip-text" translatable="yes">Buddies will have higher priority in the queue, the same as globally privileged users.</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Upload queue type:</property>
+                    <property name="wrap">1</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">FirstInFirstOut</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="FirstInFirstOut">
+                    <property name="visible">1</property>
+                    <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
+First In, First Out: Files will be uploaded in the order they were queued.</property>
+                    <items>
+                      <item translatable="yes">Round Robin</item>
+                      <item translatable="yes">First In, First Out</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -336,6 +321,12 @@
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="FriendsNoLimits">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Queue limits do not apply to buddies</property>
           </object>
         </child>
         <child>
@@ -371,7 +362,7 @@
                     <child>
                       <object class="GtkSpinButton" id="MaxUserQueue">
                         <property name="visible">1</property>
-                        <property name="tooltip_text" translatable="yes">Mebibytes (2^17 bytes).</property>
+                        <property name="tooltip_text" translatable="yes">Mebibytes (2^20 bytes).</property>
                         <property name="adjustment">adjustment_MaxUserQueue</property>
                         <property name="hexpand">1</property>
                         <property name="numeric">1</property>
@@ -427,12 +418,6 @@
                 </child>
               </object>
             </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="FriendsNoLimits">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Queue limits do not apply to users in buddy list</property>
           </object>
         </child>
       </object>

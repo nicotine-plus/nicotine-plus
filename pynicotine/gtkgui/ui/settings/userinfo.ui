@@ -35,6 +35,7 @@
                     <child>
                       <object class="GtkTextView" id="Description">
                         <property name="visible">1</property>
+                        <property name="accepts-tab">0</property>
                         <property name="pixels-above-lines">1</property>
                         <property name="pixels-below-lines">1</property>
                         <property name="left-margin">8</property>

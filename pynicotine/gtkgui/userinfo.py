@@ -33,6 +33,7 @@ from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -58,6 +59,8 @@ class UserInfos(IconNotebook):
             show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.userinfo_notebook
         )
+
+        CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())
 
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
@@ -85,7 +88,7 @@ class UserInfos(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.UserInfoStatusPage.hide()
+                self.frame.userinfo_status_page.hide()
 
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -204,7 +207,7 @@ class UserInfo(UserInterface):
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
             ("", None),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
@@ -440,7 +443,7 @@ class UserInfo(UserInterface):
             callback=self.on_save_picture_response,
             initialdir=config.sections["transfers"]["downloaddir"],
             initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Save as...")
+            title=_("Save as…")
         )
 
     def on_image_popup_menu(self, menu, widget):
@@ -542,7 +545,7 @@ class UserInfo(UserInterface):
         self.userinfos.remove_page(self.Main)
 
         if self.userinfos.get_n_pages() == 0:
-            self.frame.UserInfoStatusPage.show()
+            self.frame.userinfo_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.userinfos.remove_all_pages()

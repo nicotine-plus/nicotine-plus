@@ -29,7 +29,7 @@ class ChatRooms:
         "/s ", "/search ", "/us ", "/usearch ", "/rs ", "/rsearch ", "/bs ", "/bsearch ", "/j ", "/join ", "/l ",
         "/leave ", "/p ", "/part ", "/ad ", "/add ", "/buddy ", "/rem ", "/unbuddy ", "/ban ", "/ignore ", "/ignoreip ",
         "/unban ", "/unignore ", "/clear ", "/cl ", "/me ", "/a ", "/away ", "/q ", "/quit ", "/exit ", "/now ",
-        "/rescan ", "/tick ", "/t ", "/info ", "/toggle ", "/tickers "
+        "/rescan ", "/info ", "/toggle "
     }
 
     def __init__(self, core, config, queue, ui_callback=None):

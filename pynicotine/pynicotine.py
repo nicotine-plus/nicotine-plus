@@ -224,7 +224,7 @@ class NicotineCore:
             slskmessages.IncConn: self.inc_conn,
             slskmessages.PlaceholdUpload: self.dummy_message,
             slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
-            slskmessages.UploadQueueNotification: self.upload_queue_notification,
+            slskmessages.UploadQueueNotification: self.dummy_message,
             slskmessages.EmbeddedMessage: self.embedded_message,
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.search_request,
@@ -285,7 +285,7 @@ class NicotineCore:
         self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
 
-        self.shares = Shares(self, config, self.queue, ui_callback)
+        self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
         self.transfers = transfers.Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
@@ -306,13 +306,13 @@ class NicotineCore:
         connect_ready = not config.need_config()
 
         if not connect_ready:
-            log.add(_("You need to specify a username and password before connecting..."))
+            log.add(_("You need to specify a username and password before connecting…"))
 
         return connect_ready
 
     def quit(self, signal_type=None, _frame=None):
 
-        log.add(_("Quitting Nicotine+ %(version)s, %(status)s..."), {
+        log.add(_("Quitting Nicotine+ %(version)s, %(status)s…"), {
             "version": config.version,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
@@ -738,7 +738,7 @@ class NicotineCore:
             country = ""
 
         if msg.ip_address == "0.0.0.0":
-            log.add(_("IP address of user %s is unknown, since user is offline"), user)
+            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
             return
 
         log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
@@ -911,7 +911,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         log.add(
-            _("Connected to server %(host)s:%(port)s, logging in..."), {
+            _("Connected to server %(host)s:%(port)s, logging in…"), {
                 'host': msg.addr[0],
                 'port': msg.addr[1]
             }
@@ -1844,7 +1844,7 @@ class NicotineCore:
                     return
 
             except Exception as error:
-                log.add(_("Failed to fetch folder contents of shared folder %(folder)s: %(error)s"),
+                log.add(_("Failed to fetch the shared folder %(folder)s: %(error)s"),
                         {"folder": msg.dir, "error": error})
 
             self.queue.append(slskmessages.FolderContentsResponse(conn, msg.dir, None))
@@ -1913,12 +1913,6 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.transfers.place_in_queue_request(msg)
-
-    def upload_queue_notification(self, msg):
-        """ Peer code: 52 """
-
-        log.add_msg_contents(msg)
-        self.transfers.upload_queue_notification(msg)
 
     def file_request(self, msg):
 

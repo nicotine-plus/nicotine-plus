@@ -10,6 +10,10 @@
     <property name="license-type">GTK_LICENSE_GPL_3_0</property>
     <property name="authors">Nicotine+ Contributors [active]
 
+&gt; Mat (mathiascode)
+   - Maintainer
+   - Developer
+
 &gt; eLvErDe
    - Provided Nicotine+ Trac instance
    - Migrated source code from SVN to Github
@@ -21,14 +25,11 @@
    - Debianization
    - [kip(at)thevertigo(dot)com]
 
-&gt; mathiascode
-   - Developer
-   - [mail(at)mathias(dot)is]
-
 &gt; Han Boetes
    - Tester
    - Documentation
    - Bug hunting
+   - Translations
 
 &gt; alekksander
    - Tester
@@ -204,27 +205,36 @@ Attributions
   Copyright (c) 2014-2018 Tom Wallroth
   https://github.com/devsnd/tinytag/
 </property>
-    <property name="translator-credits">Dutch
+    <property name="translator-credits">English
+ - mathiascode (2020)
+ - Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
+ - hyriand
+ - daelstorm
+
+Dutch
+ - hboetes (2021)
  - nince78 (2007)
  - hyriand
 
 German
+ - hboetes (2021)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)
  - hyriand (2003)
 
 Spanish
+ - Strange (2021)
  - Silvio Orta (2007)
  - Dreslo
 
 French
+ - zniavre (2007-2021)
  - melmorabity (2021)
  - m-balthazar (2020)
  - Michael Labouebe (2016-2017)
    [gfarmerfr(at)free(dot)fr]
  - ManWell (2007)
- - zniavre (2007-2009)
  - flashfr
  - systr
 
@@ -262,6 +272,9 @@ Finnish
 
 Euskara
  - The Librezale.org Team
-   [librezale(at)librezale(dot)org]</property>
+   [librezale(at)librezale(dot)org]
+
+Turkish
+ - Oğuz Ersen (2021)</property>
   </object>
 </interface>

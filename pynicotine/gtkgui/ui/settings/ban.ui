@@ -7,7 +7,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="spacing">6</property>
+        <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
@@ -17,6 +17,16 @@
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Prohibit users from accessing your shared files, based on username, IP address or country.</property>
+            <property name="margin-bottom">12</property>
+            <property name="selectable">1</property>
+            <property name="wrap">1</property>
           </object>
         </child>
         <child>
@@ -31,8 +41,61 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
+                  <object class="GtkCheckButton" id="GeoBlock">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Country codes to block (comma separated):</property>
+                    <signal name="toggled" handler="on_country_codes_toggled" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkEntry" id="GeoBlockCC">
+                    <property name="visible">1</property>
+                    <property name="tooltip_text" translatable="yes">Codes must be in ISO 3166-2 format.</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkCheckButton" id="UseCustomGeoBlock">
+                    <property name="label" translatable="yes">Use custom geo block message:</property>
+                    <property name="visible">1</property>
+                    <property name="tooltip_text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
+                    <property name="use-underline">1</property>
+                    <signal name="toggled" handler="on_use_custom_geo_block_toggled" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkEntry" id="CustomGeoBlock">
+                    <property name="visible">1</property>
+                    <property name="hexpand">1</property>
+                    <property name="width-chars">24</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
                   <object class="GtkCheckButton" id="UseCustomBan">
-                    <property name="label" translatable="yes">Custom ban message:</property>
+                    <property name="label" translatable="yes">Use custom ban message:</property>
                     <property name="visible">1</property>
                     <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
                     <property name="use-underline">1</property>
@@ -96,12 +159,12 @@
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
+                            <property name="height-request">200</property>
                             <property name="hexpand">1</property>
                             <property name="vexpand">1</property>
                             <child>
                               <object class="GtkTreeView" id="BannedList">
                                 <property name="visible">1</property>
-                                <property name="headers-visible">0</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
                                     <property name="mode">multiple</property>
@@ -139,7 +202,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Add...</property>
+                                        <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">1</property>
                                       </object>
                                     </child>
@@ -253,6 +316,7 @@
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">1</property>
+                            <property name="height-request">200</property>
                             <property name="hexpand">1</property>
                             <property name="vexpand">1</property>
                             <child>
@@ -295,7 +359,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Add...</property>
+                                        <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">1</property>
                                       </object>
                                     </child>

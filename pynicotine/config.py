@@ -59,6 +59,10 @@ class Config:
         self.python_version = sys.version
         self.gtk_version = ""
 
+        self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
+        self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
+        self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
+
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
@@ -362,7 +366,7 @@ class Config:
                 "listfont": "",
                 "browserfont": "",
                 "transfersfont": "",
-                "last_tab_id": 0,
+                "last_tab_id": "",
                 "modes_visible": {
                     "search": True,
                     "downloads": True,

@@ -17,11 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import gettext
+import glob
 import locale
+import os
 import sys
 
 
-def apply_translation():
+def apply_translations():
     """Function dealing with translations and locales.
 
     We try to autodetect the language and fix the locale.
@@ -71,3 +73,39 @@ def apply_translation():
     # We let gettext handle the situation: if found them in the system dir
     # the app will be translated, if not, it will be untranslated
     gettext.install(package)
+
+
+def generate_translations():
+
+    current_folder = os.path.dirname(os.path.realpath(__file__))
+    base_folder = os.path.normpath(os.path.join(current_folder, ".."))
+
+    mo_entries = []
+    languages = []
+
+    for po_file in glob.glob(os.path.join(base_folder, "po", "*.po")):
+        lang = os.path.basename(po_file[:-3])
+        languages.append(lang)
+
+        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
+        mo_file = os.path.join(mo_dir, "nicotine.mo")
+
+        if not os.path.exists(mo_dir):
+            os.makedirs(mo_dir)
+
+        exit_code = os.system("msgfmt --check " + po_file + " -o " + mo_file)
+
+        if exit_code > 0:
+            sys.exit(exit_code)
+
+        targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
+        mo_entries.append((targetpath, [mo_file]))
+
+    # Merge translations into .desktop and metainfo files
+    for desktop_file in glob.glob(os.path.join(base_folder, "data", "*.desktop.in")):
+        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
+
+    for metainfo_file in glob.glob(os.path.join(base_folder, "data", "*.metainfo.xml.in")):
+        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
+
+    return mo_entries, languages

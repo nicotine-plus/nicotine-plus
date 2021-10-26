@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install gir1.2-gtk-3.0 libgirepository1.0-dev
+          sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
           python -m pip install flake8 pygobject pylint
 
       - name: Linter

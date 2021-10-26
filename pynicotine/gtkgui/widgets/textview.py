@@ -123,8 +123,7 @@ class TextView:
         if buffer.get_char_count() > 0:
             line = "\n" + line
 
-        if (find_urls and config.sections["urls"]["urlcatching"]
-                and ("://" in line or "www." in line or "mailto:" in line)):
+        if find_urls and ("://" in line or "www." in line or "mailto:" in line):
             # Match first url
             match = self.url_regex.search(line)
 
@@ -133,11 +132,6 @@ class TextView:
                 _usertag(buffer, line[:match.start()])
 
                 url = match.group()
-
-                if url.startswith("slsk://") and config.sections["urls"]["humanizeurls"]:
-                    import urllib.parse
-                    url = urllib.parse.unquote(url)
-
                 urltag = self.create_tag("urlcolor", url=url)
                 self.tag_urls.append(urltag)
                 _append(buffer, url, urltag)

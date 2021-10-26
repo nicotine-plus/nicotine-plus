@@ -81,6 +81,12 @@ class FastConfigureAssistant(UserInterface):
             config.sections["server"]["passw"]
         )
 
+        # portpage
+        url = config.portchecker_url % str(self.frame.np.protothread.listenport)
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
+        self.checkmyport.set_markup(text)
+        self.checkmyport.connect("activate-link", lambda x, url: open_uri(url))
+
         # sharepage
         if config.sections['transfers']['downloaddir']:
             self.downloaddir.set_path(
@@ -94,6 +100,15 @@ class FastConfigureAssistant(UserInterface):
 
             if isinstance(virtual_name, str) and isinstance(path, str):
                 self.add_shared_folder(virtual_name, path)
+
+        # completepage
+        import urllib.parse
+
+        login = urllib.parse.quote(config.sections["server"]["login"])
+        url = config.privileges_url % login
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
+        self.privileges.set_markup(text)
+        self.privileges.connect("activate-link", lambda x, url: open_uri(url))
 
         self.FastConfigureDialog.present_with_time(Gdk.CURRENT_TIME)
 
@@ -159,15 +174,6 @@ class FastConfigureAssistant(UserInterface):
 
     def on_entry_changed(self, *args):
         self.reset_completeness()
-
-    def on_check_port_status(self, *args):
-
-        open_uri(
-            '='.join([
-                'http://tools.slsknet.org/porttest.php?port',
-                str(self.frame.np.protothread.listenport)
-            ])
-        )
 
     def on_add_share_response(self, dialog, response_id, directory):
 
@@ -246,11 +252,9 @@ class FastConfigureAssistant(UserInterface):
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
-    def on_get_privileges(self, *args):
-        self.frame.on_get_privileges()
-
     def on_set_up(self, *args):
         self.FastConfigureDialog.next_page()
+        self.username.grab_focus()
 
     def on_prepare(self, *args):
         self.reset_completeness()
@@ -267,15 +271,10 @@ class FastConfigureAssistant(UserInterface):
 
         dialog_hide(self.FastConfigureDialog)
 
-        # Rescan public shares if needed
-        if not config.sections["transfers"]["friendsonly"]:
-            self.frame.on_rescan()
+        # Rescan shares
+        self.frame.np.shares.rescan_shares()
 
-        # Rescan buddy shares if needed
-        if config.sections["transfers"]["enablebuddyshares"]:
-            self.frame.on_buddy_rescan()
-
-        self.frame.on_connect()
+        self.frame.np.connect()
 
     def on_cancel(self, *args):
         dialog_hide(self.FastConfigureDialog)

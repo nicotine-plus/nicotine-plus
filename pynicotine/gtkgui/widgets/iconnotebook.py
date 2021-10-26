@@ -284,9 +284,7 @@ class IconNotebook:
         self.unread_button.set_tooltip_text(_("Unread Tabs"))
         self.unread_button.set_halign(Gtk.Align.CENTER)
         self.unread_button.set_valign(Gtk.Align.CENTER)
-
-        context = self.unread_button.get_style_context()
-        context.add_class("circular")
+        self.unread_button.get_style_context().add_class("circular")
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
@@ -426,7 +424,7 @@ class IconNotebook:
         option_dialog(
             parent=self.window,
             title=_('Close All Tabs?'),
-            message=_('Are you sure you wish to close all tabs?'),
+            message=_('Do you really want to close all tabs?'),
             callback=self.remove_all_pages_response
         )
 

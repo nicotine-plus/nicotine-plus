@@ -85,29 +85,31 @@ class TransferList(UserInterface):
         self.paths = {}
 
         # Status list
-        self.statuses = {}
-        self.statuses["Queued"] = _("Queued")
-        self.statuses["Getting status"] = _("Getting status")
-        self.statuses["Establishing connection"] = _("Establishing connection")
-        self.statuses["Transferring"] = _("Transferring")
-        self.statuses["Cannot connect"] = _("Cannot connect")
-        self.statuses["Pending shutdown."] = _("Pending shutdown")
-        self.statuses["User logged off"] = _("User logged off")
-        self.statuses["Connection closed by peer"] = _("Connection closed by peer")
-        self.statuses["Disallowed extension"] = _("Disallowed extension")  # Sent by Soulseek NS for filtered extensions
-        self.statuses["Aborted"] = _("Aborted")
-        self.statuses["Paused"] = _("Paused")
-        self.statuses["Finished"] = _("Finished")
-        self.statuses["Filtered"] = _("Filtered")
-        self.statuses["Banned"] = _("Banned")
-        self.statuses["Blocked country"] = _("Blocked country")
-        self.statuses["Too many files"] = _("Too many files")
-        self.statuses["Too many megabytes"] = _("Too many megabytes")
-        self.statuses["File not shared"] = _("File not shared")
-        self.statuses["File not shared."] = _("File not shared")  # Newer variant containing a dot
-        self.statuses["Download folder error"] = _("Download folder error")
-        self.statuses["Local file error"] = _("Local file error")
-        self.statuses["Remote file error"] = _("Remote file error")
+        self.statuses = {
+            "Queued": _("Queued"),
+            "Getting status": _("Getting status"),
+            "Establishing connection": _("Establishing connection"),
+            "Transferring": _("Transferring"),
+            "Cannot connect": _("Cannot connect"),
+            "Pending shutdown.": _("Pending shutdown"),
+            "User logged off": _("User logged off"),
+            "Connection closed by peer": _("Connection closed by peer"),
+            "Disallowed extension": _("Disallowed extension"),  # Sent by Soulseek NS for filtered extensions
+            "Aborted": _("Aborted"),
+            "Cancelled": _("Cancelled"),
+            "Paused": _("Paused"),
+            "Finished": _("Finished"),
+            "Filtered": _("Filtered"),
+            "Banned": _("Banned"),
+            "Blocked country": _("Blocked country"),
+            "Too many files": _("Too many files"),
+            "Too many megabytes": _("Too many megabytes"),
+            "File not shared": _("File not shared"),
+            "File not shared.": _("File not shared"),  # Newer variant containing a dot
+            "Download folder error": _("Download folder error"),
+            "Local file error": _("Local file error"),
+            "Remote file error": _("Remote file error")
+        }
 
         # String templates
         self.extension_list_template = _("All %(ext)s")
@@ -162,7 +164,7 @@ class TransferList(UserInterface):
 
         self.Transfers.set_model(self.transfersmodel)
 
-        self.status_page = getattr(frame, "%ssStatusPage" % self.type.title())
+        self.status_page = getattr(frame, "%ss_status_page" % self.type)
         self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
 
         state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % self.type]))
@@ -449,10 +451,6 @@ class TransferList(UserInterface):
             size = 0
 
         hsize = "%s / %s" % (human_size(currentbytes), human_size(size))
-
-        if transfer.modifier:
-            hsize += " (%s)" % transfer.modifier
-
         speed = transfer.speed or 0
         elapsed = transfer.timeelapsed or 0
         left = transfer.timeleft or ""
@@ -475,6 +473,10 @@ class TransferList(UserInterface):
         # Modify old transfer
         if transfer.iterator is not None:
             initer = transfer.iterator
+
+            if transfer.modifier:
+                user = transfer.user + " (%s)" % transfer.modifier
+                self.transfersmodel.set_value(initer, 0, user)
 
             self.transfersmodel.set_value(initer, 3, hstatus)
             self.transfersmodel.set_value(initer, 4, hplace)

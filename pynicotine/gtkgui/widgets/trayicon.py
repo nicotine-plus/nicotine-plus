@@ -101,9 +101,9 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.send_message_item, handler = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_ip_item, handler = self.create_item(_("Receive a User's IP Address"), self.on_get_a_users_ip)
-        self.lookup_info_item, handler = self.create_item(_("Receive a User's Info"), self.on_get_a_users_info)
-        self.lookup_shares_item, handler = self.create_item(_("Receive a User's Shares"), self.on_get_a_users_shares)
+        self.lookup_ip_item, handler = self.create_item(_("Request User's IP Address"), self.on_get_a_users_ip)
+        self.lookup_info_item, handler = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
+        self.lookup_shares_item, handler = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
@@ -119,11 +119,11 @@ class TrayIcon:
         self.show_window()
 
     def on_downloads(self, *args):
-        self.frame.on_downloads()
+        self.frame.change_main_page("downloads")
         self.show_window()
 
     def on_uploads(self, *args):
-        self.frame.on_uploads()
+        self.frame.change_main_page("uploads")
         self.show_window()
 
     def on_open_private_chat_response(self, dialog, response_id, data):
@@ -145,7 +145,7 @@ class TrayIcon:
         entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Start Messaging"),
-            message=_('Enter the name of a user who you wish to send a message:'),
+            message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=users
         )
@@ -167,7 +167,7 @@ class TrayIcon:
         entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request User Info"),
-            message=_('Enter the name of a user whose info you wish to receive:'),
+            message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
             droplist=users
         )
@@ -189,7 +189,7 @@ class TrayIcon:
         entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request IP Address"),
-            message=_('Enter the name of a user whose IP address you wish to receive:'),
+            message=_('Enter the name of the user whose IP address you want to see:'),
             callback=self.on_get_a_users_ip_response,
             droplist=users
         )
@@ -211,7 +211,7 @@ class TrayIcon:
         entry_dialog(
             parent=self.frame.application.get_active_window(),
             title=GLib.get_application_name() + ": " + _("Request Shares List"),
-            message=_('Enter the name of a user whose shares list you wish to receive:'),
+            message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
             droplist=users
         )

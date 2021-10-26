@@ -37,6 +37,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
@@ -64,6 +65,8 @@ class PrivateChats(IconNotebook):
             show_status_image=config.sections["ui"]["tab_status_icons"],
             notebookraw=self.frame.private_notebook
         )
+
+        CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
 
         self.notebook.connect("switch-page", self.on_switch_chat)
 
@@ -129,7 +132,7 @@ class PrivateChats(IconNotebook):
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
-                self.frame.PrivateChatStatusPage.hide()
+                self.frame.private_status_page.hide()
 
         if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -207,20 +210,20 @@ class PrivateChat(UserInterface):
         popup.setup_user_menu(user, page="privatechat")
         popup.setup(
             ("", None),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
         popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat)
         popup.setup(
-            ("#" + _("Find..."), self.on_find_chat_log),
+            ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
             ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
             ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Chat Log"), self.on_view_chat_log),
-            ("#" + _("Delete Chat Log..."), self.on_delete_chat_log),
+            ("#" + _("Delete Chat Log…"), self.on_delete_chat_log),
             ("", None),
             ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
             ("", None),
@@ -319,7 +322,7 @@ class PrivateChat(UserInterface):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
-            message=_('Are you sure you wish to permanently delete all logged messages for this user?'),
+            message=_('Do you really want to permanently delete all logged messages for this user?'),
             callback=self.on_delete_chat_log_response
         )
 
@@ -482,7 +485,7 @@ class PrivateChat(UserInterface):
         self.chats.remove_page(self.Main)
 
         if self.chats.get_n_pages() == 0:
-            self.frame.PrivateChatStatusPage.show()
+            self.frame.private_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.chats.remove_all_pages()

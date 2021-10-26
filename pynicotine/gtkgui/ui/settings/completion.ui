@@ -86,14 +86,14 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteCommandsCheck">
-            <property name="label" translatable="yes">Complete built-in /commands</property>
+            <property name="label" translatable="yes">Complete built-in commands</property>
             <property name="visible">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="CompleteAliasesCheck">
-            <property name="label" translatable="yes">Complete alias /commands</property>
+            <property name="label" translatable="yes">Complete command aliases</property>
             <property name="visible">1</property>
             <signal name="toggled" handler="on_completion_changed"/>
           </object>

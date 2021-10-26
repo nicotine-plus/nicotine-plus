@@ -23,6 +23,8 @@
 
 import random
 
+from itertools import islice
+
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
 from pynicotine.utils import PUNCTUATION
@@ -198,7 +200,7 @@ class Search:
             items.insert(0, searchterm)
 
             # Clear old items
-            del items[15:]
+            del items[200:]
             self.config.write_configuration()
 
         if mode == "global":
@@ -251,7 +253,7 @@ class Search:
     def do_wishlist_search_interval(self):
 
         if self.wishlist_interval == 0:
-            log.add(_("The server forbid us from doing wishlist searches."))
+            log.add(_("Server does not permit performing wishlist searches at this time"))
             return False
 
         searches = self.config.sections["server"]["autosearch"]
@@ -317,7 +319,7 @@ class Search:
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
 
-        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
+        log.add_search("Wishlist wait period set to %s seconds", msg.seconds)
 
     def file_search_result(self, msg):
 
@@ -489,11 +491,6 @@ class Search:
         if not resultlist:
             return
 
-        numresults = min(len(resultlist), maxresults)
-        uploadspeed = self.core.transfers.upload_speed
-        queuesize = self.core.transfers.get_upload_queue_size()
-        slotsavail = self.core.transfers.allow_new_uploads()
-
         if checkuser == 2:
             fileindex = self.share_dbs.get("buddyfileindex")
         else:
@@ -502,27 +499,50 @@ class Search:
         if fileindex is None:
             return
 
+        fileinfos = []
+        numresults = min(len(resultlist), maxresults)
+
+        for index in islice(resultlist, numresults):
+            fileinfo = fileindex.get(repr(index))
+
+            if fileinfo is not None:
+                fileinfos.append(fileinfo)
+
+        if numresults != len(fileinfos):
+            log.add_search(("File index inconsistency while responding to search request "
+                            "\"%(query)s\". %(expected_num)s results expected, but only %(total_num)s "
+                            "results were found in database."), {
+                "query": searchterm_old,
+                "expected_num": numresults,
+                "total_num": len(fileinfos)
+            })
+
+        numresults = len(fileinfos)
+
+        if not numresults:
+            return
+
+        uploadspeed = self.core.transfers.upload_speed
+        queuesize = self.core.transfers.get_upload_queue_size()
+        slotsavail = self.core.transfers.allow_new_uploads()
         fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResult(
-            None,
-            self.config.sections["server"]["login"],
-            searchid, sorted(resultlist), fileindex, slotsavail,
-            uploadspeed, queuesize, fifoqueue, numresults
-        )
+            None, self.config.sections["server"]["login"],
+            searchid, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
         self.core.send_message_to_peer(user, message)
 
         if direct:
             log.add_search(
-                _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
+                "User %(user)s is directly searching for \"%(query)s\", returning %(num)i results", {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults
                 })
         else:
             log.add_search(
-                _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
+                "User %(user)s is searching for \"%(query)s\", returning %(num)i results", {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults

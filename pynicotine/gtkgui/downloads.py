@@ -50,9 +50,9 @@ class Downloads(TransferList):
             ("#" + _("Paused"), self.on_clear_paused),
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Filtered"), self.on_clear_filtered),
-            ("#" + _("Queued..."), self.on_try_clear_queued),
+            ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All..."), self.on_try_clear_all),
+            ("#" + _("Clear All…"), self.on_try_clear_all),
         )
 
     def switch_tab(self):
@@ -63,7 +63,7 @@ class Downloads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
-            message=_('Are you sure you wish to clear all queued downloads?'),
+            message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_response,
             callback_data="queued"
         )
@@ -73,7 +73,7 @@ class Downloads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear All Downloads'),
-            message=_('Are you sure you wish to clear all downloads?'),
+            message=_('Do you really want to clear all downloads?'),
             callback=self.on_clear_response,
             callback_data="all"
         )
@@ -90,7 +90,7 @@ class Downloads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
-            message=_("Are you sure you wish to download %(num)i files from %(user)s's folder %(folder)s?") % {
+            message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
             callback_data=msg

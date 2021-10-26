@@ -35,22 +35,22 @@
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkRadioButton" id="NP_lastfm">
-                <property name="label" translatable="yes">last.fm</property>
+                <property name="label">Last.fm</property>
                 <property name="visible">1</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_mpris">
-                <property name="label" translatable="yes">MPRIS (v2)</property>
+              <object class="GtkRadioButton" id="NP_listenbrainz">
+                <property name="label">ListenBrainz</property>
                 <property name="visible">1</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
               </object>
             </child>
             <child>
-              <object class="GtkRadioButton" id="NP_listenbrainz">
-                <property name="label" translatable="yes">ListenBrainz</property>
+              <object class="GtkRadioButton" id="NP_mpris">
+                <property name="label">MPRIS (v2)</property>
                 <property name="visible">1</property>
                 <property name="group">NP_lastfm</property>
                 <signal name="toggled" handler="update_now_playing_info" swapped="no"/>

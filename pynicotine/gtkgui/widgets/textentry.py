@@ -411,19 +411,7 @@ class ChatEntry:
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif cmd == "/rescan":
-            # Rescan public shares if needed
-            if not config.sections["transfers"]["friendsonly"] and config.sections["transfers"]["shared"]:
-                self.frame.on_rescan()
-
-            # Rescan buddy shares if needed
-            if config.sections["transfers"]["enablebuddyshares"]:
-                self.frame.on_buddy_rescan()
-
-        elif cmd in ("/tick", "/t"):
-            self.frame.np.queue.append(slskmessages.RoomTickerSet(self.entity, args))
-
-        elif cmd == "/tickers":
-            self.frame.chatrooms.pages[self.entity].show_tickers()
+            self.frame.np.shares.rescan_shares()
 
         elif cmd == "/toggle":
             if args:
@@ -598,3 +586,35 @@ class TextSearchBar:
     def hide_search_bar(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()
+
+
+class CompletionEntry:
+
+    def __init__(self, entry, model):
+
+        self.entry = entry
+
+        completion = Gtk.EntryCompletion()
+        completion.set_inline_completion(True)
+        completion.set_inline_selection(True)
+        completion.set_popup_single_match(False)
+        completion.set_model(model)
+        completion.set_text_column(0)
+        completion.set_match_func(self.entry_completion_find_match)
+
+        entry.set_completion(completion)
+
+    def entry_completion_find_match(self, completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        item_text = completion.get_model().get_value(iterator, 0)
+
+        if not item_text:
+            return False
+
+        if item_text.lower().startswith(entry_text.lower()):
+            return True
+
+        return False

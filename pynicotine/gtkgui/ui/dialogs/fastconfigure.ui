@@ -88,7 +88,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">_Set Up...</property>
+                <property name="label" translatable="yes">_Set Up…</property>
                 <property name="margin-start">14</property>
                 <property name="margin-end">14</property>
                 <property name="use-underline">1</property>
@@ -125,7 +125,7 @@
     <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Please keep in mind that certain usernames may be taken. If this is the case, you will be prompted to change your username when connecting to the network.</property>
+        <property name="label" translatable="yes">If your desired username is already taken, you will be prompted to change it.</property>
         <property name="justify">center</property>
         <property name="wrap">1</property>
         <property name="width-chars">36</property>
@@ -214,44 +214,53 @@
     <property name="margin-top">24</property>
     <property name="margin-bottom">24</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">24</property>
+    <property name="spacing">30</property>
     <child>
-      <object class="GtkLabel">
+      <object class="GtkBox">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. In order to allow users to connect to you without trouble, an open listening port is crucial.</property>
-        <property name="justify">center</property>
-        <property name="wrap">1</property>
-        <property name="width-chars">36</property>
-        <property name="max-width-chars">60</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">24</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Nicotine+ uses peer-to-peer networking to connect to other users. In order to allow users to connect to you without trouble, an open listening port is crucial.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">The default listening port &apos;2234&apos; works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">If your listening port is closed, you will only be able to connect to users whose listening ports are open.</property>
+            <property name="justify">center</property>
+            <property name="wrap">1</property>
+            <property name="width-chars">36</property>
+            <property name="max-width-chars">60</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
-      <object class="GtkLabel">
+      <object class="GtkLabel" id="checkmyport">
         <property name="visible">1</property>
-        <property name="label" translatable="yes">The default listening port &apos;2234&apos; works fine in most cases. If you need to use a different port, you will be able to modify it in the preferences later.</property>
-        <property name="justify">center</property>
-        <property name="wrap">1</property>
-        <property name="width-chars">36</property>
-        <property name="max-width-chars">60</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">1</property>
-        <property name="label" translatable="yes">If your listening port is closed, you will only be able to connect to users whose listening ports are open.</property>
-        <property name="justify">center</property>
-        <property name="wrap">1</property>
-        <property name="width-chars">36</property>
-        <property name="max-width-chars">60</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkButton" id="checkmyport">
-        <property name="visible">1</property>
-        <property name="label" translatable="yes">Check _Port Status</property>
+        <property name="label" translatable="yes">Check Port Status</property>
         <property name="halign">center</property>
-        <property name="use-underline">1</property>
-        <signal name="clicked" handler="on_check_port_status" swapped="no"/>
+        <property name="use-markup">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
       </object>
     </child>
   </object>
@@ -341,7 +350,7 @@
             <child>
               <object class="GtkButton" id="addshare">
                 <property name="visible">1</property>
-                <property name="label" translatable="yes">_Add...</property>
+                <property name="label" translatable="yes">_Add…</property>
                 <property name="use-underline">1</property>
                 <signal name="clicked" handler="on_add_share" swapped="no"/>
               </object>
@@ -399,33 +408,25 @@
         <child>
           <object class="GtkLabel" id="labelnoshare">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Donating to Soulseek grants you privileges for a certain time period. Privileges allow your downloads to be queued ahead of non-privileged users.</property>
+            <property name="label" translatable="yes">Donating to Soulseek grants you privileges for a certain time period. If you have privileges, your downloads will be queued ahead of non-privileged users.</property>
             <property name="xalign">0</property>
             <property name="wrap">1</property>
             <property name="width-chars">32</property>
             <property name="max-width-chars">60</property>
           </object>
         </child>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">1</property>
-            <property name="halign">center</property>
-            <property name="margin-top">6</property>
-            <signal name="clicked" handler="on_get_privileges" swapped="no"/>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Get Soulseek _Privileges...</property>
-                <property name="margin-start">14</property>
-                <property name="margin-end">14</property>
-                <property name="use-underline">1</property>
-              </object>
-            </child>
-            <style>
-              <class name="circular"/>
-            </style>
-          </object>
-        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="privileges">
+        <property name="visible">1</property>
+        <property name="label" translatable="yes">Get Soulseek Privileges…</property>
+        <property name="margin-start">14</property>
+        <property name="margin-end">14</property>
+        <property name="use-markup">1</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
       </object>
     </child>
   </object>

@@ -167,35 +167,22 @@ class NetworkFilter:
                 # Only trusted buddies allowed, and user isn't trusted
                 return 1, ""
 
-            if self.config.sections["transfers"]["enablebuddyshares"]:
-                # For sending buddy-only shares
-                return 2, ""
-
-            # Buddy list users bypass geoblock
-            return 1, ""
-
-        if self.config.sections["transfers"]["friendsonly"]:
-            return 0, "Sorry, friends only"
+            # For sending buddy-only shares
+            return 2, ""
 
         if ip_address is None or not self.config.sections["transfers"]["geoblock"]:
             return 1, ""
 
         country_code = self.geoip.get_country_code(ip_address)
 
-        if country_code == "-":
-            if self.config.sections["transfers"]["geopanic"]:
-                return 0, "Blocked country (Sorry, geographical paranoia)"
-
-            return 1, ""
-
         """ Please note that all country codes are stored in the same string at the first index
         of an array, separated by commas (no idea why...) """
 
         if self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if self.config.sections["transfers"]["usecustomgeoblock"]:
-                return 0, "Blocked country (%s)" % self.config.sections["transfers"]["customgeoblock"]
+                return 0, "Banned (%s)" % self.config.sections["transfers"]["customgeoblock"]
 
-            return 0, "Blocked country"
+            return 0, "Banned"
 
         return 1, ""
 

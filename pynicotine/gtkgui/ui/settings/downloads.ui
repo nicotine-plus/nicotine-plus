@@ -37,16 +37,23 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LockIncoming">
-            <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
+          <object class="GtkCheckButton" id="DownloadReverseOrder">
+            <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
+            <property name="visible">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="UsernameSubfolders">
+            <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DownloadReverseOrder">
-            <property name="label" translatable="yes">Download folders in reverse alphanumerical order</property>
+          <object class="GtkCheckButton" id="LockIncoming">
+            <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
             <property name="visible">1</property>
+            <property name="use-underline">1</property>
           </object>
         </child>
         <child>
@@ -188,22 +195,6 @@
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="ShareDownloadDir">
-            <property name="label" translatable="yes">Automatically share downloads</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">The equivalent of adding your download folder as a public share, however files downloaded to this folder will be automatically accessible to others (no rescan required).</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="UsernameSubfolders">
-            <property name="label" translatable="yes">Store downloads in username subfolders</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Creates subfolders based on the user you are downloading from, and stores the downloaded file / folder there.</property>
-            <property name="use-underline">1</property>
           </object>
         </child>
         <child>
@@ -377,7 +368,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Add...</property>
+                                <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>
@@ -405,7 +396,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Edit...</property>
+                                <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>

@@ -38,6 +38,7 @@ from pynicotine.slskmessages import AddThingIHate
 from pynicotine.slskmessages import AddThingILike
 from pynicotine.slskmessages import AddToPrivileged
 from pynicotine.slskmessages import AddUser
+from pynicotine.slskmessages import AdminCommand
 from pynicotine.slskmessages import AdminMessage
 from pynicotine.slskmessages import BranchLevel
 from pynicotine.slskmessages import BranchRoot
@@ -294,57 +295,58 @@ class SlskProtoThread(threading.Thread):
         FileSearch: 26,
         SetStatus: 28,
         ServerPing: 32,               # Deprecated
-        SendConnectToken: 33,         # Deprecated
-        SendDownloadSpeed: 34,        # Deprecated
+        SendConnectToken: 33,         # Obsolete
+        SendDownloadSpeed: 34,        # Obsolete
         SharedFoldersFiles: 35,
         GetUserStats: 36,
-        QueuedDownloads: 40,          # Deprecated
+        QueuedDownloads: 40,          # Obsolete
         Relogged: 41,
         UserSearch: 42,
-        AddThingILike: 51,
-        RemoveThingILike: 52,
-        Recommendations: 54,
-        GlobalRecommendations: 56,
-        UserInterests: 57,
-        PlaceInLineResponse: 60,      # Deprecated
-        RoomAdded: 62,                # Deprecated
-        RoomRemoved: 63,              # Deprecated
+        AddThingILike: 51,            # Deprecated
+        RemoveThingILike: 52,         # Deprecated
+        Recommendations: 54,          # Deprecated
+        GlobalRecommendations: 56,    # Deprecated
+        UserInterests: 57,            # Deprecated
+        AdminCommand: 58,
+        PlaceInLineResponse: 60,      # Obsolete
+        RoomAdded: 62,                # Obsolete
+        RoomRemoved: 63,              # Obsolete
         RoomList: 64,
-        ExactFileSearch: 65,          # Deprecated
+        ExactFileSearch: 65,          # Obsolete
         AdminMessage: 66,
-        GlobalUserList: 67,           # Deprecated
-        TunneledMessage: 68,          # Deprecated
+        GlobalUserList: 67,           # Obsolete
+        TunneledMessage: 68,          # Obsolete
         PrivilegedUsers: 69,
         HaveNoParent: 71,
-        SearchParent: 73,
+        SearchParent: 73,             # Deprecated
         ParentMinSpeed: 83,
         ParentSpeedRatio: 84,
-        ParentInactivityTimeout: 86,  # Deprecated
-        SearchInactivityTimeout: 87,  # Deprecated
-        MinParentsInCache: 88,        # Deprecated
-        DistribAliveInterval: 90,     # Deprecated
-        AddToPrivileged: 91,
+        ParentInactivityTimeout: 86,  # Obsolete
+        SearchInactivityTimeout: 87,  # Obsolete
+        MinParentsInCache: 88,        # Obsolete
+        DistribAliveInterval: 90,     # Obsolete
+        AddToPrivileged: 91,          # Obsolete
         CheckPrivileges: 92,
         EmbeddedMessage: 93,
         AcceptChildren: 100,
         PossibleParents: 102,
         WishlistSearch: 103,
         WishlistInterval: 104,
-        SimilarUsers: 110,
-        ItemRecommendations: 111,
-        ItemSimilarUsers: 112,
+        SimilarUsers: 110,            # Deprecated
+        ItemRecommendations: 111,     # Deprecated
+        ItemSimilarUsers: 112,        # Deprecated
         RoomTickerState: 113,
         RoomTickerAdd: 114,
         RoomTickerRemove: 115,
         RoomTickerSet: 116,
-        AddThingIHate: 117,
-        RemoveThingIHate: 118,
+        AddThingIHate: 117,           # Deprecated
+        RemoveThingIHate: 118,        # Deprecated
         RoomSearch: 120,
         SendUploadSpeed: 121,
-        UserPrivileged: 122,
+        UserPrivileged: 122,          # Deprecated
         GivePrivileges: 123,
-        NotifyPrivileges: 124,
-        AckNotifyPrivileges: 125,
+        NotifyPrivileges: 124,        # Deprecated
+        AckNotifyPrivileges: 125,     # Deprecated
         BranchLevel: 126,
         BranchRoot: 127,
         ChildDepth: 129,
@@ -354,7 +356,7 @@ class SlskProtoThread(threading.Thread):
         PrivateRoomRemoveUser: 135,
         PrivateRoomDismember: 136,
         PrivateRoomDisown: 137,
-        PrivateRoomSomething: 138,
+        PrivateRoomSomething: 138,    # Obsolete
         PrivateRoomAdded: 139,
         PrivateRoomRemoved: 140,
         PrivateRoomToggle: 141,
@@ -365,11 +367,11 @@ class SlskProtoThread(threading.Thread):
         PrivateRoomOperatorRemoved: 146,
         PrivateRoomOwned: 148,
         MessageUsers: 149,
-        JoinPublicRoom: 150,
-        LeavePublicRoom: 151,
-        PublicRoomMessage: 152,
-        RelatedSearch: 153,           # Deprecated
-        CantConnectToPeer: 1001,      # Deprecated
+        JoinPublicRoom: 150,          # Deprecated
+        LeavePublicRoom: 151,         # Deprecated
+        PublicRoomMessage: 152,       # Deprecated
+        RelatedSearch: 153,           # Obsolete
+        CantConnectToPeer: 1001,
         CantCreateRoom: 1003
     }
 
@@ -381,22 +383,22 @@ class SlskProtoThread(threading.Thread):
     peercodes = {
         GetSharedFileList: 4,
         SharedFileList: 5,
-        FileSearchRequest: 8,
+        FileSearchRequest: 8,         # Obsolete
         FileSearchResult: 9,
         UserInfoRequest: 15,
         UserInfoReply: 16,
-        PMessageUser: 22,
+        PMessageUser: 22,             # Deprecated
         FolderContentsRequest: 36,
         FolderContentsResponse: 37,
         TransferRequest: 40,
         TransferResponse: 41,
-        PlaceholdUpload: 42,          # Deprecated
+        PlaceholdUpload: 42,          # Obsolete
         QueueUpload: 43,
         PlaceInQueue: 44,
         UploadFailed: 46,
         UploadDenied: 50,
         PlaceInQueueRequest: 51,
-        UploadQueueNotification: 52,
+        UploadQueueNotification: 52,  # Deprecated
         UnknownPeerMessage: 12547
     }
 

@@ -4,6 +4,10 @@ Have you done something for Nicotine+, and your name is missing? Please [let us 
 
 ### Active
 
+Mat (mathiascode)
+- Maintainer
+- Developer
+
 eLvErDe
 - Provided Nicotine+ Trac instance
 - Migrated source code from SVN to Github
@@ -15,14 +19,11 @@ Kip Warner
 - Debianization
 - [kip(at)thevertigo(dot)com]
 
-mathiascode
-- Developer
-- [mail(at)mathias(dot)is]
-
 Han Boetes
 - Tester
 - Documentation
 - Bug hunting
+- Translations
 
 alekksander
 - Tester

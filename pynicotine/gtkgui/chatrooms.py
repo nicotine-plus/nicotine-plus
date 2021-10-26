@@ -41,6 +41,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_image
@@ -78,7 +79,7 @@ class ChatRooms(IconNotebook):
             notebookraw=self.frame.chatrooms_notebook
         )
 
-        self.set_tab_pos(self.frame.get_tab_position(config.sections["ui"]["tabrooms"]))
+        CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
 
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
@@ -182,7 +183,7 @@ class ChatRooms(IconNotebook):
             self.frame.RoomSearchCombo.append_text(msg.room)
 
         if self.get_n_pages() > 0:
-            self.frame.ChatroomsStatusPage.hide()
+            self.frame.chatrooms_status_page.hide()
 
     def leave_room(self, msg):
 
@@ -202,7 +203,7 @@ class ChatRooms(IconNotebook):
                 self.frame.RoomSearchCombo.append_text(room)
 
         if self.get_n_pages() == 0:
-            self.frame.ChatroomsStatusPage.show()
+            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass
@@ -456,7 +457,7 @@ class ChatRoom(UserInterface):
         )
 
         PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).setup(
-            ("#" + _("Find..."), self.on_find_activity_log),
+            ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.log_textview.on_copy_text),
             ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
@@ -467,14 +468,14 @@ class ChatRoom(UserInterface):
         )
 
         PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat).setup(
-            ("#" + _("Find..."), self.on_find_room_log),
+            ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
             ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
             ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
             ("", None),
             ("#" + _("View Room Log"), self.on_view_room_log),
-            ("#" + _("Delete Room Log..."), self.on_delete_room_log),
+            ("#" + _("Delete Room Log…"), self.on_delete_room_log),
             ("", None),
             ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
             ("#" + _("_Leave Room"), self.on_leave_room)
@@ -845,11 +846,6 @@ class ChatRoom(UserInterface):
 
         self.chat_textview.append_line(text, tag, timestamp_format=timestamp_format)
 
-    def show_tickers(self):
-        tickers = self.tickers.get_tickers()
-        header = _("All tickers / wall messages for %(room)s:") % {'room': self.room}
-        log.add("%s\n%s", (header, "\n".join(["[%s] %s" % (user, msg) for (user, msg) in tickers])))
-
     def user_joined_room(self, userdata):
 
         username = userdata.username
@@ -1121,7 +1117,7 @@ class ChatRoom(UserInterface):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
-            message=_('Are you sure you wish to permanently delete all logged messages for this room?'),
+            message=_('Do you really want to permanently delete all logged messages for this room?'),
             callback=self.on_delete_room_log_response
         )
 

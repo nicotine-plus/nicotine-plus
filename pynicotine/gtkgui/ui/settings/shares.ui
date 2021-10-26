@@ -2,7 +2,7 @@
 <interface>
   <object class="GtkBox" id="Main">
     <property name="visible">1</property>
-    <property name="spacing">30</property>
+    <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
@@ -20,6 +20,15 @@
           </object>
         </child>
         <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Share folders with every Soulseek user or buddies, allowing contents to be downloaded directly from your device. Hidden files are never shared.</property>
+            <property name="selectable">1</property>
+            <property name="wrap">1</property>
+          </object>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">12</property>
@@ -33,27 +42,17 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="EnableBuddyShares">
-                <property name="label" translatable="yes">Enable buddy-only shares</property>
-                <property name="tooltip-text" translatable="yes">Enables private shares that only users on your buddy list can access. If disabled, users will only be able to access your public shares.</property>
+              <object class="GtkCheckButton" id="ShareDownloadDir">
+                <property name="label" translatable="yes">Automatically share completed downloads</property>
                 <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">The equivalent of adding your download folder as a public share, however files downloaded to this folder will be automatically accessible to others (no rescan required).</property>
                 <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_enabled_buddy_shares_toggled" swapped="no"/>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="FriendsOnly">
-                <property name="label" translatable="yes">Mark each shared folder as buddy-only</property>
-                <property name="tooltip-text" translatable="yes">Overrides the per-share option, useful if you temporarily need to prevent public access to shares.</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_friends_only_toggled" swapped="no"/>
+                <signal name="toggled" handler="on_share_download_dir_toggled" swapped="no"/>
               </object>
             </child>
             <child>
               <object class="GtkCheckButton" id="BuddySharesTrustedOnly">
                 <property name="label" translatable="yes">Limit buddy-only shares to trusted buddies</property>
-                <property name="tooltip-text" translatable="yes">Only users marked as trusted on your buddy list can access your buddy-only shares.</property>
                 <property name="visible">1</property>
                 <property name="use-underline">1</property>
               </object>
@@ -67,27 +66,6 @@
         <property name="visible">1</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Shared Folders</property>
-            <property name="mnemonic_widget">Shares</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Nicotine+ allows you to share folders directly from your computer. All the contents of these folders (with the exception of dotfiles) can be downloaded by other users on the Soulseek network. Public shares are available for every user, while users in your buddy list can access buddy-only shares in addition to public shares.</property>
-            <property name="margin-bottom">12</property>
-            <property name="selectable">1</property>
-            <property name="wrap">1</property>
-          </object>
-        </child>
         <child>
           <object class="GtkFrame">
             <property name="visible">1</property>
@@ -142,7 +120,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
-                                <property name="label" translatable="yes">Add...</property>
+                                <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">1</property>
                               </object>
                             </child>

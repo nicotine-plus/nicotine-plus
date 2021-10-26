@@ -36,6 +36,13 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;r</property>
+                <property name="title" translatable="yes">Rescan Shares</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;l</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
               </object>

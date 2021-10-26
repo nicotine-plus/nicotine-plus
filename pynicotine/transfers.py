@@ -322,9 +322,9 @@ class Transfers:
         if user in self.privilegedusers:
             return True
 
-        return self.is_buddy_privileged(user)
+        return self.is_buddy_prioritized(user)
 
-    def is_buddy_privileged(self, user):
+    def is_buddy_prioritized(self, user):
 
         if not user:
             return False
@@ -338,9 +338,9 @@ class Transfers:
                 if self.config.sections["transfers"]["preferfriends"]:
                     return True
 
-                # Only privileged users
+                # Only explicitly prioritized users
                 try:
-                    return bool(row[3])  # Privileged column
+                    return bool(row[3])  # Prioritized column
                 except IndexError:
                     return False
 
@@ -562,6 +562,7 @@ class Transfers:
 
         i.status = "Cannot connect"
         i.req = None
+        i.place = 0
         curtime = time.time()
 
         for j in self.uploads:
@@ -901,6 +902,7 @@ class Transfers:
 
                 i.status = msg.reason
                 i.req = None
+                i.place = 0
 
                 if self.uploadsview:
                     self.uploadsview.update(i)
@@ -968,6 +970,7 @@ class Transfers:
             self.downloadsview.update(transfer)
 
         elif transfer in self.uploads:
+            transfer.place = 0
             curtime = time.time()
 
             for j in self.uploads:
@@ -1163,7 +1166,7 @@ class Transfers:
                 i.place = 0
 
                 if self.is_privileged(i.user):
-                    i.modifier = _("privileged")
+                    i.modifier = _("privileged") if i.user in self.privilegedusers else _("prioritized")
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
@@ -1529,17 +1532,6 @@ class Transfers:
                     self.downloadsview.update(i)
 
                 return
-
-    def upload_queue_notification(self, msg):
-
-        username = msg.conn.init.target_user
-
-        if self.can_upload(username):
-            log.add(_("Your buddy, %s, is attempting to upload file(s) to you."), username)
-
-        else:
-            self.core.privatechats.send_automatic_message(username, "You are not allowed to send me files.")
-            log.add(_("%s is not allowed to send you file(s), but is attempting to, anyway. Warning Sent."), username)
 
     """ Transfer Actions """
 
@@ -2260,9 +2252,10 @@ class Transfers:
             return
 
         user = transfer.user
+        filename = transfer.filename
 
         for i in self.uploads:
-            if i.user != user:
+            if i.user != user or i.filename != filename:
                 continue
 
             if i.req is not None or i.conn is not None or i.status == "Getting status":

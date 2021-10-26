@@ -31,6 +31,7 @@
     <child type="title">
       <object class="GtkBox" id="search_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="hexpand">0</property>
         <property name="spacing">4</property>
         <property name="valign">center</property>
@@ -57,10 +58,9 @@
             </items>
             <child internal-child="entry">
               <object class="GtkEntry" id="RoomSearchEntry">
-                <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Room...</property>
+                <property name="placeholder-text" translatable="yes">Room…</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
@@ -77,10 +77,9 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserSearchEntry">
-                <property name="height-request">0</property>
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
               </object>
             </child>
@@ -98,10 +97,9 @@
             <child internal-child="entry">
               <object class="GtkEntry" id="SearchEntry">
                 <property name="hexpand">1</property>
-                <property name="height-request">0</property>
                 <property name="max-width-chars">75</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Search term...</property>
+                <property name="placeholder-text" translatable="yes">Search term…</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
                 <signal name="activate" handler="on_search" swapped="no"/>
@@ -125,6 +123,7 @@
         <child>
           <object class="GtkMenuButton" id="WishList">
             <property name="visible">1</property>
+            <property name="height-request">0</property>
           </object>
         </child>
         <child>
@@ -152,6 +151,7 @@
     <child type="title">
       <object class="GtkBox" id="downloads_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
@@ -295,6 +295,7 @@
     <child type="title">
       <object class="GtkBox" id="uploads_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
@@ -438,6 +439,7 @@
     <child type="title">
       <object class="GtkBox" id="private_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBoxText" id="PrivateChatCombo">
@@ -446,11 +448,10 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="PrivateChatEntry">
-                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to send a message to</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_private_chat" swapped="no"/>
                 <signal name="icon-press" handler="on_get_private_chat" swapped="no"/>
@@ -495,6 +496,7 @@
     <child type="title">
       <object class="GtkBox" id="userinfo_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBoxText" id="UserInfoCombo">
@@ -503,11 +505,10 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserInfoEntry">
-                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person you to receive information about</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_user_info" swapped="no"/>
                 <signal name="icon-press" handler="on_get_user_info" swapped="no"/>
@@ -534,6 +535,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
+                <property name="height-request">0</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage">
@@ -550,6 +552,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="image-text-button"/>
+            </style>
           </object>
         </child>
       </object>
@@ -561,6 +566,7 @@
     <child type="title">
       <object class="GtkBox" id="userbrowse_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBoxText" id="UserBrowseCombo">
@@ -569,11 +575,10 @@
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserBrowseEntry">
-                <property name="height-request">0</property>
                 <property name="max-width-chars">45</property>
                 <property name="width-chars">5</property>
-                <property name="placeholder-text" translatable="yes">Username...</property>
-                <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you wish to see</property>
+                <property name="placeholder-text" translatable="yes">Username…</property>
+                <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
                 <signal name="activate" handler="on_get_shares" swapped="no"/>
                 <signal name="icon-press" handler="on_get_shares" swapped="no"/>
@@ -600,6 +605,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
+                <property name="height-request">0</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage">
@@ -617,6 +623,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="image-text-button"/>
+            </style>
           </object>
         </child>
         <child>
@@ -644,15 +653,15 @@
     <child type="title">
       <object class="GtkBox" id="userlist_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
-            <property name="height-request">0</property>
             <property name="max-width-chars">45</property>
             <property name="width-chars">5</property>
-            <property name="placeholder-text" translatable="yes">Add buddy...</property>
-            <property name="tooltip-text" translatable="yes">Enter the username of the person you wish to add to your buddy list</property>
+            <property name="placeholder-text" translatable="yes">Add buddy…</property>
+            <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
             <signal name="activate" handler="on_add_user" swapped="no"/>
             <signal name="icon-press" handler="on_add_user" swapped="no"/>
@@ -690,16 +699,16 @@
     <child type="title">
       <object class="GtkBox" id="chatrooms_title">
         <property name="visible">1</property>
+        <property name="height-request">0</property>
         <property name="hexpand">0</property>
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkEntry" id="ChatroomsEntry">
             <property name="visible">1</property>
-            <property name="height-request">0</property>
             <property name="max-width-chars">40</property>
             <property name="width-chars">5</property>
-            <property name="placeholder-text" translatable="yes">Create or join room...</property>
+            <property name="placeholder-text" translatable="yes">Create or join room…</property>
             <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
             <property name="primary-icon-name">user-available-symbolic</property>
             <signal name="activate" handler="on_create_room" swapped="no"/>
@@ -709,6 +718,7 @@
         <child>
           <object class="GtkMenuButton" id="RoomList">
             <property name="visible">1</property>
+            <property name="height-request">0</property>
           </object>
         </child>
       </object>
@@ -807,51 +817,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="SearchStatusPage">
+                              <object class="GtkBox" id="search_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">system-search-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Search Files</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">system-search-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Enter a search term to search for files shared by other users on the Soulseek network</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Search Files</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Enter a search term to search for files shared by other users on the Soulseek network</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -897,51 +913,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="DownloadsStatusPage">
+                              <object class="GtkBox" id="downloads_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">document-save-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Downloads</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">document-save-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Files you download from other users are queued here, and can be paused and resumed on demand</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Downloads</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Files you download from other users are queued here, and can be paused and resumed on demand</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -981,51 +1003,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="UploadsStatusPage">
+                              <object class="GtkBox" id="uploads_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">emblem-shared-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Uploads</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">emblem-shared-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Users' attempts to download your shared files are queued and managed here</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Uploads</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Users' attempts to download your shared files are queued and managed here</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1036,7 +1064,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- User Browse -->
+                    <!-- Browse Shares -->
                     <child>
                       <object class="GtkBox" id="userbrowsevbox">
                         <property name="visible">1</property>
@@ -1065,51 +1093,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="UserBrowseStatusPage">
+                              <object class="GtkBox" id="userbrowse_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">folder-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">User Browse</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">folder-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Enter the name of a user to browse their list of shared files. You can also open a list you have previously saved.</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Browse Shares</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Enter the name of a user, whose shared files you'd like to browse. You can also save the list to disk, and inspect it later on.</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1155,51 +1189,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="UserInfoStatusPage">
+                              <object class="GtkBox" id="userinfo_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">avatar-default-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">User Info</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">avatar-default-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Enter the name of a user to view their user description, information and personal picture</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">User Info</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Enter the name of a user to view their user description, information and personal picture</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1245,51 +1285,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="PrivateChatStatusPage">
+                              <object class="GtkBox" id="private_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">mail-send-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Private Chat</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">mail-send-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Enter the name of a user to start a text conversation with them in private</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Private Chat</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Enter the name of a user to start a text conversation with them in private</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1306,7 +1352,7 @@
                         </child>
                       </object>
                     </child>
-                    <!-- Buddy List -->
+                    <!-- Buddies -->
                     <child>
                       <object class="GtkBox" id="userlistvbox">
                         <property name="visible">1</property>
@@ -1335,51 +1381,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="UserListStatusPage">
+                              <object class="GtkBox" id="userlist_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">contact-new-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Buddy List</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">contact-new-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Add users to your buddy list to share specific folders with them and receive notifications when they are online</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Buddies</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Add users as buddies to share specific folders with them and receive notifications when they are online</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1419,51 +1471,57 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="ChatroomsStatusPage">
+                              <object class="GtkBox" id="chatrooms_status_page">
                                 <property name="visible">1</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="margin-start">24</property>
-                                <property name="margin-end">24</property>
-                                <property name="margin-top">30</property>
-                                <property name="margin-bottom">30</property>
-                                <property name="spacing">30</property>
-                                <property name="orientation">vertical</property>
-                                <property name="vexpand">1</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">1</property>
-                                    <property name="icon-name">user-available-symbolic</property>
-                                    <property name="pixel-size">128</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">1</property>
-                                    <property name="spacing">12</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="margin-end">24</property>
+                                    <property name="margin-top">30</property>
+                                    <property name="margin-bottom">30</property>
+                                    <property name="spacing">30</property>
                                     <property name="orientation">vertical</property>
+                                    <property name="hexpand">1</property>
+                                    <property name="vexpand">1</property>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkImage">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Chat Rooms</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
-                                        <attributes>
-                                          <attribute name="weight" value="ultrabold"/>
-                                          <attribute name="size" value="20000"/>
-                                        </attributes>
+                                        <property name="icon-name">user-available-symbolic</property>
+                                        <property name="pixel-size">128</property>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel">
+                                      <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
-                                        <property name="max-width-chars">55</property>
-                                        <property name="justify">center</property>
-                                        <property name="wrap">1</property>
+                                        <property name="spacing">12</property>
+                                        <property name="orientation">vertical</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Chat Rooms</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                            <attributes>
+                                              <attribute name="weight" value="ultrabold"/>
+                                              <attribute name="size" value="20000"/>
+                                            </attributes>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">1</property>
+                                            <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
+                                            <property name="max-width-chars">55</property>
+                                            <property name="justify">center</property>
+                                            <property name="wrap">1</property>
+                                          </object>
+                                        </child>
                                       </object>
                                     </child>
                                   </object>
@@ -1492,9 +1550,6 @@
                         <property name="visible">1</property>
                       </object>
                     </child>
-                    <style>
-                      <class name="view"/>
-                    </style>
                   </object>
                 </child>
                 <!-- Log Window -->
@@ -1721,15 +1776,6 @@
                     <property name="valign">center</property>
                     <property name="pulse-step">0.10000000149</property>
                     <property name="text" translatable="yes">Scanning Shares</property>
-                    <property name="show-text">1</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkProgressBar" id="BuddySharesProgress">
-                    <property name="visible">0</property>
-                    <property name="valign">center</property>
-                    <property name="pulse-step">0.10000000149</property>
-                    <property name="text" translatable="yes">Scanning Buddy Shares</property>
                     <property name="show-text">1</property>
                   </object>
                 </child>

@@ -19,7 +19,7 @@
 import importlib.util
 import sys
 
-from pynicotine.i18n import apply_translation
+from pynicotine.i18n import apply_translations
 
 
 def check_arguments():
@@ -142,15 +142,12 @@ def rescan_shares():
 
     config.load_config()
 
-    shares = Shares(None, config, deque())
-    error = shares.rescan_public_shares(thread=False)
-
-    if config.sections["transfers"]["enablebuddyshares"]:
-        error = shares.rescan_buddy_shares(thread=False)
+    shares = Shares(None, config, deque(), init_shares=False)
+    error = shares.rescan_shares(use_thread=False)
 
     if error:
         print("--------------------------------------------------")
-        print(_("Failed to scan shares. If Nicotine+ is currently running, please close the program before scanning."))
+        print(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
         return 1
 
     return 0
@@ -236,4 +233,4 @@ binary package and what you try to run Nicotine+ with).""")
     return run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance)
 
 
-apply_translation()
+apply_translations()

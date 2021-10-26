@@ -47,9 +47,9 @@ class Uploads(TransferList):
             ("#" + _("Finished"), self.on_clear_finished),
             ("#" + _("Aborted"), self.on_clear_aborted),
             ("#" + _("Failed"), self.on_clear_failed),
-            ("#" + _("Queued..."), self.on_try_clear_queued),
+            ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All..."), self.on_try_clear_all),
+            ("#" + _("Clear All…"), self.on_try_clear_all),
         )
 
     def on_try_clear_queued(self, *args):
@@ -57,7 +57,7 @@ class Uploads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
-            message=_('Are you sure you wish to clear all queued uploads?'),
+            message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_response,
             callback_data="queued"
         )
@@ -67,7 +67,7 @@ class Uploads(TransferList):
         option_dialog(
             parent=self.frame.MainWindow,
             title=_('Clear All Uploads'),
-            message=_('Are you sure you wish to clear all uploads?'),
+            message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_response,
             callback_data="all"
         )

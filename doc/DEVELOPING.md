@@ -8,7 +8,6 @@ This document contains important information about Nicotine+ design decisions an
  * [Dependencies](#dependencies)
  * [Profiling](#profiling)
  * [Continuous Integration Testing](#continuous-integration-testing)
- * [Translations](#translations)
  * [Releases](#releases)
 
 # Language and Toolkit
@@ -83,34 +82,6 @@ autopkgtest --shell-fail --apt-upgrade . -- \
 ## Creating tests
 
 Tests are defined in the *test/* folder, and should be expanded to cover larger parts of the client when possible.
-
-# Translations
-
-## To update the translation template
-
-As strings change in the Nicotine+ source code, the translation template file should also be updated regularly.
-
-To update the template (.pot) file, run the following command:
-
-```console
-python3 po/update_pot.py
-```
-
-A developer part of the [Nicotine+ Launchpad team](https://launchpad.net/~nicotine-team) should then [upload the updated .pot file](https://translations.launchpad.net/nicotine+/trunk/+translations-upload) to Launchpad, and [approve it](https://translations.launchpad.net/nicotine+/+imports).
-
-## To import translations to GitHub
-
-Translations should be imported to the GitHub repository regularly, at the very latest before a new Nicotine+ release is tagged.
-
-To do this:
-
- * [Export all translations](https://translations.launchpad.net/nicotine+/trunk/+export) in PO format
-
- * Add the updated files to the `po` folder
-
- * Commit the files
-
-Also remember to add new translators to the list of translators, located in TRANSLATORS.md and `pynicotine/gtkgui/ui/about/about.ui`.
 
 # Releases
 

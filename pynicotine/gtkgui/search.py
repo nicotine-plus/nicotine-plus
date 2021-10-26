@@ -39,6 +39,7 @@ from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_image
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -79,6 +80,10 @@ class Searches(IconNotebook):
             self.frame.SearchMethod.set_wrap_width(1)
 
         self.wish_list = WishList(frame, self)
+
+        CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
+        CompletionEntry(frame.UserSearchEntry, frame.UserSearchCombo.get_model())
+        CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
 
         self.populate_search_history()
         self.update_visuals()
@@ -188,7 +193,7 @@ class Searches(IconNotebook):
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
         if self.get_n_pages() > 0:
-            self.frame.SearchStatusPage.hide()
+            self.frame.search_status_page.hide()
 
     def show_search_result(self, msg, username, country):
 
@@ -215,7 +220,7 @@ class Searches(IconNotebook):
         self.remove_page(tab.Main)
 
         if self.get_n_pages() == 0:
-            self.frame.SearchStatusPage.show()
+            self.frame.search_status_page.show()
 
     def add_wish(self, wish):
         self.wish_list.add_wish(wish)
@@ -370,9 +375,9 @@ class Search(UserInterface):
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download File(s) _To..."), self.on_download_files_to),
+            ("#" + _("Download File(s) _To…"), self.on_download_files_to),
             ("#" + _("Download _Folder(s)"), self.on_download_folders),
-            ("#" + _("Download F_older(s) To..."), self.on_download_folders_to),
+            ("#" + _("Download F_older(s) To…"), self.on_download_folders_to),
             ("", None),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
@@ -389,7 +394,7 @@ class Search(UserInterface):
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
-            ("#" + _("Close All Tabs..."), self.on_close_all_tabs),
+            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
         )
 
@@ -532,12 +537,12 @@ class Search(UserInterface):
 
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
                 """ Filter out results with filtered words (e.g. nicotine -music) """
-                log.add_search(_("Filtered out excluded search result " + fullpath + " from user " + user))
+                log.add_search("Filtered out excluded search result " + fullpath + " from user " + user)
                 continue
 
             if not any(word in fullpath_lower for word in self.searchterm_words_include):
                 """ Some users may send us wrong results, filter out such ones """
-                log.add_search(_("Filtered out inexact or incorrect search result " + fullpath + " from user " + user))
+                log.add_search("Filtered out inexact or incorrect search result " + fullpath + " from user " + user)
                 continue
 
             fullpath_split = fullpath.split('\\')
@@ -609,7 +614,7 @@ class Search(UserInterface):
             h_queue = humanize(inqueue)
 
         h_speed = ""
-        ulspeed = msg.ulspeed
+        ulspeed = msg.ulspeed or 0
 
         if ulspeed > 0:
             h_speed = human_speed(ulspeed)
@@ -1129,11 +1134,11 @@ class Search(UserInterface):
         users = len(self.selected_users) > 0
         files = len(self.selected_results) > 0
 
-        for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
+        for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
                   _("Copy _URL")):
             actions[i].set_enabled(False)
 
-        for i in (_("Download _Folder(s)"), _("Download F_older(s) To..."), _("_Browse Folder(s)"),
+        for i in (_("Download _Folder(s)"), _("Download F_older(s) To…"), _("_Browse Folder(s)"),
                   _("Copy _File Path"), _("Copy Folder U_RL")):
             actions[i].set_enabled(files)
 
@@ -1143,7 +1148,7 @@ class Search(UserInterface):
         if self.selected_files_count:
             # At least one selected result is a file, activate file-related items
 
-            for i in (_("_Download File(s)"), _("Download File(s) _To..."), _("F_ile Properties"),
+            for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
                       _("Copy _URL")):
                 actions[i].set_enabled(True)
 

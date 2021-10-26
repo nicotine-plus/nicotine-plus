@@ -7,20 +7,24 @@
 - daelstorm
 
 ## Dutch
+- hboetes (2021)
 - nince78 (2007)
 - hyriand
 
 ## German
+- hboetes (2021)
 - Meokater (2007)
 - (.\_.) (2007)
 - lippel (2004)
 - hyriand (2003)
 
 ## Spanish
+- Strange (2021)
 - Silvio Orta (2007)
 - Dreslo
 
 ## French
+- melmorabity (2021)
 - m-balthazar (2020)
 - Michael Labouebe (2016-2017) [gfarmerfr(at)free(dot)fr]
 - ManWell (2007)
@@ -60,3 +64,6 @@
 
 ## Euskara
 - The Librezale.org Team [librezale(at)librezale(dot)org]
+
+## Turkish
+- Oğuz Ersen (2021)
