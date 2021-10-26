@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-25 22:28+0300\n"
-"PO-Revision-Date: 2021-10-26 02:51+0000\n"
+"PO-Revision-Date: 2021-10-26 04:06+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
@@ -5447,12 +5447,10 @@ msgid "Replace censored letters with:"
 msgstr "Erstatt sensurerte bokstaver med:"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:98
-#, fuzzy
 msgid "Censored Patterns"
 msgstr "Sensurerte mønstre"
 
 #: pynicotine/gtkgui/ui/settings/censorreplace.ui:256
-#, fuzzy
 msgid "Auto-Replace"
 msgstr "Erstatt automatisk"
 
@@ -6278,9 +6276,8 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibyte (2^20 byte)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:374
-#, fuzzy
 msgid "MiBs"
-msgstr "MiBer"
+msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:412
 #, fuzzy
@@ -6719,9 +6716,8 @@ msgid "User Picture"
 msgstr "Bilde av bruker"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:623
-#, fuzzy
 msgid "Save _Picture"
-msgstr "Lagre _Picture"
+msgstr "Lagre _bilde"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:654
 #, fuzzy
