@@ -66,10 +66,7 @@ class PluginHandler:
         BasePlugin.core = self.core
         BasePlugin.frame = self.core.ui_callback
 
-        if os.path.isdir(config.plugin_dir):
-            self.load_enabled()
-        else:
-            log.add(_("It appears '%s' is not a directory, not loading plugins."), config.plugin_dir)
+        self.load_enabled()
 
     def update_completions(self, plugin):
 
