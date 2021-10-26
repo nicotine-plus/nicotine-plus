@@ -1195,7 +1195,7 @@ class UserBrowse(UserInterface):
         entry_dialog(
             parent=self.frame.MainWindow,
             title=str_title,
-            message=_('Enter the name of the user you wish to upload to:'),
+            message=_('Enter the name of the user you want to upload to:'),
 
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
@@ -1267,7 +1267,7 @@ class UserBrowse(UserInterface):
         entry_dialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s) To User'),
-            message=_('Enter the name of the user you wish to upload to:'),
+            message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,
             droplist=users
         )
