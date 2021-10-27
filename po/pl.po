@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-26 16:40+0300\n"
-"PO-Revision-Date: 2021-10-24 15:17+0000\n"
+"PO-Revision-Date: 2021-10-27 21:58+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -1676,14 +1676,13 @@ msgstr "Zgłoś _błąd"
 
 #: pynicotine/gtkgui/frame.py:1060
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Popraw tłumaczenie"
 
 #: pynicotine/gtkgui/frame.py:1061
 msgid "Check _Latest Version"
 msgstr "Sprawdź _ostatnią wersje"
 
 #: pynicotine/gtkgui/frame.py:1063
-#, fuzzy
 msgid "_About Nicotine+"
 msgstr "O Nicotine+"
 
@@ -2582,9 +2581,8 @@ msgid "Aborted"
 msgstr "Przerwane"
 
 #: pynicotine/gtkgui/transferlist.py:99
-#, fuzzy
 msgid "Cancelled"
-msgstr "Anuluj"
+msgstr "Anulowane"
 
 #: pynicotine/gtkgui/transferlist.py:103
 msgid "Banned"
@@ -4326,7 +4324,6 @@ msgid ""
 msgstr "Wprowadź nazwę użytkownika, aby rozpocząć z nim czat prywatny"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1429
-#, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
 "notifications when they are online"
@@ -5510,14 +5507,12 @@ msgid "_Add Plugins"
 msgstr "_Dodaj wtyczki"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
-#, fuzzy
 msgid "Version:"
-msgstr "Wersja: "
+msgstr "Wersja:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:223
-#, fuzzy
 msgid "Author(s):"
-msgstr "Autorzy: "
+msgstr "Autorzy:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:50
 msgid "Enable search history"
