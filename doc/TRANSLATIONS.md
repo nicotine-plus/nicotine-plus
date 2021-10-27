@@ -9,7 +9,7 @@ We regularly import the improved translations into the Nicotine+ GitHub reposito
 Look around in the weblate interface, there are quite a few very practical options.
 
 
-### Automatic translations
+### Automatic Translations
 
 This will translate all strings that haven't been edited yet.
 
