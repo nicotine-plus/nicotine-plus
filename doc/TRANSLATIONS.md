@@ -6,7 +6,7 @@ You can help improving our translations at [Hosted Weblate](https://hosted.webla
 
 We regularly import the improved translations into the Nicotine+ GitHub repository, especially before a new Nicotine+ release.
 
-Look around in the weblate interface, there are quite a few very practical options.
+Look around in the Weblate interface, there are quite a few very practical options.
 
 
 ### Automatic Translations
