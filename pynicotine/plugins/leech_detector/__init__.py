@@ -107,7 +107,7 @@ class Plugin(BasePlugin):
             return
 
         if stats['files'] == 0 and stats['dirs'] == 0:
-            ## ToDo: Implement alternate fallback method (num_files | num_folders) from Browse Shares (Issue #1565) ##
+            # ToDo: Implement alternate fallback method (num_files | num_folders) from Browse Shares (Issue #1565) #
             self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
             self.probed[user] = 'zero'
             return
@@ -132,4 +132,4 @@ class Plugin(BasePlugin):
         for line in self.settings['message'].splitlines():
             self.send_private(user, line, show_ui=self.settings['open_private_chat'], switch_page=False)
 
-        self.log("Leecher %s doesn't share enough files, sent complaint.", user)
+        self.log("Leecher %s doesn't share enough files, complaint message sent.", user)
