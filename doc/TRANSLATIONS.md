@@ -13,7 +13,7 @@ Look around in the Weblate interface, there are quite a few very practical optio
 
 This will translate all strings that haven't been edited yet.
 
-In the menu "tools → automatic translations", select "Automatic translation mode → as needing edit" and "search filter → not translated strings" and "machine translations → Google translate"
+In the menu "Tools → Automatic translations", select "Automatic translation mode → Add as needing edit", "Search filter → Not translated strings" and "Machine translations → Google Translate"
 
 After letting it run for a while, say 20 minutes, it should have finished and added a halfway decent translation for your language.
 
