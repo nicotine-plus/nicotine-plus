@@ -27,7 +27,7 @@ Whilst translating in normal mode, you can select "Automatic Suggestions," this 
 
 ### Zen Mode
 
-In zen-mode you can check and improve all items you have selected.
+In Zen mode you can check and improve all items you have selected.
 
 
 ### Search and replace
