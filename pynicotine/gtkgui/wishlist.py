@@ -49,7 +49,7 @@ class WishList(UserInterface):
         self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
             None, self.list_view,
-            ["wishes", _("Wishes"), -1, "text", None]
+            ["wishes", _("Wishes"), -1, "edit", None]
         )
 
         self.list_view.set_model(self.store)
@@ -60,9 +60,7 @@ class WishList(UserInterface):
             wish = str(wish)
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
-        renderers = cols["wishes"].get_cells()
-        for render in renderers:
-            render.set_property('editable', True)
+        for render in cols["wishes"].get_cells():
             render.connect('edited', self.cell_edited_callback, self.list_view, 0)
 
         CompletionEntry(self.wish_entry, self.store)
@@ -116,7 +114,6 @@ class WishList(UserInterface):
             wish = model.get_value(iterator, 0)
             self.frame.np.search.remove_wish(wish)
 
-        self.list_view.get_selection().unselect_all()
         self.wish_entry.grab_focus()
 
     def on_remove_wish_accelerator(self, *args):
