@@ -22,7 +22,7 @@ Now you can continue with translating by pressing a fitting item in the "String 
 
 ### Automatic Suggestions
 
-Whilst translating in normal mode, you can select "Automatic Suggestions," this is great to see the proposed translations from various translation services. Google translate works very well, but you might find other translations that are more to the point.
+Whilst translating in normal mode, you can select "Automatic Suggestions," this is great to see the proposed translations from various translation services. Google Translate works very well, but you might find other translations that are more to the point.
 
 
 ### Zen mode
