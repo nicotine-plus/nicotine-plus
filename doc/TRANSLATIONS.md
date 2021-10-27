@@ -39,7 +39,7 @@ You can use the "Search and Replace" tool to help you with that.
 
 ## Testing Updated Translations
 
-After translating can test your translation by running Nicotine+ with the new translations.
+After translating, you can test your translation by running Nicotine+ with the new translations.
 
 Nicotine+ will first try to find your translation files in your project folder, which is particularly useful for testing translations from the git source tree or if your are using the Python virtualenv framework.
 
