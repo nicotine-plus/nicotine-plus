@@ -30,7 +30,7 @@ Whilst translating in normal mode, you can select "Automatic Suggestions," this 
 In Zen mode you can check and improve all items you have selected.
 
 
-### Search and replace
+### Search and Replace
 
 Using consistent terms for the same things makes the translation easier to understand. You may also find that some words are mistranslated by the engines, for example "shares" is often translated as "shares from the stockmarket" and not as in "sharing files and directories".
 
