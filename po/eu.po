@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-26 16:40+0300\n"
-"PO-Revision-Date: 2021-10-27 21:58+0000\n"
+"PO-Revision-Date: 2021-10-29 12:12+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
@@ -2018,7 +2018,7 @@ msgstr "Salatu _Bug"
 
 #: pynicotine/gtkgui/frame.py:1060
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Hobetu itzulpenak"
 
 #: pynicotine/gtkgui/frame.py:1061
 #, fuzzy
