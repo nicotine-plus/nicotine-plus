@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-26 16:40+0300\n"
-"PO-Revision-Date: 2021-10-17 12:09+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2021-10-29 12:12+0000\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -145,6 +145,8 @@ msgstr ""
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
+"Les partages n'ont pas pu être lus. Fermez les autres instances de Nicotine+ "
+"et réessayez."
 
 #: pynicotine/chatrooms.py:241
 #, python-format
@@ -1336,12 +1338,11 @@ msgid "Delete Logged Messages?"
 msgstr "Supprimer les messages enregistrés ?"
 
 #: pynicotine/gtkgui/chatrooms.py:1120
-#, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr ""
-"Êtes-vous sûr de vouloir supprimer définitivement tous les messages "
-"enregistrés de ce salon ?"
+"Voulez-vous vraiment supprimer définitivement tous les messages enregistrés "
+"de ce salon ?"
 
 #: pynicotine/gtkgui/downloads.py:40
 msgid "_Resume"
@@ -1390,7 +1391,7 @@ msgstr "Effacer les téléchargements en attente"
 #, fuzzy
 msgid "Do you really want to clear all queued downloads?"
 msgstr ""
-"Êtes-vous sûr de vouloir supprimer tous les téléchargements en attente ?"
+"Voulez-vous vraiment effacer tous les téléchargements en file d'attente ?"
 
 #: pynicotine/gtkgui/downloads.py:75
 msgid "Clear All Downloads"
@@ -1399,7 +1400,7 @@ msgstr "Effacer tous les téléchargements"
 #: pynicotine/gtkgui/downloads.py:76
 #, fuzzy
 msgid "Do you really want to clear all downloads?"
-msgstr "Êtes-vous sûr de vouloir effacer tous les téléchargements ?"
+msgstr "Voulez-vous vraiment effacer tous les téléchargements ?"
 
 #: pynicotine/gtkgui/downloads.py:92
 #, python-format
@@ -1407,13 +1408,13 @@ msgid "Download %(num)i files?"
 msgstr "Télécharger %(num)i fichiers ?"
 
 #: pynicotine/gtkgui/downloads.py:93
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Do you really want to download %(num)i files from %(user)s's folder "
 "%(folder)s?"
 msgstr ""
-"Êtes-vous sûr de vouloir télécharger %(num)i fichiers depuis le répertoire "
-"%(folder)s de l'utilisateur %(user)s ?"
+"Voulez-vous vraiment télécharger %(num)i fichiers du dossier %(folder)s de "
+"l'utilisateur %(user)s ?"
 
 #: pynicotine/gtkgui/fastconfigure.py:65
 #: pynicotine/gtkgui/settingswindow.py:577
@@ -1651,9 +1652,8 @@ msgid "Buddy List Always Visible"
 msgstr "Liste d'amis toujours visible"
 
 #: pynicotine/gtkgui/frame.py:1030
-#, fuzzy
 msgid "_Rescan Shares"
-msgstr "Réexaminer mes partages"
+msgstr "_Réexaminer mes partages"
 
 #: pynicotine/gtkgui/frame.py:1031
 msgid "_Configure Shares"
