@@ -98,7 +98,7 @@ doas pkg install py-nicotine-plus
 
 Currently there are no up to date and stable packages available for any of the BSD versions, nor for Solaris.
 
-Not to worry, with a bit of fidgeting can you run Nicotine+ from git: [RUNFROMGIT.md](doc/RUNFROMGIT.md)
+Not to worry, with a bit of fidgeting can you also install Nicotine+ with pip: [PIPINSTALL.md](doc/PIPINSTALL.md)
 
 ## Windows
 
