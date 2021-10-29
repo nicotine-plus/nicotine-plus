@@ -84,7 +84,7 @@ class Plugin(BasePlugin):
 
         self.probed[user] = 'requesting'
         self.core.queue.append(slskmessages.GetUserStats(user))
-        self.log("Requesting statistics for new user %s...", user)
+        self.log("Requesting statistics for new user %s…", user)
 
     def user_stats_notification(self, user, stats):
 
