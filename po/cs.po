@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-26 16:40+0300\n"
-"PO-Revision-Date: 2021-10-19 17:11+0000\n"
-"Last-Translator: Patrik <burnmail123@gmail.com>\n"
+"PO-Revision-Date: 2021-10-29 12:12+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -2017,8 +2017,9 @@ msgid "Report a _Bug"
 msgstr "Nahlásit _Bug"
 
 #: pynicotine/gtkgui/frame.py:1060
+#, fuzzy
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Vylepšete T_ranslations"
 
 #: pynicotine/gtkgui/frame.py:1061
 #, fuzzy
@@ -3464,8 +3465,9 @@ msgid "Notify"
 msgstr "Uvědomit"
 
 #: pynicotine/gtkgui/userlist.py:86
+#, fuzzy
 msgid "Prioritized"
-msgstr ""
+msgstr "Upřednostněný"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3473,8 +3475,9 @@ msgid "Last Seen"
 msgstr "Naposledy viděno"
 
 #: pynicotine/gtkgui/userlist.py:88
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 #, fuzzy
@@ -3482,8 +3485,9 @@ msgid "_Online Notify"
 msgstr "_Online Upozornit"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
+#, fuzzy
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Upřednostnit uživatele"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3491,8 +3495,9 @@ msgid "_Trust User"
 msgstr "_Trusted"
 
 #: pynicotine/gtkgui/userlist.py:145
+#, fuzzy
 msgid "Add User _Note…"
-msgstr ""
+msgstr "Přidat uživatelskou _poznámku…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3521,8 +3526,9 @@ msgid "User %s is offline"
 msgstr "Uživatel %s je offline"
 
 #: pynicotine/gtkgui/userlist.py:569
+#, fuzzy
 msgid "Add User Note"
-msgstr ""
+msgstr "Přidat poznámku uživatele"
 
 #: pynicotine/gtkgui/userlist.py:570
 #, fuzzy, python-format
@@ -3670,9 +3676,9 @@ msgid "Please enter number of days!"
 msgstr "Zadejte prosím celé číslo!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, python-format
+#, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
-msgstr ""
+msgstr "Darujte dny svých práv Soulseek uživateli %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, fuzzy, python-format
@@ -4285,8 +4291,9 @@ msgid "privileged"
 msgstr "privilegovaný"
 
 #: pynicotine/transfers.py:1148
+#, fuzzy
 msgid "prioritized"
-msgstr ""
+msgstr "upřednostněný"
 
 #: pynicotine/transfers.py:1166
 #, fuzzy, python-format
@@ -6618,10 +6625,13 @@ msgid "Result Filter Help"
 msgstr "Nápověda k filtrování výsledků"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Sdílejte složky s každým uživatelem Soulseek nebo kamarády, což umožňuje "
+"stahovat obsah přímo z vašeho zařízení. Skryté soubory nejsou nikdy sdíleny."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 #, fuzzy
