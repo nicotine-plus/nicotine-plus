@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-04-02 00:16+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
+"Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eo/>\n"
 "Language: eo\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 4.18-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.appdata.xml.in:8
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -4538,8 +4538,7 @@ msgstr "Iu ensalutinta al via Soulseek-konto aliloke"
 #: pynicotine/slskproto.py:493
 #, fuzzy, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr ""
-"La servilo ŝajnas malfunkcii aŭ ne respondas, reprovante en %i sekundoj"
+msgstr "La servilo ŝajnas malfunkcii aŭ ne respondas, reprovante en %i sekundoj"
 
 #: pynicotine/slskproto.py:813
 #, fuzzy, python-format
@@ -5941,8 +5940,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtru en rezultoj, kies dosiervojoj enhavas la specifitan tekston. "
-"Multoblaj frazoj kaj vortoj povas esti precizigitaj, ekz. ekzakta frazo|"
-"muziko|termino|preciza frazo du"
+"Multoblaj frazoj kaj vortoj povas esti precizigitaj, ekz. ekzakta "
+"frazo|muziko|termino|preciza frazo du"
 
 #: pynicotine/gtkgui/ui/search.ui:215
 #, fuzzy
@@ -5958,8 +5957,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtru el rezultoj, kies dosiervojoj enhavas la specifitan tekston. "
-"Multoblaj frazoj kaj vortoj povas esti precizigitaj, ekz. ekzakta frazo|"
-"muziko|termino|preciza frazo du"
+"Multoblaj frazoj kaj vortoj povas esti precizigitaj, ekz. ekzakta "
+"frazo|muziko|termino|preciza frazo du"
 
 #: pynicotine/gtkgui/ui/search.ui:244
 #, fuzzy
