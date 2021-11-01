@@ -416,7 +416,6 @@ class AddUser(ServerMessage):
         self.files = None
         self.dirs = None
         self.country = None
-        self.privileged = None
 
     def make_network_message(self):
         return self.pack_object(self.user)
@@ -425,16 +424,22 @@ class AddUser(ServerMessage):
         pos, self.user = self.get_object(message, str)
         pos, self.userexists = pos + 1, message[pos]
 
-        if message[pos:]:
-            pos, self.status = self.get_object(message, int, pos)
-            pos, self.avgspeed = self.get_object(message, int, pos)
-            pos, self.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
+        if not message[pos:]:
+            # User does not exist
+            return
 
-            pos, self.files = self.get_object(message, int, pos)
-            pos, self.dirs = self.get_object(message, int, pos)
+        pos, self.status = self.get_object(message, int, pos)
+        pos, self.avgspeed = self.get_object(message, int, pos)
+        pos, self.uploadnum = self.get_object(message, int, pos, getunsignedlonglong=True)
 
-            if message[pos:]:
-                pos, self.country = self.get_object(message, str, pos)
+        pos, self.files = self.get_object(message, int, pos)
+        pos, self.dirs = self.get_object(message, int, pos)
+
+        if not message[pos:]:
+            # User is offline
+            return
+
+        pos, self.country = self.get_object(message, str, pos)
 
 
 class RemoveUser(ServerMessage):
@@ -609,6 +614,7 @@ class UserJoinedRoom(ServerMessage):
         pos, self.userdata.dirs = self.get_object(message, int, pos)
         pos, self.userdata.slotsfull = self.get_object(message, int, pos)
 
+        # Soulfind support
         if message[pos:]:
             pos, self.userdata.country = self.get_object(message, str, pos)
 
