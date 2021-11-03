@@ -637,26 +637,30 @@ class SharesFrame(UserInterface):
     def on_share_download_dir_toggled(self, widget):
         self.needrescan = True
 
-    def cell_toggle_callback(self, widget, index, treeview):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-
-        buddy = self.shareslist.get_value(iterator, 2)
-        self.shareslist.set_value(iterator, 2, not buddy)
+    def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
         virtual = self.shareslist.get_value(iterator, 0)
         directory = self.shareslist.get_value(iterator, 1)
         share = (virtual, directory)
         self.needrescan = True
 
-        if buddy:
-            self.bshareddirs.remove(share)
-            self.shareddirs.append(share)
+        self.shareslist.set_value(iterator, 2, buddy_only)
+
+        if buddy_only:
+            self.shareddirs.remove(share)
+            self.bshareddirs.append(share)
             return
 
-        self.shareddirs.remove(share)
-        self.bshareddirs.append(share)
+        self.bshareddirs.remove(share)
+        self.shareddirs.append(share)
+
+    def cell_toggle_callback(self, widget, index, treeview):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+
+        buddy_only = not self.shareslist.get_value(iterator, 2)
+        self.set_shared_dir_buddy_only(iterator, buddy_only)
 
     def add_shared_dir_response(self, dialog, response_id, data):
 
@@ -734,7 +738,7 @@ class SharesFrame(UserInterface):
             title=_("Add a Shared Folder")
         )
 
-    def on_edit_shared_dir_response(self, dialog, response_id, iterator):
+    def on_edit_shared_dir_response(self, dialog, response_id, path):
 
         virtual = dialog.get_response_value()
         buddy_only = dialog.get_second_response_value()
@@ -747,14 +751,15 @@ class SharesFrame(UserInterface):
             return
 
         # Remove slashes from share name to avoid path conflicts
+        iterator = self.shareslist.get_iter(path)
         virtual = virtual.replace('/', '_').replace('\\', '_')
         directory = self.shareslist.get_value(iterator, 1)
         oldvirtual = self.shareslist.get_value(iterator, 0)
         oldmapping = (oldvirtual, directory)
         newmapping = (virtual, directory)
 
+        self.set_shared_dir_buddy_only(iterator, buddy_only)
         self.shareslist.set_value(iterator, 0, virtual)
-        self.shareslist.set_value(iterator, 2, buddy_only)
 
         if oldmapping in self.bshareddirs:
             shared_dirs = self.bshareddirs
@@ -785,7 +790,7 @@ class SharesFrame(UserInterface):
                 optionvalue=buddy_only,
                 optionmessage="Share with buddies only?",
                 callback=self.on_edit_shared_dir_response,
-                callback_data=iterator
+                callback_data=path
             )
 
     def on_remove_shared_dir(self, *args):
