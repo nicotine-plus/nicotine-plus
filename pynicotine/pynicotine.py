@@ -338,8 +338,7 @@ class NicotineCore:
         self.stop_timers()
 
         # Closing up all shelves db
-        self.shares.close_shares("normal")
-        self.shares.close_shares("buddy")
+        self.shares.quit()
 
         if self.ui_callback:
             self.ui_callback.quit()
