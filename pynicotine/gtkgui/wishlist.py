@@ -48,14 +48,15 @@ class WishList(UserInterface):
         self.store = Gtk.ListStore(str)
 
         self.column_numbers = list(range(self.store.get_n_columns()))
-        initialise_columns(
+        cols = initialise_columns(
             None, self.list_view,
             ["wishes", _("Wishes"), -1, "text", None]
         )
 
-        self.list_view.set_model(self.store)
+        cols["wishes"].set_sort_column_id(0)
 
         self.store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.list_view.set_model(self.store)
 
         for wish in config.sections["server"]["autosearch"]:
             wish = str(wish)
