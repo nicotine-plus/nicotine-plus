@@ -72,11 +72,11 @@ class WishList(UserInterface):
         if Gtk.get_major_version() == 4:
             button = frame.WishList.get_first_child()
             button.connect("clicked", self.on_show)
-            button.set_child(frame.WishListLabel)
+            button.set_child(frame.WishListLabelBox)
             button.get_style_context().add_class("image-text-button")
             button.get_style_context().remove_class("image-button")
         else:
-            frame.WishList.add(frame.WishListLabel)
+            frame.WishList.add(frame.WishListLabelBox)
             frame.WishList.connect("clicked", self.on_show)
 
         frame.WishList.set_popover(self.popover)

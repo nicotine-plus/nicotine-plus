@@ -8,7 +8,7 @@
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
   </object>
-  <object class="GtkBox" id="WishListLabel">
+  <object class="GtkBox" id="WishListLabelBox">
     <property name="visible">1</property>
     <property name="spacing">6</property>
     <child>
@@ -18,7 +18,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkLabel">
+      <object class="GtkLabel" id="WishListLabel">
         <property name="visible">1</property>
         <property name="label" translatable="yes">_Wishlist</property>
         <property name="use-underline">1</property>

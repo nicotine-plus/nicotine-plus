@@ -7,7 +7,7 @@
       <object class="GtkShortcutsSection">
         <property name="visible">1</property>
         <property name="section-name">shortcuts</property>
-        <property name="max-height">11</property>
+        <property name="max-height">12</property>
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
@@ -127,12 +127,32 @@
         <child>
           <object class="GtkShortcutsGroup">
             <property name="visible">1</property>
-            <property name="title" translatable="yes">File Lists</property>
+            <property name="title" translatable="yes">Lists</property>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;c</property>
-                <property name="title" translatable="yes">Copy File Path</property>
+                <property name="title" translatable="yes">Copy Selected Cell</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">Delete</property>
+                <property name="title" translatable="yes">Remove Selected Row</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">1</property>
+            <property name="title" translatable="yes">File Search</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;f Escape</property>
+                <property name="title" translatable="yes">Result Filters</property>
               </object>
             </child>
             <child>
@@ -142,6 +162,18 @@
                 <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>
+            <child>
+              <object class="GtkShortcutsShortcut" id="wishlist_shortcut">
+                <property name="visible">0</property>
+                <property name="title" translatable="yes">Wishlist</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">1</property>
+            <property name="title" translatable="yes">File Transfers</property>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
@@ -154,6 +186,13 @@
                 <property name="visible">1</property>
                 <property name="accelerator">t</property>
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Alt&gt;Return</property>
+                <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>
           </object>
