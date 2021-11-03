@@ -189,11 +189,59 @@
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkShortcutsGroup">
+            <property name="visible">1</property>
+            <property name="title" translatable="yes">Browse Shares</property>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;Return</property>
+                <property name="title" translatable="yes">Download / Upload To</property>
+              </object>
+            </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Alt&gt;Return</property>
                 <property name="title" translatable="yes">File Properties</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;S</property>
+                <property name="title" translatable="yes">Save List to Disk</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;G</property>
+                <property name="title" translatable="yes">Find Next Match</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;R</property>
+                <property name="title" translatable="yes">Refresh</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;backslash</property>
+                <property name="title" translatable="yes">Expand / Collapse All</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">BackSpace</property>
+                <property name="title" translatable="yes">Back to Parent Folder</property>
               </object>
             </child>
           </object>
