@@ -794,7 +794,7 @@ class Shares:
         if an individual file was added to our shares. """
 
         if (share_type == "normal" and self.compressed_shares_normal is None
-                or share_type == "buddy" and self.ompressed_shares_buddy is None):
+                or share_type == "buddy" and self.compressed_shares_buddy is None):
             self.rescan_shares(rescan=False)
 
         if share_type == "normal":
