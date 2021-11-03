@@ -1,4 +1,4 @@
-Version = "2021-07-24r00"
+Version = "2021-10-27r00"
 Authors = ['Nicotine+ Team']
 Name = "Leech Detector"
-Description = "Detects when leechers are downloading, and sends them a message"
+Description = "Detects when leechers are downloading, and sends them a message after a file is leeched."
