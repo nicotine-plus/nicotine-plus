@@ -2036,8 +2036,9 @@ msgid "Report a _Bug"
 msgstr "Pranešti apie _Bug"
 
 #: pynicotine/gtkgui/frame.py:1067
+#, fuzzy
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Pagerinkite T_vertimus"
 
 #: pynicotine/gtkgui/frame.py:1068
 #, fuzzy
@@ -3516,8 +3517,9 @@ msgid "Notify"
 msgstr "Pranešti"
 
 #: pynicotine/gtkgui/userlist.py:86
+#, fuzzy
 msgid "Prioritized"
-msgstr ""
+msgstr "Pirmenybė teikiama"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3525,8 +3527,9 @@ msgid "Last Seen"
 msgstr "Vėliausiai matytas"
 
 #: pynicotine/gtkgui/userlist.py:88
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Pastaba"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 #, fuzzy
@@ -3534,8 +3537,9 @@ msgid "_Online Notify"
 msgstr "_Online pranešti"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
+#, fuzzy
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Prioritetas vartotojui"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3543,8 +3547,9 @@ msgid "_Trust User"
 msgstr "_Patikimas"
 
 #: pynicotine/gtkgui/userlist.py:145
+#, fuzzy
 msgid "Add User _Note…"
-msgstr ""
+msgstr "Pridėti naudotoją _Pastaba…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3571,8 +3576,9 @@ msgid "User %s is offline"
 msgstr "Naudotojas %s atsijungęs"
 
 #: pynicotine/gtkgui/userlist.py:569
+#, fuzzy
 msgid "Add User Note"
-msgstr ""
+msgstr "Pridėti vartotojo pastabą"
 
 #: pynicotine/gtkgui/userlist.py:570
 #, fuzzy, python-format
@@ -3720,9 +3726,10 @@ msgid "Please enter number of days!"
 msgstr "Įveskite sveikąjį skaičių!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, python-format
+#, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Dovanokite savo „Soulseek“ privilegijas vartotojui %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -4346,8 +4353,9 @@ msgid "privileged"
 msgstr "(privilegijuotas)"
 
 #: pynicotine/transfers.py:1148
+#, fuzzy
 msgid "prioritized"
-msgstr ""
+msgstr "teikiama pirmenybė"
 
 #: pynicotine/transfers.py:1166
 #, fuzzy, python-format
@@ -4779,8 +4787,9 @@ msgid "Copy Selected Cell"
 msgstr "Žymėti viską"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Pašalinti pasirinktą eilutę"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
@@ -6697,10 +6706,14 @@ msgid "Result Filter Help"
 msgstr "Rezultatų filtro žinynas"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Bendrinkite aplankus su kiekvienu „Soulseek“ vartotoju ar bičiuliais, kad "
+"turinį būtų galima atsisiųsti tiesiai iš jūsų įrenginio. Paslėpti failai "
+"niekada nėra bendrinami."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"

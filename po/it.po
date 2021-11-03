@@ -1703,8 +1703,9 @@ msgid "Report a _Bug"
 msgstr "Segnala un _Bug"
 
 #: pynicotine/gtkgui/frame.py:1067
+#, fuzzy
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Migliora le traduzioni"
 
 #: pynicotine/gtkgui/frame.py:1068
 msgid "Check _Latest Version"
@@ -3055,8 +3056,9 @@ msgid "Notify"
 msgstr "Notifica"
 
 #: pynicotine/gtkgui/userlist.py:86
+#, fuzzy
 msgid "Prioritized"
-msgstr ""
+msgstr "Priorità"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3064,16 +3066,18 @@ msgid "Last Seen"
 msgstr "Ultima visita"
 
 #: pynicotine/gtkgui/userlist.py:88
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 msgid "_Online Notify"
 msgstr "Notifica Connessione"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
+#, fuzzy
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Dai priorità all'utente"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3081,8 +3085,9 @@ msgid "_Trust User"
 msgstr "Fida_ti"
 
 #: pynicotine/gtkgui/userlist.py:145
+#, fuzzy
 msgid "Add User _Note…"
-msgstr ""
+msgstr "Aggiungi utente _Nota…"
 
 #: pynicotine/gtkgui/userlist.py:146
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:361
@@ -3242,9 +3247,11 @@ msgid "Please enter number of days!"
 msgstr "Inserisci un numero intero!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, python-format
+#, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Regala giorni dei tuoi privilegi Soulseek all'utente %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -3847,8 +3854,9 @@ msgid "privileged"
 msgstr "privilegiato"
 
 #: pynicotine/transfers.py:1148
+#, fuzzy
 msgid "prioritized"
-msgstr ""
+msgstr "prioritario"
 
 #: pynicotine/transfers.py:1166
 #, python-format
@@ -4243,8 +4251,9 @@ msgid "Copy Selected Cell"
 msgstr "Seleziona Tutto"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Rimuovi riga selezionata"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
@@ -5924,10 +5933,14 @@ msgid "Result Filter Help"
 msgstr "Aiuto Filtri Risultato"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Condividi le cartelle con ogni utente o amico di Soulseek, consentendo il "
+"download dei contenuti direttamente dal tuo dispositivo. I file nascosti non "
+"vengono mai condivisi."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"

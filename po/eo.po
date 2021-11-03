@@ -4880,8 +4880,9 @@ msgid "Copy Selected Cell"
 msgstr "Elekti ĉiujn"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Forigi Elektitan Vicon"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy

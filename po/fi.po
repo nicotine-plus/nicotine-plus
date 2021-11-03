@@ -2042,8 +2042,9 @@ msgid "Report a _Bug"
 msgstr "Ilmoituksen _Bug"
 
 #: pynicotine/gtkgui/frame.py:1067
+#, fuzzy
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Paranna T_käännöksiä"
 
 #: pynicotine/gtkgui/frame.py:1068
 #, fuzzy
@@ -3561,8 +3562,9 @@ msgid "Notify"
 msgstr "Ilmoittaa"
 
 #: pynicotine/gtkgui/userlist.py:86
+#, fuzzy
 msgid "Prioritized"
-msgstr ""
+msgstr "Priorisoitu"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3570,8 +3572,9 @@ msgid "Last Seen"
 msgstr "Nähty viimeksi"
 
 #: pynicotine/gtkgui/userlist.py:88
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Huomautus"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 #, fuzzy
@@ -3579,8 +3582,9 @@ msgid "_Online Notify"
 msgstr "_Ilmoita kun linjalla"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
+#, fuzzy
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Priorisoi käyttäjä"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3768,9 +3772,10 @@ msgid "Please enter number of days!"
 msgstr "Anna kokonaisluku!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, python-format
+#, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Lahjapäiviä Soulseek-oikeuksistasi käyttäjälle %(user)s (%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, fuzzy, python-format
@@ -4399,8 +4404,9 @@ msgid "privileged"
 msgstr "(etuoikeutettu)"
 
 #: pynicotine/transfers.py:1148
+#, fuzzy
 msgid "prioritized"
-msgstr ""
+msgstr "etusijalla"
 
 #: pynicotine/transfers.py:1166
 #, fuzzy, python-format
@@ -4829,8 +4835,9 @@ msgid "Copy Selected Cell"
 msgstr "Valitse kaikki"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Poista valittu rivi"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
@@ -6772,10 +6779,14 @@ msgid "Result Filter Help"
 msgstr "Tulossuodattimen ohje"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Jaa kansioita jokaisen Soulseekin käyttäjän tai ystävien kanssa, jolloin "
+"sisältö voidaan ladata suoraan laitteestasi. Piilotettuja tiedostoja ei "
+"koskaan jaeta."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"

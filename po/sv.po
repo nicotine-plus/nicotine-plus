@@ -4872,8 +4872,9 @@ msgid "Copy Selected Cell"
 msgstr "Välj Alla"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Ta bort vald rad"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy

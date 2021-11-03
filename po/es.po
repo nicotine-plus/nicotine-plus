@@ -3998,8 +3998,11 @@ msgid "Joined Rooms "
 msgstr "Habitaciones unidas "
 
 #: pynicotine/search.py:256
+#, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr ""
+"El servidor no permite realizar búsquedas en la lista de deseos en este "
+"momento"
 
 #: pynicotine/shares.py:101 pynicotine/shares.py:99
 msgid "Rescanning shares…"
@@ -4570,8 +4573,9 @@ msgid "Copy Selected Cell"
 msgstr "Seleccionar todo"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Eliminar fila seleccionada"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
@@ -6451,8 +6455,9 @@ msgstr ""
 "compartidos, los resultados de la búsqueda se enviarán al usuario."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:468
+#, fuzzy
 msgid "Searches shorter than this number of characters will be ignored:"
-msgstr ""
+msgstr "Se ignorarán las búsquedas de menos de este número de caracteres:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:497
 #, fuzzy
@@ -6465,10 +6470,14 @@ msgid "Result Filter Help"
 msgstr "Ayuda del filtro de resultados"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Comparta carpetas con todos los usuarios o amigos de Soulseek, permitiendo "
+"que los contenidos se descarguen directamente desde su dispositivo. Los "
+"archivos ocultos nunca se comparten."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"

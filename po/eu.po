@@ -4858,8 +4858,9 @@ msgid "Copy Selected Cell"
 msgstr "Hautatu guztiak"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Kendu hautatutako errenkada"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy

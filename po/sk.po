@@ -2030,8 +2030,9 @@ msgid "Report a _Bug"
 msgstr "Nahlásiť _Bug"
 
 #: pynicotine/gtkgui/frame.py:1067
+#, fuzzy
 msgid "Improve T_ranslations"
-msgstr ""
+msgstr "Vylepšite T_ranslations"
 
 #: pynicotine/gtkgui/frame.py:1068
 #, fuzzy
@@ -3519,8 +3520,9 @@ msgid "Notify"
 msgstr "Upozornenie"
 
 #: pynicotine/gtkgui/userlist.py:86
+#, fuzzy
 msgid "Prioritized"
-msgstr ""
+msgstr "Uprednostňované"
 
 #: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
@@ -3528,8 +3530,9 @@ msgid "Last Seen"
 msgstr "Naposledy videný"
 
 #: pynicotine/gtkgui/userlist.py:88
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:356
 #, fuzzy
@@ -3537,8 +3540,9 @@ msgid "_Online Notify"
 msgstr "Upo_zornenie pri prihlásení"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
+#, fuzzy
 msgid "_Prioritize User"
-msgstr ""
+msgstr "_Uprednostnite používateľa"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
 #, fuzzy
@@ -3725,9 +3729,11 @@ msgid "Please enter number of days!"
 msgstr "Zadajte celé číslo!"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:588
-#, python-format
+#, fuzzy, python-format
 msgid "Gift days of your Soulseek privileges to user %(user)s (%(days_left)s):"
 msgstr ""
+"Darujte dni svojich privilégií Soulseek používateľovi %(user)s "
+"(%(days_left)s):"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:589
 #, python-format
@@ -4354,8 +4360,9 @@ msgid "privileged"
 msgstr "(privilegovaný)"
 
 #: pynicotine/transfers.py:1148
+#, fuzzy
 msgid "prioritized"
-msgstr ""
+msgstr "prioritné"
 
 #: pynicotine/transfers.py:1166
 #, fuzzy, python-format
@@ -4785,8 +4792,9 @@ msgid "Copy Selected Cell"
 msgstr "Vybrať všetky"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Odstrániť vybraný riadok"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
@@ -6710,10 +6718,14 @@ msgid "Result Filter Help"
 msgstr "Pomocník filtra výsledkov"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:26
+#, fuzzy
 msgid ""
 "Share folders with every Soulseek user or buddies, allowing contents to be "
 "downloaded directly from your device. Hidden files are never shared."
 msgstr ""
+"Zdieľajte priečinky s každým používateľom Soulseek alebo kamarátmi, čo "
+"umožňuje sťahovanie obsahu priamo z vášho zariadenia. Skryté súbory sa nikdy "
+"nezdieľajú."
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:38
 msgid "Rescan shares on startup"

@@ -4201,8 +4201,9 @@ msgid "Copy Selected Cell"
 msgstr "Wybierz wszystko"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:142
+#, fuzzy
 msgid "Remove Selected Row"
-msgstr ""
+msgstr "Usuń zaznaczony wiersz"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:150
 #, fuzzy
