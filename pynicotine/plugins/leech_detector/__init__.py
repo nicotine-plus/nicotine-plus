@@ -109,8 +109,6 @@ class Plugin(BasePlugin):
         if stats['files'] == 0 and stats['dirs'] == 0:
             # ToDo: Implement alternate fallback method (num_files | num_folders) from Browse Shares (Issue #1565) #
             self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
-            self.probed[user] = 'zero'
-            return
 
         self.log("Leecher %s detected, only sharing %s files in %s folders.", (user, stats['files'], stats['dirs']))
         self.probed[user] = 'leecher'
