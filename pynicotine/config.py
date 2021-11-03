@@ -62,6 +62,7 @@ class Config:
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
         self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
+        self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)

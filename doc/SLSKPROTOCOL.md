@@ -1,8 +1,8 @@
 # Soulseek Protocol Documentation
 
-Last updated on October 24, 2021
+Last updated on November 2, 2021
 
-As the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
+Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
 If you find any inconsistencies or errors in the documentation, please report them.
 
@@ -325,17 +325,20 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
   - Send
     1.  **string** <ins>username</ins>
+
   - Receive
     1.  **string** <ins>username</ins>
     2.  **bool** <ins>exists</ins>
-    <!-- end list -->
-      - If <ins>exists</ins> is 1/True (may not be implemented)
+
+    - If <ins>exists</ins> is true
         1.  **uint** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
         2.  **uint** <ins>avgspeed</ins>
         3.  **uint64** <ins>uploadnum</ins>
         4.  **uint** <ins>files</ins>
         5.  **uint** <ins>dirs</ins>
-        6.  **string** <ins>Country Code</ins> (may not be implemented)
+
+        - If <ins>status</ins> is away/online
+            1.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ### Server Code 6
 
@@ -447,8 +450,7 @@ Server responds with this message when we join a room. Contains users list with 
         1.  **uint** <ins>slotsfree</ins>
     10. **uint** <ins>number of usercountries</ins>
     11. Iterate thru number of usercountries
-        1.  **string** <ins>countrycode</ins>
-            **Uppercase country code**
+        1.  **string** <ins>countrycode</ins> *Uppercase country code*
     12. **string** <ins>owner</ins> **If private
         room**
     13. **uint** <ins>number of operators in
@@ -503,7 +505,7 @@ The server tells us someone has just joined a room we're in.
     6.  **uint** <ins>files</ins>
     7.  **uint** <ins>dirs</ins>
     8.  **uint** <ins>slotsfree</ins>
-    9.  **string** <ins>countrycode</ins> **Uppercase country code**
+    9.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ### Server Code 17
 
@@ -1215,8 +1217,7 @@ We send this to get a global list of all users online.
         1.  **uint** <ins>slotsfree</ins>
     9. **uint** <ins>number of usercountries</ins>
     10. Iterate thru number of usercountries
-        1.  **string** <ins>countrycode</ins>
-            **Uppercase country code**
+        1.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ### Server Code 68
 

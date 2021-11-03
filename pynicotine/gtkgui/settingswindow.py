@@ -370,7 +370,7 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_add_filter(self, widget):
+    def on_add_filter(self, *args):
 
         entry_dialog(
             parent=self.p.dialog,
@@ -424,7 +424,7 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_edit_filter(self, widget):
+    def on_edit_filter(self, *args):
 
         dfilter = self.get_selected_filter()
 
@@ -456,7 +456,7 @@ class DownloadsFrame(UserInterface):
 
         return None
 
-    def on_remove_filter(self, widget):
+    def on_remove_filter(self, *args):
 
         dfilter = self.get_selected_filter()
 
@@ -470,7 +470,7 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_default_filters(self, widget):
+    def on_default_filters(self, *args):
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -734,9 +734,10 @@ class SharesFrame(UserInterface):
             title=_("Add a Shared Folder")
         )
 
-    def rename_virtuals_response(self, dialog, response_id, iterator):
+    def on_edit_shared_dir_response(self, dialog, response_id, iterator):
 
         virtual = dialog.get_response_value()
+        buddy_only = dialog.get_second_response_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
@@ -753,6 +754,7 @@ class SharesFrame(UserInterface):
         newmapping = (virtual, directory)
 
         self.shareslist.set_value(iterator, 0, virtual)
+        self.shareslist.set_value(iterator, 2, buddy_only)
 
         if oldmapping in self.bshareddirs:
             shared_dirs = self.bshareddirs
@@ -764,7 +766,7 @@ class SharesFrame(UserInterface):
 
         self.needrescan = True
 
-    def rename_virtuals(self):
+    def on_edit_shared_dir(self, *args):
 
         model, paths = self.Shares.get_selection().get_selected_rows()
 
@@ -772,20 +774,21 @@ class SharesFrame(UserInterface):
             iterator = model.get_iter(path)
             virtual_name = model.get_value(iterator, 0)
             folder = model.get_value(iterator, 1)
+            buddy_only = model.get_value(iterator, 2)
 
             entry_dialog(
                 parent=self.p.dialog,
-                title=_("Edit Virtual Name"),
+                title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
-                callback=self.rename_virtuals_response,
+                option=True,
+                optionvalue=buddy_only,
+                optionmessage="Share with buddies only?",
+                callback=self.on_edit_shared_dir_response,
                 callback_data=iterator
             )
 
-    def on_rename_virtuals(self, widget):
-        self.rename_virtuals()
-
-    def remove_shared_dir(self):
+    def on_remove_shared_dir(self, *args):
 
         model, paths = self.Shares.get_selection().get_selected_rows()
 
@@ -804,9 +807,6 @@ class SharesFrame(UserInterface):
 
         if paths:
             self.needrescan = True
-
-    def on_remove_shared_dir(self, widget):
-        self.remove_shared_dir()
 
 
 class UploadsFrame(UserInterface):

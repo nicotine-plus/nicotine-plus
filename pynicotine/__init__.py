@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import importlib.util
-import sys
-
 from pynicotine.i18n import apply_translations
 
 
@@ -110,6 +107,7 @@ def check_arguments():
 def check_core_dependencies():
 
     # Require Python >= 3.5
+    import sys
     try:
         assert sys.version_info[:2] >= (3, 5), '.'.join(
             map(str, sys.version_info[:3])
@@ -123,6 +121,7 @@ You should install Python %(min_version)s or newer.""") % {
         }
 
     # Require gdbm or semidbm, for faster loading of shelves
+    import importlib.util
     if not importlib.util.find_spec("_gdbm") and \
             not importlib.util.find_spec("semidbm"):
         return _("Cannot find %(option1)s or %(option2)s, please install either one.") % {
@@ -184,8 +183,15 @@ def run_headless(core, ci_mode):
 def run():
     """ Run Nicotine+ and return its exit code """
 
+    import importlib.util
+    import io
+    import sys
+
+    # Always use UTF-8 for print()
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
     # Support file scanning process in frozen Windows and macOS binaries
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, "frozen", False):
         import multiprocessing
         multiprocessing.freeze_support()
 
@@ -200,7 +206,7 @@ binary package and what you try to run Nicotine+ with).""")
         return 1
 
     from pynicotine.utils import rename_process
-    rename_process(b'nicotine')
+    rename_process(b"nicotine")
 
     trayicon, headless, hidden, bindip, port, ci_mode, rescan, multi_instance = check_arguments()
     error = check_core_dependencies()
