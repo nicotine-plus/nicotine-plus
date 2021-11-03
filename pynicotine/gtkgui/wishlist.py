@@ -26,6 +26,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -47,9 +48,9 @@ class WishList(UserInterface):
         self.store = Gtk.ListStore(str)
 
         self.column_numbers = list(range(self.store.get_n_columns()))
-        cols = initialise_columns(
+        initialise_columns(
             None, self.list_view,
-            ["wishes", _("Wishes"), -1, "edit", None]
+            ["wishes", _("Wishes"), -1, "text", None]
         )
 
         self.list_view.set_model(self.store)
@@ -60,13 +61,10 @@ class WishList(UserInterface):
             wish = str(wish)
             self.wishes[wish] = self.store.insert_with_valuesv(-1, self.column_numbers, [wish])
 
-        for render in cols["wishes"].get_cells():
-            render.connect('edited', self.cell_edited_callback, self.list_view, 0)
-
         CompletionEntry(self.wish_entry, self.store)
 
-        setup_accelerator("<Shift>Delete", self.main, self.on_remove_wish_accelerator)
-        setup_accelerator("<Shift>Delete", self.wish_entry, self.on_remove_wish_accelerator)
+        setup_accelerator("Delete", self.main, self.on_remove_wish)
+        setup_accelerator("Delete", self.wish_entry, self.on_remove_wish)
         setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
         if Gtk.get_major_version() == 4:
@@ -81,17 +79,6 @@ class WishList(UserInterface):
 
         frame.WishList.set_popover(self.popover)
 
-    def cell_edited_callback(self, widget, index, value, treeview, pos):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        old_value = store.get_value(iterator, 0)
-
-        if value and not value.isspace():
-            self.frame.np.search.remove_wish(old_value)
-            self.frame.np.search.add_wish(value)
-            self.select_wish(value)
-
     def on_add_wish(self, *args):
 
         wish = self.wish_entry.get_text()
@@ -105,6 +92,38 @@ class WishList(UserInterface):
 
         self.select_wish(wish)
 
+    def on_edit_wish_response(self, dialog, response_id, old_wish):
+
+        wish = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if not wish:
+            return
+
+        self.frame.np.search.remove_wish(old_wish)
+        self.frame.np.search.add_wish(wish)
+        self.select_wish(wish)
+
+    def on_edit_wish(self, *args):
+
+        model, paths = self.list_view.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            old_wish = model.get_value(iterator, 0)
+
+            entry_dialog(
+                parent=self.frame.MainWindow,
+                title=_("Edit Wish"),
+                message=_("Enter new value for wish '%s':") % old_wish,
+                default=old_wish,
+                callback=self.on_edit_wish_response,
+                callback_data=old_wish
+            )
+
     def on_remove_wish(self, *args):
 
         model, paths = self.list_view.get_selection().get_selected_rows()
@@ -115,11 +134,6 @@ class WishList(UserInterface):
             self.frame.np.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
-
-    def on_remove_wish_accelerator(self, *args):
-        """ Shift+Delete: Remove Wish """
-
-        self.on_remove_wish()
         return True
 
     def clear_wishlist_response(self, dialog, response_id, data):
