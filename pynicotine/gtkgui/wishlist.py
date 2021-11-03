@@ -26,7 +26,10 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -38,7 +41,17 @@ class WishList(UserInterface):
 
     def __init__(self, frame, searches):
 
-        super().__init__("ui/popovers/wishlist.ui")
+        super().__init__("ui/dialogs/wishlist.ui")
+
+        self.dialog = generic_dialog(
+            parent=frame.MainWindow,
+            modal=False,
+            content_box=self.main,
+            quit_callback=self.hide,
+            title=_("Search Wishlist"),
+            width=600,
+            height=600
+        )
 
         self.frame = frame
         self.searches = searches
@@ -68,17 +81,9 @@ class WishList(UserInterface):
         setup_accelerator("Delete", self.wish_entry, self.on_remove_wish)
         setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
-        if Gtk.get_major_version() == 4:
-            button = frame.WishList.get_first_child()
-            button.connect("clicked", self.on_show)
-            button.set_child(frame.WishListLabelBox)
-            button.get_style_context().add_class("image-text-button")
-            button.get_style_context().remove_class("image-button")
-        else:
-            frame.WishList.add(frame.WishListLabelBox)
-            frame.WishList.connect("clicked", self.on_show)
-
-        frame.WishList.set_popover(self.popover)
+    def on_list_focus_entry_accelerator(self, *args):
+        self.wish_entry.grab_focus()
+        return True
 
     def on_add_wish(self, *args):
 
@@ -117,7 +122,7 @@ class WishList(UserInterface):
             old_wish = model.get_value(iterator, 0)
 
             entry_dialog(
-                parent=self.frame.MainWindow,
+                parent=self.dialog,
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
@@ -150,7 +155,7 @@ class WishList(UserInterface):
     def on_clear_wishlist(self, *args):
 
         option_dialog(
-            parent=self.frame.MainWindow,
+            parent=self.dialog,
             title=_('Clear Wishlist?'),
             message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response
@@ -201,12 +206,9 @@ class WishList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def on_list_focus_entry_accelerator(self, *args):
-        self.wish_entry.grab_focus()
-        return True
+    def show(self, *args):
 
-    def on_show(self, *args):
-
+        dialog_show(self.dialog)
         page = self.searches.get_nth_page(self.searches.get_current_page())
 
         if page is None:
@@ -236,3 +238,7 @@ class WishList(UserInterface):
         self.list_view.get_selection().unselect_all()
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()
+
+    def hide(self, *args):
+        dialog_hide(self.dialog)
+        return True

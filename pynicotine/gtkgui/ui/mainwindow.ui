@@ -8,23 +8,6 @@
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
   </object>
-  <object class="GtkBox" id="WishListLabelBox">
-    <property name="visible">1</property>
-    <property name="spacing">6</property>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">1</property>
-        <property name="icon-name">document-edit-symbolic</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel" id="WishListLabel">
-        <property name="visible">1</property>
-        <property name="label" translatable="yes">_Wishlist</property>
-        <property name="use-underline">1</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkHeaderBar" id="header_search">
     <property name="visible">1</property>
     <property name="height-request">42</property>
@@ -121,9 +104,29 @@
         <property name="spacing">6</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkMenuButton" id="WishList">
+          <object class="GtkButton" id="WishList">
             <property name="visible">1</property>
             <property name="height-request">0</property>
+            <property name="action-name">app.wishlist</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">1</property>
+                    <property name="icon-name">document-edit-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">_Wishlist</property>
+                    <property name="use-underline">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>

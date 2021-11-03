@@ -163,9 +163,10 @@
               </object>
             </child>
             <child>
-              <object class="GtkShortcutsShortcut" id="wishlist_shortcut">
-                <property name="visible">0</property>
-                <property name="title" translatable="yes">Wishlist</property>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;w</property>
+                <property name="title" translatable="yes">Search Wishlist</property>
               </object>
             </child>
           </object>

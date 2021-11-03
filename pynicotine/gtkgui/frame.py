@@ -671,13 +671,6 @@ class NicotineFrame(UserInterface):
             self.shortcuts = UserInterface("ui/dialogs/shortcuts.ui")
             set_dialog_properties(self.shortcuts.dialog, self.MainWindow, quit_callback=self.on_hide)
 
-            wishlist_key = self.WishListLabel.get_mnemonic_keyval()
-
-            if wishlist_key != Gdk.KEY_VoidSymbol:
-                # Wishlist shortcut is language-dependent
-                self.shortcuts.wishlist_shortcut.set_property("accelerator", "<Alt>" + Gdk.keyval_name(wishlist_key))
-                self.shortcuts.wishlist_shortcut.show()
-
             if hasattr(Gtk.Entry.props, "show-emoji-icon"):
                 # Emoji picker only available in GTK 3.24+
                 self.shortcuts.emoji.show()
@@ -909,6 +902,13 @@ class NicotineFrame(UserInterface):
         action = Gio.SimpleAction.new("about", None)
         action.connect("activate", self.on_about)
         self.application.add_action(action)
+
+        # Wishlist
+
+        action = Gio.SimpleAction.new("wishlist", None)
+        action.connect("activate", self.search.wish_list.show)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.wishlist", ["<Shift><Primary>w"])
 
         # Notebook Tabs
 
