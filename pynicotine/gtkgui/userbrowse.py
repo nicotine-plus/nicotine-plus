@@ -219,7 +219,6 @@ class UserBrowse(UserInterface):
         setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
 
         setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
-        setup_accelerator("<Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -872,7 +871,7 @@ class UserBrowse(UserInterface):
 
     def on_folder_open_manager_accelerator(self, *args):
         """ Ctrl+Alt+Enter: Open folder in File Manager...
-            (or Alt+Enter)  Download Folder Into...    """
+                            Download Folder Into...    """
 
         if len(self.file_store) <= 0:
             self.on_folder_expand_sub_accelerator()
@@ -881,7 +880,7 @@ class UserBrowse(UserInterface):
             self.on_file_manager()
 
         elif len(self.file_store) >= 1:  # [user is not self]
-            self.on_download_directory_to()
+            self.on_download_directory_to()  # same as Ctrl+Enter
 
         return True
 
