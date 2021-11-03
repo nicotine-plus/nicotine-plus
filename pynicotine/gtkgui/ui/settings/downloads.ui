@@ -336,6 +336,7 @@
                     <child>
                       <object class="GtkTreeView" id="FilterView">
                         <property name="visible">1</property>
+                        <signal name="row-activated" handler="on_edit_filter"/>
                       </object>
                     </child>
                     <style>
