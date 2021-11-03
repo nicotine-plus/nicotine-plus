@@ -217,8 +217,9 @@ class UserBrowse(UserInterface):
         setup_accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
         setup_accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
         setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
-        setup_accelerator("<Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
+
         setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
+        setup_accelerator("<Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -318,15 +319,16 @@ class UserBrowse(UserInterface):
 
         """ Key Bindings (FileTreeView) """
 
-        setup_accelerator("Left", self.FileTreeView, self.on_file_focus_folder_left_accelerator)
-        setup_accelerator("<Shift>Tab", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # avoid header
-        setup_accelerator("BackSpace", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # navigate up
-        setup_accelerator("backslash", self.FileTreeView, self.on_file_focus_folder_back_accelerator)  # "\"
+        for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
+            setup_accelerator(accelerator, self.FileTreeView, self.on_focus_folder_accelerator)
+
+        setup_accelerator("Left", self.FileTreeView, self.on_focus_folder_left_accelerator)
 
         # Note: Unmasked Return/Enter/DblClick is handled by on_file_row_activated (Play/Download)
+        setup_accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
         setup_accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
         setup_accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
-        setup_accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
+
         setup_accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
         setup_accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
 
@@ -886,20 +888,17 @@ class UserBrowse(UserInterface):
 
     """ Key Bindings (FileTreeView) """
 
-    def on_file_focus_folder_left_accelerator(self, *args):
+    def on_focus_folder_left_accelerator(self, *args):
         """ Left: focus back parent folder (left arrow) """
 
-        h = self.FileScrolledWindow.get_hadjustment()
-
-        if h.get_value() > 0.0:
+        if self.FileScrolledWindow.get_hadjustment().get_value() > 0.0:
             # Allow horizontal scrolling
             return False
 
         self.FolderTreeView.grab_focus()
-
         return True
 
-    def on_file_focus_folder_back_accelerator(self, *args):
+    def on_focus_folder_accelerator(self, *args):
         """ Shift+Tab: focus selection back parent folder
             BackSpace | \backslash |                  """
 
@@ -964,7 +963,7 @@ class UserBrowse(UserInterface):
         self.select_files()  # support multi-select with Up/Dn keys
 
         if self.user == config.sections["server"]["login"]:
-            self.on_play_files(*args)  # ToDo: Enqueue into Player playlist
+            self.on_play_files()  # ToDo: Enqueue into Player playlist
         else:
             self.on_download_files()
 
