@@ -381,19 +381,22 @@ class UserBrowse(UserInterface):
 
         """ Shortcut Key Bindings (Tool Bar) """
 
-        setup_accelerator("<Primary>f", self.Main, self.on_search_accelerator)  # Find focus
-        setup_accelerator("<Primary>f", self.FolderTreeView, self.on_search_accelerator)  # over-ride interactive-search
-        setup_accelerator("<Primary>f", self.FileTreeView, self.on_search_accelerator)  # (alpha lookup still possible)
-        setup_accelerator("<Primary>g", self.Main, self.on_search_next_accelerator)  # Find on_search Enter (repeat)
+        for widget in (self.Main, self.FolderTreeView, self.FileTreeView):
+            setup_accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
+
+        for widget in (self.Main, self.SearchEntry):
+            setup_accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
+            setup_accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
+
         setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
-        setup_accelerator("<Shift><Primary>g", self.Main, self.on_search_previous_accelerator)  # search_position-2
         setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
         setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
-        setup_accelerator("<Primary>g", self.SearchEntry, self.on_search_next_accelerator)  # F3 parses by itself
-        setup_accelerator("<Shift><Primary>g", self.SearchEntry, self.on_search_previous_accelerator)
+
         setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
         setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
+
         setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
+
         setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
 
         self.ExpandButton.set_active(True)
@@ -799,7 +802,6 @@ class UserBrowse(UserInterface):
             Shift+Right (Gtk) | "+" (Gtk) |    """
 
         path, _focus_column = self.FolderTreeView.get_cursor()
-
         expandable = self.FolderTreeView.expand_row(path, False)
 
         if not expandable and len(self.file_store) > 0:
@@ -814,7 +816,6 @@ class UserBrowse(UserInterface):
 
         self.FolderTreeView.collapse_row(path)  # show 2nd level
         self.FolderTreeView.expand_row(path, False)
-
         return True
 
     def on_folder_expand_sub_accelerator(self, *args):
@@ -829,10 +830,9 @@ class UserBrowse(UserInterface):
 
         if len(self.file_store) >= 1:
             self.FileTreeView.grab_focus()
+            return True
 
-        else:
-            self.on_folder_expand_sub_accelerator()
-
+        self.on_folder_expand_sub_accelerator()
         return True
 
     def on_folder_transfer_to_accelerator(self, *args):
@@ -860,15 +860,14 @@ class UserBrowse(UserInterface):
         if self.user == config.sections["server"]["login"]:
             self.on_folder_expand_sub_accelerator()
             self.on_upload_directory_recursive_to()
+            return True
 
-        else:
-            if len(self.file_store) <= 0:
-                # risk of accidental recursive download
-                self.on_folder_expand_sub_accelerator()
+        if len(self.file_store) <= 0:
+            # risk of accidental recursive download
+            self.on_folder_expand_sub_accelerator()
+            return True
 
-            else:
-                self.on_download_directory()  # without prompt
-
+        self.on_download_directory()  # without prompt
         return True
 
     def on_folder_open_manager_accelerator(self, *args):
@@ -913,17 +912,18 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.grab_focus()
             return True
 
-        if self.num_selected_files <= 0:  # do Folder instead
-            self.on_folder_transfer_to_accelerator()
-
-        elif self.num_selected_files >= 1:
+        if self.num_selected_files >= 1:
             self.select_files()
 
             if self.user == config.sections["server"]["login"]:
                 self.on_upload_files()
-            else:
-                self.on_download_files_to()  # (prompt, Single or Multi-selection)
+                return True
 
+            self.on_download_files_to()  # (prompt, Single or Multi-selection)
+            return True
+
+        # Do folder instead
+        self.on_folder_transfer_to_accelerator()
         return True
 
     def on_file_transfer_accelerator(self, *args):
