@@ -3355,11 +3355,11 @@ msgstr "%(file)s kullanıcı arayüzü dosyası yüklenemedi: %(error)s"
 msgid "Wishes"
 msgstr "Dilekler"
 
-#: pynicotine/gtkgui/wishlist.py:126
+#: pynicotine/gtkgui/wishlist.py:126 pynicotine/gtkgui/wishlist.py:120
 msgid "Edit Wish"
 msgstr "Dileği Düzenle"
 
-#: pynicotine/gtkgui/wishlist.py:127
+#: pynicotine/gtkgui/wishlist.py:127 pynicotine/gtkgui/wishlist.py:121
 #, python-format
 msgid "Enter new value for wish '%s':"
 msgstr "'%s' dileği için yeni bir değer girin:"
@@ -4209,6 +4209,7 @@ msgid "Result Filters"
 msgstr "Sonuç Filtreleri"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:177
+#: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
 msgid "File Transfers"
 msgstr "Dosya Aktarımları"
 
@@ -5093,6 +5094,7 @@ msgid "Add Wish…"
 msgstr "Dilek Ekle…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:84
+#: pynicotine/gtkgui/ui/popovers/wishlist.ui:87
 msgid "Edit"
 msgstr "Düzenle"
 
@@ -6385,8 +6387,9 @@ msgstr "Paylaşılan Klasörler"
 msgid "Search Wishlist"
 msgstr "Dilek Listesi Temizlensin mi?"
 
-#~ msgid "Wishlist"
-#~ msgstr "Dilek Listesi"
+#: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:168
+msgid "Wishlist"
+msgstr "Dilek Listesi"
 
 #~ msgid "File Lists"
 #~ msgstr "Dosya Listeleri"
