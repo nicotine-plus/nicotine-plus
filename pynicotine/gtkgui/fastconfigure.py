@@ -18,6 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from gi.repository import Gdk
 from gi.repository import Gtk
 
@@ -231,8 +233,9 @@ class FastConfigureAssistant(UserInterface):
 
             entry_dialog(
                 parent=self.FastConfigureDialog,
-                title=_("Virtual Name"),
+                title=_("Set Virtual Name"),
                 message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
+                default=os.path.basename(os.path.normpath(folder)),
                 callback=self.on_add_share_response,
                 callback_data=folder
             )
