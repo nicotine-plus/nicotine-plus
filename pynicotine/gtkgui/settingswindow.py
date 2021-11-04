@@ -1029,10 +1029,6 @@ class IgnoreListFrame(UserInterface):
             model.remove(iterator)
             self.ignored_users.remove(user)
 
-    def on_clear_ignored(self, widget):
-        self.ignored_users = []
-        self.ignorelist.clear()
-
     def on_add_ignored_ip_response(self, dialog, response_id, data):
 
         ip = dialog.get_response_value()
@@ -1080,10 +1076,6 @@ class IgnoreListFrame(UserInterface):
 
             model.remove(iterator)
             del self.ignored_ips[ip]
-
-    def on_clear_ignored_ip(self, widget):
-        self.ignored_ips = {}
-        self.ignored_ips_list.clear()
 
 
 class BanListFrame(UserInterface):
@@ -1219,10 +1211,6 @@ class BanListFrame(UserInterface):
             model.remove(iterator)
             self.banlist.remove(user)
 
-    def on_clear_banned(self, widget):
-        self.banlist = []
-        self.banlist_model.clear()
-
     def on_add_blocked_response(self, dialog, response_id, data):
 
         ip = dialog.get_response_value()
@@ -1271,10 +1259,6 @@ class BanListFrame(UserInterface):
 
             self.blocked_list_model.remove(iterator)
             del self.blocked_list[ip]
-
-    def on_clear_blocked(self, widget):
-        self.blocked_list = {}
-        self.blocked_list_model.clear()
 
 
 class TextToSpeechFrame(UserInterface):
