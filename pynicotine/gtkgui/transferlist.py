@@ -756,36 +756,9 @@ class TransferList(UserInterface):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
-
-        actions = menu.get_actions()
-        users = len(self.selected_users) > 0
-        files = num_selected_transfers > 0
-
-        actions[_("User(s)")].set_enabled(users)  # Users Menu
-        self.populate_popup_menu_users()
-
-        if files:
-            act = True
-        else:
-            # Disable options
-            # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
-            act = False
-
-        for i in (_("Send to _Player"), _("_Open in File Manager"), _("F_ile Properties"),
-                  _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
-            actions[i].set_enabled(act)
-
-        if not users or not files:
-            # Disable options
-            # Retry, Abort, Clear
-            act = False
-        else:
-            act = True
-
-        for i in (self.retry_label, self.abort_label, _("_Clear")):
-            actions[i].set_enabled(act)
-
         menu.set_num_selected_files(num_selected_transfers)
+
+        self.populate_popup_menu_users()
 
     def on_row_activated(self, treeview, path, column):
 
