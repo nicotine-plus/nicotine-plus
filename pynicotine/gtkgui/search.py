@@ -373,6 +373,13 @@ class Search(UserInterface):
 
         self.popup_menu_users = PopupMenu(self.frame)
 
+        self.popup_menu_copy = PopupMenu(self.frame)
+        self.popup_menu_copy.setup(
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+        )
+
         self.popup_menu = PopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
@@ -385,10 +392,7 @@ class Search(UserInterface):
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
             ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url),
-            ("", None),
+            (">" + _("Copy"), self.popup_menu_copy),
             (">" + _("User(s)"), self.popup_menu_users)
         )
 

@@ -184,27 +184,31 @@ class TransferList(UserInterface):
         self.popup_menu_clear = PopupMenu(frame)
         self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
+        self.popup_menu_copy = PopupMenu(frame)
+        self.popup_menu_copy.setup(
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+        )
+
         self.popup_menu = PopupMenu(frame, self.Transfers, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
             ("#" + _("_Open in File Manager"), self.on_open_file_manager),
-            ("", None),
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
+            ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
-            ("#" + _("F_ile Properties"), self.on_file_properties),
-            (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            (">" + _("Clear Groups"), self.popup_menu_clear)
+            (">" + _("Clear Groups"), self.popup_menu_clear),
+            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("User(s)"), self.popup_menu_users)
         )
 
         self.update_visuals()
