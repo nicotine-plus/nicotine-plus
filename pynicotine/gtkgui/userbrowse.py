@@ -238,47 +238,10 @@ class UserBrowse(UserInterface):
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        self.popup_menu_downloads_folders = PopupMenu(self.frame)
-        self.popup_menu_downloads_folders.setup(
-            ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-            ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
-        )
-
-        self.popup_menu_downloads_files = PopupMenu(self.frame)
-        self.popup_menu_downloads_files.setup(
-            ("#" + _("_Download File(s)"), self.on_download_files),
-            ("#" + _("Download _To…"), self.on_download_files_to),
-            ("", None),
-            ("#" + _("_Download Folder"), self.on_download_directory),
-            ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-            ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-            ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to)
-        )
-
-        self.popup_menu_uploads_folders = PopupMenu(self.frame)
-        self.popup_menu_uploads_folders.setup(
-            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to)
-        )
-
-        self.popup_menu_uploads_files = PopupMenu(self.frame)
-        self.popup_menu_uploads_files.setup(
-            ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
-            ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
-            ("#" + _("Up_load File(s)"), self.on_upload_files)
-        )
-
         self.folder_popup_menu = PopupMenu(self.frame, self.FolderTreeView, self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
-                ("#" + _("_Download Folder"), self.on_download_directory),
-                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
-                ("", None),
                 ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
                 ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
                 ("", None),
@@ -353,8 +316,9 @@ class UserBrowse(UserInterface):
             self.file_popup_menu.setup(
                 ("#" + "selected_files", None),
                 ("", None),
-                (">" + _("Download"), self.popup_menu_downloads_files),
-                (">" + _("Upload"), self.popup_menu_uploads_files),
+                ("#" + _("Up_load File(s)"), self.on_upload_files),
+                ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
+                ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Send to _Player"), self.on_play_files),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
@@ -369,7 +333,13 @@ class UserBrowse(UserInterface):
             self.file_popup_menu.setup(
                 ("#" + "selected_files", None),
                 ("", None),
-                (">" + _("Download"), self.popup_menu_downloads_files),
+                ("#" + _("_Download File(s)"), self.on_download_files),
+                ("#" + _("Download File(s) _To…"), self.on_download_files_to),
+                ("", None),
+                ("#" + _("_Download Folder"), self.on_download_directory),
+                ("#" + _("Download Folder _To…"), self.on_download_directory_to),
+                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
+                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
