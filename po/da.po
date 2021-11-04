@@ -6,14 +6,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 05:59+0200\n"
-"PO-Revision-Date: 2020-09-02 01:33+0000\n"
-"Last-Translator: daelstorm <Unknown>\n"
+"PO-Revision-Date: 2021-11-04 13:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.9-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
@@ -3291,20 +3292,24 @@ msgstr ""
 "forbindelsesproblem."
 
 #: pynicotine/gtkgui/userbrowse.py:997
+#, fuzzy
 msgid "Select Destination for Downloading Folder with Subfolders from User"
-msgstr ""
+msgstr "Vælg destination for download af mappe med undermapper fra bruger"
 
 #: pynicotine/gtkgui/userbrowse.py:999
+#, fuzzy
 msgid "Select Destination for Downloading a Folder from User"
-msgstr ""
+msgstr "Vælg destination for download af en mappe fra bruger"
 
 #: pynicotine/gtkgui/userbrowse.py:1094
+#, fuzzy
 msgid "Select Destination for Downloading File(s) from User"
-msgstr ""
+msgstr "Vælg destination for download af fil(er) fra bruger"
 
 #: pynicotine/gtkgui/userbrowse.py:1135
+#, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
-msgstr ""
+msgstr "Upload mappe (med undermapper) til bruger"
 
 #: pynicotine/gtkgui/userbrowse.py:1137
 #, fuzzy

@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 05:59+0200\n"
-"PO-Revision-Date: 2021-10-27 21:58+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2021-11-04 13:25+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -3008,20 +3008,24 @@ msgstr ""
 "har en lukket lytteport, eller så er det et midlertidig tilkoblingsproblem."
 
 #: pynicotine/gtkgui/userbrowse.py:997
+#, fuzzy
 msgid "Select Destination for Downloading Folder with Subfolders from User"
-msgstr ""
+msgstr "Velg Destinasjon for nedlasting av mappe med undermapper fra bruker"
 
 #: pynicotine/gtkgui/userbrowse.py:999
+#, fuzzy
 msgid "Select Destination for Downloading a Folder from User"
-msgstr ""
+msgstr "Velg Destinasjon for nedlasting av en mappe fra bruker"
 
 #: pynicotine/gtkgui/userbrowse.py:1094
+#, fuzzy
 msgid "Select Destination for Downloading File(s) from User"
-msgstr ""
+msgstr "Velg Destinasjon for nedlasting av fil(er) fra bruker"
 
 #: pynicotine/gtkgui/userbrowse.py:1135
+#, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
-msgstr ""
+msgstr "Last opp mappe (med undermapper) til bruker"
 
 #: pynicotine/gtkgui/userbrowse.py:1137
 #, fuzzy

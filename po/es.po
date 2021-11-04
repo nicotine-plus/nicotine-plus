@@ -7201,20 +7201,25 @@ msgid "Select User's Results"
 msgstr "Seleccionar transferencias de usuario"
 
 #: pynicotine/gtkgui/userbrowse.py:997
+#, fuzzy
 msgid "Select Destination for Downloading Folder with Subfolders from User"
 msgstr ""
+"Seleccione el destino para descargar la carpeta con subcarpetas del usuario"
 
 #: pynicotine/gtkgui/userbrowse.py:999
+#, fuzzy
 msgid "Select Destination for Downloading a Folder from User"
-msgstr ""
+msgstr "Seleccione el destino para descargar una carpeta del usuario"
 
 #: pynicotine/gtkgui/userbrowse.py:1094
+#, fuzzy
 msgid "Select Destination for Downloading File(s) from User"
-msgstr ""
+msgstr "Seleccione el destino para descargar archivos del usuario"
 
 #: pynicotine/gtkgui/userbrowse.py:1135
+#, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
-msgstr ""
+msgstr "Cargar carpeta (con subcarpetas) al usuario"
 
 #: pynicotine/gtkgui/userbrowse.py:1137
 #, fuzzy
