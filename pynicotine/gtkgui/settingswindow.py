@@ -1923,7 +1923,6 @@ class UrlHandlersFrame(UserInterface):
         }
 
         self.protocolmodel = Gtk.ListStore(str, str)
-
         self.protocols = {}
 
         self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
@@ -1942,53 +1941,34 @@ class UrlHandlersFrame(UserInterface):
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
-    def cell_edited_callback(self, widget, index, value, treeview, pos):
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, pos, value)
-
     def set_settings(self):
 
         self.protocolmodel.clear()
         self.protocols.clear()
+
         self.p.set_widgets_data(self.options)
 
-        urls = config.sections["urls"]
+        for key in config.sections["urls"]["protocols"].keys():
+            if config.sections["urls"]["protocols"][key][-1:] == "&":
+                command = config.sections["urls"]["protocols"][key][:-1].rstrip()
+            else:
+                command = config.sections["urls"]["protocols"][key]
 
-        if urls["protocols"] is not None:
-
-            for key in urls["protocols"].keys():
-                if urls["protocols"][key][-1:] == "&":
-                    command = urls["protocols"][key][:-1].rstrip()
-                else:
-                    command = urls["protocols"][key]
-
-                iterator = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [
-                    str(key), str(command)
-                ])
-                self.protocols[key] = iterator
-
-        selection = self.ProtocolHandlers.get_selection()
-        selection.unselect_all()
-
-        for key, iterator in self.protocols.items():
-            if iterator is not None:
-                selection.select_iter(iterator)
-                break
+            self.protocols[key] = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [
+                str(key), str(command)
+            ])
 
     def get_settings(self):
 
         protocols = {}
+        iterator = self.protocolmodel.get_iter_first()
 
-        try:
-            iterator = self.protocolmodel.get_iter_first()
-            while iterator is not None:
-                protocol = self.protocolmodel.get_value(iterator, 0)
-                handler = self.protocolmodel.get_value(iterator, 1)
-                protocols[protocol] = handler
-                iterator = self.protocolmodel.iter_next(iterator)
-        except Exception:
-            pass
+        while iterator is not None:
+            protocol = self.protocolmodel.get_value(iterator, 0)
+            handler = self.protocolmodel.get_value(iterator, 1)
+            protocols[protocol] = handler
+
+            iterator = self.protocolmodel.iter_next(iterator)
 
         return {
             "urls": {
@@ -1996,18 +1976,11 @@ class UrlHandlersFrame(UserInterface):
             }
         }
 
-    def on_select(self, selection):
+    def cell_edited_callback(self, widget, index, value, treeview, pos):
 
-        model, iterator = selection.get_selected()
-
-        if iterator is None:
-            self.ProtocolCombo.get_child().set_text("")
-            self.Handler.get_child().set_text("")
-        else:
-            protocol = model.get_value(iterator, 0)
-            handler = model.get_value(iterator, 1)
-            self.ProtocolCombo.get_child().set_text(protocol)
-            self.Handler.get_child().set_text(handler)
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
 
     def on_add(self, widget):
 
@@ -2018,25 +1991,22 @@ class UrlHandlersFrame(UserInterface):
         self.Handler.get_child().set_text("")
 
         if protocol in self.protocols:
-            iterator = self.protocols[protocol]
-            if iterator is not None:
-                self.protocolmodel.set(iterator, 1, command)
+            self.protocolmodel.set(self.protocols[protocol], 1, command)
         else:
-            iterator = self.protocolmodel.insert_with_valuesv(-1, self.column_numbers, [protocol, command])
-            self.protocols[protocol] = iterator
+            self.protocols[protocol] = self.protocolmodel.insert_with_valuesv(
+                -1, self.column_numbers, [protocol, command]
+            )
 
     def on_remove(self, widget):
 
-        selection = self.ProtocolHandlers.get_selection()
-        model, iterator = selection.get_selected()
+        model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
 
-        if iterator is not None:
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
             protocol = self.protocolmodel.get_value(iterator, 0)
-            self.protocolmodel.remove(iterator)
-            del self.protocols[protocol]
 
-    def on_clear(self, widget):
-        self.protocolmodel.clear()
+            model.remove(iterator)
+            del self.protocols[protocol]
 
 
 class CensorReplaceListFrame(UserInterface):
@@ -2196,7 +2166,6 @@ class CensorReplaceListFrame(UserInterface):
 
         iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
         selection = self.ReplacementList.get_selection()
-        selection.unselect_all()
         selection.select_iter(iterator)
         col = self.ReplacementList.get_column(0)
 
@@ -3129,7 +3098,6 @@ class Settings(UserInterface):
 
         model = self.SettingsTreeview.get_model()
         selection = self.SettingsTreeview.get_selection()
-        selection.unselect_all()
         path = model.get_path(self.tree[page])
 
         self.SettingsTreeview.expand_to_path(path)
