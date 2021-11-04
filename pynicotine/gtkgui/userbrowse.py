@@ -444,19 +444,6 @@ class UserBrowse(UserInterface):
         # ToDo: Mouse double-click actions will need *args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_popup_menu(self, menu, widget):
-
-        actions = menu.get_actions()
-
-        if self.user == config.sections["server"]["login"]:
-            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
-                      _("Download R_ecursive To…"), _("Upload Folder To…"), _("Upload Folder Recursive To…"),
-                      _("Open in File _Manager"), _("Copy _Folder Path"), _("Copy _URL")):
-                actions[i].set_enabled(self.selected_folder)
-        else:
-            for i in (_("_Download Folder"), _("Download Folder _To…"), _("Download _Recursive"),
-                      _("Download R_ecursive To…"), _("Copy _Folder Path"), _("Copy _URL")):
-                actions[i].set_enabled(self.selected_folder)
-
         self.user_popup.toggle_user_items()
 
     def select_files(self):
@@ -484,20 +471,8 @@ class UserBrowse(UserInterface):
 
         self.select_files()
         self.num_selected_files = len(self.selected_files)
-
-        actions = menu.get_actions()
-
-        if self.user == config.sections["server"]["login"]:
-            for i in (_("Download"), _("Upload"), _("Send to _Player"), _("F_ile Properties"),
-                      _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(self.num_selected_files)
-
-            actions[_("Open in File _Manager")].set_enabled(self.selected_folder)
-        else:
-            for i in (_("Download"), _("F_ile Properties"), _("Copy _File Path"), _("Copy _URL")):
-                actions[i].set_enabled(self.num_selected_files)
-
         menu.set_num_selected_files(self.num_selected_files)
+
         self.user_popup.toggle_user_items()
 
     def clear_model(self):
