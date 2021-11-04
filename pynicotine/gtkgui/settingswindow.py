@@ -2050,17 +2050,31 @@ class CensorReplaceListFrame(UserInterface):
 
         self.options = {
             "words": {
-                "autoreplaced": self.ReplacementList,
-                "replacewords": self.ReplaceCheck,
-                "censorfill": self.CensorReplaceCombo,
                 "censored": self.CensorList,
-                "censorwords": self.CensorCheck
+                "censorwords": self.CensorCheck,
+                "censorfill": self.CensorReplaceCombo,
+                "autoreplaced": self.ReplacementList,
+                "replacewords": self.ReplaceCheck
             }
         }
 
-        self.replacelist = Gtk.ListStore(str, str)
+        self.censor_list_model = Gtk.ListStore(str)
 
-        self.column_numbers = list(range(self.replacelist.get_n_columns()))
+        cols = initialise_columns(
+            None, self.CensorList,
+            ["pattern", _("Pattern"), -1, "edit", None]
+        )
+        cols["pattern"].set_sort_column_id(0)
+
+        self.CensorList.set_model(self.censor_list_model)
+
+        renderers = cols["pattern"].get_cells()
+        for render in renderers:
+            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
+
+        self.replace_list_model = Gtk.ListStore(str, str)
+
+        self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
         cols = initialise_columns(
             None, self.ReplacementList,
             ["pattern", _("Pattern"), 150, "edit", None],
@@ -2069,7 +2083,7 @@ class CensorReplaceListFrame(UserInterface):
         cols["pattern"].set_sort_column_id(0)
         cols["replacement"].set_sort_column_id(1)
 
-        self.ReplacementList.set_model(self.replacelist)
+        self.ReplacementList.set_model(self.replace_list_model)
 
         pos = 0
         for (column_id, column) in cols.items():
@@ -2079,26 +2093,51 @@ class CensorReplaceListFrame(UserInterface):
 
             pos += 1
 
-        self.censor_list_model = Gtk.ListStore(str)
+    def set_settings(self):
 
-        cols = initialise_columns(
-            None, self.CensorList,
-            ["pattern", _("Pattern"), -1, "edit", None]
-        )
+        self.censor_list_model.clear()
+        self.replace_list_model.clear()
 
-        cols["pattern"].set_sort_column_id(0)
+        self.p.set_widgets_data(self.options)
 
-        self.CensorList.set_model(self.censor_list_model)
+        for word, replacement in config.sections["words"]["autoreplaced"].items():
+            self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
+                str(word),
+                str(replacement)
+            ])
 
-        renderers = cols["pattern"].get_cells()
-        for render in renderers:
-            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
+        self.on_censor_check(self.CensorCheck)
+        self.on_replace_check(self.ReplaceCheck)
 
-    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
+    def get_settings(self):
 
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, pos, value)
+        censored = []
+        autoreplaced = {}
+
+        iterator = self.censor_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.censor_list_model.get_value(iterator, 0)
+            censored.append(word)
+            iterator = self.censor_list_model.iter_next(iterator)
+
+        iterator = self.replace_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.replace_list_model.get_value(iterator, 0)
+            replacement = self.replace_list_model.get_value(iterator, 1)
+            autoreplaced[word] = replacement
+            iterator = self.replace_list_model.iter_next(iterator)
+
+        return {
+            "words": {
+                "censored": censored,
+                "censorwords": self.CensorCheck.get_active(),
+                "censorfill": self.CensorReplaceCombo.get_active_text(),
+                "autoreplaced": autoreplaced,
+                "replacewords": self.ReplaceCheck.get_active()
+            }
+        }
 
     def censor_cell_edited_callback(self, widget, index, value, treeview, pos):
 
@@ -2110,90 +2149,19 @@ class CensorReplaceListFrame(UserInterface):
         else:
             store.remove(iterator)
 
-    def set_settings(self):
+    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
 
-        self.replacelist.clear()
-        self.censor_list_model.clear()
-
-        self.p.set_widgets_data(self.options)
-
-        words = config.sections["words"]
-        if words["autoreplaced"] is not None:
-            for word, replacement in words["autoreplaced"].items():
-                self.replacelist.insert_with_valuesv(-1, self.column_numbers, [
-                    str(word),
-                    str(replacement)
-                ])
-
-        self.on_replace_check(self.ReplaceCheck)
-        self.on_censor_check(self.CensorCheck)
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
 
     def on_replace_check(self, widget):
         sensitive = widget.get_active()
         self.ReplacementsContainer.set_sensitive(sensitive)
 
     def on_censor_check(self, widget):
-
         sensitive = widget.get_active()
-
-        self.CensorList.set_sensitive(sensitive)
-        self.RemoveCensor.set_sensitive(sensitive)
-        self.AddCensor.set_sensitive(sensitive)
-        self.ClearCensors.set_sensitive(sensitive)
-        self.CensorReplaceCombo.set_sensitive(sensitive)
-
-    def get_settings(self):
-
-        autoreplaced = {}
-        try:
-            iterator = self.replacelist.get_iter_first()
-            while iterator is not None:
-                word = self.replacelist.get_value(iterator, 0)
-                replacement = self.replacelist.get_value(iterator, 1)
-                autoreplaced[word] = replacement
-                iterator = self.replacelist.iter_next(iterator)
-        except Exception:
-            autoreplaced.clear()
-
-        censored = []
-        try:
-            iterator = self.censor_list_model.get_iter_first()
-            while iterator is not None:
-                word = self.censor_list_model.get_value(iterator, 0)
-                censored.append(word)
-                iterator = self.censor_list_model.iter_next(iterator)
-        except Exception:
-            pass
-
-        return {
-            "words": {
-                "autoreplaced": autoreplaced,
-                "replacewords": self.ReplaceCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_text(),
-                "censored": censored,
-                "censorwords": self.CensorCheck.get_active()
-            }
-        }
-
-    def on_add_replacement(self, widget):
-
-        iterator = self.replacelist.insert_with_valuesv(-1, self.column_numbers, ["", ""])
-        selection = self.ReplacementList.get_selection()
-        selection.unselect_all()
-        selection.select_iter(iterator)
-        col = self.ReplacementList.get_column(0)
-
-        self.ReplacementList.set_cursor(self.replacelist.get_path(iterator), col, True)
-
-    def on_remove_replacement(self, widget):
-
-        selection = self.ReplacementList.get_selection()
-        iterator = selection.get_selected()[1]
-        if iterator is not None:
-            self.replacelist.remove(iterator)
-
-    def on_clear_replacements(self, widget):
-        self.replacelist.clear()
+        self.CensorContainer.set_sensitive(sensitive)
 
     def on_add_censored_response(self, dialog, response_id, data):
 
@@ -2217,13 +2185,30 @@ class CensorReplaceListFrame(UserInterface):
         )
 
     def on_remove_censored(self, widget):
-        selection = self.CensorList.get_selection()
-        iterator = selection.get_selected()[1]
-        if iterator is not None:
-            self.censor_list_model.remove(iterator)
 
-    def on_clear_censored(self, widget):
-        self.censor_list_model.clear()
+        model, paths = self.CensorList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
+
+    def on_add_replacement(self, widget):
+
+        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
+        selection = self.ReplacementList.get_selection()
+        selection.unselect_all()
+        selection.select_iter(iterator)
+        col = self.ReplacementList.get_column(0)
+
+        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
+
+    def on_remove_replacement(self, widget):
+
+        model, paths = self.ReplacementList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
 
 
 class CompletionFrame(UserInterface):
@@ -2937,6 +2922,7 @@ class PluginsFrame(UserInterface):
     def on_select_plugin(self, selection):
 
         model, iterator = selection.get_selected()
+
         if iterator is None:
             self.selected_plugin = _("No Plugin Selected")
             info = {}
