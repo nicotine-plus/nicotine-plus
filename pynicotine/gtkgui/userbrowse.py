@@ -867,16 +867,11 @@ class UserBrowse(UserInterface):
         return True
 
     def on_folder_open_manager_accelerator(self, *args):
-        """ Ctrl+Alt+Enter: Open folder in File Manager...
-                            Download Folder Into...    """
+        """ Ctrl+Alt+Enter: Open folder in File Manager... """
 
         if self.user == config.sections["server"]["login"]:
             self.on_file_manager()
-
-        elif len(self.file_store) >= 1:  # [user is not self]
-            self.on_download_directory_to()  # same as Ctrl+Enter
-
-        return True
+            return True
 
     """ Key Bindings (FileTreeView) """
 
