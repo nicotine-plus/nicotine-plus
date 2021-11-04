@@ -424,8 +424,8 @@ class SlskProtoThread(threading.Thread):
 
         self.name = "NetworkThread"
 
-        if sys.platform not in ("linux", "darwin"):
-            # TODO: support custom network interface for other systems than Linux and macOS
+        if sys.platform == "win32":
+            # TODO: support custom network interface for Windows
             interface = None
 
         self._core_callback = core_callback
@@ -506,24 +506,47 @@ class SlskProtoThread(threading.Thread):
         return True
 
     @staticmethod
-    def bind_to_network_interface(sock, if_name):
+    def get_interface_ip_address(if_name):
 
-        if sys.platform == "linux":
-            sock.setsockopt(socket.SOL_SOCKET, 25, if_name.encode())
+        import fcntl
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        if sys.platform == "darwin":
-            sock.setsockopt(socket.IPPROTO_IP, 25, socket.if_nametoindex(if_name))
+        ip_if = fcntl.ioctl(sock.fileno(),
+                            0x8915,  # SIOCGIFADDR
+                            struct.pack('256s', if_name.encode()[:15]))
+
+        ip_address = socket.inet_ntoa(ip_if[20:24])
+        return ip_address
+
+    def bind_to_network_interface(self, sock, if_name):
+
+        try:
+            if sys.platform == "linux":
+                sock.setsockopt(socket.SOL_SOCKET, 25, if_name.encode())
+                self.bindip = None
+                return
+
+            if sys.platform == "darwin":
+                sock.setsockopt(socket.IPPROTO_IP, 25, socket.if_nametoindex(if_name))
+                self.bindip = None
+                return
+
+        except PermissionError:
+            pass
+
+        # System does not support changing the network interface
+        # Retrieve the IP address of the interface, and bind to it instead
+        self.bindip = self.get_interface_ip_address(if_name)
 
     def bind_listen_port(self):
 
         if not self.validate_network_interface():
             return
 
-        ip_address = self.bindip or ''
-
-        if self.interface:
+        if self.interface and not self.bindip:
             self.bind_to_network_interface(self.listen_socket, self.interface)
-            ip_address = ''
+
+        ip_address = self.bindip or ''
 
         for listenport in range(int(self.portrange[0]), int(self.portrange[1]) + 1):
             try:
@@ -773,11 +796,11 @@ class SlskProtoThread(threading.Thread):
             # Detect if our connection to the server is still alive
             self.set_server_socket_keepalive(server_socket)
 
-            if self.interface:
-                self.bind_to_network_interface(server_socket, self.interface)
-
-            elif self.bindip:
+            if self.bindip:
                 server_socket.bind((self.bindip, 0))
+
+            elif self.interface:
+                self.bind_to_network_interface(server_socket, self.interface)
 
             server_socket.connect_ex(msg_obj.addr)
 
@@ -946,11 +969,11 @@ class SlskProtoThread(threading.Thread):
             conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn.setblocking(0)
 
-            if self.interface:
-                self.bind_to_network_interface(conn, self.interface)
-
-            elif self.bindip:
+            if self.bindip:
                 conn.bind((self.bindip, 0))
+
+            elif self.interface:
+                self.bind_to_network_interface(conn, self.interface)
 
             conn.connect_ex(msg_obj.addr)
 
