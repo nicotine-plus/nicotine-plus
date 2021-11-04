@@ -508,14 +508,19 @@ class SlskProtoThread(threading.Thread):
     @staticmethod
     def get_interface_ip_address(if_name):
 
-        import fcntl
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        try:
+            import fcntl
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        ip_if = fcntl.ioctl(sock.fileno(),
-                            0x8915,  # SIOCGIFADDR
-                            struct.pack('256s', if_name.encode()[:15]))
+            ip_if = fcntl.ioctl(sock.fileno(),
+                                0x8915,  # SIOCGIFADDR
+                                struct.pack('256s', if_name.encode()[:15]))
 
-        ip_address = socket.inet_ntoa(ip_if[20:24])
+            ip_address = socket.inet_ntoa(ip_if[20:24])
+
+        except ImportError:
+            ip_address = None
+
         return ip_address
 
     def bind_to_network_interface(self, sock, if_name):
