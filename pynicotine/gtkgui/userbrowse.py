@@ -814,9 +814,11 @@ class UserBrowse(UserInterface):
     def on_folder_open_manager_accelerator(self, *args):
         """ Ctrl+Alt+Enter: Open folder in File Manager... """
 
-        if self.user == config.sections["server"]["login"]:
-            self.on_file_manager()
-            return True
+        if self.user != config.sections["server"]["login"]:
+            return False
+
+        self.on_file_manager()
+        return True
 
     """ Key Bindings (FileTreeView) """
 
@@ -901,17 +903,13 @@ class UserBrowse(UserInterface):
         return True
 
     def on_file_open_manager_accelerator(self, *args):
-        """ Ctrl+Alt+Enter: Open in File Manager
-                            Download Folder Into...     """
+        """ Ctrl+Alt+Enter: Open in File Manager """
 
-        if len(self.file_store) <= 0:
-            self.FolderTreeView.grab_focus()  # avoid nav trap
-
-        elif self.user == config.sections["server"]["login"]:
+        if self.user == config.sections["server"]["login"]:
             self.on_file_manager()
 
-        elif self.num_selected_files >= 1:  # [user is not self]
-            self.on_file_properties()  # same as Alt+Enter
+        else:  # [user is not self]
+            self.on_file_properties_accelerator()  # same as Alt+Enter
 
         return True
 
