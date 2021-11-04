@@ -968,9 +968,6 @@ class UserBrowse(UserInterface):
         elif self.num_selected_files >= 1:  # [user is not self]
             self.on_file_properties()  # same as Alt+Enter
 
-        elif self.num_selected_files <= 0:
-            self.on_folder_transfer_to_accelerator()
-
         return True
 
     def on_file_properties_accelerator(self, *args):
