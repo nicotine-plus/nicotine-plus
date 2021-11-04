@@ -288,10 +288,7 @@ class PopupMenu(Gio.Menu):
     def toggle_user_items(self):
 
         self.editing = True
-
-        self.actions[_("_Gift Privileges…")].set_enabled(
-            GLib.Variant.new_boolean(self.frame.np.privileges_left)
-        )
+        self.actions[_("_Gift Privileges…")].set_enabled(bool(self.frame.np.privileges_left))
 
         add_to_list = _("_Add to Buddy List")
 
