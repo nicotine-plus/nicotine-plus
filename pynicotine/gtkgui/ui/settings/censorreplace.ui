@@ -88,7 +88,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="CensorContainer">
                     <property name="visible">1</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
@@ -118,6 +118,12 @@
                                 <child>
                                   <object class="GtkTreeView" id="CensorList">
                                     <property name="visible">1</property>
+                                    <property name="rubber-banding">1</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection">
+                                        <property name="mode">multiple</property>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <style>
@@ -187,41 +193,6 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="halign">end</property>
-                                    <property name="hexpand">1</property>
-                                    <child>
-                                      <object class="GtkButton" id="ClearCensors">
-                                        <property name="visible">1</property>
-                                        <signal name="clicked" handler="on_clear_censored" swapped="no"/>
-                                        <child>
-                                          <object class="GtkBox">
-                                            <property name="visible">1</property>
-                                            <property name="spacing">6</property>
-                                            <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">1</property>
-                                                <property name="icon-name">edit-clear-symbolic</property>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">1</property>
-                                                <property name="label" translatable="yes">Clear All</property>
-                                                <property name="use-underline">1</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <style>
-                                          <class name="flat"/>
-                                        </style>
-                                      </object>
-                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -300,6 +271,12 @@
                                 <child>
                                   <object class="GtkTreeView" id="ReplacementList">
                                     <property name="visible">1</property>
+                                    <property name="rubber-banding">1</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection">
+                                        <property name="mode">multiple</property>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <style>
@@ -369,42 +346,6 @@
                                     <style>
                                       <class name="flat"/>
                                     </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="spacing">6</property>
-                                    <property name="halign">end</property>
-                                    <property name="hexpand">1</property>
-                                    <child>
-                                      <object class="GtkButton" id="ClearReplacements">
-                                        <property name="visible">1</property>
-                                        <signal name="clicked" handler="on_clear_replacements" swapped="no"/>
-                                        <child>
-                                          <object class="GtkBox">
-                                            <property name="visible">1</property>
-                                            <property name="spacing">6</property>
-                                            <child>
-                                              <object class="GtkImage">
-                                                <property name="visible">1</property>
-                                                <property name="icon-name">edit-clear-symbolic</property>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">1</property>
-                                                <property name="label" translatable="yes">Clear All</property>
-                                                <property name="use-underline">1</property>
-                                              </object>
-                                            </child>
-                                          </object>
-                                        </child>
-                                        <style>
-                                          <class name="flat"/>
-                                        </style>
-                                      </object>
-                                    </child>
                                   </object>
                                 </child>
                               </object>

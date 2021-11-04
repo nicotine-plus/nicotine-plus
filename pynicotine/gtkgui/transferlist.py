@@ -184,27 +184,31 @@ class TransferList(UserInterface):
         self.popup_menu_clear = PopupMenu(frame)
         self.ClearTransfers.set_menu_model(self.popup_menu_clear)
 
+        self.popup_menu_copy = PopupMenu(frame)
+        self.popup_menu_copy.setup(
+            ("#" + _("Copy _File Path"), self.on_copy_file_path),
+            ("#" + _("Copy _URL"), self.on_copy_url),
+            ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
+        )
+
         self.popup_menu = PopupMenu(frame, self.Transfers, self.on_popup_menu)
         self.popup_menu.setup(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
             ("#" + _("_Open in File Manager"), self.on_open_file_manager),
-            ("", None),
-            ("#" + _("Copy _File Path"), self.on_copy_file_path),
-            ("#" + _("Copy _URL"), self.on_copy_url),
-            ("#" + _("Copy Folder URL"), self.on_copy_dir_url),
+            ("#" + _("F_ile Properties"), self.on_file_properties),
             ("", None),
             ("#" + _("_Search"), self.on_file_search),
             ("#" + _("_Browse Folder(s)"), self.on_browse_folder),
-            ("#" + _("F_ile Properties"), self.on_file_properties),
-            (">" + _("User(s)"), self.popup_menu_users),
             ("", None),
             ("#" + self.retry_label, self.on_retry_transfer),
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            (">" + _("Clear Groups"), self.popup_menu_clear)
+            (">" + _("Clear Groups"), self.popup_menu_clear),
+            (">" + _("Copy"), self.popup_menu_copy),
+            (">" + _("User(s)"), self.popup_menu_users)
         )
 
         self.update_visuals()
@@ -756,36 +760,9 @@ class TransferList(UserInterface):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
-
-        actions = menu.get_actions()
-        users = len(self.selected_users) > 0
-        files = num_selected_transfers > 0
-
-        actions[_("User(s)")].set_enabled(users)  # Users Menu
-        self.populate_popup_menu_users()
-
-        if files:
-            act = True
-        else:
-            # Disable options
-            # Send to player, File manager, file properties, Copy File Path, Copy URL, Copy Folder URL, Search filename
-            act = False
-
-        for i in (_("Send to _Player"), _("_Open in File Manager"), _("F_ile Properties"),
-                  _("Copy _File Path"), _("Copy _URL"), _("Copy Folder URL"), _("_Search")):
-            actions[i].set_enabled(act)
-
-        if not users or not files:
-            # Disable options
-            # Retry, Abort, Clear
-            act = False
-        else:
-            act = True
-
-        for i in (self.retry_label, self.abort_label, _("_Clear")):
-            actions[i].set_enabled(act)
-
         menu.set_num_selected_files(num_selected_transfers)
+
+        self.populate_popup_menu_users()
 
     def on_row_activated(self, treeview, path, column):
 
