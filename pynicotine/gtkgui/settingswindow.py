@@ -113,7 +113,7 @@ class NetworkFrame(UserInterface):
         self.needportmap = False
         self.on_toggle_upnp(self.UseUPnP)
 
-        if sys.platform == "win32":
+        if sys.platform not in ("linux", "darwin"):
             for widget in (self.InterfaceLabel, self.Interface):
                 widget.get_parent().hide()
 

@@ -424,8 +424,8 @@ class SlskProtoThread(threading.Thread):
 
         self.name = "NetworkThread"
 
-        if sys.platform == "win32":
-            # TODO: support custom network interface for Windows
+        if sys.platform not in ("linux", "darwin"):
+            # TODO: support custom network interface for other systems than Linux and macOS
             interface = None
 
         self._core_callback = core_callback
