@@ -188,7 +188,7 @@ def run():
     import sys
 
     # Always use UTF-8 for print()
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
     # Support file scanning process in frozen Windows and macOS binaries
     if getattr(sys, "frozen", False):
