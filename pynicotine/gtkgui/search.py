@@ -296,6 +296,9 @@ class Search(UserInterface):
         self.directoryiters = {}
         self.users = set()
         self.all_data = []
+        self.selected_results = []
+        self.selected_users = []
+        self.selected_files_count = 0
         self.filters = None
         self.clearing_filters = False
         self.numvisibleresults = 0
@@ -1008,7 +1011,7 @@ class Search(UserInterface):
         popup.setup_user_menu(user)
         popup.setup(
             ("", None),
-            ("#" + _("Select User's Transfers"), self.on_select_user_results, user)
+            ("#" + _("Select User's Results"), self.on_select_user_results, user)
         )
 
         popup.toggle_user_items()
@@ -1069,40 +1072,53 @@ class Search(UserInterface):
 
         self.select_results()
 
+    def select_result(self, model, iterator):
+
+        user = model.get_value(iterator, 1)
+
+        if user is None:
+            return
+
+        if user not in self.selected_users:
+            self.selected_users.append(user)
+
+        filepath = model.get_value(iterator, 11)
+
+        if not filepath:
+            # Result is not a file or directory, don't add it
+            return
+
+        bitrate = model.get_value(iterator, 8)
+        length = model.get_value(iterator, 9)
+        size = model.get_value(iterator, 13)
+
+        self.selected_results.append((user, filepath, size, bitrate, length))
+
+        filename = model.get_value(iterator, 6)
+
+        if filename:
+            self.selected_files_count += 1
+
+    def select_child_results(self, model, iterator):
+
+        while iterator is not None:
+            self.select_result(model, iterator)
+            self.select_child_results(model, model.iter_children(iterator))
+
+            iterator = model.iter_next(iterator)
+
     def select_results(self):
 
-        self.selected_results = []
-        self.selected_users = []
+        self.selected_results.clear()
+        self.selected_users.clear()
         self.selected_files_count = 0
 
         model, paths = self.ResultsList.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
-            user = model.get_value(iterator, 1)
-
-            if user is None:
-                continue
-
-            if user not in self.selected_users:
-                self.selected_users.append(user)
-
-            filepath = model.get_value(iterator, 11)
-
-            if not filepath:
-                # Result is not a file or directory, don't add it
-                continue
-
-            bitrate = model.get_value(iterator, 8)
-            length = model.get_value(iterator, 9)
-            size = model.get_value(iterator, 13)
-
-            self.selected_results.append((user, filepath, size, bitrate, length))
-
-            filename = model.get_value(iterator, 6)
-
-            if filename:
-                self.selected_files_count += 1
+            self.select_result(model, iterator)
+            self.select_child_results(model, model.iter_children(iterator))
 
     def update_result_counter(self):
         self.Counter.set_text(str(self.numvisibleresults))
@@ -1129,29 +1145,7 @@ class Search(UserInterface):
     def on_popup_menu(self, menu, widget):
 
         self.select_results()
-
-        actions = menu.get_actions()
-        users = len(self.selected_users) > 0
-        files = len(self.selected_results) > 0
-
-        for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
-                  _("Copy _URL")):
-            actions[i].set_enabled(False)
-
-        for i in (_("Download _Folder(s)"), _("Download F_older(s) To…"), _("_Browse Folder(s)"),
-                  _("Copy _File Path"), _("Copy Folder U_RL")):
-            actions[i].set_enabled(files)
-
-        actions[_("User(s)")].set_enabled(users)
         self.populate_popup_menu_users()
-
-        if self.selected_files_count:
-            # At least one selected result is a file, activate file-related items
-
-            for i in (_("_Download File(s)"), _("Download File(s) _To…"), _("F_ile Properties"),
-                      _("Copy _URL")):
-                actions[i].set_enabled(True)
-
         menu.set_num_selected_files(self.selected_files_count)
 
     def on_browse_folder(self, *args):
