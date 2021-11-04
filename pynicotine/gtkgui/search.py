@@ -1076,28 +1076,14 @@ class Search(UserInterface):
 
         user = model.get_value(iterator, 1)
 
-        if user is None:
-            return
-
         if user not in self.selected_users:
             self.selected_users.append(user)
-
-        filepath = model.get_value(iterator, 11)
-
-        if not filepath:
-            # Result is not a file or directory, don't add it
-            return
-
-        bitrate = model.get_value(iterator, 8)
-        length = model.get_value(iterator, 9)
-        size = model.get_value(iterator, 13)
-
-        self.selected_results.append((user, filepath, size, bitrate, length))
 
         filename = model.get_value(iterator, 6)
 
         if filename:
             self.selected_files_count += 1
+            self.selected_results.append(iterator)
 
     def select_child_results(self, model, iterator):
 
@@ -1153,9 +1139,9 @@ class Search(UserInterface):
         requested_users = set()
         requested_folders = set()
 
-        for file in self.selected_results:
-            user = file[0]
-            folder = file[1].rsplit('\\', 1)[0]
+        for iterator in self.selected_results:
+            user = self.resultsmodel.get_value(iterator, 1)
+            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
 
             if user not in requested_users and folder not in requested_folders:
                 self.frame.np.userbrowse.browse_user(user, folder=folder)
@@ -1166,26 +1152,19 @@ class Search(UserInterface):
     def on_file_properties(self, *args):
 
         data = []
-        model, paths = self.ResultsList.get_selection().get_selected_rows()
 
-        for path in paths:
-            iterator = model.get_iter(path)
-            filename = model.get_value(iterator, 6)
-
-            # We only want to see the metadata of files, not directories
-            if not filename:
-                continue
-
-            num = model.get_value(iterator, 0)
-            user = model.get_value(iterator, 1)
-            speed = model.get_value(iterator, 3)
-            queue = model.get_value(iterator, 4)
-            size = model.get_value(iterator, 7)
-            bitratestr = model.get_value(iterator, 8)
-            length = model.get_value(iterator, 9)
-            fn = model.get_value(iterator, 11)
+        for iterator in self.selected_results:
+            num = self.resultsmodel.get_value(iterator, 0)
+            user = self.resultsmodel.get_value(iterator, 1)
+            speed = self.resultsmodel.get_value(iterator, 3)
+            queue = self.resultsmodel.get_value(iterator, 4)
+            filename = self.resultsmodel.get_value(iterator, 6)
+            size = self.resultsmodel.get_value(iterator, 7)
+            bitratestr = self.resultsmodel.get_value(iterator, 8)
+            length = self.resultsmodel.get_value(iterator, 9)
+            fn = self.resultsmodel.get_value(iterator, 11)
             directory, filename = fn.rsplit('\\', 1)
-            cc = model.get_value(iterator, 12)
+            cc = self.resultsmodel.get_value(iterator, 12)
             country = "%s / %s" % (cc, self.frame.np.geoip.country_code_to_name(cc))
 
             data.append({
@@ -1207,11 +1186,15 @@ class Search(UserInterface):
 
     def on_download_files(self, *args, prefix=""):
 
-        for file in self.selected_results:
-            # Make sure the selected result is not a directory
-            if not file[1].endswith('\\'):
-                self.frame.np.transfers.get_file(
-                    file[0], file[1], prefix, size=file[2], bitrate=file[3], length=file[4])
+        for iterator in self.selected_results:
+            user = self.resultsmodel.get_value(iterator, 1)
+            filepath = self.resultsmodel.get_value(iterator, 11)
+            size = self.resultsmodel.get_value(iterator, 13)
+            bitrate = self.resultsmodel.get_value(iterator, 8)
+            length = self.resultsmodel.get_value(iterator, 9)
+
+            self.frame.np.transfers.get_file(
+                user, filepath, prefix, size=size, bitrate=bitrate, length=length)
 
     def on_download_files_to_selected(self, selected, data):
         self.on_download_files(prefix=selected)
@@ -1235,9 +1218,9 @@ class Search(UserInterface):
         else:
             requested_folders = defaultdict(dict)
 
-        for i in self.selected_results:
-            user = i[0]
-            folder = i[1].rsplit('\\', 1)[0]
+        for iterator in self.selected_results:
+            user = self.resultsmodel.get_value(iterator, 1)
+            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
 
             if folder in requested_folders[user]:
                 """ Ensure we don't send folder content requests for a folder more than once,
@@ -1276,21 +1259,26 @@ class Search(UserInterface):
 
     def on_copy_file_path(self, *args):
 
-        if self.selected_results:
-            user, path = self.selected_results[0][:2]
-            copy_text(path)
+        for iterator in self.selected_results:
+            filepath = self.resultsmodel.get_value(iterator, 11)
+            copy_text(filepath)
+            return
 
     def on_copy_url(self, *args):
 
-        if self.selected_results:
-            user, path = self.selected_results[0][:2]
-            copy_file_url(user, path)
+        for iterator in self.selected_results:
+            user = self.resultsmodel.get_value(iterator, 1)
+            filepath = self.resultsmodel.get_value(iterator, 11)
+            copy_file_url(user, filepath)
+            return
 
     def on_copy_dir_url(self, *args):
 
-        if self.selected_results:
-            user, path = self.selected_results[0][:2]
-            copy_file_url(user, path.rsplit('\\', 1)[0] + '\\')
+        for iterator in self.selected_results:
+            user = self.resultsmodel.get_value(iterator, 1)
+            filepath = self.resultsmodel.get_value(iterator, 11)
+            copy_file_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            return
 
     def on_search_settings(self, *args):
         self.frame.on_settings(page='Searches')
