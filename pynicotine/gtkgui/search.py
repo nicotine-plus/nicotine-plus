@@ -1125,11 +1125,7 @@ class Search(UserInterface):
 
         self.select_results()
 
-        if self.selected_files_count:
-            self.on_download_files()
-        else:
-            self.on_download_folders()
-
+        self.on_download_files()
         treeview.get_selection().unselect_all()
 
     def on_popup_menu(self, menu, widget):
