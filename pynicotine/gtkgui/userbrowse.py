@@ -844,11 +844,8 @@ class UserBrowse(UserInterface):
             else:
                 self.on_upload_directory_recursive_to()
 
-        else:
-            if len(self.file_store) >= 1:
-                self.on_download_directory_to()
-            else:
-                self.on_download_directory_recursive_to()
+        elif len(self.file_store) >= 1:
+            self.on_download_directory_to()
 
         return True
 
@@ -907,18 +904,17 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.grab_focus()
             return True
 
-        if self.num_selected_files >= 1:
-            self.select_files()
-
-            if self.user == config.sections["server"]["login"]:
-                self.on_upload_files()
-                return True
-
-            self.on_download_files_to()  # (prompt, Single or Multi-selection)
+        if self.num_selected_files <= 0:  # do folder instead
+            self.on_folder_transfer_to_accelerator()
             return True
 
-        # Do folder instead
-        self.on_folder_transfer_to_accelerator()
+        self.select_files()
+
+        if self.user == config.sections["server"]["login"]:
+            self.on_upload_files()
+            return True
+
+        self.on_download_files_to()  # (with prompt, Single or Multi-selection)
         return True
 
     def on_file_transfer_accelerator(self, *args):
