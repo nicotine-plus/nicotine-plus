@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-04 05:59+0200\n"
+"POT-Creation-Date: 2021-11-05 10:53+0100\n"
 "PO-Revision-Date: 2021-11-04 13:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3304,7 +3304,8 @@ msgstr ""
 #: pynicotine/gtkgui/userbrowse.py:997
 #, fuzzy
 msgid "Select Destination for Downloading Folder with Subfolders from User"
-msgstr "Välj destination för nedladdning av mapp med undermappar från användare"
+msgstr ""
+"Välj destination för nedladdning av mapp med undermappar från användare"
 
 #: pynicotine/gtkgui/userbrowse.py:999
 #, fuzzy
@@ -4227,7 +4228,7 @@ msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
 "Det går inte att läsa aktiedatabasen. Vänligen skanna om dina aktier. Fel: %s"
 
-#: pynicotine/slskproto.py:533
+#: pynicotine/slskproto.py:561
 #, python-format
 msgid "Listening on port %i"
 msgstr "Lyssnar på port %i"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-04 05:59+0200\n"
+"POT-Creation-Date: 2021-11-05 10:53+0100\n"
 "PO-Revision-Date: 2021-11-04 13:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3239,7 +3239,8 @@ msgstr ""
 #: pynicotine/gtkgui/userbrowse.py:997
 #, fuzzy
 msgid "Select Destination for Downloading Folder with Subfolders from User"
-msgstr "Válassza ki a felhasználói almappákat tartalmazó mappa letöltési célját"
+msgstr ""
+"Válassza ki a felhasználói almappákat tartalmazó mappa letöltési célját"
 
 #: pynicotine/gtkgui/userbrowse.py:999
 #, fuzzy
@@ -4153,7 +4154,7 @@ msgstr ""
 "Megpróbálja visszaállítani a megosztott fájlok indexét hiba miatt. Kérjük, "
 "vizsgálja újra a megosztásokat."
 
-#: pynicotine/slskproto.py:533
+#: pynicotine/slskproto.py:561
 #, python-format
 msgid "Listening on port %i"
 msgstr "Figyelés a(z) %i porton"
