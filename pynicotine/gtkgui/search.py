@@ -119,7 +119,7 @@ class Searches(IconNotebook):
         if not text:
             return
 
-        mode = self.frame.SearchMethod.get_active_id()
+        mode = self.frame.SearchMethod.get_active_id() or "global"
         room = self.frame.RoomSearchEntry.get_text()
         user = self.frame.UserSearchEntry.get_text()
 
