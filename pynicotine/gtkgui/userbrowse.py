@@ -46,6 +46,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import open_file_path
 
@@ -79,11 +80,13 @@ class UserBrowses(IconNotebook):
         for tab in self.pages.values():
             if tab.Main == page:
 
-                # Remember folder or file selection
+                # Remember folder or file selection, and update info on Statusbar
                 if tab.num_selected_files >= 1:
                     GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)
+                    tab.on_select_file(tab.FileTreeView.get_selection())
                 else:
                     GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)
+                    tab.on_select_dir(tab.FolderTreeView.get_selection())
 
                 break
 
@@ -198,7 +201,7 @@ class UserBrowse(UserInterface):
 
         # Iters for current FileStore
         self.files = {}
-        self.totalsize = 0
+        self.totalsize = 0  # this isn't used anywhere
         self.num_selected_files = 0
 
         # Setup FolderTreeView
@@ -417,15 +420,53 @@ class UserBrowse(UserInterface):
 
     def select_files(self):
 
+        if self.num_selected_files <= 0:
+            return
+
         self.selected_files.clear()
+        self.selected_size = 0  # store for displaying in dialogs
+        selected_length = 0  # for length of time in Statusbar
+
         model, paths = self.FileTreeView.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
-            rawfilename = model.get_value(iterator, 0)
-            filesize = model.get_value(iterator, 4)
+            file_name = model.get_value(iterator, 0)
+            file_hsize = model.get_value(iterator, 1)
+            file_bitrate = model.get_value(iterator, 2)
+            file_hlength = model.get_value(iterator, 3)
+            file_size = model.get_value(iterator, 4)
+            # file_rate = model.get_value(iterator, 5)
+            file_length = model.get_value(iterator, 6)
 
-            self.selected_files[rawfilename] = filesize
+            self.selected_files[file_name] = file_size
+            self.selected_size += int(file_size)
+            selected_length += int(file_length)
+
+        if selected_length == 0:
+            str_length = " data"
+
+        if self.num_selected_files >= 2:
+            # Display total size and length for multi-selection
+
+            str_length = " " + human_length(selected_length)
+
+            self.frame.set_status_text(_("Selected: %s files (%s total%s)")
+                                        % (str(self.num_selected_files), human_size(self.selected_size), str_length)
+            )
+
+        if self.num_selected_files == 1:
+            # Display full info in Statusbar for selected single file,
+
+            if file_hlength:
+                str_length = " " + file_hlength
+
+            if file_bitrate:
+                file_bitrate = "[" + file_bitrate + " Kbps]"
+
+            self.frame.set_status_text(_("Selected file") + " (%(size)s%(length)s): %(name)s %(rate)s"
+                % {'size': file_hsize, 'length': str_length, 'name': file_name, 'rate': file_bitrate}
+            )
 
     def on_file_row_activated(self, treeview, path, column):
 
@@ -464,17 +505,23 @@ class UserBrowse(UserInterface):
 
         self.clear_model()
         self.shares = shares
-        private_size = num_private_folders = 0
+        private_size = num_private_folders = num_private_files = 0
 
         # Generate the directory tree and select first directory
-        size, num_folders = self.create_folder_tree(shares)
+        public_size, num_public_folders, num_public_files = self.create_folder_tree(shares)
 
         if private_shares:
             self.shares = shares + private_shares
-            private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
+            private_size, num_private_folders, num_private_files = self.create_folder_tree(private_shares, private=True)
 
-        self.AmountShared.set_text(human_size(size + private_size))
-        self.NumDirectories.set_text(str(num_folders + num_private_folders))
+        # Store total counts for external use (ToDo: future implementation)
+        self.total_size = public_size + private_size
+        self.total_num_folders = num_public_folders + num_private_folders
+        self.total_num_files = num_public_files + num_private_files
+
+        self.AmountShared.set_text(human_size(self.total_size))
+        self.NumDirectories.set_text(str(self.total_num_folders))
+        self.AmountShared.set_tooltip_text("Files: " + str(self.total_num_files))
 
         if self.ExpandButton.get_active():
             self.FolderTreeView.expand_all()
@@ -496,10 +543,11 @@ class UserBrowse(UserInterface):
     def create_folder_tree(self, shares, private=False):
 
         size = 0
+        num_folders = 0
+        num_files = 0
 
         if not shares:
-            num_folders = 0
-            return size, num_folders
+            return size, num_folders, num_files
 
         for folder, files in shares:
             current_path = ""
@@ -531,8 +579,11 @@ class UserBrowse(UserInterface):
 
             for filedata in files:
                 size += filedata[2]
+                num_files += 1
 
-        return size, len(shares)
+        num_folders = len(shares)
+
+        return size, num_folders, num_files
 
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
@@ -585,6 +636,9 @@ class UserBrowse(UserInterface):
         if not found_dir:
             return
 
+        dir_size = 0
+        dir_length = 0
+
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
             try:
@@ -604,6 +658,9 @@ class UserBrowse(UserInterface):
                 GObject.Value(GObject.TYPE_UINT64, length)
             ]
 
+            dir_size += size
+            dir_length += length
+
             try:
                 self.files[f[0]] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
             except Exception as msg:
@@ -611,6 +668,24 @@ class UserBrowse(UserInterface):
                         {'folder': directory, 'error': msg})
 
         self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+
+        if len(files) == 0:
+            self.frame.set_status_text(_("Browsing folder: %s") % self.user + "\\" + directory + "\\")
+            return
+
+        if dir_length == 0:
+            str_length = "data"
+        else:
+            str_length = human_length(dir_length)
+
+        self.frame.set_status_text(
+            _("Browsing %s files (%s total %s) in folder: %s")
+            % (str(len(files)),
+               human_size(dir_size),
+               str_length,
+               self.user + "\\" + directory + "\\"
+            )
+        )
 
     def on_save_accelerator(self, *args):
         """ Ctrl+S: Save Shares List """
@@ -713,6 +788,8 @@ class UserBrowse(UserInterface):
 
     def on_select_dir(self, selection):
 
+        self.frame.set_status_text(_("Browsing user: %s") % self.user)  # while loading or incase offline
+
         model, iterator = selection.get_selected()
 
         if iterator is None:
@@ -726,6 +803,16 @@ class UserBrowse(UserInterface):
             return
 
         self.num_selected_files = selection.count_selected_rows()
+
+        if self.num_selected_files <= 0:
+            return  # allow browsing to another folder
+
+        if 2 + 2 == 0:  # ToDo: make a Preference to disable the size and length if this is problematic
+            self.frame.set_status_text(_("Selected: %(num)s files") % {'num': str(self.num_selected_files)})
+            return  # skip iterating, because performance is affected when selecting with Shift+Up/Dn arrow keys
+
+        # Update Statusbar with file info, it is inexpensive to get data already stored in TreeView
+        self.select_files()
 
     """ Key Bindings (FolderTreeView) """
 
@@ -918,6 +1005,9 @@ class UserBrowse(UserInterface):
 
         if len(self.file_store) <= 0:
             self.FolderTreeView.grab_focus()  # avoid nav trap
+
+        if self.num_selected_files >= 2:
+            self.select_files()  # display total size in Statusbar
 
         if self.num_selected_files >= 1:
             self.on_file_properties()
