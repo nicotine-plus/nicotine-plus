@@ -14,15 +14,14 @@
     <child type="title">
       <object class="GtkBox" id="search_title">
         <property name="visible">1</property>
-        <property name="height-request">0</property>
         <property name="hexpand">0</property>
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
           <object class="GtkComboBoxText" id="SearchMethod">
             <property name="visible">1</property>
+            <property name="height-request">0</property>
             <property name="tooltip-text" translatable="yes">Search scope</property>
-            <property name="active-id">global</property>
             <signal name="changed" handler="on_search_method" swapped="no"/>
             <items>
               <item translatable="yes" id="global">Global</item>
@@ -30,15 +29,18 @@
               <item translatable="yes" id="rooms">Rooms</item>
               <item translatable="yes" id="user">User</item>
             </items>
+            <property name="active-id">global</property>
           </object>
         </child>
         <child>
           <object class="GtkComboBoxText" id="RoomSearchCombo">
             <property name="visible">0</property>
+            <property name="height-request">0</property>
             <property name="has-entry">1</property>
             <items>
               <item translatable="yes" id="joined">Joined Rooms </item>
             </items>
+            <property name="active-id">joined</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="RoomSearchEntry">
                 <property name="max-width-chars">20</property>
@@ -57,6 +59,7 @@
         <child>
           <object class="GtkComboBoxText" id="UserSearchCombo">
             <property name="visible">0</property>
+            <property name="height-request">0</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="UserSearchEntry">
@@ -76,6 +79,7 @@
         <child>
           <object class="GtkComboBoxText" id="SearchCombo">
             <property name="visible">1</property>
+            <property name="height-request">0</property>
             <property name="has-entry">1</property>
             <child internal-child="entry">
               <object class="GtkEntry" id="SearchEntry">

@@ -40,7 +40,6 @@ class RoomList(UserInterface):
 
         self.frame = frame
         self.room_iters = {}
-        frame.RoomSearchCombo.set_active_id("joined")
 
         self.room_model = Gtk.ListStore(
             str,
