@@ -1586,7 +1586,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">1</property>
-                                        <property name="label" translatable="yes">Debug Logging</property>
+                                        <property name="label" translatable="yes">Log History</property>
                                         <property name="xalign">0</property>
                                         <property name="margin-end">12</property>
                                         <attributes>
@@ -1618,6 +1618,19 @@
                                         <property name="label" translatable="yes">Uploads</property>
                                         <property name="visible">1</property>
                                         <property name="action-name">app.debuguploads</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkFlowBoxChild">
+                                    <property name="visible">1</property>
+                                    <property name="focusable">0</property>
+                                    <child>
+                                      <object class="GtkCheckButton">
+                                        <property name="label" translatable="yes">Transfers</property>
+                                        <property name="visible">1</property>
+                                        <property name="action-name">app.debugtransfers</property>
                                       </object>
                                     </child>
                                   </object>
@@ -1667,7 +1680,7 @@
                                     <property name="focusable">0</property>
                                     <child>
                                       <object class="GtkCheckButton">
-                                        <property name="label" translatable="yes">Messages</property>
+                                        <property name="label" translatable="yes">Protocol</property>
                                         <property name="visible">1</property>
                                         <property name="action-name">app.debugmessages</property>
                                       </object>
@@ -1680,20 +1693,7 @@
                                     <property name="focusable">0</property>
                                     <child>
                                       <object class="GtkCheckButton">
-                                        <property name="label" translatable="yes">Transfers</property>
-                                        <property name="visible">1</property>
-                                        <property name="action-name">app.debugtransfers</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkFlowBoxChild">
-                                    <property name="visible">1</property>
-                                    <property name="focusable">0</property>
-                                    <child>
-                                      <object class="GtkCheckButton">
-                                        <property name="label" translatable="yes">Miscellaneous</property>
+                                        <property name="label" translatable="yes">Debug</property>
                                         <property name="visible">1</property>
                                         <property name="action-name">app.debugmiscellaneous</property>
                                       </object>
@@ -1913,7 +1913,7 @@
                 <child>
                   <object class="GtkToggleButton">
                     <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Show log history</property>
+                    <property name="tooltip-text" translatable="yes">Show Log History</property>
                     <property name="action-name">win.showlog</property>
                     <child>
                       <object class="GtkImage">
