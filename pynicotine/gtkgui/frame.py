@@ -111,14 +111,29 @@ class NicotineFrame(UserInterface):
         self.log_textview = TextView(self.LogWindow)
 
         # Popup menu on the log windows
+        popup_categories = PopupMenu(self)
+        popup_categories.setup(
+            ("$" + _("Downloads"), "win.logdownloads"),
+            ("$" + _("Uploads"), "win.loguploads"),
+            ("$" + _("Search"), "win.logsearches"),
+            ("$" + _("Chat"), "win.logchat"),
+            ("", None),
+            ("$" + _("[Debug] Connections"), "win.logconnections"),
+            ("$" + _("[Debug] Messages"), "win.logmessages"),
+            ("$" + _("[Debug] Transfers"), "win.logtransfers"),
+            ("$" + _("[Debug] Miscellaneous"), "win.logmiscellaneous"),
+        )
+
         PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
-            ("#" + _("Find…"), self.on_find_log_window),
+            ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
-            ("#" + _("Copy"), self.log_textview.on_copy_text),
-            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
+            ("#" + _("_Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
             ("", None),
-            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
+            ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
+            ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
+            ("", None),
+            (">" + _("_Log Categories"), popup_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
         )
@@ -839,12 +854,6 @@ class NicotineFrame(UserInterface):
         self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
         self.set_show_log(state)
 
-        state = config.sections["logging"]["debug"]
-        action = Gio.SimpleAction.new_stateful("showdebug", None, GLib.Variant.new_boolean(state))
-        action.connect("change-state", self.on_show_debug)
-        self.MainWindow.add_action(action)
-        self.set_show_debug(state)
-
         state = config.sections["ui"]["buddylistinchatrooms"]
 
         if state not in ("tab", "chatrooms", "always"):
@@ -934,47 +943,47 @@ class NicotineFrame(UserInterface):
             self.application.set_accels_for_action("win.primarytab" + str(num),
                                                    ["<Primary>" + str(num), "<Alt>" + str(num)])
 
-        # Debug Logging
+        # Logging
 
         state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugdownloads", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logdownloads", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_downloads)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debuguploads", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("loguploads", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_uploads)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugsearches", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logsearches", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_searches)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugchat", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logchat", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_chat)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugconnections", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logconnections", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_connections)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugmessages", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logmessages", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_messages)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugtransfers", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logtransfers", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_transfers)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("debugmiscellaneous", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction.new_stateful("logmiscellaneous", None, GLib.Variant.new_boolean(state))
         action.connect("change-state", self.on_debug_miscellaneous)
-        self.application.add_action(action)
+        self.MainWindow.add_action(action)
 
         # Status Bar
 
@@ -1020,9 +1029,7 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
-            ("", None),
             ("$" + _("Show _Log Pane"), "win.showlog"),
-            ("$" + _("Show _Debug Log Controls"), "win.showdebug"),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
             ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
@@ -1840,7 +1847,7 @@ class NicotineFrame(UserInterface):
 
     def on_popup_menu_log(self, menu, textview):
         actions = menu.get_actions()
-        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
+        actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
