@@ -112,15 +112,17 @@ class NicotineFrame(UserInterface):
 
         # Popup menu on the log windows
         PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
-            ("#" + _("Find…"), self.on_find_log_window),
             ("", None),
-            ("#" + _("Copy"), self.log_textview.on_copy_text),
-            ("#" + _("Copy All"), self.log_textview.on_copy_all_text),
+            ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
-            ("#" + _("View Debug Logs"), self.on_view_debug_logs),
-            ("#" + _("View Transfer Log"), self.on_view_transfer_log),
+            ("#" + _("_Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
             ("", None),
-            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
+            ("#" + _("_Open Log _Files"), self.on_view_debug_logs),
+            ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
+            ("", None),
+            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text),
+            ("$" + _("Show _Log Pane Controls"), "win.showdebug")
         )
 
         # Text Search
@@ -1021,8 +1023,8 @@ class NicotineFrame(UserInterface):
             ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
             ("", None),
-            ("$" + _("Show _Log Pane"), "win.showlog"),
-            ("$" + _("Show _Debug Log Controls"), "win.showdebug"),
+            ("$" + _("Show _Log History Pane"), "win.showlog"),
+            ("$" + _("Show _Log Pane Controls"), "win.showdebug"),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
             ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
@@ -1840,7 +1842,7 @@ class NicotineFrame(UserInterface):
 
     def on_popup_menu_log(self, menu, textview):
         actions = menu.get_actions()
-        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
+        actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
