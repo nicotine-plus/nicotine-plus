@@ -244,7 +244,7 @@ def make_version(version):
     stable = 1
 
     if "dev" in version or "rc" in version:
-        # Example: 2.0.1.dev1
+        # Example: 3.2.0.dev1
         # A dev version will be one less than a stable version
         stable = 0
 
@@ -256,11 +256,18 @@ def human_length(seconds):
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
+    years, days = divmod(days, 365)
 
-    if days > 0:
-        ret = '%i:%02i:%02i:%02i' % (days, hours, minutes, seconds)
+    if years > 1:
+        ret = '%i years' % (years)
+    elif years > 0:
+        ret = '%i year %i days' % (years, days)
+    elif days > 1:
+        ret = '%i days %i hours' % (days, hours)
+    elif days > 0:
+        ret = '%i day %ih %im' % (days, hours, minutes)
     elif hours > 0:
-        ret = '%i:%02i:%02i' % (hours, minutes, seconds)
+        ret = '%02i:%02i:%02i' % (hours, minutes, seconds)
     else:
         ret = '%i:%02i' % (minutes, seconds)
 
