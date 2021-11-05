@@ -219,7 +219,6 @@ class UserBrowse(UserInterface):
         setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
 
         setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
-        setup_accelerator("<Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
@@ -790,11 +789,8 @@ class UserBrowse(UserInterface):
             else:
                 self.on_upload_directory_recursive_to()
 
-        else:
-            if len(self.file_store) >= 1:
-                self.on_download_directory_to()
-            else:
-                self.on_download_directory_recursive_to()
+        elif len(self.file_store) >= 1:
+            self.on_download_directory_to()
 
         return True
 
@@ -808,7 +804,7 @@ class UserBrowse(UserInterface):
             return True
 
         if len(self.file_store) <= 0:
-            # risk of accidental recursive download
+            # don't risk accidental recursive download
             self.on_folder_expand_sub_accelerator()
             return True
 
@@ -816,18 +812,12 @@ class UserBrowse(UserInterface):
         return True
 
     def on_folder_open_manager_accelerator(self, *args):
-        """ Ctrl+Alt+Enter: Open folder in File Manager...
-            (or Alt+Enter)  Download Folder Into...    """
+        """ Ctrl+Alt+Enter: Open folder in File Manager... """
 
-        if len(self.file_store) <= 0:
-            self.on_folder_expand_sub_accelerator()
+        if self.user != config.sections["server"]["login"]:
+            return False
 
-        if self.user == config.sections["server"]["login"]:
-            self.on_file_manager()
-
-        elif len(self.file_store) >= 1:  # [user is not self]
-            self.on_download_directory_to()
-
+        self.on_file_manager()
         return True
 
     """ Key Bindings (FileTreeView) """
@@ -836,8 +826,7 @@ class UserBrowse(UserInterface):
         """ Left: focus back parent folder (left arrow) """
 
         if self.FileScrolledWindow.get_hadjustment().get_value() > 0.0:
-            # Allow horizontal scrolling
-            return False
+            return False  # allow horizontal scrolling
 
         self.FolderTreeView.grab_focus()
         return True
@@ -857,18 +846,17 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.grab_focus()
             return True
 
-        if self.num_selected_files >= 1:
-            self.select_files()
-
-            if self.user == config.sections["server"]["login"]:
-                self.on_upload_files()
-                return True
-
-            self.on_download_files_to()  # (prompt, Single or Multi-selection)
+        if self.num_selected_files <= 0:  # do folder instead
+            self.on_folder_transfer_to_accelerator()
             return True
 
-        # Do folder instead
-        self.on_folder_transfer_to_accelerator()
+        self.select_files()
+
+        if self.user == config.sections["server"]["login"]:
+            self.on_upload_files()
+            return True
+
+        self.on_download_files_to()  # (with prompt, Single or Multi-selection)
         return True
 
     def on_file_transfer_accelerator(self, *args):
@@ -915,20 +903,13 @@ class UserBrowse(UserInterface):
         return True
 
     def on_file_open_manager_accelerator(self, *args):
-        """ Ctrl+Alt+Enter: Open in File Manager
-                            Download Folder Into...     """
+        """ Ctrl+Alt+Enter: Open in File Manager """
 
-        if len(self.file_store) <= 0:
-            self.FolderTreeView.grab_focus()  # avoid nav trap
-
-        elif self.user == config.sections["server"]["login"]:
+        if self.user == config.sections["server"]["login"]:
             self.on_file_manager()
 
-        elif self.num_selected_files >= 1:  # [user is not self]
-            self.on_file_properties()
-
-        elif self.num_selected_files <= 0:
-            self.on_folder_transfer_to_accelerator()
+        else:  # [user is not self]
+            self.on_file_properties_accelerator()  # same as Alt+Enter
 
         return True
 
@@ -937,10 +918,6 @@ class UserBrowse(UserInterface):
 
         if len(self.file_store) <= 0:
             self.FolderTreeView.grab_focus()  # avoid nav trap
-
-        if self.user == config.sections["server"]["login"]:
-            if self.num_selected_files <= 0:
-                self.on_file_manager()
 
         if self.num_selected_files >= 1:
             self.on_file_properties()
