@@ -509,8 +509,9 @@ class Shares:
         self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
         self.rescanning = False
-        self.compressed_shares_normal = None
-        self.compressed_shares_buddy = None
+        self.should_compress_shares = False
+        self.compressed_shares_normal = slskmessages.SharedFileList(None, None)
+        self.compressed_shares_buddy = slskmessages.SharedFileList(None, None)
 
         self.convert_shares()
         self.share_db_paths = [
@@ -734,7 +735,7 @@ class Shares:
                     index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
 
                 self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
-                self.compressed_shares_normal = None
+                self.should_compress_shares = True
 
         except Exception as error:
             log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
@@ -783,7 +784,7 @@ class Shares:
                 )
 
                 self.share_dbs["buddymtimes"][vdir] = os.path.getmtime(rdir)
-                self.compressed_shares_buddy = None
+                self.should_compress_shares = True
 
         except Exception as error:
             log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
@@ -793,9 +794,8 @@ class Shares:
         """ Returns the compressed shares message. Creates a new one if necessary, e.g.
         if an individual file was added to our shares. """
 
-        if (share_type == "normal" and self.compressed_shares_normal is None
-                or share_type == "buddy" and self.compressed_shares_buddy is None):
-            self.rescan_shares(rescan=False)
+        if self.should_compress_shares:
+            self.rescan_shares(init=True, rescan=False)
 
         if share_type == "normal":
             return self.compressed_shares_normal
@@ -911,6 +911,8 @@ class Shares:
 
                     elif item.type == "buddy":
                         self.compressed_shares_buddy = item
+
+                    self.should_compress_shares = False
 
         return False
 
