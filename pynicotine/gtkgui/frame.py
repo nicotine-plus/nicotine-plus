@@ -576,17 +576,6 @@ class NicotineFrame(UserInterface):
 
         config.sections["logging"]["logcollapsed"] = not state
 
-    def set_show_debug(self, show):
-        self.DebugButtons.set_reveal_child(show)
-
-    def on_show_debug(self, action, *args):
-
-        state = config.sections["logging"]["debug"]
-        self.set_show_debug(not state)
-        action.set_state(GLib.Variant.new_boolean(not state))
-
-        config.sections["logging"]["debug"] = not state
-
     def set_toggle_buddy_list(self, mode):
 
         page_id = self.userlist.page_id
