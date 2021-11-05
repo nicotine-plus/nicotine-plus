@@ -453,7 +453,7 @@ class UserBrowse(UserInterface):
 
             self.frame.set_status_text(
                 _("Selected: %s files (%s total%s)")
-                 % (str(self.num_selected_files), human_size(self.selected_size), str_length)
+                % (str(self.num_selected_files), human_size(self.selected_size), str_length)
             )
 
         if self.num_selected_files == 1:
@@ -467,7 +467,7 @@ class UserBrowse(UserInterface):
 
             self.frame.set_status_text(
                 _("Selected file") + " (%(size)s%(length)s): %(name)s %(rate)s"
-                 % {'size': file_hsize, 'length': str_length, 'name': file_name, 'rate': file_bitrate}
+                % {'size': file_hsize, 'length': str_length, 'name': file_name, 'rate': file_bitrate}
             )
 
     def on_file_row_activated(self, treeview, path, column):
@@ -682,7 +682,7 @@ class UserBrowse(UserInterface):
 
         self.frame.set_status_text(
             _("Browsing %s files (%s total %s) in folder: %s")
-             % (str(len(files)), human_size(dir_size), str_length, self.user + "\\" + directory + "\\")
+            % (str(len(files)), human_size(dir_size), str_length, self.user + "\\" + directory + "\\")
         )
 
     def on_save_accelerator(self, *args):
