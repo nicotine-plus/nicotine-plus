@@ -109,37 +109,9 @@ class NicotineFrame(UserInterface):
         """ Logging """
 
         self.log_textview = TextView(self.LogWindow)
-
-        # Popup menu on the log windows
-        popup_categories = PopupMenu(self)
-        popup_categories.setup(
-            ("$" + _("Downloads"), "win.logdownloads"),
-            ("$" + _("Uploads"), "win.loguploads"),
-            ("$" + _("Search"), "win.logsearches"),
-            ("$" + _("Chat"), "win.logchat"),
-            ("", None),
-            ("$" + _("[Debug] Connections"), "win.logconnections"),
-            ("$" + _("[Debug] Messages"), "win.logmessages"),
-            ("$" + _("[Debug] Transfers"), "win.logtransfers"),
-            ("$" + _("[Debug] Miscellaneous"), "win.logmiscellaneous"),
-        )
-
-        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
-            ("#" + _("_Find…"), self.on_find_log_window),
-            ("", None),
-            ("#" + _("_Copy"), self.log_textview.on_copy_text),
-            ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
-            ("", None),
-            ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
-            ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
-            ("", None),
-            (">" + _("_Log Categories"), popup_categories),
-            ("", None),
-            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
-        )
-
-        # Text Search
         TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+
+        self.create_log_context_menu()
 
         if Gtk.get_major_version() == 4:
             self.MainPaned.set_resize_start_child(True)
@@ -1815,7 +1787,36 @@ class NicotineFrame(UserInterface):
     def on_settings_uploads(self, *args):
         self.on_settings(page='Uploads')
 
-    """ Log Window """
+    """ Log Pane """
+
+    def create_log_context_menu(self):
+
+        popup_categories = PopupMenu(self)
+        popup_categories.setup(
+            ("$" + _("Downloads"), "win.logdownloads"),
+            ("$" + _("Uploads"), "win.loguploads"),
+            ("$" + _("Search"), "win.logsearches"),
+            ("$" + _("Chat"), "win.logchat"),
+            ("", None),
+            ("$" + _("[Debug] Connections"), "win.logconnections"),
+            ("$" + _("[Debug] Messages"), "win.logmessages"),
+            ("$" + _("[Debug] Transfers"), "win.logtransfers"),
+            ("$" + _("[Debug] Miscellaneous"), "win.logmiscellaneous"),
+        )
+
+        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
+            ("#" + _("_Find…"), self.on_find_log_window),
+            ("", None),
+            ("#" + _("_Copy"), self.log_textview.on_copy_text),
+            ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
+            ("", None),
+            ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
+            ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
+            ("", None),
+            (">" + _("_Log Categories"), popup_categories),
+            ("", None),
+            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
+        )
 
     def log_callback(self, timestamp_format, msg, level):
         GLib.idle_add(self.update_log, msg, level, priority=GLib.PRIORITY_LOW)
