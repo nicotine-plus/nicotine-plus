@@ -501,11 +501,11 @@ class UserBrowse(UserInterface):
 
     def create_folder_tree(self, shares, private=False):
 
-        size = 0
+        total_size = 0
 
         if not shares:
             num_folders = 0
-            return size, num_folders
+            return total_size, num_folders
 
         for folder, files in shares:
             current_path = ""
@@ -537,9 +537,9 @@ class UserBrowse(UserInterface):
                 self.iter_data_dirs[iterator.user_data] = current_path
 
             for filedata in files:
-                size += filedata[2]
+                total_size += filedata[2]
 
-        return size, len(shares)
+        return total_size, len(shares)
 
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
@@ -580,13 +580,7 @@ class UserBrowse(UserInterface):
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length
             filename = file[1]
-
-            try:
-                size = int(file[2])
-
-            except ValueError:
-                size = 0
-
+            size = file[2]
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
             f = [filename, human_size(size), h_bitrate, h_length,
@@ -594,12 +588,7 @@ class UserBrowse(UserInterface):
                  GObject.Value(GObject.TYPE_UINT64, bitrate),
                  GObject.Value(GObject.TYPE_UINT64, length)]
 
-            try:
-                self.files[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
-
-            except Exception as msg:
-                log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"),
-                        {'folder': directory, 'error': msg})
+            self.files[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
 
     def on_save_accelerator(self, *args):
         """ Ctrl+S: Save Shares List """

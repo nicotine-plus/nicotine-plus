@@ -137,8 +137,10 @@ class UserBrowse:
                     import json
                     shares_list = json.load(file_handle)
 
-            if not isinstance(shares_list, (list, dict)):
-                raise TypeError("Bad data in file %(sharesdb)s" % {'sharesdb': filename})
+            # Basic sanity check
+            for _folder, files in shares_list:
+                for _file_data in files:
+                    pass
 
             return shares_list
 
