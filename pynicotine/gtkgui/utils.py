@@ -43,16 +43,15 @@ def _parse_accelerator(accelerator):
         keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
         valid, keys = keymap.get_entries_for_keyval(key)
 
-    keycodes = [key.keycode for key in keys]
+    keycodes = set(key.keycode for key in keys)
     return keycodes, mods
 
 
 ALL_MODIFIERS = (_parse_accelerator("<Primary>")[1] | _parse_accelerator("<Shift>")[1] | _parse_accelerator("<Alt>")[1])
 
 
-def _activate_accelerator(widget, event, accelerator, callback, user_data=None):
+def _activate_accelerator(widget, event, keycodes, required_mods, callback, user_data=None):
 
-    keycodes, required_mods = _parse_accelerator(accelerator)
     activated_mods = event.state
     excluded_mods = ALL_MODIFIERS & ~required_mods
 
@@ -87,7 +86,8 @@ def setup_accelerator(accelerator, widget, callback, user_data=None):
         return
 
     # GTK 3 replacement for Gtk.ShortcutController
-    widget.connect("key-press-event", _activate_accelerator, accelerator, callback, user_data)
+    keycodes, required_mods = _parse_accelerator(accelerator)
+    widget.connect("key-press-event", _activate_accelerator, keycodes, required_mods, callback, user_data)
 
 
 """ Clipboard """
