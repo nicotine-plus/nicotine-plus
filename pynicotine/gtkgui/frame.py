@@ -110,6 +110,9 @@ class NicotineFrame(UserInterface):
 
         self.log_textview = TextView(self.LogWindow)
 
+        # Popup sub menu in the View menu and on the Log History pane
+        self.create_log_catagories_menu()
+
         # Popup menu on the log windows
         PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
             ("", None),
@@ -118,11 +121,12 @@ class NicotineFrame(UserInterface):
             ("#" + _("_Copy"), self.log_textview.on_copy_text),
             ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
             ("", None),
+            (">" + _("_Log Categories"), self.popup_menu_log_categories),
+            ("", None),
             ("#" + _("_Open Log _Files"), self.on_view_debug_logs),
             ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
             ("", None),
             ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text),
-            ("$" + _("Show _Log Pane Controls"), "win.showdebug")
         )
 
         # Text Search
@@ -1024,7 +1028,7 @@ class NicotineFrame(UserInterface):
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
             ("", None),
             ("$" + _("Show _Log History Pane"), "win.showlog"),
-            ("$" + _("Show _Log Pane Controls"), "win.showdebug"),
+            (">" + _("L_og Categories"), self.popup_menu_log_categories),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
             ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
@@ -1032,6 +1036,22 @@ class NicotineFrame(UserInterface):
         )
 
         return menu
+
+    def create_log_catagories_menu(self):
+
+        # Popup sub menu in the View menu and on the Log History pane
+        self.popup_menu_log_categories = PopupMenu(self.LogWindow)
+        self.popup_menu_log_categories.setup(
+            ("$" + _("Downloads"), "app.debugdownloads"),
+            ("$" + _("Uploads"), "app.debuguploads"),
+            ("$" + _("Search"), "app.debugsearches"),
+            ("$" + _("Chat"), "app.debugchat"),
+            ("", None),
+            ("$" + _("Transfers (debug)"), "app.debugtransfers"),
+            ("$" + _("Connections (debug)"), "app.debugconnections"),
+            ("$" + _("Protocol (debug)"), "app.debugmessages"),
+            ("$" + _("Miscellaneous (debug)"), "app.debugmiscellaneous"),
+        )
 
     def add_configure_shares_section(self, menu):
 
@@ -1843,6 +1863,9 @@ class NicotineFrame(UserInterface):
     def on_popup_menu_log(self, menu, textview):
         actions = menu.get_actions()
         actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
+
+    def on_popup_menu_log_categories(self, menu, textview):
+        actions = menu.get_actions()
 
     def on_find_log_window(self, *args):
         self.LogSearchBar.set_search_mode(True)
