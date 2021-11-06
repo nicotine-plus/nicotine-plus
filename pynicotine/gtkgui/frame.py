@@ -1640,15 +1640,8 @@ class NicotineFrame(UserInterface):
         widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, data):
-
         for filename in selected:
-            shares_list = self.np.userbrowse.get_shares_list_from_disk(filename)
-
-            if shares_list is None:
-                continue
-
-            username = filename.replace('\\', os.sep).split(os.sep)[-1]
-            self.np.userbrowse.load_local_shares_list(username, shares_list)
+            self.np.userbrowse.load_shares_list_from_disk(filename)
 
     def on_load_from_disk(self, *args):
 

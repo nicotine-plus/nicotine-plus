@@ -16,10 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
+import os
 import threading
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.utils import get_path
 from pynicotine.utils import RestrictedUnpickler
 
 
@@ -119,8 +122,7 @@ class UserBrowse:
 
         self.show_user(username, folder=folder, switch_page=switch_page)
 
-    @staticmethod
-    def get_shares_list_from_disk(filename):
+    def load_shares_list_from_disk(self, filename):
 
         try:
             try:
@@ -134,7 +136,6 @@ class UserBrowse:
                 # Try new format
 
                 with open(filename, encoding="utf-8") as file_handle:
-                    import json
                     shares_list = json.load(file_handle)
 
             # Basic sanity check
@@ -142,21 +143,43 @@ class UserBrowse:
                 for _file_data in files:
                     pass
 
-            return shares_list
-
         except Exception as msg:
             log.add(_("Loading Shares from disk failed: %(error)s"), {'error': msg})
+            return
 
-        return None
-
-    def load_local_shares_list(self, username, shares_list):
-
+        username = filename.replace('\\', os.sep).split(os.sep)[-1]
         self.show_user(username)
 
         msg = slskmessages.SharedFileList(None)
         msg.list = shares_list
 
         self.shared_file_list(username, msg)
+
+    @staticmethod
+    def _save_shares_list_to_file(path, shares_list):
+        with open(path, "w", encoding="utf-8") as file_handle:
+            json.dump(shares_list, file_handle, ensure_ascii=False)
+
+    def save_shares_list_to_disk(self, user, shares_list):
+
+        sharesdir = os.path.join(self.config.data_dir, "usershares")
+
+        try:
+            if not os.path.exists(sharesdir):
+                os.makedirs(sharesdir)
+
+        except Exception as msg:
+            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
+                    {'folder': sharesdir, 'error': msg})
+
+        try:
+            get_path(sharesdir, user, self._save_shares_list_to_file, shares_list)
+
+            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
+                    {'user': user, 'dir': sharesdir})
+
+        except Exception as msg:
+            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': msg})
 
     def show_connection_error(self, username):
         if self.ui_callback:

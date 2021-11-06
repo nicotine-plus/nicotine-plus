@@ -21,7 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import json
 import os
 
 from gi.repository import GLib
@@ -44,7 +43,6 @@ from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.utils import get_path
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
 from pynicotine.utils import open_file_path
@@ -597,29 +595,7 @@ class UserBrowse(UserInterface):
         return True
 
     def on_save(self, *args):
-
-        sharesdir = os.path.join(config.data_dir, "usershares")
-
-        try:
-            if not os.path.exists(sharesdir):
-                os.makedirs(sharesdir)
-
-        except Exception as msg:
-            log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
-                    {'folder': sharesdir, 'error': msg})
-
-        try:
-            get_path(sharesdir, self.user, self.dump_shares_to_file)
-            log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
-                    {'user': self.user, 'dir': sharesdir})
-
-        except Exception as msg:
-            log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': self.user, 'error': msg})
-
-    def dump_shares_to_file(self, path, data):
-
-        with open(path, "w", encoding="utf-8") as sharesfile:
-            json.dump(self.shares, sharesfile, ensure_ascii=False)
+        self.frame.np.userbrowse.save_shares_list_to_disk(self.user, self.shares)
 
     def save_columns(self):
         save_columns("user_browse", self.FileTreeView.get_columns())
