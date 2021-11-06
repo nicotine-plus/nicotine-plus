@@ -1337,7 +1337,11 @@ class NicotineCore:
         """ Server code: 13 """
 
         log.add_msg_contents(msg)
-        log.add_chat(msg)
+        log.add_chat(_("Chat message from user '%(user)s' in room '%(room)s': %(message)s"), {
+            "user": msg.user,
+            "room": msg.room,
+            "message": msg.msg
+        })
 
         self.chatrooms.say_chat_room(msg)
 
@@ -1369,7 +1373,10 @@ class NicotineCore:
         """ Server code: 22 """
 
         log.add_msg_contents(msg)
-        log.add_chat(msg)
+        log.add_chat(_("Private message from user '%(user)s': %(message)s"), {
+            "user": msg.user,
+            "message": msg.msg
+        })
 
         self.privatechats.message_user(msg)
 

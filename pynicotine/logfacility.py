@@ -68,7 +68,7 @@ class Logger:
         if level and not level.startswith("important") and level not in levels:
             return
 
-        if not msg_args and level in ("chat", "message"):
+        if not msg_args and level == "message":
             # Compile message contents
             msg = "%s %s" % (msg.__class__, self.contents(msg))
 
