@@ -580,26 +580,25 @@ class UserBrowse(UserInterface):
             return
 
         for file in files:
-            # Filename, HSize, Bitrate, HLength, Size, Length, RawFilename
+            # Filename, HSize, Bitrate, HLength, Size, Length
+            filename = file[1]
+
             try:
                 size = int(file[2])
 
             except ValueError:
                 size = 0
 
-            f = [file[1], human_size(size)]
-
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
-            f += [
-                h_bitrate,
-                h_length,
-                GObject.Value(GObject.TYPE_UINT64, int(size)),
-                GObject.Value(GObject.TYPE_UINT64, bitrate),
-                GObject.Value(GObject.TYPE_UINT64, length)
-            ]
+
+            f = [filename, human_size(size), h_bitrate, h_length,
+                 GObject.Value(GObject.TYPE_UINT64, size),
+                 GObject.Value(GObject.TYPE_UINT64, bitrate),
+                 GObject.Value(GObject.TYPE_UINT64, length)]
 
             try:
-                self.files[f[0]] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
+                self.files[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
+
             except Exception as msg:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"),
                         {'folder': directory, 'error': msg})
