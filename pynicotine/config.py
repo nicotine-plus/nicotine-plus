@@ -751,6 +751,8 @@ class Config:
 
     def write_config_backup(self, filename):
 
+        from pynicotine.logfacility import log
+
         if not filename.endswith(".tar.bz2"):
             filename += ".tar.bz2"
 
@@ -766,10 +768,10 @@ class Config:
                 tar.add(self.filename)
 
         except Exception as error:
-            print(error)
-            return (True, "Cannot write backup archive: %s" % error)
+            log.add(_("Error backing up config: %s"), error)
+            return
 
-        return (False, filename)
+        log.add(_("Config backed up to: %s"), filename)
 
 
 config = Config()

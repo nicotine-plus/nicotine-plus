@@ -3362,13 +3362,7 @@ class Settings(UserInterface):
             self.viewport1.add(self.pages[page_id].Main)
 
     def on_backup_config_response(self, selected, data):
-
-        error, message = config.write_config_backup(selected)
-
-        if error:
-            log.add(_("Error backing up config: %s"), message)
-        else:
-            log.add(_("Config backed up to: %s"), message)
+        config.write_config_backup(selected)
 
     def on_backup_config(self, *args):
 
