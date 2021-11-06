@@ -251,23 +251,25 @@ def make_version(version):
     return (major << 24) + (minor << 16) + (patch << 8) + stable
 
 
-def human_length(seconds):
+def human_length(seconds, long=False):
 
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
     years, days = divmod(days, 365)
 
-    if years > 1:
+    if long and years > 1:
         ret = '%i years' % (years)
-    elif years > 0:
+    elif long and years > 0:
         ret = '%i year %i days' % (years, days)
-    elif days > 1:
+    elif long and days > 1:
         ret = '%i days %i hours' % (days, hours)
-    elif days > 0:
+    elif long and days > 0:
         ret = '%i day %ih %im' % (days, hours, minutes)
+    elif days > 0:
+        ret = '%i:%02i:%02i:%02i' % (days, hours, minutes, seconds)
     elif hours > 0:
-        ret = '%02i:%02i:%02i' % (hours, minutes, seconds)
+        ret = '%i:%02i:%02i' % (hours, minutes, seconds)
     else:
         ret = '%i:%02i' % (minutes, seconds)
 
