@@ -543,13 +543,23 @@ class Search(UserInterface):
             fullpath_lower = fullpath.lower()
 
             if any(word in fullpath_lower for word in self.searchterm_words_ignore):
-                """ Filter out results with filtered words (e.g. nicotine -music) """
-                log.add_search("Filtered out excluded search result " + fullpath + " from user " + user)
+                # Filter out results with filtered words (e.g. nicotine -music)
+                log.add_debug(("Filtered out excluded search result %(filepath)s from user %(user)s for "
+                               "search term \"%(query)s\""), {
+                    "filepath": fullpath,
+                    "user": user,
+                    "query": self.text
+                })
                 continue
 
             if not any(word in fullpath_lower for word in self.searchterm_words_include):
-                """ Some users may send us wrong results, filter out such ones """
-                log.add_search("Filtered out inexact or incorrect search result " + fullpath + " from user " + user)
+                # Certain users may send us wrong results, filter out such ones
+                log.add_search(_("Filtered out incorrect search result %(filepath)s from user %(user)s for "
+                                 "search query \"%(query)s\""), {
+                    "filepath": fullpath,
+                    "user": user,
+                    "query": self.text
+                })
                 continue
 
             fullpath_split = fullpath.split('\\')

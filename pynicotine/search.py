@@ -319,7 +319,7 @@ class Search:
         if self.ui_callback:
             self.ui_callback.set_wishlist_interval(msg)
 
-        log.add_search("Wishlist wait period set to %s seconds", msg.seconds)
+        log.add_search(_("Wishlist wait period set to %s seconds"), msg.seconds)
 
     def file_search_result(self, msg):
 
@@ -509,9 +509,9 @@ class Search:
                 fileinfos.append(fileinfo)
 
         if numresults != len(fileinfos):
-            log.add_search(("File index inconsistency while responding to search request "
-                            "\"%(query)s\". %(expected_num)s results expected, but only %(total_num)s "
-                            "results were found in database."), {
+            log.add_debug(("File index inconsistency while responding to search request "
+                           "\"%(query)s\". %(expected_num)s results expected, but only %(total_num)s "
+                           "results were found in database."), {
                 "query": searchterm_old,
                 "expected_num": numresults,
                 "total_num": len(fileinfos)
@@ -535,14 +535,14 @@ class Search:
 
         if direct:
             log.add_search(
-                "User %(user)s is directly searching for \"%(query)s\", returning %(num)i results", {
+                _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults
                 })
         else:
             log.add_search(
-                "User %(user)s is searching for \"%(query)s\", returning %(num)i results", {
+                _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
                     'user': user,
                     'query': searchterm_old,
                     'num': numresults
