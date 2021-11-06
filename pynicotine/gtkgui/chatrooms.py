@@ -230,7 +230,8 @@ class ChatRooms(IconNotebook):
         pass
 
     def private_room_added(self, msg):
-        self.roomlist.update_room(msg.room)
+        user_count = 0
+        self.roomlist.update_room(msg.room, user_count)
 
     def private_room_removed(self, msg):
         pass

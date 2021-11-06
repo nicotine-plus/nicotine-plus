@@ -990,8 +990,8 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
-            ("$" + _("Show _Log History Pane"), "win.showlog"),
-            (">" + _("L_og Categories"), self.popup_menu_log_categories),
+            ("$" + _("Show Log _History Pane"), "win.showlog"),
+            (">" + _("_Log Categories"), self.popup_menu_log_categories),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
             ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
