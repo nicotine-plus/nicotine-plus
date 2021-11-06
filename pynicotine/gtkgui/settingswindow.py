@@ -2902,13 +2902,9 @@ class PluginsFrame(UserInterface):
         self.plugins_model.set(iterator, pos, not value)
 
         if not value:
-            if not self.frame.np.pluginhandler.enable_plugin(plugin):
-                log.add(_('Could not enable plugin.'))
-                return
+            self.frame.np.pluginhandler.enable_plugin(plugin)
         else:
-            if not self.frame.np.pluginhandler.disable_plugin(plugin):
-                log.add(_('Could not disable plugin.'))
-                return
+            self.frame.np.pluginhandler.disable_plugin(plugin)
 
         self.check_properties_button(plugin)
 
