@@ -198,64 +198,10 @@ class NicotineFrame(UserInterface):
         set_global_style()
         self.update_visuals()
 
-        """ Window Properties """
-
-        self.application.add_window(self.MainWindow)
-        self.MainWindow.set_title(GLib.get_application_name())
-
-        self.MainWindow.connect("notify::is-active", self.on_window_active_changed)
-        self.MainWindow.connect("notify::visible", self.on_window_visible_changed)
-
-        # Set up event controllers
-        if Gtk.get_major_version() == 4:
-            key_controller = Gtk.EventControllerKey()
-            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            key_controller.connect("key-pressed", self.on_disable_auto_away)
-
-            motion_controller = Gtk.EventControllerMotion()
-            motion_controller.connect("motion", self.on_disable_auto_away)
-
-            self.MainWindow.add_controller(key_controller)
-            self.MainWindow.add_controller(motion_controller)
-
-            self.MainWindow.connect("close-request", self.on_close_request)
-
-        else:
-            self.MainWindow.connect("key-press-event", self.on_disable_auto_away)
-            self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
-
-            self.MainWindow.connect("delete-event", self.on_close_request)
-
-        width = config.sections["ui"]["width"]
-        height = config.sections["ui"]["height"]
-
-        if Gtk.get_major_version() == 4:
-            self.MainWindow.set_default_size(width, height)
-        else:
-            self.MainWindow.resize(width, height)
-
-        if Gtk.get_major_version() == 3:
-            xpos = config.sections["ui"]["xposition"]
-            ypos = config.sections["ui"]["yposition"]
-
-            # According to the pygtk doc this will be ignored my many window managers
-            # since the move takes place before we do a show()
-            if min(xpos, ypos) < 0:
-                self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
-            else:
-                self.MainWindow.move(xpos, ypos)
-
-        if config.sections["ui"]["maximized"]:
-            self.MainWindow.maximize()
-
-        main_icon = get_icon("n")
-
-        if main_icon and Gtk.get_major_version() == 3:
-            self.MainWindow.set_default_icon(main_icon)
-        else:
-            self.MainWindow.set_default_icon_name(GLib.get_prgname())
-
         """ Show Window """
+
+        self.update_window_properties()
+        self.application.add_window(self.MainWindow)
 
         # Check command line option and config option
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
@@ -330,6 +276,65 @@ class NicotineFrame(UserInterface):
             page.save_columns()
 
     """ Init UI """
+
+    def update_window_properties(self):
+
+        # Clear notifications when main window is focused
+        self.MainWindow.connect("notify::is-active", self.on_window_active_changed)
+        self.MainWindow.connect("notify::visible", self.on_window_visible_changed)
+
+        # Set up event controllers
+        if Gtk.get_major_version() == 4:
+            key_controller = Gtk.EventControllerKey()
+            key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            key_controller.connect("key-pressed", self.on_disable_auto_away)
+
+            motion_controller = Gtk.EventControllerMotion()
+            motion_controller.connect("motion", self.on_disable_auto_away)
+
+            self.MainWindow.add_controller(key_controller)
+            self.MainWindow.add_controller(motion_controller)
+
+            self.MainWindow.connect("close-request", self.on_close_request)
+
+        else:
+            self.MainWindow.connect("key-press-event", self.on_disable_auto_away)
+            self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+
+            self.MainWindow.connect("delete-event", self.on_close_request)
+
+        # Set main window title and icon
+        self.MainWindow.set_title(GLib.get_application_name())
+
+        main_icon = get_icon("n")
+
+        if main_icon and Gtk.get_major_version() == 3:
+            self.MainWindow.set_default_icon(main_icon)
+        else:
+            self.MainWindow.set_default_icon_name(GLib.get_prgname())
+
+        # Set main window size
+        width = config.sections["ui"]["width"]
+        height = config.sections["ui"]["height"]
+
+        if Gtk.get_major_version() == 4:
+            self.MainWindow.set_default_size(width, height)
+        else:
+            self.MainWindow.resize(width, height)
+
+        # Set main window position
+        if Gtk.get_major_version() == 3:
+            xpos = config.sections["ui"]["xposition"]
+            ypos = config.sections["ui"]["yposition"]
+
+            if min(xpos, ypos) < 0:
+                self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
+            else:
+                self.MainWindow.move(xpos, ypos)
+
+        # Maximize main window if necessary
+        if config.sections["ui"]["maximized"]:
+            self.MainWindow.maximize()
 
     def init_spell_checker(self):
 
