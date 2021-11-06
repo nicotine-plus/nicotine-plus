@@ -990,7 +990,7 @@ class NicotineFrame(UserInterface):
         menu.setup(
             ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
-            ("$" + _("Show _Log Pane"), "win.showlog"),
+            ("$" + _("Show _Log History Pane"), "win.showlog"),
             ("", None),
             ("O" + _("Buddy List in Separate Tab"), "win.togglebuddylist", "tab"),
             ("O" + _("Buddy List in Chat Rooms"), "win.togglebuddylist", "chatrooms"),
@@ -1791,8 +1791,8 @@ class NicotineFrame(UserInterface):
 
     def create_log_context_menu(self):
 
-        popup_categories = PopupMenu(self)
-        popup_categories.setup(
+        popup_menu_log_categories = PopupMenu(self)
+        popup_menu_log_categories.setup(
             ("$" + _("Downloads"), "win.logdownloads"),
             ("$" + _("Uploads"), "win.loguploads"),
             ("$" + _("Search"), "win.logsearches"),
@@ -1813,7 +1813,7 @@ class NicotineFrame(UserInterface):
             ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
             ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
             ("", None),
-            (">" + _("_Log Categories"), popup_categories),
+            (">" + _("_Log Categories"), popup_menu_log_categories),
             ("", None),
             ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
         )
