@@ -449,7 +449,7 @@ class UserBrowse(UserInterface):
         if self.num_selected_files >= 2:
             # Display total size and length for multi-selection
 
-            str_length = " " + human_length(selected_length)
+            str_length = " " + human_length(selected_length, long=True)
 
             self.frame.set_status_text(
                 _("Selected: %s files (%s total%s)")
@@ -678,7 +678,7 @@ class UserBrowse(UserInterface):
         if dir_length == 0:
             str_length = "data"
         else:
-            str_length = human_length(dir_length)
+            str_length = human_length(dir_length, long=True)
 
         self.frame.set_status_text(
             _("Browsing %s files (%s total %s) in folder: %s")
