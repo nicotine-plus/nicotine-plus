@@ -192,6 +192,7 @@ class UserBrowse(UserInterface):
 
         self.selected_files = {}
         self.shares = []
+        self.shares_dict = {}
 
         # Iters for current DirStore
         self.directories = {}
@@ -450,6 +451,7 @@ class UserBrowse(UserInterface):
         self.query = None
         self.selected_folder = None
         self.shares.clear()
+        self.shares_dict.clear()
         self.selected_files.clear()
         self.directories.clear()
         self.iter_data_dirs.clear()
@@ -476,6 +478,8 @@ class UserBrowse(UserInterface):
         if private_shares:
             self.shares = shares + private_shares
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
+
+        self.shares_dict = dict(shares)
 
         self.AmountShared.set_text(human_size(size + private_size))
         self.NumDirectories.set_text(str(num_folders + num_private_folders))
@@ -568,15 +572,9 @@ class UserBrowse(UserInterface):
         self.file_store.clear()
         self.files.clear()
 
-        found_dir = False
+        files = self.shares_dict.get(directory)
 
-        for d, f in self.shares:
-            if d == directory:
-                found_dir = True
-                files = f
-                break
-
-        if not found_dir:
+        if not files:
             return
 
         for file in files:
