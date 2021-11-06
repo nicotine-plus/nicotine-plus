@@ -746,6 +746,10 @@ class UserBrowse(UserInterface):
             Shift+Right (Gtk) | "+" (Gtk) |    """
 
         path, _focus_column = self.FolderTreeView.get_cursor()
+
+        if path is None:
+            return False
+
         expandable = self.FolderTreeView.expand_row(path, False)
 
         if not expandable and len(self.file_store) > 0:
@@ -758,6 +762,9 @@ class UserBrowse(UserInterface):
 
         path, _focus_column = self.FolderTreeView.get_cursor()
 
+        if path is None:
+            return False
+
         self.FolderTreeView.collapse_row(path)  # show 2nd level
         self.FolderTreeView.expand_row(path, False)
         return True
@@ -766,6 +773,10 @@ class UserBrowse(UserInterface):
         """ =equal: expand only (dont move focus)   """
 
         path, _focus_column = self.FolderTreeView.get_cursor()
+
+        if path is None:
+            return False
+
         self.FolderTreeView.expand_row(path, False)
         return True
 
