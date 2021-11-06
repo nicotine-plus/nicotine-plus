@@ -189,17 +189,16 @@ class UserBrowse(UserInterface):
         self.search_position = 0
 
         self.selected_files = {}
-        self.shares = []
-        self.shares_dict = {}
+        self.num_selected_files = 0
+
+        self.shares = {}
 
         # Iters for current DirStore
-        self.directories = {}
-        self.iter_data_dirs = {}
+        self.dir_iters = {}
+        self.dir_user_data = {}
 
         # Iters for current FileStore
-        self.files = {}
-        self.totalsize = 0
-        self.num_selected_files = 0
+        self.file_iters = {}
 
         # Setup FolderTreeView
         self.dir_store = Gtk.TreeStore(str)
@@ -447,37 +446,37 @@ class UserBrowse(UserInterface):
     def clear_model(self):
 
         self.query = None
-        self.selected_folder = None
-        self.shares.clear()
-        self.shares_dict.clear()
-        self.selected_files.clear()
-        self.directories.clear()
-        self.iter_data_dirs.clear()
-        self.files.clear()
-        self.dir_store.clear()
-        self.file_store.clear()
         self.search_list.clear()
+
+        self.selected_folder = None
+        self.selected_files.clear()
+
+        self.shares.clear()
+
+        self.dir_iters.clear()
+        self.dir_user_data.clear()
+        self.dir_store.clear()
+
+        self.file_iters.clear()
+        self.file_store.clear()
 
     def make_new_model(self, shares, private_shares=None):
 
         self.clear_model()
-        self.shares = shares
         private_size = num_private_folders = 0
-
-        # Sort shares
-        for folder, files in shares:
-            files.sort()
-
-        shares.sort()
 
         # Generate the directory tree and select first directory
         size, num_folders = self.create_folder_tree(shares)
 
         if private_shares:
-            self.shares = shares + private_shares
+            shares = shares + private_shares
             private_size, num_private_folders = self.create_folder_tree(private_shares, private=True)
 
-        self.shares_dict = dict(shares)
+        # Sort files
+        for folder, files in shares:
+            files.sort()
+
+        self.shares = dict(shares)
 
         self.AmountShared.set_text(human_size(size + private_size))
         self.NumDirectories.set_text(str(num_folders + num_private_folders))
@@ -505,12 +504,15 @@ class UserBrowse(UserInterface):
             num_folders = 0
             return total_size, num_folders
 
+        # Sort folders
+        shares.sort()
+
         for folder, files in shares:
             current_path = ""
             root_processed = False
 
             for subfolder in folder.split('\\'):
-                parent = self.directories.get(current_path)
+                parent = self.dir_iters.get(current_path)
 
                 if not root_processed:
                     current_path = subfolder
@@ -518,7 +520,7 @@ class UserBrowse(UserInterface):
                 else:
                     current_path = '\\'.join([current_path, subfolder])
 
-                if current_path in self.directories:
+                if current_path in self.dir_iters:
                     # Folder was already added to tree
                     continue
 
@@ -529,10 +531,10 @@ class UserBrowse(UserInterface):
                 if private:
                     subfolder = "[PRIVATE FOLDER]  " + subfolder
 
-                self.directories[current_path] = iterator = self.dir_store.insert_with_values(
+                self.dir_iters[current_path] = iterator = self.dir_store.insert_with_values(
                     parent, -1, self.dir_column_numbers, [subfolder]
                 )
-                self.iter_data_dirs[iterator.user_data] = current_path
+                self.dir_user_data[iterator.user_data] = current_path
 
             for filedata in files:
                 total_size += filedata[2]
@@ -542,35 +544,31 @@ class UserBrowse(UserInterface):
     def browse_queued_folder(self):
         """ Browse a queued folder in the share """
 
-        try:
-            iterator = self.directories[self.queued_folder]
-        except KeyError:
-            # Folder not found
+        iterator = self.dir_iters.get(self.queued_folder)
+
+        if not iterator:
             return
 
-        if self.queued_folder:
-            sel = self.FolderTreeView.get_selection()
-            sel.unselect_all()
+        self.queued_folder = None
+        sel = self.FolderTreeView.get_selection()
+        path = self.dir_store.get_path(iterator)
 
-            path = self.dir_store.get_path(iterator)
-            self.FolderTreeView.expand_to_path(path)
-            sel.select_path(path)
-            self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+        self.FolderTreeView.expand_to_path(path)
+        sel.select_path(path)
+        self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 
-            self.queued_folder = None
+    def set_directory(self, iter_user_data):
 
-    def set_directory(self, iter_data):
-
-        directory = self.iter_data_dirs.get(iter_data)
+        directory = self.dir_user_data.get(iter_user_data)
 
         if not directory:
             return
 
         self.selected_folder = directory
         self.file_store.clear()
-        self.files.clear()
+        self.file_iters.clear()
 
-        files = self.shares_dict.get(directory)
+        files = self.shares.get(directory)
 
         if not files:
             return
@@ -586,7 +584,7 @@ class UserBrowse(UserInterface):
                  GObject.Value(GObject.TYPE_UINT64, bitrate),
                  GObject.Value(GObject.TYPE_UINT64, length)]
 
-            self.files[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
+            self.file_iters[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
 
     def on_save_accelerator(self, *args):
         """ Ctrl+S: Save Shares List """
@@ -595,7 +593,7 @@ class UserBrowse(UserInterface):
         return True
 
     def on_save(self, *args):
-        self.frame.np.userbrowse.save_shares_list_to_disk(self.user, self.shares)
+        self.frame.np.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
 
     def save_columns(self):
         save_columns("user_browse", self.FileTreeView.get_columns())
@@ -675,10 +673,6 @@ class UserBrowse(UserInterface):
         self.set_directory(iterator.user_data)
 
     def on_select_file(self, selection):
-
-        if selection is None:
-            return
-
         self.num_selected_files = selection.count_selected_rows()
 
     """ Key Bindings (FolderTreeView) """
@@ -963,18 +957,16 @@ class UserBrowse(UserInterface):
         # Get final download destination
         destination = self.frame.np.transfers.get_folder_destination(self.user, folder)
 
-        for d, files in self.shares:
-            # Find the wanted directory
-            if d != folder:
-                continue
+        files = self.shares.get(folder)
 
+        if files:
             if config.sections["transfers"]["reverseorder"]:
                 files.sort(key=lambda x: x[1], reverse=True)
 
-            for file in files:
-                virtualpath = "\\".join([folder, file[1]])
-                size = file[2]
-                h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+            for file_data in files:
+                virtualpath = "\\".join([folder, file_data[1]])
+                size = file_data[2]
+                h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file_data[4])
 
                 self.frame.np.transfers.get_file(
                     self.user, virtualpath, destination,
@@ -983,35 +975,31 @@ class UserBrowse(UserInterface):
         if not recurse:
             return
 
-        for subdir, subf in self.shares:
+        for subdir, subf in self.shares.items():
             if folder in subdir and folder != subdir:
                 self.download_directory(subdir, prefix=os.path.join(destination, ""))
 
     def on_download_files(self, *args, prefix=""):
 
         folder = self.selected_folder
+        files = self.shares.get(folder)
 
-        for d, f in self.shares:
-            # Find the wanted directory
-            if d != folder:
+        if not files:
+            return
+
+        for file_data in files:
+            # Find the wanted file
+            if file_data[1] not in self.selected_files:
                 continue
 
-            for file in f:
-                # Find the wanted file
-                if file[1] not in self.selected_files:
-                    continue
+            virtualpath = "\\".join([folder, file_data[1]])
+            size = file_data[2]
+            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file_data[4])
 
-                virtualpath = "\\".join([folder, file[1]])
-                size = file[2]
-                h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
-
-                # Get the file
-                self.frame.np.transfers.get_file(
-                    self.user, virtualpath, prefix,
-                    size=size, bitrate=h_bitrate, length=h_length)
-
-            # We have found the wanted directory: we can break out of the loop
-            break
+            # Get the file
+            self.frame.np.transfers.get_file(
+                self.user, virtualpath, prefix,
+                size=size, bitrate=h_bitrate, length=h_length)
 
     def on_download_files_to_selected(self, selected, data):
 
@@ -1033,11 +1021,9 @@ class UserBrowse(UserInterface):
         if not os.path.exists(path) or not os.path.isdir(path):
             path = download_folder
 
-        str_title = _("Select Destination for Downloading File(s) from User")
-
         choose_dir(
             parent=self.frame.MainWindow,
-            title=str_title,
+            title=_("Select Destination for Downloading File(s) from User"),
             callback=self.on_download_files_to_selected,
             initialdir=path,
             multichoice=False
@@ -1082,7 +1068,6 @@ class UserBrowse(UserInterface):
             parent=self.frame.MainWindow,
             title=str_title,
             message=_('Enter the name of the user you want to upload to:'),
-
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=users
@@ -1093,28 +1078,25 @@ class UserBrowse(UserInterface):
 
     def upload_directory_to(self, user, folder, recurse=False):
 
-        if folder == "" or folder is None or user is None or user == "":
+        if not folder or not user:
             return
 
         ldir = folder.split("\\")[-1]
+        files = self.shares.get(folder)
 
-        locally_queued = False
-        for d, f in self.shares:
+        if files:
+            locally_queued = False
 
-            # Find the wanted directory
-            if d != folder:
-                continue
-
-            for file in f:
-                filename = "\\".join([folder, file[1]])
-                size = file[2]
+            for file_data in files:
+                filename = "\\".join([folder, file_data[1]])
+                size = file_data[2]
                 self.frame.np.transfers.push_file(user, filename, ldir, size=size, locally_queued=locally_queued)
                 locally_queued = True
 
         if not recurse:
             return
 
-        for subdir, subf in self.shares:
+        for subdir, subf in self.shares.items():
             if folder in subdir and folder != subdir:
                 self.upload_directory_to(user, subdir, recurse)
 
@@ -1173,14 +1155,14 @@ class UserBrowse(UserInterface):
 
         self.search_list.clear()
 
-        for directory, files in self.shares:
+        for directory, files in self.shares.items():
 
             if self.query in directory.lower() and directory not in self.search_list:
                 self.search_list.append(directory)
                 continue
 
-            for file in files:
-                if self.query in file[1].lower() and directory not in self.search_list:
+            for file_data in files:
+                if self.query in file_data[1].lower() and directory not in self.search_list:
                     self.search_list.append(directory)
 
     def on_search(self, *args):
@@ -1207,14 +1189,14 @@ class UserBrowse(UserInterface):
         self.search_list = sorted(self.search_list, key=str.casefold)
         directory = self.search_list[self.search_position]
 
-        path = self.dir_store.get_path(self.directories[directory])
+        path = self.dir_store.get_path(self.dir_iters[directory])
         self.FolderTreeView.expand_to_path(path)
         self.FolderTreeView.set_cursor(path)
 
         # Get matching files in the current directory
         resultfiles = []
 
-        for file in self.files:
+        for file in self.file_iters:
             if query in file.lower():
                 resultfiles.append(file)
 
@@ -1224,7 +1206,7 @@ class UserBrowse(UserInterface):
         resultfiles.sort()
 
         for fn in resultfiles:
-            path = self.file_store.get_path(self.files[fn])
+            path = self.file_store.get_path(self.file_iters[fn])
 
             # Select each matching file in directory
             sel.select_path(path)
