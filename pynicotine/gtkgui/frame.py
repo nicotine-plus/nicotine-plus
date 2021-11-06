@@ -203,6 +203,9 @@ class NicotineFrame(UserInterface):
         self.application.add_window(self.MainWindow)
         self.MainWindow.set_title(GLib.get_application_name())
 
+        self.MainWindow.connect("notify::is-active", self.on_window_active_changed)
+        self.MainWindow.connect("notify::visible", self.on_window_visible_changed)
+
         # Set up event controllers
         if Gtk.get_major_version() == 4:
             key_controller = Gtk.EventControllerKey()

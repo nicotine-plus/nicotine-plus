@@ -774,8 +774,6 @@
     </child>
   </object>
   <object class="GtkApplicationWindow" id="MainWindow">
-    <signal name="notify::is-active" handler="on_window_active_changed" swapped="no"/>
-    <signal name="notify::visible" handler="on_window_visible_changed" swapped="no"/>
     <child>
       <object class="GtkBox" id="MainContent">
         <property name="visible">1</property>
