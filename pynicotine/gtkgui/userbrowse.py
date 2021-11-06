@@ -195,6 +195,7 @@ class UserBrowse(UserInterface):
 
         # Iters for current DirStore
         self.directories = {}
+        self.iter_data_dirs = {}
 
         # Iters for current FileStore
         self.files = {}
@@ -451,6 +452,7 @@ class UserBrowse(UserInterface):
         self.shares.clear()
         self.selected_files.clear()
         self.directories.clear()
+        self.iter_data_dirs.clear()
         self.files.clear()
         self.dir_store.clear()
         self.file_store.clear()
@@ -458,13 +460,15 @@ class UserBrowse(UserInterface):
 
     def make_new_model(self, shares, private_shares=None):
 
-        # Temporarily disable sorting for improved performance
-        self.dir_store.set_default_sort_func(lambda *args: 0)
-        self.dir_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
-
         self.clear_model()
         self.shares = shares
         private_size = num_private_folders = 0
+
+        # Sort shares
+        for folder, files in shares:
+            files.sort()
+
+        shares.sort()
 
         # Generate the directory tree and select first directory
         size, num_folders = self.create_folder_tree(shares)
@@ -480,8 +484,6 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.expand_all()
         else:
             self.FolderTreeView.collapse_all()
-
-        self.dir_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
         iterator = self.dir_store.get_iter_first()
         sel = self.FolderTreeView.get_selection()
@@ -525,9 +527,10 @@ class UserBrowse(UserInterface):
                 if private:
                     subfolder = "[PRIVATE FOLDER]  " + subfolder
 
-                self.directories[current_path] = self.dir_store.insert_with_values(
+                self.directories[current_path] = iterator = self.dir_store.insert_with_values(
                     parent, -1, self.dir_column_numbers, [subfolder]
                 )
+                self.iter_data_dirs[iterator.user_data] = current_path
 
             for filedata in files:
                 size += filedata[2]
@@ -556,19 +559,10 @@ class UserBrowse(UserInterface):
 
     def set_directory(self, iter_data):
 
-        directory = None
-
-        for d, i in self.directories.items():
-            if i.user_data == iter_data:
-                directory = d
-                break
+        directory = self.iter_data_dirs.get(iter_data)
 
         if not directory:
             return
-
-        # Temporarily disable sorting for improved performance
-        self.file_store.set_default_sort_func(lambda *args: 0)
-        self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.selected_folder = directory
         self.file_store.clear()
@@ -609,8 +603,6 @@ class UserBrowse(UserInterface):
             except Exception as msg:
                 log.add(_("Error while attempting to display folder '%(folder)s', reported error: %(error)s"),
                         {'folder': directory, 'error': msg})
-
-        self.file_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
 
     def on_save_accelerator(self, *args):
         """ Ctrl+S: Save Shares List """
