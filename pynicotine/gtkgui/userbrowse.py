@@ -41,6 +41,7 @@ from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
+from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
@@ -222,10 +223,10 @@ class UserBrowse(UserInterface):
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
             None, self.FolderTreeView,
-            ["folders", _("Folders"), -1, "text", None]  # 0
+            ["folder", _("Folder"), -1, "text", None]  # 0
         )
 
-        cols["folders"].set_sort_column_id(0)
+        cols["folder"].set_sort_column_id(0)
 
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userbrowse")
@@ -377,6 +378,13 @@ class UserBrowse(UserInterface):
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="browserfont")
+
+    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+
+        file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 0)
+
+        if file_path_tooltip:
+            return file_path_tooltip
 
     def on_expand_accelerator(self, *args):
         """ Ctrl+\backslash: Expand / Collapse All """

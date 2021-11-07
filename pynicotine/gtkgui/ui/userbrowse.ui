@@ -214,8 +214,10 @@
                               <object class="GtkTreeView" id="FolderTreeView">
                                 <property name="visible">1</property>
                                 <property name="hexpand">1</property>
+                                <property name="has-tooltip">1</property>
                                 <property name="enable-tree-lines">1</property>
                                 <property name="headers-visible">0</property>
+                                <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_folder_row_activated"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
@@ -266,7 +268,9 @@
                               <object class="GtkTreeView" id="FileTreeView">
                                 <property name="visible">1</property>
                                 <property name="hexpand">1</property>
+                                <property name="has-tooltip">1</property>
                                 <property name="rubber-banding">1</property>
+                                <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_file_row_activated"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
