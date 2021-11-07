@@ -2391,6 +2391,9 @@ class Transfers:
             if i.status != "Finished":
                 self.uploads.remove(i)
 
+                if self.uploadsview:
+                    self.uploadsview.remove_specific(i, True)
+
         self.privilegedusers.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()
