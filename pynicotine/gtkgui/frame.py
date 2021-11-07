@@ -92,7 +92,7 @@ class NicotineFrame(UserInterface):
         self.current_page_id = ""
         self.hamburger_menu = None
         self.checking_update = False
-        self.autoaway = False
+        self.auto_away = False
         self.away_timer = None
         self.bindip = bindip
         self.port = port
@@ -356,27 +356,15 @@ class NicotineFrame(UserInterface):
         GLib.idle_add(self.np.network_event, msgs)
 
     def server_login(self):
-
-        if not self.np.away:
-            self.set_user_status(_("Online"))
-            self.start_away_timer()
-        else:
-            self.set_user_status(_("Away"))
-
         self.set_widget_online_status(True)
-        self.tray_icon.set_away(self.np.away)
 
     def server_disconnect(self):
 
         self.remove_away_timer()
-
-        if self.autoaway:
-            self.autoaway = self.np.away = False
+        self.set_user_status(_("Offline"))
 
         self.set_widget_online_status(False)
         self.tray_icon.set_connected(False)
-
-        self.set_user_status(_("Offline"))
 
         # Reset transfer stats (speed, total files/users)
         self.update_bandwidth()
@@ -450,23 +438,7 @@ class NicotineFrame(UserInterface):
         self.np.disconnect()
 
     def on_away(self, *args):
-
-        self.np.away = not self.np.away
-        config.sections["server"]["away"] = self.np.away
-        self._apply_away_state()
-
-    def _apply_away_state(self):
-
-        if not self.np.away:
-            self.set_user_status(_("Online"))
-            self.on_disable_auto_away()
-        else:
-            self.set_user_status(_("Away"))
-
-        self.tray_icon.set_away(self.np.away)
-
-        self.np.request_set_status(self.np.away and 1 or 2)
-        self.away_action.set_state(GLib.Variant.new_boolean(self.np.away))
+        self.np.set_away_mode(not self.np.away, save_state=True)
 
     def on_get_privileges(self, *args):
 
@@ -1712,44 +1684,55 @@ class NicotineFrame(UserInterface):
         self.np.chatrooms.update_completions()
         self.np.privatechats.update_completions()
 
-    """ Away Timer """
+    """ Away Mode """
+
+    def set_away_mode(self, is_away):
+
+        if not is_away:
+            self.set_user_status(_("Online"))
+            self.on_disable_auto_away()
+        else:
+            self.set_user_status(_("Away"))
+
+        self.tray_icon.set_away(is_away)
+        self.away_action.set_state(GLib.Variant.new_boolean(is_away))
 
     def start_away_timer(self):
 
         self.remove_away_timer()
-        autoaway = config.sections["server"]["autoaway"]
 
-        if autoaway > 0:
-            self.away_timer = GLib.timeout_add(1000 * 60 * autoaway, self.on_enable_auto_away)
+        if self.np.away:
+            return
+
+        away_interval = config.sections["server"]["autoaway"]
+
+        if away_interval > 0:
+            self.away_timer = GLib.timeout_add(1000 * 60 * away_interval, self.on_enable_auto_away)
             return
 
         self.away_timer = None
 
     def remove_away_timer(self):
+
         if self.away_timer is not None:
             GLib.source_remove(self.away_timer)
+            self.away_timer = None
 
     def on_enable_auto_away(self):
 
         self.away_timer = None
+        self.auto_away = True
 
-        if not self.np.away:
-            self.autoaway = True
-            self.np.away = True
-
-            self._apply_away_state()
-
+        self.np.set_away_mode(True)
         return False
 
     def on_disable_auto_away(self, *args):
 
-        if self.autoaway:
-            self.autoaway = False
+        if self.auto_away:
+            self.auto_away = False
 
             if self.np.away:
-                # Disable away mode if not already done
-                self.np.away = False
-                self._apply_away_state()
+                self.np.set_away_mode(False)
 
         self.start_away_timer()
         return False

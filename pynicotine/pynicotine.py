@@ -1095,6 +1095,17 @@ class NicotineCore:
         upnp = UPnPPortMapping()
         upnp.update_port_mapping(self.protothread.listenport)
 
+    def set_away_mode(self, is_away, save_state=False):
+
+        if save_state:
+            config.sections["server"]["away"] = is_away
+
+        self.away = is_away
+        self.request_set_status(is_away and 1 or 2)
+
+        if self.ui_callback:
+            self.ui_callback.set_away_mode(is_away)
+
     def set_server_timer(self):
 
         if self.server_timeout_value == -1:
@@ -1233,8 +1244,7 @@ class NicotineCore:
             thread.start()
 
             self.logged_in = True
-            self.away = config.sections["server"]["away"]
-            self.queue.append(slskmessages.SetStatus((not self.away) + 1))
+            self.set_away_mode(config.sections["server"]["away"])
             self.watch_user(config.sections["server"]["login"])
 
             if msg.ip_address is not None:
