@@ -94,6 +94,7 @@ class NicotineFrame(UserInterface):
         self.checking_update = False
         self.auto_away = False
         self.away_timer = None
+        self.away_cooldown_time = 0
         self.bindip = bindip
         self.port = port
 
@@ -1690,7 +1691,7 @@ class NicotineFrame(UserInterface):
 
         if not is_away:
             self.set_user_status(_("Online"))
-            self.on_disable_auto_away()
+            self.set_auto_away(False)
         else:
             self.set_user_status(_("Away"))
 
@@ -1714,6 +1715,10 @@ class NicotineFrame(UserInterface):
             if self.np.away:
                 self.np.set_away_mode(False)
 
+        # Reset away timer
+        self.remove_away_timer()
+        self.create_away_timer()
+
     def create_away_timer(self):
 
         if self.np.away:
@@ -1732,10 +1737,11 @@ class NicotineFrame(UserInterface):
 
     def on_disable_auto_away(self, *args):
 
-        self.set_auto_away(False)
+        current_time = time.time()
 
-        self.remove_away_timer()
-        self.create_away_timer()
+        if (current_time - self.away_cooldown_time) >= 5:
+            self.set_auto_away(False)
+            self.away_cooldown_time = current_time
 
         return False
 
