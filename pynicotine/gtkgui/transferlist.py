@@ -87,6 +87,8 @@ class TransferList(UserInterface):
         # Status list
         self.statuses = {
             "Queued": _("Queued"),
+            "Queued (prioritized)": _("Queued (prioritized)"),
+            "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
             "Establishing connection": _("Establishing connection"),
             "Transferring": _("Transferring"),
@@ -290,12 +292,12 @@ class TransferList(UserInterface):
 
     def translate_status(self, status):
 
-        try:
-            newstatus = self.statuses[status]
-        except KeyError:
-            newstatus = status
+        translated_status = self.statuses.get(status)
 
-        return newstatus
+        if translated_status:
+            return translated_status
+
+        return status
 
     def update(self, transfer=None, forceupdate=False):
 
@@ -437,7 +439,13 @@ class TransferList(UserInterface):
         if currentbytes is None:
             currentbytes = 0
 
+        modifier = transfer.modifier
         status = transfer.status or ""
+
+        if modifier and status == "Queued":
+            # Priority status
+            status = status + " (%s)" % modifier
+
         hstatus = self.translate_status(status)
 
         try:
@@ -470,10 +478,6 @@ class TransferList(UserInterface):
         # Modify old transfer
         if transfer.iterator is not None:
             initer = transfer.iterator
-
-            if transfer.modifier:
-                user = transfer.user + " (%s)" % transfer.modifier
-                self.transfersmodel.set_value(initer, 0, user)
 
             self.transfersmodel.set_value(initer, 3, hstatus)
             self.transfersmodel.set_value(initer, 4, hplace)

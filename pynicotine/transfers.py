@@ -1155,9 +1155,6 @@ class Transfers:
                 i.lastbytes = offset
                 i.place = 0
 
-                if self.is_privileged(i.user):
-                    i.modifier = _("privileged") if i.user in self.privilegedusers else _("prioritized")
-
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
 
@@ -1652,6 +1649,9 @@ class Transfers:
 
         previously_queued = False
         old_index = 0
+
+        if self.is_privileged(user):
+            transferobj.modifier = "privileged" if user in self.privilegedusers else "prioritized"
 
         for i in self.uploads:
             if i.user == user and i.filename == filename:
