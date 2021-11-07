@@ -284,24 +284,37 @@ class NicotineFrame(UserInterface):
         self.MainWindow.connect("notify::is-active", self.on_window_active_changed)
         self.MainWindow.connect("notify::visible", self.on_window_visible_changed)
 
-        # Set up event controllers
+        # Auto-away mode
         if Gtk.get_major_version() == 4:
+            self.gesture_click = Gtk.GestureClick()
+            self.MainWindow.add_controller(self.gesture_click)
+
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             key_controller.connect("key-released", self.on_disable_auto_away)
-
-            motion_controller = Gtk.EventControllerMotion()
-            motion_controller.connect("motion", self.on_disable_auto_away)
-
             self.MainWindow.add_controller(key_controller)
-            self.MainWindow.add_controller(motion_controller)
 
-            self.MainWindow.connect("close-request", self.on_close_request)
+            scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.BOTH_AXES)
+            scroll_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+            scroll_controller.connect("scroll", self.on_disable_auto_away)
+            self.MainWindow.add_controller(scroll_controller)
 
         else:
-            self.MainWindow.connect("key-release-event", self.on_disable_auto_away)
-            self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
+            self.gesture_click = Gtk.GestureMultiPress.new(self.MainWindow)
 
+            self.MainWindow.connect("key-release-event", self.on_disable_auto_away)
+            self.MainWindow.connect("scroll-event", self.on_disable_auto_away)
+
+        self.gesture_click.set_button(0)
+        self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_click.connect("pressed", self.on_disable_auto_away)
+
+        self.MainWindow.connect("notify::is-active", self.on_disable_auto_away)
+
+        # Exit dialog
+        if Gtk.get_major_version() == 4:
+            self.MainWindow.connect("close-request", self.on_close_request)
+        else:
             self.MainWindow.connect("delete-event", self.on_close_request)
 
         # Set main window title and icon
