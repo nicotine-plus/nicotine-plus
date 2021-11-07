@@ -58,11 +58,6 @@ class PrivateChats:
         for user in self.users:
             self.core.watch_user(user)  # Get notified of user status
 
-        if self.config.sections["privatechat"]["store"]:
-            for user in self.config.sections["privatechat"]["users"]:
-                if isinstance(user, str) and user not in self.users:
-                    self.show_user(user, switch_page=False)
-
         if self.ui_callback:
             self.ui_callback.server_login()
 
@@ -94,6 +89,15 @@ class PrivateChats:
 
         if self.ui_callback:
             self.ui_callback.show_user(user, switch_page)
+
+    def load_users(self):
+
+        if not self.config.sections["privatechat"]["store"]:
+            return
+
+        for user in self.config.sections["privatechat"]["users"]:
+            if isinstance(user, str) and user not in self.users:
+                self.show_user(user, switch_page=False)
 
     def auto_replace(self, message):
 

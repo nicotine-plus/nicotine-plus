@@ -38,7 +38,6 @@ from collections import deque
 
 from pynicotine import slskmessages
 from pynicotine import slskproto
-from pynicotine import transfers
 from pynicotine.chatrooms import ChatRooms
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
@@ -52,6 +51,7 @@ from pynicotine.privatechat import PrivateChats
 from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
+from pynicotine.transfers import Transfers
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -287,13 +287,15 @@ class NicotineCore:
 
         self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
-        self.transfers = transfers.Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
+        self.transfers = Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userbrowse = UserBrowse(self, config, ui_callback)
         self.userinfo = UserInfo(self, config, self.queue, ui_callback)
         self.userlist = UserList(self, config, self.queue, ui_callback)
         self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
         self.chatrooms = ChatRooms(self, config, self.queue, ui_callback)
+
+        self.privatechats.load_users()
 
         port_range = config.sections["server"]["portrange"]
         interface = config.sections["server"]["interface"]
