@@ -249,6 +249,7 @@ class NicotineFrame(UserInterface):
 
         self.chatrooms.clear_notifications()
         self.privatechat.clear_notifications()
+        self.on_disable_auto_away()
 
         if Gtk.get_major_version() == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
@@ -294,22 +295,14 @@ class NicotineFrame(UserInterface):
             key_controller.connect("key-released", self.on_disable_auto_away)
             self.MainWindow.add_controller(key_controller)
 
-            scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.BOTH_AXES)
-            scroll_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            scroll_controller.connect("scroll", self.on_disable_auto_away)
-            self.MainWindow.add_controller(scroll_controller)
-
         else:
             self.gesture_click = Gtk.GestureMultiPress.new(self.MainWindow)
 
             self.MainWindow.connect("key-release-event", self.on_disable_auto_away)
-            self.MainWindow.connect("scroll-event", self.on_disable_auto_away)
 
         self.gesture_click.set_button(0)
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self.on_disable_auto_away)
-
-        self.MainWindow.connect("notify::is-active", self.on_disable_auto_away)
 
         # Exit dialog
         if Gtk.get_major_version() == 4:
