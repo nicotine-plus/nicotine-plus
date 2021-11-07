@@ -295,6 +295,7 @@ class NicotineCore:
         self.privatechats = PrivateChats(self, config, self.queue, ui_callback)
         self.chatrooms = ChatRooms(self, config, self.queue, ui_callback)
 
+        self.transfers.init_transfers()
         self.privatechats.load_users()
 
         port_range = config.sections["server"]["portrange"]
@@ -338,6 +339,9 @@ class NicotineCore:
 
         self.protothread.abort()
         self.stop_timers()
+
+        # Save download/upload list to file
+        self.transfers.abort_transfers()
 
         # Closing up all shelves db
         self.shares.quit()

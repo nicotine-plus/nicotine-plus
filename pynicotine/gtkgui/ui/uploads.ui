@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">0</property>
     <property name="orientation">vertical</property>
     <property name="hexpand">1</property>
     <child>
@@ -19,7 +19,6 @@
                 <property name="enable-tree-lines">1</property>
                 <property name="rubber-banding">1</property>
                 <property name="search-column">0</property>
-                <property name="sensitive">0</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
                 <child internal-child="selection">

@@ -19,7 +19,6 @@
                 <property name="enable-tree-lines">1</property>
                 <property name="rubber-banding">1</property>
                 <property name="search-column">2</property>
-                <property name="sensitive">0</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
                 <child internal-child="selection">

@@ -213,17 +213,15 @@ class TransferList(UserInterface):
 
         self.update_visuals()
 
-    def server_login(self):
+    def init_transfers(self, transfer_list):
+        self.transfer_list = transfer_list
+        self.update(forceupdate=True)
 
-        self.transfer_list = getattr(self.frame.np.transfers, "%ss" % self.type)
-        self.Transfers.set_sensitive(True)
-        self.update()
+    def server_login(self):
+        pass
 
     def server_disconnect(self):
-
-        self.Transfers.set_sensitive(False)
-        self.clear()
-        self.transfer_list = []
+        pass
 
     def rebuild_transfers(self):
         self.clear()
@@ -300,11 +298,6 @@ class TransferList(UserInterface):
         return newstatus
 
     def update(self, transfer=None, forceupdate=False):
-
-        if not self.Transfers.get_sensitive():
-            """ List is not initialized """
-            self.Main.hide()
-            return
 
         curtime = time()
 
@@ -749,7 +742,9 @@ class TransferList(UserInterface):
         self.expand_button.set_visible(active)
 
         self.tree_users = mode
-        self.rebuild_transfers()
+
+        if self.transfer_list:
+            self.rebuild_transfers()
 
         action.set_state(state)
 

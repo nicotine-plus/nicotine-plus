@@ -103,6 +103,7 @@ class Transfers:
         self.core = core
         self.config = config
         self.queue = queue
+        self.initialized = False
         self.downloads = deque()
         self.uploads = deque()
         self.privilegedusers = set()
@@ -112,9 +113,6 @@ class Transfers:
 
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
-
-        self.add_stored_transfers("downloads")
-        self.add_stored_transfers("uploads")
 
         self.users = users
         self.network_callback = network_callback
@@ -130,6 +128,19 @@ class Transfers:
             self.uploadsview = ui_callback.uploads
 
         self.update_download_filters()
+
+    def init_transfers(self):
+
+        self.add_stored_transfers("downloads")
+        self.add_stored_transfers("uploads")
+
+        if self.downloadsview:
+            self.downloadsview.init_transfers(self.downloads)
+
+        if self.uploadsview:
+            self.uploadsview.init_transfers(self.uploads)
+
+        self.initialized = True
 
     def server_login(self):
 
@@ -267,7 +278,7 @@ class Transfers:
             elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
                 status = i[3]
             else:
-                status = "Getting status"
+                status = "User logged off"
 
             if transfer_type == "uploads" and status != "Finished":
                 # Only finished uploads are supposed to be restored
@@ -1698,6 +1709,9 @@ class Transfers:
     def user_logged_out(self, user):
         """ Check if a user who previously queued a file has logged out since """
 
+        if not self.core.logged_in:
+            return True
+
         try:
             return self.users[user].status <= 0
 
@@ -2208,7 +2222,7 @@ class Transfers:
 
     def retry_download(self, transfer):
 
-        if transfer.status in ("Finished", "Old"):
+        if transfer.status == "Finished":
             return
 
         user = transfer.user
@@ -2227,7 +2241,7 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        if transfer.status in ("Finished", "Old"):
+        if transfer.status == "Finished":
             return
 
         user = transfer.user
@@ -2365,10 +2379,22 @@ class Transfers:
     def abort_transfers(self):
         """ Stop all transfers on disconnect/shutdown """
 
-        for i in self.downloads + self.uploads:
+        for i in self.downloads:
             if i.status not in ("Finished", "Paused"):
                 self.abort_transfer(i)
-                i.status = "Old"
+                i.status = "User logged off"
+                self.downloadsview.update(i)
+
+        for i in self.uploads.copy():
+            if i.status != "Finished":
+                self.uploads.remove(i)
+
+        self.privilegedusers.clear()
+        self.requested_folders.clear()
+        self.transfer_request_times.clear()
+
+        self.save_transfers("downloads")
+        self.save_transfers("uploads")
 
     def get_downloads(self):
         """ Get a list of downloads """
@@ -2378,7 +2404,7 @@ class Transfers:
     def get_uploads(self):
         """ Get a list of finished uploads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
-                for i in reversed(self.uploads) if i.status == "Finished"]
+                for i in reversed(self.uploads)]
 
     def save_downloads_callback(self, filename):
         json.dump(self.get_downloads(), filename, ensure_ascii=False)
@@ -2388,6 +2414,10 @@ class Transfers:
 
     def save_transfers(self, transfer_type):
         """ Save list of transfers """
+
+        if not self.initialized:
+            # Don't save if transfers didn't load properly!
+            return
 
         self.config.create_data_folder()
 
@@ -2403,16 +2433,6 @@ class Transfers:
     def server_disconnect(self):
 
         self.abort_transfers()
-        self.save_transfers("downloads")
-        self.save_transfers("uploads")
-
-        for i in self.uploads.copy():
-            if i.status != "Finished":
-                self.uploads.remove(i)
-
-        self.privilegedusers.clear()
-        self.requested_folders.clear()
-        self.transfer_request_times.clear()
 
         if self.downloadsview:
             self.downloadsview.server_disconnect()

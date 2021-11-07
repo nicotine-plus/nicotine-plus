@@ -433,9 +433,6 @@ class NicotineFrame(UserInterface):
         self.interests.RecommendationsButton.set_sensitive(status)
         self.interests.SimilarUsersButton.set_sensitive(status)
 
-        self.downloads.TransferButtons.set_sensitive(status)
-        self.uploads.TransferButtons.set_sensitive(status)
-
         self.ChatroomsEntry.set_sensitive(status)
         self.RoomList.set_sensitive(status)
 
