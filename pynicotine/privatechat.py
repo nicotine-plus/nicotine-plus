@@ -182,18 +182,20 @@ class PrivateChats:
 
         self.queue.append(slskmessages.MessageAcked(msg.msgid))
 
-        if self.core.network_filter.is_user_ignored(msg.user):
-            return
-
-        if msg.user in self.core.users and isinstance(self.core.users[msg.user].addr, tuple):
-            ip_address, _port = self.core.users[msg.user].addr
-            if self.core.network_filter.is_ip_ignored(ip_address):
+        if msg.user != "server":
+            # Check ignore status for all other users except "server"
+            if self.core.network_filter.is_user_ignored(msg.user):
                 return
 
-        elif msg.newmessage:
-            self.queue.append(slskmessages.GetPeerAddress(msg.user))
-            self.private_message_queue_add(msg)
-            return
+            if msg.user in self.core.users and isinstance(self.core.users[msg.user].addr, tuple):
+                ip_address, _port = self.core.users[msg.user].addr
+                if self.core.network_filter.is_ip_ignored(ip_address):
+                    return
+
+            elif msg.newmessage:
+                self.queue.append(slskmessages.GetPeerAddress(msg.user))
+                self.private_message_queue_add(msg)
+                return
 
         user_text = self.core.pluginhandler.incoming_private_chat_event(msg.user, msg.msg)
         if user_text is None:
