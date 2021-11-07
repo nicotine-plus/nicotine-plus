@@ -101,8 +101,9 @@ class PopupMenu(Gio.Menu):
 
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)
+            self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
-            self.popup_menu.present()
+
             return self.popup_menu
 
         if isinstance(widget, (Gtk.Button, Gtk.TreeView)):
@@ -372,7 +373,6 @@ class PopupMenu(Gio.Menu):
             if not x and not y:
                 x = y = 0
 
-            menu.set_halign(Gtk.Align.START)
             menu.set_offset(x, y)
             menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
             menu.popup()
