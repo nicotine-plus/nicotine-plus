@@ -93,7 +93,7 @@ class NicotineFrame(UserInterface):
         self.hamburger_menu = None
         self.checking_update = False
         self.autoaway = False
-        self.awaytimerid = None
+        self.away_timer = None
         self.bindip = bindip
         self.port = port
 
@@ -359,13 +359,7 @@ class NicotineFrame(UserInterface):
 
         if not self.np.away:
             self.set_user_status(_("Online"))
-
-            autoaway = config.sections["server"]["autoaway"]
-
-            if autoaway > 0:
-                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
-            else:
-                self.awaytimerid = None
+            self.start_away_timer()
         else:
             self.set_user_status(_("Away"))
 
@@ -374,9 +368,7 @@ class NicotineFrame(UserInterface):
 
     def server_disconnect(self):
 
-        if self.awaytimerid is not None:
-            self.remove_away_timer(self.awaytimerid)
-            self.awaytimerid = None
+        self.remove_away_timer()
 
         if self.autoaway:
             self.autoaway = self.np.away = False
@@ -1722,19 +1714,29 @@ class NicotineFrame(UserInterface):
 
     """ Away Timer """
 
-    def remove_away_timer(self, timerid):
+    def start_away_timer(self):
 
-        # Check that the away timer hasn't been destroyed already
-        # Happens if the timer expires
-        context = GLib.MainContext.default()
-        if context.find_source_by_id(timerid) is not None:
-            GLib.source_remove(timerid)
+        self.remove_away_timer()
+        autoaway = config.sections["server"]["autoaway"]
 
-    def on_auto_away(self):
+        if autoaway > 0:
+            self.away_timer = GLib.timeout_add(1000 * 60 * autoaway, self.on_enable_auto_away)
+            return
+
+        self.away_timer = None
+
+    def remove_away_timer(self):
+        if self.away_timer is not None:
+            GLib.source_remove(self.away_timer)
+
+    def on_enable_auto_away(self):
+
+        self.away_timer = None
 
         if not self.np.away:
             self.autoaway = True
             self.np.away = True
+
             self._apply_away_state()
 
         return False
@@ -1749,15 +1751,7 @@ class NicotineFrame(UserInterface):
                 self.np.away = False
                 self._apply_away_state()
 
-        if self.awaytimerid is not None:
-            self.remove_away_timer(self.awaytimerid)
-
-            autoaway = config.sections["server"]["autoaway"]
-            if autoaway > 0:
-                self.awaytimerid = GLib.timeout_add(1000 * 60 * autoaway, self.on_auto_away)
-            else:
-                self.awaytimerid = None
-
+        self.start_away_timer()
         return False
 
     """ User Actions """
