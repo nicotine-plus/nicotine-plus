@@ -288,7 +288,7 @@ class NicotineFrame(UserInterface):
         if Gtk.get_major_version() == 4:
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            key_controller.connect("key-pressed", self.on_disable_auto_away)
+            key_controller.connect("key-released", self.on_disable_auto_away)
 
             motion_controller = Gtk.EventControllerMotion()
             motion_controller.connect("motion", self.on_disable_auto_away)
@@ -299,7 +299,7 @@ class NicotineFrame(UserInterface):
             self.MainWindow.connect("close-request", self.on_close_request)
 
         else:
-            self.MainWindow.connect("key-press-event", self.on_disable_auto_away)
+            self.MainWindow.connect("key-release-event", self.on_disable_auto_away)
             self.MainWindow.connect("motion-notify-event", self.on_disable_auto_away)
 
             self.MainWindow.connect("delete-event", self.on_close_request)
