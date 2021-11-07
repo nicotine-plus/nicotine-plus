@@ -2383,7 +2383,9 @@ class Transfers:
             if i.status not in ("Finished", "Paused"):
                 self.abort_transfer(i)
                 i.status = "User logged off"
-                self.downloadsview.update(i)
+
+                if self.downloadsview:
+                    self.downloadsview.update(i)
 
         for i in self.uploads.copy():
             if i.status != "Finished":

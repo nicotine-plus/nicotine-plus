@@ -36,6 +36,7 @@ class TransfersTest(unittest.TestCase):
         config.load_config()
 
         self.transfers = Transfers(Mock(), config, deque(), {}, Mock())
+        self.transfers.init_transfers()
         self.transfers.server_login()
 
     def test_load_downloads(self):
@@ -69,6 +70,7 @@ class TransfersTest(unittest.TestCase):
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
+        self.transfers.initialized = False
         self.transfers.abort_transfers()
 
         old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
