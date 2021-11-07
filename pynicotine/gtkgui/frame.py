@@ -1697,36 +1697,16 @@ class NicotineFrame(UserInterface):
         self.tray_icon.set_away(is_away)
         self.away_action.set_state(GLib.Variant.new_boolean(is_away))
 
-    def start_away_timer(self):
+    def set_auto_away(self, active):
 
-        self.remove_away_timer()
-
-        if self.np.away:
-            return
-
-        away_interval = config.sections["server"]["autoaway"]
-
-        if away_interval > 0:
-            self.away_timer = GLib.timeout_add(1000 * 60 * away_interval, self.on_enable_auto_away)
-            return
-
-        self.away_timer = None
-
-    def remove_away_timer(self):
-
-        if self.away_timer is not None:
-            GLib.source_remove(self.away_timer)
+        if active:
+            self.auto_away = True
             self.away_timer = None
 
-    def on_enable_auto_away(self):
+            if not self.np.away:
+                self.np.set_away_mode(True)
 
-        self.away_timer = None
-        self.auto_away = True
-
-        self.np.set_away_mode(True)
-        return False
-
-    def on_disable_auto_away(self, *args):
+            return
 
         if self.auto_away:
             self.auto_away = False
@@ -1734,7 +1714,29 @@ class NicotineFrame(UserInterface):
             if self.np.away:
                 self.np.set_away_mode(False)
 
-        self.start_away_timer()
+    def create_away_timer(self):
+
+        if self.np.away:
+            return
+
+        away_interval = config.sections["server"]["autoaway"]
+
+        if away_interval > 0:
+            self.away_timer = GLib.timeout_add(1000 * 60 * away_interval, self.set_auto_away, True)
+
+    def remove_away_timer(self):
+
+        if self.away_timer is not None:
+            GLib.source_remove(self.away_timer)
+            self.away_timer = None
+
+    def on_disable_auto_away(self, *args):
+
+        self.set_auto_away(False)
+
+        self.remove_away_timer()
+        self.create_away_timer()
+
         return False
 
     """ User Actions """
