@@ -241,8 +241,8 @@ class UserBrowse(UserInterface):
 
         if user == config.sections["server"]["login"]:
             self.folder_popup_menu.setup(
-                ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
-                ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
+                ("#" + _("Upload Folder…"), self.on_upload_directory_to),
+                ("#" + _("Upload Folder & Subfolder(s)…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
                 ("", None),
@@ -255,8 +255,8 @@ class UserBrowse(UserInterface):
             self.folder_popup_menu.setup(
                 ("#" + _("_Download Folder"), self.on_download_directory),
                 ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
+                ("#" + _("Download Folder & Subfolder(s)"), self.on_download_directory_recursive),
+                ("#" + _("Download Folder & Subfolder(s) To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
@@ -315,9 +315,8 @@ class UserBrowse(UserInterface):
             self.file_popup_menu.setup(
                 ("#" + "selected_files", None),
                 ("", None),
-                ("#" + _("Up_load File(s)"), self.on_upload_files),
-                ("#" + _("Upload Folder To…"), self.on_upload_directory_to),
-                ("#" + _("Upload Folder Recursive To…"), self.on_upload_directory_recursive_to),
+                ("#" + _("Up_load File(s)…"), self.on_upload_files),
+                ("#" + _("Upload Folder…"), self.on_upload_directory_to),
                 ("", None),
                 ("#" + _("Send to _Player"), self.on_play_files),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
@@ -337,8 +336,6 @@ class UserBrowse(UserInterface):
                 ("", None),
                 ("#" + _("_Download Folder"), self.on_download_directory),
                 ("#" + _("Download Folder _To…"), self.on_download_directory_to),
-                ("#" + _("Download _Recursive"), self.on_download_directory_recursive),
-                ("#" + _("Download R_ecursive To…"), self.on_download_directory_recursive_to),
                 ("", None),
                 ("#" + _("F_ile Properties"), self.on_file_properties),
                 ("", None),
