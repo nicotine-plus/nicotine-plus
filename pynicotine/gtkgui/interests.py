@@ -87,6 +87,7 @@ class Interests(UserInterface):
         cols["item"].set_sort_column_id(1)
 
         self.RecommendationsList.set_model(self.recommendations_model)
+        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(
@@ -277,15 +278,14 @@ class Interests(UserInterface):
     def on_similar_users_clicked(self, *args):
         self.frame.np.interests.request_similar_users()
 
-    def set_recommendations(self, recom):
+    def set_recommendations(self, recommendations):
+
         self.recommendations_model.clear()
 
-        for (thing, rating) in recom.items():
+        for thing, rating in recommendations.items():
             self.recommendations_model.insert_with_valuesv(
                 -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
             )
-
-        self.recommendations_model.set_sort_column_id(2, Gtk.SortType.DESCENDING)
 
     def global_recommendations(self, msg):
         self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
