@@ -412,8 +412,6 @@ class NicotineFrame(UserInterface):
         self.away_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
 
-        self.PrivateChatCombo.set_sensitive(status)
-
         self.UserBrowseCombo.set_sensitive(status)
 
         if self.current_page_id == self.userbrowse.page_id:
@@ -424,7 +422,6 @@ class NicotineFrame(UserInterface):
         if self.current_page_id == self.userinfo.page_id:
             GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
-        self.UserSearchCombo.set_sensitive(status)
         self.SearchCombo.set_sensitive(status)
 
         if self.current_page_id == self.search.page_id:
