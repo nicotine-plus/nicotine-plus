@@ -1878,11 +1878,10 @@ class SearchesFrame(UserInterface):
         active = widget.get_active()
 
         for entry in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
-                  self.FilterBR, self.FilterCC, self.FilterFree):
+                      self.FilterBR, self.FilterCC, self.FilterFree):
             entry.set_sensitive(active)
 
-        for label in (self.LabelIn, self.LabelOut, self.LabelType, self.LabelSize,
-                  self.LabelBR, self.LabelCC):
+        for label in (self.LabelIn, self.LabelOut, self.LabelType, self.LabelSize, self.LabelBR, self.LabelCC):
             label.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
