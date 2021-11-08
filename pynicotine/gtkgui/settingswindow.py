@@ -932,7 +932,7 @@ class UserInfoFrame(UserInterface):
         self.ImageChooser.clear()
 
 
-class IgnoreListFrame(UserInterface):
+class IgnoredUsersFrame(UserInterface):
 
     def __init__(self, parent):
 
@@ -954,9 +954,9 @@ class IgnoreListFrame(UserInterface):
         self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
         cols = initialise_columns(
             None, self.IgnoredUsers,
-            ["users", _("Users"), -1, "text", None]
+            ["username", _("Username"), -1, "text", None]
         )
-        cols["users"].set_sort_column_id(0)
+        cols["username"].set_sort_column_id(0)
 
         self.IgnoredUsers.set_model(self.ignorelist)
 
@@ -966,11 +966,11 @@ class IgnoreListFrame(UserInterface):
         self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
         cols = initialise_columns(
             None, self.IgnoredIPs,
-            ["addresses", _("Addresses"), -1, "text", None],
-            ["users", _("Users"), -1, "text", None]
+            ["ip_address", _("IP Address"), -1, "text", None],
+            ["user", _("User"), -1, "text", None]
         )
-        cols["addresses"].set_sort_column_id(0)
-        cols["users"].set_sort_column_id(1)
+        cols["ip_address"].set_sort_column_id(0)
+        cols["user"].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
@@ -1082,7 +1082,7 @@ class IgnoreListFrame(UserInterface):
             del self.ignored_ips[ip]
 
 
-class BanListFrame(UserInterface):
+class BannedUsersFrame(UserInterface):
 
     def __init__(self, parent):
 
@@ -1112,9 +1112,9 @@ class BanListFrame(UserInterface):
         self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
         cols = initialise_columns(
             None, self.BannedList,
-            ["users", _("Users"), -1, "text", None]
+            ["username", _("Username"), -1, "text", None]
         )
-        cols["users"].set_sort_column_id(0)
+        cols["username"].set_sort_column_id(0)
 
         self.BannedList.set_model(self.banlist_model)
 
@@ -1124,11 +1124,11 @@ class BanListFrame(UserInterface):
         self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
         cols = initialise_columns(
             None, self.BlockedList,
-            ["addresses", _("Addresses"), -1, "text", None],
-            ["users", _("Users"), -1, "text", None]
+            ["ip_address", _("IP Address"), -1, "text", None],
+            ["user", _("User"), -1, "text", None]
         )
-        cols["addresses"].set_sort_column_id(0)
-        cols["users"].set_sort_column_id(1)
+        cols["ip_address"].set_sort_column_id(0)
+        cols["user"].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
 
@@ -1418,8 +1418,6 @@ class UserInterfaceFrame(UserInterface):
 
                 "file_path_tooltips": self.FilePathTooltips,
                 "reverse_file_paths": self.ReverseFilePaths,
-                "private_search_results": self.ShowPrivateSearchResults,
-                "private_shares": self.ShowPrivateShares,
 
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
@@ -1537,8 +1535,6 @@ class UserInterfaceFrame(UserInterface):
 
                 "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
-                "private_search_results": self.ShowPrivateSearchResults.get_active(),
-                "private_shares": self.ShowPrivateShares.get_active(),
 
                 "tabmain": self.pos_list.get_value(iter_main, 1),
                 "tabrooms": self.pos_list.get_value(iter_rooms, 1),
@@ -1781,7 +1777,8 @@ class SearchesFrame(UserInterface):
                 "max_displayed_results": self.MaxDisplayedResults,
                 "min_search_chars": self.MinSearchChars,
                 "remove_special_chars": self.RemoveSpecialChars,
-                "enable_history": self.EnableSearchHistory
+                "enable_history": self.EnableSearchHistory,
+                "private_search_results": self.ShowPrivateSearchResults
             }
         }
 
@@ -1833,7 +1830,8 @@ class SearchesFrame(UserInterface):
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
                 "min_search_chars": self.MinSearchChars.get_value_as_int(),
                 "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "enable_history": self.EnableSearchHistory.get_active()
+                "enable_history": self.EnableSearchHistory.get_active(),
+                "private_search_results": self.ShowPrivateSearchResults.get_active()
             }
         }
 
@@ -1858,39 +1856,6 @@ class SearchesFrame(UserInterface):
             w.set_sensitive(active)
 
 
-class EventsFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/events.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "ui": {
-                "filemanager": self.FileManagerCombo
-            },
-            "players": {
-                "default": self.audioPlayerCombo
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-    def get_settings(self):
-
-        return {
-            "ui": {
-                "filemanager": self.FileManagerCombo.get_child().get_text()
-            },
-            "players": {
-                "default": self.audioPlayerCombo.get_child().get_text()
-            }
-        }
-
-
 class UrlHandlersFrame(UserInterface):
 
     def __init__(self, parent):
@@ -1903,6 +1868,12 @@ class UrlHandlersFrame(UserInterface):
         self.options = {
             "urls": {
                 "protocols": None
+            },
+            "ui": {
+                "filemanager": self.FileManagerCombo
+            },
+            "players": {
+                "default": self.audioPlayerCombo
             }
         }
 
@@ -1913,15 +1884,15 @@ class UrlHandlersFrame(UserInterface):
         cols = initialise_columns(
             None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
-            ["handler", _("Handler"), -1, "combo", None]
+            ["command", _("Command"), -1, "combo", None]
         )
 
         cols["protocol"].set_sort_column_id(0)
-        cols["handler"].set_sort_column_id(1)
+        cols["command"].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
 
-        renderers = cols["handler"].get_cells()
+        renderers = cols["command"].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
@@ -1957,6 +1928,12 @@ class UrlHandlersFrame(UserInterface):
         return {
             "urls": {
                 "protocols": protocols
+            },
+            "ui": {
+                "filemanager": self.FileManagerCombo.get_child().get_text()
+            },
+            "players": {
+                "default": self.audioPlayerCombo.get_child().get_text()
             }
         }
 
@@ -2832,11 +2809,11 @@ class PluginsFrame(UserInterface):
         cols = initialise_columns(
             None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugins", _("Plugins"), 380, "text", None]
+            ["plugin", _("Plugin"), 380, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)
-        cols["plugins"].set_sort_column_id(1)
+        cols["plugin"].set_sort_column_id(1)
 
         renderers = cols["enabled"].get_cells()
         column_pos = 0
@@ -3042,11 +3019,10 @@ class Settings(UserInterface):
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
         self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
         self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
-        self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
-        self.tree["Events"] = model.append(row, [_("Events"), "Events"])
+        self.tree["BannedUsers"] = model.append(row, [_("Banned Users"), "BannedUsers"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])
+        self.tree["IgnoredUsers"] = model.append(row, [_("Ignored Users"), "IgnoredUsers"])
         self.tree["CensorReplaceList"] = model.append(row, [_("Censor & Replace"), "CensorReplaceList"])
         self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
@@ -3311,7 +3287,7 @@ class Settings(UserInterface):
             need_completion = False
 
         try:
-            need_ip_block = self.pages["BanList"].need_ip_block
+            need_ip_block = self.pages["BannedUsers"].need_ip_block
 
         except KeyError:
             need_ip_block = False
