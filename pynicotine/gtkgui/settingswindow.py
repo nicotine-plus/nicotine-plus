@@ -1858,39 +1858,6 @@ class SearchesFrame(UserInterface):
             w.set_sensitive(active)
 
 
-class EventsFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/events.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "ui": {
-                "filemanager": self.FileManagerCombo
-            },
-            "players": {
-                "default": self.audioPlayerCombo
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-    def get_settings(self):
-
-        return {
-            "ui": {
-                "filemanager": self.FileManagerCombo.get_child().get_text()
-            },
-            "players": {
-                "default": self.audioPlayerCombo.get_child().get_text()
-            }
-        }
-
-
 class UrlHandlersFrame(UserInterface):
 
     def __init__(self, parent):
@@ -1903,6 +1870,12 @@ class UrlHandlersFrame(UserInterface):
         self.options = {
             "urls": {
                 "protocols": None
+            },
+            "ui": {
+                "filemanager": self.FileManagerCombo
+            },
+            "players": {
+                "default": self.audioPlayerCombo
             }
         }
 
@@ -1913,15 +1886,15 @@ class UrlHandlersFrame(UserInterface):
         cols = initialise_columns(
             None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
-            ["handler", _("Handler"), -1, "combo", None]
+            ["command", _("Command"), -1, "combo", None]
         )
 
         cols["protocol"].set_sort_column_id(0)
-        cols["handler"].set_sort_column_id(1)
+        cols["command"].set_sort_column_id(1)
 
         self.ProtocolHandlers.set_model(self.protocolmodel)
 
-        renderers = cols["handler"].get_cells()
+        renderers = cols["command"].get_cells()
         for render in renderers:
             render.connect('edited', self.cell_edited_callback, self.ProtocolHandlers, 1)
 
@@ -1957,6 +1930,12 @@ class UrlHandlersFrame(UserInterface):
         return {
             "urls": {
                 "protocols": protocols
+            },
+            "ui": {
+                "filemanager": self.FileManagerCombo.get_child().get_text()
+            },
+            "players": {
+                "default": self.audioPlayerCombo.get_child().get_text()
             }
         }
 
@@ -3043,7 +3022,6 @@ class Settings(UserInterface):
         self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
         self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
         self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
-        self.tree["Events"] = model.append(row, [_("Events"), "Events"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
         self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])

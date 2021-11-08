@@ -29,7 +29,7 @@
               <object class="GtkLabel">
                 <property name="visible">1</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">Instances of $ will be replaced by the link. The default web browser of the system will be used in cases where a protocol has not been configured.</property>
+                <property name="label" translatable="yes">Instances of $ are replaced by the URL. Default system applications are used in cases where a protocol has not been configured.</property>
                 <property name="selectable">1</property>
                 <property name="wrap">1</property>
               </object>
@@ -85,7 +85,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Handler:</property>
+                    <property name="label" translatable="yes">Command:</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">Handler</property>
                   </object>
@@ -212,6 +212,89 @@
                         </style>
                       </object>
                     </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Media player command:</property>
+                    <property name="wrap">1</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">audioPlayerCombo</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="audioPlayerCombo">
+                    <property name="visible">1</property>
+                    <property name="has-entry">1</property>
+                    <items>
+                      <item>xdg-open $</item>
+                      <item>amarok -a $</item>
+                      <item>audacious -e $</item>
+                      <item>exaile $</item>
+                      <item>rhythmbox $</item>
+                      <item>xmms2 add -f $</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">File manager command:</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">FileManagerCombo</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="FileManagerCombo">
+                    <property name="visible">1</property>
+                    <property name="has-entry">1</property>
+                    <items>
+                      <item>xdg-open $</item>
+                      <item>explorer $</item>
+                      <item>emelfm2 -1 $</item>
+                      <item>gentoo -1 $</item>
+                      <item>konqueror $</item>
+                      <item>krusader --left $</item>
+                      <item>nautilus --no-desktop $</item>
+                      <item>rox $</item>
+                      <item>thunar $</item>
+                      <item>xterm -e mc $</item>
+                    </items>
                   </object>
                 </child>
               </object>
