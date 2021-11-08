@@ -1401,8 +1401,11 @@ class UserInterfaceFrame(UserInterface):
             ):
                 liststore.insert_with_valuesv(-1, column_numbers, row)
 
-        self.needcolors = 0
+        self.needcolors = False
         self.options = {
+            "notifications": {
+                "notification_tab_colors": self.NotificationTabColors
+            },
             "transfers": {
                 "download_doubleclick": self.DownloadDoubleClick,
                 "upload_doubleclick": self.UploadDoubleClick
@@ -1487,7 +1490,7 @@ class UserInterfaceFrame(UserInterface):
             if model.get_value(iterator, 1).lower() == data["cfg"].lower():
                 data["combobox"].set_active_iter(iterator)
 
-        # Override settings for the GtkComboBox defining ui positionning
+        # Override settings for the GtkComboBox defining ui positioning
         for opt in [
             "tabmain", "tabrooms", "tabprivate",
             "tabsearch", "tabinfo", "tabbrowse"
@@ -1501,8 +1504,11 @@ class UserInterfaceFrame(UserInterface):
                 "combobox": self.options["ui"][opt]
             })
 
+        self.on_username_hotspots_toggled(self.UsernameHotspots)
+        self.on_tab_notification_color_toggled(self.NotificationTabColors)
+
         self.update_color_buttons()
-        self.needcolors = 0
+        self.needcolors = False
 
     def get_settings(self):
 
@@ -1520,6 +1526,9 @@ class UserInterfaceFrame(UserInterface):
             enabled_tabs[page_id] = widget.get_active()
 
         return {
+            "notifications": {
+                "notification_tab_colors": self.NotificationTabColors.get_active()
+            },
             "transfers": {
                 "download_doubleclick": self.DownloadDoubleClick.get_active(),
                 "upload_doubleclick": self.UploadDoubleClick.get_active()
@@ -1582,10 +1591,10 @@ class UserInterfaceFrame(UserInterface):
         font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
         font_button.set_font_name("")
 
-        self.needcolors = 1
+        self.needcolors = True
 
     def on_fonts_changed(self, widget):
-        self.needcolors = 1
+        self.needcolors = True
 
     """ Colors """
 
@@ -1661,6 +1670,19 @@ class UserInterfaceFrame(UserInterface):
         self.PickOnline.set_sensitive(sensitive)
         self.PickOffline.set_sensitive(sensitive)
 
+    def on_tab_notification_color_toggled(self, widget):
+
+        sensitive = widget.get_active()
+
+        self.EntryChangedTab.set_sensitive(sensitive)
+        self.EntryHighlightTab.set_sensitive(sensitive)
+
+        self.DefaultChangedTab.set_sensitive(sensitive)
+        self.DefaultHighlightTab.set_sensitive(sensitive)
+
+        self.PickChangedTab.set_sensitive(sensitive)
+        self.PickHighlightTab.set_sensitive(sensitive)
+
     def on_colors_changed(self, widget):
 
         if isinstance(widget, Gtk.Entry):
@@ -1670,7 +1692,7 @@ class UserInterfaceFrame(UserInterface):
             color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
             color_button.set_rgba(rgba)
 
-        self.needcolors = 1
+        self.needcolors = True
 
 
 class LoggingFrame(UserInterface):
@@ -2169,7 +2191,7 @@ class CompletionFrame(UserInterface):
         }
 
     def set_settings(self):
-        self.needcompletion = 0
+        self.needcompletion = False
 
         try:
             gi.require_version('Gspell', '1')
@@ -2181,11 +2203,11 @@ class CompletionFrame(UserInterface):
         self.p.set_widgets_data(self.options)
 
     def on_completion_changed(self, widget):
-        self.needcompletion = 1
+        self.needcompletion = True
 
     def on_completion_tab_check(self, widget):
         sensitive = self.CompletionTabCheck.get_active()
-        self.needcompletion = 1
+        self.needcompletion = True
 
         self.CompletionCycleCheck.set_sensitive(sensitive)
         self.CompleteRoomNamesCheck.set_sensitive(sensitive)
@@ -2199,7 +2221,7 @@ class CompletionFrame(UserInterface):
 
     def on_completion_dropdown_check(self, widget):
         sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
-        self.needcompletion = 1
+        self.needcompletion = True
 
         self.CharactersCompletion.set_sensitive(sensitive)
         self.OneMatchCheck.set_sensitive(sensitive)
@@ -2407,7 +2429,6 @@ class NotificationsFrame(UserInterface):
         self.options = {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle,
-                "notification_tab_colors": self.NotificationTabColors,
                 "notification_tab_icons": self.NotificationTabIcons,
                 "notification_popup_sound": self.NotificationPopupSound,
                 "notification_popup_file": self.NotificationPopupFile,
@@ -2450,7 +2471,6 @@ class NotificationsFrame(UserInterface):
         return {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_tab_colors": self.NotificationTabColors.get_active(),
                 "notification_tab_icons": self.NotificationTabIcons.get_active(),
                 "notification_popup_sound": self.NotificationPopupSound.get_active(),
                 "notification_popup_file": self.NotificationPopupFile.get_active(),
