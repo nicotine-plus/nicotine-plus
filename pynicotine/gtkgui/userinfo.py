@@ -149,6 +149,7 @@ class UserInfo(UserInterface):
         self.frame = userinfos.frame
 
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
+        self.descr_textview = TextView(self.descr)
 
         if Gtk.get_major_version() == 4:
             self.image = Gtk.Picture()
@@ -175,22 +176,8 @@ class UserInfo(UserInterface):
         self.zoom_factor = 5
         self.actual_zoom = 0
 
-        self.descr_textview = TextView(self.descr)
-
-        self.hates_store = Gtk.ListStore(str)
-        self.Hates.set_model(self.hates_store)
-
-        self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
-        cols = initialise_columns(
-            None, self.Hates,
-            ["dislikes", _("Dislikes"), 0, "text", None]
-        )
-        cols["dislikes"].set_sort_column_id(0)
-
-        self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-
+        # Set up likes list
         self.likes_store = Gtk.ListStore(str)
-        self.Likes.set_model(self.likes_store)
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
@@ -200,9 +187,22 @@ class UserInfo(UserInterface):
         cols["likes"].set_sort_column_id(0)
 
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.Likes.set_model(self.likes_store)
 
-        self.update_visuals()
+        # Set up dislikes list
+        self.hates_store = Gtk.ListStore(str)
 
+        self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
+        cols = initialise_columns(
+            None, self.Hates,
+            ["dislikes", _("Dislikes"), 0, "text", None]
+        )
+        cols["dislikes"].set_sort_column_id(0)
+
+        self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.Hates.set_model(self.hates_store)
+
+        # Popup menus
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userinfo")
         popup.setup(
@@ -232,28 +232,21 @@ class UserInfo(UserInterface):
             ("#" + _("Save Picture"), self.on_save_picture)
         )
 
+        self.update_visuals()
+
     def set_label(self, label):
         self.user_popup.set_widget(label)
+
+    def save_columns(self):
+        # Unused
+        pass
 
     def update_visuals(self):
 
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def user_interests(self, msg):
-
-        self.likes_store.clear()
-        self.hates_store.clear()
-
-        for like in msg.likes:
-            self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
-
-        for hate in msg.hates:
-            self.hates_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
-
-    def save_columns(self):
-        # Unused
-        pass
+    """ General """
 
     def load_picture(self, data):
 
@@ -299,179 +292,6 @@ class UserInfo(UserInterface):
                 "user": self.user,
                 "error": str(e)
             })
-
-    def get_user_stats(self, msg):
-
-        if msg.avgspeed > 0:
-            self.speed.set_text(human_speed(msg.avgspeed))
-
-        self.filesshared.set_text(humanize(msg.files))
-        self.dirsshared.set_text(humanize(msg.dirs))
-
-    def set_user_country(self, country_code):
-
-        if country_code:
-            country = GeoIP.country_code_to_name(country_code)
-            country_text = "%s (%s)" % (country, country_code)
-        else:
-            country_text = _("Unknown")
-
-        self.country.set_text(country_text)
-
-    def show_connection_error(self):
-
-        self.info_bar.show_message(
-            _("Unable to request information from user. Either you both have a closed listening "
-              "port, the user is offline, or there's a temporary connectivity issue.")
-        )
-
-        self.set_finished()
-
-    def set_finished(self):
-
-        self.frame.request_tab_hilite(self.userinfos.page_id)
-        self.userinfos.request_changed(self.Main)
-
-        self.progressbar.set_fraction(1.0)
-
-    def user_info_reply(self, msg):
-
-        if msg is None:
-            return
-
-        self.descr_textview.clear()
-        self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
-
-        self.uploads.set_text(humanize(msg.totalupl))
-        self.queuesize.set_text(humanize(msg.queuesize))
-        self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
-
-        self.image_pixbuf = None
-        self.load_picture(msg.pic)
-
-        self.info_bar.set_visible(False)
-        self.set_finished()
-
-    def update_gauge(self, msg):
-
-        if msg.total == 0 or msg.bufferlen == 0:
-            fraction = 0.0
-        elif msg.bufferlen >= msg.total:
-            fraction = 1.0
-        else:
-            fraction = float(msg.bufferlen) / msg.total
-
-        self.progressbar.set_fraction(fraction)
-
-    """ Events """
-
-    def on_tab_popup(self, *args):
-        self.user_popup.toggle_user_items()
-
-    def on_popup_interest_menu(self, menu, widget):
-
-        model, iterator = widget.get_selection().get_selected()
-
-        if iterator is None:
-            return True
-
-        item = model.get_value(iterator, 0)
-
-        if item is None:
-            return True
-
-        menu.set_user(item)
-
-        actions = menu.get_actions()
-        actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
-        )
-        actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
-        )
-
-    def on_like_recommendation(self, action, state, popup):
-        self.frame.interests.on_like_recommendation(action, state, popup.get_user())
-
-    def on_dislike_recommendation(self, action, state, popup):
-        self.frame.interests.on_dislike_recommendation(action, state, popup.get_user())
-
-    def on_interest_recommend_search(self, action, state, popup):
-        self.frame.interests.recommend_search(popup.get_user())
-
-    def on_send_message(self, *args):
-        self.frame.np.privatechats.show_user(self.user)
-        self.frame.change_main_page("private")
-
-    def on_show_ip_address(self, *args):
-        self.frame.np.request_ip_address(self.user)
-
-    def on_refresh(self, *args):
-
-        self.info_bar.set_visible(False)
-        self.progressbar.set_fraction(0.0)
-
-        self.frame.np.userinfo.request_user_info(self.user)
-
-    def on_browse_user(self, *args):
-        self.frame.np.userbrowse.browse_user(self.user)
-
-    def on_add_to_list(self, *args):
-        self.frame.np.userlist.add_user(self.user)
-
-    def on_ban_user(self, *args):
-        self.frame.np.network_filter.ban_user(self.user)
-
-    def on_ignore_user(self, *args):
-        self.frame.np.network_filter.ignore_user(self.user)
-
-    def on_save_picture_response(self, selected, data):
-
-        if not os.path.exists(selected):
-            self.image_pixbuf.savev(selected, "jpeg", ["quality"], ["100"])
-            log.add(_("Picture saved to %s"), selected)
-        else:
-            log.add(_("Picture not saved, %s already exists."), selected)
-
-    def on_save_picture(self, *args):
-
-        if self.image is None or self.image_pixbuf is None:
-            return
-
-        save_file(
-            parent=self.frame.MainWindow,
-            callback=self.on_save_picture_response,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Save as…")
-        )
-
-    def on_image_popup_menu(self, menu, widget):
-
-        act = True
-
-        if self.image is None or self.image_pixbuf is None:
-            act = False
-
-        actions = menu.get_actions()
-        for (action_id, action) in actions.items():
-            action.set_enabled(act)
-
-    def on_scroll(self, controller, x, y):
-
-        if y < 0:
-            self.make_zoom_in()
-        else:
-            self.make_zoom_out()
-
-    def on_scroll_event(self, widget, event):
-
-        if event.get_scroll_deltas().delta_y < 0:
-            self.make_zoom_in()
-        else:
-            self.make_zoom_out()
-
-        return True  # Don't scroll the Gtk.ScrolledWindow
 
     def make_zoom_normal(self, *args):
         self.make_zoom_in(zoom=True)
@@ -537,6 +357,192 @@ class UserInfo(UserInterface):
         del pixbuf_zoomed
 
         gc.collect()
+
+    def show_connection_error(self):
+
+        self.info_bar.show_message(
+            _("Unable to request information from user. Either you both have a closed listening "
+              "port, the user is offline, or there's a temporary connectivity issue.")
+        )
+
+        self.set_finished()
+
+    def set_finished(self):
+
+        self.frame.request_tab_hilite(self.userinfos.page_id)
+        self.userinfos.request_changed(self.Main)
+
+        self.progressbar.set_fraction(1.0)
+
+    def update_gauge(self, msg):
+
+        if msg.total == 0 or msg.bufferlen == 0:
+            fraction = 0.0
+        elif msg.bufferlen >= msg.total:
+            fraction = 1.0
+        else:
+            fraction = float(msg.bufferlen) / msg.total
+
+        self.progressbar.set_fraction(fraction)
+
+    """ Network Messages """
+
+    def user_info_reply(self, msg):
+
+        if msg is None:
+            return
+
+        self.descr_textview.clear()
+        self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
+
+        self.uploads.set_text(humanize(msg.totalupl))
+        self.queuesize.set_text(humanize(msg.queuesize))
+        self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
+
+        self.image_pixbuf = None
+        self.load_picture(msg.pic)
+
+        self.info_bar.set_visible(False)
+        self.set_finished()
+
+    def get_user_stats(self, msg):
+
+        if msg.avgspeed > 0:
+            self.speed.set_text(human_speed(msg.avgspeed))
+
+        self.filesshared.set_text(humanize(msg.files))
+        self.dirsshared.set_text(humanize(msg.dirs))
+
+    def set_user_country(self, country_code):
+
+        if country_code:
+            country = GeoIP.country_code_to_name(country_code)
+            country_text = "%s (%s)" % (country, country_code)
+        else:
+            country_text = _("Unknown")
+
+        self.country.set_text(country_text)
+
+    def user_interests(self, msg):
+
+        self.likes_store.clear()
+        self.hates_store.clear()
+
+        for like in msg.likes:
+            self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
+
+        for hate in msg.hates:
+            self.hates_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
+
+    """ Callbacks """
+
+    def on_tab_popup(self, *args):
+        self.user_popup.toggle_user_items()
+
+    def on_popup_interest_menu(self, menu, widget):
+
+        model, iterator = widget.get_selection().get_selected()
+
+        if iterator is None:
+            return True
+
+        item = model.get_value(iterator, 0)
+
+        if item is None:
+            return True
+
+        menu.set_user(item)
+
+        actions = menu.get_actions()
+        actions[_("I _Like This")].set_state(
+            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
+        )
+        actions[_("I _Dislike This")].set_state(
+            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
+        )
+
+    def on_like_recommendation(self, action, state, popup):
+        self.frame.interests.on_like_recommendation(action, state, popup.get_user())
+
+    def on_dislike_recommendation(self, action, state, popup):
+        self.frame.interests.on_dislike_recommendation(action, state, popup.get_user())
+
+    def on_interest_recommend_search(self, action, state, popup):
+        self.frame.interests.recommend_search(popup.get_user())
+
+    def on_send_message(self, *args):
+        self.frame.np.privatechats.show_user(self.user)
+        self.frame.change_main_page("private")
+
+    def on_show_ip_address(self, *args):
+        self.frame.np.request_ip_address(self.user)
+
+    def on_browse_user(self, *args):
+        self.frame.np.userbrowse.browse_user(self.user)
+
+    def on_add_to_list(self, *args):
+        self.frame.np.userlist.add_user(self.user)
+
+    def on_ban_user(self, *args):
+        self.frame.np.network_filter.ban_user(self.user)
+
+    def on_ignore_user(self, *args):
+        self.frame.np.network_filter.ignore_user(self.user)
+
+    def on_save_picture_response(self, selected, data):
+
+        if not os.path.exists(selected):
+            self.image_pixbuf.savev(selected, "jpeg", ["quality"], ["100"])
+            log.add(_("Picture saved to %s"), selected)
+        else:
+            log.add(_("Picture not saved, %s already exists."), selected)
+
+    def on_save_picture(self, *args):
+
+        if self.image is None or self.image_pixbuf is None:
+            return
+
+        save_file(
+            parent=self.frame.MainWindow,
+            callback=self.on_save_picture_response,
+            initialdir=config.sections["transfers"]["downloaddir"],
+            initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
+            title=_("Save as…")
+        )
+
+    def on_image_popup_menu(self, menu, widget):
+
+        act = True
+
+        if self.image is None or self.image_pixbuf is None:
+            act = False
+
+        actions = menu.get_actions()
+        for (action_id, action) in actions.items():
+            action.set_enabled(act)
+
+    def on_scroll(self, controller, x, y):
+
+        if y < 0:
+            self.make_zoom_in()
+        else:
+            self.make_zoom_out()
+
+    def on_scroll_event(self, widget, event):
+
+        if event.get_scroll_deltas().delta_y < 0:
+            self.make_zoom_in()
+        else:
+            self.make_zoom_out()
+
+        return True
+
+    def on_refresh(self, *args):
+
+        self.info_bar.set_visible(False)
+        self.progressbar.set_fraction(0.0)
+
+        self.frame.np.userinfo.request_user_info(self.user)
 
     def on_close(self, *args):
 
