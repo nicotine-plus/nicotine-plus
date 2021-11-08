@@ -1877,15 +1877,13 @@ class SearchesFrame(UserInterface):
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
 
-        # Filter Entry Boxes
-        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
+        for entry in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
                   self.FilterBR, self.FilterCC, self.FilterFree):
-            w.set_sensitive(active)
+            entry.set_sensitive(active)
 
-        # Labels
-        for l in (self.LabelIn, self.LabelOut, self.LabelType, self.LabelSize,
+        for label in (self.LabelIn, self.LabelOut, self.LabelType, self.LabelSize,
                   self.LabelBR, self.LabelCC):
-            l.set_sensitive(active)
+            label.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
         active = widget.get_active()
