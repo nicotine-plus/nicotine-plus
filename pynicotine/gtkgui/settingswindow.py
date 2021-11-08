@@ -954,9 +954,9 @@ class IgnoreListFrame(UserInterface):
         self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
         cols = initialise_columns(
             None, self.IgnoredUsers,
-            ["users", _("Users"), -1, "text", None]
+            ["username", _("Username"), -1, "text", None]
         )
-        cols["users"].set_sort_column_id(0)
+        cols["username"].set_sort_column_id(0)
 
         self.IgnoredUsers.set_model(self.ignorelist)
 
@@ -966,11 +966,11 @@ class IgnoreListFrame(UserInterface):
         self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
         cols = initialise_columns(
             None, self.IgnoredIPs,
-            ["addresses", _("Addresses"), -1, "text", None],
-            ["users", _("Users"), -1, "text", None]
+            ["ip_address", _("IP Address"), -1, "text", None],
+            ["user", _("User"), -1, "text", None]
         )
-        cols["addresses"].set_sort_column_id(0)
-        cols["users"].set_sort_column_id(1)
+        cols["ip_address"].set_sort_column_id(0)
+        cols["user"].set_sort_column_id(1)
 
         self.IgnoredIPs.set_model(self.ignored_ips_list)
 
@@ -1112,9 +1112,9 @@ class BanListFrame(UserInterface):
         self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
         cols = initialise_columns(
             None, self.BannedList,
-            ["users", _("Users"), -1, "text", None]
+            ["username", _("Username"), -1, "text", None]
         )
-        cols["users"].set_sort_column_id(0)
+        cols["username"].set_sort_column_id(0)
 
         self.BannedList.set_model(self.banlist_model)
 
@@ -1124,11 +1124,11 @@ class BanListFrame(UserInterface):
         self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
         cols = initialise_columns(
             None, self.BlockedList,
-            ["addresses", _("Addresses"), -1, "text", None],
-            ["users", _("Users"), -1, "text", None]
+            ["ip_address", _("IP Address"), -1, "text", None],
+            ["user", _("User"), -1, "text", None]
         )
-        cols["addresses"].set_sort_column_id(0)
-        cols["users"].set_sort_column_id(1)
+        cols["ip_address"].set_sort_column_id(0)
+        cols["user"].set_sort_column_id(1)
 
         self.BlockedList.set_model(self.blocked_list_model)
 
@@ -2811,11 +2811,11 @@ class PluginsFrame(UserInterface):
         cols = initialise_columns(
             None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugins", _("Plugins"), 380, "text", None]
+            ["plugin", _("Plugin"), 380, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)
-        cols["plugins"].set_sort_column_id(1)
+        cols["plugin"].set_sort_column_id(1)
 
         renderers = cols["enabled"].get_cells()
         column_pos = 0
