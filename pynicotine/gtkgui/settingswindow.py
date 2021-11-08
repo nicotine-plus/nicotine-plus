@@ -1399,6 +1399,10 @@ class UserInterfaceFrame(UserInterface):
 
         self.needcolors = 0
         self.options = {
+            "transfers": {
+                "download_doubleclick": self.DownloadDoubleClick,
+                "upload_doubleclick": self.UploadDoubleClick
+            },
             "ui": {
                 "globalfont": self.SelectGlobalFont,
                 "chatfont": self.SelectChatFont,
@@ -1514,6 +1518,10 @@ class UserInterfaceFrame(UserInterface):
             enabled_tabs[page_id] = widget.get_active()
 
         return {
+            "transfers": {
+                "download_doubleclick": self.DownloadDoubleClick.get_active(),
+                "upload_doubleclick": self.UploadDoubleClick.get_active()
+            },
             "ui": {
                 "globalfont": self.SelectGlobalFont.get_font(),
                 "chatfont": self.SelectChatFont.get_font(),
@@ -1858,9 +1866,7 @@ class EventsFrame(UserInterface):
         self.options = {
             "transfers": {
                 "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder,
-                "download_doubleclick": self.DownloadDoubleClick,
-                "upload_doubleclick": self.UploadDoubleClick
+                "afterfolder": self.AfterFolder
             },
             "ui": {
                 "filemanager": self.FileManagerCombo
@@ -1878,9 +1884,7 @@ class EventsFrame(UserInterface):
         return {
             "transfers": {
                 "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text(),
-                "download_doubleclick": self.DownloadDoubleClick.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "afterfolder": self.AfterFolder.get_text()
             },
             "ui": {
                 "filemanager": self.FileManagerCombo.get_child().get_text()
