@@ -249,7 +249,9 @@ class DownloadsFrame(UserInterface):
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed,
                 "downloadlimitalt": self.DownloadSpeedAlternative,
-                "usernamesubfolders": self.UsernameSubfolders
+                "usernamesubfolders": self.UsernameSubfolders,
+                "afterfinish": self.AfterDownload,
+                "afterfolder": self.AfterFolder
             }
         }
 
@@ -320,7 +322,9 @@ class DownloadsFrame(UserInterface):
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
-                "usernamesubfolders": self.UsernameSubfolders.get_active()
+                "usernamesubfolders": self.UsernameSubfolders.get_active(),
+                "afterfinish": self.AfterDownload.get_text(),
+                "afterfolder": self.AfterFolder.get_text()
             }
         }
 
@@ -1864,10 +1868,6 @@ class EventsFrame(UserInterface):
         self.frame = self.p.frame
 
         self.options = {
-            "transfers": {
-                "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder
-            },
             "ui": {
                 "filemanager": self.FileManagerCombo
             },
@@ -1882,10 +1882,6 @@ class EventsFrame(UserInterface):
     def get_settings(self):
 
         return {
-            "transfers": {
-                "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text()
-            },
             "ui": {
                 "filemanager": self.FileManagerCombo.get_child().get_text()
             },
