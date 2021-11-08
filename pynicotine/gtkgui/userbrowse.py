@@ -480,7 +480,7 @@ class UserBrowse(UserInterface):
         self.make_new_model(msg.list, msg.privatelist)
         self.info_bar.set_visible(False)
 
-        if msg.list or (config.sections["ui"]["private_shares"] and msg.privatelist):
+        if msg.list or msg.privatelist:
             self.browse_queued_folder()
 
         else:

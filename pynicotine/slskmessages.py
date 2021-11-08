@@ -2229,7 +2229,7 @@ class SharedFileList(PeerMessage):
         if message[pos:]:
             pos, self.unknown = self.get_object(message, int, pos)
 
-        if message[pos:] and config.sections["ui"]["private_shares"]:
+        if message[pos:]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def make_network_message(self):
@@ -2364,7 +2364,7 @@ class FileSearchResult(PeerMessage):
         pos, self.ulspeed = self.get_object(message, int, pos)
         pos, self.inqueue = self.get_object(message, int, pos, getunsignedlonglong=True)
 
-        if message[pos:] and config.sections["ui"]["private_search_results"]:
+        if message[pos:] and config.sections["searches"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def pack_file_info(self, fileinfo):

@@ -1418,8 +1418,6 @@ class UserInterfaceFrame(UserInterface):
 
                 "file_path_tooltips": self.FilePathTooltips,
                 "reverse_file_paths": self.ReverseFilePaths,
-                "private_search_results": self.ShowPrivateSearchResults,
-                "private_shares": self.ShowPrivateShares,
 
                 "tabmain": self.MainPosition,
                 "tabrooms": self.ChatRoomsPosition,
@@ -1537,8 +1535,6 @@ class UserInterfaceFrame(UserInterface):
 
                 "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
-                "private_search_results": self.ShowPrivateSearchResults.get_active(),
-                "private_shares": self.ShowPrivateShares.get_active(),
 
                 "tabmain": self.pos_list.get_value(iter_main, 1),
                 "tabrooms": self.pos_list.get_value(iter_rooms, 1),
@@ -1781,7 +1777,8 @@ class SearchesFrame(UserInterface):
                 "max_displayed_results": self.MaxDisplayedResults,
                 "min_search_chars": self.MinSearchChars,
                 "remove_special_chars": self.RemoveSpecialChars,
-                "enable_history": self.EnableSearchHistory
+                "enable_history": self.EnableSearchHistory,
+                "private_search_results": self.ShowPrivateSearchResults
             }
         }
 
@@ -1833,7 +1830,8 @@ class SearchesFrame(UserInterface):
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
                 "min_search_chars": self.MinSearchChars.get_value_as_int(),
                 "remove_special_chars": self.RemoveSpecialChars.get_active(),
-                "enable_history": self.EnableSearchHistory.get_active()
+                "enable_history": self.EnableSearchHistory.get_active(),
+                "private_search_results": self.ShowPrivateSearchResults.get_active()
             }
         }
 

@@ -317,7 +317,8 @@ class Config:
                 "search_results": True,
                 "max_displayed_results": 1500,
                 "min_search_chars": 3,
-                "remove_special_chars": True
+                "remove_special_chars": True,
+                "private_search_results": True
             },
 
             "ui": {
@@ -404,8 +405,6 @@ class Config:
                 "yposition": -1,
                 "maximized": True,
                 "urgencyhint": True,
-                "private_search_results": False,
-                "private_shares": False,
                 "file_path_tooltips": True,
                 "reverse_file_paths": True
             },
@@ -720,6 +719,10 @@ class Config:
 
         # Remove option to specify if tabs are reorderable, since there's no clear advantage
         self.remove_old_option("ui", "tab_reorderable")
+
+        # Remove old private search result option, moved to "searches" category
+        self.remove_old_option("ui", "private_search_results")
+        self.remove_old_option("ui", "private_shares")
 
     def remove_old_option(self, section, option):
 
