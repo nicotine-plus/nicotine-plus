@@ -1589,6 +1589,13 @@
           </object>
         </child>
         <child>
+          <object class="GtkCheckButton" id="NotificationTabColors">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
+            <signal name="toggled" handler="on_tab_notification_color_toggled" swapped="no"/>
+          </object>
+        </child>
+        <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="homogeneous">1</property>

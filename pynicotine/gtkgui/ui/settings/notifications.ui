@@ -31,12 +31,6 @@
             <property name="label" translatable="yes">Show notification icons on tabs</property>
           </object>
         </child>
-        <child>
-          <object class="GtkCheckButton" id="NotificationTabColors">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
-          </object>
-        </child>
       </object>
     </child>
     <child>

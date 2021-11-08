@@ -214,14 +214,6 @@ class Searches(IconNotebook):
 
         tab.add_user_results(msg, username, country)
 
-    def remove_tab(self, tab):
-
-        self.frame.np.search.remove_search(tab.id)
-        self.remove_page(tab.Main)
-
-        if self.get_n_pages() == 0:
-            self.frame.search_status_page.show()
-
     def add_wish(self, wish):
         self.wish_list.add_wish(wish)
 
@@ -1407,7 +1399,13 @@ class Search(UserInterface):
         self.update_result_counter()
 
     def on_close(self, *args):
-        self.searches.remove_tab(self)
+
+        del self.searches.pages[self.id]
+        self.frame.np.search.remove_search(self.id)
+        self.searches.remove_page(self.Main)
+
+        if self.searches.get_n_pages() == 0:
+            self.frame.search_status_page.show()
 
     def on_close_all_tabs(self, *args):
         self.searches.remove_all_pages()
