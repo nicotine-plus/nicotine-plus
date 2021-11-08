@@ -1,7 +1,4 @@
 # COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
-# COPYRIGHT (C) 2008-2009 Quinox <quinox@users.sf.net>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
