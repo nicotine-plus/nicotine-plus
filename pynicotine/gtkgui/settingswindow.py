@@ -1841,13 +1841,29 @@ class SearchesFrame(UserInterface):
 
     def on_clear_filter_history(self, widget):
         self.frame.search.clear_filter_history()
+
+        # Clear default Result Filters
+        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC):
+            w.set_text("")
+
+        self.FilterFree.set_active(False)
+
+        self.on_enable_filters_toggled(self.EnableFilters)
+
         self.ClearFilterHistorySuccess.show()
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
+
+        # Filter Entry Boxes
         for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
                   self.FilterBR, self.FilterCC, self.FilterFree):
             w.set_sensitive(active)
+
+        # Labels
+        for l in (self.LabelIn, self.LabelOut, self.LabelType, self.LabelSize,
+                  self.LabelBR, self.LabelCC):
+            l.set_sensitive(active)
 
     def on_enable_search_results(self, widget):
         active = widget.get_active()
