@@ -2429,7 +2429,6 @@ class NotificationsFrame(UserInterface):
         self.options = {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle,
-                "notification_tab_icons": self.NotificationTabIcons,
                 "notification_popup_sound": self.NotificationPopupSound,
                 "notification_popup_file": self.NotificationPopupFile,
                 "notification_popup_folder": self.NotificationPopupFolder,
@@ -2471,7 +2470,6 @@ class NotificationsFrame(UserInterface):
         return {
             "notifications": {
                 "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_tab_icons": self.NotificationTabIcons.get_active(),
                 "notification_popup_sound": self.NotificationPopupSound.get_active(),
                 "notification_popup_file": self.NotificationPopupFile.get_active(),
                 "notification_popup_folder": self.NotificationPopupFolder.get_active(),

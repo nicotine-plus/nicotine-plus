@@ -71,18 +71,11 @@ class ChatRooms(IconNotebook):
         self.autojoin_rooms = set()
         self.roomlist = RoomList(self.frame)
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.chatrooms_notebook
-        )
-
-        CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
-
+        IconNotebook.__init__(self, self.frame, self.frame.chatrooms_notebook)
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
+
+        CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
 
         if Gtk.get_major_version() == 4:
             self.frame.ChatroomsPane.set_resize_start_child(True)

@@ -67,13 +67,8 @@ class Searches(IconNotebook):
         self.page_id = "search"
         self.pages = {}
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.search_notebook
-        )
+        IconNotebook.__init__(self, self.frame, self.frame.search_notebook)
+        self.notebook.connect("switch-page", self.on_switch_search_page)
 
         if Gtk.get_major_version() == 3:
             # Workaround to make dropdown menu appear below button
@@ -87,8 +82,6 @@ class Searches(IconNotebook):
 
         self.populate_search_history()
         self.update_visuals()
-
-        self.notebook.connect("switch-page", self.on_switch_search_page)
 
     def on_switch_search_page(self, notebook, page, page_num):
 

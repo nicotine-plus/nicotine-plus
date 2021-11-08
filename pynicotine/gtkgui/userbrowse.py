@@ -57,18 +57,10 @@ class UserBrowses(IconNotebook):
         self.page_id = "userbrowse"
         self.pages = {}
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.userbrowse_notebook
-        )
+        IconNotebook.__init__(self, self.frame, self.frame.userbrowse_notebook)
+        self.notebook.connect("switch-page", self.on_switch_browse_page)
 
         CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
-
-        self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, notebook, page, page_num):
 

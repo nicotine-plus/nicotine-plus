@@ -25,12 +25,6 @@
             <property name="label" translatable="yes">Show notification for private chats and mentions in the window title</property>
           </object>
         </child>
-        <child>
-          <object class="GtkCheckButton" id="NotificationTabIcons">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification icons on tabs</property>
-          </object>
-        </child>
       </object>
     </child>
     <child>

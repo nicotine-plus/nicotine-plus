@@ -1233,12 +1233,7 @@ class NicotineFrame(UserInterface):
             page.page_id = tab_id
 
             # Initialize the image label
-            tab_label = ImageLabel(
-                tab_text,
-                show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-                show_status_image=True
-            )
-
+            tab_label = ImageLabel(tab_text)
             tab_label.set_icon(tab_icon_name)
             tab_label.set_text_color()
             tab_label.show()
@@ -1416,11 +1411,11 @@ class NicotineFrame(UserInterface):
         else:
             hilite_icon = get_icon("hilite3")
 
-            if tab_label.get_hilite_image() == get_icon("hilite"):
+            if tab_label.hilite_pixbuf == get_icon("hilite"):
                 # Chat mentions have priority over normal notifications
                 return
 
-        if hilite_icon == tab_label.get_hilite_image():
+        if hilite_icon == tab_label.hilite_pixbuf:
             return
 
         tab_label.set_hilite_image(hilite_icon)
@@ -1430,7 +1425,7 @@ class NicotineFrame(UserInterface):
 
         tab_label = getattr(self, self.current_page_id + "_tab_label")
 
-        if not tab_label.get_hilite_image():
+        if not tab_label.hilite_pixbuf:
             return
 
         tab_label.set_hilite_image(None)
@@ -2044,12 +2039,8 @@ class NicotineFrame(UserInterface):
 
         # Other notebooks
         for w in (self.chatrooms, self.privatechat, self.userinfo, self.userbrowse, self.search):
-            w.set_tab_closers(config.sections["ui"]["tabclosers"])
-            w.show_hilite_images(config.sections["notifications"]["notification_tab_icons"])
+            w.set_tab_closers()
             w.set_text_colors(None)
-
-        for w in (self.privatechat, self.userinfo, self.userbrowse):
-            w.show_status_images(config.sections["ui"]["tab_status_icons"])
 
         # Main notebook
         self.set_tab_positions()
@@ -2059,7 +2050,6 @@ class NicotineFrame(UserInterface):
             page = self.MainNotebook.get_nth_page(i)
             tab_label = self.MainNotebook.get_tab_label(page)
 
-            tab_label.show_hilite_image(config.sections["notifications"]["notification_tab_icons"])
             tab_label.set_text_color(0)
             self.set_tab_expand(page)
 
