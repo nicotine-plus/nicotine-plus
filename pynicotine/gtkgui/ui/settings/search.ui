@@ -46,20 +46,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="EnableSearchHistory">
-            <property name="label" translatable="yes">Enable search history</property>
-            <property name="visible">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="RemoveSpecialChars">
-            <property name="label" translatable="yes">Remove special characters from search terms</property>
-            <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
-            <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
@@ -98,30 +84,28 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkCheckButton" id="RemoveSpecialChars">
+            <property name="label" translatable="yes">Remove special characters from search terms</property>
             <property name="visible">1</property>
-            <property name="spacing">12</property>
+            <property name="tooltip_text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">3</property>
+            <property name="selection-mode">none</property>
             <child>
-              <object class="GtkButton" id="ClearSearchHistory">
+              <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
+                <property name="focusable">0</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkCheckButton" id="EnableSearchHistory">
+                    <property name="label" translatable="yes">Enable search history</property>
                     <property name="visible">1</property>
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">1</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">1</property>
-                        <property name="label" translatable="yes">Clear Search History</property>
-                        <property name="use-underline">1</property>
-                      </object>
-                    </child>
                   </object>
                 </child>
               </object>
@@ -131,6 +115,51 @@
                 <property name="icon-name">object-select-symbolic</property>
               </object>
             </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkButton" id="ClearSearchHistory">
+                    <property name="visible">1</property>
+                    <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">1</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">1</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Clear Search History</property>
+                            <property name="use-underline">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="ShowPrivateSearchResults">
+            <property name="label" translatable="yes">Show privately shared files in search results</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission.</property>
+            <property name="use-underline">1</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
           </object>
         </child>
       </object>
@@ -154,13 +183,15 @@
           <object class="GtkCheckButton" id="EnableFilters">
             <property name="label" translatable="yes">Enable search result filters by default</property>
             <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">Default filters specified below will apply to all new searches, and can be cleared during each search.</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enable_filters_toggled" swapped="no"/>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="RegexpFilters">
-            <property name="label" translatable="yes">Allow regular expressions for the filter&apos;s include and exclude</property>
+          <object class="GtkCheckButton" id="FilterFree">
+            <property name="label" translatable="yes">Show only results from users with at least one upload slot free</property>
+            <property name="tooltip_text" translatable="yes">Filter out unavailable results, or leave off to show as greyed out.</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
           </object>
@@ -172,60 +203,6 @@
             <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Include:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">FilterIn</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkEntry" id="FilterIn">
-                    <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Exclude:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">FilterOut</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkEntry" id="FilterOut">
-                    <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
-                  </object>
-                </child>
-              </object>
-            </child>
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
@@ -359,6 +336,10 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
+                    <property name="label" translatable="yes">Include Text:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">FilterIn</property>
                   </object>
                 </child>
               </object>
@@ -368,15 +349,48 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkCheckButton" id="FilterFree">
-                    <property name="label" translatable="yes">Free Slot</property>
+                  <object class="GtkEntry" id="FilterIn">
                     <property name="visible">1</property>
-                    <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
-                    <property name="use-underline">1</property>
+                    <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
                   </object>
                 </child>
               </object>
             </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Exclude Text:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">1</property>
+                    <property name="mnemonic_widget">FilterOut</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkEntry" id="FilterOut">
+                    <property name="visible">1</property>
+                    <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="RegexpFilters">
+            <property name="label" translatable="yes">Allow advanced RegEx filters for Include and Exclude text</property>
+            <property name="visible">1</property>
+            <property name="tooltip_text" translatable="yes">A regex is a sequence of meta-characters (and characters), e.g. [ \d \D \s \S \w \W ] and operators { + * ? | ^ }</property>
+            <property name="use-underline">1</property>
           </object>
         </child>
         <child>
@@ -418,6 +432,12 @@
                 <property name="icon-name">object-select-symbolic</property>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
           </object>
         </child>
       </object>
