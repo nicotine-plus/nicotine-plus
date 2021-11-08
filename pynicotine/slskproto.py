@@ -1,9 +1,8 @@
-# Copyright (C) 2020-2021 Nicotine+ Team
-# Copyright (C) 2007 daelstorm. All rights reserved.
-# Copyright (c) 2003-2004 Hyriand. All rights reserved.
-#
-# Based on code from PySoulSeek, original copyright note:
-# Copyright (c) 2001-2003 Alexander Kanavin. All rights reserved.
+# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
+# COPYRIGHT (C) 2007-2009 Daelstorm <daelstorm@gmail.com>
+# COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
+# COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
