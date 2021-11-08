@@ -48,9 +48,8 @@ class ImageLabel(Gtk.Box):
         self.label.set_hexpand(True)
         self.label.show()
 
-        self.text = label
         self.full_text = full_text
-        self.set_text(self.text)
+        self.set_text(label)
 
         self.close_button = None
         self.close_button_visible = close_button_visible
@@ -158,31 +157,6 @@ class ImageLabel(Gtk.Box):
         self.centered = centered
         self._pack_children()
 
-    def set_text_color(self, notify=None, text=None):
-
-        color = config.sections["ui"]["tab_default"]
-
-        if config.sections["notifications"]["notification_tab_colors"]:
-            if notify == 1:
-                color = config.sections["ui"]["tab_changed"]
-            elif notify == 2:
-                color = config.sections["ui"]["tab_hilite"]
-
-        try:
-            rgba = Gdk.RGBA()
-            rgba.parse(color)
-        except Exception:
-            color = ""
-
-        if text is not None:
-            self.text = text
-
-        if not color:
-            self.label.set_text("%s" % self.text)
-        else:
-            from html import escape
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
-
     def set_hilite_image(self, pixbuf):
 
         if pixbuf is self.hilite_pixbuf:
@@ -205,8 +179,30 @@ class ImageLabel(Gtk.Box):
         self.status_image.set_property("icon-name", icon_name)
         self.status_image.show()
 
-    def set_text(self, lbl):
-        self.set_text_color(notify=None, text=lbl)
+    def set_text(self, text, status=None):
+
+        color_rgba = Gdk.RGBA()
+        color = config.sections["ui"]["tab_default"]
+
+        if config.sections["notifications"]["notification_tab_colors"]:
+            if status == 1:
+                color = config.sections["ui"]["tab_changed"]
+            elif status == 2:
+                color = config.sections["ui"]["tab_hilite"]
+
+        if not color_rgba.parse(color):
+            color = ""
+
+        self.text = text
+
+        if not color:
+            self.label.set_text("%s" % self.text)
+        else:
+            from html import escape
+            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
+
+    def set_text_color(self, status):
+        self.set_text(self.text, status)
 
     def get_text(self):
         return self.label.get_text()

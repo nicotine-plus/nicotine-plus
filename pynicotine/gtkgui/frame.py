@@ -1235,7 +1235,6 @@ class NicotineFrame(UserInterface):
             # Initialize the image label
             tab_label = ImageLabel(tab_text)
             tab_label.set_icon(tab_icon_name)
-            tab_label.set_text_color()
             tab_label.show()
 
             # Apply tab label
