@@ -1123,7 +1123,7 @@ class ChatRoom(UserInterface):
         )
 
     def on_ignore_users_settings(self, *args):
-        self.frame.on_settings(page='IgnoreList')
+        self.frame.on_settings(page='IgnoredUsers')
 
     def set_completion_list(self, completion_list):
 

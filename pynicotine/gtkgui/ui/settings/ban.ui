@@ -12,7 +12,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Ban List</property>
+            <property name="label" translatable="yes">Banned Users</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -142,7 +142,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Banned Users</property>
+                    <property name="label" translatable="yes">Usernames</property>
                     <property name="mnemonic_widget">BannedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -265,7 +265,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Blocked IP Addresses</property>
+                    <property name="label" translatable="yes">IP Addresses</property>
                     <property name="mnemonic_widget">BlockedList</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>

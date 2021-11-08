@@ -25,7 +25,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Ignored Users</property>
+                    <property name="label" translatable="yes">Usernames</property>
                     <property name="mnemonic_widget">IgnoredUsers</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -147,7 +147,7 @@
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Ignored IP Addresses</property>
+                    <property name="label" translatable="yes">IP Addresses</property>
                     <property name="mnemonic_widget">IgnoredIPs</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>

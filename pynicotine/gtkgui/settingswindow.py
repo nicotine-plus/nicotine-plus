@@ -932,7 +932,7 @@ class UserInfoFrame(UserInterface):
         self.ImageChooser.clear()
 
 
-class IgnoreListFrame(UserInterface):
+class IgnoredUsersFrame(UserInterface):
 
     def __init__(self, parent):
 
@@ -1082,7 +1082,7 @@ class IgnoreListFrame(UserInterface):
             del self.ignored_ips[ip]
 
 
-class BanListFrame(UserInterface):
+class BannedUsersFrame(UserInterface):
 
     def __init__(self, parent):
 
@@ -3021,10 +3021,10 @@ class Settings(UserInterface):
         self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
         self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
         self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
-        self.tree["BanList"] = model.append(row, [_("Ban List"), "BanList"])
+        self.tree["BannedUsers"] = model.append(row, [_("Banned Users"), "BannedUsers"])
 
         self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["IgnoreList"] = model.append(row, [_("Ignore List"), "IgnoreList"])
+        self.tree["IgnoredUsers"] = model.append(row, [_("Ignored Users"), "IgnoredUsers"])
         self.tree["CensorReplaceList"] = model.append(row, [_("Censor & Replace"), "CensorReplaceList"])
         self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
         self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
@@ -3289,7 +3289,7 @@ class Settings(UserInterface):
             need_completion = False
 
         try:
-            need_ip_block = self.pages["BanList"].need_ip_block
+            need_ip_block = self.pages["BannedUsers"].need_ip_block
 
         except KeyError:
             need_ip_block = False
