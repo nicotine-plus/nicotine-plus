@@ -930,9 +930,9 @@ class UserBrowse(UserInterface):
     def on_download_directory_to(self, *args, recurse=False):
 
         if recurse:
-            str_title = _("Select Destination Folder for this Download (with subfolders)")
+            str_title = _("Select Destination folder for Downloading Multiple Folders")
         else:
-            str_title = _("Select Destination Folder for this Download")
+            str_title = _("Select Destination Folder")
 
         choose_dir(
             parent=self.frame.MainWindow,
