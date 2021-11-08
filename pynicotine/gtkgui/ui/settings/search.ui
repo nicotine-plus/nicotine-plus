@@ -87,6 +87,31 @@
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
+            <property name="column-spacing">60</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkCheckButton" id="RemoveSpecialChars">
+                <property name="label" translatable="yes">Remove special characters from search terms</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="ShowPrivateSearchResults">
+                <property name="label" translatable="yes">Show privately shared files in search results</property>
+                <property name="visible">1</property>
+                <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission.</property>
+                <property name="use-underline">1</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
             <property name="max-children-per-line">3</property>
             <property name="selection-mode">none</property>
@@ -132,14 +157,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="RemoveSpecialChars">
-                <property name="label" translatable="yes">Remove special characters from search terms</property>
-                <property name="visible">1</property>
-                <property name="tooltip_text" translatable="yes">Certain clients don&apos;t send search results if special characters are included.</property>
-                <property name="use-underline">1</property>
               </object>
             </child>
           </object>
