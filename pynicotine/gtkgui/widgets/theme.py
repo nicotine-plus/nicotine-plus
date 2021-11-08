@@ -108,6 +108,14 @@ def set_global_css():
         border-bottom: 1px solid @borders;
     }
 
+    .border-left {
+        border-left: 1px solid @borders;
+    }
+
+    .border-right {
+        border-right: 1px solid @borders;
+    }
+
     .preferences-border .dialog-action-box {
         border-top: 1px solid @borders;
     }

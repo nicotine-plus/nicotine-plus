@@ -3003,57 +3003,51 @@ class Settings(UserInterface):
         style_context.add_class("preferences")
         style_context.add_class("preferences-border")
 
-        if Gtk.get_major_version() == 3:
-            self.Main.child_set_property(self.SettingsList, "shrink", False)
-            self.Main.child_set_property(self.ScrolledWindow, "shrink", False)
-        else:
-            self.Main.set_shrink_start_child(False)
-            self.Main.set_shrink_end_child(False)
-
         # Signal sent and catch by frame.py on update
         GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
                            GObject.TYPE_NONE, (GObject.TYPE_STRING,))
         dialog.connect("settings-updated", self.frame.on_settings_updated)
 
-        # Treeview of the settings
-        self.tree = {}
         self.pages = {}
+        self.page_ids = [("Network", _("Network"), "network-wireless-symbolic"),
+                         ("UserInterface", _("User Interface"), "view-grid-symbolic"),
+                         ("Shares", _("Shares"), "folder-symbolic"),
+                         ("Downloads", _("Downloads"), "document-save-symbolic"),
+                         ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
+                         ("UserInfo", _("User Info"), "avatar-default-symbolic"),
+                         ("Searches", _("Searches"), "system-search-symbolic"),
+                         ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
+                         ("CensorReplaceList", _("Censor & Replace Chat"), "insert-text-symbolic"),
+                         ("Completion", _("Chat Completion"), "format-indent-more-symbolic"),
+                         ("TextToSpeech", _("Text-to-Speech"), "audio-volume-high-symbolic"),
+                         ("Logging", _("Logging"), "emblem-documents-symbolic"),
+                         ("Notifications", _("Notifications"), "mail-unread-symbolic"),
+                         ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
+                         ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+                         ("Plugins", _("Plugins"), "list-add-symbolic"),
+                         ("UrlHandlers", _("URL Handlers"), "window-new-symbolic")]
 
-        # Model of the treeview
-        model = Gtk.TreeStore(str, str)
-        self.SettingsTreeview.set_model(model)
+        for page_id, label, icon_name in self.page_ids:
+            box = Gtk.Box()
+            box.set_margin_top(8)
+            box.set_margin_bottom(8)
+            box.set_margin_start(12)
+            box.set_margin_end(42)
+            box.set_spacing(12)
+            box.show()
 
-        self.tree["General"] = row = model.append(None, [_("General"), "General"])
-        self.tree["Network"] = model.append(row, [_("Network"), "Network"])
-        self.tree["UserInterface"] = model.append(row, [_("User Interface"), "UserInterface"])
-        self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
-        self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
-        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
-        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
-        self.tree["UrlHandlers"] = model.append(row, [_("URL Handlers"), "UrlHandlers"])
+            icon = Gtk.Image()
+            icon.set_property("icon-name", icon_name)
+            icon.show()
 
-        self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
-        self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
-        self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
-        self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
-        self.tree["BannedUsers"] = model.append(row, [_("Banned Users"), "BannedUsers"])
+            label = Gtk.Label.new(label)
+            label.set_xalign(0)
+            label.show()
 
-        self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["IgnoredUsers"] = model.append(row, [_("Ignored Users"), "IgnoredUsers"])
-        self.tree["CensorReplaceList"] = model.append(row, [_("Censor & Replace"), "CensorReplaceList"])
-        self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
-        self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
-        self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
+            box.add(icon)
+            box.add(label)
 
-        initialise_columns(
-            None, self.SettingsTreeview,
-            ["categories", _("Categories"), -1, "text", None]
-        )
-
-        # Set the cursor to the second element of the TreeViewColumn.
-        self.SettingsTreeview.expand_all()
-        self.SettingsTreeview.set_cursor((0, 0))
+            self.SettingsListBox.insert(box, -1)
 
         self.update_visuals()
 
@@ -3070,16 +3064,15 @@ class Settings(UserInterface):
 
     def set_active_page(self, page):
 
-        model = self.SettingsTreeview.get_model()
-        selection = self.SettingsTreeview.get_selection()
-        path = model.get_path(self.tree[page])
+        pos = 0
+        for page_id, _label, _icon_name in self.page_ids:
+            if page_id == page:
+                break
 
-        self.SettingsTreeview.expand_to_path(path)
+            pos += 1
 
-        if path is not None:
-            selection.select_path(path)
-
-        self.on_switch_page(selection)
+        row = self.SettingsListBox.get_row_at_index(pos)
+        self.SettingsListBox.select_row(row)
 
     def set_combobox_value(self, combobox, option):
 
@@ -3312,14 +3305,9 @@ class Settings(UserInterface):
 
         return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, config
 
-    def on_switch_page(self, selection):
+    def on_switch_page(self, listbox, row):
 
-        model, iterator = selection.get_selected()
-
-        if iterator is None:
-            return
-
-        page_id = model.get_value(iterator, 1)
+        page_id, _label, _icon_name = self.page_ids[row.get_index()]
 
         if not hasattr(sys.modules[__name__], page_id + "Frame"):
             return

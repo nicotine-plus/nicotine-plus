@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkPaned" id="Main">
+  <object class="GtkBox" id="Main">
     <property name="visible">1</property>
     <property name="vexpand">1</property>
     <child>
       <object class="GtkScrolledWindow" id="SettingsList">
-        <property name="width-request">250</property>
         <property name="visible">1</property>
+        <property name="hscrollbar-policy">never</property>
         <property name="vexpand">1</property>
         <child>
-          <object class="GtkTreeView" id="SettingsTreeview">
+          <object class="GtkListBox" id="SettingsListBox">
             <property name="visible">1</property>
-            <property name="headers-visible">0</property>
-            <child internal-child="selection">
-              <object class="GtkTreeSelection">
-                <property name="mode">browse</property>
-                <signal name="changed" handler="on_switch_page" swapped="no"/>
-              </object>
-            </child>
+            <property name="selection-mode">browse</property>
+            <signal name="row-selected" handler="on_switch_page" swapped="no"/>
+            <style>
+              <class name="border-right"/>
+              <class name="navigation-sidebar"/>
+              <class name="view"/>
+            </style>
           </object>
         </child>
       </object>
