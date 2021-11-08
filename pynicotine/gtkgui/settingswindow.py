@@ -1843,12 +1843,10 @@ class SearchesFrame(UserInterface):
         self.frame.search.clear_filter_history()
 
         # Clear default Result Filters
-        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC):
-            w.set_text("")
-
         self.FilterFree.set_active(False)
 
-        self.on_enable_filters_toggled(self.EnableFilters)
+        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC):
+            w.set_text("")
 
         self.ClearFilterHistorySuccess.show()
 
