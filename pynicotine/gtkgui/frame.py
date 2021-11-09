@@ -62,7 +62,6 @@ from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import load_icons
 from pynicotine.gtkgui.widgets.theme import set_dark_mode
-from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import set_global_style
 from pynicotine.gtkgui.widgets.theme import set_use_header_bar
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
