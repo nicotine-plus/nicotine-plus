@@ -80,10 +80,11 @@ def dialog_show(dialog):
     if dialog_height > main_height:
         new_height = main_height - 30
 
-    if Gtk.get_major_version() == 4:
-        dialog.set_default_size(new_width, new_height)
-    else:
-        dialog.resize(new_width, new_height)
+    if new_width > 0 and new_height > 0:
+        if Gtk.get_major_version() == 4:
+            dialog.set_default_size(new_width, new_height)
+        else:
+            dialog.resize(new_width, new_height)
 
     # Show the dialog
     dialog.present_with_time(Gdk.CURRENT_TIME)
