@@ -40,6 +40,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
@@ -2868,7 +2869,7 @@ class PluginsFrame(UserInterface):
             self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
-        dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(dialog)
 
     def on_select_plugin(self, selection):
 
@@ -3464,27 +3465,4 @@ class Settings(UserInterface):
         dialog_hide(self.dialog)
 
     def show(self, *args):
-
-        # Shrink the dialog if it's larger than the main window
-        if Gtk.get_major_version() == 4:
-            main_width = self.frame.MainWindow.get_width()
-            main_height = self.frame.MainWindow.get_height()
-        else:
-            main_width, main_height = self.frame.MainWindow.get_size()
-
-        new_width = dialog_width = self.dialog.get_property("default-width")
-        new_height = dialog_height = self.dialog.get_property("default-height")
-
-        if dialog_width > main_width:
-            new_width = main_width - 30
-
-        if dialog_height > main_height:
-            new_height = main_height - 30
-
-        if Gtk.get_major_version() == 4:
-            self.dialog.set_default_size(new_width, new_height)
-        else:
-            self.dialog.resize(new_width, new_height)
-
-        # Show the dialog
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(self.dialog)
