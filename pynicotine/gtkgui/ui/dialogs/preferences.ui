@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="main">
     <property name="visible">1</property>
     <property name="vexpand">1</property>
     <child>
-      <object class="GtkScrolledWindow" id="SettingsList">
+      <object class="GtkScrolledWindow">
         <property name="visible">1</property>
         <property name="hscrollbar-policy">never</property>
         <property name="vexpand">1</property>
         <child>
-          <object class="GtkListBox" id="SettingsListBox">
+          <object class="GtkListBox" id="preferences_list">
             <property name="visible">1</property>
             <property name="selection-mode">browse</property>
             <signal name="row-selected" handler="on_switch_page" swapped="no"/>
@@ -23,12 +23,12 @@
       </object>
     </child>
     <child>
-      <object class="GtkScrolledWindow" id="ScrolledWindow">
+      <object class="GtkScrolledWindow">
         <property name="visible">1</property>
         <property name="hexpand">1</property>
         <property name="hscrollbar-policy">never</property>
         <child>
-          <object class="GtkViewport" id="viewport1">
+          <object class="GtkViewport" id="viewport">
             <property name="visible">1</property>
             <property name="width-request">380</property>
           </object>
