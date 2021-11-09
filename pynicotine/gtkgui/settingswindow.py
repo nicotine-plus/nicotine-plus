@@ -31,6 +31,7 @@ import time
 import gi
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
+from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -45,6 +46,8 @@ from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import set_dark_mode
+from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -2977,12 +2980,12 @@ class Settings(UserInterface):
 
     def __init__(self, frame):
 
-        super().__init__("ui/settings/settingswindow.ui")
+        super().__init__("ui/dialogs/preferences.ui")
 
         self.frame = frame
         self.dialog = dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.Main,
+            content_box=self.main,
             quit_callback=self.on_delete,
             title=_("Preferences"),
             width=960,
@@ -3002,11 +3005,6 @@ class Settings(UserInterface):
         style_context = dialog.get_style_context()
         style_context.add_class("preferences")
         style_context.add_class("preferences-border")
-
-        # Signal sent and catch by frame.py on update
-        GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
-                           GObject.TYPE_NONE, (GObject.TYPE_STRING,))
-        dialog.connect("settings-updated", self.frame.on_settings_updated)
 
         self.pages = {}
         self.page_ids = [("Network", _("Network"), "network-wireless-symbolic"),
@@ -3047,7 +3045,7 @@ class Settings(UserInterface):
             box.add(icon)
             box.add(label)
 
-            self.SettingsListBox.insert(box, -1)
+            self.preferences_list.insert(box, -1)
 
         self.update_visuals()
 
@@ -3071,8 +3069,8 @@ class Settings(UserInterface):
 
             pos += 1
 
-        row = self.SettingsListBox.get_row_at_index(pos)
-        self.SettingsListBox.select_row(row)
+        row = self.preferences_list.get_row_at_index(pos)
+        self.preferences_list.select_row(row)
 
     def set_combobox_value(self, combobox, option):
 
@@ -3305,20 +3303,123 @@ class Settings(UserInterface):
 
         return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, config
 
+    def update_settings(self, settings_closed=False):
+
+        need_portmap, need_rescan, need_colors, need_completion, need_ip_block, new_config = self.get_settings()
+
+        for key, data in new_config.items():
+            config.sections[key].update(data)
+
+        if need_portmap:
+            self.frame.np.add_upnp_portmapping()
+
+        if need_colors:
+            set_global_font(config.sections["ui"]["globalfont"])
+
+            self.frame.chatrooms.update_visuals()
+            self.frame.privatechat.update_visuals()
+            self.frame.search.update_visuals()
+            self.frame.downloads.update_visuals()
+            self.frame.uploads.update_visuals()
+            self.frame.userinfo.update_visuals()
+            self.frame.userbrowse.update_visuals()
+            self.frame.userlist.update_visuals()
+            self.frame.interests.update_visuals()
+
+            self.frame.update_visuals()
+            self.update_visuals()
+
+        if need_completion:
+            self.frame.update_completions()
+
+        if need_ip_block:
+            self.frame.np.network_filter.close_blocked_ip_connections()
+
+        # Dark mode
+        dark_mode_state = config.sections["ui"]["dark_mode"]
+        set_dark_mode(dark_mode_state)
+        self.frame.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
+
+        # UPnP
+        if not config.sections["server"]["upnp"] and self.frame.np.upnp_timer:
+            self.frame.np.upnp_timer.cancel()
+
+        # Chatrooms
+        self.frame.chatrooms.toggle_chat_buttons()
+
+        # Search
+        self.frame.search.populate_search_history()
+
+        # Transfers
+        self.frame.np.transfers.update_limits()
+        self.frame.np.transfers.update_download_filters()
+        self.frame.np.transfers.check_upload_queue()
+
+        # Tray icon
+        if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
+            self.frame.tray_icon.hide()
+
+        elif config.sections["ui"]["trayicon"] and not self.frame.tray_icon.is_visible():
+            self.frame.tray_icon.load()
+
+        # Main notebook
+        self.frame.set_tab_positions()
+        self.frame.set_main_tabs_visibility()
+
+        for i in range(self.frame.MainNotebook.get_n_pages()):
+            page = self.frame.MainNotebook.get_nth_page(i)
+            tab_label = self.frame.MainNotebook.get_tab_label(page)
+            tab_label.set_text_color(0)
+            self.frame.set_tab_expand(page)
+
+        # Other notebooks
+        for w in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
+                  self.frame.userbrowse, self.frame.search):
+            w.set_tab_closers()
+            w.set_text_colors(None)
+
+        # Update configuration
+        config.write_configuration()
+
+        if config.need_config():
+            self.frame.connect_action.set_enabled(False)
+            self.frame.on_fast_configure()
+
+        elif not self.frame.np.active_server_conn:
+            self.frame.connect_action.set_enabled(True)
+
+        if not settings_closed:
+            return
+
+        if need_rescan:
+            self.frame.np.shares.rescan_shares()
+
+        if not config.sections["ui"]["trayicon"]:
+            self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+    def back_up_config_response(self, selected, data):
+        config.write_config_backup(selected)
+
+    def back_up_config(self, *args):
+
+        save_file(
+            parent=self.frame.MainWindow,
+            callback=self.back_up_config_response,
+            initialdir=os.path.dirname(config.filename),
+            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            title=_("Pick a File Name for Config Backup")
+        )
+
     def on_switch_page(self, listbox, row):
 
         page_id, _label, _icon_name = self.page_ids[row.get_index()]
-
-        if not hasattr(sys.modules[__name__], page_id + "Frame"):
-            return
-
-        child = self.viewport1.get_child()
+        child = self.viewport.get_child()
 
         if child:
             if Gtk.get_major_version() == 4:
-                self.viewport1.set_child(None)
+                self.viewport.set_child(None)
             else:
-                self.viewport1.remove(child)
+                self.viewport.remove(child)
 
         if page_id not in self.pages:
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
@@ -3339,41 +3440,28 @@ class Settings(UserInterface):
             self.update_visuals(page)
 
         if Gtk.get_major_version() == 4:
-            self.viewport1.set_child(self.pages[page_id].Main)
+            self.viewport.set_child(self.pages[page_id].Main)
         else:
-            self.viewport1.add(self.pages[page_id].Main)
-
-    def on_backup_config_response(self, selected, data):
-        config.write_config_backup(selected)
-
-    def on_backup_config(self, *args):
-
-        save_file(
-            parent=self.frame.MainWindow,
-            callback=self.on_backup_config_response,
-            initialdir=os.path.dirname(config.filename),
-            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Pick a File Name for Config Backup")
-        )
-
-    def on_response(self, dialog, response_id):
-
-        if response_id == Gtk.ResponseType.OK:
-            self.on_delete()
-            self.dialog.emit("settings-updated", "ok")
-
-        elif response_id == Gtk.ResponseType.APPLY:
-            self.dialog.emit("settings-updated", "apply")
-
-        elif response_id == Gtk.ResponseType.HELP:
-            self.on_backup_config()
-
-        else:
-            self.on_delete()
+            self.viewport.add(self.pages[page_id].Main)
 
     def on_delete(self, *args):
         dialog_hide(self.dialog)
         return True
+
+    def on_response(self, dialog, response_id):
+
+        if response_id == Gtk.ResponseType.OK:
+            self.update_settings(settings_closed=True)
+
+        elif response_id == Gtk.ResponseType.APPLY:
+            self.update_settings()
+            return True
+
+        elif response_id == Gtk.ResponseType.HELP:
+            self.back_up_config()
+            return True
+
+        dialog_hide(self.dialog)
 
     def show(self, *args):
 
