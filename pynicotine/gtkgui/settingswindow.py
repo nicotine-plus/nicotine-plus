@@ -1310,7 +1310,7 @@ class TextToSpeechFrame(UserInterface):
         return {
             "ui": {
                 "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_child().get_text(),
+                "speechcommand": self.TTSCommand.get_active_text(),
                 "speechrooms": self.RoomMessage.get_text(),
                 "speechprivate": self.PrivateMessage.get_text()
             }
@@ -1325,6 +1325,9 @@ class UserInterfaceFrame(UserInterface):
 
         self.p = parent
         self.frame = self.p.frame
+        self.needcolors = False
+
+        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
 
         self.tabs = {
             "search": self.EnableSearchTab,
@@ -1338,43 +1341,15 @@ class UserInterfaceFrame(UserInterface):
             "interests": self.EnableInterestsTab
         }
 
-        # Define options for each GtkComboBox using a liststore
-        # The first element is the translated string,
-        # the second is a GtkPositionType
-        self.pos_list = Gtk.ListStore(str, str)
-        column_numbers = list(range(self.pos_list.get_n_columns()))
+        # Tab positions
+        for combobox in (self.MainPosition, self.ChatRoomsPosition, self.PrivateChatPosition,
+                         self.SearchPosition, self.UserInfoPosition, self.UserBrowsePosition):
+            combobox.append("Top", _("Top"))
+            combobox.append("Bottom", _("Bottom"))
+            combobox.append("Left", _("Left"))
+            combobox.append("Right", _("Right"))
 
-        for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
-            self.pos_list.insert_with_valuesv(-1, column_numbers, item)
-
-        cell = Gtk.CellRendererText()
-
-        self.MainPosition.set_model(self.pos_list)
-        self.MainPosition.pack_start(cell, True)
-        self.MainPosition.add_attribute(cell, 'text', 0)
-
-        self.ChatRoomsPosition.set_model(self.pos_list)
-        self.ChatRoomsPosition.pack_start(cell, True)
-        self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
-
-        self.PrivateChatPosition.set_model(self.pos_list)
-        self.PrivateChatPosition.pack_start(cell, True)
-        self.PrivateChatPosition.add_attribute(cell, 'text', 0)
-
-        self.SearchPosition.set_model(self.pos_list)
-        self.SearchPosition.pack_start(cell, True)
-        self.SearchPosition.add_attribute(cell, 'text', 0)
-
-        self.UserInfoPosition.set_model(self.pos_list)
-        self.UserInfoPosition.pack_start(cell, True)
-        self.UserInfoPosition.add_attribute(cell, 'text', 0)
-
-        self.UserBrowsePosition.set_model(self.pos_list)
-        self.UserBrowsePosition.pack_start(cell, True)
-        self.UserBrowsePosition.add_attribute(cell, 'text', 0)
-
-        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
-
+        # Icon preview
         icon_list = [
             (get_icon("online"), _("Connected"), 16),
             (get_icon("offline"), _("Disconnected"), 16),
@@ -1410,7 +1385,6 @@ class UserInterfaceFrame(UserInterface):
 
             self.IconView.insert(box, -1)
 
-        self.needcolors = False
         self.options = {
             "notifications": {
                 "notification_tab_colors": self.NotificationTabColors
@@ -1494,25 +1468,6 @@ class UserInterfaceFrame(UserInterface):
             if widget is not None:
                 widget.set_active(enabled)
 
-        # Function to set the default iter from the value found in the config file
-        def set_active_conf(model, path, iterator, data):
-            if model.get_value(iterator, 1).lower() == data["cfg"].lower():
-                data["combobox"].set_active_iter(iterator)
-
-        # Override settings for the GtkComboBox defining ui positioning
-        for opt in [
-            "tabmain", "tabrooms", "tabprivate",
-            "tabsearch", "tabinfo", "tabbrowse"
-        ]:
-            # Get the value in the config file
-            config_val = config.sections["ui"][opt]
-
-            # Iterate over entries to find which one should be active
-            self.options["ui"][opt].get_model().foreach(set_active_conf, {
-                "cfg": config_val,
-                "combobox": self.options["ui"][opt]
-            })
-
         self.on_username_hotspots_toggled(self.UsernameHotspots)
         self.on_tab_notification_color_toggled(self.NotificationTabColors)
 
@@ -1520,14 +1475,6 @@ class UserInterfaceFrame(UserInterface):
         self.needcolors = False
 
     def get_settings(self):
-
-        # Get iters from GtkComboBox fields
-        iter_main = self.pos_list.get_iter(self.MainPosition.get_active())
-        iter_rooms = self.pos_list.get_iter(self.ChatRoomsPosition.get_active())
-        iter_private = self.pos_list.get_iter(self.PrivateChatPosition.get_active())
-        iter_search = self.pos_list.get_iter(self.SearchPosition.get_active())
-        iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
-        iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
 
         enabled_tabs = {}
 
@@ -1549,17 +1496,17 @@ class UserInterfaceFrame(UserInterface):
                 "searchfont": self.SelectSearchFont.get_font(),
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font(),
-                "usernamestyle": self.UsernameStyle.get_active_text(),
+                "usernamestyle": self.UsernameStyle.get_active_id(),
 
                 "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
 
-                "tabmain": self.pos_list.get_value(iter_main, 1),
-                "tabrooms": self.pos_list.get_value(iter_rooms, 1),
-                "tabprivate": self.pos_list.get_value(iter_private, 1),
-                "tabsearch": self.pos_list.get_value(iter_search, 1),
-                "tabinfo": self.pos_list.get_value(iter_info, 1),
-                "tabbrowse": self.pos_list.get_value(iter_browse, 1),
+                "tabmain": self.MainPosition.get_active_id(),
+                "tabrooms": self.ChatRoomsPosition.get_active_id(),
+                "tabprivate": self.PrivateChatPosition.get_active_id(),
+                "tabsearch": self.SearchPosition.get_active_id(),
+                "tabinfo": self.UserInfoPosition.get_active_id(),
+                "tabbrowse": self.UserBrowsePosition.get_active_id(),
                 "modes_visible": enabled_tabs,
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
@@ -1961,10 +1908,10 @@ class UrlHandlersFrame(UserInterface):
                 "protocols": protocols
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.get_child().get_text()
+                "filemanager": self.FileManagerCombo.get_active_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.get_child().get_text()
+                "default": self.audioPlayerCombo.get_active_text()
             }
         }
 
@@ -1976,8 +1923,8 @@ class UrlHandlersFrame(UserInterface):
 
     def on_add(self, widget):
 
-        protocol = self.ProtocolCombo.get_child().get_text()
-        command = self.Handler.get_child().get_text()
+        protocol = self.ProtocolCombo.get_active_text()
+        command = self.Handler.get_active_text()
 
         self.ProtocolCombo.get_child().set_text("")
         self.Handler.get_child().set_text("")
@@ -2095,7 +2042,7 @@ class CensorReplaceListFrame(UserInterface):
             "words": {
                 "censored": censored,
                 "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_text(),
+                "censorfill": self.CensorReplaceCombo.get_active_id(),
                 "autoreplaced": autoreplaced,
                 "replacewords": self.ReplaceCheck.get_active()
             }
@@ -2340,7 +2287,7 @@ class NowPlayingFrame(UserInterface):
         return self.NPCommand.get_text()
 
     def get_format(self):
-        return self.NPFormat.get_child().get_text()
+        return self.NPFormat.get_active_text()
 
     def set_player(self, player):
 
@@ -3079,29 +3026,6 @@ class Settings(UserInterface):
         row = self.preferences_list.get_row_at_index(pos)
         self.preferences_list.select_row(row)
 
-    def set_combobox_value(self, combobox, option):
-
-        # Attempt to match the value with an existing item
-        iterator = combobox.get_model().get_iter_first()
-
-        while iterator is not None:
-            word = combobox.get_model().get_value(iterator, 0)
-
-            if word.lower() == option or word == option:
-                combobox.set_active_iter(iterator)
-                break
-
-            iterator = combobox.get_model().iter_next(iterator)
-
-        # Custom value provided
-        if combobox.get_has_entry():
-            if Gtk.get_major_version() == 4:
-                entry = combobox.get_child()
-            else:
-                entry = combobox.get_children()[0]
-
-            entry.set_text(option)
-
     def set_widgets_data(self, options):
 
         for section, keys in options.items():
@@ -3149,8 +3073,8 @@ class Settings(UserInterface):
                 # Regular check button
                 return widget.get_active()
 
-        elif isinstance(widget, Gtk.ComboBox):
-            return widget.get_model().get(widget.get_active_iter(), 0)[0]
+        elif isinstance(widget, Gtk.ComboBoxText):
+            return widget.get_active_text()
 
         elif isinstance(widget, Gtk.FontButton):
             widget.get_font()
@@ -3186,8 +3110,8 @@ class Settings(UserInterface):
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
 
-        elif isinstance(widget, Gtk.ComboBox):
-            self.set_combobox_item(widget, "")
+        elif isinstance(widget, Gtk.ComboBoxText):
+            widget.get_child().set_text("")
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
@@ -3220,9 +3144,12 @@ class Settings(UserInterface):
                 # Regular check button
                 widget.set_active(value)
 
-        elif isinstance(widget, Gtk.ComboBox):
+        elif isinstance(widget, Gtk.ComboBoxText):
             if isinstance(value, str):
-                self.set_combobox_value(widget, value)
+                if widget.get_has_entry():
+                    widget.get_child().set_text(value)
+                else:
+                    widget.set_active_id(value)
 
             elif isinstance(value, int):
                 widget.set_active(value)

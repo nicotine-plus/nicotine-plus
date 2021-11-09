@@ -119,7 +119,7 @@
                     <property name="visible">1</property>
                     <property name="focusable">0</property>
                     <child>
-                      <object class="GtkComboBox" id="MainPosition">
+                      <object class="GtkComboBoxText" id="MainPosition">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                       </object>
@@ -602,7 +602,7 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBox" id="ChatRoomsPosition">
+                  <object class="GtkComboBoxText" id="ChatRoomsPosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -628,7 +628,7 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBox" id="PrivateChatPosition">
+                  <object class="GtkComboBoxText" id="PrivateChatPosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -654,7 +654,7 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBox" id="SearchPosition">
+                  <object class="GtkComboBoxText" id="SearchPosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -680,7 +680,7 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBox" id="UserInfoPosition">
+                  <object class="GtkComboBoxText" id="UserInfoPosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -706,7 +706,7 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBox" id="UserBrowsePosition">
+                  <object class="GtkComboBoxText" id="UserBrowsePosition">
                     <property name="visible">1</property>
                     <property name="hexpand">1</property>
                   </object>
@@ -778,10 +778,10 @@
                         <property name="visible">1</property>
                         <signal name="changed" handler="on_colors_changed"/>
                         <items>
-                          <item translatable="yes">bold</item>
-                          <item translatable="yes">italic</item>
-                          <item translatable="yes">underline</item>
-                          <item translatable="yes">normal</item>
+                          <item id="bold" translatable="yes">bold</item>
+                          <item id="italic" translatable="yes">italic</item>
+                          <item id="underline" translatable="yes">underline</item>
+                          <item id="normal" translatable="yes">normal</item>
                         </items>
                       </object>
                     </child>
