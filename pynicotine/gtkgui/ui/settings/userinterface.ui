@@ -117,34 +117,23 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="spacing">18</property>
-        <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
             <property name="spacing">12</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">1</property>
-                <property name="label" translatable="yes">Primary Tabs</property>
-                <property name="xalign">0</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
-              </object>
-            </child>
             <child>
               <object class="GtkCheckButton" id="TabSelectPrevious">
                 <property name="label" translatable="yes">Remember previous primary tab on startup</property>
                 <property name="visible">1</property>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">12</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkFlowBox">
                 <property name="visible">1</property>
