@@ -428,7 +428,7 @@
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="column-spacing">12</property>
+            <property name="column-spacing">48</property>
             <property name="row-spacing">12</property>
             <property name="min-children-per-line">4</property>
             <property name="max-children-per-line">4</property>
@@ -565,10 +565,8 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
-
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
@@ -584,7 +582,6 @@
             </attributes>
           </object>
         </child>
-
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
@@ -626,7 +623,6 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
@@ -862,9 +858,6 @@
         </child>
       </object>
     </child>
-
-
-
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
