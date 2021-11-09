@@ -1175,18 +1175,8 @@ class NicotineFrame(UserInterface):
 
         if Gtk.get_major_version() == 4:
             header_bar.set_title_widget(title_widget)
-            header_bar.add = header_bar.pack_start
         else:
             header_bar.set_custom_title(title_widget)
-
-        try:
-            start_widget = getattr(self, self.current_page_id + "_start")
-            toolbar_contents.remove(start_widget)
-            header_bar.add(start_widget)
-
-        except AttributeError:
-            # No start widget
-            pass
 
         end_widget = getattr(self, self.current_page_id + "_end")
         toolbar_contents.remove(end_widget)
