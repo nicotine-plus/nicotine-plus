@@ -91,6 +91,10 @@ def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Se
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
 
+    if Gtk.get_major_version() == 3:
+        # Display network shares
+        self.set_local_only(False)
+
     if multichoice:
         self.set_select_multiple(True)
 
@@ -120,6 +124,10 @@ def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("S
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
     self.set_select_multiple(multiple)
+
+    if Gtk.get_major_version() == 3:
+        # Display network shares
+        self.set_local_only(False)
 
     _set_filechooser_folder(self, initialdir)
     self.show()
@@ -168,6 +176,10 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
     self.set_modal(True)
 
     if Gtk.get_major_version() == 3:
+        # Display network shares
+        self.set_local_only(False)
+
+        # Image preview
         self.connect("update-preview", on_update_image_preview)
 
         preview = Gtk.Image()
@@ -203,6 +215,10 @@ def save_file(parent, callback, callback_data=None, initialdir="~", initialfile=
     self.set_select_multiple(False)
 
     if Gtk.get_major_version() == 3:
+        # Display network shares
+        self.set_local_only(False)
+
+        # Display hidden files
         self.set_show_hidden(True)
 
     _set_filechooser_folder(self, initialdir)
