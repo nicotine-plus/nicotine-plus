@@ -3025,7 +3025,7 @@ class Settings(UserInterface):
                          ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
                          ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
                          ("Plugins", _("Plugins"), "list-add-symbolic"),
-                         ("UrlHandlers", _("URL Handlers"), "window-new-symbolic")]
+                         ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
         for page_id, label, icon_name in self.page_ids:
             box = Gtk.Box()
