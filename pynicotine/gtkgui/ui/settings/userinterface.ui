@@ -2314,13 +2314,20 @@
               <object class="GtkFrame">
                 <property name="visible">1</property>
                 <child>
-                  <object class="GtkIconView" id="IconView">
+                  <object class="GtkFlowBox" id="IconView">
                     <property name="visible">1</property>
-                    <property name="pixbuf-column">0</property>
-                    <property name="text-column">1</property>
+                    <property name="column-spacing">12</property>
+                    <property name="row-spacing">12</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">24</property>
                     <property name="selection-mode">none</property>
                   </object>
                 </child>
+                <style>
+                  <class name="view"/>
+                </style>
               </object>
             </child>
           </object>

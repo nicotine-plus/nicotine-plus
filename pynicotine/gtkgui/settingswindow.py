@@ -30,9 +30,7 @@ import time
 
 import gi
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
 from gi.repository import GLib
-from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -1377,33 +1375,42 @@ class UserInterfaceFrame(UserInterface):
 
         self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
 
-        liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
-        column_numbers = list(range(liststore.get_n_columns()))
-        self.IconView.set_model(liststore)
-
-        for row in (
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("online")), _("Connected")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("offline")), _("Disconnected")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("away")), _("Away")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite")), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite3")), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("n")), _("Window")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("notify")), _("Notification")]
-        ):
-            liststore.insert_with_valuesv(-1, column_numbers, row)
+        icon_list = [
+            (get_icon("online"), _("Connected"), 16),
+            (get_icon("offline"), _("Disconnected"), 16),
+            (get_icon("away"), _("Away"), 16),
+            (get_icon("hilite"), _("Highlight"), 16),
+            (get_icon("hilite3"), _("Highlight"), 16),
+            (get_icon("n"), _("Window"), 64),
+            (get_icon("notify"), _("Notification"), 64)
+        ]
 
         if sys.platform != "darwin" and Gtk.get_major_version() != 4:
-            for row in (
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_connect")),
-                    _("Connected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_disconnect")),
-                    _("Disconnected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_away")),
-                    _("Away (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_msg")),
-                    _("Message (Tray)")]
-            ):
-                liststore.insert_with_valuesv(-1, column_numbers, row)
+            icon_list += [
+                (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
+                (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
+                (get_icon("trayicon_away"), _("Away (Tray)"), 16),
+                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)
+            ]
+
+        for pixbuf, label, pixel_size in icon_list:
+            box = Gtk.Box()
+            box.set_orientation(Gtk.Orientation.VERTICAL)
+            box.set_valign(Gtk.Align.CENTER)
+            box.set_spacing(6)
+            box.show()
+
+            icon = Gtk.Image.new_from_pixbuf(pixbuf)
+            icon.set_pixel_size(pixel_size)
+            icon.show()
+
+            label = Gtk.Label.new(label)
+            label.show()
+
+            box.add(icon)
+            box.add(label)
+
+            self.IconView.insert(box, -1)
 
         self.needcolors = False
         self.options = {
