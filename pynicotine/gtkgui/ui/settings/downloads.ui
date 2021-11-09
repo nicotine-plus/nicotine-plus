@@ -31,7 +31,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="AutoclearFinished">
-            <property name="label" translatable="yes">Autoclear finished/filtered downloads from transfer list</property>
+            <property name="label" translatable="yes">Automatically clear finished transfers from the Downloads list</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
           </object>
@@ -44,7 +44,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="UsernameSubfolders">
-            <property name="label" translatable="yes">Store completed downloads in username subfolders</property>
+            <property name="label" translatable="yes">Store completed downloads in username subfolders (not recommended)</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
           </object>
@@ -54,46 +54,6 @@
             <property name="label" translatable="yes">Prevent write access by other programs for files being downloaded (turn off for NFS)</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBox">
-            <property name="visible">1</property>
-            <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkCheckButton" id="RemoteDownloads">
-                    <property name="label" translatable="yes">Allow these users to send you files:</property>
-                    <property name="visible">1</property>
-                    <property name="use-underline">1</property>
-                    <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkComboBoxText" id="UploadsAllowed">
-                    <property name="visible">1</property>
-                    <items>
-                      <item translatable="yes">No one</item>
-                      <item translatable="yes">Everyone</item>
-                      <item translatable="yes">Buddies</item>
-                      <item translatable="yes">Trusted Buddies</item>
-                    </items>
-                  </object>
-                </child>
-              </object>
-            </child>
           </object>
         </child>
       </object>
@@ -118,6 +78,7 @@
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
+            <property name="min-children-per-line">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
@@ -125,12 +86,42 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkFlowBox">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Limit download speed to (KiB/s):</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">DownloadSpeed</property>
+                    <property name="row-spacing">6</property>
+                    <property name="column-spacing">6</property>
+                    <property name="min-children-per-line">2</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Limit download speed to (KiB/s):</property>
+                            <property name="tooltip_text" translatable="yes">0 = Unlimited</property>
+                            <property name="xalign">0</property>
+                            <property name="wrap">1</property>
+                            <property name="mnemonic_widget">DownloadSpeed</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkSpinButton" id="DownloadSpeed">
+                            <property name="visible">1</property>
+                            <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                            <property name="adjustment">adjustment_DownloadSpeed</property>
+                            <property name="numeric">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -140,40 +131,42 @@
                 <property name="visible">1</property>
                 <property name="focusable">0</property>
                 <child>
-                  <object class="GtkSpinButton" id="DownloadSpeed">
+                  <object class="GtkFlowBox">
                     <property name="visible">1</property>
-                    <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                    <property name="adjustment">adjustment_DownloadSpeed</property>
-                    <property name="numeric">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Alternative download speed limit (KiB/s):</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">1</property>
-                    <property name="mnemonic_widget">DownloadSpeedAlternative</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkSpinButton" id="DownloadSpeedAlternative">
-                    <property name="visible">1</property>
-                    <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                    <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
-                    <property name="numeric">1</property>
+                    <property name="row-spacing">6</property>
+                    <property name="column-spacing">6</property>
+                    <property name="min-children-per-line">2</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">1</property>
+                            <property name="label" translatable="yes">Alternative speed limit (KiB/s):</property>
+                            <property name="tooltip_text" translatable="yes">Enabled with the rewind button on the status bar.</property>
+                            <property name="xalign">0</property>
+                            <property name="wrap">1</property>
+                            <property name="mnemonic_widget">DownloadSpeedAlternative</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkSpinButton" id="DownloadSpeedAlternative">
+                            <property name="visible">1</property>
+                            <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                            <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
+                            <property name="numeric">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -257,6 +250,55 @@
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">4</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkCheckButton" id="RemoteDownloads">
+                    <property name="label" translatable="yes">Allow these users to send you files:</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                    <signal name="toggled" handler="on_remote_downloads" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="UploadsAllowed">
+                    <property name="visible">1</property>
+                    <items>
+                      <item translatable="yes">No one</item>
+                      <item translatable="yes">Everyone</item>
+                      <item translatable="yes">Buddies</item>
+                      <item translatable="yes">Trusted Buddies</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">48</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
@@ -264,7 +306,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Save buddies&apos; uploads to:</property>
+                    <property name="label" translatable="yes">            Save incomming uploads to:</property>
                     <property name="xalign">0</property>
                     <property name="wrap">1</property>
                     <property name="mnemonic_widget">UploadDir</property>
@@ -296,7 +338,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Events</property>
+            <property name="label" translatable="yes">Events and Notifications</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -306,8 +348,71 @@
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
-            <property name="spacing">18</property>
+            <property name="spacing">12</property>
             <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkFlowBox">
+                <property name="visible">1</property>
+                <property name="row-spacing">12</property>
+                <property name="column-spacing">12</property>
+                <property name="max-children-per-line">2</property>
+                <property name="selection-mode">none</property>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Double-click action for downloads:</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">DownloadDoubleClick</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBoxChild">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkComboBoxText" id="DownloadDoubleClick">
+                        <property name="visible">1</property>
+                        <items>
+                          <item>Nothing</item>
+                          <item>Send to Player</item>
+                          <item>Open in File Manager</item>
+                          <item>Search</item>
+                          <item>Pause</item>
+                          <item>Clear</item>
+                          <item>Resume</item>
+                          <item>Browse Folder</item>
+                        </items>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="NotificationPopupFile">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Show notification popup when a file has finished downloading</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="NotificationPopupFolder">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Show notification popup when a folder has finished downloading</property>
+                  </object>
+                </child>
+              </object>
+            </child>
             <child>
               <object class="GtkBox">
                 <property name="visible">1</property>
@@ -363,7 +468,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Download Filters</property>
+            <property name="label" translatable="yes">File Exclusions</property>
             <property name="mnemonic_widget">FilterView</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -372,7 +477,7 @@
         </child>
         <child>
           <object class="GtkCheckButton" id="DownloadFilter">
-            <property name="label" translatable="yes">Enable download filters</property>
+            <property name="label" translatable="yes">Enable download exclusions</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
             <signal name="toggled" handler="on_enable_filters_toggle" swapped="no"/>
@@ -382,7 +487,7 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">&lt;b&gt;Syntax:&lt;/b&gt; Letters are case-insensitive. All Python regular expressions are supported if escaping is disabled. For simple filters, keeping escaping enabled is recommended.</property>
+            <property name="label" translatable="yes">When downloading folders and multiple files, sometimes useless items are included. Exclude the following name patterns:</property>
             <property name="selectable">1</property>
             <property name="use-markup">1</property>
             <property name="wrap">1</property>
@@ -564,7 +669,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">Verify Filters</property>
+                        <property name="label" translatable="yes">Verify Exclusions</property>
                         <property name="use-underline">1</property>
                       </object>
                     </child>
