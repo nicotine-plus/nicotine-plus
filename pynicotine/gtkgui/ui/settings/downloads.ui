@@ -77,7 +77,7 @@
           <object class="GtkFlowBox">
             <property name="visible">1</property>
             <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
+            <property name="column-spacing">6</property>
             <property name="min-children-per-line">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -89,7 +89,6 @@
                   <object class="GtkFlowBox">
                     <property name="visible">1</property>
                     <property name="row-spacing">6</property>
-                    <property name="column-spacing">6</property>
                     <property name="min-children-per-line">2</property>
                     <property name="selection-mode">none</property>
                     <child>
@@ -99,7 +98,7 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Limit download speed to (KiB/s):</property>
+                            <property name="label" translatable="yes">Maximum download speed (KiB/s):</property>
                             <property name="tooltip_text" translatable="yes">0 = Unlimited</property>
                             <property name="xalign">0</property>
                             <property name="wrap">1</property>
@@ -134,7 +133,6 @@
                   <object class="GtkFlowBox">
                     <property name="visible">1</property>
                     <property name="row-spacing">6</property>
-                    <property name="column-spacing">6</property>
                     <property name="min-children-per-line">2</property>
                     <property name="selection-mode">none</property>
                     <child>
@@ -144,8 +142,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
-                            <property name="label" translatable="yes">Alternative speed limit (KiB/s):</property>
-                            <property name="tooltip_text" translatable="yes">Enabled with the rewind button on the status bar.</property>
+                            <property name="label" translatable="yes">Limited download speed (KiB/s):</property>
+                            <property name="tooltip_text" translatable="yes">Alternative speed limits are enabled with the rewind button on the status bar.</property>
                             <property name="xalign">0</property>
                             <property name="wrap">1</property>
                             <property name="mnemonic_widget">DownloadSpeedAlternative</property>
@@ -411,6 +409,12 @@
                     <property name="label" translatable="yes">Show notification popup when a folder has finished downloading</property>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">24</property>
               </object>
             </child>
             <child>
