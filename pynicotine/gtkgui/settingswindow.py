@@ -1382,16 +1382,14 @@ class UserInterfaceFrame(UserInterface):
             (get_icon("hilite"), _("Highlight"), 16),
             (get_icon("hilite3"), _("Highlight"), 16),
             (get_icon("n"), _("Window"), 64),
-            (get_icon("notify"), _("Notification"), 64)
-        ]
+            (get_icon("notify"), _("Notification"), 64)]
 
         if sys.platform != "darwin" and Gtk.get_major_version() != 4:
             icon_list += [
                 (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
                 (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
                 (get_icon("trayicon_away"), _("Away (Tray)"), 16),
-                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)
-            ]
+                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)]
 
         for pixbuf, label, pixel_size in icon_list:
             box = Gtk.Box()
@@ -3015,23 +3013,24 @@ class Settings(UserInterface):
         style_context.add_class("preferences-border")
 
         self.pages = {}
-        self.page_ids = [("Network", _("Network"), "network-wireless-symbolic"),
-                         ("UserInterface", _("User Interface"), "view-grid-symbolic"),
-                         ("Shares", _("Shares"), "folder-symbolic"),
-                         ("Downloads", _("Downloads"), "document-save-symbolic"),
-                         ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
-                         ("Searches", _("Searches"), "system-search-symbolic"),
-                         ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-                         ("Notifications", _("Notifications"), "mail-unread-symbolic"),
-                         ("Logging", _("Logging"), "emblem-documents-symbolic"),
-                         ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
-                         ("CensorReplaceList", _("Chat Censor & Replace"), "insert-text-symbolic"),
-                         ("Completion", _("Chat Completion"), "format-indent-more-symbolic"),
-                         ("TextToSpeech", _("Text-to-Speech"), "audio-volume-high-symbolic"),
-                         ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
-                         ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
-                         ("Plugins", _("Plugins"), "list-add-symbolic"),
-                         ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
+        self.page_ids = [
+            ("Network", _("Network"), "network-wireless-symbolic"),
+            ("UserInterface", _("User Interface"), "view-grid-symbolic"),
+            ("Shares", _("Shares"), "folder-symbolic"),
+            ("Downloads", _("Downloads"), "document-save-symbolic"),
+            ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
+            ("Searches", _("Searches"), "system-search-symbolic"),
+            ("UserInfo", _("User Info"), "avatar-default-symbolic"),
+            ("Notifications", _("Notifications"), "mail-unread-symbolic"),
+            ("Logging", _("Logging"), "emblem-documents-symbolic"),
+            ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
+            ("CensorReplaceList", _("Chat Censor & Replace"), "insert-text-symbolic"),
+            ("Completion", _("Chat Completion"), "format-indent-more-symbolic"),
+            ("TextToSpeech", _("Text-to-Speech"), "audio-volume-high-symbolic"),
+            ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
+            ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+            ("Plugins", _("Plugins"), "list-add-symbolic"),
+            ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
         for page_id, label, icon_name in self.page_ids:
             box = Gtk.Box()
