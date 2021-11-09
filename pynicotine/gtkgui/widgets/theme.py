@@ -129,6 +129,11 @@ def set_global_css():
     .count {
         padding-left: 10px;
         padding-right: 10px;
+    }
+    """
+
+    css_gtk3_20 = b"""
+    .count {
         min-width: 12px;
     }
     """
@@ -160,6 +165,9 @@ def set_global_css():
         css = css + css_gtk4
     else:
         screen = Gdk.Screen.get_default()
+
+        if not Gtk.check_version(3, 20, 0):
+            css = css + css_gtk3_20
 
     global_css_provider.load_from_data(css)
 
