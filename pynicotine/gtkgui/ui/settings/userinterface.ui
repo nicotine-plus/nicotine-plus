@@ -124,6 +124,7 @@
             <child>
               <object class="GtkCheckButton" id="TabSelectPrevious">
                 <property name="label" translatable="yes">Remember previous primary tab on startup</property>
+                <property name="tooltip_text" translatable="yes">Start with Search Files by default.</property>
                 <property name="visible">1</property>
               </object>
             </child>
