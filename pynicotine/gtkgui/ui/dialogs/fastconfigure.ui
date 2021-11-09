@@ -326,7 +326,6 @@
             <child>
               <object class="GtkScrolledWindow" id="shareddirectories">
                 <property name="visible">1</property>
-                <property name="height-request">150</property>
                 <child>
                   <object class="GtkTreeView" id="shareddirectoriestree">
                     <property name="visible">1</property>
