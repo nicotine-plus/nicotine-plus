@@ -20,16 +20,68 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="DarkMode">
-            <property name="label" translatable="yes">Prefer dark mode</property>
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+            <property name="homogeneous">1</property>
+            <property name="column-spacing">12</property>
+            <property name="row-spacing">12</property>
+            <property name="min-children-per-line">1</property>
+            <property name="max-children-per-line">3</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkCheckButton" id="DarkMode">
+                    <property name="label" translatable="yes">Prefer dark mode</property>
+                    <property name="visible">1</property>
+                    <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox" id = "TraySettings">
+                    <property name="visible">1</property>
+                    <property name="focusable">0</property>
+                    <child>
+                      <object class="GtkCheckButton" id="TrayiconCheck">
+                        <property name="label" translatable="yes">Display tray icon</property>
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                        <signal name="toggled" handler="on_toggle_tray" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="halign">start</property>
+                        <property name="label">    </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="StartupHidden">
+                        <property name="label" translatable="yes">Minimize to tray on startup</property>
+                        <property name="visible">1</property>
+                        <property name="use-underline">1</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>
           <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="column-spacing">12</property>
+            <property name="homogeneous">1</property>
+            <property name="column-spacing">24</property>
             <property name="row-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
@@ -89,7 +141,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="TabSelectPrevious">
-                <property name="label" translatable="yes">View previous primary tab on startup</property>
+                <property name="label" translatable="yes">Remember previous primary tab on startup</property>
                 <property name="visible">1</property>
               </object>
             </child>
