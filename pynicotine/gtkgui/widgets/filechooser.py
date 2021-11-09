@@ -21,6 +21,7 @@ import os
 from gi.repository import GdkPixbuf
 from gi.repository import Gio
 from gi.repository import Gtk
+from gi.repository import Pango
 
 
 """ File Choosers """
@@ -235,6 +236,8 @@ class FileChooserButton:
             self.icon.set_property("icon-name", "text-x-generic-symbolic")
 
         self.label = Gtk.Label.new(_("(None)"))
+        self.label.set_ellipsize(Pango.EllipsizeMode.END)
+        self.label.set_width_chars(6)
         box.add(self.icon)
         box.add(self.label)
 

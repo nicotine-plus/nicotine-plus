@@ -53,6 +53,7 @@ from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
@@ -624,10 +625,10 @@ class NicotineFrame(UserInterface):
                 self.shortcuts.emoji.show()
 
             # Workaround for off-centered dialog on first run
-            self.shortcuts.dialog.present_with_time(Gdk.CURRENT_TIME)
-            self.on_hide(self.shortcuts.dialog)
+            dialog_show(self.shortcuts.dialog)
+            dialog_hide(self.shortcuts.dialog)
 
-        self.shortcuts.dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(self.shortcuts.dialog)
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
@@ -719,7 +720,7 @@ class NicotineFrame(UserInterface):
             self.about.dialog.connect("response", lambda x, y: x.destroy())
 
         self.about.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
-        self.about.dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(self.about.dialog)
 
     """ Actions """
 
@@ -1175,18 +1176,8 @@ class NicotineFrame(UserInterface):
 
         if Gtk.get_major_version() == 4:
             header_bar.set_title_widget(title_widget)
-            header_bar.add = header_bar.pack_start
         else:
             header_bar.set_custom_title(title_widget)
-
-        try:
-            start_widget = getattr(self, self.current_page_id + "_start")
-            toolbar_contents.remove(start_widget)
-            header_bar.add(start_widget)
-
-        except AttributeError:
-            # No start widget
-            pass
 
         end_widget = getattr(self, self.current_page_id + "_end")
         toolbar_contents.remove(end_widget)
