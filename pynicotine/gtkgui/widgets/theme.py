@@ -162,7 +162,7 @@ def set_global_css():
     if Gtk.get_major_version() == 4:
         Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
         screen = Gdk.Display.get_default()
-        css = css + css_gtk4
+        css = css + css_gtk3_20 + css_gtk4
     else:
         screen = Gdk.Screen.get_default()
 
