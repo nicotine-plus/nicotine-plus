@@ -2316,8 +2316,8 @@
                 <child>
                   <object class="GtkFlowBox" id="IconView">
                     <property name="visible">1</property>
-                    <property name="column-spacing">12</property>
-                    <property name="row-spacing">12</property>
+                    <property name="column-spacing">24</property>
+                    <property name="row-spacing">24</property>
                     <property name="margin-start">24</property>
                     <property name="margin-end">24</property>
                     <property name="margin-top">24</property>
