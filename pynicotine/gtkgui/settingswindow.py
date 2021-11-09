@@ -3019,7 +3019,7 @@ class Settings(UserInterface):
                          ("Notifications", _("Notifications"), "mail-unread-symbolic"),
                          ("Logging", _("Logging"), "emblem-documents-symbolic"),
                          ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
-                         ("CensorReplaceList", _("Censor & Replace Chat"), "insert-text-symbolic"),
+                         ("CensorReplaceList", _("Chat Censor & Replace"), "insert-text-symbolic"),
                          ("Completion", _("Chat Completion"), "format-indent-more-symbolic"),
                          ("TextToSpeech", _("Text-to-Speech"), "audio-volume-high-symbolic"),
                          ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
