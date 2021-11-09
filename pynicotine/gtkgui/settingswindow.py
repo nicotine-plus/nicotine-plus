@@ -2476,7 +2476,7 @@ class NotificationsFrame(UserInterface):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
                 "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            },
+            }
         }
 
 
