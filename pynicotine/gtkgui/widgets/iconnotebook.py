@@ -57,9 +57,11 @@ class ImageLabel(Gtk.Box):
 
         self.status_image = Gtk.Image()
         self.status_pixbuf = None
+        self.status_image.hide()
 
         self.hilite_image = Gtk.Image()
         self.hilite_pixbuf = None
+        self.hilite_image.hide()
 
         self._pack_children()
 
