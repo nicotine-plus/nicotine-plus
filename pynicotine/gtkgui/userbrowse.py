@@ -737,9 +737,9 @@ class UserBrowse(UserInterface):
     def on_download_directory_to(self, *args, recurse=False):
 
         if recurse:
-            str_title = _("Select Destination for Downloading Folder with Subfolders from User")
+            str_title = _("Select Destination for Downloading Multiple Folders")
         else:
-            str_title = _("Select Destination for Downloading a Folder from User")
+            str_title = _("Select Destination Folder")
 
         choose_dir(
             parent=self.frame.MainWindow,
