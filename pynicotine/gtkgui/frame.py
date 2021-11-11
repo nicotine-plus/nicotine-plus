@@ -1265,14 +1265,14 @@ class NicotineFrame(UserInterface):
                 GLib.idle_add(lambda: self.PrivateChatEntry.grab_focus() == -1)
 
         elif page == self.uploadsvbox:
-            self.uploads.update(forceupdate=True)
+            self.uploads.lazy_load(seconds=2)
             self.clear_tab_hilite()
 
             if self.uploads.Main.get_visible():
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
 
         elif page == self.downloadsvbox:
-            self.downloads.update(forceupdate=True)
+            self.downloads.lazy_load(seconds=2)
             self.clear_tab_hilite()
 
             if self.downloads.Main.get_visible():
