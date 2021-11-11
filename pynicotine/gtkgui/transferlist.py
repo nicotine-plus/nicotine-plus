@@ -78,8 +78,9 @@ class TransferList(UserInterface):
         setup_accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
         setup_accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
         setup_accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
+        setup_accelerator("F5", self.Transfers, self.on_update_accelerator)
 
-        self.last_ui_update = self.last_save = 0
+        self.last_ui_update = self.last_save = self.lazy_loading = 0
         self.transfer_list = []
         self.users = {}
         self.paths = {}
@@ -217,7 +218,11 @@ class TransferList(UserInterface):
 
     def init_transfers(self, transfer_list):
         self.transfer_list = transfer_list
-        self.update(forceupdate=True)
+
+        if self.lazy_loading:
+            return  # update is already triggered by frame.on_switch_page
+
+        self.lazy_load(seconds=5)  # allow faster app start
 
     def server_login(self):
         pass
@@ -299,6 +304,20 @@ class TransferList(UserInterface):
 
         return status
 
+    def lazy_load(self, seconds):
+        """ Avoid UI hang in frame.on_switch_tab: allows 2 seconds cooldown """
+
+        if self.lazy_loading:
+            return  # a transfers list update is already pending or running
+
+        self.lazy_loading = GLib.timeout_add_seconds(seconds, self.on_lazy_load)
+
+    def on_lazy_load(self):
+
+        GLib.source_remove(self.lazy_loading)
+        self.update(forceupdate=True)
+        self.lazy_loading = 0
+
     def update(self, transfer=None, forceupdate=False):
 
         curtime = time()
@@ -330,14 +349,14 @@ class TransferList(UserInterface):
                 self.update_specific(transfer)
 
         if forceupdate or finished or (curtime - self.last_ui_update) > 1:
-
-            """ Unless a transfer finishes, use a cooldown to avoid updating
-            too often """
+            """ Unless transfer finished, skip to avoid updating too often """
 
             self.update_parent_rows()
 
             self.status_page.set_visible(not self.transfer_list)
             self.Main.set_visible(self.transfer_list)
+
+        self.last_ui_update = time()
 
     def update_parent_rows(self, only_remove=False):
 
@@ -362,9 +381,6 @@ class TransferList(UserInterface):
                 # No grouping
                 if not self.users[username]:
                     del self.users[username]
-
-        self.frame.update_bandwidth()
-        self.last_ui_update = time()
 
     def update_parent_row(self, initer):
 
@@ -827,6 +843,11 @@ class TransferList(UserInterface):
         self.select_transfers()
         self.on_file_properties()
         return True
+
+    def on_update_accelerator(self, *args):
+        """ F5: Refresh """
+
+        self.lazy_load(seconds=1)
 
     def on_file_properties(self, *args):
 
