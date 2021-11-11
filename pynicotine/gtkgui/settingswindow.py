@@ -1271,23 +1271,110 @@ class BannedUsersFrame(UserInterface):
             del self.blocked_list[ip]
 
 
-class TextToSpeechFrame(UserInterface):
+class ChatsFrame(UserInterface):
 
     def __init__(self, parent):
 
-        super().__init__("ui/settings/tts.ui")
+        super().__init__("ui/settings/chats.ui")
 
         self.p = parent
         self.frame = self.p.frame
 
         self.options = {
+            "logging": {
+                "readroomlines": self.RoomLogLines,
+                "readprivatelines": self.PrivateLogLines,
+                "readroomlogs": self.ReadRoomLogs,
+                "rooms_timestamp": self.ChatRoomFormat,
+                "private_timestamp": self.PrivateChatFormat
+            },
+            "privatechat": {
+                "store": self.ReopenPrivateChats
+            },
+            "words": {
+                "tab": self.CompletionTabCheck,
+                "cycle": self.CompletionCycleCheck,
+                "dropdown": self.CompletionDropdownCheck,
+                "characters": self.CharactersCompletion,
+                "roomnames": self.CompleteRoomNamesCheck,
+                "buddies": self.CompleteBuddiesCheck,
+                "roomusers": self.CompleteUsersInRoomsCheck,
+                "commands": self.CompleteCommandsCheck,
+                "aliases": self.CompleteAliasesCheck,
+                "onematch": self.OneMatchCheck,
+                "censored": self.CensorList,
+                "censorwords": self.CensorCheck,
+                "censorfill": self.CensorReplaceCombo,
+                "autoreplaced": self.ReplacementList,
+                "replacewords": self.ReplaceCheck
+            },
             "ui": {
+                "spellcheck": self.SpellCheck,
                 "speechenabled": self.TextToSpeech,
                 "speechcommand": self.TTSCommand,
                 "speechrooms": self.RoomMessage,
                 "speechprivate": self.PrivateMessage
             }
         }
+
+        self.censor_list_model = Gtk.ListStore(str)
+
+        cols = initialise_columns(
+            None, self.CensorList,
+            ["pattern", _("Pattern"), -1, "edit", None]
+        )
+        cols["pattern"].set_sort_column_id(0)
+
+        self.CensorList.set_model(self.censor_list_model)
+
+        renderers = cols["pattern"].get_cells()
+        for render in renderers:
+            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
+
+        self.replace_list_model = Gtk.ListStore(str, str)
+
+        self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
+        cols = initialise_columns(
+            None, self.ReplacementList,
+            ["pattern", _("Pattern"), 150, "edit", None],
+            ["replacement", _("Replacement"), -1, "edit", None]
+        )
+        cols["pattern"].set_sort_column_id(0)
+        cols["replacement"].set_sort_column_id(1)
+
+        self.ReplacementList.set_model(self.replace_list_model)
+
+        pos = 0
+        for (column_id, column) in cols.items():
+            renderers = column.get_cells()
+            for render in renderers:
+                render.connect('edited', self.replace_cell_edited_callback, self.ReplacementList, pos)
+
+            pos += 1
+
+    def on_completion_changed(self, widget):
+        self.needcompletion = True
+
+    def on_completion_tab_check(self, widget):
+        sensitive = self.CompletionTabCheck.get_active()
+        self.needcompletion = True
+
+        self.CompletionCycleCheck.set_sensitive(sensitive)
+        self.CompleteRoomNamesCheck.set_sensitive(sensitive)
+        self.CompleteBuddiesCheck.set_sensitive(sensitive)
+        self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
+        self.CompleteCommandsCheck.set_sensitive(sensitive)
+        self.CompleteAliasesCheck.set_sensitive(sensitive)
+        self.CompletionDropdownCheck.set_sensitive(sensitive)
+
+        self.on_completion_dropdown_check(widget)
+
+    def on_completion_dropdown_check(self, widget):
+        sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
+        self.needcompletion = True
+
+        self.CharactersCompletion.set_sensitive(sensitive)
+        self.OneMatchCheck.set_sensitive(sensitive)
 
     def on_default_private(self, widget):
         self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
@@ -1298,9 +1385,97 @@ class TextToSpeechFrame(UserInterface):
     def on_default_tts(self, widget):
         self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
+    def on_room_default_timestamp(self, widget):
+        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
+
+    def on_private_default_timestamp(self, widget):
+        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
+
+    def censor_cell_edited_callback(self, widget, index, value, treeview, pos):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+
+        if value != "" and not value.isspace() and len(value) > 2:
+            store.set(iterator, pos, value)
+        else:
+            store.remove(iterator)
+
+    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
+
+    def on_replace_check(self, widget):
+        sensitive = widget.get_active()
+        self.ReplacementsContainer.set_sensitive(sensitive)
+
+    def on_censor_check(self, widget):
+        sensitive = widget.get_active()
+        self.CensorContainer.set_sensitive(sensitive)
+
+    def on_add_censored_response(self, dialog, response_id, data):
+
+        pattern = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if pattern:
+            self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
+
+    def on_add_censored(self, widget):
+
+        entry_dialog(
+            parent=self.p.dialog,
+            title=_("Censor Pattern"),
+            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+                      "want to match strings inside words (may fail at the beginning and end of lines)."),
+            callback=self.on_add_censored_response
+        )
+
+    def on_remove_censored(self, widget):
+
+        model, paths = self.CensorList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
+
+    def on_add_replacement(self, widget):
+
+        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
+        selection = self.ReplacementList.get_selection()
+        selection.select_iter(iterator)
+        col = self.ReplacementList.get_column(0)
+
+        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
+
+    def on_remove_replacement(self, widget):
+
+        model, paths = self.ReplacementList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
+
     def set_settings(self):
 
+        self.censor_list_model.clear()
+        self.replace_list_model.clear()
+
         self.p.set_widgets_data(self.options)
+
+        self.needcompletion = False
+
+        try:
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401
+
+        except (ImportError, ValueError):
+            self.SpellCheck.hide()
 
         for i in ("%(user)s", "%(message)s"):
             if i not in config.sections["ui"]["speechprivate"]:
@@ -1309,10 +1484,65 @@ class TextToSpeechFrame(UserInterface):
             if i not in config.sections["ui"]["speechrooms"]:
                 self.default_rooms(None)
 
+        for word, replacement in config.sections["words"]["autoreplaced"].items():
+            self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
+                str(word),
+                str(replacement)
+            ])
+
+        self.on_censor_check(self.CensorCheck)
+        self.on_replace_check(self.ReplaceCheck)
+
     def get_settings(self):
 
+        censored = []
+        autoreplaced = {}
+
+        iterator = self.censor_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.censor_list_model.get_value(iterator, 0)
+            censored.append(word)
+            iterator = self.censor_list_model.iter_next(iterator)
+
+        iterator = self.replace_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.replace_list_model.get_value(iterator, 0)
+            replacement = self.replace_list_model.get_value(iterator, 1)
+            autoreplaced[word] = replacement
+            iterator = self.replace_list_model.iter_next(iterator)
+
         return {
+            "logging": {
+                "readroomlogs": self.ReadRoomLogs.get_active(),
+                "readroomlines": self.RoomLogLines.get_value_as_int(),
+                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
+                "private_timestamp": self.PrivateChatFormat.get_text(),
+                "rooms_timestamp": self.ChatRoomFormat.get_text()
+            },
+            "privatechat": {
+                "store": self.ReopenPrivateChats.get_active()
+            },
+            "words": {
+                "tab": self.CompletionTabCheck.get_active(),
+                "cycle": self.CompletionCycleCheck.get_active(),
+                "dropdown": self.CompletionDropdownCheck.get_active(),
+                "characters": self.CharactersCompletion.get_value_as_int(),
+                "roomnames": self.CompleteRoomNamesCheck.get_active(),
+                "buddies": self.CompleteBuddiesCheck.get_active(),
+                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
+                "commands": self.CompleteCommandsCheck.get_active(),
+                "aliases": self.CompleteAliasesCheck.get_active(),
+                "onematch": self.OneMatchCheck.get_active(),
+                "censored": censored,
+                "censorwords": self.CensorCheck.get_active(),
+                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "autoreplaced": autoreplaced,
+                "replacewords": self.ReplaceCheck.get_active()
+            },
             "ui": {
+                "spellcheck": self.SpellCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
                 "speechcommand": self.TTSCommand.get_active_text(),
                 "speechrooms": self.RoomMessage.get_text(),
@@ -1711,16 +1941,7 @@ class LoggingFrame(UserInterface):
                 "transferslogsdir": self.TransfersLogDir,
                 "debug_file_output": self.LogDebug,
                 "debuglogsdir": self.DebugLogDir,
-                "rooms_timestamp": self.ChatRoomFormat,
-                "private_timestamp": self.PrivateChatFormat,
-                "log_timestamp": self.LogFileFormat,
-                "timestamps": self.ShowTimeStamps,
-                "readroomlines": self.RoomLogLines,
-                "readprivatelines": self.PrivateLogLines,
-                "readroomlogs": self.ReadRoomLogs
-            },
-            "privatechat": {
-                "store": self.ReopenPrivateChats
+                "log_timestamp": self.LogFileFormat
             }
         }
 
@@ -1739,27 +1960,12 @@ class LoggingFrame(UserInterface):
                 "transferslogsdir": self.TransfersLogDir.get_path(),
                 "debug_file_output": self.LogDebug.get_active(),
                 "debuglogsdir": self.DebugLogDir.get_path(),
-                "readroomlogs": self.ReadRoomLogs.get_active(),
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text(),
-                "log_timestamp": self.LogFileFormat.get_text(),
-                "timestamps": self.ShowTimeStamps.get_active()
-            },
-            "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
-            },
+                "log_timestamp": self.LogFileFormat.get_text()
+            }
         }
 
     def on_default_timestamp(self, widget):
         self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
-
-    def on_room_default_timestamp(self, widget):
-        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
-
-    def on_private_default_timestamp(self, widget):
-        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
 
 class SearchesFrame(UserInterface):
@@ -2937,11 +3143,9 @@ class Settings(UserInterface):
             ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("Searches", _("Searches"), "system-search-symbolic"),
             ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Logging", _("Logging"), "emblem-documents-symbolic"),
+            ("Chats", _("Chats"), "mail-send-symbolic"),
             ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
-            ("CensorReplaceList", _("Chat Censor & Replace"), "insert-text-symbolic"),
-            ("Completion", _("Chat Completion"), "format-indent-more-symbolic"),
-            ("TextToSpeech", _("Text-to-Speech"), "audio-volume-high-symbolic"),
+            ("Logging", _("Logging"), "emblem-documents-symbolic"),
             ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
             ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
             ("Plugins", _("Plugins"), "list-add-symbolic"),

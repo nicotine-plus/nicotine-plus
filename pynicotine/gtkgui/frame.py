@@ -1620,8 +1620,8 @@ class NicotineFrame(UserInterface):
 
     """ Chat """
 
-    def on_settings_logging(self, *args):
-        self.on_settings(page='Logging')
+    def on_settings_chat(self, *args):
+        self.on_settings(page="Chats")
 
     def on_get_private_chat(self, widget, *args):
 

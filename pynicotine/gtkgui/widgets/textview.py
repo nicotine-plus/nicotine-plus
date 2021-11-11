@@ -112,7 +112,7 @@ class TextView:
         buffer = self.textbuffer
         linenr = buffer.get_line_count()
 
-        if showstamp and timestamp_format and config.sections["logging"]["timestamps"]:
+        if showstamp and timestamp_format:
             if timestamp:
                 final_timestamp = time.strftime(timestamp_format, time.localtime(timestamp)) + " "
             else:

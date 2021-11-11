@@ -481,8 +481,8 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Configure logging</property>
-            <signal name="clicked" handler="on_settings_logging" swapped="no"/>
+            <property name="tooltip-text" translatable="yes">Configure chats</property>
+            <signal name="clicked" handler="on_settings_chat" swapped="no"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
@@ -738,8 +738,8 @@
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
-            <property name="tooltip-text" translatable="yes">Configure logging</property>
-            <signal name="clicked" handler="on_settings_logging" swapped="no"/>
+            <property name="tooltip-text" translatable="yes">Configure chats</property>
+            <signal name="clicked" handler="on_settings_chat" swapped="no"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
