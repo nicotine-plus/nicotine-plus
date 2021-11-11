@@ -1198,6 +1198,7 @@ class Search(UserInterface):
 
         choose_dir(
             parent=self.frame.MainWindow,
+            title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initialdir=config.sections["transfers"]["downloaddir"],
             multichoice=False
@@ -1247,6 +1248,7 @@ class Search(UserInterface):
 
         choose_dir(
             parent=self.frame.MainWindow,
+            title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initialdir=config.sections["transfers"]["downloaddir"],
             multichoice=False
