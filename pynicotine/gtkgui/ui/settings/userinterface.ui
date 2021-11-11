@@ -281,6 +281,135 @@
     <child>
       <object class="GtkBox">
         <property name="visible">1</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="label" translatable="yes">Notifications</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">1</property>
+            <property name="spacing">24</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">12</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkCheckButton" id="NotificationPopupSound">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Enable sound for notification popups</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="NotificationWindowTitle">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Show notification for private chats and mentions in the window title</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">1</property>
+                <property name="spacing">18</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Show notification popups for:</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">EnableSearchTab</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkFlowBox">
+                    <property name="visible">1</property>
+                    <property name="homogeneous">1</property>
+                    <property name="column-spacing">18</property>
+                    <property name="row-spacing">12</property>
+                    <property name="min-children-per-line">1</property>
+                    <property name="max-children-per-line">2</property>
+                    <property name="selection-mode">none</property>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="NotificationPopupFile">
+                            <property name="label" translatable="yes">Finished file downloads</property>
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="NotificationPopupFolder">
+                            <property name="label" translatable="yes">Finished folder downloads</property>
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
+                            <property name="label" translatable="yes">Private messages</property>
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="NotificationPopupChatroom">
+                            <property name="label" translatable="yes">Chat room messages</property>
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild">
+                        <property name="visible">1</property>
+                        <property name="focusable">0</property>
+                        <child>
+                          <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
+                            <property name="label" translatable="yes">Chat room mentions</property>
+                            <property name="visible">1</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
         <property name="spacing">30</property>
         <property name="orientation">vertical</property>
         <child>

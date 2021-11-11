@@ -1387,7 +1387,14 @@ class UserInterfaceFrame(UserInterface):
 
         self.options = {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors
+                "notification_tab_colors": self.NotificationTabColors,
+                "notification_window_title": self.NotificationWindowTitle,
+                "notification_popup_sound": self.NotificationPopupSound,
+                "notification_popup_file": self.NotificationPopupFile,
+                "notification_popup_folder": self.NotificationPopupFolder,
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
+                "notification_popup_chatroom": self.NotificationPopupChatroom,
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
             },
             "transfers": {
                 "download_doubleclick": self.DownloadDoubleClick,
@@ -1493,7 +1500,14 @@ class UserInterfaceFrame(UserInterface):
 
         return {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors.get_active()
+                "notification_tab_colors": self.NotificationTabColors.get_active(),
+                "notification_window_title": self.NotificationWindowTitle.get_active(),
+                "notification_popup_sound": self.NotificationPopupSound.get_active(),
+                "notification_popup_file": self.NotificationPopupFile.get_active(),
+                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
+                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
             },
             "transfers": {
                 "download_doubleclick": self.DownloadDoubleClick.get_active(),
@@ -2399,45 +2413,6 @@ class NowPlayingFrame(UserInterface):
         }
 
 
-class NotificationsFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/notifications.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-    def get_settings(self):
-
-        return {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            }
-        }
-
-
 class PluginsFrame(UserInterface):
 
     """ Plugin preferences dialog """
@@ -2966,7 +2941,6 @@ class Settings(UserInterface):
             ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("Searches", _("Searches"), "system-search-symbolic"),
             ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Notifications", _("Notifications"), "mail-unread-symbolic"),
             ("Logging", _("Logging"), "emblem-documents-symbolic"),
             ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
             ("CensorReplaceList", _("Chat Censor & Replace"), "insert-text-symbolic"),
