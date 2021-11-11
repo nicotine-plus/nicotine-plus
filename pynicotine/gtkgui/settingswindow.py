@@ -1434,7 +1434,9 @@ class UserInterfaceFrame(UserInterface):
                 "tab_hilite": self.EntryHighlightTab,
                 "tab_changed": self.EntryChangedTab,
                 "dark_mode": self.DarkMode,
-                "exitdialog": self.CloseAction
+                "exitdialog": self.CloseAction,
+                "trayicon": self.TrayiconCheck,
+                "startup_hidden": self.StartupHidden
             }
         }
 
@@ -1461,6 +1463,14 @@ class UserInterfaceFrame(UserInterface):
     def set_settings(self):
 
         self.p.set_widgets_data(self.options)
+
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            # Tray icons don't work as expected on macOS
+            self.hide_tray_icon_settings()
+            return
+
+        sensitive = self.TrayiconCheck.get_active()
+        self.StartupHidden.set_sensitive(sensitive)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
@@ -1531,9 +1541,25 @@ class UserInterfaceFrame(UserInterface):
                 "tab_default": self.EntryRegularTab.get_text(),
                 "tab_changed": self.EntryChangedTab.get_text(),
                 "dark_mode": self.DarkMode.get_active(),
-                "exitdialog": self.CloseAction.get_active()
+                "exitdialog": self.CloseAction.get_active(),
+                "trayicon": self.TrayiconCheck.get_active(),
+                "startup_hidden": self.StartupHidden.get_active()
             }
         }
+
+    """ Tray """
+
+    def hide_tray_icon_settings(self):
+
+        # Hide widgets
+        self.TraySettings.hide()
+
+    def on_toggle_tray(self, widget):
+
+        self.StartupHidden.set_sensitive(widget.get_active())
+
+        if not widget.get_active() and self.StartupHidden.get_active():
+            self.StartupHidden.set_active(widget.get_active())
 
     """ Icons """
 
@@ -2391,35 +2417,11 @@ class NotificationsFrame(UserInterface):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage,
                 "notification_popup_chatroom": self.NotificationPopupChatroom,
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
-            },
-            "ui": {
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden
             }
         }
 
     def set_settings(self):
         self.p.set_widgets_data(self.options)
-
-        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
-            # Tray icons don't work as expected on macOS
-            self.hide_tray_icon_settings()
-            return
-
-        sensitive = self.TrayiconCheck.get_active()
-        self.StartupHidden.set_sensitive(sensitive)
-
-    def hide_tray_icon_settings(self):
-
-        # Hide widgets
-        self.TraySettings.hide()
-
-    def on_toggle_tray(self, widget):
-
-        self.StartupHidden.set_sensitive(widget.get_active())
-
-        if not widget.get_active() and self.StartupHidden.get_active():
-            self.StartupHidden.set_active(widget.get_active())
 
     def get_settings(self):
 
@@ -2432,10 +2434,6 @@ class NotificationsFrame(UserInterface):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
                 "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            },
-            "ui": {
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active()
             }
         }
 
