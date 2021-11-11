@@ -253,7 +253,8 @@ class DownloadsFrame(UserInterface):
                 "downloadlimitalt": self.DownloadSpeedAlternative,
                 "usernamesubfolders": self.UsernameSubfolders,
                 "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder
+                "afterfolder": self.AfterFolder,
+                "download_doubleclick": self.DownloadDoubleClick
             }
         }
 
@@ -326,7 +327,8 @@ class DownloadsFrame(UserInterface):
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
                 "usernamesubfolders": self.UsernameSubfolders.get_active(),
                 "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text()
+                "afterfolder": self.AfterFolder.get_text(),
+                "download_doubleclick": self.DownloadDoubleClick.get_active()
             }
         }
 
@@ -843,7 +845,8 @@ class UploadsFrame(UserInterface):
                 "queuelimit": self.MaxUserQueue,
                 "filelimit": self.MaxUserFiles,
                 "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends
+                "preferfriends": self.PreferFriends,
+                "upload_doubleclick": self.UploadDoubleClick
             }
         }
 
@@ -870,7 +873,8 @@ class UploadsFrame(UserInterface):
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
                 "filelimit": self.MaxUserFiles.get_value_as_int(),
                 "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active()
+                "preferfriends": self.PreferFriends.get_active(),
+                "upload_doubleclick": self.UploadDoubleClick.get_active()
             }
         }
 
@@ -1396,10 +1400,6 @@ class UserInterfaceFrame(UserInterface):
                 "notification_popup_chatroom": self.NotificationPopupChatroom,
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
             },
-            "transfers": {
-                "download_doubleclick": self.DownloadDoubleClick,
-                "upload_doubleclick": self.UploadDoubleClick
-            },
             "ui": {
                 "globalfont": self.SelectGlobalFont,
                 "chatfont": self.SelectChatFont,
@@ -1508,10 +1508,6 @@ class UserInterfaceFrame(UserInterface):
                 "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
                 "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
                 "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            },
-            "transfers": {
-                "download_doubleclick": self.DownloadDoubleClick.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
             },
             "ui": {
                 "globalfont": self.SelectGlobalFont.get_font(),
