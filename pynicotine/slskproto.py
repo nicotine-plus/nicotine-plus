@@ -28,8 +28,6 @@ import sys
 import threading
 import time
 
-from random import uniform
-
 from pynicotine.logfacility import log
 from pynicotine.slskmessages import AcceptChildren
 from pynicotine.slskmessages import AckNotifyPrivileges
@@ -1126,20 +1124,12 @@ class SlskProtoThread(threading.Thread):
                     pass
 
             addedbyteslen = len(addedbytes)
-
             curtime = time.time()
-
-            """ Depending on the number of active downloads, the cooldown for callbacks
-            can be up to 15 seconds per transfer. We use a bit of randomness to give the
-            illusion that downloads are updated often. """
-
             finished = ((leftbytes - addedbyteslen) == 0)
-            cooldown = max(1.0, min(self.total_downloads * uniform(0.8, 1.0), 15))
 
-            if finished or (curtime - conn.lastcallback) > cooldown:
-
-                """ We save resources by not sending data back to the NicotineCore
-                every time a part of a file is downloaded """
+            if finished or (curtime - conn.lastcallback) > 1:
+                # We save resources by not sending data back to the NicotineCore
+                # every time a part of a file is downloaded
 
                 self._callback_msgs.append(DownloadFile(conn.conn, conn.filedown.file))
                 conn.lastcallback = curtime
@@ -1457,18 +1447,11 @@ class SlskProtoThread(threading.Thread):
                 return
 
             curtime = time.time()
-
-            """ Depending on the number of active uploads, the cooldown for callbacks
-            can be up to 15 seconds per transfer. We use a bit of randomness to give the
-            illusion that uploads are updated often. """
-
             finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
-            cooldown = max(1.0, min(self.total_uploads * uniform(0.8, 1.0), 15))
 
-            if finished or (curtime - conn_obj.lastcallback) > cooldown:
-
-                """ We save resources by not sending data back to the NicotineCore
-                every time a part of a file is uploaded """
+            if finished or (curtime - conn_obj.lastcallback) > 1:
+                # We save resources by not sending data back to the NicotineCore
+                # every time a part of a file is uploaded
 
                 self._callback_msgs.append(conn_obj.fileupl)
                 conn_obj.lastcallback = curtime
