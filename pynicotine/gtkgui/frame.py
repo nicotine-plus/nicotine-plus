@@ -360,7 +360,8 @@ class NicotineFrame(UserInterface):
     """ Connection """
 
     def network_callback(self, msgs):
-        GLib.idle_add(self.np.network_event, msgs)
+        # High priority to ensure there are no delays
+        GLib.idle_add(self.np.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def server_login(self):
         self.set_widget_online_status(True)
