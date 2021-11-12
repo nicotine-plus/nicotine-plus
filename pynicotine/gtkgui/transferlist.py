@@ -361,7 +361,6 @@ class TransferList(UserInterface):
                 if not self.users[username]:
                     del self.users[username]
 
-        self.frame.update_bandwidth()
         self.last_ui_update = time()
 
     def get_hplace(self, place):
