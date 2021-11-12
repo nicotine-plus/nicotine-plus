@@ -1936,7 +1936,6 @@ class Transfers:
         self.core.shares.add_file_to_shared(newname)
         self.core.shares.add_file_to_buddy_shared(newname)
         self.core.statistics.append_stat_value("completed_downloads", 1)
-        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
 
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
@@ -1946,6 +1945,7 @@ class Transfers:
         if not self.auto_clear_download(i) and self.downloadsview:
             self.downloadsview.update(i)
 
+        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
         self.save_transfers("downloads")
 
         log.add_download(
@@ -1991,12 +1991,13 @@ class Transfers:
         )
 
         self.core.statistics.append_stat_value("completed_uploads", 1)
-        real_path = self.core.shares.virtual2real(i.filename)
-        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         # Autoclear this upload
         if not self.auto_clear_upload(i) and self.uploadsview:
             self.uploadsview.update(i)
+
+        real_path = self.core.shares.virtual2real(i.filename)
+        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         self.save_transfers("uploads")
         self.check_upload_queue()

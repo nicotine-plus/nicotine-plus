@@ -474,10 +474,14 @@ class TransferList(UserInterface):
         speed = transfer.speed or 0
         hspeed = self.get_hspeed(speed)
         helapsed = self.get_helapsed(transfer.timeelapsed or 0)
+        initer = transfer.iterator
 
         # Modify old transfer
-        if transfer.iterator is not None:
-            initer = transfer.iterator
+        if initer is not None:
+            if not self.transfersmodel.iter_is_valid(initer):
+                # Row has already been removed at some point
+                return
+
             translated_status = self.translate_status(status)
 
             if self.transfersmodel.get_value(initer, 3) != translated_status:
