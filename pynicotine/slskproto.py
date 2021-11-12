@@ -559,7 +559,7 @@ class SlskProtoThread(threading.Thread):
                 self.listen_socket.listen()
                 self.listenport = listenport
                 log.add(_("Listening on port: %i"), listenport)
-                log.add(_("Data socket limit: %(socks)s maximum set by %(platform)s system"),
+                log.add(_("Data socket limit: %(socks)i maximum set by %(platform)s system"),
                         {'socks': MAXSOCKETS, 'platform': sys.platform})
                 break
 
