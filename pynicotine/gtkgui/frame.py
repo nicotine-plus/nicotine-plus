@@ -1341,7 +1341,7 @@ class NicotineFrame(UserInterface):
             return False
 
         tab_label, menu_label = notebook.get_labels(page)
-        tab_label.onclose()
+        tab_label.close_callback()
         return True
 
     def on_tab_cycle(self, widget, state, backwards=False):
