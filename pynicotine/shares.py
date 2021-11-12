@@ -37,7 +37,15 @@ from pynicotine.utils import rename_process
 
 """ Check if there's an appropriate (performant) database type for shelves """
 
-if importlib.util.find_spec("semidbm"):
+if importlib.util.find_spec("_gdbm"):
+
+    def shelve_open_gdbm(filename, flag='c', protocol=None, writeback=False):
+        import _gdbm  # pylint: disable=import-error
+        return shelve.Shelf(_gdbm.open(filename, flag), protocol, writeback)
+
+    shelve.open = shelve_open_gdbm
+
+elif importlib.util.find_spec("semidbm"):
 
     def shelve_open_semidbm(filename, flag='c', protocol=None, writeback=False):
         import semidbm  # pylint: disable=import-error
