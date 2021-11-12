@@ -299,6 +299,7 @@ class TransferList(UserInterface):
     def update(self, transfer=None, forceupdate=False):
 
         curtime = time()
+        last_ui_update = self.last_ui_update
 
         if (curtime - self.last_save) > 15:
 
@@ -312,8 +313,9 @@ class TransferList(UserInterface):
 
         finished = (transfer is not None and transfer.status == "Finished")
 
-        if forceupdate or finished or (curtime - self.last_ui_update) > 1:
+        if forceupdate or finished or (curtime - last_ui_update) > 1:
             self.frame.update_bandwidth()
+            self.last_ui_update = curtime
 
         if not forceupdate and self.frame.current_page_id != self.page_id:
             """ No need to do unnecessary work if transfers are not visible """
@@ -326,7 +328,7 @@ class TransferList(UserInterface):
             for transfer in reversed(self.transfer_list):
                 self.update_specific(transfer)
 
-        if forceupdate or finished or (curtime - self.last_ui_update) > 1:
+        if forceupdate or finished or (curtime - last_ui_update) > 1:
 
             """ Unless a transfer finishes, use a cooldown to avoid updating
             too often """
