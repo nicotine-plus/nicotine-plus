@@ -1309,7 +1309,7 @@ class Transfers:
 
                 if i.size > i.currentbytes:
                     if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                        i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+                        i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
 
                         if i.speed <= 0:
                             i.timeleft = "∞"
@@ -1365,7 +1365,7 @@ class Transfers:
 
             if i.size > i.currentbytes:
                 if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                    i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+                    i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
 
                     if i.speed <= 0:
                         i.timeleft = "∞"
@@ -1959,9 +1959,8 @@ class Transfers:
 
         if i.speed is not None:
             # Inform the server about the last upload speed for this transfer
-            speed = int(i.speed)
-            self.upload_speed = speed
-            self.queue.append(slskmessages.SendUploadSpeed(speed))
+            self.upload_speed = i.speed
+            self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
         self.close_file(file_handle, i)
 
