@@ -1882,7 +1882,7 @@ class NicotineFrame(UserInterface):
         self.UserStatus.set_text(status)
 
     def set_socket_status(self, status):
-        self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
+        self.SocketStatus.set_text("%(current)s" % {'current': status})
 
     def show_scan_progress(self):
 
