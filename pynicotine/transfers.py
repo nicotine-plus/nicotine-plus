@@ -252,6 +252,7 @@ class Transfers:
 
         for i in transfers:
             size = currentbytes = bitrate = length = None
+            status = i[3]
 
             try:
                 size = int(i[4])
@@ -273,10 +274,12 @@ class Transfers:
             except Exception:
                 pass
 
-            if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
+            if len(i) >= 4 and status in ("Aborted", "Paused"):
                 status = "Paused"
-            elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
-                status = i[3]
+            elif len(i) >= 4 and status in ("Filtered", "Finished"):
+                status = status
+            elif currentbytes is not None and size is not None and currentbytes >= size:
+                status = "Finished"
             else:
                 status = "User logged off"
 
@@ -2380,7 +2383,7 @@ class Transfers:
         """ Stop all transfers on disconnect/shutdown """
 
         for i in self.downloads:
-            if i.status not in ("Finished", "Paused"):
+            if i.status not in ("Finished", "Filtered", "Paused"):
                 self.abort_transfer(i)
                 i.status = "User logged off"
 
