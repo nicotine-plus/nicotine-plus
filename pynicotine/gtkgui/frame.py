@@ -1881,7 +1881,7 @@ class NicotineFrame(UserInterface):
         self.UserStatus.set_text(status)
 
     def set_socket_status(self, status):
-        self.SocketStatus.set_text("%(current)s" % {'current': status})
+        self.SocketStatus.set_text(str(status))
 
     def show_scan_progress(self):
 
