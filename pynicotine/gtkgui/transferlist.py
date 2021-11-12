@@ -121,21 +121,19 @@ class TransferList(UserInterface):
             str,                   # (0)  user
             str,                   # (1)  path
             str,                   # (2)  file name
-            str,                   # (3)  status
+            str,                   # (3)  translated status
             str,                   # (4)  hqueue position
             GObject.TYPE_UINT64,   # (5)  percent
             str,                   # (6)  hsize
             str,                   # (7)  hspeed
             str,                   # (8)  htime elapsed
-            str,                   # (9)  time left
+            str,                   # (9)  htime left
             str,                   # (10) path
-            str,                   # (11) status (non-translated)
-            GObject.TYPE_UINT64,   # (12) size
-            GObject.TYPE_UINT64,   # (13) current bytes
-            GObject.TYPE_UINT64,   # (14) speed
-            GObject.TYPE_UINT64,   # (15) time elapsed
-            GObject.TYPE_UINT64,   # (16) queue position
-            GObject.TYPE_PYOBJECT  # (17) transfer object
+            GObject.TYPE_UINT64,   # (11) size
+            GObject.TYPE_UINT64,   # (12) current bytes
+            GObject.TYPE_UINT64,   # (13) speed
+            GObject.TYPE_UINT64,   # (14) queue position
+            GObject.TYPE_PYOBJECT  # (15) transfer object
         )
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
@@ -156,11 +154,11 @@ class TransferList(UserInterface):
         cols["user"].set_sort_column_id(0)
         cols["path"].set_sort_column_id(1)
         cols["filename"].set_sort_column_id(2)
-        cols["status"].set_sort_column_id(11)
-        cols["queue_position"].set_sort_column_id(16)
+        cols["status"].set_sort_column_id(3)
+        cols["queue_position"].set_sort_column_id(14)
         cols["percent"].set_sort_column_id(5)
-        cols["size"].set_sort_column_id(12)
-        cols["speed"].set_sort_column_id(14)
+        cols["size"].set_sort_column_id(11)
+        cols["speed"].set_sort_column_id(13)
         cols["time_elapsed"].set_sort_column_id(8)
         cols["time_left"].set_sort_column_id(9)
 
@@ -262,7 +260,7 @@ class TransferList(UserInterface):
     def select_transfer(self, model, iterator, select_user=False):
 
         user = model.get_value(iterator, 0)
-        transfer = model.get_value(iterator, 17)
+        transfer = model.get_value(iterator, 15)
 
         if isinstance(transfer, Transfer):
             self.selected_transfers.add(transfer)
@@ -429,7 +427,8 @@ class TransferList(UserInterface):
         iterator = self.transfersmodel.iter_children(initer)
 
         while iterator is not None:
-            status = self.transfersmodel.get_value(iterator, 11)
+            transfer = self.transfersmodel.get_value(iterator, 15)
+            status = transfer.status
 
             if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
                 salientstatus = status
@@ -439,33 +438,44 @@ class TransferList(UserInterface):
                 iterator = self.transfersmodel.iter_next(iterator)
                 continue
 
-            elapsed += self.transfersmodel.get_value(iterator, 15)
-            totalsize += self.transfersmodel.get_value(iterator, 12)
-            position += self.transfersmodel.get_value(iterator, 13)
+            elapsed += transfer.timeelapsed or 0
+            totalsize += self.get_size(transfer.size)
+            position += transfer.currentbytes or 0
 
             if status == "Transferring":
-                speed += float(self.transfersmodel.get_value(iterator, 14))
+                speed += transfer.speed or 0
 
             if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
                 salientstatus = status
 
             iterator = self.transfersmodel.iter_next(iterator)
 
-        if self.transfersmodel.get_value(initer, 11) != salientstatus:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
-            self.transfersmodel.set_value(initer, 11, salientstatus)
+        translated_status = self.translate_status(salientstatus)
+        helapsed = self.get_helapsed(elapsed)
+        transfer = self.transfersmodel.get_value(initer, 15)
 
-        if self.transfersmodel.get_value(initer, 13) != position:
+        if self.transfersmodel.get_value(initer, 3) != translated_status:
+            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
+            transfer.status = salientstatus
+
+        if self.transfersmodel.get_value(initer, 8) != helapsed:
+            self.transfersmodel.set_value(initer, 8, helapsed)
+            transfer.timeelapsed = elapsed
+
+        if self.transfersmodel.get_value(initer, 12) != position:
             percent = self.get_percent(position, totalsize)
 
             self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
-            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, position))
-
-        elif self.transfersmodel.get_value(initer, 11) != totalsize:
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
-            self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, totalsize))
+            self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, position))
+            transfer.currentbytes = position
 
-        if self.transfersmodel.get_value(initer, 14) != speed:
+        if self.transfersmodel.get_value(initer, 11) != totalsize:
+            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, totalsize))
+            transfer.size = totalsize
+
+        if self.transfersmodel.get_value(initer, 13) != speed:
             hspeed = self.get_hspeed(speed)
             left = ""
 
@@ -474,20 +484,13 @@ class TransferList(UserInterface):
 
             self.transfersmodel.set_value(initer, 7, hspeed)
             self.transfersmodel.set_value(initer, 9, left)
-            self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
-
-        if self.transfersmodel.get_value(initer, 15) != elapsed:
-            self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
-            self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
+            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, speed))
+            transfer.speed = speed
 
     def update_specific(self, transfer=None):
 
-        currentbytes = transfer.currentbytes
+        currentbytes = transfer.currentbytes or 0
         place = transfer.place or 0
-
-        if currentbytes is None:
-            currentbytes = 0
-
         modifier = transfer.modifier
         status = transfer.status or ""
 
@@ -497,38 +500,38 @@ class TransferList(UserInterface):
 
         size = self.get_size(transfer.size)
         speed = transfer.speed or 0
-        elapsed = transfer.timeelapsed or 0
+        helapsed = self.get_helapsed(transfer.timeelapsed or 0)
 
         # Modify old transfer
         if transfer.iterator is not None:
             initer = transfer.iterator
+            translated_status = self.translate_status(status)
 
-            if self.transfersmodel.get_value(initer, 11) != status:
-                self.transfersmodel.set_value(initer, 3, self.translate_status(status))
-                self.transfersmodel.set_value(initer, 11, status)
+            if self.transfersmodel.get_value(initer, 3) != translated_status:
+                self.transfersmodel.set_value(initer, 3, translated_status)
 
-            if self.transfersmodel.get_value(initer, 13) != currentbytes:
+            if self.transfersmodel.get_value(initer, 8) != helapsed:
+                self.transfersmodel.set_value(initer, 8, helapsed)
+
+            if self.transfersmodel.get_value(initer, 12) != currentbytes:
                 percent = self.get_percent(currentbytes, size)
 
                 self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
-                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, currentbytes))
-
-            elif self.transfersmodel.get_value(initer, 12) != size:
                 self.transfersmodel.set_value(initer, 6, self.get_hsize(currentbytes, size))
-                self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, size))
+                self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, currentbytes))
 
-            if self.transfersmodel.get_value(initer, 14) != speed:
+            elif self.transfersmodel.get_value(initer, 11) != size:
+                self.transfersmodel.set_value(initer, 6, self.get_hsize(currentbytes, size))
+                self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, size))
+
+            if self.transfersmodel.get_value(initer, 13) != speed:
                 self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))
                 self.transfersmodel.set_value(initer, 9, transfer.timeleft or "")
-                self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, speed))
+                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, speed))
 
-            if self.transfersmodel.get_value(initer, 15) != elapsed:
-                self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
-                self.transfersmodel.set_value(initer, 15, GObject.Value(GObject.TYPE_UINT64, elapsed))
-
-            if self.transfersmodel.get_value(initer, 16) != place:
+            if self.transfersmodel.get_value(initer, 14) != place:
                 self.transfersmodel.set_value(initer, 4, self.get_hplace(place))
-                self.transfersmodel.set_value(initer, 16, GObject.Value(GObject.TYPE_UINT64, place))
+                self.transfersmodel.set_value(initer, 14, GObject.Value(GObject.TYPE_UINT64, place))
 
             return
 
@@ -559,13 +562,11 @@ class TransferList(UserInterface):
                         empty_str,
                         empty_str,
                         empty_str,
-                        empty_str,
                         empty_int,
                         empty_int,
                         empty_int,
                         empty_int,
-                        empty_int,
-                        lambda: None
+                        Transfer()
                     ]
                 )
 
@@ -597,13 +598,11 @@ class TransferList(UserInterface):
                             empty_str,
                             empty_str,
                             empty_str,
-                            empty_str,
                             empty_int,
                             empty_int,
                             empty_int,
                             empty_int,
-                            empty_int,
-                            lambda: None
+                            Transfer()
                         ]
                     )
 
@@ -635,14 +634,12 @@ class TransferList(UserInterface):
                 GObject.Value(GObject.TYPE_UINT64, self.get_percent(currentbytes, size)),
                 self.get_hsize(currentbytes, size),
                 self.get_hspeed(speed),
-                self.get_helapsed(elapsed),
+                helapsed,
                 transfer.timeleft or "",
                 fn,
-                status,
                 GObject.Value(GObject.TYPE_UINT64, size),
                 GObject.Value(GObject.TYPE_UINT64, currentbytes),
                 GObject.Value(GObject.TYPE_UINT64, speed),
-                GObject.Value(GObject.TYPE_UINT64, elapsed),
                 GObject.Value(GObject.TYPE_UINT64, place),
                 transfer
             )
