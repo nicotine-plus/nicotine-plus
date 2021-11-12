@@ -150,6 +150,7 @@ max_displayed_results = 1000
 min_search_chars = 3
 remove_special_chars = True
 enable_history = True
+private_search_results = True
 
 [ui]
 dark_mode = False
@@ -216,8 +217,6 @@ xposition = 0
 yposition = 0
 maximized = True
 urgencyhint = True
-private_search_results = False
-private_shares = False
 file_path_tooltips = True
 reverse_file_paths = True
 
