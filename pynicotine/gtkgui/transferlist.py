@@ -455,14 +455,15 @@ class TransferList(UserInterface):
             self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
             self.transfersmodel.set_value(initer, 11, salientstatus)
 
-        if (self.transfersmodel.get_value(initer, 13) != position
-                or self.transfersmodel.get_value(initer, 11) != totalsize):
+        if self.transfersmodel.get_value(initer, 13) != position:
             percent = self.get_percent(position, totalsize)
 
             self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
+            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, position))
+
+        elif self.transfersmodel.get_value(initer, 11) != totalsize:
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
             self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, totalsize))
-            self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, position))
 
         if self.transfersmodel.get_value(initer, 14) != speed:
             hspeed = self.get_hspeed(speed)
@@ -506,14 +507,15 @@ class TransferList(UserInterface):
                 self.transfersmodel.set_value(initer, 3, self.translate_status(status))
                 self.transfersmodel.set_value(initer, 11, status)
 
-            if (self.transfersmodel.get_value(initer, 13) != currentbytes
-                    or self.transfersmodel.get_value(initer, 12) != size):
+            if self.transfersmodel.get_value(initer, 13) != currentbytes:
                 percent = self.get_percent(currentbytes, size)
 
                 self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
+                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, currentbytes))
+
+            elif self.transfersmodel.get_value(initer, 12) != size:
                 self.transfersmodel.set_value(initer, 6, self.get_hsize(currentbytes, size))
                 self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, size))
-                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, currentbytes))
 
             if self.transfersmodel.get_value(initer, 14) != speed:
                 self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))
