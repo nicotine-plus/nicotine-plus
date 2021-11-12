@@ -377,14 +377,7 @@ class TransferList(UserInterface):
         return "%s / %s" % (human_size(currentbytes), human_size(size))
 
     def get_hspeed(self, speed):
-
-        hspeed = ""
-
-        if speed > 0:
-            speed = float(speed)
-            hspeed = human_speed(speed)
-
-        return hspeed
+        return human_speed(int(speed)) if speed > 0 else ""
 
     def get_helapsed(self, elapsed):
 
@@ -419,7 +412,7 @@ class TransferList(UserInterface):
 
     def update_parent_row(self, initer):
 
-        speed = 0.0
+        speed = 0
         percent = totalsize = position = 0
         elapsed = 0
         salientstatus = ""
@@ -499,10 +492,10 @@ class TransferList(UserInterface):
             status = status + " (%s)" % modifier
 
         size = self.get_size(transfer.size)
-        speed = transfer.speed or 0
+        speed = int(transfer.speed or 0)  # remove floating decimals from bytes per second
         helapsed = self.get_helapsed(transfer.timeelapsed or 0)
 
-        # Modify old transfer
+        # Modify old existing or current in-progress transfer
         if transfer.iterator is not None:
             initer = transfer.iterator
             translated_status = self.translate_status(status)
