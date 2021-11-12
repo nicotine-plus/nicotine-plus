@@ -249,7 +249,7 @@ class NicotineFrame(UserInterface):
 
         self.chatrooms.clear_notifications()
         self.privatechat.clear_notifications()
-        self.on_disable_auto_away()
+        self.on_cancel_auto_away()
 
         if Gtk.get_major_version() == 3 and window.get_urgency_hint():
             window.set_urgency_hint(False)
@@ -292,17 +292,17 @@ class NicotineFrame(UserInterface):
 
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-            key_controller.connect("key-released", self.on_disable_auto_away)
+            key_controller.connect("key-released", self.on_cancel_auto_away)
             self.MainWindow.add_controller(key_controller)
 
         else:
             self.gesture_click = Gtk.GestureMultiPress.new(self.MainWindow)
 
-            self.MainWindow.connect("key-release-event", self.on_disable_auto_away)
+            self.MainWindow.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.connect("pressed", self.on_disable_auto_away)
+        self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
         # Exit dialog
         if Gtk.get_major_version() == 4:
@@ -1712,7 +1712,7 @@ class NicotineFrame(UserInterface):
         away_interval = config.sections["server"]["autoaway"]
 
         if away_interval > 0:
-            self.away_timer = GLib.timeout_add(1000 * 60 * away_interval, self.set_auto_away, True)
+            self.away_timer = GLib.timeout_add_seconds(60 * away_interval, self.set_auto_away, True)
 
     def remove_away_timer(self):
 
@@ -1720,7 +1720,7 @@ class NicotineFrame(UserInterface):
             GLib.source_remove(self.away_timer)
             self.away_timer = None
 
-    def on_disable_auto_away(self, *args):
+    def on_cancel_auto_away(self, *args):
 
         current_time = time.time()
 
