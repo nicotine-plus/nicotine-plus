@@ -259,14 +259,13 @@ class TransferList(UserInterface):
 
     def select_transfer(self, model, iterator, select_user=False):
 
-        user = model.get_value(iterator, 0)
         transfer = model.get_value(iterator, 15)
 
-        if isinstance(transfer, Transfer):
+        if transfer.filename is not None:
             self.selected_transfers.add(transfer)
 
         if select_user:
-            self.selected_users.add(user)
+            self.selected_users.add(transfer.user)
 
     def new_transfer_notification(self):
         self.frame.request_tab_hilite(self.page_id)
@@ -565,7 +564,7 @@ class TransferList(UserInterface):
                         empty_int,
                         empty_int,
                         empty_int,
-                        Transfer()
+                        Transfer(user=user)
                     ]
                 )
 
@@ -601,7 +600,7 @@ class TransferList(UserInterface):
                             empty_int,
                             empty_int,
                             empty_int,
-                            Transfer()
+                            Transfer(user=user)
                         ]
                     )
 
