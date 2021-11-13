@@ -17,27 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import subprocess
-import sys
 
-""" Script used to install packaging dependencies in Homebrew """
-
-
-def install_brew():
-    """ Install dependencies from the main Homebrew repos """
-
-    packages = ["create-dmg"]
-    subprocess.check_call(["brew", "install"] + packages)
+""" Script used to create a macOS DMG package """
 
 
-def install_pypi():
-    """ Install dependencies from PyPi """
+def create_dmg():
 
-    packages = ["pyinstaller==4.3",
-                "stdlib_list"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+
+    os.mkdir("dmg")
+    os.chdir("dmg")
+
+    subprocess.check_call(["create-dmg",
+                           "--volname", "Nicotine+",
+                           "--window-size", "600", "400",
+                           "--app-drop-link", "450", "185",
+                           "Nicotine+.dmg",
+                           os.path.join(current_dir, "..", "..", "dist")])
 
 
 if __name__ == '__main__':
-    install_brew()
-    install_pypi()
+    create_dmg()
