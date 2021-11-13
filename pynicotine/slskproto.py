@@ -304,7 +304,7 @@ class SlskProtoThread(threading.Thread):
         Recommendations: 54,          # Deprecated
         GlobalRecommendations: 56,    # Deprecated
         UserInterests: 57,            # Deprecated
-        AdminCommand: 58,
+        AdminCommand: 58,             # Obsolete
         PlaceInLineResponse: 60,      # Obsolete
         RoomAdded: 62,                # Obsolete
         RoomRemoved: 63,              # Obsolete
