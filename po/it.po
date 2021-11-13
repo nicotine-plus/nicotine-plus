@@ -1587,43 +1587,54 @@ msgstr "Ricerca"
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1771
+#: pynicotine/gtkgui/frame.py:1771 pynicotine/gtkgui/frame.py:121
+#: pynicotine/gtkgui/frame.py:1801
 msgid "[Debug] Connections"
 msgstr "[Debug] Connessioni"
 
-#: pynicotine/gtkgui/frame.py:1772
+#: pynicotine/gtkgui/frame.py:1772 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:1802
 msgid "[Debug] Messages"
 msgstr "[Debug] Messaggi"
 
-#: pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:1773 pynicotine/gtkgui/frame.py:123
+#: pynicotine/gtkgui/frame.py:1803
 msgid "[Debug] Transfers"
 msgstr "[Debug] Trasferimenti"
 
-#: pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:1774 pynicotine/gtkgui/frame.py:124
+#: pynicotine/gtkgui/frame.py:1804
 msgid "[Debug] Miscellaneous"
 msgstr "[Debug] Varie"
 
-#: pynicotine/gtkgui/frame.py:1778
+#: pynicotine/gtkgui/frame.py:1778 pynicotine/gtkgui/frame.py:128
+#: pynicotine/gtkgui/frame.py:1808
 msgid "_Find…"
 msgstr "Cerca…"
 
 #: pynicotine/gtkgui/frame.py:1780 pynicotine/gtkgui/frame.py:1810
+#: pynicotine/gtkgui/frame.py:130 pynicotine/gtkgui/frame.py:1839
+#: pynicotine/gtkgui/frame.py:1840
 msgid "_Copy"
 msgstr "_Copia"
 
-#: pynicotine/gtkgui/frame.py:1781
+#: pynicotine/gtkgui/frame.py:1781 pynicotine/gtkgui/frame.py:131
+#: pynicotine/gtkgui/frame.py:1811
 msgid "Copy _All"
 msgstr "Copia Tutto"
 
-#: pynicotine/gtkgui/frame.py:1783
+#: pynicotine/gtkgui/frame.py:1783 pynicotine/gtkgui/frame.py:133
+#: pynicotine/gtkgui/frame.py:1813
 msgid "_Open Log Folder"
 msgstr "Apri Cartella Registro"
 
-#: pynicotine/gtkgui/frame.py:1784
+#: pynicotine/gtkgui/frame.py:1784 pynicotine/gtkgui/frame.py:134
+#: pynicotine/gtkgui/frame.py:1814
 msgid "Open _Transfer Log"
 msgstr "Apri Registro _Trasferimenti"
 
-#: pynicotine/gtkgui/frame.py:1786
+#: pynicotine/gtkgui/frame.py:1786 pynicotine/gtkgui/frame.py:136
+#: pynicotine/gtkgui/frame.py:1816
 msgid "_Log Categories"
 msgstr "Registro Categorie"
 
@@ -2279,7 +2290,7 @@ msgstr "Copia Termine di Ricerca"
 msgid "Clear All Results"
 msgstr "Pulisci Tutti i Risultati"
 
-#: pynicotine/gtkgui/search.py:542
+#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/search.py:557
 #, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -3879,13 +3890,13 @@ msgstr "Il server sembra essere non raggiungibile, tentativo fra %i secondi"
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Impossibile connettersi al server. Motivo: %s"
 
-#: pynicotine/pynicotine.py:1356
+#: pynicotine/pynicotine.py:1356 pynicotine/pynicotine.py:1340
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Messaggio chat dall'utente '%(user)s' nel canale '%(room)s': %(message)s"
 
-#: pynicotine/pynicotine.py:1392
+#: pynicotine/pynicotine.py:1392 pynicotine/pynicotine.py:1376
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Messaggio privato dall'utene '%(user)s': %(message)s"
@@ -6792,7 +6803,7 @@ msgstr "Salva Immagine"
 msgid "_Refresh Info"
 msgstr "Aggiorna Dettagli"
 
-#: pynicotine/gtkgui/frame.py:966
+#: pynicotine/gtkgui/frame.py:966 pynicotine/gtkgui/frame.py:993
 msgid "Show _Log History Pane"
 msgstr "Mostra Crono_logia Registro"
 
