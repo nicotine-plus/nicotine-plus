@@ -286,8 +286,9 @@ class Search(UserInterface):
         self.selected_files_count = 0
         self.filters = None
         self.clearing_filters = False
-        self.numvisibleresults = 0
         self.active_filter_count = 0
+        self.numtotalresults = 0
+        self.numvisibleresults = 0
 
         self.operators = {
             '<': operator.lt,
@@ -518,6 +519,7 @@ class Search(UserInterface):
         privately shared files. """
 
         update_ui = False
+        self.numtotalresults += len(result_list)
         max_results = config.sections["searches"]["max_displayed_results"]
 
         for result in result_list:
@@ -913,7 +915,7 @@ class Search(UserInterface):
             if self.check_filter(row):
                 self.add_row_to_model(row)
 
-        # Update number of visible results
+        # Update number of results
         self.update_result_counter()
         self.update_filter_counter(self.active_filter_count)
 
@@ -1106,7 +1108,16 @@ class Search(UserInterface):
             self.select_child_results(model, model.iter_children(iterator))
 
     def update_result_counter(self):
-        self.Counter.set_text(str(self.numvisibleresults))
+
+        if self.numtotalresults > self.numvisibleresults:
+            # Append plus symbol "+" if Result Filter is active or reached 'Maximum per search'
+            str_plus = "+"
+            str_total = (_("Total: %i") % self.numtotalresults)
+        else:
+            str_plus = str_total = ""  # don't show the tooltip if there are no hidden results
+
+        self.Counter.set_text(str(self.numvisibleresults) + (str_plus))
+        self.Counter.set_tooltip_text(str_total)
 
     def update_visuals(self):
 
@@ -1278,7 +1289,12 @@ class Search(UserInterface):
             return
 
     def on_search_settings(self, *args):
-        self.frame.on_settings(page='Searches')
+        # Result CounterButton clicked
+
+        if self.active_filter_count >= 1 and (self.numtotalresults > self.numvisibleresults):
+            self.on_clear_filters()
+        else:
+            self.frame.on_settings(page='Searches')
 
     def on_group(self, action, state):
 
@@ -1385,6 +1401,7 @@ class Search(UserInterface):
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
+        self.numtotalresults = 0
         self.numvisibleresults = 0
 
         # Allow parsing search result messages again
