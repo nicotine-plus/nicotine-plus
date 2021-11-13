@@ -1110,9 +1110,10 @@ class Search(UserInterface):
     def update_result_counter(self):
 
         if self.numtotalresults > self.numvisibleresults:
-            # Append plus symbol "+" if Result Filter is active or reached 'Maximum per search'
+            # Append plus symbol "+" if Result Filter is active and/or reached 'Maximum per search'
             str_plus = "+"
-            str_total = (_("Total: %i") % self.numtotalresults)
+            str_total_plus = "+" if self.numtotalresults > config.sections["searches"]["max_displayed_results"] else ""
+            str_total = (_("Total: %i%s") % (self.numtotalresults, str_total_plus))
         else:
             str_plus = str_total = ""  # don't show the tooltip if there are no hidden results
 
