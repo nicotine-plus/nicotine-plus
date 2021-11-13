@@ -15,11 +15,13 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 The current stable version of Nicotine+ is 3.1.1, released on August 2, 2021. See the [release notes](NEWS.md).
 
-Packages are available for:
+Stable builds are available for:
 
 - [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
 - [Windows](doc/DOWNLOADS.md#windows)
 - [macOS](doc/DOWNLOADS.md#macos)
+
+If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md).
 
 # Getting Involved
 
