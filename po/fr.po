@@ -3228,7 +3228,7 @@ msgstr "Envoyer le répertoire à l'utilisateur"
 #: pynicotine/gtkgui/userbrowse.py:794 pynicotine/gtkgui/userbrowse.py:1038
 msgid "Enter the name of the user you want to upload to:"
 msgstr ""
-"Saisir le nom de l'utilisateur à qui vous souhaitez envoyer des fichiers  :"
+"Saisir le nom de l'utilisateur à qui vous souhaitez envoyer des fichiers :"
 
 #: pynicotine/gtkgui/userbrowse.py:1190 pynicotine/gtkgui/userbrowse.py:1179
 #: pynicotine/gtkgui/userbrowse.py:1037
@@ -3238,7 +3238,7 @@ msgstr "Envoyer le(s) fichier(s)"
 
 #: pynicotine/gtkgui/userinfo.py:228 pynicotine/gtkgui/userinfo.py:220
 msgid "Zoom 1:1"
-msgstr "Zoom 1 :1"
+msgstr "Zoom 1:1"
 
 #: pynicotine/gtkgui/userinfo.py:229 pynicotine/gtkgui/userinfo.py:221
 msgid "Zoom In"
@@ -3669,7 +3669,7 @@ msgstr "Échec du chargement du fichier d'interface %(file)s : %(error)s"
 #: pynicotine/gtkgui/wishlist.py:46
 #, fuzzy
 msgid "Search Wishlist"
-msgstr "Effacer la liste de souhaits ?"
+msgstr "Rechercher une liste de souhaits"
 
 #: pynicotine/gtkgui/wishlist.py:66
 msgid "Wishes"
@@ -6683,7 +6683,7 @@ msgstr "Noms d'utilisateurs colorés et cliquables"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:702
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:764
 msgid "Chat username appearance:"
-msgstr "Apparence du nom d’utilisateur du chat :"
+msgstr "Apparence du nom d’utilisateur dans les discussions :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:719
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:781
