@@ -242,7 +242,7 @@ class UserInfo(UserInterface):
 
     def load_picture(self, data):
 
-        if data is None:
+        if not data:
             self.image.hide()
             return
 
