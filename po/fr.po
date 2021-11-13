@@ -1592,43 +1592,54 @@ msgstr "Recherche"
 msgid "Chat"
 msgstr "Discussion"
 
-#: pynicotine/gtkgui/frame.py:1771
+#: pynicotine/gtkgui/frame.py:1771 pynicotine/gtkgui/frame.py:121
+#: pynicotine/gtkgui/frame.py:1801
 msgid "[Debug] Connections"
 msgstr "[Débogage] Connexions"
 
-#: pynicotine/gtkgui/frame.py:1772
+#: pynicotine/gtkgui/frame.py:1772 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:1802
 msgid "[Debug] Messages"
 msgstr "[Débogage] Messages"
 
-#: pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:1773 pynicotine/gtkgui/frame.py:123
+#: pynicotine/gtkgui/frame.py:1803
 msgid "[Debug] Transfers"
 msgstr "[Débogage] Transferts"
 
-#: pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:1774 pynicotine/gtkgui/frame.py:124
+#: pynicotine/gtkgui/frame.py:1804
 msgid "[Debug] Miscellaneous"
 msgstr "[Débogage] Divers"
 
-#: pynicotine/gtkgui/frame.py:1778
+#: pynicotine/gtkgui/frame.py:1778 pynicotine/gtkgui/frame.py:128
+#: pynicotine/gtkgui/frame.py:1808
 msgid "_Find…"
 msgstr "_Trouver…"
 
 #: pynicotine/gtkgui/frame.py:1780 pynicotine/gtkgui/frame.py:1810
+#: pynicotine/gtkgui/frame.py:130 pynicotine/gtkgui/frame.py:1839
+#: pynicotine/gtkgui/frame.py:1840
 msgid "_Copy"
 msgstr "_Copier"
 
-#: pynicotine/gtkgui/frame.py:1781
+#: pynicotine/gtkgui/frame.py:1781 pynicotine/gtkgui/frame.py:131
+#: pynicotine/gtkgui/frame.py:1811
 msgid "Copy _All"
 msgstr "Copier _tout"
 
-#: pynicotine/gtkgui/frame.py:1783
+#: pynicotine/gtkgui/frame.py:1783 pynicotine/gtkgui/frame.py:133
+#: pynicotine/gtkgui/frame.py:1813
 msgid "_Open Log Folder"
 msgstr "_Ouvrir le dossier des journaux"
 
-#: pynicotine/gtkgui/frame.py:1784
+#: pynicotine/gtkgui/frame.py:1784 pynicotine/gtkgui/frame.py:134
+#: pynicotine/gtkgui/frame.py:1814
 msgid "Open _Transfer Log"
 msgstr "Afficher les journaux de _transfert"
 
-#: pynicotine/gtkgui/frame.py:1786
+#: pynicotine/gtkgui/frame.py:1786 pynicotine/gtkgui/frame.py:136
+#: pynicotine/gtkgui/frame.py:1816
 msgid "_Log Categories"
 msgstr "Catégories des _journaux"
 
@@ -1861,7 +1872,8 @@ msgstr "Statistiques de transferts"
 msgid "Report a _Bug"
 msgstr "Signaler un _bogue"
 
-#: pynicotine/gtkgui/frame.py:1008
+#: pynicotine/gtkgui/frame.py:1008 pynicotine/gtkgui/frame.py:1063
+#: pynicotine/gtkgui/frame.py:1035
 msgid "Improve T_ranslations"
 msgstr "Améliorer les t_raductions"
 
@@ -2312,7 +2324,7 @@ msgstr "Ajouter _Souhait"
 msgid "Remove Wi_sh"
 msgstr "Supprimer _souhait"
 
-#: pynicotine/gtkgui/search.py:1013
+#: pynicotine/gtkgui/search.py:1013 pynicotine/gtkgui/search.py:1028
 msgid "Select User's Results"
 msgstr "Sélectionner les résultats de l'utilisateur"
 
@@ -2431,6 +2443,7 @@ msgid "Share with buddies only"
 msgstr "Partager uniquement avec des amis"
 
 #: pynicotine/gtkgui/settingswindow.py:792
+#: pynicotine/gtkgui/settingswindow.py:786
 msgid "Edit Shared Folder"
 msgstr "Modifier les répertoires partagés"
 
@@ -3200,11 +3213,13 @@ msgstr ""
 "Sélectionnez la destination pour télécharger le(s) fichier(s) de "
 "l'utilisateur"
 
-#: pynicotine/gtkgui/userbrowse.py:787
+#: pynicotine/gtkgui/userbrowse.py:787 pynicotine/gtkgui/userbrowse.py:1112
+#: pynicotine/gtkgui/userbrowse.py:1101
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Envoyer le dossier (avec les sous-dossiers) vers l'utilisateur"
 
-#: pynicotine/gtkgui/userbrowse.py:789
+#: pynicotine/gtkgui/userbrowse.py:789 pynicotine/gtkgui/userbrowse.py:1114
+#: pynicotine/gtkgui/userbrowse.py:1103
 msgid "Upload Folder To User"
 msgstr "Envoyer le répertoire à l'utilisateur"
 
@@ -3292,9 +3307,8 @@ msgid "Notify"
 msgstr "Notifier"
 
 #: pynicotine/gtkgui/userlist.py:86
-#, fuzzy
 msgid "Prioritized"
-msgstr "Priorité à"
+msgstr "En priorité"
 
 #: pynicotine/gtkgui/userlist.py:87
 msgid "Last Seen"
@@ -3309,14 +3323,12 @@ msgid "_Online Notify"
 msgstr "N_otifier de la présence en ligne"
 
 #: pynicotine/gtkgui/userlist.py:141 pynicotine/gtkgui/userlist.py:357
-#, fuzzy
 msgid "_Prioritize User"
 msgstr "_Prioriser l'utilisateur"
 
 #: pynicotine/gtkgui/userlist.py:142 pynicotine/gtkgui/userlist.py:358
-#, fuzzy
 msgid "_Trust User"
-msgstr "_Faire confiance à l'utilisateur"
+msgstr "Faire confiance à l'u_tilisateur"
 
 #: pynicotine/gtkgui/userlist.py:145
 msgid "Add User _Note…"
@@ -3663,11 +3675,11 @@ msgstr "Effacer la liste de souhaits ?"
 msgid "Wishes"
 msgstr "Souhaits"
 
-#: pynicotine/gtkgui/wishlist.py:121
+#: pynicotine/gtkgui/wishlist.py:121 pynicotine/gtkgui/wishlist.py:126
 msgid "Edit Wish"
 msgstr "Modifier le souhait"
 
-#: pynicotine/gtkgui/wishlist.py:122
+#: pynicotine/gtkgui/wishlist.py:122 pynicotine/gtkgui/wishlist.py:127
 #, python-format
 msgid "Enter new value for wish '%s':"
 msgstr "Choisissez une nouvelle valeur pour le souhait '%s'  :"
@@ -3918,13 +3930,13 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Impossible de se connecter au serveur. Raison : %s"
 
 #: pynicotine/pynicotine.py:1340 pynicotine/pynicotine.py:1356
-#, fuzzy, python-format
+#, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
-"Message de chat de l'utilisateur '%(user)s' dans la salle '%(room)s' : "
+"Message de discussion de l'utilisateur '%(user)s' dans la salle '%(room)s': "
 "%(message)s"
 
-#: pynicotine/pynicotine.py:1392
+#: pynicotine/pynicotine.py:1392 pynicotine/pynicotine.py:1376
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Message privé de '%(user)s' : %(message)s"
@@ -4702,6 +4714,7 @@ msgid "Add Wish…"
 msgstr "Ajouter un souhait…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:85
+#: pynicotine/gtkgui/ui/dialogs/wishlist.ui:84
 msgid "Edit"
 msgstr "Modifier"
 
@@ -6892,7 +6905,7 @@ msgstr "Sauvegarder l'_image"
 msgid "_Refresh Info"
 msgstr "_Rafraîchir les informations"
 
-#: pynicotine/gtkgui/frame.py:966
+#: pynicotine/gtkgui/frame.py:966 pynicotine/gtkgui/frame.py:993
 msgid "Show _Log History Pane"
 msgstr "Afficher l'historique des _journaux"
 

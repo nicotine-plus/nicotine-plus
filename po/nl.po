@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-06 02:26+0200\n"
-"PO-Revision-Date: 2021-11-04 17:20+0000\n"
+"PO-Revision-Date: 2021-11-13 16:57+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1584,43 +1584,54 @@ msgstr "Zoeken"
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1771
+#: pynicotine/gtkgui/frame.py:1771 pynicotine/gtkgui/frame.py:121
+#: pynicotine/gtkgui/frame.py:1801
 msgid "[Debug] Connections"
 msgstr "[Debug] Verbindingen"
 
-#: pynicotine/gtkgui/frame.py:1772
+#: pynicotine/gtkgui/frame.py:1772 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:1802
 msgid "[Debug] Messages"
 msgstr "[Debug] Berichten"
 
-#: pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:1773 pynicotine/gtkgui/frame.py:123
+#: pynicotine/gtkgui/frame.py:1803
 msgid "[Debug] Transfers"
 msgstr "[Debug] Bestandsoverdracht"
 
-#: pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:1774 pynicotine/gtkgui/frame.py:124
+#: pynicotine/gtkgui/frame.py:1804
 msgid "[Debug] Miscellaneous"
 msgstr "[Debug] Diversen"
 
-#: pynicotine/gtkgui/frame.py:1778
+#: pynicotine/gtkgui/frame.py:1778 pynicotine/gtkgui/frame.py:128
+#: pynicotine/gtkgui/frame.py:1808
 msgid "_Find…"
 msgstr "_Vind…"
 
 #: pynicotine/gtkgui/frame.py:1780 pynicotine/gtkgui/frame.py:1810
+#: pynicotine/gtkgui/frame.py:130 pynicotine/gtkgui/frame.py:1839
+#: pynicotine/gtkgui/frame.py:1840
 msgid "_Copy"
 msgstr "_Kopiëren"
 
-#: pynicotine/gtkgui/frame.py:1781
+#: pynicotine/gtkgui/frame.py:1781 pynicotine/gtkgui/frame.py:131
+#: pynicotine/gtkgui/frame.py:1811
 msgid "Copy _All"
 msgstr "Kopieer _Alles"
 
-#: pynicotine/gtkgui/frame.py:1783
+#: pynicotine/gtkgui/frame.py:1783 pynicotine/gtkgui/frame.py:133
+#: pynicotine/gtkgui/frame.py:1813
 msgid "_Open Log Folder"
 msgstr "_Open Log Map"
 
-#: pynicotine/gtkgui/frame.py:1784
+#: pynicotine/gtkgui/frame.py:1784 pynicotine/gtkgui/frame.py:134
+#: pynicotine/gtkgui/frame.py:1814
 msgid "Open _Transfer Log"
 msgstr "Open _Bestandsoverdracht Log"
 
-#: pynicotine/gtkgui/frame.py:1786
+#: pynicotine/gtkgui/frame.py:1786 pynicotine/gtkgui/frame.py:136
+#: pynicotine/gtkgui/frame.py:1816
 msgid "_Log Categories"
 msgstr "_Log categorieën"
 
@@ -2275,7 +2286,7 @@ msgstr "Zoekterm kopiëren"
 msgid "Clear All Results"
 msgstr "Wis alle resultaten"
 
-#: pynicotine/gtkgui/search.py:542
+#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/search.py:557
 #, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -3870,12 +3881,12 @@ msgstr ""
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Kan niet verbinden met de server. Reden: %s"
 
-#: pynicotine/pynicotine.py:1356
+#: pynicotine/pynicotine.py:1356 pynicotine/pynicotine.py:1340
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Chatbericht van gebruiker '%(user)s' in kamer '%(room)s': %(message)s"
 
-#: pynicotine/pynicotine.py:1392
+#: pynicotine/pynicotine.py:1392 pynicotine/pynicotine.py:1376
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Privébericht van gebruiker '%(user)s': %(message)s"
@@ -6789,126 +6800,106 @@ msgstr "Bewaar _Beeld"
 msgid "_Refresh Info"
 msgstr "Info _vernieuwen"
 
-#: pynicotine/gtkgui/frame.py:966
+#: pynicotine/gtkgui/frame.py:966 pynicotine/gtkgui/frame.py:993
 msgid "Show _Log History Pane"
 msgstr "Toon _Log Geschiedenis Paneel"
 
 #: pynicotine/gtkgui/search.py:1201 pynicotine/gtkgui/userbrowse.py:997
-#, fuzzy
 msgid "Select Destination Folder for File(s)"
-msgstr "Selecteer bestemming voor het downloaden van bestand(en) van gebruiker"
+msgstr "Selecteer Doelmap voor Bestand(en)"
 
 #: pynicotine/gtkgui/search.py:1251 pynicotine/gtkgui/userbrowse.py:742
-#, fuzzy
 msgid "Select Destination Folder"
-msgstr "Selecteer een map"
+msgstr "Selecteer Doelmap"
 
 #: pynicotine/gtkgui/settingswindow.py:971
 #: pynicotine/gtkgui/settingswindow.py:1129
-#, fuzzy
 msgid "IP Address"
-msgstr "Blokkeer IP adres"
+msgstr "IP-adres"
 
 #: pynicotine/gtkgui/settingswindow.py:1865
-#, fuzzy
 msgid "Command"
-msgstr "Bevel:"
+msgstr "Opdracht"
 
 #: pynicotine/gtkgui/settingswindow.py:2786
-#, fuzzy
 msgid "Plugin"
-msgstr "Plug-ins"
+msgstr "Plug-in"
 
 #: pynicotine/gtkgui/settingswindow.py:2974
-#, fuzzy
 msgid "Chat Censor & Replace"
-msgstr "Censureren en vervangen"
+msgstr "Chat Censor & Vervangen"
 
 #: pynicotine/gtkgui/settingswindow.py:2975
 #: pynicotine/gtkgui/ui/settings/completion.ui:22
-#, fuzzy
 msgid "Chat Completion"
-msgstr "Aanvulling"
+msgstr "Chat Voltooien"
 
 #: pynicotine/gtkgui/transferlist.py:90
-#, fuzzy
 msgid "Queued (prioritized)"
-msgstr "geprioriteerd"
+msgstr "In wachtrij (met prioriteit)"
 
 #: pynicotine/gtkgui/transferlist.py:91
-#, fuzzy
 msgid "Queued (privileged)"
-msgstr "bevoorrecht"
+msgstr "In de wachtrij (bevoorrecht)"
 
 #: pynicotine/gtkgui/userbrowse.py:213 pynicotine/gtkgui/userbrowse.py:271
-#, fuzzy
 msgid "Upload Folder…"
-msgstr "Upload map _naar…"
+msgstr "Upload map…"
 
 #: pynicotine/gtkgui/userbrowse.py:214
-#, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
-msgstr "Map uploaden (met submappen) naar gebruiker"
+msgstr "Upload map en submap(pen)…"
 
 #: pynicotine/gtkgui/userbrowse.py:227
-#, fuzzy
 msgid "Download Folder & Subfolder(s)"
-msgstr "_Map(pen) downloaden"
+msgstr "Download Map & Submap(pen)"
 
 #: pynicotine/gtkgui/userbrowse.py:228
-#, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
-msgstr "Download M_ap(pen) naar…"
+msgstr "Download Map & Submap(pen) Naar…"
 
 #: pynicotine/gtkgui/userbrowse.py:270
-#, fuzzy
 msgid "Up_load File(s)…"
-msgstr "Up_load bestand(en)"
+msgstr "Up_load bestand(en)…"
 
 #: pynicotine/gtkgui/userbrowse.py:740
-#, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
-msgstr "Selecteer bestemming voor het downloaden van een map van gebruiker"
+msgstr "Selecteer bestemming voor het downloaden van meerdere mappen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:152
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
-#, fuzzy
 msgid "Usernames"
-msgstr "Gebruikersnaam"
+msgstr "Gebruikersnamen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:275
 #: pynicotine/gtkgui/ui/settings/ignore.ui:150
-#, fuzzy
 msgid "IP Addresses"
-msgstr "Adressen"
+msgstr "IP-adressen"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:32
-#, fuzzy
 msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"Instanties van $ worden vervangen door de link. De standaardwebbrowser van "
-"het systeem wordt gebruikt in gevallen waarin geen protocol is "
-"geconfigureerd."
+"De plaats van $ wordt vervangen door de URL. Standaard systeemtoepassingen "
+"worden gebruikt in gevallen waarin een protocol niet is geconfigureerd."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:235
-#, fuzzy
 msgid "Media player command:"
-msgstr "Media Player commando ($ voor bestandspad):"
+msgstr "Media speler commando:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:271
-#, fuzzy
 msgid "File manager command:"
-msgstr "Bestandsbeheer commando ($ voor bestandspad):"
+msgstr "Bestandsbeheer commando:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:291
-#, fuzzy
 msgid "Show file path tooltips in file list views"
-msgstr "Bestandspad tooltips inschakelen in zoek- en overdrachtsweergave"
+msgstr "Toon bestandspad tooltips in bestandslijstweergaven"
 
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr "Selecteer bestemming voor downloadmap met submappen van gebruiker"
+#: pynicotine/gtkgui/userbrowse.py:974 pynicotine/gtkgui/userbrowse.py:963
+msgid "Select Destination for Downloading Folder with Subfolders from User"
+msgstr ""
+"Selecteer Bestemming voor het downloaden van map en submappen van gebruiker"
 
 #~ msgid "View Debug Logs"
 #~ msgstr "Debug logs bekijken"

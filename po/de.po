@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-06 02:26+0200\n"
-"PO-Revision-Date: 2021-11-04 17:20+0000\n"
+"PO-Revision-Date: 2021-11-11 15:53+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1592,43 +1592,54 @@ msgstr "Suchen"
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1771
+#: pynicotine/gtkgui/frame.py:1771 pynicotine/gtkgui/frame.py:121
+#: pynicotine/gtkgui/frame.py:1801
 msgid "[Debug] Connections"
 msgstr "[Debug] Verbindungen"
 
-#: pynicotine/gtkgui/frame.py:1772
+#: pynicotine/gtkgui/frame.py:1772 pynicotine/gtkgui/frame.py:122
+#: pynicotine/gtkgui/frame.py:1802
 msgid "[Debug] Messages"
 msgstr "[Debug]-Meldungen"
 
-#: pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:1773 pynicotine/gtkgui/frame.py:123
+#: pynicotine/gtkgui/frame.py:1803
 msgid "[Debug] Transfers"
 msgstr "[Debug] Übertragungen"
 
-#: pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:1774 pynicotine/gtkgui/frame.py:124
+#: pynicotine/gtkgui/frame.py:1804
 msgid "[Debug] Miscellaneous"
 msgstr "[Debug] Sonstiges"
 
-#: pynicotine/gtkgui/frame.py:1778
+#: pynicotine/gtkgui/frame.py:1778 pynicotine/gtkgui/frame.py:128
+#: pynicotine/gtkgui/frame.py:1808
 msgid "_Find…"
 msgstr "_Finden…"
 
 #: pynicotine/gtkgui/frame.py:1780 pynicotine/gtkgui/frame.py:1810
+#: pynicotine/gtkgui/frame.py:130 pynicotine/gtkgui/frame.py:1839
+#: pynicotine/gtkgui/frame.py:1840
 msgid "_Copy"
 msgstr "_Kopieren"
 
-#: pynicotine/gtkgui/frame.py:1781
+#: pynicotine/gtkgui/frame.py:1781 pynicotine/gtkgui/frame.py:131
+#: pynicotine/gtkgui/frame.py:1811
 msgid "Copy _All"
 msgstr "_Alles kopieren"
 
-#: pynicotine/gtkgui/frame.py:1783
+#: pynicotine/gtkgui/frame.py:1783 pynicotine/gtkgui/frame.py:133
+#: pynicotine/gtkgui/frame.py:1813
 msgid "_Open Log Folder"
 msgstr "_Open Protokollordner"
 
-#: pynicotine/gtkgui/frame.py:1784
+#: pynicotine/gtkgui/frame.py:1784 pynicotine/gtkgui/frame.py:134
+#: pynicotine/gtkgui/frame.py:1814
 msgid "Open _Transfer Log"
 msgstr "_Übertragungsprotokoll öffnen"
 
-#: pynicotine/gtkgui/frame.py:1786
+#: pynicotine/gtkgui/frame.py:1786 pynicotine/gtkgui/frame.py:136
+#: pynicotine/gtkgui/frame.py:1816
 msgid "_Log Categories"
 msgstr "_Protokolkategorien"
 
@@ -2285,7 +2296,7 @@ msgstr "Suchbegriff kopieren"
 msgid "Clear All Results"
 msgstr "Alle Ergebnisse löschen"
 
-#: pynicotine/gtkgui/search.py:542
+#: pynicotine/gtkgui/search.py:542 pynicotine/gtkgui/search.py:557
 #, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -3187,7 +3198,8 @@ msgstr "Ziel für das Herunterladen eines Ordners vom Benutzer auswählen"
 msgid "Select Destination for Downloading File(s) from User"
 msgstr "Wählen Sie das Ziel zum Herunterladen der Datei(en) vom Benutzer"
 
-#: pynicotine/gtkgui/userbrowse.py:787
+#: pynicotine/gtkgui/userbrowse.py:787 pynicotine/gtkgui/userbrowse.py:1112
+#: pynicotine/gtkgui/userbrowse.py:1101
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Ordner (mit Unterordnern) zum Benutzer hochladen"
 
@@ -3901,12 +3913,12 @@ msgstr ""
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Es kann keine Verbindung zum Server hergestellt werden. Grund: %s"
 
-#: pynicotine/pynicotine.py:1356
+#: pynicotine/pynicotine.py:1356 pynicotine/pynicotine.py:1340
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr "Chatnachricht von Benutzer '%(user)s' im Raum '%(room)s': %(message)s"
 
-#: pynicotine/pynicotine.py:1392
+#: pynicotine/pynicotine.py:1392 pynicotine/pynicotine.py:1376
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Private Nachricht von Benutzer '%(user)s': %(message)s"
@@ -6853,128 +6865,107 @@ msgstr "_Bild speichern"
 msgid "_Refresh Info"
 msgstr "_Info aktualisieren"
 
-#: pynicotine/gtkgui/frame.py:966
+#: pynicotine/gtkgui/frame.py:966 pynicotine/gtkgui/frame.py:993
 msgid "Show _Log History Pane"
 msgstr "_Protokolfenster anzeigen"
 
 #: pynicotine/gtkgui/search.py:1201 pynicotine/gtkgui/userbrowse.py:997
-#, fuzzy
 msgid "Select Destination Folder for File(s)"
-msgstr "Wählen Sie das Ziel zum Herunterladen der Datei(en) vom Benutzer"
+msgstr "Zielordner für Datei(en) auswählen"
 
 #: pynicotine/gtkgui/search.py:1251 pynicotine/gtkgui/userbrowse.py:742
-#, fuzzy
 msgid "Select Destination Folder"
-msgstr "Wähle einen Ordner"
+msgstr "Zielordner auswählen"
 
 #: pynicotine/gtkgui/settingswindow.py:971
 #: pynicotine/gtkgui/settingswindow.py:1129
-#, fuzzy
 msgid "IP Address"
-msgstr "IP-Adresse blockieren"
+msgstr "IP-Adresse"
 
 #: pynicotine/gtkgui/settingswindow.py:1865
-#, fuzzy
 msgid "Command"
-msgstr "Befehl:"
+msgstr "Befehl"
 
 #: pynicotine/gtkgui/settingswindow.py:2786
-#, fuzzy
 msgid "Plugin"
-msgstr "Plugins"
+msgstr "Plugin"
 
 #: pynicotine/gtkgui/settingswindow.py:2974
-#, fuzzy
 msgid "Chat Censor & Replace"
-msgstr "Zensieren & Ersetzen"
+msgstr "Chat Zensieren & Ersetzen"
 
 #: pynicotine/gtkgui/settingswindow.py:2975
 #: pynicotine/gtkgui/ui/settings/completion.ui:22
-#, fuzzy
 msgid "Chat Completion"
-msgstr "Vervollständigung"
+msgstr "Chat-Vervollständigung"
 
 #: pynicotine/gtkgui/transferlist.py:90
-#, fuzzy
 msgid "Queued (prioritized)"
-msgstr "priorisiert"
+msgstr "In der Warteschlange (priorisiert)"
 
 #: pynicotine/gtkgui/transferlist.py:91
-#, fuzzy
 msgid "Queued (privileged)"
-msgstr "privilegiert"
+msgstr "In der Warteschlange (privilegiert)"
 
 #: pynicotine/gtkgui/userbrowse.py:213 pynicotine/gtkgui/userbrowse.py:271
-#, fuzzy
 msgid "Upload Folder…"
-msgstr "Ordner hochladen zu…"
+msgstr "Ordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:214
-#, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
-msgstr "Ordner (mit Unterordnern) zum Benutzer hochladen"
+msgstr "Ordner & Unterordner hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:227
-#, fuzzy
 msgid "Download Folder & Subfolder(s)"
-msgstr "_Ordner herunterladen"
+msgstr "Ordner und Unterordner herunterladen"
 
 #: pynicotine/gtkgui/userbrowse.py:228
-#, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
-msgstr "Datei(en) herunterladen zu …"
+msgstr "Ordner & Unterordner herunterladen zu…"
 
 #: pynicotine/gtkgui/userbrowse.py:270
-#, fuzzy
 msgid "Up_load File(s)…"
-msgstr "_Datei(en) hochladen"
+msgstr "_Datei(en) hochladen…"
 
 #: pynicotine/gtkgui/userbrowse.py:740
-#, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
-msgstr "Ziel für das Herunterladen eines Ordners vom Benutzer auswählen"
+msgstr "Ziel für das Herunterladen mehrerer Ordner auswählen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:152
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
-#, fuzzy
 msgid "Usernames"
-msgstr "Benutzername"
+msgstr "Benutzernamen"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:275
 #: pynicotine/gtkgui/ui/settings/ignore.ui:150
-#, fuzzy
 msgid "IP Addresses"
-msgstr "Adressen"
+msgstr "IP-Adressen"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:32
-#, fuzzy
 msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"Instanzen von $ werden durch den Link ersetzt. In Fällen, in denen kein "
-"Protokoll konfiguriert wurde, wird der Standard-Webbrowser des Systems "
-"verwendet."
+"Die Instanzen von $ werden durch die URL ersetzt. Standard-Systemanwendungen "
+"werden verwendet, wenn ein Protokoll nicht konfiguriert wurde."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:235
-#, fuzzy
 msgid "Media player command:"
-msgstr "Media Player-Befehl ($ für Dateipfad):"
+msgstr "Media-Player-Befehl:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:271
-#, fuzzy
 msgid "File manager command:"
-msgstr "Dateimanager-Befehl ($ für Dateipfad):"
+msgstr "Dateimanager-Befehl:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:291
-#, fuzzy
 msgid "Show file path tooltips in file list views"
-msgstr "Aktivieren von Dateipfad-Tooltips in Such- und Übertragungsansichten"
+msgstr "Dateipfad-Tooltips in Dateilistenansichten anzeigen"
 
-#~ msgid "Select Destination for Downloading Folder with Subfolders from User"
-#~ msgstr ""
-#~ "Wählen Sie das Ziel zum Herunterladen des Ordners mit Unterordnern vom "
-#~ "Benutzer"
+#: pynicotine/gtkgui/userbrowse.py:974 pynicotine/gtkgui/userbrowse.py:963
+msgid "Select Destination for Downloading Folder with Subfolders from User"
+msgstr ""
+"Wählen Sie das Ziel zum Herunterladen des Ordners mit Unterordnern vom "
+"Benutzer"
 
 #~ msgid "View Debug Logs"
 #~ msgstr "Debug-Protokolle anzeigen"
