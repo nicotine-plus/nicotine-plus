@@ -64,6 +64,13 @@ a = Analysis(['../../nicotine'],
              hiddenimports=hiddenimports,
              hookspath=[],
              runtime_hooks=[],
+             hooksconfig={
+                 "gi": {
+                     "icons": ["Adwaita", "hicolor"],
+                     "themes": ["Adwaita", "Mac"],
+                     "languages": languages
+                 }
+             },
              excludes=['FixTk', 'idlelib', 'lib2to3', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
@@ -79,24 +86,6 @@ for file in a.datas[:]:
 
     if target_path.endswith(excluded):
         a.datas.remove(file)
-
-    elif 'share/icons' in target_path or \
-            'share/themes' in target_path:
-        theme = target_path.split('/')[2]
-
-        # Remove unwanted themes
-        if theme not in ('Adwaita', 'Mac', 'hicolor'):
-            a.datas.remove(file)
-
-        elif 'Adwaita/cursors' in target_path:
-            a.datas.remove(file)
-
-    elif 'share/locale' in target_path:
-        lang = target_path.split('/')[2]
-
-        # Remove unnecessary translations
-        if not (lang in languages and target_path.endswith(("nicotine.mo", "gtk30.mo"))):
-            a.datas.remove(file)
 
 
 """ Archive """

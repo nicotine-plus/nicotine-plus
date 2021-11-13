@@ -33,7 +33,7 @@ def install_brew():
 def install_pypi():
     """ Install dependencies from PyPi """
 
-    packages = ["pyinstaller==4.3",
+    packages = ["pyinstaller==4.7",
                 "stdlib_list"]
     subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
 

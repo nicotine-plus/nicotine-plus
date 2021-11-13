@@ -135,10 +135,6 @@ jobs:
           pyinstaller packaging/macos/nicotine.spec
           rm -rf dist/Nicotine+/
 
-      - name: Ad-hoc signing
-        run: |
-          codesign --deep --entitlements packaging/macos/entitlements.plist --options runtime --sign - dist/Nicotine+.app
-
       - name: Generate .dmg
         run: |
           python3 packaging/macos/create_dmg.py
