@@ -2286,11 +2286,13 @@ msgid "Clear All Results"
 msgstr "Effacer tous les résultats"
 
 #: pynicotine/gtkgui/search.py:557 pynicotine/gtkgui/search.py:542
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
 msgstr ""
+"Filtrage des résultats de recherche incorrects %(filepath)s de l'utilisateur "
+"%(user)s pour la requête de recherche \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:912 pynicotine/gtkgui/search.py:897
 #, python-format
@@ -3916,9 +3918,11 @@ msgid "Unable to connect to the server. Reason: %s"
 msgstr "Impossible de se connecter au serveur. Raison : %s"
 
 #: pynicotine/pynicotine.py:1340 pynicotine/pynicotine.py:1356
-#, python-format
+#, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
+"Message de chat de l'utilisateur '%(user)s' dans la salle '%(room)s' : "
+"%(message)s"
 
 #: pynicotine/pynicotine.py:1392
 #, python-format
