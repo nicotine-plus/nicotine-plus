@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-06 02:26+0200\n"
-"PO-Revision-Date: 2021-11-04 16:38+0000\n"
+"PO-Revision-Date: 2021-11-11 15:57+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1587,43 +1587,53 @@ msgid "Chat"
 msgstr "Sohbet"
 
 #: pynicotine/gtkgui/frame.py:1801 pynicotine/gtkgui/frame.py:1771
+#: pynicotine/gtkgui/frame.py:121
 msgid "[Debug] Connections"
 msgstr "[Hata ayıklama] Bağlantılar"
 
 #: pynicotine/gtkgui/frame.py:1802 pynicotine/gtkgui/frame.py:1772
+#: pynicotine/gtkgui/frame.py:122
 msgid "[Debug] Messages"
 msgstr "[Hata ayıklama] Mesajlar"
 
 #: pynicotine/gtkgui/frame.py:1803 pynicotine/gtkgui/frame.py:1773
+#: pynicotine/gtkgui/frame.py:123
 msgid "[Debug] Transfers"
 msgstr "[Hata ayıklama] Aktarımlar"
 
 #: pynicotine/gtkgui/frame.py:1804 pynicotine/gtkgui/frame.py:1774
+#: pynicotine/gtkgui/frame.py:124
 msgid "[Debug] Miscellaneous"
 msgstr "[Hata ayıklama] Çeşitli"
 
 #: pynicotine/gtkgui/frame.py:1808 pynicotine/gtkgui/frame.py:1778
+#: pynicotine/gtkgui/frame.py:128
 msgid "_Find…"
 msgstr "_Bul…"
 
 #: pynicotine/gtkgui/frame.py:1810 pynicotine/gtkgui/frame.py:1840
-#: pynicotine/gtkgui/frame.py:1780
+#: pynicotine/gtkgui/frame.py:1780 pynicotine/gtkgui/frame.py:130
+#: pynicotine/gtkgui/frame.py:1839
 msgid "_Copy"
 msgstr "_Kopyala"
 
 #: pynicotine/gtkgui/frame.py:1811 pynicotine/gtkgui/frame.py:1781
+#: pynicotine/gtkgui/frame.py:131
 msgid "Copy _All"
 msgstr "_Tümünü Kopyala"
 
 #: pynicotine/gtkgui/frame.py:1813 pynicotine/gtkgui/frame.py:1783
+#: pynicotine/gtkgui/frame.py:133
 msgid "_Open Log Folder"
 msgstr "_Günlük Klasörünü Aç"
 
 #: pynicotine/gtkgui/frame.py:1814 pynicotine/gtkgui/frame.py:1784
+#: pynicotine/gtkgui/frame.py:134
 msgid "Open _Transfer Log"
 msgstr "_Aktarım Günlüğünü Aç"
 
 #: pynicotine/gtkgui/frame.py:1816 pynicotine/gtkgui/frame.py:1786
+#: pynicotine/gtkgui/frame.py:136
 msgid "_Log Categories"
 msgstr "Gü_nlük Kategorileri"
 
@@ -4535,7 +4545,7 @@ msgstr "Aktarımı Duraklat / İptal Et"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:202
 msgid "Download / Upload To"
-msgstr "Şuraya İndir / Karşıya Yükle"
+msgstr "Şuraya İndir / Yükle"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:216
 msgid "Save List to Disk"
@@ -6788,123 +6798,101 @@ msgstr "Resmi _Kaydet"
 msgid "_Refresh Info"
 msgstr "Bilgileri _Yenile"
 
-#: pynicotine/gtkgui/frame.py:966
+#: pynicotine/gtkgui/frame.py:966 pynicotine/gtkgui/frame.py:993
 msgid "Show _Log History Pane"
 msgstr "_Günlük Geçmişi Bölmesini Göster"
 
 #: pynicotine/gtkgui/search.py:1201 pynicotine/gtkgui/userbrowse.py:997
-#, fuzzy
 msgid "Select Destination Folder for File(s)"
-msgstr "Kullanıcıdan Dosya(lar) İndirmek İçin Hedef Seç"
+msgstr "Dosya(lar) için Hedef Klasörü Seç"
 
 #: pynicotine/gtkgui/search.py:1251 pynicotine/gtkgui/userbrowse.py:742
-#, fuzzy
 msgid "Select Destination Folder"
-msgstr "Klasör Seç"
+msgstr "Hedef Klasörü Seç"
 
 #: pynicotine/gtkgui/settingswindow.py:971
 #: pynicotine/gtkgui/settingswindow.py:1129
-#, fuzzy
 msgid "IP Address"
-msgstr "IP Adresini Engelle"
+msgstr "IP Adresi"
 
 #: pynicotine/gtkgui/settingswindow.py:1865
-#, fuzzy
 msgid "Command"
-msgstr "Komut:"
+msgstr "Komut"
 
 #: pynicotine/gtkgui/settingswindow.py:2786
-#, fuzzy
 msgid "Plugin"
-msgstr "Eklentiler"
+msgstr "Eklenti"
 
 #: pynicotine/gtkgui/settingswindow.py:2974
-#, fuzzy
 msgid "Chat Censor & Replace"
-msgstr "Sansürle ve Değiştir"
+msgstr "Sohbeti Sansürle ve Değiştir"
 
 #: pynicotine/gtkgui/settingswindow.py:2975
 #: pynicotine/gtkgui/ui/settings/completion.ui:22
-#, fuzzy
 msgid "Chat Completion"
-msgstr "Tamamlama"
+msgstr "Sohbeti Tamamla"
 
 #: pynicotine/gtkgui/transferlist.py:90
-#, fuzzy
 msgid "Queued (prioritized)"
-msgstr "öncelikli"
+msgstr "Kuyruğa alındı (öncelikli)"
 
 #: pynicotine/gtkgui/transferlist.py:91
-#, fuzzy
 msgid "Queued (privileged)"
-msgstr "ayrıcalıklı"
+msgstr "Kuyruğa alındı (ayrıcalıklı)"
 
 #: pynicotine/gtkgui/userbrowse.py:213 pynicotine/gtkgui/userbrowse.py:271
-#, fuzzy
 msgid "Upload Folder…"
-msgstr "Klasörü Şuraya Yükle…"
+msgstr "Klasörü Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:214
-#, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
-msgstr "Klasörü (Alt Klasörlerle) Kullanıcıya Yükle"
+msgstr "Klasörü ve Alt Klasör(ler)i Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:227
-#, fuzzy
 msgid "Download Folder & Subfolder(s)"
-msgstr "_Klasör(ler)i İndir"
+msgstr "Klasörü ve Alt Klasör(ler)i İndir"
 
 #: pynicotine/gtkgui/userbrowse.py:228
-#, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
-msgstr "K_lasör(ler)ı Şuraya İndir…"
+msgstr "Klasörü ve Alt Klasör(ler)i Şuraya İndir…"
 
 #: pynicotine/gtkgui/userbrowse.py:270
-#, fuzzy
 msgid "Up_load File(s)…"
-msgstr "_Dosya(lar)ı Yükle"
+msgstr "_Dosya(lar)ı Yükle…"
 
 #: pynicotine/gtkgui/userbrowse.py:740
-#, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
-msgstr "Kullanıcıdan Klasör İndirmek İçin Hedef Seç"
+msgstr "Birden Çok Klasörü İndirmek İçin Hedef Seç"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:152
 #: pynicotine/gtkgui/ui/settings/ignore.ui:28
-#, fuzzy
 msgid "Usernames"
-msgstr "Kullanıcı Adı"
+msgstr "Kullanıcı Adları"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:275
 #: pynicotine/gtkgui/ui/settings/ignore.ui:150
-#, fuzzy
 msgid "IP Addresses"
-msgstr "Adresler"
+msgstr "IP Adresleri"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:32
-#, fuzzy
 msgid ""
 "Instances of $ are replaced by the URL. Default system applications are used "
 "in cases where a protocol has not been configured."
 msgstr ""
-"$ karakterleri bağlantı ile değiştirilecektir. Bir protokolün "
-"yapılandırılmadığı durumlarda sistemin öntanımlı internet tarayıcısı "
-"kullanılacaktır."
+"$ karakterleri URL ile değiştirilecektir. Bir protokolün yapılandırılmadığı "
+"durumlarda öntanımlı sistem uygulamaları kullanılır."
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:235
-#, fuzzy
 msgid "Media player command:"
-msgstr "Ortam oynatıcı komutu (dosya yolu için $):"
+msgstr "Ortam oynatıcısı komutu:"
 
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:271
-#, fuzzy
 msgid "File manager command:"
-msgstr "Dosya yöneticisi komutu (dosya yolu için $):"
+msgstr "Dosya yöneticisi komutu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:291
-#, fuzzy
 msgid "Show file path tooltips in file list views"
-msgstr "Arama ve aktarım görünümlerinde dosya yolu araç ipuçlarını etkinleştir"
+msgstr "Dosya yolu araç ipuçlarını dosya listesi görünümlerinde göster"
 
 #~ msgid "View Debug Logs"
 #~ msgstr "Hata Ayıklama Günlüklerini Görüntüle"
