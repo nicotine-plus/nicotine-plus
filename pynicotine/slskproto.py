@@ -559,7 +559,7 @@ class SlskProtoThread(threading.Thread):
                 self.listen_socket.listen()
                 self.listenport = listenport
                 log.add(_("Listening on port: %i"), listenport)
-                log.add(_("Maximum data sockets: %i"), MAXSOCKETS)
+                log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
                 break
 
             except socket.error:
