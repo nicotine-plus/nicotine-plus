@@ -131,6 +131,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="image-text-button"/>
+            </style>
           </object>
         </child>
         <child>
