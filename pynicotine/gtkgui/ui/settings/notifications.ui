@@ -47,7 +47,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Notification Popups</property>
+            <property name="label" translatable="yes">Notifications</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -57,37 +57,37 @@
         <child>
           <object class="GtkCheckButton" id="NotificationPopupSound">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Enable sound for notification popups</property>
+            <property name="label" translatable="yes">Enable sound for notifications</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFile">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification popup when a file has finished downloading</property>
+            <property name="label" translatable="yes">Show a notification when a file has finished downloading</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupFolder">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification popup when a folder has finished downloading</property>
+            <property name="label" translatable="yes">Show a notification when a folder has finished downloading</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupPrivateMessage">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification popup when you receive a private message</property>
+            <property name="label" translatable="yes">Show a notification when you receive a private message</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroom">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification popup when someone sends a message in a chat room</property>
+            <property name="label" translatable="yes">Show a notification when someone sends a message in a chat room</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="NotificationPopupChatroomMention">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Show notification popup when you are mentioned in a chat room</property>
+            <property name="label" translatable="yes">Show a notification when you are mentioned in a chat room</property>
           </object>
         </child>
       </object>
