@@ -355,16 +355,21 @@ class Scanner:
 
             try:
                 for entry in os.scandir(folder):
-                    if entry.is_file():
-                        filename = self.get_utf8_path(entry.name)
+                    try:
+                        if entry.is_file():
+                            filename = self.get_utf8_path(entry.name)
 
-                        if self.is_hidden(folder, filename):
-                            continue
+                            if self.is_hidden(folder, filename):
+                                continue
 
-                        # Get the metadata of the file
-                        path = self.get_utf8_path(entry.path)
-                        data = self.get_file_info(filename, path, self.tinytag, self.queue, entry)
-                        files[virtualdir].append(data)
+                            # Get the metadata of the file
+                            path = self.get_utf8_path(entry.path)
+                            data = self.get_file_info(filename, path, self.tinytag, self.queue, entry)
+                            files[virtualdir].append(data)
+
+                    except Exception as errtuple:
+                        self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
+                                       {'path': entry.path, 'error': errtuple}, None))
 
             except OSError as errtuple:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
@@ -383,54 +388,44 @@ class Scanner:
         bitrate_info = None
         duration_info = None
 
-        try:
-            if file:
-                # Faster way if we use scandir
-                size = file.stat().st_size
-            else:
-                size = os.stat(pathname).st_size
+        if file:
+            # Faster way if we use scandir
+            size = file.stat().st_size
+        else:
+            size = os.stat(pathname).st_size
 
-            """ We skip metadata scanning of files without meaningful content """
-            if size > 128:
-                try:
-                    audio = tinytag.get(pathname, size, tags=False)
+        """ We skip metadata scanning of files without meaningful content """
+        if size > 128:
+            try:
+                audio = tinytag.get(pathname, size, tags=False)
 
-                except Exception as errtuple:
-                    error = _("Error while scanning metadata for file %(path)s: %(error)s")
-                    args = {'path': pathname, 'error': errtuple}
+            except Exception as errtuple:
+                error = _("Error while scanning metadata for file %(path)s: %(error)s")
+                args = {'path': pathname, 'error': errtuple}
 
-                    if queue:
-                        queue.put((error, args, None))
-                    else:
-                        log.add(error, args)
+                if queue:
+                    queue.put((error, args, None))
+                else:
+                    log.add(error, args)
 
-            if audio is not None and audio.bitrate is not None and audio.duration is not None:
-                bitrate = int(audio.bitrate)
-                duration = int(audio.duration)
+        if audio is not None and audio.bitrate is not None and audio.duration is not None:
+            bitrate = int(audio.bitrate)
+            duration = int(audio.duration)
 
-                if UINT_LIMIT > bitrate > 0:
-                    bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
+            if UINT_LIMIT > bitrate > 0:
+                bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
 
-                if UINT_LIMIT > duration > 0:
-                    duration_info = duration
+            if UINT_LIMIT > duration > 0:
+                duration_info = duration
 
-                if bitrate_info is None or duration_info is None:
-                    error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
-                    args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
+            if bitrate_info is None or duration_info is None:
+                error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
+                args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
 
-                    if queue:
-                        queue.put((error, args, "miscellaneous"))
-                    else:
-                        log.add(error, args)
-
-        except Exception as errtuple:
-            error = _("Error while scanning file %(path)s: %(error)s")
-            args = {'path': pathname, 'error': errtuple}
-
-            if queue:
-                queue.put((error, args, None))
-            else:
-                log.add(error, args)
+                if queue:
+                    queue.put((error, args, "miscellaneous"))
+                else:
+                    log.add(error, args)
 
         return (name, size, bitrate_info, duration_info)
 
