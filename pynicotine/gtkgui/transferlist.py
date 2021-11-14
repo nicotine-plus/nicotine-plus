@@ -478,10 +478,6 @@ class TransferList(UserInterface):
 
         # Modify old transfer
         if initer is not None:
-            if not self.transfersmodel.iter_is_valid(initer):
-                # Row has already been removed at some point
-                return
-
             translated_status = self.translate_status(status)
 
             if self.transfersmodel.get_value(initer, 3) != translated_status:
