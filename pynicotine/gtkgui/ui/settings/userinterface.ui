@@ -306,7 +306,7 @@
                 <child>
                   <object class="GtkCheckButton" id="NotificationPopupSound">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Enable sound for notification popups</property>
+                    <property name="label" translatable="yes">Enable sound for notifications</property>
                   </object>
                 </child>
                 <child>
@@ -325,7 +325,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Show notification popups for:</property>
+                    <property name="label" translatable="yes">Show notifications for:</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">NotificationPopupFile</property>
                   </object>
