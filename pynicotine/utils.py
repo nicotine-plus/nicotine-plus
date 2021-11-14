@@ -401,10 +401,15 @@ speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', '
 def human_speed(filesize):
     try:
         step_unit = 1024
+        template = "%3.1f %s"
 
-        for i in speed_suffixes:
+        for index, suffix in enumerate(speed_suffixes):
             if filesize < step_unit:
-                return "%i %s" % (filesize, i)
+                if index <= 1:
+                    # Don't show decimals for KiB/s and B/s
+                    template = "%i %s"
+
+                return template % (filesize, suffix)
 
             filesize /= step_unit
 
