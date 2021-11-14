@@ -324,38 +324,37 @@ class Scanner:
         lastpercent = 0.0
 
         for folder in mtimes:
+            count += 1
 
-            try:
-                count += 1
+            # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
+            percent = float("%.2f" % (float(count) / len(mtimes) * 0.5))
 
-                # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-                percent = float("%.2f" % (float(count) / len(mtimes) * 0.5))
+            if lastpercent < percent <= 1.0:
+                self.queue.put(percent)
+                lastpercent = percent
 
-                if lastpercent < percent <= 1.0:
-                    self.queue.put(percent)
-                    lastpercent = percent
+            virtualdir = Shares.real2virtual_cls(folder, self.config)
 
-                virtualdir = Shares.real2virtual_cls(folder, self.config)
-
-                if not rebuild and folder in oldmtimes and mtimes[folder] == oldmtimes[folder]:
-                    if os.path.exists(folder):
-                        try:
-                            files[virtualdir] = oldfiles[virtualdir]
-                            streams[virtualdir] = oldstreams[virtualdir]
-                            continue
-                        except KeyError:
-                            self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
-                                'vdir': virtualdir,
-                                'dir': folder
-                            }, "miscellaneous"))
-                    else:
-                        self.queue.put(("Dropping missing folder %(dir)s", {'dir': folder}, "miscellaneous"))
+            if not rebuild and folder in oldmtimes and mtimes[folder] == oldmtimes[folder]:
+                if os.path.exists(folder):
+                    try:
+                        files[virtualdir] = oldfiles[virtualdir]
+                        streams[virtualdir] = oldstreams[virtualdir]
                         continue
 
-                files[virtualdir] = []
+                    except KeyError:
+                        self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
+                            'vdir': virtualdir,
+                            'dir': folder
+                        }, "miscellaneous"))
+                else:
+                    self.queue.put(("Dropping missing folder %(dir)s", {'dir': folder}, "miscellaneous"))
+                    continue
 
+            files[virtualdir] = []
+
+            try:
                 for entry in os.scandir(folder):
-
                     if entry.is_file():
                         filename = self.get_utf8_path(entry.name)
 
@@ -367,12 +366,11 @@ class Scanner:
                         data = self.get_file_info(filename, path, self.tinytag, self.queue, entry)
                         files[virtualdir].append(data)
 
-                streams[virtualdir] = self.get_dir_stream(files[virtualdir])
-
             except OSError as errtuple:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
                                {'path': folder, 'error': errtuple}, None))
-                continue
+
+            streams[virtualdir] = self.get_dir_stream(files[virtualdir])
 
         return files, streams
 
