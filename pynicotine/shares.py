@@ -385,7 +385,7 @@ class Scanner:
             if UINT_LIMIT > bitrate > 0:
                 bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
 
-            if UINT_LIMIT > duration > 0:
+            if UINT_LIMIT > duration >= 0:
                 duration_info = duration
 
             if bitrate_info is None or duration_info is None:
