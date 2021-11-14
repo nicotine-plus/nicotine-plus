@@ -1663,7 +1663,7 @@
                         <child>
                           <object class="GtkLabel" id="SocketStatus">
                             <property name="visible">1</property>
-                            <property name="label">0/0</property>
+                            <property name="label">0</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>
