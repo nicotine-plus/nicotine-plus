@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-14 00:02+0200\n"
-"PO-Revision-Date: 2021-11-11 15:57+0000\n"
+"PO-Revision-Date: 2021-11-14 09:08+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -4306,9 +4306,8 @@ msgstr "Mesaj göndermek istediğiniz kişinin kullanıcı adını girin"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:484
 #: pynicotine/gtkgui/ui/mainwindow.ui:741
-#, fuzzy
 msgid "Configure chats"
-msgstr "Paylaşımları yapılandır"
+msgstr "Sohbeti yapılandır"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:518
 msgid "Enter the username of the person whose information you want to see"
@@ -5086,34 +5085,28 @@ msgid "Minimum characters required to display drop-down:"
 msgstr "Açılır menüyü görüntülemek için gereken en az karakter:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:236
-#, fuzzy
 msgid "Allowed chat completions:"
-msgstr "İzin Verilen Tamamlamalar"
+msgstr "İzin verilen sohbet tamamlamaları:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:256
-#, fuzzy
 msgid "Buddy names"
-msgstr "Arkadaş Listesi"
+msgstr "Arkadaş adları"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:268
-#, fuzzy
 msgid "Chat room usernames"
-msgstr "Sohbet odası mesajı:"
+msgstr "Sohbet odası kullanıcı adları"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:281
-#, fuzzy
 msgid "Room names"
-msgstr "Odalar"
+msgstr "Oda adları"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:294
-#, fuzzy
 msgid "Built-in commands"
-msgstr "Yerleşik komutları tamamla"
+msgstr "Yerleşik komutlar"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Command aliases"
-msgstr "Komut takma adlarını tamamla"
+msgstr "Komut takma adları"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:330
 msgid "Timestamps"
@@ -5364,9 +5357,8 @@ msgid "Log debug messages to file"
 msgstr "Hata ayıklama mesajlarının günlüğünü dosyaya kaydet"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:64
-#, fuzzy
 msgid "Log file timestamp format:"
-msgstr "Günlük dosyası biçimi:"
+msgstr "Günlük dosyası zaman damgası biçimi:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:128
 msgid "Folder Locations"
@@ -5805,14 +5797,12 @@ msgid "Minimize to tray on startup"
 msgstr "Başlangıçta tepsi simgesine küçült"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:62
-#, fuzzy
 msgid "Remember previous primary tab on startup"
-msgstr "Başlangıçta önceki birincil sekmeyi görüntüle"
+msgstr "Başlangıçta önceki birincil sekmeyi hatırla"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-#, fuzzy
 msgid "Start with Search Files by default."
-msgstr "Öntanımlı olarak arama sonucu filtrelerini etkinleştir"
+msgstr "Öntanımlı olarak Dosyaları Ara sekmesiyle başla."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
@@ -5851,34 +5841,28 @@ msgid "Show notification for private chats and mentions in the window title"
 msgstr "Pencere başlığında özel sohbetler ve bahsetmeler için bildirim göster"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:328
-#, fuzzy
 msgid "Show notification popups for:"
-msgstr "Sekmelerde bildirim simgelerini göster"
+msgstr "Şunlar için bildirim açılır pencerelerini göster:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:348
-#, fuzzy
 msgid "Finished file downloads"
-msgstr "Dosya indirildi"
+msgstr "Biten dosya indirmeleri"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "Klasör indirildi"
+msgstr "Biten klasör indirmeleri"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
-#, fuzzy
 msgid "Private messages"
-msgstr "%s kullanıcısından özel mesaj"
+msgstr "Özel mesajlar"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:384
-#, fuzzy
 msgid "Chat room messages"
-msgstr "Sohbet odası mesajı:"
+msgstr "Sohbet odası mesajları"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:396
-#, fuzzy
 msgid "Chat room mentions"
-msgstr "Sohbeti Tamamla"
+msgstr "Sohbet odasında bahsedilmeler"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:423
 msgid "Secondary Tabs"
