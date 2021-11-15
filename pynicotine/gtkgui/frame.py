@@ -55,6 +55,7 @@ from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import custom_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -618,7 +619,7 @@ class NicotineFrame(UserInterface):
 
         if not hasattr(self, "shortcuts"):
             self.shortcuts = UserInterface("ui/dialogs/shortcuts.ui")
-            set_dialog_properties(self.shortcuts.dialog, self.MainWindow, quit_callback=self.on_hide)
+            set_dialog_properties(self.shortcuts.dialog, self.MainWindow, quit_callback=self.on_dialog_hide)
 
             if hasattr(Gtk.Entry.props, "show-emoji-icon"):
                 # Emoji picker only available in GTK 3.24+
@@ -767,6 +768,16 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_quit)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.quit", ["<Primary>q"])
+
+        action = Gio.SimpleAction.new("force_quit", None)
+        action.connect("activate", self.np.quit)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.force_quit", ["<Primary><Alt>q"])
+
+        action = Gio.SimpleAction.new("tray_quit", None)
+        action.connect("activate", self.on_tray_quit)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.tray_quit", ["<Shift><Primary>q"])
 
         # View
 
@@ -943,16 +954,17 @@ class NicotineFrame(UserInterface):
         menu.setup(("#" + _("_Preferences"), "app.settings"))
 
     def add_quit_item(self, menu):
-        menu.setup(("#" + _("_Quit"), "app.quit"))
+
+        menu.setup(
+            ("", None),
+            ("#" + _("_Quit"), "app.quit")
+        )
 
     def create_file_menu(self):
 
         menu = PopupMenu(self)
         self.add_connection_section(menu)
         self.add_preferences_item(menu)
-
-        menu.setup(("", None))
-
         self.add_quit_item(menu)
 
         return menu
@@ -1757,6 +1769,10 @@ class NicotineFrame(UserInterface):
     def on_settings_uploads(self, *args):
         self.on_settings(page='Uploads')
 
+    def on_dialog_hide(self, dialog, *args):
+        dialog_hide(dialog)
+        return True
+
     """ Log Pane """
 
     def create_log_context_menu(self):
@@ -1963,7 +1979,7 @@ class NicotineFrame(UserInterface):
         self.np.transfers.update_limits()
         self.tray_icon.set_alternative_speed_limit(not state)
 
-    """ Exit """
+    """ Termination """
 
     def on_critical_error_response(self, dialog, response_id, data):
 
@@ -2041,51 +2057,103 @@ class NicotineFrame(UserInterface):
 
         GLib.idle_add(self._on_critical_error_threading, args)
 
-    def on_quit_response(self, dialog, response_id, data):
+    """ Exit """
 
-        checkbox = dialog.checkbox.get_active()
+    def on_exit_dialog_response(self, dialog, response_id, data):
+
+        checkbox = dialog.checkbox.get_active() if dialog.checkbox else None
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == 1:  # Quit
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 0
 
             self.np.quit()
+            return True
 
-        elif response_id == Gtk.ResponseType.REJECT:
+        elif response_id == 2:  # Minimize to Tray
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 2
 
-            if self.MainWindow.get_property("visible"):
-                self.MainWindow.hide()
+            self.hide()
+            return False
+
+        elif response_id == 3:  # Disable Tray Icon
+            config.sections["ui"]["trayicon"] = False
+            config.sections["ui"]["startup_hidden"] = False
+            if config.sections["ui"]["exitdialog"] == 2:
+                config.sections["ui"]["exitdialog"] = 1
+
+            self.tray_icon.hide()
+            self.MainWindow.show()
+            return False
+
+        log.add_debug("Still running, that was close! " + str(response_id))
+        return None  # 0=No ; -4=Escape
+
+    def exit_dialog(self, remember=True):
+
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            tray_possible = False  # Tray icons don't work as expected on macOS
+        else:
+            tray_possible = True if self.MainWindow.get_property("visible") else None
+
+        if self.tray_icon.is_visible() and not remember:
+            tray_active = True
+        else:
+            tray_active = False
+
+        confirm = custom_dialog(
+            parent=self.MainWindow,
+            title=_('Close Nicotine+'),
+            message=_('Do you really want to exit?'),
+            zero=_("_No"),
+            one=_("_Quit"),
+            two=_("Minimize to _Tray") if tray_possible else "",
+            three=_("_Disable Tray Icon") if tray_active else "",
+            checkbox=_("Remember choice") if remember else "",
+            callback=self.on_exit_dialog_response
+        )
+        return True
+
+    def on_tray_quit(self, *args):
+        self.exit_dialog(remember=False)
 
     def on_close_request(self, *args):
+        return self.on_quit()
 
-        if not config.sections["ui"]["exitdialog"]:
+    def on_quit(self, *args):
+
+        if config.sections["ui"]["exitdialog"] == 0:
             self.np.quit()
             return True
 
         if config.sections["ui"]["exitdialog"] == 2:
-            if self.MainWindow.get_property("visible"):
-                self.MainWindow.hide()
+            self.hide()
             return True
 
-        option_dialog(
-            parent=self.MainWindow,
-            title=_('Close Nicotine+?'),
-            message=_('Do you really want to exit Nicotine+?'),
-            third=_("Run in Background"),
-            checkbox_label=_("Remember choice"),
-            callback=self.on_quit_response
-        )
-        return True
+        # Do you really want to exit?
+        return self.exit_dialog()
 
-    def on_hide(self, dialog, *args):
-        dialog_hide(dialog)
-        return True
+    def hide(self, *args):
 
-    def on_quit(self, *args):
-        self.np.quit()
+        if not self.MainWindow.get_property("visible"):
+            return
+
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            # Tray icons don't work as expected on macOS
+            self.minimize()
+            return
+
+        # Show tray icon, otherwise main window cannot be shown again
+        self.tray_icon.load(use_trayicon=True)
+        self.tray_icon.set_image(force_update=True)
+
+        # Run in Background
+        self.MainWindow.hide()
+
+    def minimize(self):
+        self.get_active_window().iconify()
 
     def quit(self):
 
