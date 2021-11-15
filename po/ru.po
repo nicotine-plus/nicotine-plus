@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-12 13:21+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -129,8 +129,8 @@ msgstr ""
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Не удалось просканировать общие каталоги. Закройте другие экземпляры Nicotine"
-"+ и повторите попытку."
+"Не удалось просканировать общие каталоги. Закройте другие экземпляры "
+"Nicotine+ и повторите попытку."
 
 #: pynicotine/chatrooms.py:254
 #, python-format
@@ -3856,8 +3856,7 @@ msgstr "Вход в вашу учетную запись произведен в
 #: pynicotine/slskproto.py:493
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr ""
-"Сервер не работает или не отвечает, попытка подключения через %i секунд"
+msgstr "Сервер не работает или не отвечает, попытка подключения через %i секунд"
 
 #: pynicotine/slskproto.py:813
 #, python-format
@@ -3901,8 +3900,7 @@ msgstr "Загрузка началась: пользователь %(user)s, ф
 #: pynicotine/transfers.py:1278
 #, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
-msgstr ""
-"Раздача началась: пользователь %(user)s, IP-адрес %(ip)s, файл %(file)s"
+msgstr "Раздача началась: пользователь %(user)s, IP-адрес %(ip)s, файл %(file)s"
 
 #: pynicotine/transfers.py:1857
 #, python-format
@@ -5861,8 +5859,7 @@ msgstr "Использовать тёмный режим"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:40
 msgid "Note that the operating system's theme may take precedence."
-msgstr ""
-"Обратите внимание, что тема операционной системы может иметь приоритет."
+msgstr "Обратите внимание, что тема операционной системы может иметь приоритет."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:50
 msgid "Display tray icon"
