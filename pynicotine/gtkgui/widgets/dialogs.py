@@ -230,3 +230,52 @@ def option_dialog(parent, title, message, callback, callback_data=None,
         self.add_button(third, Gtk.ResponseType.REJECT)
 
     self.present_with_time(Gdk.CURRENT_TIME)
+
+
+def custom_dialog(parent, title, message, callback, callback_data=None, selectable=False, default=0,
+                  zero="", one="", two="", three="", four="", five="", checkbox=""):
+
+    self = Gtk.MessageDialog(
+        transient_for=parent,
+        message_type=Gtk.MessageType.QUESTION,  # INFO; WARNING; QUESTION; ERROR; OTHER
+        buttons=Gtk.ButtonsType.NONE,
+        text=title,
+        secondary_text=message or ""
+    )
+    self.connect("response", callback, callback_data)
+    self.set_destroy_with_parent(True)
+    self.set_modal(True)
+
+    if Gtk.get_major_version() == 4:
+        label = self.get_message_area().get_last_child()
+    else:
+        label = self.get_message_area().get_children()[-1]
+
+    label.set_selectable(selectable)
+
+    if checkbox:
+        self.checkbox = Gtk.CheckButton()
+        self.checkbox.set_label(checkbox)
+
+        self.get_message_area().add(self.checkbox)
+        self.checkbox.show()
+    else:
+        self.checkbox = None
+
+    # Buttons
+    if zero:
+        self.add_button(zero, 0)
+    if one:
+        self.add_button(one, 1)
+    if two:
+        self.add_button(two, 2)
+    if three:
+        self.add_button(three, 3)
+    if four:
+        self.add_button(four, 4)
+    if five:
+        self.add_button(five, 5)
+
+    self.set_default_response(default)
+
+    self.present_with_time(Gdk.CURRENT_TIME)
