@@ -462,7 +462,11 @@ class PopupMenu(Gio.Menu):
         self.gesture_press.connect("pressed", self._callback)
 
     def on_search_user(self, *args):
-        self.frame.SearchMethod.set_active_id("user")
+
+        state = GLib.Variant.new_string("user")
+        self.frame.search_mode_action.set_state(state)
+        self.frame.search_mode_action.emit("change-state", state)
+
         self.frame.UserSearchEntry.set_text(self.user)
         self.frame.change_main_page("search")
 

@@ -119,11 +119,6 @@ class Search:
                     text = feedback[0]
 
         elif mode == "rooms":
-            # Space after Joined Rooms is important, so it doesn't conflict
-            # with any possible real room
-            if room == _("Joined Rooms ") or room.isspace():
-                room = None
-
             if self.core:
                 feedback = self.core.pluginhandler.outgoing_room_search_event(room, text)
 
@@ -216,6 +211,10 @@ class Search:
             self.do_peer_search(self.searchid, searchterm, users)
 
         self.add_search(self.searchid, searchterm, mode, ignore=False)
+
+        if self.ui_callback:
+            self.ui_callback.do_search(self.searchid, searchterm, mode, room, user)
+
         return (self.searchid, searchterm, searchterm_without_special)
 
     def do_global_search(self, search_id, text):
@@ -228,7 +227,7 @@ class Search:
 
     def do_rooms_search(self, search_id, text, room=None):
 
-        if room is not None:
+        if room != _("Joined Rooms "):
             self.queue.append(slskmessages.RoomSearch(room, search_id, text))
 
         elif self.core.chatrooms.ui_callback is not None:
