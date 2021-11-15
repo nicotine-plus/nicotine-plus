@@ -108,13 +108,17 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit"), self.frame.on_quit)
+        self.create_item(_("Quit…"), self.frame.on_tray_quit)  # always prompt, without remember checkbox
 
     def on_hide_unhide_window(self, *args):
 
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
             return
+
+        if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
+            # Tray icon was shown using Minimize to Tray in the Close Nicotine+ dialog
+            self.frame.tray_icon.hide()
 
         self.show_window()
 
