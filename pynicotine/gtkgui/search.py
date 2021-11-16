@@ -1139,13 +1139,19 @@ class Search(UserInterface):
 
     def update_result_counter(self):
 
+        max_results = config.sections["searches"]["max_displayed_results"]
+
         if self.numtotalresults > self.numvisibleresults:
             # Append plus symbol "+" if Result Filter is active and/or reached 'Maximum per search'
             str_plus = "+"
-            str_total_plus = "+" if self.numtotalresults > config.sections["searches"]["max_displayed_results"] else ""
-            str_total = (_("Total: %i%s") % (self.numtotalresults, str_total_plus))
-        else:
-            str_plus = str_total = ""  # don't show the tooltip if there are no hidden results
+
+            # Display the tooltip for total, but only if we know the exact number of total results
+            str_total = (_("Total: %s") %
+                (self.numtotalresults if not self.numtotalresults > max_results else \
+                 "> " + str(max_results) + "+"))
+
+        else:  # Hide the tooltip if there are no hidden results
+            str_plus = str_total = ""
 
         self.Counter.set_text(str(self.numvisibleresults) + (str_plus))
         self.Counter.set_tooltip_text(str_total)
