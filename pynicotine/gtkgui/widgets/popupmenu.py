@@ -38,12 +38,11 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 """ Popup/Context Menu """
 
 
-class PopupMenu(Gio.Menu):
+class PopupMenu:
 
     def __init__(self, frame=None, widget=None, callback=None, connect_events=True):
 
-        Gio.Menu.__init__(self)
-
+        self.model = Gio.Menu()
         self.frame = frame
         self.widget = widget
         self.callback = callback
@@ -99,7 +98,7 @@ class PopupMenu(Gio.Menu):
                 while not isinstance(widget, Gtk.Box):
                     widget = widget.get_parent()
 
-            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self, Gtk.PopoverMenuFlags.NESTED)
+            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
@@ -113,7 +112,7 @@ class PopupMenu(Gio.Menu):
             while not isinstance(widget, Gtk.Box):
                 widget = widget.get_parent()
 
-        self.popup_menu = Gtk.Menu.new_from_model(self)
+        self.popup_menu = Gtk.Menu.new_from_model(self.model)
         self.popup_menu.attach_to_widget(widget, None)
 
         return self.popup_menu
@@ -176,7 +175,7 @@ class PopupMenu(Gio.Menu):
             self.useritem = menuitem
 
         if submenu:
-            menuitem.set_submenu(item[1])
+            menuitem.set_submenu(item[1].model)
             self.submenus.append(item[1])
 
             if Gtk.get_major_version() == 3:
@@ -199,9 +198,9 @@ class PopupMenu(Gio.Menu):
         if not self.menu_section or not item[0]:
             # Create new section
 
-            self.menu_section = Gio.Menu.new()
+            self.menu_section = Gio.Menu()
             menuitem = Gio.MenuItem.new_section(None, self.menu_section)
-            Gio.Menu.append_item(self, menuitem)
+            self.model.append_item(menuitem)
 
             if not item[0]:
                 return menuitem
@@ -259,8 +258,8 @@ class PopupMenu(Gio.Menu):
         self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
 
         # Rather ugly solution, but otherwise the label update doesn't display
-        self.remove(0)
-        self.prepend_item(self.items["selected_files"])
+        self.model.remove(0)
+        self.model.prepend_item(self.items["selected_files"])
 
     def set_user(self, user):
 
@@ -279,7 +278,7 @@ class PopupMenu(Gio.Menu):
         self.useritem.set_label(user)
 
         # Rather ugly solution, but otherwise the label update doesn't display
-        section = self.get_item_link(0, Gio.MENU_LINK_SECTION)
+        section = self.model.get_item_link(0, Gio.MENU_LINK_SECTION)
         section.remove(0)
         section.prepend_item(self.useritem)
 
@@ -353,7 +352,7 @@ class PopupMenu(Gio.Menu):
             submenu.clear()
 
         self.submenus.clear()
-        self.remove_all()
+        self.model.remove_all()
 
         for action in self.actions:
             self.get_window().remove_action(action)

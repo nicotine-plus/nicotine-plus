@@ -182,7 +182,7 @@ class TransferList(UserInterface):
 
         self.popup_menu_users = PopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
-        self.ClearTransfers.set_menu_model(self.popup_menu_clear)
+        self.ClearTransfers.set_menu_model(self.popup_menu_clear.model)
 
         self.popup_menu_copy = PopupMenu(frame)
         self.popup_menu_copy.setup(

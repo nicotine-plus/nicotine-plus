@@ -84,7 +84,7 @@ class Searches(IconNotebook):
             ("O" + self.modes["rooms"], "win.searchmode", "rooms"),
             ("O" + self.modes["user"], "win.searchmode", "user")
         )
-        frame.SearchMode.set_menu_model(mode_menu)
+        frame.SearchMode.set_menu_model(mode_menu.model)
         frame.SearchModeLabel.set_markup_with_mnemonic(self.modes["global"])
 
         if Gtk.get_major_version() == 4:

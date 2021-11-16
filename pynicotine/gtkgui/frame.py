@@ -1054,7 +1054,7 @@ class NicotineFrame(UserInterface):
     def set_up_menu(self):
 
         menu = self.create_menu_bar()
-        self.application.set_menubar(menu)
+        self.application.set_menubar(menu.model)
 
         self.hamburger_menu = self.create_hamburger_menu()
 
@@ -1103,7 +1103,7 @@ class NicotineFrame(UserInterface):
         header_bar.pack_end(end_widget)
 
         # Set menu model after moving menu button to avoid GTK warnings in old GTK versions
-        self.header_menu.set_menu_model(self.hamburger_menu)
+        self.header_menu.set_menu_model(self.hamburger_menu.model)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
