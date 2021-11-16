@@ -266,7 +266,7 @@
                         <items>
                           <item translatable="yes">Quit program</item>
                           <item translatable="yes">Show confirmation dialog</item>
-                          <item translatable="yes">Minimize to tray</item>
+                          <item translatable="yes">Run in the background</item>
                         </items>
                       </object>
                     </child>
