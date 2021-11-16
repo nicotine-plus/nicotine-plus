@@ -227,6 +227,11 @@ def initialise_columns(treeview_name, treeview, *args):
     setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(widget=treeview, callback=press_header, connect_events=False)
 
+    if Gtk.get_major_version() == 4:
+        # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug
+        # when clicking column headers
+        treeview.set_rubber_banding(False)
+
     return cols
 
 
