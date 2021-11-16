@@ -107,26 +107,29 @@ class NicotineFrame(UserInterface):
 
         super().__init__("ui/mainwindow.ui")
 
-        """ Logging """
-
-        self.log_textview = TextView(self.LogWindow)
-        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
-
-        self.create_log_context_menu()
-
         if Gtk.get_major_version() == 4:
+            self.header_menu.set_icon_name("open-menu-symbolic")
+
             self.MainPaned.set_resize_start_child(True)
             self.NotebooksPane.set_resize_start_child(True)
             self.NotebooksPane.set_shrink_start_child(False)
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
+            self.header_menu.set_image(self.header_menu_icon)
+
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
             self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
             self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
             self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
 
+        """ Logging """
+
+        self.log_textview = TextView(self.LogWindow)
+        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+
+        self.create_log_context_menu()
         log.add_listener(self.log_callback)
 
         """ Configuration """
@@ -857,7 +860,12 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_about)
         self.application.add_action(action)
 
-        # Wishlist
+        # Search
+
+        self.search_mode_action = Gio.SimpleAction.new_stateful(
+            "searchmode", GLib.VariantType.new("s"), GLib.Variant.new_string("global"))
+        self.search_mode_action.connect("change-state", self.search.on_search_mode)
+        self.MainWindow.add_action(self.search_mode_action)
 
         action = Gio.SimpleAction.new("wishlist", None)
         action.connect("activate", self.search.wish_list.show)
@@ -1061,7 +1069,7 @@ class NicotineFrame(UserInterface):
     def set_up_menu(self):
 
         menu = self.create_menu_bar()
-        self.application.set_menubar(menu)
+        self.application.set_menubar(menu.model)
 
         self.hamburger_menu = self.create_hamburger_menu()
 
@@ -1075,46 +1083,35 @@ class NicotineFrame(UserInterface):
     """ Headerbar/toolbar """
 
     def set_header_bar(self, page_id):
-
         """ Set a 'normal' headerbar for the main window (client side decorations
         enabled) """
 
-        self.MainWindow.set_show_menubar(False)
-        self.header_menu.show()
-
-        self.application.set_accels_for_action("app.menu", ["F10"])
-
-        menu_parent = self.header_menu.get_parent()
-        if menu_parent is not None:
-            menu_parent.remove(self.header_menu)
+        if not self.MainWindow.get_titlebar():
+            self.header_menu.set_menu_model(self.hamburger_menu.model)
+            self.application.set_accels_for_action("app.menu", ["F10"])
+            self.MainWindow.set_show_menubar(False)
 
         header_bar = getattr(self, "header_" + page_id)
-        end_widget = getattr(self, page_id + "_end")
-        end_widget.add(self.header_menu)
 
         if Gtk.get_major_version() == 4:
-            self.header_menu.set_icon_name("open-menu-symbolic")
-
             header_bar.set_show_title_buttons(True)
-
         else:
-            self.header_menu.set_image(self.header_menu_icon)
-
             # Avoid "Untitled window" in certain desktop environments
             header_bar.set_title(self.MainWindow.get_title())
 
             header_bar.set_has_subtitle(False)
             header_bar.set_show_close_button(True)
 
+        # Move menu button to current header bar
+        end_widget = getattr(self, page_id + "_end")
+
         header_bar.remove(end_widget)
         header_bar.pack_end(end_widget)
+        end_widget.add(self.header_menu)
 
-        # Set menu model after moving menu button to avoid GTK warnings in old GTK versions
-        self.header_menu.set_menu_model(self.hamburger_menu)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
-
         """ Move the headerbar widgets to a GtkBox "toolbar", and show the regular
         title bar (client side decorations disabled) """
 
@@ -1131,14 +1128,6 @@ class NicotineFrame(UserInterface):
         title_widget = getattr(self, page_id + "_title")
         title_widget.set_hexpand(True)
 
-        try:
-            start_widget = getattr(self, page_id + "_start")
-            header_bar.remove(start_widget)
-
-        except AttributeError:
-            # No start widget
-            start_widget = None
-
         end_widget = getattr(self, page_id + "_end")
         header_bar.remove(end_widget)
 
@@ -1147,30 +1136,30 @@ class NicotineFrame(UserInterface):
         else:
             header_bar.set_custom_title(None)
 
-        if start_widget:
-            toolbar_contents.add(start_widget)
-
         toolbar_contents.add(title_widget)
         toolbar_contents.add(end_widget)
 
         toolbar.show()
 
-    def remove_header_bar(self):
-
+    def remove_header_bar(self, enable_ssd=True):
         """ Remove the current CSD headerbar, and show the regular titlebar """
 
-        self.header_menu.set_menu_model(None)
-        self.header_menu.hide()
+        parent = self.header_menu.get_parent()
+        if parent is not None:
+            parent.remove(self.header_menu)
+
+        if not enable_ssd:
+            return
 
         # Don't override builtin accelerator for menu bar
         self.application.set_accels_for_action("app.menu", [])
+        self.header_menu.set_menu_model(None)
 
         self.MainWindow.unrealize()
         self.MainWindow.set_titlebar(None)
         self.MainWindow.map()
 
     def remove_toolbar(self):
-
         """ Move the GtkBox toolbar widgets back to the headerbar, and hide
         the toolbar """
 
@@ -1198,13 +1187,12 @@ class NicotineFrame(UserInterface):
         toolbar.hide()
 
     def set_active_header_bar(self, page_id):
-
         """ Switch out the active headerbar for another one. This is used when
         changing the active notebook tab. """
 
         if config.sections["ui"]["header_bar"] and sys.platform != "darwin":
+            self.remove_header_bar(enable_ssd=False)
             self.set_header_bar(page_id)
-
         else:
             self.remove_toolbar()
             self.set_toolbar(page_id)
@@ -1554,28 +1542,6 @@ class NicotineFrame(UserInterface):
 
     def on_settings_searches(self, *args):
         self.on_settings(page='Searches')
-
-    def on_search_method(self, *args):
-
-        act = False
-        search_mode = self.SearchMethod.get_active_id()
-
-        if search_mode == "user":
-            self.UserSearchCombo.show()
-            act = True
-        else:
-            self.UserSearchCombo.hide()
-
-        self.UserSearchCombo.set_sensitive(act)
-
-        act = False
-        if search_mode == "rooms":
-            act = True
-            self.RoomSearchCombo.show()
-        else:
-            self.RoomSearchCombo.hide()
-
-        self.RoomSearchCombo.set_sensitive(act)
 
     def on_search(self, *args):
         self.search.on_search()

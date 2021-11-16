@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-14 00:02+0200\n"
-"PO-Revision-Date: 2021-11-13 16:57+0000\n"
+"PO-Revision-Date: 2021-11-14 14:08+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -4312,9 +4312,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:484
 #: pynicotine/gtkgui/ui/mainwindow.ui:741
-#, fuzzy
 msgid "Configure chats"
-msgstr "Shares configureren"
+msgstr "Chats configureren"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:518
 msgid "Enter the username of the person whose information you want to see"
@@ -5098,34 +5097,28 @@ msgid "Minimum characters required to display drop-down:"
 msgstr "Minimum aantal karakters vereist alvorens drop-down lijst te tonen:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:236
-#, fuzzy
 msgid "Allowed chat completions:"
-msgstr "Toegestane voltooiingen"
+msgstr "Toegestane chat voltooiingen:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:256
-#, fuzzy
 msgid "Buddy names"
-msgstr "Vriendenlijst"
+msgstr "Vrienden namen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:268
-#, fuzzy
 msgid "Chat room usernames"
-msgstr "Chatkamerbericht:"
+msgstr "Chatkamer gebruikersnamen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:281
-#, fuzzy
 msgid "Room names"
-msgstr "Kamers"
+msgstr "Kamernamen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:294
-#, fuzzy
 msgid "Built-in commands"
-msgstr "Voltooi ingebouwde opdrachten"
+msgstr "Ingebouwde commando's"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Command aliases"
-msgstr "Opdrachtaliassen voltooien"
+msgstr "Commando aliassen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:330
 msgid "Timestamps"
@@ -5375,9 +5368,8 @@ msgid "Log debug messages to file"
 msgstr "Log debug-berichten in een bestand"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:64
-#, fuzzy
 msgid "Log file timestamp format:"
-msgstr "Formaat van Logbestand:"
+msgstr "Tijdstempel formaat logbestand:"
 
 #: pynicotine/gtkgui/ui/settings/log.ui:128
 msgid "Folder Locations"
@@ -5815,14 +5807,12 @@ msgid "Minimize to tray on startup"
 msgstr "Minimaliseren naar lade bij opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:62
-#, fuzzy
 msgid "Remember previous primary tab on startup"
-msgstr "Bekijk vorig primair tabblad bij opstarten"
+msgstr "Onthoud vorige primaire tab bij opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-#, fuzzy
 msgid "Start with Search Files by default."
-msgstr "Zoekresultaatfilters standaard inschakelen"
+msgstr "Begin standaard met Bestanden zoeken."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
@@ -5861,34 +5851,28 @@ msgid "Show notification for private chats and mentions in the window title"
 msgstr "Toon melding voor privéchat en vermeldingen in venstertitel"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:328
-#, fuzzy
 msgid "Show notification popups for:"
-msgstr "Meldingspictogrammen op tabbladen weergeven"
+msgstr "Toon notificatie pop-ups voor:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:348
-#, fuzzy
 msgid "Finished file downloads"
-msgstr "Bestand gedownload"
+msgstr "Voltooide bestandsdownloads"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:360
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "Map gedownload"
+msgstr "Voltooide mapdownloads"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:372
-#, fuzzy
 msgid "Private messages"
-msgstr "Privébericht van %s"
+msgstr "Privéberichten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:384
-#, fuzzy
 msgid "Chat room messages"
 msgstr "Chatkamerbericht:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:396
-#, fuzzy
 msgid "Chat room mentions"
-msgstr "Chat Voltooien"
+msgstr "Chatroom vermeldingen"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:423
 msgid "Secondary Tabs"
