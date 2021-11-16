@@ -231,14 +231,30 @@ def option_dialog(parent, title, message, callback, callback_data=None,
 
     self.present_with_time(Gdk.CURRENT_TIME)
 
+    """ Custom Dialog (to replace option_dialog) """
 
-def custom_dialog(parent, title, message, callback, callback_data=None, selectable=False, default=0,
-                  zero="", one="", two="", three="", four="", five="", checkbox=""):
+def custom_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", checkbox_value=False,
+                  id_0="", id_1="", id_2="", id_3="", id_4="", id_5="", id_6="", id_9="", default_button=1,
+                  selectable=True, cancel=True, third=""):
+
+    if id_0 or id_1:
+        # Use Custom Buttons (0, 1, 2, 3...)
+        buttons=Gtk.ButtonsType.NONE
+        icon=Gtk.MessageType.QUESTION
+
+    elif cancel and (id_0 == id_1 == ""):
+        # Standard option_dialog
+        buttons = Gtk.ButtonsType.OK_CANCEL
+        icon=Gtk.MessageType.QUESTION
+    else:
+        # Simple message_dialog
+        buttons = Gtk.ButtonsType.OK
+        type=Gtk.MessageType.INFO
 
     self = Gtk.MessageDialog(
         transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,  # INFO; WARNING; QUESTION; ERROR; OTHER
-        buttons=Gtk.ButtonsType.NONE,
+        message_type=icon,  # INFO; WARNING; QUESTION; ERROR; OTHER
+        buttons=buttons,
         text=title,
         secondary_text=message or ""
     )
@@ -253,29 +269,39 @@ def custom_dialog(parent, title, message, callback, callback_data=None, selectab
 
     label.set_selectable(selectable)
 
-    if checkbox:
+    # Checkbox Option
+    if checkbox_label:
         self.checkbox = Gtk.CheckButton()
-        self.checkbox.set_label(checkbox)
+        self.checkbox.set_label(checkbox_label)
+        self.checkbox.set_active(checkbox_value)
 
         self.get_message_area().add(self.checkbox)
         self.checkbox.show()
     else:
-        self.checkbox = None
+        self.checkbox = None  # option can be hidden
 
-    # Buttons
-    if zero:
-        self.add_button(zero, 0)
-    if one:
-        self.add_button(one, 1)
-    if two:
-        self.add_button(two, 2)
-    if three:
-        self.add_button(three, 3)
-    if four:
-        self.add_button(four, 4)
-    if five:
-        self.add_button(five, 5)
+    # Custom Buttons (label, response_id)
+    if id_0:
+        self.add_button(id_0, 0)
+    if id_1:
+        self.add_button(id_1, 1)
 
-    self.set_default_response(default)
+    if third:  # backwards compatable with option_dialog
+        self.add_button(third, Gtk.ResponseType.REJECT)
+
+    if id_2:
+        self.add_button(id_2, 2)
+    if id_3:
+        self.add_button(id_3, 3)
+    if id_4:
+        self.add_button(id_4, 4)
+    if id_5:
+        self.add_button(id_5, 5)
+    if id_6:
+        self.add_button(id_6, 6)
+    if id_9:
+        self.add_button(id_9, 9)
+
+    self.set_default_response(default_button)
 
     self.present_with_time(Gdk.CURRENT_TIME)
