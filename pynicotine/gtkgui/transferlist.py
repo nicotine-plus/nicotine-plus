@@ -182,7 +182,7 @@ class TransferList(UserInterface):
 
         self.popup_menu_users = PopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
-        self.ClearTransfers.set_menu_model(self.popup_menu_clear)
+        self.ClearTransfers.set_menu_model(self.popup_menu_clear.model)
 
         self.popup_menu_copy = PopupMenu(frame)
         self.popup_menu_copy.setup(
@@ -478,10 +478,6 @@ class TransferList(UserInterface):
 
         # Modify old transfer
         if initer is not None:
-            if not self.transfersmodel.iter_is_valid(initer):
-                # Row has already been removed at some point
-                return
-
             translated_status = self.translate_status(status)
 
             if self.transfersmodel.get_value(initer, 3) != translated_status:

@@ -148,6 +148,7 @@ class NicotineCore:
         self.servertimer = None
         self.upnp_timer = None
         self.server_timeout_value = -1
+        self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
         self.requested_info_times = {}
         self.requested_share_times = {}
@@ -1729,7 +1730,8 @@ class NicotineCore:
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
-            self.privatechats.send_automatic_message(user, reason)
+            message = self.ban_message % reason
+            self.privatechats.send_automatic_message(user, message)
 
         shares_list = None
 
@@ -1768,6 +1770,7 @@ class NicotineCore:
         user = msg.conn.init.target_user
         login_user = config.sections["server"]["login"]
         conn = msg.conn.conn
+        addr = msg.conn.addr
         request_time = time.time()
 
         if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
@@ -1780,9 +1783,13 @@ class NicotineCore:
         if login_user != user:
             log.add(_("User %(user)s is reading your user info"), {'user': user})
 
-        if self.network_filter.is_user_banned(user):
+        status, reason = self.network_filter.check_user(user, addr[0])
+
+        if not status:
             pic = None
-            descr = "You are banned from downloading my shared files."
+            descr = self.ban_message % reason
+            descr += "\n\n--------------------------------------------------------\n\n"
+            descr += unescape(config.sections["userinfo"]["descr"])
 
         else:
             try:
@@ -1841,7 +1848,8 @@ class NicotineCore:
         checkuser, reason = self.network_filter.check_user(username, ip_address)
 
         if not checkuser:
-            self.privatechats.send_automatic_message(username, reason)
+            message = self.ban_message % reason
+            self.privatechats.send_automatic_message(username, message)
 
         normalshares = self.shares.share_dbs.get("streams")
         buddyshares = self.shares.share_dbs.get("buddystreams")

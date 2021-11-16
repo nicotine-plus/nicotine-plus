@@ -33,7 +33,6 @@ from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
 
-from pynicotine import slskproto
 from pynicotine.config import config
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.downloads import Downloads
@@ -847,7 +846,12 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_about)
         self.application.add_action(action)
 
-        # Wishlist
+        # Search
+
+        self.search_mode_action = Gio.SimpleAction.new_stateful(
+            "searchmode", GLib.VariantType.new("s"), GLib.Variant.new_string("global"))
+        self.search_mode_action.connect("change-state", self.search.on_search_mode)
+        self.MainWindow.add_action(self.search_mode_action)
 
         action = Gio.SimpleAction.new("wishlist", None)
         action.connect("activate", self.search.wish_list.show)
@@ -1050,7 +1054,7 @@ class NicotineFrame(UserInterface):
     def set_up_menu(self):
 
         menu = self.create_menu_bar()
-        self.application.set_menubar(menu)
+        self.application.set_menubar(menu.model)
 
         self.hamburger_menu = self.create_hamburger_menu()
 
@@ -1099,7 +1103,7 @@ class NicotineFrame(UserInterface):
         header_bar.pack_end(end_widget)
 
         # Set menu model after moving menu button to avoid GTK warnings in old GTK versions
-        self.header_menu.set_menu_model(self.hamburger_menu)
+        self.header_menu.set_menu_model(self.hamburger_menu.model)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
@@ -1544,28 +1548,6 @@ class NicotineFrame(UserInterface):
     def on_settings_searches(self, *args):
         self.on_settings(page='Searches')
 
-    def on_search_method(self, *args):
-
-        act = False
-        search_mode = self.SearchMethod.get_active_id()
-
-        if search_mode == "user":
-            self.UserSearchCombo.show()
-            act = True
-        else:
-            self.UserSearchCombo.hide()
-
-        self.UserSearchCombo.set_sensitive(act)
-
-        act = False
-        if search_mode == "rooms":
-            act = True
-            self.RoomSearchCombo.show()
-        else:
-            self.RoomSearchCombo.hide()
-
-        self.RoomSearchCombo.set_sensitive(act)
-
     def on_search(self, *args):
         self.search.on_search()
         self.SearchEntry.set_text("")
@@ -1882,7 +1864,7 @@ class NicotineFrame(UserInterface):
         self.UserStatus.set_text(status)
 
     def set_socket_status(self, status):
-        self.SocketStatus.set_text("%(current)s/%(limit)s" % {'current': status, 'limit': slskproto.MAXSOCKETS})
+        self.SocketStatus.set_text(str(status))
 
     def show_scan_progress(self):
 

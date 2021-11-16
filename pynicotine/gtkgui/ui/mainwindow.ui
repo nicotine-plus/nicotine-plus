@@ -18,18 +18,9 @@
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
-          <object class="GtkComboBoxText" id="SearchMethod">
+          <object class="GtkMenuButton" id="SearchMode">
             <property name="visible">1</property>
-            <property name="height-request">0</property>
             <property name="tooltip-text" translatable="yes">Search scope</property>
-            <signal name="changed" handler="on_search_method" swapped="no"/>
-            <items>
-              <item translatable="yes" id="global">Global</item>
-              <item translatable="yes" id="buddies">Buddies</item>
-              <item translatable="yes" id="rooms">Rooms</item>
-              <item translatable="yes" id="user">User</item>
-            </items>
-            <property name="active-id">global</property>
           </object>
         </child>
         <child>
@@ -131,6 +122,9 @@
                 </child>
               </object>
             </child>
+            <style>
+              <class name="image-text-button"/>
+            </style>
           </object>
         </child>
         <child>
@@ -680,6 +674,22 @@
       <object class="GtkBox" id="userlist_end">
         <property name="visible">1</property>
         <property name="valign">center</property>
+      </object>
+    </child>
+  </object>
+  <object class="GtkBox" id="SearchModeLabelBox">
+    <property name="visible">1</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkLabel" id="SearchModeLabel">
+        <property name="visible">1</property>
+        <property name="use-underline">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">1</property>
+        <property name="icon-name">pan-down-symbolic</property>
       </object>
     </child>
   </object>
@@ -1663,7 +1673,7 @@
                         <child>
                           <object class="GtkLabel" id="SocketStatus">
                             <property name="visible">1</property>
-                            <property name="label">0/0</property>
+                            <property name="label">0</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
                             </attributes>

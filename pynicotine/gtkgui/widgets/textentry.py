@@ -317,33 +317,24 @@ class ChatEntry:
 
         elif cmd in ("/s", "/search"):
             if args:
-                self.frame.SearchMethod.set_active(0)
-                self.frame.SearchEntry.set_text(args)
-                self.frame.on_search(self.frame.SearchEntry)
+                self.frame.np.search.do_search(args, "global")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
-                self.frame.SearchMethod.set_active(3)
-                self.frame.SearchEntry.set_text(args_split[1])
-                self.frame.UserSearchEntry.set_text(args_split[0])
-                self.frame.on_search(self.frame.SearchEntry)
+                self.frame.np.search.do_search(args_split[1], "user", user=args_split[0])
                 self.frame.change_main_page("search")
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
-                self.frame.SearchMethod.set_active(2)
-                self.frame.SearchEntry.set_text(args)
-                self.frame.on_search(self.frame.SearchEntry)
+                self.frame.np.search.do_search(args, "rooms")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
-                self.frame.SearchMethod.set_active(1)
-                self.frame.SearchEntry.set_text(args)
-                self.frame.on_search(self.frame.SearchEntry)
+                self.frame.np.search.do_search(args, "buddies")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/j", "/join"):
