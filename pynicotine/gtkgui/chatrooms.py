@@ -1101,7 +1101,7 @@ class ChatRoom(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             delete_log(config.sections["logging"]["roomlogsdir"], self.room)
             self.log_textview.clear()
             self.chat_textview.clear()

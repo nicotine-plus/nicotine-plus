@@ -194,17 +194,12 @@ def message_dialog(parent, title, message, callback=None):
 
 
 def option_dialog(parent, title, message, callback, callback_data=None,
-                  checkbox_label="", cancel=True, third=""):
-
-    if cancel:
-        buttons = Gtk.ButtonsType.OK_CANCEL
-    else:
-        buttons = Gtk.ButtonsType.OK
+                  checkbox_label="", default_buttons=Gtk.ButtonsType.YES_NO, third=""):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
         message_type=Gtk.MessageType.QUESTION,
-        buttons=buttons,
+        buttons=default_buttons,
         text=title,
         secondary_text=message
     )
@@ -227,6 +222,6 @@ def option_dialog(parent, title, message, callback, callback_data=None,
         self.checkbox.show()
 
     if third:
-        self.add_button(third, Gtk.ResponseType.REJECT)
+        self.add_button(third, 0)
 
     self.present_with_time(Gdk.CURRENT_TIME)

@@ -305,7 +305,7 @@ class PrivateChat(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.chat_textview.clear()
 

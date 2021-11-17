@@ -381,7 +381,7 @@ class NicotineFrame(UserInterface):
 
     def invalid_password_response(self, dialog, response_id, data):
 
-        if response_id == Gtk.ResponseType.REJECT:
+        if response_id == 0:
             self.on_settings(page='Network')
 
         dialog.destroy()
@@ -397,7 +397,7 @@ class NicotineFrame(UserInterface):
             title=title,
             message=msg,
             third=_("Change Login Details"),
-            cancel=False,
+            default_buttons=Gtk.ButtonsType.CANCEL,
             callback=self.invalid_password_response
         )
 
@@ -1604,7 +1604,7 @@ class NicotineFrame(UserInterface):
         private = dialog.checkbox.get_active()
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             # Create a new room
             self.np.chatrooms.request_join_room(room, private)
 
@@ -1935,7 +1935,7 @@ class NicotineFrame(UserInterface):
 
         loop, error = data
 
-        if response_id == Gtk.ResponseType.REJECT:
+        if response_id == 0:
             copy_text(error)
             self.on_report_bug()
             return
@@ -1988,7 +1988,7 @@ class NicotineFrame(UserInterface):
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:") + error,
             third=_("Copy & Report Bug"),
-            cancel=False,
+            default_buttons=Gtk.ButtonsType.OK,
             callback=self.on_critical_error_response,
             callback_data=(loop, error)
         )
@@ -2012,13 +2012,13 @@ class NicotineFrame(UserInterface):
         checkbox = dialog.checkbox.get_active()
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 0
 
             self.np.quit()
 
-        elif response_id == Gtk.ResponseType.REJECT:
+        elif response_id == 0:
             if checkbox:
                 config.sections["ui"]["exitdialog"] = 2
 
