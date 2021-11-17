@@ -973,11 +973,11 @@ class NicotineFrame(UserInterface):
 
     def add_quit_item(self, menu):
 
-        dialog = "…" if config.sections["ui"]["exitdialog"] else ""
+        ellipsis = "…" if config.sections["ui"]["exitdialog"] else ""
 
         menu.setup(
             ("", None),
-            ("#" + _("_Quit") + dialog, "app.quit")
+            ("#" + _("_Quit") + ellipsis, "app.quit")
         )
 
     def create_file_menu(self):
@@ -2042,44 +2042,50 @@ class NicotineFrame(UserInterface):
         checkbox = dialog.checkbox.get_active() if dialog.checkbox else None
         dialog.destroy()
 
-        # 'Remember choice'
-        if response_id >= 0 <= 3 and checkbox is True:
+        if checkbox is True and response_id >= 0 <= 5:
+            # 'Remember choice'
             config.sections["ui"]["exitdialog"] = response_id
 
-        # 'Quit'
         if response_id == 0:
+            # 'Quit'
             self.np.quit()
 
-        # 'Run in Background'
-        elif response_id == 2 or response_id == 3:
-            self.hide(load_tray=True if response_id == 3 else False)
+        elif response_id == 2:
+            # 'Run in Background'
+            self.hide()
 
-        # 'Disable Tray Icon'
-        elif response_id == 5:
-            self.disable_tray_icon()
+        elif response_id == 9:
+            # 'Disable Tray Icon'
+            self.tray_icon.disable()
 
-    def exit_dialog(self, remember=False, tray_quit=False):
+    def exit_dialog(self, remember=None, tray_quit=None):
 
-        tray_possible = True if sys.platform != "darwin" and Gtk.get_major_version() != 4 else False
         tray_visible = self.tray_icon.is_visible()
-        tray_enabled = True if config.sections["ui"]["trayicon"] else False
-        foreground = self.MainWindow.get_property("visible")
-
-        log.add_debug("    P:" + str(tray_possible)
-                      + "  V:" + str(tray_visible)  # Bug: is_visible() isn't always correct on first load
-                      + "  E:" + str(tray_enabled)
-                      + "  F:" + str(foreground))
+        tray_possible = True if sys.platform != "darwin" and Gtk.get_major_version() != 4 else False
+        help_text = _("(in the User Interface section of the Preferences)")
 
         custom_dialog(
             parent=self.MainWindow,
             title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
+
             id_0=_("_Quit"),
+            tip_0=_("Shortcut: Ctrl+Alt+Q (force Quit without confirmation dialog)") if not tray_quit else "",
+
             id_1=_("_No"),
-            id_2=_("Run in _Background") if foreground else "",  # not (tray_visible or tray_enabled) and
-            # id_3=_("Run in _Background") if tray_visible and tray_enabled and tray_possible and foreground else "",
-            id_5=_("_Disable Tray Icon") if not remember and tray_quit else "",
-            checkbox_label=_("Remember choice") if remember else "",
+
+            id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
+            tip_2=(_("Minimize to system tray") if tray_visible
+                   else _("Caution, the tray icon is not currently enabled") + "\n"
+                        + (help_text if tray_possible else "")),
+
+            id_9=_("_Disable Tray Icon") if tray_quit else "",
+            tip_9=_("This will change the current tray icon setting") + "\n" + help_text,
+
+            checkbox_label=_("Remember choice") if not tray_quit and remember else "",
+            checkbox_tip=(_("This setting can be changed later") + " " + help_text + ".\n"
+                          + _("Shortcut: Shift+Ctrl+Q (show Quit confirmation dialog)")),
+
             selectable=False,
             callback=self.on_exit_dialog_response
         )
@@ -2093,8 +2099,8 @@ class NicotineFrame(UserInterface):
         remembered = config.sections["ui"]["exitdialog"]
 
         if remembered >= 2:
-            # 2='Run in Background' or 3='Minimize to Tray'
-            self.hide(load_tray=True if remembered == 3 else False)
+            # 2='Run in Background'
+            self.hide()
             return True
 
         return self.on_quit(remember=True)
@@ -2109,7 +2115,7 @@ class NicotineFrame(UserInterface):
         # 1='Show confirmation dialog'
         return self.exit_dialog(remember=remember)
 
-    def hide(self, load_tray=False):
+    def hide(self):
 
         if not self.MainWindow.get_property("visible"):
             return
@@ -2117,30 +2123,14 @@ class NicotineFrame(UserInterface):
         # Save window state, incase application is killed later
         self.save_window_state()
 
-        # Try to avoid zombie window if possible, 'Minimize to system tray' (3)
-        if load_tray or (config.sections["ui"]["trayicon"] and not self.tray_icon.is_visible()):
-            self.tray_icon.load(use_trayicon=True)
-            self.tray_icon.show()
-        else:
-            log.add(_("Nicotine+ is running in the background") + " (tray=" + str(self.tray_icon.is_visible()) + ")")
+        if not self.tray_icon.is_visible():
+            log.add(_("Nicotine+ is running in the background"))
 
         # Run in Background
         self.MainWindow.hide()
 
         # Save config, incase application is killed later
         config.write_configuration()
-
-    def disable_tray_icon(self):
-
-        config.sections["ui"]["trayicon"] = False
-        config.sections["ui"]["startup_hidden"] = False
-
-        if config.sections["ui"]["exitdialog"] >= 2:
-            # Don't wipeout 0='Quit program' setting
-            config.sections["ui"]["exitdialog"] = 1
-
-        self.MainWindow.show()  # avoid zombie
-        self.tray_icon.hide()
 
     def quit(self):
 
@@ -2209,10 +2199,6 @@ class Application(Gtk.Application):
                 self.ci_mode
             )
             return
-
-        self.show()
-
-    def show(self):
 
         # Show the window of the running Nicotine+ instance
         window = self.get_active_window()
