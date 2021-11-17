@@ -317,8 +317,10 @@ class Search(UserInterface):
         self.filters = None
         self.clearing_filters = False
         self.active_filter_count = 0
-        self.numtotalresults = 0
-        self.numvisibleresults = 0
+        self.num_results_found = 0
+        self.num_results_visible = 0
+        self.max_limit = config.sections["searches"]["max_displayed_results"]
+        self.max_limited = False
 
         self.operators = {
             '<': operator.lt,
@@ -549,13 +551,8 @@ class Search(UserInterface):
         privately shared files. """
 
         update_ui = False
-        self.numtotalresults += len(result_list)
-        max_results = config.sections["searches"]["max_displayed_results"]
 
         for result in result_list:
-            if counter > max_results:
-                break
-
             fullpath = result[1]
             fullpath_lower = fullpath.lower()
 
@@ -628,6 +625,14 @@ class Search(UserInterface):
                 update_ui = True
 
             counter += 1
+
+            if counter > self.max_limit:
+                self.max_limited = True
+                break
+
+            self.num_results_found += 1
+
+            # continue
 
         return update_ui, counter
 
@@ -784,7 +789,7 @@ class Search(UserInterface):
 
             iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
-            self.numvisibleresults += 1
+            self.num_results_visible += 1
 
         except Exception as e:
             types = []
@@ -939,7 +944,7 @@ class Search(UserInterface):
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
-        self.numvisibleresults = 0
+        self.num_results_visible = 0
 
         for row in self.all_data:
             if self.check_filter(row):
@@ -1139,21 +1144,18 @@ class Search(UserInterface):
 
     def update_result_counter(self):
 
-        max_results = config.sections["searches"]["max_displayed_results"]
-
-        if self.numtotalresults > self.numvisibleresults:
-            # Append plus symbol "+" if Result Filter is active and/or reached 'Maximum per search'
+        if self.max_limited or self.num_results_found > self.num_results_visible:
+            # Append plus symbol "+" if Results are Filtered and/or reached 'Maximum per search'
             str_plus = "+"
 
-            # Display the tooltip for total, but only if we know the exact number of total results
+            # Display total results on the tooltip, but only if we know the exact number of results
             str_total = (_("Total: %s") %
-                (self.numtotalresults if not self.numtotalresults > max_results else \
-                 "> " + str(max_results) + "+"))
+                         (self.num_results_found if not self.max_limited else "> " + str(self.max_limit) + "+"))
 
         else:  # Hide the tooltip if there are no hidden results
             str_plus = str_total = ""
 
-        self.Counter.set_text(str(self.numvisibleresults) + (str_plus))
+        self.Counter.set_text(str(self.num_results_visible) + (str_plus))
         self.Counter.set_tooltip_text(str_total)
 
     def update_visuals(self):
@@ -1328,7 +1330,7 @@ class Search(UserInterface):
     def on_search_settings(self, *args):
         # Result CounterButton clicked
 
-        if self.active_filter_count >= 1 and (self.numtotalresults > self.numvisibleresults):
+        if self.active_filter_count >= 1 and (self.num_results_found > self.num_results_visible):
             self.on_clear_filters()
         else:
             self.frame.on_settings(page='Searches')
@@ -1438,13 +1440,15 @@ class Search(UserInterface):
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
-        self.numtotalresults = 0
-        self.numvisibleresults = 0
+        self.num_results_found = 0
+        self.num_results_visible = 0
+        self.max_limited = False
+        self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         # Allow parsing search result messages again
         self.frame.np.search.add_allowed_search_id(self.id)
 
-        # Update number of visible results
+        # Update number of results widget
         self.update_result_counter()
 
     def on_close(self, *args):
