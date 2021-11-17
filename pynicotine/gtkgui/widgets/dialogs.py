@@ -231,26 +231,27 @@ def option_dialog(parent, title, message, callback, callback_data=None,
 
     self.present_with_time(Gdk.CURRENT_TIME)
 
-    """ Custom Dialog (direct replacement for option_dialog and message_dialog. ToDo: entry_dialog integration) """
 
 def custom_dialog(parent, title, message, callback, callback_data=None, cancel=True, selectable=True, third="",
                   id_0="", id_1="", id_2="", id_3="", id_4="", id_5="", id_6="", id_9="", default_button=1,
                   tip_0="", tip_1="", tip_2="", tip_3="", tip_4="", tip_5="", tip_6="", tip_9="",
                   checkbox_label="", checkbox_tip="", checkbox_value=False):
 
+    """ Custom Dialog (direct replacement for option_dialog and message_dialog. ToDo: entry_dialog integration) """
+
     if id_0 or id_1:
         # Use Custom Buttons (0, 1... 6, 9)
-        buttons=Gtk.ButtonsType.NONE
-        icon=Gtk.MessageType.QUESTION
+        buttons = Gtk.ButtonsType.NONE
+        icon = Gtk.MessageType.QUESTION
 
     elif cancel and (id_0 == id_1 == ""):
         # Standard option_dialog
         buttons = Gtk.ButtonsType.OK_CANCEL
-        icon=Gtk.MessageType.QUESTION
+        icon = Gtk.MessageType.QUESTION
     else:
         # Simple message_dialog
         buttons = Gtk.ButtonsType.OK
-        type=Gtk.MessageType.INFO
+        icon = Gtk.MessageType.INFO
 
     self = Gtk.MessageDialog(
         transient_for=parent,
