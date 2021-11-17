@@ -108,17 +108,13 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit…"), self.frame.on_tray_quit)  # always prompt, without remember checkbox
+        self.create_item(_("Quit…"), self.frame.on_tray_quit)  # always prompt
 
     def on_hide_unhide_window(self, *args):
 
         if self.frame.MainWindow.get_property("visible"):
             self.frame.MainWindow.hide()
             return
-
-        if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
-            # Tray icon was shown using Minimize to Tray in the Close Nicotine+ dialog
-            self.frame.tray_icon.hide()
 
         self.show_window()
 
@@ -486,6 +482,22 @@ class TrayIcon:
             # Temporarily disable handler, we only want to change the visual checkbox appearance
             self.alt_speed_item.set_active(enable)
 
+    def disable(self):
+
+        config.sections["ui"]["trayicon"] = False
+        config.sections["ui"]["startup_hidden"] = False
+
+        if config.sections["ui"]["exitdialog"] >= 2:
+            # Don't wipeout 0='Quit program' setting
+            config.sections["ui"]["exitdialog"] = 1
+
+        if not self.frame.MainWindow.get_property("visible"):
+            self.show_window()  # avoid zombie
+
+        self.hide()
+
     def show_window(self):
         self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-        self.frame.MainWindow.deiconify()
+
+        if Gtk.get_major_version() == 3:
+            self.frame.MainWindow.deiconify()
