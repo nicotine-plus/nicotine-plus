@@ -260,10 +260,6 @@ class NicotineFrame(UserInterface):
     def on_window_visible_changed(self, window, param):
         self.tray_icon.update_show_hide_label()
 
-        if not config.sections["ui"]["trayicon"] and self.tray_icon.is_visible():
-            # Was Minimized to system tray via exit_dialog
-            self.tray_icon.hide()
-
     def save_window_state(self):
 
         if Gtk.get_major_version() == 4:
@@ -2075,9 +2071,8 @@ class NicotineFrame(UserInterface):
             id_1=_("_No"),
 
             id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
-            tip_2=(_("Minimize to system tray") if tray_visible
-                   else _("Caution, the tray icon is not currently enabled") + "\n"
-                        + (help_text if tray_possible else "")),
+            tip_2=(_("Minimize to system tray") if tray_visible else _("Caution, the tray icon is not enabled") + "\n"
+                   + (help_text if tray_possible else "")),
 
             id_9=_("_Disable Tray Icon") if tray_quit else "",
             tip_9=_("This will change the current tray icon setting") + "\n" + help_text,
