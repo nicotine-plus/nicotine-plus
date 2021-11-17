@@ -231,14 +231,15 @@ def option_dialog(parent, title, message, callback, callback_data=None,
 
     self.present_with_time(Gdk.CURRENT_TIME)
 
-    """ Custom Dialog (to replace option_dialog) """
+    """ Custom Dialog (direct replacement for option_dialog and message_dialog. ToDo: entry_dialog integration) """
 
-def custom_dialog(parent, title, message, callback, callback_data=None, checkbox_label="", checkbox_value=False,
+def custom_dialog(parent, title, message, callback, callback_data=None, cancel=True, selectable=True, third="",
                   id_0="", id_1="", id_2="", id_3="", id_4="", id_5="", id_6="", id_9="", default_button=1,
-                  selectable=True, cancel=True, third=""):
+                  tip_0="", tip_1="", tip_2="", tip_3="", tip_4="", tip_5="", tip_6="", tip_9="",
+                  checkbox_label="", checkbox_tip="", checkbox_value=False):
 
     if id_0 or id_1:
-        # Use Custom Buttons (0, 1, 2, 3...)
+        # Use Custom Buttons (0, 1... 6, 9)
         buttons=Gtk.ButtonsType.NONE
         icon=Gtk.MessageType.QUESTION
 
@@ -274,6 +275,7 @@ def custom_dialog(parent, title, message, callback, callback_data=None, checkbox
         self.checkbox = Gtk.CheckButton()
         self.checkbox.set_label(checkbox_label)
         self.checkbox.set_active(checkbox_value)
+        self.checkbox.set_tooltip_text(checkbox_tip)
 
         self.get_message_area().add(self.checkbox)
         self.checkbox.show()
@@ -282,25 +284,33 @@ def custom_dialog(parent, title, message, callback, callback_data=None, checkbox
 
     # Custom Buttons (label, response_id)
     if id_0:
-        self.add_button(id_0, 0)
+        self.button_0 = self.add_button(id_0, 0)
+        self.button_0.set_tooltip_text(tip_0)
     if id_1:
-        self.add_button(id_1, 1)
+        self.button_1 = self.add_button(id_1, 1)
+        self.button_1.set_tooltip_text(tip_1)
 
     if third:  # backwards compatable with option_dialog
         self.add_button(third, Gtk.ResponseType.REJECT)
 
     if id_2:
-        self.add_button(id_2, 2)
+        self.button_2 = self.add_button(id_2, 2)
+        self.button_2.set_tooltip_text(tip_2)
     if id_3:
-        self.add_button(id_3, 3)
+        self.button_3 = self.add_button(id_3, 3)
+        self.button_3.set_tooltip_text(tip_3)
     if id_4:
-        self.add_button(id_4, 4)
+        self.button_4 = self.add_button(id_4, 4)
+        self.button_4.set_tooltip_text(tip_4)
     if id_5:
-        self.add_button(id_5, 5)
+        self.button_5 = self.add_button(id_5, 5)
+        self.button_5.set_tooltip_text(tip_5)
     if id_6:
-        self.add_button(id_6, 6)
+        self.button_6 = self.add_button(id_6, 6)
+        self.button_6.set_tooltip_text(tip_6)
     if id_9:
-        self.add_button(id_9, 9)
+        self.button_9 = self.add_button(id_9, 9)
+        self.button_9.set_tooltip_text(tip_9)
 
     self.set_default_response(default_button)
 
