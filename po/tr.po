@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-14 14:36+0100\n"
-"PO-Revision-Date: 2021-11-14 09:08+0000\n"
+"PO-Revision-Date: 2021-11-15 21:01+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -1921,9 +1921,9 @@ msgid "You've been mentioned in the %(room)s room"
 msgstr "%(room)s odasında sizden bahsedildi"
 
 #: pynicotine/gtkgui/notifications.py:134
-#, fuzzy, python-format
+#, python-format
 msgid "Unable to show notification: %s"
-msgstr "Bildirim açılır penceresi gösterilemiyor: %s"
+msgstr "Bildirim gösterilemiyor: %s"
 
 #: pynicotine/gtkgui/privatechat.py:205 pynicotine/gtkgui/search.py:389
 #: pynicotine/gtkgui/userbrowse.py:205 pynicotine/gtkgui/userinfo.py:202
@@ -3621,9 +3621,9 @@ msgstr ""
 "Hata: %s"
 
 #: pynicotine/slskproto.py:561
-#, fuzzy, python-format
+#, python-format
 msgid "Listening on port: %i"
-msgstr "%i bağlantı noktasında dinleniyor"
+msgstr "Dinlenen bağlantı noktası: %i"
 
 #: pynicotine/transfers.py:999
 #, python-format
@@ -5828,18 +5828,16 @@ msgid "Notifications"
 msgstr "Bildirimler"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:309
-#, fuzzy
 msgid "Enable sound for notifications"
-msgstr "Bildirim açılır pencereleri için sesi etkinleştir"
+msgstr "Bildirimler için sesi etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:315
 msgid "Show notification for private chats and mentions in the window title"
 msgstr "Pencere başlığında özel sohbetler ve bahsetmeler için bildirim göster"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:328
-#, fuzzy
 msgid "Show notifications for:"
-msgstr "Şunlar için bildirim açılır pencerelerini göster:"
+msgstr "Şunlar için bildirimleri göster:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:348
 msgid "Finished file downloads"
