@@ -104,7 +104,7 @@ class Scanner:
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
 
-                self.queue.put((_("%(num)s folders found after rescan, finished"), {"num": len(new_files)}, None))
+                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, None))
 
                 self.create_compressed_shares()
 
@@ -865,7 +865,7 @@ class Shares:
                     if self.ui_callback:
                         self.ui_callback.set_scan_progress(item)
                     else:
-                        log.add(_("Progress: %s"), str(int(item * 100)) + " %")
+                        log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
 
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":
