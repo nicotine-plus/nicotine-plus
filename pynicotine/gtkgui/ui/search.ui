@@ -35,7 +35,7 @@
                 <child>
                   <object class="GtkButton" id="CounterButton">
                     <property name="visible">1</property>
-                    <signal name="clicked" handler="on_search_settings" swapped="no"/>
+                    <signal name="clicked" handler="on_counter_button" swapped="no"/>
                     <child>
                       <object class="GtkLabel" id="Counter">
                         <property name="visible">1</property>
