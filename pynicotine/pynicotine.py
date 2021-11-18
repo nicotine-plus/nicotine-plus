@@ -115,7 +115,6 @@ class NicotineCore:
         self.notifications = None
 
         self.shutdown = False
-        self.manualdisconnect = False
 
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
@@ -137,17 +136,22 @@ class NicotineCore:
 
         self.away = False
         self.logged_in = False
-        self.active_server_conn = None
+        self.user_ip_address = None
+        self.privileges_left = None
+        self.manual_disconnect = False
+
+        self.server_conn = None
+        self.server_address = None
+        self.server_timer = None
+        self.server_timeout_value = -1
+
         self.parent_conn = None
         self.potential_parents = {}
         self.distrib_parent_min_speed = 0
         self.distrib_parent_speed_ratio = 1
         self.max_distrib_children = 10
-        self.ipaddress = None
-        self.privileges_left = None
-        self.servertimer = None
+
         self.upnp_timer = None
-        self.server_timeout_value = -1
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
         self.requested_info_times = {}
@@ -157,7 +161,8 @@ class NicotineCore:
         # Callback handlers for messages
         self.events = {
             slskmessages.ConnectError: self.connect_error,
-            slskmessages.ServerConn: self.server_conn,
+            slskmessages.InitServerConn: self.init_server_conn,
+            slskmessages.InitPeerConn: self.init_peer_conn,
             slskmessages.ConnClose: self.conn_close,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -173,7 +178,6 @@ class NicotineCore:
             slskmessages.CantCreateRoom: self.dummy_message,
             slskmessages.QueuedDownloads: self.dummy_message,
             slskmessages.GetPeerAddress: self.get_peer_address,
-            slskmessages.PeerConn: self.peer_conn,
             slskmessages.UserInfoReply: self.user_info_reply,
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.pierce_fire_wall,
@@ -323,7 +327,7 @@ class NicotineCore:
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
-        self.manualdisconnect = True
+        self.manual_disconnect = True
 
         # Notify plugins
         self.pluginhandler.shutdown_notification()
@@ -333,13 +337,11 @@ class NicotineCore:
             self.pluginhandler.disable_plugin(plugin)
 
         # Shut down networking thread
-        server_conn = self.active_server_conn
-
-        if server_conn:
-            self.closed_connection(server_conn, server_conn.getsockname())
-
+        self.server_disconnect()
         self.protothread.abort()
-        self.stop_timers()
+
+        if self.server_timer is not None:
+            self.server_timer.cancel()
 
         # Save download/upload list to file
         self.transfers.abort_transfers()
@@ -395,17 +397,17 @@ class NicotineCore:
 
         server = config.sections["server"]["server"]
         log.add(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})
-        self.queue.append(slskmessages.ServerConn(None, server))
+        self.queue.append(slskmessages.InitServerConn(None, server))
 
-        if self.servertimer is not None:
-            self.servertimer.cancel()
-            self.servertimer = None
+        if self.server_timer is not None:
+            self.server_timer.cancel()
+            self.server_timer = None
 
         return True
 
     def disconnect(self):
-        self.manualdisconnect = True
-        self.queue.append(slskmessages.ConnClose(self.active_server_conn))
+        self.manual_disconnect = True
+        self.queue.append(slskmessages.ConnClose(self.server_conn))
 
     def network_event(self, msgs):
 
@@ -576,7 +578,7 @@ class NicotineCore:
 
         """ Initiate a connection with a peer directly """
 
-        self.queue.append(slskmessages.PeerConn(None, addr, init))
+        self.queue.append(slskmessages.InitPeerConn(None, addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             'type': message_type,
@@ -776,7 +778,7 @@ class NicotineCore:
     def inc_conn(msg):
         log.add_msg_contents(msg)
 
-    def peer_conn(self, msg):
+    def init_peer_conn(self, msg):
 
         """ Networking thread told us that the connection to the peer was successful.
         If we connected directly to the peer, send a PeerInit message. If we connected
@@ -912,7 +914,7 @@ class NicotineCore:
             }
         )
 
-    def server_conn(self, msg):
+    def init_server_conn(self, msg):
 
         log.add_msg_contents(msg)
 
@@ -923,7 +925,8 @@ class NicotineCore:
             }
         )
 
-        self.active_server_conn = msg.conn
+        self.server_conn = msg.conn
+        self.server_address = msg.addr
         self.server_timeout_value = -1
         self.users.clear()
         self.queue.append(
@@ -946,33 +949,37 @@ class NicotineCore:
         if self.protothread.listenport is not None:
             self.queue.append(slskmessages.SetWaitPort(self.protothread.listenport))
 
-    def server_disconnect(self, addr):
+    def server_disconnect(self):
+
+        if self.server_conn is None:
+            return
+
+        host, port = self.server_address
 
         log.add(
             _("Disconnected from server %(host)s:%(port)s"), {
-                'host': addr[0],
-                'port': addr[1]
+                'host': host,
+                'port': port
             })
-        userchoice = self.manualdisconnect
 
         # Inform threads we've disconnected
         self.exit.set()
 
-        if not self.manualdisconnect:
+        if not self.manual_disconnect:
             self.set_server_timer()
         else:
-            self.manualdisconnect = False
+            self.manual_disconnect = False
 
-        self.active_server_conn = None
+        self.server_conn = None
+        self.server_address = None
         self.logged_in = False
 
         # Clean up connections
         self.peerconns.clear()
         self.out_indirect_conn_request_times.clear()
-
         self.watchedusers.clear()
 
-        self.pluginhandler.server_disconnect_notification(userchoice)
+        self.pluginhandler.server_disconnect_notification(self.manual_disconnect)
 
         self.transfers.server_disconnect()
         self.search.server_disconnect()
@@ -985,10 +992,15 @@ class NicotineCore:
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
-    def closed_connection(self, conn, addr):
+    def conn_close(self, msg):
 
-        if conn == self.active_server_conn:
-            self.server_disconnect(addr)
+        log.add_msg_contents(msg)
+
+        conn = msg.conn
+        addr = msg.addr
+
+        if conn == self.server_conn:
+            self.server_disconnect()
 
         else:
             """ A peer connection has died, remove it """
@@ -1010,17 +1022,11 @@ class NicotineCore:
                     self.peerconns.remove(i)
                     return
 
-    def conn_close(self, msg):
-
-        log.add_msg_contents(msg)
-
-        self.closed_connection(msg.conn, msg.addr)
-
     def connect_error(self, msg):
 
         log.add_msg_contents(msg)
 
-        if msg.connobj.__class__ is slskmessages.ServerConn:
+        if msg.connobj.__class__ is slskmessages.InitServerConn:
 
             log.add(
                 _("Cannot connect to server %(host)s:%(port)s: %(error)s"), {
@@ -1031,11 +1037,10 @@ class NicotineCore:
             )
 
             self.set_server_timer()
+            self.server_conn = None
+            self.server_address = None
 
-            if self.active_server_conn is not None:
-                self.active_server_conn = None
-
-        elif msg.connobj.__class__ is slskmessages.PeerConn:
+        elif msg.connobj.__class__ is slskmessages.InitPeerConn:
 
             addr = msg.connobj.addr
 
@@ -1121,10 +1126,10 @@ class NicotineCore:
         elif 0 < self.server_timeout_value < 600:
             self.server_timeout_value = self.server_timeout_value * 2
 
-        self.servertimer = threading.Timer(self.server_timeout_value, self.server_timeout)
-        self.servertimer.name = "ServerTimer"
-        self.servertimer.daemon = True
-        self.servertimer.start()
+        self.server_timer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.server_timer.name = "ServerTimer"
+        self.server_timer.daemon = True
+        self.server_timer.start()
 
         log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
                 self.server_timeout_value)
@@ -1185,10 +1190,6 @@ class NicotineCore:
 
         # Get privilege status
         self.queue.append(slskmessages.GetUserStatus(user))
-
-    def stop_timers(self):
-        if self.servertimer is not None:
-            self.servertimer.cancel()
 
     def connect_to_server(self, msg):
         log.add_msg_contents(msg)
@@ -1255,7 +1256,7 @@ class NicotineCore:
             self.watch_user(config.sections["server"]["login"])
 
             if msg.ip_address is not None:
-                self.ipaddress = msg.ip_address
+                self.user_ip_address = msg.ip_address
 
             self.transfers.server_login()
             self.userbrowse.server_login()
@@ -1293,8 +1294,8 @@ class NicotineCore:
             self.pluginhandler.server_connect_notification()
 
         else:
-            self.manualdisconnect = True
-            self.queue.append(slskmessages.ConnClose(self.active_server_conn))
+            self.manual_disconnect = True
+            self.queue.append(slskmessages.ConnClose(self.server_conn))
 
             if msg.reason == "INVALIDPASS":
                 self.ui_callback.invalid_password()
@@ -1433,7 +1434,7 @@ class NicotineCore:
         """ Server code: 41 """
 
         log.add_important_info(_("Someone logged in to your Soulseek account elsewhere"))
-        self.manualdisconnect = True
+        self.manual_disconnect = True
 
     def recommendations(self, msg):
         """ Server code: 54 """

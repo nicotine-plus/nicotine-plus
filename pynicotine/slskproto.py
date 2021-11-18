@@ -77,6 +77,8 @@ from pynicotine.slskmessages import GlobalRecommendations
 from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
+from pynicotine.slskmessages import InitPeerConn
+from pynicotine.slskmessages import InitServerConn
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
 from pynicotine.slskmessages import JoinPublicRoom
@@ -93,7 +95,6 @@ from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import ParentInactivityTimeout
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
-from pynicotine.slskmessages import PeerConn
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PeerInitMessage
 from pynicotine.slskmessages import PeerMessage
@@ -144,7 +145,6 @@ from pynicotine.slskmessages import SearchParent
 from pynicotine.slskmessages import SendConnectToken
 from pynicotine.slskmessages import SendDownloadSpeed
 from pynicotine.slskmessages import SendUploadSpeed
-from pynicotine.slskmessages import ServerConn
 from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import SetCurrentConnectionCount
@@ -1311,7 +1311,7 @@ class SlskProtoThread(threading.Thread):
             elif issubclass(msg_class, PeerMessage):
                 self.process_peer_output(msg_obj)
 
-            elif msg_class is PeerConn:
+            elif msg_class is InitPeerConn:
                 if self._numsockets < MAXSOCKETS:
                     self.init_peer_conn(msg_obj)
                 else:
@@ -1336,7 +1336,7 @@ class SlskProtoThread(threading.Thread):
             elif msg_class is ConnCloseIP:
                 self.close_connection_by_ip(msg_obj.addr)
 
-            elif msg_class is ServerConn:
+            elif msg_class is InitServerConn:
                 if self._numsockets < MAXSOCKETS:
                     self.init_server_conn(msg_obj)
 
@@ -1573,7 +1573,7 @@ class SlskProtoThread(threading.Thread):
                             self._conns[self.server_socket] = Connection(
                                 conn=self.server_socket, addr=addr, events=events)
 
-                            self._callback_msgs.append(ServerConn(self.server_socket, addr))
+                            self._callback_msgs.append(InitServerConn(self.server_socket, addr))
 
                         else:
                             if self._network_filter.is_ip_blocked(addr[0]):
@@ -1588,7 +1588,7 @@ class SlskProtoThread(threading.Thread):
                             self._conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, events=events, init=msg_obj.init)
 
-                            self._callback_msgs.append(PeerConn(connection_in_progress, addr))
+                            self._callback_msgs.append(InitPeerConn(connection_in_progress, addr))
 
                         del self._connsinprogress[connection_in_progress]
 

@@ -245,6 +245,14 @@ class NicotineFrame(UserInterface):
 
     """ Window State """
 
+    def on_window_hide_unhide(self, *args):
+
+        if self.MainWindow.get_property("visible"):
+            self.MainWindow.hide()
+            return
+
+        self.show()
+
     def on_window_active_changed(self, window, param):
 
         if not window.get_property(param.name):
@@ -279,6 +287,13 @@ class NicotineFrame(UserInterface):
 
         for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.search):
             page.save_columns()
+
+    def show(self):
+
+        self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+        if Gtk.get_major_version() == 3:
+            self.MainWindow.deiconify()
 
     """ Init UI """
 
