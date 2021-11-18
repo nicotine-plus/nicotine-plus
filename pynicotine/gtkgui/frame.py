@@ -2048,7 +2048,7 @@ class NicotineFrame(UserInterface):
                 config.sections["ui"]["exitdialog"] = 2
 
             if self.MainWindow.get_property("visible"):
-                self.MainWindow.hide()
+                self.hide()
 
     def exit_dialog(self, remember=None, tray_quit=None):
 
