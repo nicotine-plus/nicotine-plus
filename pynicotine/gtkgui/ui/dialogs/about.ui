@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <object class="GtkAboutDialog" id="dialog">
-    <property name="modal">1</property>
-    <property name="comments" translatable="yes">Graphical client for the Soulseek peer-to-peer network</property>
-    <property name="website">https://nicotine-plus.org</property>
-    <property name="copyright">© 2001-2003 PySoulSeek Contributors
-© 2003-2004 Nicotine Team
-© 2004-2021 Nicotine+ Team</property>
-    <property name="license-type">GTK_LICENSE_GPL_3_0</property>
     <property name="authors">Nicotine+ Contributors [active]
 
 &gt; Mat (mathiascode)

@@ -670,44 +670,6 @@ class SharesFrame(UserInterface):
         buddy_only = not self.shareslist.get_value(iterator, 2)
         self.set_shared_dir_buddy_only(iterator, buddy_only)
 
-    def add_shared_dir_response(self, dialog, response_id, data):
-
-        virtual = dialog.get_response_value()
-        buddy = dialog.get_second_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
-
-        # Remove slashes from share name to avoid path conflicts
-        if virtual:
-            virtual = virtual.replace('/', '_').replace('\\', '_')
-
-        # If the virtual share name is not already used
-        if not virtual or virtual in (x[0] for x in self.shareddirs + self.bshareddirs):
-            message_dialog(
-                parent=self.p.dialog,
-                title=_("Unable to Share Folder"),
-                message=_("The chosen virtual name is either empty or already exists")
-            )
-            return
-
-        directory = data
-
-        self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
-            virtual,
-            directory,
-            buddy
-        ])
-
-        if buddy:
-            shared_dirs = self.bshareddirs
-        else:
-            shared_dirs = self.shareddirs
-
-        shared_dirs.append((virtual, directory))
-        self.needrescan = True
-
     def add_shared_dir(self, folder):
 
         if folder is None:
@@ -715,23 +677,31 @@ class SharesFrame(UserInterface):
 
         # If the directory is already shared
         if folder in (x[1] for x in self.shareddirs + self.bshareddirs):
-            message_dialog(
-                parent=self.p.dialog,
-                title=_("Unable to Share Folder"),
-                message=_("The chosen folder is already shared.")
-            )
             return
 
-        entry_dialog(
-            parent=self.p.dialog,
-            title=_("Set Virtual Name"),
-            message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
-            default=os.path.basename(os.path.normpath(folder)),
-            option=True,
-            optionmessage=_("Share with buddies only"),
-            callback=self.add_shared_dir_response,
-            callback_data=folder
-        )
+        virtual = os.path.basename(os.path.normpath(folder))
+
+        # Remove slashes from share name to avoid path conflicts
+        virtual = virtual.replace('/', '_').replace('\\', '_')
+        virtual_final = virtual
+
+        # If the virtual share name is not already used
+        counter = 1
+        while virtual_final in (x[0] for x in self.shareddirs + self.bshareddirs):
+            virtual_final = virtual + str(counter)
+            counter += 1
+
+        iterator = self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
+            virtual_final,
+            folder,
+            False
+        ])
+
+        self.Shares.set_cursor(self.shareslist.get_path(iterator))
+        self.Shares.grab_focus()
+
+        self.shareddirs.append((virtual_final, folder))
+        self.needrescan = True
 
     def on_add_shared_dir_selected(self, selected, data):
 
@@ -783,7 +753,7 @@ class SharesFrame(UserInterface):
 
         model, paths = self.Shares.get_selection().get_selected_rows()
 
-        for path in reversed(paths):
+        for path in paths:
             iterator = model.get_iter(path)
             virtual_name = model.get_value(iterator, 0)
             folder = model.get_value(iterator, 1)
@@ -800,6 +770,7 @@ class SharesFrame(UserInterface):
                 callback=self.on_edit_shared_dir_response,
                 callback_data=path
             )
+            return
 
     def on_remove_shared_dir(self, *args):
 
@@ -3104,7 +3075,7 @@ class PluginsFrame(UserInterface):
         }
 
 
-class Settings(UserInterface):
+class Preferences(UserInterface):
 
     def __init__(self, frame):
 

@@ -2360,6 +2360,7 @@ class FileSearchResult(PeerMessage):
 
         if self.token not in SEARCH_TOKENS_ALLOWED:
             # Results are no longer accepted for this search token, stop parsing message
+            self.list = []
             return
 
         pos, self.list = self._parse_result_list(message, pos)
