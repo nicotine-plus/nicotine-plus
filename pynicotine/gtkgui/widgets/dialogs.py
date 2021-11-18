@@ -213,12 +213,14 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
 
     label.set_selectable(True)
 
-    if checkbox_label:
-        self.checkbox = Gtk.CheckButton()
-        self.checkbox.set_label(checkbox_label)
+    self.checkbox = Gtk.CheckButton()
 
-        self.get_message_area().add(self.checkbox)
+    if checkbox_label:
+        self.checkbox.set_label(checkbox_label)
         self.checkbox.show()
+        self.get_message_area().add(self.checkbox)
+    else:
+        self.checkbox.hide()
 
     if first_button:
         self.add_button(first_button, 1)
