@@ -1145,11 +1145,11 @@ class Search(UserInterface):
             else:
                 total = self.num_results_found
 
-            self.Counter.set_tooltip_text(_("Total: %s") % total)
+            self.CounterButton.set_tooltip_text(_("Total: %s") % total)
 
         else:  # Hide the tooltip if there are no hidden results
             str_plus = ""
-            self.Counter.set_has_tooltip(False)
+            self.CounterButton.set_has_tooltip(False)
 
         self.Counter.set_text(str(self.num_results_visible) + str_plus)
 
