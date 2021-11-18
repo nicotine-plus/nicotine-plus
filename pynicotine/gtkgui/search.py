@@ -32,7 +32,8 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.fileproperties import FileProperties
+from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
+from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import setup_accelerator
@@ -51,7 +52,6 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import humanize
@@ -228,11 +228,10 @@ class Searches(IconNotebook):
             mode_label = _("Wish")
             tab = self.create_tab(msg.token, search_term, mode, mode_label, showtab=False)
 
-        counter = len(tab.all_data) + 1
-
         # No more things to add because we've reached the result limit
-        if counter > config.sections["searches"]["max_displayed_results"]:
+        if tab.num_results_found >= tab.max_limit:
             self.frame.np.search.remove_allowed_search_id(msg.token)
+            tab.max_limited = True
             return
 
         tab.add_user_results(msg, username, country)
@@ -316,8 +315,11 @@ class Search(UserInterface):
         self.selected_files_count = 0
         self.filters = None
         self.clearing_filters = False
-        self.numvisibleresults = 0
         self.active_filter_count = 0
+        self.num_results_found = 0
+        self.num_results_visible = 0
+        self.max_limit = config.sections["searches"]["max_displayed_results"]
+        self.max_limited = False
 
         self.operators = {
             '<': operator.lt,
@@ -542,16 +544,16 @@ class Search(UserInterface):
             else:
                 combobox.prepend_text(text)
 
-    def add_result_list(self, result_list, counter, user, country, inqueue, ulspeed, h_speed,
+    def add_result_list(self, result_list, user, country, inqueue, ulspeed, h_speed,
                         h_queue, color, private=False):
         """ Adds a list of search results to the treeview. Lists can either contain publicly or
         privately shared files. """
 
         update_ui = False
-        max_results = config.sections["searches"]["max_displayed_results"]
 
         for result in result_list:
-            if counter > max_results:
+            if self.num_results_found >= self.max_limit:
+                self.max_limited = True
                 break
 
             fullpath = result[1]
@@ -577,6 +579,7 @@ class Search(UserInterface):
                 })
                 continue
 
+            self.num_results_found += 1
             fullpath_split = fullpath.split('\\')
 
             if config.sections["ui"]["reverse_file_paths"]:
@@ -601,7 +604,7 @@ class Search(UserInterface):
 
             is_result_visible = self.append(
                 [
-                    GObject.Value(GObject.TYPE_UINT64, counter),
+                    GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
                     user,
                     GObject.Value(GObject.TYPE_OBJECT, get_flag_image(country)),
                     h_speed,
@@ -625,9 +628,7 @@ class Search(UserInterface):
             if is_result_visible:
                 update_ui = True
 
-            counter += 1
-
-        return update_ui, counter
+        return update_ui
 
     def add_user_results(self, msg, user, country):
 
@@ -635,8 +636,6 @@ class Search(UserInterface):
             return
 
         self.users.add(user)
-
-        counter = len(self.all_data) + 1
 
         if msg.freeulslots:
             inqueue = 0
@@ -654,12 +653,11 @@ class Search(UserInterface):
         color_id = (msg.freeulslots and "search" or "searchq")
         color = config.sections["ui"][color_id] or None
 
-        update_ui, counter = self.add_result_list(
-            msg.list, counter, user, country, inqueue, ulspeed, h_speed, h_queue, color)
+        update_ui = self.add_result_list(msg.list, user, country, inqueue, ulspeed, h_speed, h_queue, color)
 
         if msg.privatelist:
-            update_ui_private, counter = self.add_result_list(
-                msg.privatelist, counter, user, country, inqueue, ulspeed, h_speed, h_queue, color, private=True)
+            update_ui_private = self.add_result_list(
+                msg.privatelist, user, country, inqueue, ulspeed, h_speed, h_queue, color, private=True)
 
             if not update_ui and update_ui_private:
                 update_ui = True
@@ -703,7 +701,7 @@ class Search(UserInterface):
         return True
 
     def add_row_to_model(self, row):
-        (counter, user, flag, h_speed, h_queue, directory, filename, h_size, h_bitrate,
+        (_counter, user, flag, h_speed, h_queue, directory, filename, h_size, h_bitrate,
             h_length, bitrate, fullpath, country, size, speed, queue, length, color) = row
 
         if self.grouping_mode != "ungrouped":
@@ -782,7 +780,7 @@ class Search(UserInterface):
 
             iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
 
-            self.numvisibleresults += 1
+            self.num_results_visible += 1
 
         except Exception as e:
             types = []
@@ -937,13 +935,13 @@ class Search(UserInterface):
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
-        self.numvisibleresults = 0
+        self.num_results_visible = 0
 
         for row in self.all_data:
             if self.check_filter(row):
                 self.add_row_to_model(row)
 
-        # Update number of visible results
+        # Update number of results
         self.update_result_counter()
         self.update_filter_counter(self.active_filter_count)
 
@@ -1136,7 +1134,24 @@ class Search(UserInterface):
             self.select_child_results(model, model.iter_children(iterator))
 
     def update_result_counter(self):
-        self.Counter.set_text(str(self.numvisibleresults))
+
+        if self.max_limited or self.num_results_found > self.num_results_visible:
+            # Append plus symbol "+" if Results are Filtered and/or reached 'Maximum per search'
+            str_plus = "+"
+
+            # Display total results on the tooltip, but only if we know the exact number of results
+            if self.max_limited:
+                total = "> " + str(self.max_limit) + "+"
+            else:
+                total = self.num_results_found
+
+            self.CounterButton.set_tooltip_text(_("Total: %s") % total)
+
+        else:  # Hide the tooltip if there are no hidden results
+            str_plus = ""
+            self.CounterButton.set_has_tooltip(False)
+
+        self.Counter.set_text(str(self.num_results_visible) + str_plus)
 
     def update_visuals(self):
 
@@ -1307,8 +1322,12 @@ class Search(UserInterface):
             copy_file_url(user, filepath.rsplit('\\', 1)[0] + '\\')
             return
 
-    def on_search_settings(self, *args):
-        self.frame.on_settings(page='Searches')
+    def on_counter_button(self, *args):
+
+        if self.num_results_found > self.num_results_visible:
+            self.on_clear_filters()
+        else:
+            self.frame.on_settings(page='Searches')
 
     def on_group(self, action, state):
 
@@ -1415,12 +1434,15 @@ class Search(UserInterface):
         self.usersiters.clear()
         self.directoryiters.clear()
         self.resultsmodel.clear()
-        self.numvisibleresults = 0
+        self.num_results_found = 0
+        self.num_results_visible = 0
+        self.max_limited = False
+        self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         # Allow parsing search result messages again
         self.frame.np.search.add_allowed_search_id(self.id)
 
-        # Update number of visible results
+        # Update number of results widget
         self.update_result_counter()
 
     def on_close(self, *args):

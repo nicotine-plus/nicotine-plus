@@ -20,7 +20,6 @@ import gi
 import os
 import sys
 
-from gi.repository import Gdk
 from gi.repository import GLib
 from gi.repository import Gtk
 
@@ -83,7 +82,7 @@ class TrayIcon:
             return
 
         self.tray_popup_menu = Gtk.Menu()
-        self.hide_show_item, handler = self.create_item(_("Show Nicotine+"), self.on_hide_unhide_window)
+        self.hide_show_item, handler = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
         self.alt_speed_item, self.alt_speed_handler = self.create_item(
             _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
@@ -110,21 +109,13 @@ class TrayIcon:
         self.create_item(_("Preferences"), self.frame.on_settings)
         self.create_item(_("Quit"), self.frame.on_quit)
 
-    def on_hide_unhide_window(self, *args):
-
-        if self.frame.MainWindow.get_property("visible"):
-            self.frame.MainWindow.hide()
-            return
-
-        self.show_window()
-
     def on_downloads(self, *args):
         self.frame.change_main_page("downloads")
-        self.show_window()
+        self.frame.show()
 
     def on_uploads(self, *args):
         self.frame.change_main_page("uploads")
-        self.show_window()
+        self.frame.show()
 
     def on_open_private_chat_response(self, dialog, response_id, data):
 
@@ -137,7 +128,7 @@ class TrayIcon:
         if user:
             self.frame.np.privatechats.show_user(user)
             self.frame.change_main_page("private")
-            self.show_window()
+            self.frame.show()
 
     def on_open_private_chat(self, *args):
 
@@ -324,7 +315,7 @@ class TrayIcon:
                 # GtkStatusIcon fallback
                 tray_icon = Gtk.StatusIcon()
                 tray_icon.set_tooltip_text(GLib.get_application_name())
-                tray_icon.connect("activate", self.on_hide_unhide_window)
+                tray_icon.connect("activate", self.frame.on_window_hide_unhide)
                 tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
             self.tray_icon = tray_icon
@@ -481,7 +472,3 @@ class TrayIcon:
         with self.alt_speed_item.handler_block(self.alt_speed_handler):
             # Temporarily disable handler, we only want to change the visual checkbox appearance
             self.alt_speed_item.set_active(enable)
-
-    def show_window(self):
-        self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-        self.frame.MainWindow.deiconify()

@@ -35,8 +35,8 @@ from gi.repository import Pango
 from pynicotine import slskmessages
 from pynicotine.chatrooms import Tickers
 from pynicotine.config import config
-from pynicotine.gtkgui.roomlist import RoomList
-from pynicotine.gtkgui.roomwall import RoomWall
+from pynicotine.gtkgui.popovers.roomlist import RoomList
+from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -1101,7 +1101,7 @@ class ChatRoom(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             delete_log(config.sections["logging"]["roomlogsdir"], self.room)
             self.log_textview.clear()
             self.chat_textview.clear()

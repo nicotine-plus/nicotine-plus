@@ -58,13 +58,13 @@ class Conn(InternalMessage):
         self.init = init
 
 
-class ServerConn(Conn):
+class InitServerConn(Conn):
     """ NicotineCore sends this to make networking thread establish a server connection.
     When a connection is established, networking thread returns an object of this type
     to NicotineCore. """
 
 
-class PeerConn(Conn):
+class InitPeerConn(Conn):
     """ NicotineCore sends this to make networking thread establish a peer connection.
     When a connection is established, networking thread returns an object of this type
     to NicotineCore. """
@@ -2360,6 +2360,7 @@ class FileSearchResult(PeerMessage):
 
         if self.token not in SEARCH_TOKENS_ALLOWED:
             # Results are no longer accepted for this search token, stop parsing message
+            self.list = []
             return
 
         pos, self.list = self._parse_result_list(message, pos)

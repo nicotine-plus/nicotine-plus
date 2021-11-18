@@ -112,7 +112,7 @@ class WishList(UserInterface):
 
         model, paths = self.list_view.get_selection().get_selected_rows()
 
-        for path in reversed(paths):
+        for path in paths:
             iterator = model.get_iter(path)
             old_wish = model.get_value(iterator, 0)
 
@@ -124,6 +124,7 @@ class WishList(UserInterface):
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
             )
+            return
 
     def on_remove_wish(self, *args):
 
@@ -141,7 +142,7 @@ class WishList(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             for wish in self.wishes.copy():
                 self.frame.np.search.remove_wish(wish)
 

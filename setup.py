@@ -72,7 +72,7 @@ functionality while keeping current with the Soulseek protocol."""
         long_description=LONG_DESCRIPTION,
         author="Nicotine+ Team",
         author_email="nicotine-team@lists.launchpad.net",
-        url="https://nicotine-plus.org/",
+        url=config.website_url,
         platforms="any",
         packages=PACKAGES,
         package_data=PACKAGE_DATA,

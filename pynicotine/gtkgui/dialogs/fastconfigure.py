@@ -27,8 +27,6 @@ from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
-from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -56,6 +54,7 @@ class FastConfigureAssistant(UserInterface):
         # Page specific, sharepage
         self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")
 
+        self.shared_folders = None
         self.sharelist = Gtk.ListStore(
             str,
             str
@@ -90,6 +89,8 @@ class FastConfigureAssistant(UserInterface):
         self.checkmyport.connect("activate-link", lambda x, url: open_uri(url))
 
         # sharepage
+        self.shared_folders = config.sections["transfers"]["shared"][:]
+
         if config.sections['transfers']['downloaddir']:
             self.downloaddir.set_path(
                 config.sections['transfers']['downloaddir']
@@ -97,11 +98,9 @@ class FastConfigureAssistant(UserInterface):
 
         self.sharelist.clear()
 
-        for entry in config.sections["transfers"]["shared"]:
+        for entry in self.shared_folders:
             virtual_name, path = entry
-
-            if isinstance(virtual_name, str) and isinstance(path, str):
-                self.add_shared_folder(virtual_name, path)
+            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [str(virtual_name), str(path)])
 
         # completepage
         import urllib.parse
@@ -130,7 +129,7 @@ class FastConfigureAssistant(UserInterface):
             complete = True
 
         elif name == 'userpasspage':
-            if (len(self.username.get_text()) > 0 and len(self.password.get_text()) > 0):
+            if len(self.username.get_text()) > 0 and len(self.password.get_text()) > 0:
                 complete = True
 
         elif name == 'portpage':
@@ -145,100 +144,34 @@ class FastConfigureAssistant(UserInterface):
 
         self.FastConfigureDialog.set_page_complete(page, complete)
 
-    def get_shared_folders(self):
-
-        iterator = self.sharelist.get_iter_first()
-        dirs = []
-
-        while iterator is not None:
-            dirs.append(
-                (
-                    self.sharelist.get_value(iterator, 0),
-                    self.sharelist.get_value(iterator, 1)
-                )
-            )
-            iterator = self.sharelist.iter_next(iterator)
-
-        return dirs
-
-    def add_shared_folder(self, virtual_name, path):
-
-        iterator = self.sharelist.get_iter_first()
-
-        while iterator is not None:
-
-            if path == self.sharelist.get_value(iterator, 1):
-                return
-
-            iterator = self.sharelist.iter_next(iterator)
-
-        self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual_name, path])
-
     def on_entry_changed(self, *args):
         self.reset_completeness()
 
-    def on_add_share_response(self, dialog, response_id, directory):
-
-        virtual = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
-
-        # If the virtual name is empty
-        if not virtual:
-            message_dialog(
-                parent=self.FastConfigureDialog,
-                title=_("Unable to Share Folder"),
-                message=_("The chosen virtual name is empty")
-            )
-            return
-
-        # Remove slashes from share name to avoid path conflicts
-        virtual = virtual.replace('/', '_').replace('\\', '_')
-
-        # We get the current defined shares from the treeview
-        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
-
-        iterator = model.get_iter_first()
-
-        while iterator is not None:
-
-            # We reject the share if the virtual share name is already used
-            if virtual == model.get_value(iterator, 0):
-                message_dialog(
-                    parent=self.FastConfigureDialog,
-                    title=_("Unable to Share Folder"),
-                    message=_("The chosen virtual name already exists")
-                )
-                return
-
-            # We also reject the share if the directory is already used
-            if directory == model.get_value(iterator, 1):
-                message_dialog(
-                    parent=self.FastConfigureDialog,
-                    title=_("Unable to Share Folder"),
-                    message=_("The chosen folder is already shared")
-                )
-                return
-
-            iterator = model.iter_next(iterator)
-
-        # The share is unique: we can add it
-        self.add_shared_folder(virtual, directory)
-
     def on_add_share_selected(self, selected, data):
+
+        shared = config.sections["transfers"]["shared"]
+        buddy_shared = config.sections["transfers"]["buddyshared"]
 
         for folder in selected:
 
-            entry_dialog(
-                parent=self.FastConfigureDialog,
-                title=_("Set Virtual Name"),
-                message=_("Enter virtual name for '%(dir)s':") % {'dir': folder},
-                default=os.path.basename(os.path.normpath(folder)),
-                callback=self.on_add_share_response,
-                callback_data=folder
-            )
+            # If the folder is already shared
+            if folder in (x[1] for x in shared + buddy_shared):
+                return
+
+            virtual = os.path.basename(os.path.normpath(folder))
+
+            # Remove slashes from share name to avoid path conflicts
+            virtual = virtual.replace('/', '_').replace('\\', '_')
+            virtual_final = virtual
+
+            counter = 1
+            while virtual_final in (x[0] for x in shared + buddy_shared):
+                virtual_final = virtual + str(counter)
+                counter += 1
+
+            # The share is unique: we can add it
+            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual, folder])
+            self.shared_folders.append((virtual, folder))
 
     def on_add_share(self, *args):
 
@@ -270,7 +203,7 @@ class FastConfigureAssistant(UserInterface):
 
         # sharepage
         config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
-        config.sections["transfers"]["shared"] = self.get_shared_folders()
+        config.sections["transfers"]["shared"] = self.shared_folders
 
         dialog_hide(self.FastConfigureDialog)
 
