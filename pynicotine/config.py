@@ -59,6 +59,12 @@ class Config:
         self.python_version = sys.version
         self.gtk_version = ""
 
+        self.summary = _("Graphical client for the Soulseek peer-to-peer network")
+        self.copyright = """© 2001-2003 PySoulSeek Contributors
+© 2003-2004 Nicotine Team
+© 2004-2021 Nicotine+ Team"""
+
+        self.website_url = "https://nicotine-plus.org/"
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
         self.portchecker_url = "http://tools.slsknet.org/porttest.php?port=%s"
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"

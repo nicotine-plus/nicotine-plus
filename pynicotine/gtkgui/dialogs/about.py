@@ -55,7 +55,11 @@ class About(UserInterface):
         else:
             self.dialog.connect("response", lambda x, y: x.destroy())
 
+        self.dialog.set_comments(config.summary)
+        self.dialog.set_copyright(config.copyright)
+        self.dialog.set_license_type(Gtk.License.GPL_3_0)
         self.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
+        self.dialog.set_website(config.website_url)
 
     def show(self):
         dialog_show(self.dialog)
