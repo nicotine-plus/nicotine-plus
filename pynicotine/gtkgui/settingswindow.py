@@ -2060,17 +2060,15 @@ class SearchesFrame(UserInterface):
         self.ClearSearchHistorySuccess.show()
 
     def on_clear_filter_history(self, widget):
-
-        # Clear toolbar combo box Filters
         self.frame.search.clear_filter_history()
+        self.ClearFilterHistorySuccess.show()
 
-        # Clear default Result Filters
+    def on_clear_default_filters(self, widget):
+
         self.FilterFree.set_active(False)
 
         for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize, self.FilterBR, self.FilterCC):
             w.set_text("")
-
-        self.ClearFilterHistorySuccess.show()
 
     def on_enable_filters_toggled(self, widget):
         active = widget.get_active()
