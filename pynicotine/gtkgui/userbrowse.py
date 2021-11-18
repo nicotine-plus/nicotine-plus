@@ -419,7 +419,7 @@ class UserBrowse(UserInterface):
         shares.sort()
 
         for folder, files in shares:
-            current_path = ""
+            current_path = None
             root_processed = False
 
             for subfolder in folder.split('\\'):
@@ -524,7 +524,7 @@ class UserBrowse(UserInterface):
 
         directory = self.dir_user_data.get(iter_user_data)
 
-        if not directory:
+        if directory is None:
             return
 
         self.selected_folder = directory
