@@ -55,7 +55,6 @@ from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
-from pynicotine.gtkgui.widgets.dialogs import custom_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -2038,31 +2037,27 @@ class NicotineFrame(UserInterface):
         checkbox = dialog.checkbox.get_active() if dialog.checkbox else None
         dialog.destroy()
 
-        if checkbox is True and response_id >= 0 <= 4:  # 'Remember choice'
-            config.sections["ui"]["exitdialog"] = response_id
+        if response_id == Gtk.ResponseType.YES:
+            if checkbox:
+                config.sections["ui"]["exitdialog"] = 0
 
-        if response_id == 0:  # 'Quit'
             self.np.quit()
 
-        elif response_id == 2:  # 'Run in Background'
-            self.hide()
+        elif response_id == 0:  # 'Run in Background'
+            if checkbox:
+                config.sections["ui"]["exitdialog"] = 2
 
-        elif response_id == 5:  # 'Disable Tray Icon'
-            self.tray_icon.disable()
+            if self.MainWindow.get_property("visible"):
+                self.MainWindow.hide()
 
     def exit_dialog(self, remember=None, tray_quit=None):
 
-        custom_dialog(
+        option_dialog(
             parent=self.MainWindow,
-            default_buttons=Gtk.ButtonsType.NONE,
-            sel=False,
             title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
+            third=_("Run in Background") if self.MainWindow.get_property("visible") else "",
             checkbox_label=_("Remember choice") if not tray_quit and remember is True else "",
-            third=_("_Quit"),
-            id_1=_("_No"),
-            id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
-            id_5=_("_Disable Tray Icon") if tray_quit else "",
             callback=self.on_exit_dialog_response
         )
         return True
@@ -2096,7 +2091,7 @@ class NicotineFrame(UserInterface):
         self.save_window_state()
 
         if not self.tray_icon.is_visible():
-            log.add(_("Nicotine+ is running in the background"))
+            log.add("Nicotine+ is running in the background")
 
         # Run in Background
         self.MainWindow.hide()
