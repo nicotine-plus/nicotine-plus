@@ -306,7 +306,7 @@ class NicotineFrame(UserInterface):
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.connect("pressed", self.on_cancel_auto_away)
 
-        # Exit dialog
+        # System window close (X)
         if Gtk.get_major_version() == 4:
             self.MainWindow.connect("close-request", self.on_close_request)
         else:
