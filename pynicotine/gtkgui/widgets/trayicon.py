@@ -482,20 +482,6 @@ class TrayIcon:
             # Temporarily disable handler, we only want to change the visual checkbox appearance
             self.alt_speed_item.set_active(enable)
 
-    def disable(self):
-
-        config.sections["ui"]["trayicon"] = False
-        config.sections["ui"]["startup_hidden"] = False
-
-        if config.sections["ui"]["exitdialog"] >= 2:
-            # Don't wipeout 0='Quit program' setting
-            config.sections["ui"]["exitdialog"] = 1
-
-        if not self.frame.MainWindow.get_property("visible"):
-            self.show_window()  # avoid zombie
-
-        self.hide()
-
     def show_window(self):
         self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
