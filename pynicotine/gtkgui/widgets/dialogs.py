@@ -220,58 +220,10 @@ def option_dialog(parent, title, message, callback, callback_data=None,
 
         self.get_message_area().add(self.checkbox)
         self.checkbox.show()
-
-    if third:
-        self.add_button(third, 0)
-
-    self.present_with_time(Gdk.CURRENT_TIME)
-
-
-def custom_dialog(parent, title, message, callback, callback_data=None, default_buttons=Gtk.ButtonsType.YES_NO, id_5="",
-                  checkbox_label="", checkbox_tip="", third="", id_1="", id_2="", id_3="", focused_btn=1, sel=False,):
-
-    """ Custom Dialog (direct replacement for option_dialog and message_dialog) """
-
-    self = Gtk.MessageDialog(
-        transient_for=parent,
-        message_type=Gtk.MessageType.QUESTION,
-        buttons=default_buttons,
-        text=title,
-        secondary_text=message
-    )
-    self.connect("response", callback, callback_data)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
-
-    if Gtk.get_major_version() == 4:
-        label = self.get_message_area().get_last_child()
-    else:
-        label = self.get_message_area().get_children()[-1]
-
-    label.set_selectable(sel)
-
-    if checkbox_label:
-        self.checkbox = Gtk.CheckButton()
-        self.checkbox.set_label(checkbox_label)
-        self.checkbox.set_active(False)  # (checkbox_value)   checkbox_value=False
-        self.checkbox.set_tooltip_text(checkbox_tip)
-
-        self.get_message_area().add(self.checkbox)
-        self.checkbox.show()
     else:
         self.checkbox = None  # option can be hidden
 
     if third:
         self.add_button(third, 0)
-    if id_1:
-        self.add_button(id_1, 1)
-    if id_2:
-        self.add_button(id_2, 2)
-    if id_3:
-        self.add_button(id_3, 3)
-    if id_5:
-        self.add_button(id_5, 5)
-
-    self.set_default_response(focused_btn)
 
     self.present_with_time(Gdk.CURRENT_TIME)
