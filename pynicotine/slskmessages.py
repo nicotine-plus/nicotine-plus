@@ -64,7 +64,7 @@ class InitServerConn(Conn):
     to NicotineCore. """
 
 
-class PeerConn(Conn):
+class InitPeerConn(Conn):
     """ NicotineCore sends this to make networking thread establish a peer connection.
     When a connection is established, networking thread returns an object of this type
     to NicotineCore. """

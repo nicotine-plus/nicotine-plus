@@ -162,6 +162,7 @@ class NicotineCore:
         self.events = {
             slskmessages.ConnectError: self.connect_error,
             slskmessages.InitServerConn: self.init_server_conn,
+            slskmessages.InitPeerConn: self.init_peer_conn,
             slskmessages.ConnClose: self.conn_close,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -177,7 +178,6 @@ class NicotineCore:
             slskmessages.CantCreateRoom: self.dummy_message,
             slskmessages.QueuedDownloads: self.dummy_message,
             slskmessages.GetPeerAddress: self.get_peer_address,
-            slskmessages.PeerConn: self.peer_conn,
             slskmessages.UserInfoReply: self.user_info_reply,
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.pierce_fire_wall,
@@ -578,7 +578,7 @@ class NicotineCore:
 
         """ Initiate a connection with a peer directly """
 
-        self.queue.append(slskmessages.PeerConn(None, addr, init))
+        self.queue.append(slskmessages.InitPeerConn(None, addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             'type': message_type,
@@ -778,7 +778,7 @@ class NicotineCore:
     def inc_conn(msg):
         log.add_msg_contents(msg)
 
-    def peer_conn(self, msg):
+    def init_peer_conn(self, msg):
 
         """ Networking thread told us that the connection to the peer was successful.
         If we connected directly to the peer, send a PeerInit message. If we connected
@@ -1040,7 +1040,7 @@ class NicotineCore:
             self.server_conn = None
             self.server_address = None
 
-        elif msg.connobj.__class__ is slskmessages.PeerConn:
+        elif msg.connobj.__class__ is slskmessages.InitPeerConn:
 
             addr = msg.connobj.addr
 

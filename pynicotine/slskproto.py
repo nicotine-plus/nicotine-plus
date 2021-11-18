@@ -77,6 +77,7 @@ from pynicotine.slskmessages import GlobalRecommendations
 from pynicotine.slskmessages import GlobalUserList
 from pynicotine.slskmessages import HaveNoParent
 from pynicotine.slskmessages import IncConn
+from pynicotine.slskmessages import InitPeerConn
 from pynicotine.slskmessages import InitServerConn
 from pynicotine.slskmessages import ItemRecommendations
 from pynicotine.slskmessages import ItemSimilarUsers
@@ -94,7 +95,6 @@ from pynicotine.slskmessages import NotifyPrivileges
 from pynicotine.slskmessages import ParentInactivityTimeout
 from pynicotine.slskmessages import ParentMinSpeed
 from pynicotine.slskmessages import ParentSpeedRatio
-from pynicotine.slskmessages import PeerConn
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PeerInitMessage
 from pynicotine.slskmessages import PeerMessage
@@ -1311,7 +1311,7 @@ class SlskProtoThread(threading.Thread):
             elif issubclass(msg_class, PeerMessage):
                 self.process_peer_output(msg_obj)
 
-            elif msg_class is PeerConn:
+            elif msg_class is InitPeerConn:
                 if self._numsockets < MAXSOCKETS:
                     self.init_peer_conn(msg_obj)
                 else:
@@ -1588,7 +1588,7 @@ class SlskProtoThread(threading.Thread):
                             self._conns[connection_in_progress] = PeerConnection(
                                 conn=connection_in_progress, addr=addr, events=events, init=msg_obj.init)
 
-                            self._callback_msgs.append(PeerConn(connection_in_progress, addr))
+                            self._callback_msgs.append(InitPeerConn(connection_in_progress, addr))
 
                         del self._connsinprogress[connection_in_progress]
 
