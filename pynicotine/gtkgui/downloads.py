@@ -82,7 +82,7 @@ class Downloads(TransferList):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             self.frame.np.transfers.folder_contents_response(msg)
 
     def download_large_folder(self, username, folder, numfiles, msg):

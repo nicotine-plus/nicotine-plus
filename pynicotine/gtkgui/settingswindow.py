@@ -2629,7 +2629,7 @@ class PluginsFrame(UserInterface):
             # Build the window
             Gtk.Dialog.__init__(
                 self,
-                title=_("%s Properties") % name,
+                title=_("%s Settings") % name,
                 modal=True,
                 default_width=600,
                 use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header")

@@ -254,6 +254,7 @@ class FileChooserButton:
         self.label = Gtk.Label.new(_("(None)"))
         self.label.set_ellipsize(Pango.EllipsizeMode.END)
         self.label.set_width_chars(6)
+        self.label.set_xalign(0)
         box.add(self.icon)
         box.add(self.label)
 

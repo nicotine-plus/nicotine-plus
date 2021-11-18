@@ -64,7 +64,7 @@ class Statistics(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             self.frame.np.statistics.reset_stats()
 
     def on_reset_statistics(self, *args):

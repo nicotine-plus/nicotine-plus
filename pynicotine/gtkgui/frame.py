@@ -382,7 +382,7 @@ class NicotineFrame(UserInterface):
 
     def invalid_password_response(self, dialog, response_id, data):
 
-        if response_id == Gtk.ResponseType.REJECT:
+        if response_id == 0:
             self.on_settings(page='Network')
 
         dialog.destroy()
@@ -398,7 +398,7 @@ class NicotineFrame(UserInterface):
             title=title,
             message=msg,
             third=_("Change Login Details"),
-            cancel=False,
+            default_buttons=Gtk.ButtonsType.CANCEL,
             callback=self.invalid_password_response
         )
 
@@ -1624,7 +1624,7 @@ class NicotineFrame(UserInterface):
         private = dialog.checkbox.get_active()
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             # Create a new room
             self.np.chatrooms.request_join_room(room, private)
 
@@ -1959,7 +1959,7 @@ class NicotineFrame(UserInterface):
 
         loop, error = data
 
-        if response_id == Gtk.ResponseType.REJECT:
+        if response_id == 0:
             copy_text(error)
             self.on_report_bug()
             return
@@ -2012,7 +2012,7 @@ class NicotineFrame(UserInterface):
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
                       "Please copy the following message and include it in a bug report:") + error,
             third=_("Copy & Report Bug"),
-            cancel=False,
+            default_buttons=Gtk.ButtonsType.OK,
             callback=self.on_critical_error_response,
             callback_data=(loop, error)
         )
@@ -2038,7 +2038,7 @@ class NicotineFrame(UserInterface):
         checkbox = dialog.checkbox.get_active() if dialog.checkbox else None
         dialog.destroy()
 
-        if checkbox is True and response_id >= 0 <= 5:
+        if checkbox is True and response_id >= 0 <= 4:
             # 'Remember choice'
             config.sections["ui"]["exitdialog"] = response_id
 
@@ -2050,7 +2050,7 @@ class NicotineFrame(UserInterface):
             # 'Run in Background'
             self.hide()
 
-        elif response_id == 9:
+        elif response_id == 5:
             # 'Disable Tray Icon'
             self.tray_icon.disable()
 
@@ -2065,23 +2065,17 @@ class NicotineFrame(UserInterface):
             title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
 
-            id_0=_("_Quit"),
-            tip_0=_("Shortcut: Ctrl+Alt+Q (force Quit without confirmation dialog)") if not tray_quit else "",
-
+            third=_("_Quit"),
             id_1=_("_No"),
-
             id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
-            tip_2=(_("Minimize to system tray") if tray_visible else _("Caution, the tray icon is not enabled") + "\n"
-                   + (help_text if tray_possible else "")),
-
-            id_9=_("_Disable Tray Icon") if tray_quit else "",
-            tip_9=_("This will change the current tray icon setting") + "\n" + help_text,
+            id_5=_("_Disable Tray Icon") if tray_quit else "",
 
             checkbox_label=_("Remember choice") if not tray_quit and remember else "",
             checkbox_tip=(_("This setting can be changed later") + " " + help_text + ".\n"
                           + _("Shortcut: Shift+Ctrl+Q (show Quit confirmation dialog)")),
 
-            selectable=False,
+            sel=False,
+            default_buttons=Gtk.ButtonsType.NONE,
             callback=self.on_exit_dialog_response
         )
         return True
