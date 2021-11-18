@@ -2058,7 +2058,7 @@ class NicotineFrame(UserInterface):
             sel=False,
             title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
-            checkbox_label=_("Remember choice") if not tray_quit and remember else "",
+            checkbox_label=_("Remember choice") if not tray_quit and remember is True else "",
             third=_("_Quit"),
             id_1=_("_No"),
             id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
