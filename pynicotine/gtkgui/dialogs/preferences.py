@@ -3075,7 +3075,7 @@ class PluginsFrame(UserInterface):
         }
 
 
-class Settings(UserInterface):
+class Preferences(UserInterface):
 
     def __init__(self, frame):
 

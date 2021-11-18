@@ -35,14 +35,16 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.chatrooms import ChatRooms
+from pynicotine.gtkgui.dialogs.about import About
+from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigureAssistant
+from pynicotine.gtkgui.dialogs.preferences import Preferences
+from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
+from pynicotine.gtkgui.dialogs.statistics import Statistics
 from pynicotine.gtkgui.downloads import Downloads
-from pynicotine.gtkgui.fastconfigure import FastConfigureAssistant
 from pynicotine.gtkgui.interests import Interests
 from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.search import Searches
-from pynicotine.gtkgui.settingswindow import Settings
-from pynicotine.gtkgui.statistics import Statistics
 from pynicotine.gtkgui.uploads import Uploads
 from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
@@ -51,11 +53,8 @@ from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
-from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -98,8 +97,10 @@ class NicotineFrame(UserInterface):
         self.port = port
 
         # Initialize these windows/dialogs later when necessary
+        self.about = None
         self.fastconfigure = None
-        self.settingswindow = None
+        self.preferences = None
+        self.shortcuts = None
         self.spell_checker = None
 
         """ Load UI """
@@ -457,7 +458,7 @@ class NicotineFrame(UserInterface):
         if self.fastconfigure is None:
             self.fastconfigure = FastConfigureAssistant(self)
 
-        if self.settingswindow is not None and self.settingswindow.dialog.get_property("visible"):
+        if self.preferences is not None and self.preferences.dialog.get_property("visible"):
             return
 
         if show:
@@ -465,18 +466,18 @@ class NicotineFrame(UserInterface):
 
     def on_settings(self, *args, page=None):
 
-        if self.settingswindow is None:
-            self.settingswindow = Settings(self)
+        if self.preferences is None:
+            self.preferences = Preferences(self)
 
         if self.fastconfigure is not None and self.fastconfigure.FastConfigureDialog.get_property("visible"):
             return
 
-        self.settingswindow.set_settings()
+        self.preferences.set_settings()
 
         if page:
-            self.settingswindow.set_active_page(page)
+            self.preferences.set_active_page(page)
 
-        self.settingswindow.show()
+        self.preferences.show()
 
     # View
 
@@ -619,19 +620,10 @@ class NicotineFrame(UserInterface):
 
     def on_keyboard_shortcuts(self, *args):
 
-        if not hasattr(self, "shortcuts"):
-            self.shortcuts = UserInterface("ui/dialogs/shortcuts.ui")
-            set_dialog_properties(self.shortcuts.dialog, self.MainWindow, quit_callback=self.on_hide)
+        if self.shortcuts is None:
+            self.shortcuts = Shortcuts(self)
 
-            if hasattr(Gtk.Entry.props, "show-emoji-icon"):
-                # Emoji picker only available in GTK 3.24+
-                self.shortcuts.emoji.show()
-
-            # Workaround for off-centered dialog on first run
-            dialog_show(self.shortcuts.dialog)
-            dialog_hide(self.shortcuts.dialog)
-
-        dialog_show(self.shortcuts.dialog)
+        self.shortcuts.show()
 
     def on_transfer_statistics(self, *args):
         self.statistics.show()
@@ -701,29 +693,10 @@ class NicotineFrame(UserInterface):
 
     def on_about(self, *args):
 
-        self.about = UserInterface("ui/dialogs/about.ui")
-        set_dialog_properties(self.about.dialog, self.MainWindow)
+        if self.about is None:
+            self.about = About(self)
 
-        # Override link handler with our own
-        self.about.dialog.connect("activate-link", lambda x, url: open_uri(url))
-
-        logo = get_icon("n")
-
-        if logo:
-            if Gtk.get_major_version() == 4:
-                logo = Gdk.Texture.new_for_pixbuf(logo)
-
-            self.about.dialog.set_logo(logo)
-        else:
-            self.about.dialog.set_logo_icon_name(GLib.get_prgname())
-
-        if Gtk.get_major_version() == 4:
-            self.about.dialog.connect("close-request", lambda x: x.destroy())
-        else:
-            self.about.dialog.connect("response", lambda x, y: x.destroy())
-
-        self.about.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
-        dialog_show(self.about.dialog)
+        self.about.show()
 
     """ Actions """
 
@@ -2044,10 +2017,6 @@ class NicotineFrame(UserInterface):
             checkbox_label=_("Remember choice"),
             callback=self.on_quit_response
         )
-        return True
-
-    def on_hide(self, dialog, *args):
-        dialog_hide(dialog)
         return True
 
     def on_quit(self, *args):

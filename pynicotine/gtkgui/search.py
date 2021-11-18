@@ -32,7 +32,8 @@ from gi.repository import GObject
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.fileproperties import FileProperties
+from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
+from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import setup_accelerator
@@ -51,7 +52,6 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.gtkgui.wishlist import WishList
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import humanize
