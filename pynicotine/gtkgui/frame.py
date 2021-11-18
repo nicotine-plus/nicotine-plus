@@ -2038,44 +2038,31 @@ class NicotineFrame(UserInterface):
         checkbox = dialog.checkbox.get_active() if dialog.checkbox else None
         dialog.destroy()
 
-        if checkbox is True and response_id >= 0 <= 4:
-            # 'Remember choice'
+        if checkbox is True and response_id >= 0 <= 4:  # 'Remember choice'
             config.sections["ui"]["exitdialog"] = response_id
 
-        if response_id == 0:
-            # 'Quit'
+        if response_id == 0:  # 'Quit'
             self.np.quit()
 
-        elif response_id == 2:
-            # 'Run in Background'
+        elif response_id == 2:  # 'Run in Background'
             self.hide()
 
-        elif response_id == 5:
-            # 'Disable Tray Icon'
+        elif response_id == 5:  # 'Disable Tray Icon'
             self.tray_icon.disable()
 
     def exit_dialog(self, remember=None, tray_quit=None):
 
-        tray_visible = self.tray_icon.is_visible()
-        tray_possible = True if sys.platform != "darwin" and Gtk.get_major_version() != 4 else False
-        help_text = _("(in the User Interface section of the Preferences)")
-
         custom_dialog(
             parent=self.MainWindow,
+            default_buttons=Gtk.ButtonsType.NONE,
+            sel=False,
             title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
-
+            checkbox_label=_("Remember choice") if not tray_quit and remember else "",
             third=_("_Quit"),
             id_1=_("_No"),
             id_2=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
             id_5=_("_Disable Tray Icon") if tray_quit else "",
-
-            checkbox_label=_("Remember choice") if not tray_quit and remember else "",
-            checkbox_tip=(_("This setting can be changed later") + " " + help_text + ".\n"
-                          + _("Shortcut: Shift+Ctrl+Q (show Quit confirmation dialog)")),
-
-            sel=False,
-            default_buttons=Gtk.ButtonsType.NONE,
             callback=self.on_exit_dialog_response
         )
         return True
@@ -2085,10 +2072,7 @@ class NicotineFrame(UserInterface):
 
     def on_close_request(self, *args):
 
-        remembered = config.sections["ui"]["exitdialog"]
-
-        if remembered >= 2:
-            # 2='Run in Background'
+        if config.sections["ui"]["exitdialog"] >= 2:  # 2='Run in Background'
             self.hide()
             return True
 
@@ -2096,8 +2080,7 @@ class NicotineFrame(UserInterface):
 
     def on_quit(self, *args, remember=False):
 
-        if config.sections["ui"]["exitdialog"] == 0:
-            # 0='Quit program'
+        if config.sections["ui"]["exitdialog"] == 0:  # 0='Quit program'
             self.np.quit()
             return True
 
