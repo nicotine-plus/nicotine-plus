@@ -67,28 +67,41 @@ class Searches(IconNotebook):
         self.page_id = "search"
         self.pages = {}
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            notebookraw=self.frame.search_notebook
+        IconNotebook.__init__(self, self.frame, self.frame.search_notebook)
+        self.notebook.connect("switch-page", self.on_switch_search_page)
+
+        self.modes = {
+            "global": _("_Global"),
+            "buddies": _("_Buddies"),
+            "rooms": _("_Rooms"),
+            "user": _("_User")
+        }
+
+        mode_menu = PopupMenu(self)
+        mode_menu.setup(
+            ("O" + self.modes["global"], "win.searchmode", "global"),
+            ("O" + self.modes["buddies"], "win.searchmode", "buddies"),
+            ("O" + self.modes["rooms"], "win.searchmode", "rooms"),
+            ("O" + self.modes["user"], "win.searchmode", "user")
         )
+        frame.SearchMode.set_menu_model(mode_menu.model)
+        frame.SearchModeLabel.set_markup_with_mnemonic(self.modes["global"])
 
-        if Gtk.get_major_version() == 3:
-            # Workaround to make dropdown menu appear below button
-            self.frame.SearchMethod.set_wrap_width(1)
-
-        self.wish_list = WishList(frame, self)
+        if Gtk.get_major_version() == 4:
+            button = frame.SearchMode.get_first_child()
+            button.set_child(frame.SearchModeLabelBox)
+            button.get_style_context().add_class("image-text-button")
+            button.get_style_context().remove_class("image-button")
+        else:
+            frame.SearchMode.add(frame.SearchModeLabelBox)
 
         CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
         CompletionEntry(frame.UserSearchEntry, frame.UserSearchCombo.get_model())
         CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
 
+        self.wish_list = WishList(frame, self)
         self.populate_search_history()
         self.update_visuals()
-
-        self.notebook.connect("switch-page", self.on_switch_search_page)
 
     def on_switch_search_page(self, notebook, page, page_num):
 
@@ -100,15 +113,17 @@ class Searches(IconNotebook):
                 GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
                 return True
 
-    def populate_search_history(self):
+    def on_search_mode(self, action, state):
 
-        self.frame.SearchCombo.remove_all()
+        action.set_state(state)
+        search_mode = state.get_string()
+        self.frame.SearchModeLabel.set_markup_with_mnemonic(self.modes[search_mode])
 
-        if not config.sections["searches"]["enable_history"]:
-            return
+        self.frame.UserSearchCombo.set_visible(search_mode == "user")
+        self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")
 
-        for term in config.sections["searches"]["history"]:
-            self.frame.SearchCombo.append_text(str(term))
+        # Hide popover after click
+        self.frame.SearchMode.get_popover().popdown()
 
     def on_search(self):
 
@@ -119,16 +134,24 @@ class Searches(IconNotebook):
         if not text:
             return
 
-        mode = self.frame.SearchMethod.get_active_id() or "global"
+        mode = self.frame.search_mode_action.get_state().get_string()
         room = self.frame.RoomSearchEntry.get_text()
         user = self.frame.UserSearchEntry.get_text()
 
-        search_response = self.frame.np.search.do_search(text, mode, room=room, user=user)
+        self.frame.np.search.do_search(text, mode, room=room, user=user)
 
-        if not search_response:
+    def populate_search_history(self):
+
+        self.frame.SearchCombo.remove_all()
+
+        if not config.sections["searches"]["enable_history"]:
             return
 
-        search_id, searchterm, _searchterm_without_special = search_response
+        for term in config.sections["searches"]["history"]:
+            self.frame.SearchCombo.append_text(str(term))
+
+    def do_search(self, search_id, search_term, mode, room=None, user=None):
+
         mode_label = None
 
         if mode == "rooms":
@@ -140,7 +163,7 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        tab = self.create_tab(search_id, searchterm, mode, mode_label)
+        tab = self.create_tab(search_id, search_term, mode, mode_label)
         self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
@@ -1205,6 +1228,7 @@ class Search(UserInterface):
 
         choose_dir(
             parent=self.frame.MainWindow,
+            title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initialdir=config.sections["transfers"]["downloaddir"],
             multichoice=False
@@ -1254,6 +1278,7 @@ class Search(UserInterface):
 
         choose_dir(
             parent=self.frame.MainWindow,
+            title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initialdir=config.sections["transfers"]["downloaddir"],
             multichoice=False

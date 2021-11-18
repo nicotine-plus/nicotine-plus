@@ -276,7 +276,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="focusable">0</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
@@ -291,7 +291,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="focusable">0</property>
                     <child>
                       <object class="GtkSpinButton" id="AutoAway">
                         <property name="visible">1</property>
@@ -303,7 +303,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="focusable">0</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
@@ -318,7 +318,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="can-focus">0</property>
+                    <property name="focusable">0</property>
                     <child>
                       <object class="GtkEntry" id="AutoReply">
                         <property name="visible">1</property>

@@ -141,7 +141,7 @@ class WishList(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             for wish in self.wishes.copy():
                 self.frame.np.search.remove_wish(wish)
 
@@ -182,7 +182,7 @@ class WishList(UserInterface):
 
     def set_interval(self, msg):
         self.frame.np.search.do_wishlist_search_interval()
-        self.timer = GLib.timeout_add(msg.seconds * 1000, self.frame.np.search.do_wishlist_search_interval)
+        self.timer = GLib.timeout_add_seconds(msg.seconds, self.frame.np.search.do_wishlist_search_interval)
 
     def server_disconnect(self):
 

@@ -130,7 +130,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 54   | [Get Recommendations](#server-code-54)            | Deprecated |
 | 56   | [Get Global Recommendations](#server-code-56)     | Deprecated |
 | 57   | [Get User Interests](#server-code-57)             | Deprecated |
-| 58   | [Admin Command](#server-code-58)                  |            |
+| 58   | [Admin Command](#server-code-58)                  | Obsolete   |
 | 60   | [Place In Line Response](#server-code-60)         | Obsolete   |
 | 62   | [Room Added](#server-code-62)                     | Obsolete   |
 | 63   | [Room Removed](#server-code-63)                   | Obsolete   |
@@ -989,13 +989,17 @@ Nicotine: AdminCommand
 
 #### Description
 
+**OBSOLETE, no longer used since Soulseek stopped supporting third-party servers in 2002**
+
+We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
+
 #### Data Order
 
   - Send
-    1.  **string** <ins>string</ins>
-    2.  **uint** <ins>number of strings</ins>
-    3.  Iterate for <ins>number of strings</ins>
-        1.  **string** <ins>string</ins>
+    1.  **string** <ins>command</ins>
+    2.  **uint** <ins>number of command arguments</ins>
+    3.  Iterate for <ins>number of command arguments</ins>
+        1.  **string** <ins>command argument</ins>
   - Receive
       - *No Message*
 

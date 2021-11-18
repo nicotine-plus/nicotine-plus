@@ -76,7 +76,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="player_input">
                     <property name="visible">1</property>
@@ -90,7 +90,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkEntry" id="NPCommand">
                     <property name="visible">1</property>
@@ -135,7 +135,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -150,7 +150,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkComboBoxText" id="NPFormat">
                     <property name="visible">1</property>
@@ -172,7 +172,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkButton" id="test_now_playing">
                     <property name="visible">1</property>
@@ -202,7 +202,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="can-focus">0</property>
+                <property name="focusable">0</property>
                 <child>
                   <object class="GtkLabel" id="Example">
                     <property name="visible">1</property>

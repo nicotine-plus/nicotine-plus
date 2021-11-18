@@ -1003,17 +1003,21 @@ class UserInterests(ServerMessage):
 
 class AdminCommand(ServerMessage):
     """ Server code: 58 """
+    """ We send this to the server to run an admin command (e.g. to ban or
+    silence a user) if we have admin status on the server. """
+    """ OBSOLETE, no longer used since Soulseek stopped supporting third-party
+    servers in 2002 """
 
-    def __init__(self, string=None, strings=None):
-        self.string = string
-        self.strings = strings
+    def __init__(self, command=None, command_args=None):
+        self.command = command
+        self.command_args = command_args
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.string))
-        msg.extend(self.pack_object(len(self.strings)))
+        msg.extend(self.pack_object(self.command))
+        msg.extend(self.pack_object(len(self.command_args)))
 
-        for i in self.strings:
+        for i in self.command_args:
             msg.extend(self.pack_object(i))
 
         return msg

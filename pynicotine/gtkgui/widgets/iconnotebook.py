@@ -37,42 +37,31 @@ from pynicotine.config import config
 
 class ImageLabel(Gtk.Box):
 
-    def __init__(self, label="", full_text="", onclose=None, closebutton=False, hilite_image=None,
-                 show_hilite_image=True, status_image=None, show_status_image=False):
+    def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
 
         Gtk.Box.__init__(self)
         self.set_hexpand(False)
-
-        self.closebutton = closebutton
         self.centered = False
-
-        self.onclose = onclose
 
         self.label = Gtk.Label()
         self.label.set_halign(Gtk.Align.START)
         self.label.set_hexpand(True)
         self.label.show()
 
-        self.text = label
         self.full_text = full_text
-        self.set_text(self.text)
+        self.set_text(label)
+
+        self.close_button = None
+        self.close_button_visible = close_button_visible
+        self.close_callback = close_callback
 
         self.status_image = Gtk.Image()
         self.status_pixbuf = None
-
-        if show_status_image:
-            self.set_status_image(status_image)
-            self.status_image.show()
-        else:
-            self.status_image.hide()
+        self.status_image.hide()
 
         self.hilite_image = Gtk.Image()
         self.hilite_pixbuf = None
-
-        if show_hilite_image:
-            self.set_hilite_image(hilite_image)
-        else:
-            self.hilite_image.hide()
+        self.hilite_image.hide()
 
         self._pack_children()
 
@@ -87,38 +76,40 @@ class ImageLabel(Gtk.Box):
 
     def _add_close_button(self):
 
-        if not self.closebutton:
+        if self.close_button is not None:
             return
 
-        if hasattr(self, "button"):
+        if not self.close_button_visible:
             return
 
         if Gtk.get_major_version() == 4:
-            self.button = Gtk.Button.new_from_icon_name("window-close-symbolic")
-            self.button.set_has_frame(False)
+            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.close_button.set_has_frame(False)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             gesture_click = Gtk.GestureClick()
             gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             gesture_click.connect(
                 "pressed", lambda controller, *args: controller.set_state(Gtk.EventSequenceState.CLAIMED))
-            self.button.add_controller(gesture_click)
+            self.close_button.add_controller(gesture_click)
 
         else:
-            self.button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
-            self.button.set_relief(Gtk.ReliefStyle.NONE)
+            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
+            self.close_button.set_relief(Gtk.ReliefStyle.NONE)
 
-        self.button.get_style_context().add_class("circular")
-        self.button.set_tooltip_text(_("Close tab"))
-        self.button.show()
-        self.add(self.button)
+        self.close_button.get_style_context().add_class("circular")
+        self.close_button.set_tooltip_text(_("Close tab"))
+        self.close_button.show()
+        self.add(self.close_button)
 
-        if self.onclose is not None:
-            self.button.connect("clicked", self.onclose)
+        if self.close_callback is not None:
+            self.close_button.connect("clicked", self.close_callback)
 
     def _remove_close_button(self):
-        if hasattr(self, "button"):
-            self.remove(self.button)
+
+        if self.close_button is not None:
+            self.remove(self.close_button)
+            self.close_button = None
 
     def _pack_children(self):
 
@@ -154,44 +145,57 @@ class ImageLabel(Gtk.Box):
         if sys.platform != "darwin":
             self._add_close_button()
 
-    def set_onclose(self, closebutton):
+    def set_close_button_visibility(self, visible):
 
-        self.closebutton = closebutton
+        self.close_button_visible = visible
 
-        if self.closebutton:
+        if visible:
             self._add_close_button()
-        else:
-            self._remove_close_button()
+            return
 
-    def show_hilite_image(self, show=True):
-
-        if show and self.get_hilite_image() is not None:
-            self.hilite_image.show()
-        else:
-            self.hilite_image.hide()
+        self._remove_close_button()
 
     def set_centered(self, centered):
         self.centered = centered
         self._pack_children()
 
-    def set_text_color(self, notify=None, text=None):
+    def set_hilite_image(self, pixbuf):
 
+        if pixbuf is self.hilite_pixbuf:
+            return
+
+        self.hilite_pixbuf = pixbuf
+        self.hilite_image.set_from_pixbuf(pixbuf)
+        self.hilite_image.set_visible(pixbuf is not None)
+
+    def set_status_image(self, pixbuf):
+
+        if pixbuf is self.status_pixbuf:
+            return
+
+        self.status_pixbuf = pixbuf
+        self.status_image.set_from_pixbuf(pixbuf)
+        self.status_image.set_visible(config.sections["ui"]["tab_status_icons"])
+
+    def set_icon(self, icon_name):
+        self.status_image.set_property("icon-name", icon_name)
+        self.status_image.show()
+
+    def set_text(self, text, status=None):
+
+        color_rgba = Gdk.RGBA()
         color = config.sections["ui"]["tab_default"]
 
         if config.sections["notifications"]["notification_tab_colors"]:
-            if notify == 1:
+            if status == 1:
                 color = config.sections["ui"]["tab_changed"]
-            elif notify == 2:
+            elif status == 2:
                 color = config.sections["ui"]["tab_hilite"]
 
-        try:
-            rgba = Gdk.RGBA()
-            rgba.parse(color)
-        except Exception:
+        if not color_rgba.parse(color):
             color = ""
 
-        if text is not None:
-            self.text = text
+        self.text = text
 
         if not color:
             self.label.set_text("%s" % self.text)
@@ -199,36 +203,8 @@ class ImageLabel(Gtk.Box):
             from html import escape
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
 
-    def set_hilite_image(self, pixbuf):
-        self.hilite_pixbuf = pixbuf
-        self.hilite_image.set_from_pixbuf(pixbuf)
-
-        self.show_hilite_image()
-
-    def get_hilite_image(self):
-        return self.hilite_pixbuf
-
-    def set_status_image(self, pixbuf):
-
-        if pixbuf is self.status_pixbuf:
-            return
-
-        if config.sections["ui"]["tab_status_icons"]:
-            self.status_image.show()
-        else:
-            self.status_image.hide()
-
-        self.status_pixbuf = pixbuf
-        self.status_image.set_from_pixbuf(pixbuf)
-
-    def get_status_image(self):
-        return self.status_pixbuf
-
-    def set_icon(self, icon_name):
-        self.status_image.set_property("icon-name", icon_name)
-
-    def set_text(self, lbl):
-        self.set_text_color(notify=None, text=lbl)
+    def set_text_color(self, status):
+        self.set_text(self.text, status)
 
     def get_text(self):
         return self.label.get_text()
@@ -242,21 +218,14 @@ class IconNotebook:
     - A few shortcuts
     """
 
-    def __init__(self, frame, tabclosers=False, show_hilite_image=True, show_status_image=False,
-                 notebookraw=None):
+    def __init__(self, frame, notebook):
 
         # We store the real Gtk.Notebook object
-        self.notebook = notebookraw
+        self.notebook = notebook
         self.notebook.set_show_border(False)
-
-        self.frame = frame
-        self.tabclosers = tabclosers
-
-        self._show_hilite_image = show_hilite_image
-        self._show_status_image = show_status_image
-
         self.notebook.connect("switch-page", self.on_switch_page)
 
+        self.frame = frame
         self.unread_button = Gtk.MenuButton.new()
 
         if Gtk.get_major_version() == 4:
@@ -289,7 +258,7 @@ class IconNotebook:
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
         self.popup_menu_unread = PopupMenu(self.frame, connect_events=False)
-        self.unread_button.set_menu_model(self.popup_menu_unread)
+        self.unread_button.set_menu_model(self.popup_menu_unread.model)
         self.unread_pages = []
 
         self.popup_enable()
@@ -308,29 +277,13 @@ class IconNotebook:
         else:
             return self.notebook.get_tab_label(page).get_children()[0]
 
-    def set_tab_closers(self, closers):
-
-        self.tabclosers = closers
+    def set_tab_closers(self):
 
         for i in range(self.notebook.get_n_pages()):
             page = self.notebook.get_nth_page(i)
             tab_label, menu_label = self.get_labels(page)
 
-            tab_label.set_onclose(self.tabclosers)
-
-    def show_hilite_images(self, show_image=True):
-
-        self._show_hilite_image = show_image
-
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
-            tab_label, menu_label = self.get_labels(page)
-
-            tab_label.show_hilite_image(self._show_hilite_image)
-
-    def show_status_images(self, show_image=True):
-
-        self._show_status_image = show_image
+            tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
     def set_tab_pos(self, pos):
         self.notebook.set_tab_pos(pos)
@@ -363,23 +316,14 @@ class IconNotebook:
         if not self.unread_pages:
             self.unread_button.hide()
 
-    def append_page(self, page, text, onclose=None, full_text=None, status=None):
-
-        closebutton = self.tabclosers
+    def append_page(self, page, text, close_callback=None, full_text=None, status=None):
 
         if full_text is None:
             full_text = text
 
-        label_tab = ImageLabel(
-            text, full_text, onclose, closebutton=closebutton,
-            show_hilite_image=self._show_hilite_image,
-            status_image=get_status_image(0),
-            show_status_image=self._show_status_image
-        )
+        label_tab = ImageLabel(text, full_text, config.sections["ui"]["tabclosers"], close_callback)
+        label_tab.set_tooltip_text(full_text)
         label_tab.show()
-
-        # menu for all tabs
-        label_tab_menu = ImageLabel(text)
 
         if Gtk.get_major_version() == 4:
             label_tab.gesture_click = Gtk.GestureClick()
@@ -388,15 +332,14 @@ class IconNotebook:
             label_tab.gesture_click = Gtk.GestureMultiPress.new(label_tab)
 
         label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
-        label_tab.gesture_click.connect("pressed", label_tab.onclose, page)
+        label_tab.gesture_click.connect("pressed", label_tab.close_callback, page)
+
+        # menu for all tabs
+        label_tab_menu = ImageLabel(text)
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
-        if status:
-            self.set_user_status(page, text, status)
-        else:
-            label_tab.set_tooltip_text(full_text)
-
+        self.set_user_status(page, text, status)
         self.notebook.set_tab_reorderable(page, True)
         self.notebook.show()
 
@@ -413,11 +356,11 @@ class IconNotebook:
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             for i in reversed(range(self.notebook.get_n_pages())):
                 page = self.notebook.get_nth_page(i)
                 tab_label, menu_label = self.get_labels(page)
-                tab_label.onclose(dialog)
+                tab_label.close_callback(dialog)
 
     def remove_all_pages(self):
 
@@ -449,6 +392,9 @@ class IconNotebook:
 
     def set_user_status(self, page, user, status):
 
+        if status is None:
+            return
+
         if status == 1:
             status_text = _("Away")
         elif status == 2:
@@ -475,7 +421,7 @@ class IconNotebook:
         if status > 0:
             image = get_icon(("hilite3", "hilite")[status - 1])
 
-        if status == 1 and tab_label.get_hilite_image() == get_icon("hilite"):
+        if status == 1 and tab_label.hilite_pixbuf == get_icon("hilite"):
             # Chat mentions have priority over normal notifications
             return
 

@@ -57,18 +57,10 @@ class PrivateChats(IconNotebook):
         self.page_id = "private"
         self.pages = {}
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.private_notebook
-        )
+        IconNotebook.__init__(self, self.frame, self.frame.private_notebook)
+        self.notebook.connect("switch-page", self.on_switch_chat)
 
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
-
-        self.notebook.connect("switch-page", self.on_switch_chat)
 
     def on_switch_chat(self, notebook, page, page_num):
 
@@ -313,7 +305,7 @@ class PrivateChat(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.OK:
+        if response_id == Gtk.ResponseType.YES:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.chat_textview.clear()
 

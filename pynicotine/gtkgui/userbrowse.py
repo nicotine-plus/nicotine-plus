@@ -57,18 +57,10 @@ class UserBrowses(IconNotebook):
         self.page_id = "userbrowse"
         self.pages = {}
 
-        IconNotebook.__init__(
-            self,
-            self.frame,
-            tabclosers=config.sections["ui"]["tabclosers"],
-            show_hilite_image=config.sections["notifications"]["notification_tab_icons"],
-            show_status_image=config.sections["ui"]["tab_status_icons"],
-            notebookraw=self.frame.userbrowse_notebook
-        )
+        IconNotebook.__init__(self, self.frame, self.frame.userbrowse_notebook)
+        self.notebook.connect("switch-page", self.on_switch_browse_page)
 
         CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
-
-        self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, notebook, page, page_num):
 
@@ -745,9 +737,9 @@ class UserBrowse(UserInterface):
     def on_download_directory_to(self, *args, recurse=False):
 
         if recurse:
-            str_title = _("Select Destination for Downloading Folder with Subfolders from User")
+            str_title = _("Select Destination for Downloading Multiple Folders")
         else:
-            str_title = _("Select Destination for Downloading a Folder from User")
+            str_title = _("Select Destination Folder")
 
         choose_dir(
             parent=self.frame.MainWindow,
@@ -1002,7 +994,7 @@ class UserBrowse(UserInterface):
 
         choose_dir(
             parent=self.frame.MainWindow,
-            title=_("Select Destination for Downloading File(s) from User"),
+            title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initialdir=path,
             multichoice=False

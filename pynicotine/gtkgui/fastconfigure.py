@@ -20,13 +20,13 @@
 
 import os
 
-from gi.repository import Gdk
 from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
@@ -112,7 +112,7 @@ class FastConfigureAssistant(UserInterface):
         self.privileges.set_markup(text)
         self.privileges.connect("activate-link", lambda x, url: open_uri(url))
 
-        self.FastConfigureDialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(self.FastConfigureDialog)
 
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """

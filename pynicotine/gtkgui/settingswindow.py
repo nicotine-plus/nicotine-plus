@@ -30,8 +30,7 @@ import time
 
 import gi
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
-from gi.repository import GObject
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -39,12 +38,15 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
+from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import set_dark_mode
+from pynicotine.gtkgui.widgets.theme import set_global_font
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -251,7 +253,8 @@ class DownloadsFrame(UserInterface):
                 "downloadlimitalt": self.DownloadSpeedAlternative,
                 "usernamesubfolders": self.UsernameSubfolders,
                 "afterfinish": self.AfterDownload,
-                "afterfolder": self.AfterFolder
+                "afterfolder": self.AfterFolder,
+                "download_doubleclick": self.DownloadDoubleClick
             }
         }
 
@@ -324,7 +327,8 @@ class DownloadsFrame(UserInterface):
                 "downloadlimitalt": self.DownloadSpeedAlternative.get_value_as_int(),
                 "usernamesubfolders": self.UsernameSubfolders.get_active(),
                 "afterfinish": self.AfterDownload.get_text(),
-                "afterfolder": self.AfterFolder.get_text()
+                "afterfolder": self.AfterFolder.get_text(),
+                "download_doubleclick": self.DownloadDoubleClick.get_active()
             }
         }
 
@@ -841,7 +845,8 @@ class UploadsFrame(UserInterface):
                 "queuelimit": self.MaxUserQueue,
                 "filelimit": self.MaxUserFiles,
                 "friendsnolimits": self.FriendsNoLimits,
-                "preferfriends": self.PreferFriends
+                "preferfriends": self.PreferFriends,
+                "upload_doubleclick": self.UploadDoubleClick
             }
         }
 
@@ -868,7 +873,8 @@ class UploadsFrame(UserInterface):
                 "queuelimit": self.MaxUserQueue.get_value_as_int(),
                 "filelimit": self.MaxUserFiles.get_value_as_int(),
                 "friendsnolimits": self.FriendsNoLimits.get_active(),
-                "preferfriends": self.PreferFriends.get_active()
+                "preferfriends": self.PreferFriends.get_active(),
+                "upload_doubleclick": self.UploadDoubleClick.get_active()
             }
         }
 
@@ -1265,23 +1271,110 @@ class BannedUsersFrame(UserInterface):
             del self.blocked_list[ip]
 
 
-class TextToSpeechFrame(UserInterface):
+class ChatsFrame(UserInterface):
 
     def __init__(self, parent):
 
-        super().__init__("ui/settings/tts.ui")
+        super().__init__("ui/settings/chats.ui")
 
         self.p = parent
         self.frame = self.p.frame
 
         self.options = {
+            "logging": {
+                "readroomlines": self.RoomLogLines,
+                "readprivatelines": self.PrivateLogLines,
+                "readroomlogs": self.ReadRoomLogs,
+                "rooms_timestamp": self.ChatRoomFormat,
+                "private_timestamp": self.PrivateChatFormat
+            },
+            "privatechat": {
+                "store": self.ReopenPrivateChats
+            },
+            "words": {
+                "tab": self.CompletionTabCheck,
+                "cycle": self.CompletionCycleCheck,
+                "dropdown": self.CompletionDropdownCheck,
+                "characters": self.CharactersCompletion,
+                "roomnames": self.CompleteRoomNamesCheck,
+                "buddies": self.CompleteBuddiesCheck,
+                "roomusers": self.CompleteUsersInRoomsCheck,
+                "commands": self.CompleteCommandsCheck,
+                "aliases": self.CompleteAliasesCheck,
+                "onematch": self.OneMatchCheck,
+                "censored": self.CensorList,
+                "censorwords": self.CensorCheck,
+                "censorfill": self.CensorReplaceCombo,
+                "autoreplaced": self.ReplacementList,
+                "replacewords": self.ReplaceCheck
+            },
             "ui": {
+                "spellcheck": self.SpellCheck,
                 "speechenabled": self.TextToSpeech,
                 "speechcommand": self.TTSCommand,
                 "speechrooms": self.RoomMessage,
                 "speechprivate": self.PrivateMessage
             }
         }
+
+        self.censor_list_model = Gtk.ListStore(str)
+
+        cols = initialise_columns(
+            None, self.CensorList,
+            ["pattern", _("Pattern"), -1, "edit", None]
+        )
+        cols["pattern"].set_sort_column_id(0)
+
+        self.CensorList.set_model(self.censor_list_model)
+
+        renderers = cols["pattern"].get_cells()
+        for render in renderers:
+            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
+
+        self.replace_list_model = Gtk.ListStore(str, str)
+
+        self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
+        cols = initialise_columns(
+            None, self.ReplacementList,
+            ["pattern", _("Pattern"), 150, "edit", None],
+            ["replacement", _("Replacement"), -1, "edit", None]
+        )
+        cols["pattern"].set_sort_column_id(0)
+        cols["replacement"].set_sort_column_id(1)
+
+        self.ReplacementList.set_model(self.replace_list_model)
+
+        pos = 0
+        for (column_id, column) in cols.items():
+            renderers = column.get_cells()
+            for render in renderers:
+                render.connect('edited', self.replace_cell_edited_callback, self.ReplacementList, pos)
+
+            pos += 1
+
+    def on_completion_changed(self, widget):
+        self.needcompletion = True
+
+    def on_completion_tab_check(self, widget):
+        sensitive = self.CompletionTabCheck.get_active()
+        self.needcompletion = True
+
+        self.CompletionCycleCheck.set_sensitive(sensitive)
+        self.CompleteRoomNamesCheck.set_sensitive(sensitive)
+        self.CompleteBuddiesCheck.set_sensitive(sensitive)
+        self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
+        self.CompleteCommandsCheck.set_sensitive(sensitive)
+        self.CompleteAliasesCheck.set_sensitive(sensitive)
+        self.CompletionDropdownCheck.set_sensitive(sensitive)
+
+        self.on_completion_dropdown_check(widget)
+
+    def on_completion_dropdown_check(self, widget):
+        sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
+        self.needcompletion = True
+
+        self.CharactersCompletion.set_sensitive(sensitive)
+        self.OneMatchCheck.set_sensitive(sensitive)
 
     def on_default_private(self, widget):
         self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
@@ -1292,9 +1385,97 @@ class TextToSpeechFrame(UserInterface):
     def on_default_tts(self, widget):
         self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
+    def on_room_default_timestamp(self, widget):
+        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
+
+    def on_private_default_timestamp(self, widget):
+        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
+
+    def censor_cell_edited_callback(self, widget, index, value, treeview, pos):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+
+        if value != "" and not value.isspace() and len(value) > 2:
+            store.set(iterator, pos, value)
+        else:
+            store.remove(iterator)
+
+    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
+
+        store = treeview.get_model()
+        iterator = store.get_iter(index)
+        store.set(iterator, pos, value)
+
+    def on_replace_check(self, widget):
+        sensitive = widget.get_active()
+        self.ReplacementsContainer.set_sensitive(sensitive)
+
+    def on_censor_check(self, widget):
+        sensitive = widget.get_active()
+        self.CensorContainer.set_sensitive(sensitive)
+
+    def on_add_censored_response(self, dialog, response_id, data):
+
+        pattern = dialog.get_response_value()
+        dialog.destroy()
+
+        if response_id != Gtk.ResponseType.OK:
+            return
+
+        if pattern:
+            self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
+
+    def on_add_censored(self, widget):
+
+        entry_dialog(
+            parent=self.p.dialog,
+            title=_("Censor Pattern"),
+            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
+                      "want to match strings inside words (may fail at the beginning and end of lines)."),
+            callback=self.on_add_censored_response
+        )
+
+    def on_remove_censored(self, widget):
+
+        model, paths = self.CensorList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
+
+    def on_add_replacement(self, widget):
+
+        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
+        selection = self.ReplacementList.get_selection()
+        selection.select_iter(iterator)
+        col = self.ReplacementList.get_column(0)
+
+        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
+
+    def on_remove_replacement(self, widget):
+
+        model, paths = self.ReplacementList.get_selection().get_selected_rows()
+
+        for path in reversed(paths):
+            iterator = model.get_iter(path)
+            model.remove(iterator)
+
     def set_settings(self):
 
+        self.censor_list_model.clear()
+        self.replace_list_model.clear()
+
         self.p.set_widgets_data(self.options)
+
+        self.needcompletion = False
+
+        try:
+            gi.require_version('Gspell', '1')
+            from gi.repository import Gspell  # noqa: F401
+
+        except (ImportError, ValueError):
+            self.SpellCheck.hide()
 
         for i in ("%(user)s", "%(message)s"):
             if i not in config.sections["ui"]["speechprivate"]:
@@ -1303,12 +1484,67 @@ class TextToSpeechFrame(UserInterface):
             if i not in config.sections["ui"]["speechrooms"]:
                 self.default_rooms(None)
 
+        for word, replacement in config.sections["words"]["autoreplaced"].items():
+            self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
+                str(word),
+                str(replacement)
+            ])
+
+        self.on_censor_check(self.CensorCheck)
+        self.on_replace_check(self.ReplaceCheck)
+
     def get_settings(self):
 
+        censored = []
+        autoreplaced = {}
+
+        iterator = self.censor_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.censor_list_model.get_value(iterator, 0)
+            censored.append(word)
+            iterator = self.censor_list_model.iter_next(iterator)
+
+        iterator = self.replace_list_model.get_iter_first()
+
+        while iterator is not None:
+            word = self.replace_list_model.get_value(iterator, 0)
+            replacement = self.replace_list_model.get_value(iterator, 1)
+            autoreplaced[word] = replacement
+            iterator = self.replace_list_model.iter_next(iterator)
+
         return {
+            "logging": {
+                "readroomlogs": self.ReadRoomLogs.get_active(),
+                "readroomlines": self.RoomLogLines.get_value_as_int(),
+                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
+                "private_timestamp": self.PrivateChatFormat.get_text(),
+                "rooms_timestamp": self.ChatRoomFormat.get_text()
+            },
+            "privatechat": {
+                "store": self.ReopenPrivateChats.get_active()
+            },
+            "words": {
+                "tab": self.CompletionTabCheck.get_active(),
+                "cycle": self.CompletionCycleCheck.get_active(),
+                "dropdown": self.CompletionDropdownCheck.get_active(),
+                "characters": self.CharactersCompletion.get_value_as_int(),
+                "roomnames": self.CompleteRoomNamesCheck.get_active(),
+                "buddies": self.CompleteBuddiesCheck.get_active(),
+                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
+                "commands": self.CompleteCommandsCheck.get_active(),
+                "aliases": self.CompleteAliasesCheck.get_active(),
+                "onematch": self.OneMatchCheck.get_active(),
+                "censored": censored,
+                "censorwords": self.CensorCheck.get_active(),
+                "censorfill": self.CensorReplaceCombo.get_active_id(),
+                "autoreplaced": autoreplaced,
+                "replacewords": self.ReplaceCheck.get_active()
+            },
             "ui": {
+                "spellcheck": self.SpellCheck.get_active(),
                 "speechenabled": self.TextToSpeech.get_active(),
-                "speechcommand": self.TTSCommand.get_child().get_text(),
+                "speechcommand": self.TTSCommand.get_active_text(),
                 "speechrooms": self.RoomMessage.get_text(),
                 "speechprivate": self.PrivateMessage.get_text()
             }
@@ -1323,6 +1559,9 @@ class UserInterfaceFrame(UserInterface):
 
         self.p = parent
         self.frame = self.p.frame
+        self.needcolors = False
+
+        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
 
         self.tabs = {
             "search": self.EnableSearchTab,
@@ -1336,79 +1575,60 @@ class UserInterfaceFrame(UserInterface):
             "interests": self.EnableInterestsTab
         }
 
-        # Define options for each GtkComboBox using a liststore
-        # The first element is the translated string,
-        # the second is a GtkPositionType
-        self.pos_list = Gtk.ListStore(str, str)
-        column_numbers = list(range(self.pos_list.get_n_columns()))
+        # Tab positions
+        for combobox in (self.MainPosition, self.ChatRoomsPosition, self.PrivateChatPosition,
+                         self.SearchPosition, self.UserInfoPosition, self.UserBrowsePosition):
+            combobox.append("Top", _("Top"))
+            combobox.append("Bottom", _("Bottom"))
+            combobox.append("Left", _("Left"))
+            combobox.append("Right", _("Right"))
 
-        for item in ([_("Top"), "Top"], [_("Bottom"), "Bottom"], [_("Left"), "Left"], [_("Right"), "Right"]):
-            self.pos_list.insert_with_valuesv(-1, column_numbers, item)
-
-        cell = Gtk.CellRendererText()
-
-        self.MainPosition.set_model(self.pos_list)
-        self.MainPosition.pack_start(cell, True)
-        self.MainPosition.add_attribute(cell, 'text', 0)
-
-        self.ChatRoomsPosition.set_model(self.pos_list)
-        self.ChatRoomsPosition.pack_start(cell, True)
-        self.ChatRoomsPosition.add_attribute(cell, 'text', 0)
-
-        self.PrivateChatPosition.set_model(self.pos_list)
-        self.PrivateChatPosition.pack_start(cell, True)
-        self.PrivateChatPosition.add_attribute(cell, 'text', 0)
-
-        self.SearchPosition.set_model(self.pos_list)
-        self.SearchPosition.pack_start(cell, True)
-        self.SearchPosition.add_attribute(cell, 'text', 0)
-
-        self.UserInfoPosition.set_model(self.pos_list)
-        self.UserInfoPosition.pack_start(cell, True)
-        self.UserInfoPosition.add_attribute(cell, 'text', 0)
-
-        self.UserBrowsePosition.set_model(self.pos_list)
-        self.UserBrowsePosition.pack_start(cell, True)
-        self.UserBrowsePosition.add_attribute(cell, 'text', 0)
-
-        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
-
-        liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str)
-        column_numbers = list(range(liststore.get_n_columns()))
-        self.IconView.set_model(liststore)
-
-        for row in (
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("online")), _("Connected")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("offline")), _("Disconnected")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("away")), _("Away")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite")), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("hilite3")), _("Highlight")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("n")), _("Window")],
-            [GObject.Value(GObject.TYPE_OBJECT, get_icon("notify")), _("Notification")]
-        ):
-            liststore.insert_with_valuesv(-1, column_numbers, row)
+        # Icon preview
+        icon_list = [
+            (get_icon("online"), _("Connected"), 16),
+            (get_icon("offline"), _("Disconnected"), 16),
+            (get_icon("away"), _("Away"), 16),
+            (get_icon("hilite"), _("Highlight"), 16),
+            (get_icon("hilite3"), _("Highlight"), 16),
+            (get_icon("n"), _("Window"), 64),
+            (get_icon("notify"), _("Notification"), 64)]
 
         if sys.platform != "darwin" and Gtk.get_major_version() != 4:
-            for row in (
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_connect")),
-                    _("Connected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_disconnect")),
-                    _("Disconnected (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_away")),
-                    _("Away (Tray)")],
-                [GObject.Value(GObject.TYPE_OBJECT, get_icon("trayicon_msg")),
-                    _("Message (Tray)")]
-            ):
-                liststore.insert_with_valuesv(-1, column_numbers, row)
+            icon_list += [
+                (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
+                (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
+                (get_icon("trayicon_away"), _("Away (Tray)"), 16),
+                (get_icon("trayicon_msg"), _("Message (Tray)"), 16)]
 
-        self.needcolors = False
+        for pixbuf, label, pixel_size in icon_list:
+            box = Gtk.Box()
+            box.set_orientation(Gtk.Orientation.VERTICAL)
+            box.set_valign(Gtk.Align.CENTER)
+            box.set_spacing(6)
+            box.show()
+
+            icon = Gtk.Image.new_from_pixbuf(pixbuf)
+            icon.set_pixel_size(pixel_size)
+            icon.show()
+
+            label = Gtk.Label.new(label)
+            label.show()
+
+            box.add(icon)
+            box.add(label)
+
+            self.IconView.insert(box, -1)
+
         self.options = {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors
-            },
-            "transfers": {
-                "download_doubleclick": self.DownloadDoubleClick,
-                "upload_doubleclick": self.UploadDoubleClick
+                "notification_tab_colors": self.NotificationTabColors,
+                "notification_window_title": self.NotificationWindowTitle,
+                "notification_popup_sound": self.NotificationPopupSound,
+                "notification_popup_file": self.NotificationPopupFile,
+                "notification_popup_folder": self.NotificationPopupFolder,
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
+                "notification_popup_chatroom": self.NotificationPopupChatroom,
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
             },
             "ui": {
                 "globalfont": self.SelectGlobalFont,
@@ -1451,7 +1671,9 @@ class UserInterfaceFrame(UserInterface):
                 "tab_hilite": self.EntryHighlightTab,
                 "tab_changed": self.EntryChangedTab,
                 "dark_mode": self.DarkMode,
-                "exitdialog": self.CloseAction
+                "exitdialog": self.CloseAction,
+                "trayicon": self.TrayiconCheck,
+                "startup_hidden": self.StartupHidden
             }
         }
 
@@ -1479,30 +1701,19 @@ class UserInterfaceFrame(UserInterface):
 
         self.p.set_widgets_data(self.options)
 
+        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
+            # Tray icons don't work as expected on macOS
+            self.hide_tray_icon_settings()
+            return
+
+        sensitive = self.TrayiconCheck.get_active()
+        self.StartupHidden.set_sensitive(sensitive)
+
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
 
             if widget is not None:
                 widget.set_active(enabled)
-
-        # Function to set the default iter from the value found in the config file
-        def set_active_conf(model, path, iterator, data):
-            if model.get_value(iterator, 1).lower() == data["cfg"].lower():
-                data["combobox"].set_active_iter(iterator)
-
-        # Override settings for the GtkComboBox defining ui positioning
-        for opt in [
-            "tabmain", "tabrooms", "tabprivate",
-            "tabsearch", "tabinfo", "tabbrowse"
-        ]:
-            # Get the value in the config file
-            config_val = config.sections["ui"][opt]
-
-            # Iterate over entries to find which one should be active
-            self.options["ui"][opt].get_model().foreach(set_active_conf, {
-                "cfg": config_val,
-                "combobox": self.options["ui"][opt]
-            })
 
         self.on_username_hotspots_toggled(self.UsernameHotspots)
         self.on_tab_notification_color_toggled(self.NotificationTabColors)
@@ -1512,14 +1723,6 @@ class UserInterfaceFrame(UserInterface):
 
     def get_settings(self):
 
-        # Get iters from GtkComboBox fields
-        iter_main = self.pos_list.get_iter(self.MainPosition.get_active())
-        iter_rooms = self.pos_list.get_iter(self.ChatRoomsPosition.get_active())
-        iter_private = self.pos_list.get_iter(self.PrivateChatPosition.get_active())
-        iter_search = self.pos_list.get_iter(self.SearchPosition.get_active())
-        iter_info = self.pos_list.get_iter(self.UserInfoPosition.get_active())
-        iter_browse = self.pos_list.get_iter(self.UserBrowsePosition.get_active())
-
         enabled_tabs = {}
 
         for page_id, widget in self.tabs.items():
@@ -1527,11 +1730,14 @@ class UserInterfaceFrame(UserInterface):
 
         return {
             "notifications": {
-                "notification_tab_colors": self.NotificationTabColors.get_active()
-            },
-            "transfers": {
-                "download_doubleclick": self.DownloadDoubleClick.get_active(),
-                "upload_doubleclick": self.UploadDoubleClick.get_active()
+                "notification_tab_colors": self.NotificationTabColors.get_active(),
+                "notification_window_title": self.NotificationWindowTitle.get_active(),
+                "notification_popup_sound": self.NotificationPopupSound.get_active(),
+                "notification_popup_file": self.NotificationPopupFile.get_active(),
+                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
+                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
+                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
+                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
             },
             "ui": {
                 "globalfont": self.SelectGlobalFont.get_font(),
@@ -1540,17 +1746,17 @@ class UserInterfaceFrame(UserInterface):
                 "searchfont": self.SelectSearchFont.get_font(),
                 "transfersfont": self.SelectTransfersFont.get_font(),
                 "browserfont": self.SelectBrowserFont.get_font(),
-                "usernamestyle": self.UsernameStyle.get_active_text(),
+                "usernamestyle": self.UsernameStyle.get_active_id(),
 
                 "file_path_tooltips": self.FilePathTooltips.get_active(),
                 "reverse_file_paths": self.ReverseFilePaths.get_active(),
 
-                "tabmain": self.pos_list.get_value(iter_main, 1),
-                "tabrooms": self.pos_list.get_value(iter_rooms, 1),
-                "tabprivate": self.pos_list.get_value(iter_private, 1),
-                "tabsearch": self.pos_list.get_value(iter_search, 1),
-                "tabinfo": self.pos_list.get_value(iter_info, 1),
-                "tabbrowse": self.pos_list.get_value(iter_browse, 1),
+                "tabmain": self.MainPosition.get_active_id(),
+                "tabrooms": self.ChatRoomsPosition.get_active_id(),
+                "tabprivate": self.PrivateChatPosition.get_active_id(),
+                "tabsearch": self.SearchPosition.get_active_id(),
+                "tabinfo": self.UserInfoPosition.get_active_id(),
+                "tabbrowse": self.UserBrowsePosition.get_active_id(),
                 "modes_visible": enabled_tabs,
                 "tab_select_previous": self.TabSelectPrevious.get_active(),
                 "tabclosers": self.TabClosers.get_active(),
@@ -1575,9 +1781,25 @@ class UserInterfaceFrame(UserInterface):
                 "tab_default": self.EntryRegularTab.get_text(),
                 "tab_changed": self.EntryChangedTab.get_text(),
                 "dark_mode": self.DarkMode.get_active(),
-                "exitdialog": self.CloseAction.get_active()
+                "exitdialog": self.CloseAction.get_active(),
+                "trayicon": self.TrayiconCheck.get_active(),
+                "startup_hidden": self.StartupHidden.get_active()
             }
         }
+
+    """ Tray """
+
+    def hide_tray_icon_settings(self):
+
+        # Hide widgets
+        self.TraySettings.hide()
+
+    def on_toggle_tray(self, widget):
+
+        self.StartupHidden.set_sensitive(widget.get_active())
+
+        if not widget.get_active() and self.StartupHidden.get_active():
+            self.StartupHidden.set_active(widget.get_active())
 
     """ Icons """
 
@@ -1719,16 +1941,7 @@ class LoggingFrame(UserInterface):
                 "transferslogsdir": self.TransfersLogDir,
                 "debug_file_output": self.LogDebug,
                 "debuglogsdir": self.DebugLogDir,
-                "rooms_timestamp": self.ChatRoomFormat,
-                "private_timestamp": self.PrivateChatFormat,
-                "log_timestamp": self.LogFileFormat,
-                "timestamps": self.ShowTimeStamps,
-                "readroomlines": self.RoomLogLines,
-                "readprivatelines": self.PrivateLogLines,
-                "readroomlogs": self.ReadRoomLogs
-            },
-            "privatechat": {
-                "store": self.ReopenPrivateChats
+                "log_timestamp": self.LogFileFormat
             }
         }
 
@@ -1747,27 +1960,12 @@ class LoggingFrame(UserInterface):
                 "transferslogsdir": self.TransfersLogDir.get_path(),
                 "debug_file_output": self.LogDebug.get_active(),
                 "debuglogsdir": self.DebugLogDir.get_path(),
-                "readroomlogs": self.ReadRoomLogs.get_active(),
-                "readroomlines": self.RoomLogLines.get_value_as_int(),
-                "readprivatelines": self.PrivateLogLines.get_value_as_int(),
-                "private_timestamp": self.PrivateChatFormat.get_text(),
-                "rooms_timestamp": self.ChatRoomFormat.get_text(),
-                "log_timestamp": self.LogFileFormat.get_text(),
-                "timestamps": self.ShowTimeStamps.get_active()
-            },
-            "privatechat": {
-                "store": self.ReopenPrivateChats.get_active()
-            },
+                "log_timestamp": self.LogFileFormat.get_text()
+            }
         }
 
     def on_default_timestamp(self, widget):
         self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
-
-    def on_room_default_timestamp(self, widget):
-        self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
-
-    def on_private_default_timestamp(self, widget):
-        self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
 
 class SearchesFrame(UserInterface):
@@ -1965,10 +2163,10 @@ class UrlHandlersFrame(UserInterface):
                 "protocols": protocols
             },
             "ui": {
-                "filemanager": self.FileManagerCombo.get_child().get_text()
+                "filemanager": self.FileManagerCombo.get_active_text()
             },
             "players": {
-                "default": self.audioPlayerCombo.get_child().get_text()
+                "default": self.audioPlayerCombo.get_active_text()
             }
         }
 
@@ -1980,8 +2178,8 @@ class UrlHandlersFrame(UserInterface):
 
     def on_add(self, widget):
 
-        protocol = self.ProtocolCombo.get_child().get_text()
-        command = self.Handler.get_child().get_text()
+        protocol = self.ProtocolCombo.get_active_text()
+        command = self.Handler.get_active_text()
 
         self.ProtocolCombo.get_child().set_text("")
         self.Handler.get_child().set_text("")
@@ -2099,7 +2297,7 @@ class CensorReplaceListFrame(UserInterface):
             "words": {
                 "censored": censored,
                 "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_text(),
+                "censorfill": self.CensorReplaceCombo.get_active_id(),
                 "autoreplaced": autoreplaced,
                 "replacewords": self.ReplaceCheck.get_active()
             }
@@ -2344,7 +2542,7 @@ class NowPlayingFrame(UserInterface):
         return self.NPCommand.get_text()
 
     def get_format(self):
-        return self.NPFormat.get_child().get_text()
+        return self.NPFormat.get_active_text()
 
     def set_player(self, player):
 
@@ -2430,75 +2628,6 @@ class NowPlayingFrame(UserInterface):
         }
 
 
-class NotificationsFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/notifications.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle,
-                "notification_tab_icons": self.NotificationTabIcons,
-                "notification_popup_sound": self.NotificationPopupSound,
-                "notification_popup_file": self.NotificationPopupFile,
-                "notification_popup_folder": self.NotificationPopupFolder,
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage,
-                "notification_popup_chatroom": self.NotificationPopupChatroom,
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention
-            },
-            "ui": {
-                "trayicon": self.TrayiconCheck,
-                "startup_hidden": self.StartupHidden
-            }
-        }
-
-    def set_settings(self):
-        self.p.set_widgets_data(self.options)
-
-        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
-            # Tray icons don't work as expected on macOS
-            self.hide_tray_icon_settings()
-            return
-
-        sensitive = self.TrayiconCheck.get_active()
-        self.StartupHidden.set_sensitive(sensitive)
-
-    def hide_tray_icon_settings(self):
-
-        # Hide widgets
-        self.TraySettings.hide()
-
-    def on_toggle_tray(self, widget):
-
-        self.StartupHidden.set_sensitive(widget.get_active())
-
-        if not widget.get_active() and self.StartupHidden.get_active():
-            self.StartupHidden.set_active(widget.get_active())
-
-    def get_settings(self):
-
-        return {
-            "notifications": {
-                "notification_window_title": self.NotificationWindowTitle.get_active(),
-                "notification_tab_icons": self.NotificationTabIcons.get_active(),
-                "notification_popup_sound": self.NotificationPopupSound.get_active(),
-                "notification_popup_file": self.NotificationPopupFile.get_active(),
-                "notification_popup_folder": self.NotificationPopupFolder.get_active(),
-                "notification_popup_private_message": self.NotificationPopupPrivateMessage.get_active(),
-                "notification_popup_chatroom": self.NotificationPopupChatroom.get_active(),
-                "notification_popup_chatroom_mention": self.NotificationPopupChatroomMention.get_active()
-            },
-            "ui": {
-                "trayicon": self.TrayiconCheck.get_active(),
-                "startup_hidden": self.StartupHidden.get_active()
-            }
-        }
-
-
 class PluginsFrame(UserInterface):
 
     """ Plugin preferences dialog """
@@ -2513,7 +2642,7 @@ class PluginsFrame(UserInterface):
             # Build the window
             Gtk.Dialog.__init__(
                 self,
-                title=_("%s Properties") % name,
+                title=_("%s Settings") % name,
                 modal=True,
                 default_width=600,
                 use_header_bar=Gtk.Settings.get_default().get_property("gtk-dialogs-use-header")
@@ -2880,7 +3009,7 @@ class PluginsFrame(UserInterface):
             self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
-        dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(dialog)
 
     def on_select_plugin(self, selection):
 
@@ -2992,12 +3121,12 @@ class Settings(UserInterface):
 
     def __init__(self, frame):
 
-        super().__init__("ui/settings/settingswindow.ui")
+        super().__init__("ui/dialogs/preferences.ui")
 
         self.frame = frame
         self.dialog = dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.Main,
+            content_box=self.main,
             quit_callback=self.on_delete,
             title=_("Preferences"),
             width=960,
@@ -3018,57 +3147,44 @@ class Settings(UserInterface):
         style_context.add_class("preferences")
         style_context.add_class("preferences-border")
 
-        if Gtk.get_major_version() == 3:
-            self.Main.child_set_property(self.SettingsList, "shrink", False)
-            self.Main.child_set_property(self.ScrolledWindow, "shrink", False)
-        else:
-            self.Main.set_shrink_start_child(False)
-            self.Main.set_shrink_end_child(False)
-
-        # Signal sent and catch by frame.py on update
-        GObject.signal_new("settings-updated", Gtk.Window, GObject.SignalFlags.RUN_LAST,
-                           GObject.TYPE_NONE, (GObject.TYPE_STRING,))
-        dialog.connect("settings-updated", self.frame.on_settings_updated)
-
-        # Treeview of the settings
-        self.tree = {}
         self.pages = {}
+        self.page_ids = [
+            ("Network", _("Network"), "network-wireless-symbolic"),
+            ("UserInterface", _("User Interface"), "view-grid-symbolic"),
+            ("Shares", _("Shares"), "folder-symbolic"),
+            ("Downloads", _("Downloads"), "document-save-symbolic"),
+            ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
+            ("Searches", _("Searches"), "system-search-symbolic"),
+            ("UserInfo", _("User Info"), "avatar-default-symbolic"),
+            ("Chats", _("Chats"), "mail-send-symbolic"),
+            ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
+            ("Logging", _("Logging"), "emblem-documents-symbolic"),
+            ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
+            ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
+            ("Plugins", _("Plugins"), "list-add-symbolic"),
+            ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
-        # Model of the treeview
-        model = Gtk.TreeStore(str, str)
-        self.SettingsTreeview.set_model(model)
+        for page_id, label, icon_name in self.page_ids:
+            box = Gtk.Box()
+            box.set_margin_top(8)
+            box.set_margin_bottom(8)
+            box.set_margin_start(12)
+            box.set_margin_end(42)
+            box.set_spacing(12)
+            box.show()
 
-        self.tree["General"] = row = model.append(None, [_("General"), "General"])
-        self.tree["Network"] = model.append(row, [_("Network"), "Network"])
-        self.tree["UserInterface"] = model.append(row, [_("User Interface"), "UserInterface"])
-        self.tree["UserInfo"] = model.append(row, [_("User Info"), "UserInfo"])
-        self.tree["Searches"] = model.append(row, [_("Searches"), "Searches"])
-        self.tree["Notifications"] = model.append(row, [_("Notifications"), "Notifications"])
-        self.tree["Plugins"] = model.append(row, [_("Plugins"), "Plugins"])
-        self.tree["Logging"] = model.append(row, [_("Logging"), "Logging"])
-        self.tree["UrlHandlers"] = model.append(row, [_("URL Handlers"), "UrlHandlers"])
+            icon = Gtk.Image()
+            icon.set_property("icon-name", icon_name)
+            icon.show()
 
-        self.tree["Transfers"] = row = model.append(None, [_("Transfers"), "Transfers"])
-        self.tree["Shares"] = model.append(row, [_("Shares"), "Shares"])
-        self.tree["Downloads"] = model.append(row, [_("Downloads"), "Downloads"])
-        self.tree["Uploads"] = model.append(row, [_("Uploads"), "Uploads"])
-        self.tree["BannedUsers"] = model.append(row, [_("Banned Users"), "BannedUsers"])
+            label = Gtk.Label.new(label)
+            label.set_xalign(0)
+            label.show()
 
-        self.tree["Chat"] = row = model.append(None, [_("Chat"), "Chat"])
-        self.tree["IgnoredUsers"] = model.append(row, [_("Ignored Users"), "IgnoredUsers"])
-        self.tree["CensorReplaceList"] = model.append(row, [_("Censor & Replace"), "CensorReplaceList"])
-        self.tree["NowPlaying"] = model.append(row, [_("Now Playing"), "NowPlaying"])
-        self.tree["Completion"] = model.append(row, [_("Completion"), "Completion"])
-        self.tree["TextToSpeech"] = model.append(row, [_("Text-to-Speech"), "TextToSpeech"])
+            box.add(icon)
+            box.add(label)
 
-        initialise_columns(
-            None, self.SettingsTreeview,
-            ["categories", _("Categories"), -1, "text", None]
-        )
-
-        # Set the cursor to the second element of the TreeViewColumn.
-        self.SettingsTreeview.expand_all()
-        self.SettingsTreeview.set_cursor((0, 0))
+            self.preferences_list.insert(box, -1)
 
         self.update_visuals()
 
@@ -3085,39 +3201,15 @@ class Settings(UserInterface):
 
     def set_active_page(self, page):
 
-        model = self.SettingsTreeview.get_model()
-        selection = self.SettingsTreeview.get_selection()
-        path = model.get_path(self.tree[page])
-
-        self.SettingsTreeview.expand_to_path(path)
-
-        if path is not None:
-            selection.select_path(path)
-
-        self.on_switch_page(selection)
-
-    def set_combobox_value(self, combobox, option):
-
-        # Attempt to match the value with an existing item
-        iterator = combobox.get_model().get_iter_first()
-
-        while iterator is not None:
-            word = combobox.get_model().get_value(iterator, 0)
-
-            if word.lower() == option or word == option:
-                combobox.set_active_iter(iterator)
+        pos = 0
+        for page_id, _label, _icon_name in self.page_ids:
+            if page_id == page:
                 break
 
-            iterator = combobox.get_model().iter_next(iterator)
+            pos += 1
 
-        # Custom value provided
-        if combobox.get_has_entry():
-            if Gtk.get_major_version() == 4:
-                entry = combobox.get_child()
-            else:
-                entry = combobox.get_children()[0]
-
-            entry.set_text(option)
+        row = self.preferences_list.get_row_at_index(pos)
+        self.preferences_list.select_row(row)
 
     def set_widgets_data(self, options):
 
@@ -3166,8 +3258,8 @@ class Settings(UserInterface):
                 # Regular check button
                 return widget.get_active()
 
-        elif isinstance(widget, Gtk.ComboBox):
-            return widget.get_model().get(widget.get_active_iter(), 0)[0]
+        elif isinstance(widget, Gtk.ComboBoxText):
+            return widget.get_active_text()
 
         elif isinstance(widget, Gtk.FontButton):
             widget.get_font()
@@ -3203,8 +3295,8 @@ class Settings(UserInterface):
         elif isinstance(widget, Gtk.CheckButton):
             widget.set_active(0)
 
-        elif isinstance(widget, Gtk.ComboBox):
-            self.set_combobox_item(widget, "")
+        elif isinstance(widget, Gtk.ComboBoxText):
+            widget.get_child().set_text("")
 
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
@@ -3237,9 +3329,12 @@ class Settings(UserInterface):
                 # Regular check button
                 widget.set_active(value)
 
-        elif isinstance(widget, Gtk.ComboBox):
+        elif isinstance(widget, Gtk.ComboBoxText):
             if isinstance(value, str):
-                self.set_combobox_value(widget, value)
+                if widget.get_has_entry():
+                    widget.get_child().set_text(value)
+                else:
+                    widget.set_active_id(value)
 
             elif isinstance(value, int):
                 widget.set_active(value)
@@ -3327,25 +3422,123 @@ class Settings(UserInterface):
 
         return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, config
 
-    def on_switch_page(self, selection):
+    def update_settings(self, settings_closed=False):
 
-        model, iterator = selection.get_selected()
+        need_portmap, need_rescan, need_colors, need_completion, need_ip_block, new_config = self.get_settings()
 
-        if iterator is None:
+        for key, data in new_config.items():
+            config.sections[key].update(data)
+
+        if need_portmap:
+            self.frame.np.add_upnp_portmapping()
+
+        if need_colors:
+            set_global_font(config.sections["ui"]["globalfont"])
+
+            self.frame.chatrooms.update_visuals()
+            self.frame.privatechat.update_visuals()
+            self.frame.search.update_visuals()
+            self.frame.downloads.update_visuals()
+            self.frame.uploads.update_visuals()
+            self.frame.userinfo.update_visuals()
+            self.frame.userbrowse.update_visuals()
+            self.frame.userlist.update_visuals()
+            self.frame.interests.update_visuals()
+
+            self.frame.update_visuals()
+            self.update_visuals()
+
+        if need_completion:
+            self.frame.update_completions()
+
+        if need_ip_block:
+            self.frame.np.network_filter.close_blocked_ip_connections()
+
+        # Dark mode
+        dark_mode_state = config.sections["ui"]["dark_mode"]
+        set_dark_mode(dark_mode_state)
+        self.frame.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
+
+        # UPnP
+        if not config.sections["server"]["upnp"] and self.frame.np.upnp_timer:
+            self.frame.np.upnp_timer.cancel()
+
+        # Chatrooms
+        self.frame.chatrooms.toggle_chat_buttons()
+
+        # Search
+        self.frame.search.populate_search_history()
+
+        # Transfers
+        self.frame.np.transfers.update_limits()
+        self.frame.np.transfers.update_download_filters()
+        self.frame.np.transfers.check_upload_queue()
+
+        # Tray icon
+        if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
+            self.frame.tray_icon.hide()
+
+        elif config.sections["ui"]["trayicon"] and not self.frame.tray_icon.is_visible():
+            self.frame.tray_icon.load()
+
+        # Main notebook
+        self.frame.set_tab_positions()
+        self.frame.set_main_tabs_visibility()
+
+        for i in range(self.frame.MainNotebook.get_n_pages()):
+            page = self.frame.MainNotebook.get_nth_page(i)
+            tab_label = self.frame.MainNotebook.get_tab_label(page)
+            tab_label.set_text_color(0)
+            self.frame.set_tab_expand(page)
+
+        # Other notebooks
+        for w in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
+                  self.frame.userbrowse, self.frame.search):
+            w.set_tab_closers()
+            w.set_text_colors(None)
+
+        # Update configuration
+        config.write_configuration()
+
+        if config.need_config():
+            self.frame.connect_action.set_enabled(False)
+            self.frame.on_fast_configure()
+
+        elif not self.frame.np.active_server_conn:
+            self.frame.connect_action.set_enabled(True)
+
+        if not settings_closed:
             return
 
-        page_id = model.get_value(iterator, 1)
+        if need_rescan:
+            self.frame.np.shares.rescan_shares()
 
-        if not hasattr(sys.modules[__name__], page_id + "Frame"):
-            return
+        if not config.sections["ui"]["trayicon"]:
+            self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
-        child = self.viewport1.get_child()
+    def back_up_config_response(self, selected, data):
+        config.write_config_backup(selected)
+
+    def back_up_config(self, *args):
+
+        save_file(
+            parent=self.frame.MainWindow,
+            callback=self.back_up_config_response,
+            initialdir=os.path.dirname(config.filename),
+            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            title=_("Pick a File Name for Config Backup")
+        )
+
+    def on_switch_page(self, listbox, row):
+
+        page_id, _label, _icon_name = self.page_ids[row.get_index()]
+        child = self.viewport.get_child()
 
         if child:
             if Gtk.get_major_version() == 4:
-                self.viewport1.set_child(None)
+                self.viewport.set_child(None)
             else:
-                self.viewport1.remove(child)
+                self.viewport.remove(child)
 
         if page_id not in self.pages:
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
@@ -3366,64 +3559,28 @@ class Settings(UserInterface):
             self.update_visuals(page)
 
         if Gtk.get_major_version() == 4:
-            self.viewport1.set_child(self.pages[page_id].Main)
+            self.viewport.set_child(self.pages[page_id].Main)
         else:
-            self.viewport1.add(self.pages[page_id].Main)
-
-    def on_backup_config_response(self, selected, data):
-        config.write_config_backup(selected)
-
-    def on_backup_config(self, *args):
-
-        save_file(
-            parent=self.frame.MainWindow,
-            callback=self.on_backup_config_response,
-            initialdir=os.path.dirname(config.filename),
-            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Pick a File Name for Config Backup")
-        )
-
-    def on_response(self, dialog, response_id):
-
-        if response_id == Gtk.ResponseType.OK:
-            self.on_delete()
-            self.dialog.emit("settings-updated", "ok")
-
-        elif response_id == Gtk.ResponseType.APPLY:
-            self.dialog.emit("settings-updated", "apply")
-
-        elif response_id == Gtk.ResponseType.HELP:
-            self.on_backup_config()
-
-        else:
-            self.on_delete()
+            self.viewport.add(self.pages[page_id].Main)
 
     def on_delete(self, *args):
         dialog_hide(self.dialog)
         return True
 
+    def on_response(self, dialog, response_id):
+
+        if response_id == Gtk.ResponseType.OK:
+            self.update_settings(settings_closed=True)
+
+        elif response_id == Gtk.ResponseType.APPLY:
+            self.update_settings()
+            return True
+
+        elif response_id == Gtk.ResponseType.HELP:
+            self.back_up_config()
+            return True
+
+        dialog_hide(self.dialog)
+
     def show(self, *args):
-
-        # Shrink the dialog if it's larger than the main window
-        if Gtk.get_major_version() == 4:
-            main_width = self.frame.MainWindow.get_width()
-            main_height = self.frame.MainWindow.get_height()
-        else:
-            main_width, main_height = self.frame.MainWindow.get_size()
-
-        new_width = dialog_width = self.dialog.get_property("default-width")
-        new_height = dialog_height = self.dialog.get_property("default-height")
-
-        if dialog_width > main_width:
-            new_width = main_width - 30
-
-        if dialog_height > main_height:
-            new_height = main_height - 30
-
-        if Gtk.get_major_version() == 4:
-            self.dialog.set_default_size(new_width, new_height)
-        else:
-            self.dialog.resize(new_width, new_height)
-
-        # Show the dialog
-        self.dialog.present_with_time(Gdk.CURRENT_TIME)
+        dialog_show(self.dialog)

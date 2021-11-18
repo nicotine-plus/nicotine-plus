@@ -62,6 +62,31 @@ def set_dialog_properties(dialog, parent, quit_callback=None, modal=True):
 
 def dialog_show(dialog):
 
+    parent = dialog.get_transient_for()
+
+    # Shrink the dialog if it's larger than the main window
+    if Gtk.get_major_version() == 4:
+        main_width = parent.get_width()
+        main_height = parent.get_height()
+    else:
+        main_width, main_height = parent.get_size()
+
+    new_width = dialog_width = dialog.get_property("default-width")
+    new_height = dialog_height = dialog.get_property("default-height")
+
+    if dialog_width > main_width:
+        new_width = main_width - 30
+
+    if dialog_height > main_height:
+        new_height = main_height - 30
+
+    if new_width > 0 and new_height > 0:
+        if Gtk.get_major_version() == 4:
+            dialog.set_default_size(new_width, new_height)
+        else:
+            dialog.resize(new_width, new_height)
+
+    # Show the dialog
     dialog.present_with_time(Gdk.CURRENT_TIME)
 
     if Gtk.get_major_version() == 3:
@@ -169,17 +194,12 @@ def message_dialog(parent, title, message, callback=None):
 
 
 def option_dialog(parent, title, message, callback, callback_data=None,
-                  checkbox_label="", cancel=True, third=""):
-
-    if cancel:
-        buttons = Gtk.ButtonsType.OK_CANCEL
-    else:
-        buttons = Gtk.ButtonsType.OK
+                  checkbox_label="", default_buttons=Gtk.ButtonsType.YES_NO, third=""):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
         message_type=Gtk.MessageType.QUESTION,
-        buttons=buttons,
+        buttons=default_buttons,
         text=title,
         secondary_text=message
     )
@@ -202,6 +222,6 @@ def option_dialog(parent, title, message, callback, callback_data=None,
         self.checkbox.show()
 
     if third:
-        self.add_button(third, Gtk.ResponseType.REJECT)
+        self.add_button(third, 0)
 
     self.present_with_time(Gdk.CURRENT_TIME)

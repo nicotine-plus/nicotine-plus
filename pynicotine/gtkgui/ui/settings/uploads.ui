@@ -56,6 +56,50 @@
             <property name="label" translatable="yes">Autoclear finished/cancelled uploads from transfer list</property>
           </object>
         </child>
+        <child>
+          <object class="GtkFlowBox">
+            <property name="visible">1</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">1</property>
+                    <property name="label" translatable="yes">Double-click action for uploads:</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">UploadDoubleClick</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="UploadDoubleClick">
+                    <property name="visible">1</property>
+                    <items>
+                      <item>Nothing</item>
+                      <item>Send to Player</item>
+                      <item>Open in File Manager</item>
+                      <item>Search</item>
+                      <item>Abort</item>
+                      <item>Clear</item>
+                      <item>Retry</item>
+                      <item>Browse Folder</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </child>
     <child>

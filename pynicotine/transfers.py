@@ -251,7 +251,12 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            size = currentbytes = bitrate = length = None
+            loaded_status = size = currentbytes = bitrate = length = None
+
+            try:
+                loaded_status = i[3]
+            except Exception:
+                pass
 
             try:
                 size = int(i[4])
@@ -273,10 +278,15 @@ class Transfers:
             except Exception:
                 pass
 
-            if len(i) >= 4 and i[3] in ("Aborted", "Paused"):
+            if loaded_status in ("Aborted", "Paused"):
                 status = "Paused"
-            elif len(i) >= 4 and i[3] in ("Filtered", "Finished"):
-                status = i[3]
+
+            elif loaded_status in ("Filtered", "Finished"):
+                status = loaded_status
+
+            elif currentbytes is not None and size is not None and currentbytes >= size:
+                status = "Finished"
+
             else:
                 status = "User logged off"
 
@@ -1299,7 +1309,7 @@ class Transfers:
 
                 if i.size > i.currentbytes:
                     if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                        i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+                        i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
 
                         if i.speed <= 0:
                             i.timeleft = "∞"
@@ -1355,7 +1365,7 @@ class Transfers:
 
             if i.size > i.currentbytes:
                 if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                    i.speed = max(0, bytesdifference / max(1, curtime - i.lasttime))
+                    i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
 
                     if i.speed <= 0:
                         i.timeleft = "∞"
@@ -1926,7 +1936,6 @@ class Transfers:
         self.core.shares.add_file_to_shared(newname)
         self.core.shares.add_file_to_buddy_shared(newname)
         self.core.statistics.append_stat_value("completed_downloads", 1)
-        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
 
         # Attempt to show notification and execute commands
         self.file_downloaded_actions(i.user, newname)
@@ -1936,6 +1945,7 @@ class Transfers:
         if not self.auto_clear_download(i) and self.downloadsview:
             self.downloadsview.update(i)
 
+        self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
         self.save_transfers("downloads")
 
         log.add_download(
@@ -1949,9 +1959,8 @@ class Transfers:
 
         if i.speed is not None:
             # Inform the server about the last upload speed for this transfer
-            speed = int(i.speed)
-            self.upload_speed = speed
-            self.queue.append(slskmessages.SendUploadSpeed(speed))
+            self.upload_speed = i.speed
+            self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
         self.close_file(file_handle, i)
 
@@ -1982,12 +1991,13 @@ class Transfers:
         )
 
         self.core.statistics.append_stat_value("completed_uploads", 1)
-        real_path = self.core.shares.virtual2real(i.filename)
-        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         # Autoclear this upload
         if not self.auto_clear_upload(i) and self.uploadsview:
             self.uploadsview.update(i)
+
+        real_path = self.core.shares.virtual2real(i.filename)
+        self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
         self.save_transfers("uploads")
         self.check_upload_queue()
@@ -2380,7 +2390,7 @@ class Transfers:
         """ Stop all transfers on disconnect/shutdown """
 
         for i in self.downloads:
-            if i.status not in ("Finished", "Paused"):
+            if i.status not in ("Finished", "Filtered", "Paused"):
                 self.abort_transfer(i)
                 i.status = "User logged off"
 

@@ -17,12 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import io
 import os
 import subprocess
-import sys
-import urllib.request
-import zipfile
 
 """ Script used to install packaging dependencies in MinGW """
 
@@ -34,36 +30,11 @@ def install_pacman():
     """ Install dependencies from the main MinGW repos """
 
     prefix = "mingw-w64-" + str(ARCH) + "-"
-    packages = [prefix + "nsis",
-                prefix + "python-certifi"]
+    packages = [prefix + "python-cx-freeze",
+                prefix + "python-pywin32"]
 
     subprocess.check_call(["pacman", "--noconfirm", "-S", "--needed"] + packages)
 
 
-def install_pypi():
-    """ Install dependencies from PyPi """
-
-    packages = ["stdlib_list"]
-    subprocess.check_call([sys.executable, "-m", "pip", "install"] + packages)
-
-
-def install_pyinstaller():
-    """ Install PyInstaller dependency. Use an older version, and rebuild bootloader
-    to reduce false positives in anti-malware software. """
-
-    url = "https://github.com/pyinstaller/pyinstaller/archive/refs/tags/v4.1.zip"
-    response = urllib.request.urlopen(url)
-
-    with zipfile.ZipFile(io.BytesIO(response.read()), "r") as file_handle:
-        file_handle.extractall()
-
-    os.chdir("pyinstaller-4.1/bootloader")
-    subprocess.check_call([sys.executable, "./waf", "all",
-                           "--target-arch=" + ("32bit" if ARCH == "i686" else "64bit")])
-    subprocess.check_call([sys.executable, "-m", "pip", "install", ".."])
-
-
 if __name__ == '__main__':
     install_pacman()
-    install_pypi()
-    install_pyinstaller()

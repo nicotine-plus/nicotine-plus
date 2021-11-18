@@ -3,6 +3,7 @@
   <object class="GtkAssistant" id="FastConfigureDialog">
     <property name="modal">1</property>
     <property name="default-width">720</property>
+    <property name="default-height">450</property>
     <signal name="cancel" handler="on_cancel" swapped="no"/>
     <signal name="close" handler="on_close" swapped="no"/>
     <signal name="prepare" handler="on_prepare" swapped="no"/>
@@ -11,7 +12,6 @@
     <property name="visible">1</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
-    <property name="margin-start">12</property>
     <property name="margin-start">24</property>
     <property name="margin-end">24</property>
     <property name="margin-bottom">24</property>
@@ -326,7 +326,6 @@
             <child>
               <object class="GtkScrolledWindow" id="shareddirectories">
                 <property name="visible">1</property>
-                <property name="height-request">150</property>
                 <child>
                   <object class="GtkTreeView" id="shareddirectoriestree">
                     <property name="visible">1</property>

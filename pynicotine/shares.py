@@ -104,8 +104,7 @@ class Scanner:
                 _new_mtimes, new_files, _new_streams = self.rescan_dirs("buddy", new_mtimes, new_files,
                                                                         new_streams, self.rebuild)
 
-                self.queue.put((_("%(num)s folders found after rescan"), {"num": len(new_files)}, None))
-                self.queue.put((_("Finished rescanning shares"), None, None))
+                self.queue.put((_("Rescan complete: %(num)s folders found"), {"num": len(new_files)}, None))
 
                 self.create_compressed_shares()
 
@@ -188,30 +187,10 @@ class Scanner:
             shared_folders = (x[1] for x in self.shared_folders)
             prefix = ""
 
+        new_files = {}
+        new_streams = {}
         new_mtimes = {}
 
-        for folder in shared_folders:
-            # Get mtimes for top-level shared folders, then every subfolder
-            try:
-                mtime = os.stat(folder).st_mtime
-                new_mtimes[folder] = mtime
-                new_mtimes = {**new_mtimes, **self.get_folder_mtimes(folder)}
-
-            except OSError as errtuple:
-                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
-                    'path': folder,
-                    'error': errtuple
-                }, None))
-
-        # Get list of files
-        # returns dict in format { Directory : { File : metadata, ... }, ... }
-        # returns dict in format { Directory : hex string of files+metadata, ... }
-        new_files, new_streams = self.get_files_list(
-            new_mtimes, self.share_dbs[prefix + "mtimes"], self.share_dbs[prefix + "files"],
-            self.share_dbs[prefix + "streams"], rebuild
-        )
-
-        # Save data to databases
         if files is not None:
             new_files = {**files, **new_files}
 
@@ -221,6 +200,24 @@ class Scanner:
         if mtimes is not None:
             new_mtimes = {**mtimes, **new_mtimes}
 
+        for folder in shared_folders:
+            # Get mtimes for top-level shared folders, then every subfolder
+            try:
+                files, streams, mtimes = self.get_files_list(
+                    folder, self.share_dbs[prefix + "mtimes"], self.share_dbs[prefix + "files"],
+                    self.share_dbs[prefix + "streams"], rebuild
+                )
+                new_files = {**new_files, **files}
+                new_streams = {**new_streams, **streams}
+                new_mtimes = {**new_mtimes, **mtimes}
+
+            except OSError as errtuple:
+                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
+                    'path': folder,
+                    'error': errtuple
+                }, None))
+
+        # Save data to databases
         self.set_shares(share_type, files=new_files, streams=new_streams, mtimes=new_mtimes)
 
         # Update Search Index
@@ -237,7 +234,7 @@ class Scanner:
         return new_mtimes, new_files, new_streams
 
     @staticmethod
-    def is_hidden(folder, filename=None, folder_obj=None):
+    def is_hidden(folder, filename=None, entry_stat=None):
         """ Stop sharing any dot/hidden directories/files """
 
         # If the last folder in the path starts with a dot, we exclude it
@@ -253,18 +250,17 @@ class Scanner:
 
         # Check if file is marked as hidden on Windows
         if sys.platform == "win32":
-            if filename is not None:
-                folder += '\\' + filename
-
-            elif len(folder) == 3 and folder[1] == ":" and folder[2] in ("\\", "/"):
+            if len(folder) == 3 and folder[1] == ":" and folder[2] in ("\\", "/"):
                 # Root directories are marked as hidden, but we allow scanning them
                 return False
 
-            elif folder_obj is not None:
-                # Faster way if we use scandir
-                return folder_obj.stat().st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+            if entry_stat is None:
+                if filename is not None:
+                    entry_stat = os.stat(folder + '\\' + filename)
+                else:
+                    entry_stat = os.stat(folder)
 
-            return os.stat(folder).st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
+            return entry_stat.st_file_attributes & stat.FILE_ATTRIBUTE_HIDDEN
 
         return False
 
@@ -280,104 +276,81 @@ class Scanner:
             # fix any remaining oddities (e.g. surrogates)
             return path.encode('utf-8', 'replace').decode('utf-8')
 
-    def get_folder_mtimes(self, folder):
-        """ Get Modification Times """
+    def get_files_list(self, folder, oldmtimes, oldfiles, oldstreams, rebuild=False, folder_stat=None):
+        """ Get a list of files with their filelength, bitrate and track length in seconds """
 
-        mtimes = {}
+        if folder_stat is None:
+            folder_stat = os.stat(folder)
+
+        folder_unchanged = False
+        virtual_folder = Shares.real2virtual_cls(folder, self.config)
+        mtime = folder_stat.st_mtime
+
+        file_list = []
+        files = {}
+        streams = {}
+        mtimes = {folder: mtime}
+
+        if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
+            try:
+                files[virtual_folder] = oldfiles[virtual_folder]
+                streams[virtual_folder] = oldstreams[virtual_folder]
+                folder_unchanged = True
+
+            except KeyError:
+                self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
+                    'vdir': virtual_folder,
+                    'dir': folder
+                }, "miscellaneous"))
 
         try:
             for entry in os.scandir(folder):
-                if entry.is_dir():
-                    path = self.get_utf8_path(entry.path).replace('\\', os.sep)
+                entry_stat = entry.stat()
 
-                    if self.is_hidden(path):
-                        continue
-
+                if entry.is_file():
                     try:
-                        mtime = entry.stat().st_mtime
+                        if not folder_unchanged:
+                            filename = self.get_utf8_path(entry.name)
 
-                    except OSError as errtuple:
-                        self.queue.put((_("Error while scanning %(path)s: %(error)s"), {
-                            'path': path,
-                            'error': errtuple
-                        }, None))
-                        continue
+                            if self.is_hidden(folder, filename, entry_stat):
+                                continue
 
-                    mtimes[path] = mtime
-                    dircontents = self.get_folder_mtimes(path)
+                            # Get the metadata of the file
+                            path = self.get_utf8_path(entry.path)
+                            data = self.get_file_info(filename, path, self.tinytag, self.queue, entry_stat)
+                            file_list.append(data)
 
-                    for k, contents in dircontents.items():
-                        mtimes[k] = contents
+                    except Exception as errtuple:
+                        self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
+                                       {'path': entry.path, 'error': errtuple}, None))
+
+                    continue
+
+                path = self.get_utf8_path(entry.path).replace('\\', os.sep)
+
+                if self.is_hidden(path, entry_stat=entry_stat):
+                    continue
+
+                dir_files, dir_streams, dir_mtimes = self.get_files_list(
+                    path, oldmtimes, oldfiles, oldstreams, rebuild, entry_stat
+                )
+
+                files = {**files, **dir_files}
+                streams = {**streams, **dir_streams}
+                mtimes = {**mtimes, **dir_mtimes}
 
         except OSError as errtuple:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
                            {'path': folder, 'error': errtuple}, None))
 
-        return mtimes
+        if not folder_unchanged:
+            files[virtual_folder] = file_list
+            streams[virtual_folder] = self.get_dir_stream(file_list)
 
-    def get_files_list(self, mtimes, oldmtimes, oldfiles, oldstreams, rebuild=False):
-        """ Get a list of files with their filelength, bitrate and track length in seconds """
-
-        files = {}
-        streams = {}
-        count = 0
-        lastpercent = 0.0
-
-        for folder in mtimes:
-
-            try:
-                count += 1
-
-                # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-                percent = float("%.2f" % (float(count) / len(mtimes) * 0.5))
-
-                if lastpercent < percent <= 1.0:
-                    self.queue.put(percent)
-                    lastpercent = percent
-
-                virtualdir = Shares.real2virtual_cls(folder, self.config)
-
-                if not rebuild and folder in oldmtimes and mtimes[folder] == oldmtimes[folder]:
-                    if os.path.exists(folder):
-                        try:
-                            files[virtualdir] = oldfiles[virtualdir]
-                            streams[virtualdir] = oldstreams[virtualdir]
-                            continue
-                        except KeyError:
-                            self.queue.put(("Inconsistent cache for '%(vdir)s', rebuilding '%(dir)s'", {
-                                'vdir': virtualdir,
-                                'dir': folder
-                            }, "miscellaneous"))
-                    else:
-                        self.queue.put(("Dropping missing folder %(dir)s", {'dir': folder}, "miscellaneous"))
-                        continue
-
-                files[virtualdir] = []
-
-                for entry in os.scandir(folder):
-
-                    if entry.is_file():
-                        filename = self.get_utf8_path(entry.name)
-
-                        if self.is_hidden(folder, filename):
-                            continue
-
-                        # Get the metadata of the file
-                        path = self.get_utf8_path(entry.path)
-                        data = self.get_file_info(filename, path, self.tinytag, self.queue, entry)
-                        files[virtualdir].append(data)
-
-                streams[virtualdir] = self.get_dir_stream(files[virtualdir])
-
-            except OSError as errtuple:
-                self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                               {'path': folder, 'error': errtuple}, None))
-                continue
-
-        return files, streams
+        return files, streams, mtimes
 
     @staticmethod
-    def get_file_info(name, pathname, tinytag, queue=None, file=None):
+    def get_file_info(name, pathname, tinytag, queue=None, file_stat=None):
         """ Get file metadata """
 
         size = 0
@@ -385,54 +358,43 @@ class Scanner:
         bitrate_info = None
         duration_info = None
 
-        try:
-            if file:
-                # Faster way if we use scandir
-                size = file.stat().st_size
-            else:
-                size = os.stat(pathname).st_size
+        if file_stat is None:
+            file_stat = os.stat(pathname)
 
-            """ We skip metadata scanning of files without meaningful content """
-            if size > 128:
-                try:
-                    audio = tinytag.get(pathname, size, tags=False)
+        size = file_stat.st_size
 
-                except Exception as errtuple:
-                    error = _("Error while scanning metadata for file %(path)s: %(error)s")
-                    args = {'path': pathname, 'error': errtuple}
+        """ We skip metadata scanning of files without meaningful content """
+        if size > 128:
+            try:
+                audio = tinytag.get(pathname, size, tags=False)
 
-                    if queue:
-                        queue.put((error, args, None))
-                    else:
-                        log.add(error, args)
+            except Exception as errtuple:
+                error = _("Error while scanning metadata for file %(path)s: %(error)s")
+                args = {'path': pathname, 'error': errtuple}
 
-            if audio is not None and audio.bitrate is not None and audio.duration is not None:
-                bitrate = int(audio.bitrate)
-                duration = int(audio.duration)
+                if queue:
+                    queue.put((error, args, None))
+                else:
+                    log.add(error, args)
 
-                if UINT_LIMIT > bitrate > 0:
-                    bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
+        if audio is not None and audio.bitrate is not None and audio.duration is not None:
+            bitrate = int(audio.bitrate)
+            duration = int(audio.duration)
 
-                if UINT_LIMIT > duration > 0:
-                    duration_info = duration
+            if UINT_LIMIT > bitrate > 0:
+                bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
 
-                if bitrate_info is None or duration_info is None:
-                    error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
-                    args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
+            if UINT_LIMIT > duration >= 0:
+                duration_info = duration
 
-                    if queue:
-                        queue.put((error, args, "miscellaneous"))
-                    else:
-                        log.add(error, args)
+            if bitrate_info is None or duration_info is None:
+                error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
+                args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
 
-        except Exception as errtuple:
-            error = _("Error while scanning file %(path)s: %(error)s")
-            args = {'path': pathname, 'error': errtuple}
-
-            if queue:
-                queue.put((error, args, None))
-            else:
-                log.add(error, args)
+                if queue:
+                    queue.put((error, args, "miscellaneous"))
+                else:
+                    log.add(error, args)
 
         return (name, size, bitrate_info, duration_info)
 
@@ -476,14 +438,14 @@ class Scanner:
         wordindex = {}
 
         index = 0
-        count = len(sharedfiles)
+        count = 0
         lastpercent = 0.0
 
         for folder in sharedfiles:
             count += 1
 
             # Truncate the percentage to two decimal places to avoid sending data to the GUI thread too often
-            percent = float("%.2f" % (float(count) / len(sharedfiles) * 0.5))
+            percent = float("%.2f" % (count / len(sharedfiles)))
 
             if lastpercent < percent <= 1.0:
                 self.queue.put(percent)
@@ -903,7 +865,7 @@ class Shares:
                     if self.ui_callback:
                         self.ui_callback.set_scan_progress(item)
                     else:
-                        log.add(_("Progress: %s"), str(int(item * 100)) + " %")
+                        log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
 
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":

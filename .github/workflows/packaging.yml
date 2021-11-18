@@ -65,15 +65,15 @@ jobs:
     strategy:
       matrix:
         include: [
-          { msystem: MINGW64, arch: x86_64, gtk: 3 },
-          { msystem: MINGW32, arch: i686, gtk: 3 }
+          { msystem: MINGW64, arch: x86_64 },
+          { msystem: MINGW32, arch: i686 },
         ]
     defaults:
       run:
         shell: msys2 {0}
     env:
       ARCH: ${{ matrix.arch }}
-      NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
+      NICOTINE_GTK_VERSION: 3
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -94,22 +94,26 @@ jobs:
 
       - name: Build installer
         run: |
-          pyinstaller packaging/windows/nicotine.spec
-          python3 packaging/windows/create_installer.py
-          mkdir installer
-          cp -r packaging/windows/Nicotine*.exe installer/
+          python3 packaging/windows/setup.py bdist_msi
+
+      - name: Post-build cleanup
+        run: |
+          rm -rf bdist.*
+          mv build/exe.* build/Nicotine+
+          mv build/Nicotine+/lib/*.dll build/Nicotine+/
+          mv build/Nicotine+/lib/gi/*.dll build/Nicotine+/
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-installer
-          path: installer
+          path: dist
 
       - name: Archive package artifacts
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{ matrix.arch }}-package
-          path: dist
+          path: build
 
   macos:
     runs-on: macos-10.15
@@ -123,6 +127,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
+          brew update
           python3 packaging/macos/dependencies_core.py
           python3 packaging/macos/dependencies_packaging.py
 
@@ -130,10 +135,6 @@ jobs:
         run: |
           pyinstaller packaging/macos/nicotine.spec
           rm -rf dist/Nicotine+/
-
-      - name: Ad-hoc signing
-        run: |
-          codesign --deep --entitlements packaging/macos/entitlements.plist --options runtime --sign - dist/Nicotine+.app
 
       - name: Generate .dmg
         run: |

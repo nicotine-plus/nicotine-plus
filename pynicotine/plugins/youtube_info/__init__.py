@@ -166,7 +166,6 @@ class Plugin(BasePlugin):
 
             views = data['statistics'].get('viewCount', 'RESTRICTED')
             likes = data['statistics'].get('likeCount', 'LIKES')
-            dislikes = data['statistics'].get('dislikeCount', 'DISLIKES')
 
         except KeyError:
             # This should not occur
@@ -175,7 +174,6 @@ class Plugin(BasePlugin):
 
         if likes != 'LIKES':
             likes = humanize(int(likes))
-            dislikes = humanize(int(dislikes))
 
         if views != 'RESTRICTED':
             views = humanize(int(views))
@@ -187,7 +185,7 @@ class Plugin(BasePlugin):
 
         return {
             '%title%': title, '%description%': description, '%duration%': duration, '%quality%': quality,
-            '%channel%': channel, '%views%': views, '%likes%': likes, '%dislikes%': dislikes
+            '%channel%': channel, '%views%': views, '%likes%': likes
         }
 
     @staticmethod
