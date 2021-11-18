@@ -95,7 +95,7 @@ class NetworkFrame(UserInterface):
             self.CurrentPort.set_text(_("Listening port is not set"))
         else:
             text = _("Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</b>") % {
-                "ip": self.frame.np.ipaddress or _("unknown"),
+                "ip": self.frame.np.user_ip_address or _("unknown"),
                 "port": self.frame.np.protothread.listenport
             }
             self.CurrentPort.set_markup(text)
@@ -3462,7 +3462,7 @@ class Preferences(UserInterface):
             self.frame.connect_action.set_enabled(False)
             self.frame.on_fast_configure()
 
-        elif not self.frame.np.active_server_conn:
+        elif not self.frame.np.server_conn:
             self.frame.connect_action.set_enabled(True)
 
         if not settings_closed:

@@ -28,7 +28,7 @@ from unittest.mock import Mock
 from unittest.mock import patch
 
 from pynicotine.slskproto import SlskProtoThread
-from pynicotine.slskmessages import ServerConn, Login, SetWaitPort
+from pynicotine.slskmessages import InitServerConn, Login, SetWaitPort
 
 # Time (in s) needed for SlskProtoThread main loop to run at least once
 SLSKPROTO_RUN_TIME = 1.5
@@ -94,7 +94,7 @@ class SlskProtoTest(unittest.TestCase):
             mock_socket.set_data(LOGIN_DATAFILE)
             proto.server_connect()
 
-            queue.append(ServerConn(addr=('0.0.0.0', 0)))
+            queue.append(InitServerConn(addr=('0.0.0.0', 0)))
             sleep(SLSKPROTO_RUN_TIME)
 
             if hasattr(socket, 'TCP_KEEPIDLE'):
@@ -124,7 +124,7 @@ class SlskProtoTest(unittest.TestCase):
             eventprocessor=Mock()
         )
         proto.server_connect()
-        queue.append(ServerConn(addr=('0.0.0.0', 0)))
+        queue.append(InitServerConn(addr=('0.0.0.0', 0)))
 
         sleep(SLSKPROTO_RUN_TIME / 2)
 
