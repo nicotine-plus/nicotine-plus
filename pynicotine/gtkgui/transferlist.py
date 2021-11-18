@@ -910,7 +910,7 @@ class TransferList(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             if data == "queued":
                 self.clear_transfers(["Queued"])
 

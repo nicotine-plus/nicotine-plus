@@ -25,8 +25,6 @@
 
 import os
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
@@ -82,7 +80,7 @@ class Downloads(TransferList):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             self.frame.np.transfers.folder_contents_response(msg)
 
     def download_large_folder(self, username, folder, numfiles, msg):

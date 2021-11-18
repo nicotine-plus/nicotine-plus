@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
-
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
@@ -64,7 +62,7 @@ class Statistics(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             self.frame.np.statistics.reset_stats()
 
     def on_reset_statistics(self, *args):

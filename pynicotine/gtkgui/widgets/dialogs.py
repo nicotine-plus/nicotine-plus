@@ -193,13 +193,12 @@ def message_dialog(parent, title, message, callback=None):
     self.present_with_time(Gdk.CURRENT_TIME)
 
 
-def option_dialog(parent, title, message, callback, callback_data=None,
-                  checkbox_label="", default_buttons=Gtk.ButtonsType.YES_NO, third=""):
+def option_dialog(parent, title, message, callback, callback_data=None, checkbox_label="",
+                  first_button=_("_No"), second_button=_("_Yes"), third_button=""):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
         message_type=Gtk.MessageType.QUESTION,
-        buttons=default_buttons,
         text=title,
         secondary_text=message
     )
@@ -221,7 +220,13 @@ def option_dialog(parent, title, message, callback, callback_data=None,
         self.get_message_area().add(self.checkbox)
         self.checkbox.show()
 
-    if third:
-        self.add_button(third, 0)
+    if first_button:
+        self.add_button(first_button, 1)
+
+    if second_button:
+        self.add_button(second_button, 2)
+
+    if third_button:
+        self.add_button(third_button, 3)
 
     self.present_with_time(Gdk.CURRENT_TIME)

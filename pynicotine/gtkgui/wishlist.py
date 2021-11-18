@@ -142,7 +142,7 @@ class WishList(UserInterface):
 
         dialog.destroy()
 
-        if response_id == Gtk.ResponseType.YES:
+        if response_id == 2:
             for wish in self.wishes.copy():
                 self.frame.np.search.remove_wish(wish)
 
