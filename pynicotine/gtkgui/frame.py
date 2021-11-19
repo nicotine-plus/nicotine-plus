@@ -758,18 +758,6 @@ class NicotineFrame(UserInterface):
         action.connect("activate", self.on_quit)
         self.application.add_action(action)
 
-        # Window (system menu and events)
-
-        action = Gio.SimpleAction.new("close", None)  # 'When closing Nicotine+'
-        action.connect("activate", self.on_close_request)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.close", ["<Primary>q"])
-
-        action = Gio.SimpleAction.new("force_quit", None)
-        action.connect("activate", self.np.quit)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.force_quit", ["<Primary><Alt>q"])
-
         # View
 
         state = config.sections["ui"]["dark_mode"]
@@ -933,6 +921,18 @@ class NicotineFrame(UserInterface):
         self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
         self.application.add_action(self.alt_speed_action)
         self.update_alternative_speed_icon(state)
+
+        # Window (system menu and events)
+
+        action = Gio.SimpleAction.new("close", None)  # 'When closing Nicotine+'
+        action.connect("activate", self.on_close_request)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.close", ["<Primary>q"])
+
+        action = Gio.SimpleAction.new("force_quit", None)
+        action.connect("activate", self.np.quit)
+        self.application.add_action(action)
+        self.application.set_accels_for_action("app.force_quit", ["<Primary><Alt>q"])
 
     """ Primary Menus """
 
@@ -2011,7 +2011,7 @@ class NicotineFrame(UserInterface):
 
     """ Exit """
 
-    def on_exit_dialog_response(self, dialog, response_id, data):
+    def show_exit_dialog_response(self, dialog, response_id, data):
 
         checkbox = dialog.checkbox.get_active()
         dialog.destroy()
@@ -2029,22 +2029,21 @@ class NicotineFrame(UserInterface):
             if self.MainWindow.get_property("visible"):
                 self.hide()
 
-    def exit_dialog(self, remember=None, tray_quit=None):
+    def show_exit_dialog(self, remember=True):
 
         option_dialog(
             parent=self.MainWindow,
             title=_('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
             second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else "",
-            checkbox_label=_("Remember choice") if not tray_quit and remember is True else "",
-            callback=self.on_exit_dialog_response
+            third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else None,
+            checkbox_label=_("Remember choice") if remember else None,
+            callback=self.show_exit_dialog_response
         )
-        return True
 
     def on_close_request(self, *args):
 
-        if config.sections["ui"]["exitdialog"] >= 2:  # 2='Run in Background'
+        if config.sections["ui"]["exitdialog"] >= 2:  # 2: 'Run in Background'
             self.hide()
             return True
 
@@ -2052,12 +2051,12 @@ class NicotineFrame(UserInterface):
 
     def on_quit(self, *args, remember=False):
 
-        if config.sections["ui"]["exitdialog"] == 0:  # 0='Quit program'
+        if config.sections["ui"]["exitdialog"] == 0:  # 0: 'Quit program'
             self.np.quit()
             return True
 
-        # 1='Show confirmation dialog'
-        return self.exit_dialog(remember=remember)
+        self.show_exit_dialog(remember)
+        return True
 
     def hide(self):
 
@@ -2068,7 +2067,7 @@ class NicotineFrame(UserInterface):
         self.save_window_state()
 
         if not self.tray_icon.is_visible():
-            log.add("Nicotine+ is running in the background")
+            log.add(_("Nicotine+ is running in the background"))
 
         # Run in Background
         self.MainWindow.hide()
