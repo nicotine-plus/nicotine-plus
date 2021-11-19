@@ -107,7 +107,10 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit…"), self.frame.on_tray_quit)  # always prompt
+        self.create_item(_("Quit…"), self.on_tray_quit)  # always prompt
+
+    def on_tray_quit(self, *args):
+        self.frame.exit_dialog(remember=False, tray_quit=True)
 
     def on_downloads(self, *args):
         self.frame.change_main_page("downloads")
