@@ -1,4 +1,3 @@
----
 app-id: org.nicotine_plus.Nicotine
 runtime: org.freedesktop.Platform
 runtime-version: '21.08'
@@ -119,8 +118,6 @@ modules:
       - url: https://download.gnome.org/sources/gspell/1.9/gspell-1.9.1.tar.xz
         sha256: dcbb769dfdde8e3c0a8ed3102ce7e661abbf7ddf85df08b29915e92cd723abdd
         type: archive
-      - path: disable-gspell-vapigen.patch
-        type: patch
     modules:
       - name: enchant
         config-opts:
