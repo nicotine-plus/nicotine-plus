@@ -97,7 +97,6 @@ class NicotineFrame(UserInterface):
         self.port = port
 
         # Initialize these windows/dialogs later when necessary
-        self.about = None
         self.fastconfigure = None
         self.preferences = None
         self.shortcuts = None
@@ -707,11 +706,7 @@ class NicotineFrame(UserInterface):
             self.checking_update = True
 
     def on_about(self, *args):
-
-        if self.about is None:
-            self.about = About(self)
-
-        self.about.show()
+        About(self).show()
 
     """ Actions """
 
