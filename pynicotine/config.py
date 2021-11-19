@@ -180,7 +180,6 @@ class Config:
                 "downloaddir": os.path.join(self.data_dir, 'downloads'),
                 "uploaddir": os.path.join(self.data_dir, 'received'),
                 "usernamesubfolders": False,
-                "sharedownloaddir": False,
                 "shared": [],
                 "buddyshared": [],
                 "uploadbandwidth": 10,
@@ -479,10 +478,19 @@ class Config:
         load_file(self.filename, self.parse_config)
 
         # Clean up old config options
-        self.remove_old_options()
+        migrate_download_share = self.remove_old_options()
 
         # Update config values from file
         self.set_config()
+
+        # Convert special download folder share to regular share
+        if migrate_download_share:
+            shares = self.sections["transfers"]["shared"]
+            virtual_name = "Downloaded"
+            shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
+
+            if shared_folder not in shares and virtual_name not in (x[0] for x in shares):
+                shares.append(shared_folder)
 
         # Load command aliases from legacy file
         try:
@@ -730,10 +738,16 @@ class Config:
         self.remove_old_option("ui", "private_search_results")
         self.remove_old_option("ui", "private_shares")
 
+        # Remove auto-share download folder option, share folder manually instead
+        migrate_download_share = self.remove_old_option("transfers", "sharedownloaddir")
+        return migrate_download_share
+
     def remove_old_option(self, section, option):
 
         if section in self.parser.sections() and option in self.parser.options(section):
-            self.parser.remove_option(section, option)
+            return self.parser.remove_option(section, option)
+
+        return False
 
     def remove_old_section(self, section):
 
