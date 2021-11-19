@@ -23,7 +23,6 @@
 
 import time
 
-from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -137,12 +136,8 @@ class UserList(UserInterface):
         popup.setup_user_menu(page="userlist")
         popup.setup(
             ("", None),
-            ("$" + _("_Online Notify"), self.on_notify),
-            ("$" + _("_Prioritize User"), self.on_prioritized),
-            ("$" + _("_Trust User"), self.on_trusted),
-            ("", None),
-            (">" + _("Private Rooms"), self.popup_menu_private_rooms),
             ("#" + _("Add User _Note…"), self.on_add_note),
+            (">" + _("Private Rooms"), self.popup_menu_private_rooms),
             ("#" + _("_Remove"), self.on_remove_user)
         )
 
@@ -319,15 +314,12 @@ class UserList(UserInterface):
 
         if iterator is not None:
             username = model.get_value(iterator, 2)
-            trusted = model.get_value(iterator, 5)
-            notify = model.get_value(iterator, 6)
-            prioritized = model.get_value(iterator, 7)
             status = model.get_value(iterator, 10)
 
         else:
-            username = trusted = notify = prioritized = status = None
+            username = status = None
 
-        return username, trusted, notify, prioritized, status
+        return username, status
 
     def on_row_activated(self, treeview, path, column):
 
@@ -339,7 +331,7 @@ class UserList(UserInterface):
 
     def on_popup_menu(self, menu, widget):
 
-        username, trusted, notify, prioritized, status = self.get_selected_username_details(widget)
+        username, status = self.get_selected_username_details(widget)
         if username is None:
             return True
 
@@ -352,10 +344,6 @@ class UserList(UserInterface):
                                  and status > 0 and menu.user != config.sections["server"]["login"])
 
         actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
-
-        actions[_("_Online Notify")].set_state(GLib.Variant.new_boolean(notify))
-        actions[_("_Prioritize User")].set_state(GLib.Variant.new_boolean(prioritized))
-        actions[_("_Trust User")].set_state(GLib.Variant.new_boolean(trusted))
 
     def get_user_status(self, msg):
 
