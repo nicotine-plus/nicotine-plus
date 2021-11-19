@@ -274,10 +274,8 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add("Loading Nicotine+ %(nic_version)s, using Python %(py_version)s" % {
-            "nic_version": config.version,
-            "py_version": config.python_version
-        })
+        log.add("Loading Nicotine+ %(nic_version)s" % {"nic_version": config.version})
+        log.add("Using Python %(py_version)s" % {"py_version": config.python_version})
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
