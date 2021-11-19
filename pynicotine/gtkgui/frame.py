@@ -288,11 +288,7 @@ class NicotineFrame(UserInterface):
             page.save_columns()
 
     def show(self):
-
         self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            self.MainWindow.deiconify()
 
     """ Init UI """
 
@@ -2136,8 +2132,4 @@ class Application(Gtk.Application):
             return
 
         # Show the window of the running Nicotine+ instance
-        window = self.get_active_window()
-        window.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            window.deiconify()
+        self.get_active_window().present_with_time(Gdk.CURRENT_TIME)
