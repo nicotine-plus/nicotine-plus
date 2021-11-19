@@ -79,6 +79,7 @@ class Scanner:
         self.rebuild = rebuild
         self.tinytag = None
         self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
+        self.version = 2
 
     def run(self):
 
@@ -94,7 +95,7 @@ class Scanner:
                 self.create_compressed_shares()
 
             if self.rescan:
-                start_num_folders = len(list(self.share_dbs["buddymtimes"]))
+                start_num_folders = len(list(self.share_dbs["buddyfiles"]))
 
                 self.queue.put((_("Rescanning shares…"), None, None))
                 self.queue.put((_("%(num)s folders found before rescan, rebuilding…"),
@@ -290,6 +291,11 @@ class Scanner:
         files = {}
         streams = {}
         mtimes = {folder: mtime}
+        share_version = oldmtimes.get("__NICOTINE_SHARE_VERSION__")
+
+        # Rebuild shares if share version is outdated
+        if share_version is None or share_version < self.version:
+            rebuild = True
 
         if not rebuild and folder in oldmtimes and mtime == oldmtimes[folder]:
             try:
@@ -317,7 +323,7 @@ class Scanner:
 
                             # Get the metadata of the file
                             path = self.get_utf8_path(entry.path)
-                            data = self.get_file_info(filename, path, self.tinytag, self.queue, entry_stat)
+                            data = self.get_file_info(filename, path, self.tinytag, entry_stat)
                             file_list.append(data)
 
                     except Exception as errtuple:
@@ -347,10 +353,10 @@ class Scanner:
             files[virtual_folder] = file_list
             streams[virtual_folder] = self.get_dir_stream(file_list)
 
+        mtimes["__NICOTINE_SHARE_VERSION__"] = self.version
         return files, streams, mtimes
 
-    @staticmethod
-    def get_file_info(name, pathname, tinytag, queue=None, file_stat=None):
+    def get_file_info(self, name, pathname, tinytag, file_stat=None):
         """ Get file metadata """
 
         size = 0
@@ -372,10 +378,7 @@ class Scanner:
                 error = _("Error while scanning metadata for file %(path)s: %(error)s")
                 args = {'path': pathname, 'error': errtuple}
 
-                if queue:
-                    queue.put((error, args, None))
-                else:
-                    log.add(error, args)
+                self.queue.put((error, args, None))
 
         if audio is not None and audio.bitrate is not None and audio.duration is not None:
             bitrate = int(audio.bitrate)
@@ -391,12 +394,9 @@ class Scanner:
                 error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
                 args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
 
-                if queue:
-                    queue.put((error, args, "miscellaneous"))
-                else:
-                    log.add(error, args)
+                self.queue.put((error, args, "miscellaneous"))
 
-        return (name, size, bitrate_info, duration_info)
+        return [name, size, bitrate_info, duration_info]
 
     @staticmethod
     def get_dir_stream(folder):
@@ -410,20 +410,6 @@ class Scanner:
             stream.extend(message.pack_file_info(fileinfo))
 
         return stream
-
-    @staticmethod
-    def add_file_to_index(index, filename, folder, fileinfo, wordindex, fileindex, pattern):
-        """ Add a file to the file index database """
-
-        fileindex[repr(index)] = (folder + '\\' + filename, *fileinfo[1:])
-
-        # Collect words from filenames for Search index
-        # Use set to prevent duplicates
-        for k in set((folder + " " + filename).lower().translate(pattern).split()):
-            try:
-                wordindex[k].append(index)
-            except KeyError:
-                wordindex[k] = [index]
 
     def get_files_index(self, sharedfiles, fileindex_dest):
         """ Update Search index with new files """
@@ -452,9 +438,21 @@ class Scanner:
                 lastpercent = percent
 
             for fileinfo in sharedfiles[folder]:
-                self.add_file_to_index(
-                    index, fileinfo[0], folder, fileinfo, wordindex, self.share_dbs[fileindex_dest],
-                    self.translatepunctuation)
+                fileinfo = list(fileinfo)
+                filename = fileinfo[0]
+
+                # Add to file index
+                fileinfo[0] = folder + '\\' + filename
+                self.share_dbs[fileindex_dest][repr(index)] = fileinfo
+
+                # Collect words from filenames for Search index
+                # Use set to prevent duplicates
+                for k in set((folder + " " + filename).lower().translate(self.translatepunctuation).split()):
+                    try:
+                        wordindex[k].append(index)
+                    except KeyError:
+                        wordindex[k] = [index]
+
                 index += 1
 
         return wordindex
@@ -550,9 +548,6 @@ class Shares:
 
         mapping = config.sections["transfers"]["shared"][:]
         mapping += config.sections["transfers"]["buddyshared"]
-
-        if config.sections["transfers"]["sharedownloaddir"]:
-            mapping += [(_("Downloaded"), config.sections["transfers"]["downloaddir"])]
 
         return mapping
 
@@ -657,101 +652,6 @@ class Shares:
         })
         return False
 
-    def add_file_to_shared(self, name):
-        """ Add a file to the normal shares database """
-
-        if not self.config.sections["transfers"]["sharedownloaddir"]:
-            return
-
-        shared = self.share_dbs.get("files")
-
-        if shared is None:
-            return
-
-        try:
-            shareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
-            shareddirs.append(self.config.sections["transfers"]["downloaddir"])
-
-            rdir = str(os.path.expanduser(os.path.dirname(name)))
-            vdir = self.real2virtual(rdir)
-            file = str(os.path.basename(name))
-
-            if not shared.get(vdir):
-                shared[vdir] = []
-
-            if file not in (i[0] for i in shared[vdir]):
-                from pynicotine.metadata.tinytag import TinyTag
-                fileinfo = Scanner.get_file_info(file, name, TinyTag())
-                shared[vdir] += [fileinfo]
-
-                self.share_dbs["streams"][vdir] = Scanner.get_dir_stream(shared[vdir])
-
-                fileindex = self.share_dbs["fileindex"]
-
-                try:
-                    index = len(fileindex)
-                except TypeError:
-                    index = len(list(fileindex))
-
-                Scanner.add_file_to_index(
-                    index, file, vdir, fileinfo, self.share_dbs["wordindex"], fileindex, self.translatepunctuation)
-
-                self.share_dbs["mtimes"][vdir] = os.path.getmtime(rdir)
-                self.should_compress_shares = True
-
-        except Exception as error:
-            log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
-                    {"filename": name, "error": error})
-
-    def add_file_to_buddy_shared(self, name):
-        """ Add a file to the buddy shares database """
-
-        if not self.config.sections["transfers"]["sharedownloaddir"]:
-            return
-
-        bshared = self.share_dbs.get("buddyfiles")
-
-        if bshared is None:
-            return
-
-        try:
-            bshareddirs = [path for _name, path in self.config.sections["transfers"]["shared"]]
-            bshareddirs += [path for _name, path in self.config.sections["transfers"]["buddyshared"]]
-            bshareddirs.append(self.config.sections["transfers"]["downloaddir"])
-
-            rdir = str(os.path.expanduser(os.path.dirname(name)))
-            vdir = self.real2virtual(rdir)
-            file = str(os.path.basename(name))
-
-            if not bshared.get(vdir):
-                bshared[vdir] = []
-
-            if file not in (i[0] for i in bshared[vdir]):
-                from pynicotine.metadata.tinytag import TinyTag
-                fileinfo = Scanner.get_file_info(file, name, TinyTag())
-                bshared[vdir] += [fileinfo]
-
-                self.share_dbs["buddystreams"][vdir] = Scanner.get_dir_stream(bshared[vdir])
-
-                bfileindex = self.share_dbs["buddyfileindex"]
-
-                try:
-                    index = len(bfileindex)
-                except TypeError:
-                    index = len(list(bfileindex))
-
-                Scanner.add_file_to_index(
-                    index, file, vdir, fileinfo,
-                    self.share_dbs["buddywordindex"], bfileindex, self.translatepunctuation
-                )
-
-                self.share_dbs["buddymtimes"][vdir] = os.path.getmtime(rdir)
-                self.should_compress_shares = True
-
-        except Exception as error:
-            log.add(_("Failed to add download %(filename)s to shared files: %(error)s"),
-                    {"filename": name, "error": error})
-
     def get_compressed_shares_message(self, share_type):
         """ Returns the compressed shares message. Creates a new one if necessary, e.g.
         if an individual file was added to our shares. """
@@ -839,9 +739,6 @@ class Shares:
 
         shared_folders = self.config.sections["transfers"]["shared"][:]
         shared_folders_buddy = self.config.sections["transfers"]["buddyshared"][:]
-
-        if self.config.sections["transfers"]["sharedownloaddir"]:
-            shared_folders.append((_('Downloaded'), self.config.sections["transfers"]["downloaddir"]))
 
         return (shared_folders, shared_folders_buddy)
 

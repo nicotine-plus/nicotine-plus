@@ -1866,12 +1866,6 @@ class Transfers:
 
         config = self.config.sections
 
-        if config["transfers"]["sharedownloaddir"]:
-            """ Folder downloaded and shared. Notify the server of new stats. The
-            reason we don't send this message after each download is to reduce traffic from
-            the server to room users, since every stat update is relayed by the server. """
-            self.core.shares.send_num_shared_folders_files()
-
         if not folderpath:
             return
 
@@ -1933,8 +1927,6 @@ class Transfers:
         i.timeleft = ""
         i.conn = None
 
-        self.core.shares.add_file_to_shared(newname)
-        self.core.shares.add_file_to_buddy_shared(newname)
         self.core.statistics.append_stat_value("completed_downloads", 1)
 
         # Attempt to show notification and execute commands

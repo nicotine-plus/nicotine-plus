@@ -49,8 +49,8 @@ class SharesTest(unittest.TestCase):
         self.assertIn(SHARES_DIR, list(shares.share_dbs["mtimes"]))
 
         # Verify that shared files were added
-        self.assertIn(('dummy_file', 0, None, None), shares.share_dbs["files"]["Shares"])
-        self.assertIn(('nicotinetestdata.mp3', 80919, None, None), shares.share_dbs["files"]["Shares"])
+        self.assertIn(['dummy_file', 0, None, None], shares.share_dbs["files"]["Shares"])
+        self.assertIn(['nicotinetestdata.mp3', 80919, None, None], shares.share_dbs["files"]["Shares"])
 
         # Verify that expected folder is empty
         self.assertEqual(len(shares.share_dbs["files"]["Shares\\folder2"]), 0)
@@ -96,26 +96,10 @@ class SharesTest(unittest.TestCase):
         # Check files
         files = shares.share_dbs["files"]["Shares"]
 
-        self.assertNotIn((".abc_file", 0, None, None), files)
-        self.assertNotIn((".hidden_file", 0, None, None), files)
-        self.assertNotIn((".xyz_file", 0, None, None), files)
-        self.assertIn(("dummy_file", 0, None, None), files)
+        self.assertNotIn([".abc_file", 0, None, None], files)
+        self.assertNotIn([".hidden_file", 0, None, None], files)
+        self.assertNotIn([".xyz_file", 0, None, None], files)
+        self.assertIn(["dummy_file", 0, None, None], files)
         self.assertEqual(len(files), 3)
-
-        shares.close_shares(shares.share_dbs)
-
-    def test_shares_add_downloaded(self):
-        """ Test that downloaded files are added to shared files """
-
-        config.sections["transfers"]["shared"] = [("Downloaded", SHARES_DIR)]
-        config.sections["transfers"]["rescanonstartup"] = False
-        config.sections["transfers"]["sharedownloaddir"] = True
-
-        shares = Shares(None, config, deque(), init_shares=False)
-        shares.load_shares(shares.share_dbs, shares.share_db_paths)
-        shares.add_file_to_shared(os.path.join(SHARES_DIR, 'nicotinetestdata.mp3'))
-
-        self.assertIn(('nicotinetestdata.mp3', 80919, None, None), shares.share_dbs["files"]["Downloaded"])
-        self.assertIn(('Downloaded\\nicotinetestdata.mp3', 80919, None, None), shares.share_dbs["fileindex"].values())
 
         shares.close_shares(shares.share_dbs)
