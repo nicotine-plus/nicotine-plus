@@ -67,6 +67,8 @@ modules:
         type: archive
     modules:
       - name: gnome-common
+        cleanup:
+          - '*'
         sources:
           - url: https://download.gnome.org/sources/gnome-common/3.18/gnome-common-3.18.0.tar.xz
             sha256: 22569e370ae755e04527b76328befc4c73b62bfd4a572499fde116b8318af8cf
@@ -79,41 +81,30 @@ modules:
             sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
             type: archive
 
-  - name: libayatana-indicator
+  - name: libayatana-appindicator
+    buildsystem: cmake
     config-opts:
-      - --disable-ido
-      - --disable-static
-      - --disable-tests
-      - --with-gtk=3
-    cleanup:
-      - /share/libayatana-indicator
+      - -DENABLE_BINDINGS_MONO=OFF
+      - -DENABLE_BINDINGS_VALA=OFF
+      - -DENABLE_TESTS=OFF
+      - -DFLAVOUR_GTK3=ON
     sources:
-      - url: https://github.com/AyatanaIndicators/libayatana-indicator/archive/refs/tags/0.7.1.tar.gz
-        sha256: 63f6cfc96b212ce0e65a4507b9830da7263d82cb80374f098b5d863a13de93e8
+      - url: https://github.com/AyatanaIndicators/libayatana-appindicator/archive/refs/tags/0.5.90.tar.gz
+        sha256: 15319ca7fda90c6bd85311bbe83eefe1e322de32df2c7f5174b0d5a7537c27b4
         type: archive
     modules:
-      - name: mate-common
+      - name: libayatana-indicator
+        buildsystem: cmake
+        config-opts:
+          - -DENABLE_IDO=OFF
+          - -DENABLE_TESTS=OFF
+          - -DFLAVOUR_GTK3=ON
         cleanup:
-          - '*'
+          - /share/libayatana-indicator
         sources:
-          - url: https://github.com/mate-desktop/mate-common/releases/download/v1.24.2/mate-common-1.24.2.tar.xz
-            sha256: 71d2013f5743c71e10e04f3c2205d3bb8db1ddb26954a4197801cb5b3c152b6b
+          - url: https://github.com/AyatanaIndicators/libayatana-indicator/archive/refs/tags/0.9.0.tar.gz
+            sha256: b72c31e64f2a6a7d8f8a35a725d02416cfae7c35e0d42f5664792f7d22d465a4
             type: archive
-
-  - name: libayatana-appindicator
-    config-opts:
-      - --disable-gtk-doc
-      - --disable-static
-      - --disable-tests
-      - --with-gtk=3
-    build-options:
-      env:
-        TESTDEPS_CFLAGS: ' '
-        TESTDEPS_LIBS: '-lz'
-    sources:
-      - url: https://github.com/AyatanaIndicators/libayatana-appindicator/archive/refs/tags/0.5.5.tar.gz
-        sha256: 55e47e94f54e6f2f13bcc06ab20530ad0a1412282a8775331af41788b59ee331
-        type: archive
 
   # Spell Checking
 
