@@ -2038,17 +2038,14 @@ class NicotineFrame(UserInterface):
 
         option_dialog(
             parent=self.MainWindow,
-            title=_('Close Nicotine+') if remember else _('Quit Nicotine+'),
+            title=_('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
             second_button=_("_Quit"),
-            third_button=_("Run in _Background") if self.MainWindow.get_property("visible") else "",
+            third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else "",
             checkbox_label=_("Remember choice") if not tray_quit and remember is True else "",
             callback=self.on_exit_dialog_response
         )
         return True
-
-    def on_tray_quit(self, *args):
-        self.exit_dialog(remember=False, tray_quit=True)
 
     def on_close_request(self, *args):
 
