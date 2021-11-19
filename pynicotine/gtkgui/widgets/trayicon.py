@@ -100,7 +100,6 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.send_message_item, handler = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_ip_item, handler = self.create_item(_("Request User's IP Address"), self.on_get_a_users_ip)
         self.lookup_info_item, handler = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
         self.lookup_shares_item, handler = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
 
@@ -122,13 +121,12 @@ class TrayIcon:
         user = dialog.get_response_value()
         dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK:
+        if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        if user:
-            self.frame.np.privatechats.show_user(user)
-            self.frame.change_main_page("private")
-            self.frame.show()
+        self.frame.np.privatechats.show_user(user)
+        self.frame.change_main_page("private")
+        self.frame.show()
 
     def on_open_private_chat(self, *args):
 
@@ -146,11 +144,11 @@ class TrayIcon:
         user = dialog.get_response_value()
         dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK:
+        if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        if user:
-            self.frame.np.userinfo.request_user_info(user)
+        self.frame.np.userinfo.request_user_info(user)
+        self.frame.show()
 
     def on_get_a_users_info(self, *args):
 
@@ -163,38 +161,16 @@ class TrayIcon:
             droplist=users
         )
 
-    def on_get_a_users_ip_response(self, dialog, response_id, data):
-
-        user = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
-
-        if user:
-            self.frame.np.request_ip_address(user)
-
-    def on_get_a_users_ip(self, *args):
-
-        users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
-            parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Request IP Address"),
-            message=_('Enter the name of the user whose IP address you want to see:'),
-            callback=self.on_get_a_users_ip_response,
-            droplist=users
-        )
-
     def on_get_a_users_shares_response(self, dialog, response_id, data):
 
         user = dialog.get_response_value()
         dialog.destroy()
 
-        if response_id != Gtk.ResponseType.OK:
+        if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        if user:
-            self.frame.np.userbrowse.browse_user(user)
+        self.frame.np.userbrowse.browse_user(user)
+        self.frame.show()
 
     def on_get_a_users_shares(self, *args):
 
@@ -451,7 +427,7 @@ class TrayIcon:
         if self.tray_icon is None:
             return
 
-        for i in (self.disconnect_item, self.away_item, self.send_message_item, self.lookup_ip_item,
+        for i in (self.disconnect_item, self.away_item, self.send_message_item,
                   self.lookup_info_item, self.lookup_shares_item):
 
             """ Disable menu items when disconnected from server """
