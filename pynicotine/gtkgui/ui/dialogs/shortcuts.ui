@@ -65,6 +65,13 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Primary&gt;q</property>
+                <property name="title" translatable="yes">Quit / Run in Background</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">&lt;Primary&gt;&lt;Alt&gt;q</property>
                 <property name="title" translatable="yes">Quit</property>
               </object>
             </child>
