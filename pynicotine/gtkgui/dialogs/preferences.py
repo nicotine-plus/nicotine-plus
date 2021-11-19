@@ -647,6 +647,9 @@ class SharesFrame(UserInterface):
 
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
+        if buddy_only == self.shareslist.get_value(iterator, 2):
+            return
+
         virtual = self.shareslist.get_value(iterator, 0)
         directory = self.shareslist.get_value(iterator, 1)
         share = (virtual, directory)
