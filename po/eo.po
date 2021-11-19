@@ -2051,9 +2051,9 @@ msgid "Program"
 msgstr "Programo"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, python-format
+#, fuzzy, python-format
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Agordoj"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -3559,8 +3559,9 @@ msgid "_No"
 msgstr "Ne"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Jes"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 #, fuzzy
@@ -4204,9 +4205,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s dosierujoj trovitaj antaŭ reskanado, rekonstruado…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Reskanado kompleta: %(num)s dosierujoj trovitaj"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format

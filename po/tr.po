@@ -1710,9 +1710,9 @@ msgid "Program"
 msgstr "Program"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, python-format
+#, fuzzy, python-format
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Ayarlar"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -2984,8 +2984,9 @@ msgid "_No"
 msgstr "Hayır"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Evet"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 msgid "Select a Folder"
@@ -3581,9 +3582,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "Yeniden taramadan önce %(num)s klasör bulundu, yeniden oluşturuluyor…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Yeniden tarama tamamlandı: %(num)s klasör bulundu"
 
 #: pynicotine/shares.py:115
 #, python-format

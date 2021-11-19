@@ -2044,9 +2044,9 @@ msgid "Program"
 msgstr "Programa"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, python-format
+#, fuzzy, python-format
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Nustatymai"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -3484,8 +3484,9 @@ msgid "_No"
 msgstr "Ne"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_ Taip"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 #, fuzzy
@@ -4126,9 +4127,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s aplankai rasti prieš rescan, atstatyti …"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Pakartotinis nuskaitymas baigtas: rasta %(num)s aplankų"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format

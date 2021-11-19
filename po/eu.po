@@ -3522,8 +3522,9 @@ msgid "_No"
 msgstr "Ez"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Bai"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 #, fuzzy
@@ -4176,9 +4177,9 @@ msgstr ""
 "%(num)s karpetak berriro aztertu aurretik aurkitu dira, berreraikitzen …"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Berriro eskaneatuta: %(num)s karpetak aurkitu dira"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format

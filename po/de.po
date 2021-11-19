@@ -2994,8 +2994,9 @@ msgid "_No"
 msgstr "Nein"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Jawohl"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 msgid "Select a Folder"
@@ -3609,9 +3610,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s Ordner vor erneutem Scan gefunden, Neuaufbau…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Erneuter Scan abgeschlossen: %(num)s Ordner gefunden"
 
 #: pynicotine/shares.py:115
 #, python-format

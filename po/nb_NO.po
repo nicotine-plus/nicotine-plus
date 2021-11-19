@@ -1900,9 +1900,9 @@ msgid "Program"
 msgstr "Program"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, python-format
+#, fuzzy, python-format
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Innstillinger"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -3254,8 +3254,9 @@ msgid "_No"
 msgstr "Nei"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Ja"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 msgid "Select a Folder"
@@ -3872,9 +3873,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s mapper funnet før ny skanning, gjenoppbygging…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Rescan fullført: %(num)s mapper funnet"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format

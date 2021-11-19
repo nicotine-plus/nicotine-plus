@@ -1727,9 +1727,9 @@ msgid "Program"
 msgstr "Программа"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, python-format
+#, fuzzy, python-format
 msgid "%s Settings"
-msgstr ""
+msgstr "%s Настройки"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -3024,8 +3024,9 @@ msgid "_No"
 msgstr "Нет"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Да"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 msgid "Select a Folder"
@@ -3621,9 +3622,9 @@ msgstr ""
 "%(num)s каталогов обнаружено перед повторным сканированием, перестроение…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Повторное сканирование завершено: найдено %(num)s папок"
 
 #: pynicotine/shares.py:115
 #, python-format

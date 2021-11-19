@@ -3520,8 +3520,9 @@ msgid "_No"
 msgstr "Ei"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Joo"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 #, fuzzy
@@ -4167,9 +4168,9 @@ msgstr ""
 "%(num)s-kansiot löytyivät ennen uudelleenskannaamista, uudelleenrakentamista…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Uudelleenskannaus valmis: %(num)s kansioita löydetty"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format

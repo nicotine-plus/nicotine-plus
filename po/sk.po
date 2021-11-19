@@ -3477,8 +3477,9 @@ msgid "_No"
 msgstr "Nie"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
+#, fuzzy
 msgid "_Yes"
-msgstr ""
+msgstr "_Áno"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 #, fuzzy
@@ -4123,9 +4124,9 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "Priečinky %(num)s nájdené pred opätovným prestavením, prestavbou…"
 
 #: pynicotine/shares.py:107
-#, python-format
+#, fuzzy, python-format
 msgid "Rescan complete: %(num)s folders found"
-msgstr ""
+msgstr "Opätovné skenovanie dokončené: Našlo sa %(num)s priečinkov"
 
 #: pynicotine/shares.py:115
 #, fuzzy, python-format
