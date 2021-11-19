@@ -25,7 +25,6 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -205,13 +204,9 @@ class FastConfigureAssistant(UserInterface):
         config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
         config.sections["transfers"]["shared"] = self.shared_folders
 
-        dialog_hide(self.FastConfigureDialog)
-
         # Rescan shares
         self.frame.np.shares.rescan_shares()
-
         self.frame.np.connect()
 
     def on_cancel(self, *args):
-        dialog_hide(self.FastConfigureDialog)
-        return True
+        self.FastConfigureDialog.destroy()

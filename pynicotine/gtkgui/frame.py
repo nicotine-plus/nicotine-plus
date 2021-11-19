@@ -467,16 +467,13 @@ class NicotineFrame(UserInterface):
         open_uri(config.privileges_url % login)
         self.np.request_check_privileges()
 
-    def on_fast_configure(self, *args, show=True):
-
-        if self.fastconfigure is None:
-            self.fastconfigure = FastConfigureAssistant(self)
+    def on_fast_configure(self, *args):
 
         if self.preferences is not None and self.preferences.dialog.get_property("visible"):
             return
 
-        if show:
-            self.fastconfigure.show()
+        self.fastconfigure = FastConfigureAssistant(self)
+        self.fastconfigure.show()
 
     def on_settings(self, *args, page=None):
 
