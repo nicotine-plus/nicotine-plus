@@ -1678,10 +1678,9 @@ class UserInterfaceFrame(UserInterface):
         if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
             self.hide_tray_icon_settings()
-            return
-
-        sensitive = self.TrayiconCheck.get_active()
-        self.StartupHidden.set_sensitive(sensitive)
+        else:
+            sensitive = self.TrayiconCheck.get_active()
+            self.StartupHidden.set_sensitive(sensitive)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
