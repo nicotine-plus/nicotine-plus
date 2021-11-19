@@ -765,11 +765,6 @@ class NicotineFrame(UserInterface):
         self.application.add_action(action)
         self.application.set_accels_for_action("app.close", ["<Primary>q"])
 
-        action = Gio.SimpleAction.new("exit_dialog", None)  # Show all exit options
-        action.connect("activate", self.exit_dialog)
-        self.application.add_action(action)
-        self.application.set_accels_for_action("app.exit_dialog", ["<Shift><Primary>q"])
-
         action = Gio.SimpleAction.new("force_quit", None)
         action.connect("activate", self.np.quit)
         self.application.add_action(action)
@@ -956,11 +951,11 @@ class NicotineFrame(UserInterface):
 
     def add_quit_item(self, menu):
 
-        ellipsis = "…" if config.sections["ui"]["exitdialog"] else ""
+        label = _("_Quit…") if config.sections["ui"]["exitdialog"] else _("_Quit")
 
         menu.setup(
             ("", None),
-            ("#" + _("_Quit") + ellipsis, "app.quit")
+            ("#" + label, "app.quit")
         )
 
     def create_file_menu(self):
