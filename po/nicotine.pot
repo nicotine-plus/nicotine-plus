@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-14 15:01+0100\n"
+"POT-Creation-Date: 2021-11-20 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -5547,11 +5547,11 @@ msgid "Minimize to tray on startup"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:62
-msgid "Restore the previously active tab on startup"
+msgid "Restore the previously active Main Tab on start-up"
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-msgid "By default the Search Files Tab is active at start-up."
+msgid "By default the Search Files Tab is activated at start-up."
 msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
