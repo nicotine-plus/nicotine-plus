@@ -123,7 +123,7 @@ class Searches(IconNotebook):
         self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")
 
         # Hide popover after click
-        self.frame.SearchMode.get_popover().popdown()
+        self.frame.SearchMode.get_popover().hide()
 
     def on_search(self):
 
