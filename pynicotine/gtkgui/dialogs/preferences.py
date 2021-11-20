@@ -227,15 +227,9 @@ class DownloadsFrame(UserInterface):
         self.frame = self.p.frame
         self.needrescan = False
 
-        self.IncompleteDir = FileChooserButton(
-            self.IncompleteDir, parent.dialog, "folder"
-        )
-        self.DownloadDir = FileChooserButton(
-            self.DownloadDir, parent.dialog, "folder", self.on_choose_download_dir
-        )
-        self.UploadDir = FileChooserButton(
-            self.UploadDir, parent.dialog, "folder"
-        )
+        self.IncompleteDir = FileChooserButton(self.IncompleteDir, parent.dialog, "folder")
+        self.DownloadDir = FileChooserButton(self.DownloadDir, parent.dialog, "folder")
+        self.UploadDir = FileChooserButton(self.UploadDir, parent.dialog, "folder")
 
         self.options = {
             "transfers": {
@@ -331,16 +325,6 @@ class DownloadsFrame(UserInterface):
                 "download_doubleclick": self.DownloadDoubleClick.get_active()
             }
         }
-
-    def on_choose_download_dir(self):
-
-        # Get the transfers section
-        transfers = config.sections["transfers"]
-
-        # This function will be called upon creating the settings window,
-        # so only force a scan if the user changes his donwload directory
-        if transfers["sharedownloaddir"] and self.DownloadDir.get_path() != transfers["downloaddir"]:
-            self.needrescan = True
 
     def on_remote_downloads(self, widget):
 
@@ -597,7 +581,6 @@ class SharesFrame(UserInterface):
         self.options = {
             "transfers": {
                 "rescanonstartup": self.RescanOnStartup,
-                "sharedownloaddir": self.ShareDownloadDir,
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly
             }
         }
@@ -637,7 +620,6 @@ class SharesFrame(UserInterface):
                 "shared": self.shareddirs[:],
                 "buddyshared": self.bshareddirs[:],
                 "rescanonstartup": self.RescanOnStartup.get_active(),
-                "sharedownloaddir": self.ShareDownloadDir.get_active(),
                 "buddysharestrustedonly": self.BuddySharesTrustedOnly.get_active()
             }
         }
