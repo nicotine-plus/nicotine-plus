@@ -78,7 +78,7 @@ class UserBrowse:
     def browse_local_public_shares(self, folder=None, new_request=None):
         """ Browse your own public shares """
 
-        username = self.config.sections["server"]["login"]
+        username = self.config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("normal")
@@ -92,7 +92,7 @@ class UserBrowse:
     def browse_local_buddy_shares(self, folder=None, new_request=False):
         """ Browse your own buddy shares """
 
-        username = self.config.sections["server"]["login"]
+        username = self.config.sections["server"]["login"] or "Default"
 
         if username not in self.users or new_request:
             msg = self.core.shares.get_compressed_shares_message("buddy")
@@ -109,7 +109,7 @@ class UserBrowse:
         if not username:
             return
 
-        if username == self.config.sections["server"]["login"]:
+        if username == (self.config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
                 self.browse_local_public_shares(folder, new_request)
                 return
