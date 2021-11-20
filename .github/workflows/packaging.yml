@@ -61,7 +61,7 @@ jobs:
         cache-key: flatpak-builder-${{ github.sha }}
 
   windows:
-    runs-on: windows-2016
+    runs-on: windows-2019
     strategy:
       matrix:
         include: [
