@@ -302,7 +302,7 @@ class TransferList(UserInterface):
 
     def update_bandwidth(self):
 
-        bandwidth = 0.0
+        bandwidth = 0
         num_active_users = 0
 
         for i in self.transfer_list:
