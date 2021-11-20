@@ -435,13 +435,19 @@ class TrayIcon:
 
         self.connect_item.set_sensitive(not status)
 
-    def set_transfer_status(self, download, upload):
+    def set_download_status(self, status):
 
         if self.tray_icon is None:
             return
 
-        self.downloads_item.set_label(download)
-        self.uploads_item.set_label(upload)
+        self.downloads_item.set_label(status)
+
+    def set_upload_status(self, status):
+
+        if self.tray_icon is None:
+            return
+
+        self.uploads_item.set_label(status)
 
     def set_alternative_speed_limit(self, enable):
 

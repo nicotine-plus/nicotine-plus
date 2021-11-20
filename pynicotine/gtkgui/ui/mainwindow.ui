@@ -1703,7 +1703,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="DownStatus">
+                          <object class="GtkLabel" id="download_status">
                             <property name="visible">1</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
@@ -1733,7 +1733,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="UpStatus">
+                          <object class="GtkLabel" id="upload_status">
                             <property name="visible">1</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>

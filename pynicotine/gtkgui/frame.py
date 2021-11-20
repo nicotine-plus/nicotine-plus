@@ -68,7 +68,6 @@ from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
-from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_log
@@ -154,10 +153,6 @@ class NicotineFrame(UserInterface):
 
         """ Tray Icon/Notifications """
 
-        # Commonly accessed strings
-        self.tray_download_template = _("Downloads: %(speed)s")
-        self.tray_upload_template = _("Uploads: %(speed)s")
-
         self.tray_icon = TrayIcon(self)
         self.tray_icon.load(use_trayicon)
 
@@ -239,7 +234,6 @@ class NicotineFrame(UserInterface):
         elif config.sections["server"]["auto_connect_startup"]:
             self.np.connect()
 
-        self.update_bandwidth()
         self.update_completions()
 
     """ Window State """
@@ -388,7 +382,8 @@ class NicotineFrame(UserInterface):
         self.tray_icon.set_connected(False)
 
         # Reset transfer stats (speed, total files/users)
-        self.update_bandwidth()
+        self.downloads.update_bandwidth()
+        self.uploads.update_bandwidth()
 
     def invalid_password_response(self, dialog, response_id, data):
 
@@ -1861,29 +1856,6 @@ class NicotineFrame(UserInterface):
 
     def hide_scan_progress(self):
         GLib.idle_add(self.SharesProgress.hide)
-
-    def update_bandwidth(self):
-
-        def _bandwidth(line):
-            bandwidth = 0.0
-            num_active_users = 0
-
-            for i in line:
-                speed = i.speed
-                if speed is not None:
-                    bandwidth = bandwidth + speed
-                    num_active_users += 1
-
-            return human_speed(bandwidth), num_active_users
-
-        down, active_usersdown = _bandwidth(self.downloads.transfer_list)
-        up, active_usersup = _bandwidth(self.uploads.transfer_list)
-
-        self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersdown, 'speed': down})
-        self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
-
-        self.tray_icon.set_transfer_status(self.tray_download_template % {'speed': down},
-                                           self.tray_upload_template % {'speed': up})
 
     def update_alternative_speed_icon(self, active):
 

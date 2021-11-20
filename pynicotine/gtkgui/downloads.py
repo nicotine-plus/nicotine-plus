@@ -38,6 +38,7 @@ class Downloads(TransferList):
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
         self.aborted_status = _("Paused")
+        self.tray_template = _("Downloads: %(speed)s")
 
         TransferList.__init__(self, frame, type='download')
 
