@@ -335,9 +335,6 @@ class TransferList(UserInterface):
 
             self.update_parent_rows()
 
-            self.status_page.set_visible(not self.transfer_list)
-            self.Main.set_visible(self.transfer_list)
-
     def update_parent_rows(self, only_remove=False):
 
         # Remove empty parent rows
@@ -361,6 +358,10 @@ class TransferList(UserInterface):
                 # No grouping
                 if not self.users[username]:
                     del self.users[username]
+
+        # Show tab description if necessary
+        self.status_page.set_visible(not self.transfer_list)
+        self.Main.set_visible(self.transfer_list)
 
         self.last_ui_update = time()
 
