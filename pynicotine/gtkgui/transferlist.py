@@ -62,7 +62,9 @@ class TransferList(UserInterface):
         self.type = type
         self.page_id = self.type + "s"
 
-        grouping_button = getattr(frame, "ToggleTree%ss" % self.type.title())
+        self.user_counter = getattr(frame, "%sUsers" % type.title())
+        self.file_counter = getattr(frame, "%sFiles" % type.title())
+        grouping_button = getattr(frame, "ToggleTree%ss" % type.title())
 
         if Gtk.get_major_version() == 4:
             grouping_button.set_icon_name("view-list-symbolic")
@@ -296,6 +298,10 @@ class TransferList(UserInterface):
 
         return status
 
+    def update_num_users_files(self):
+        self.user_counter.set_text(str(len(self.users)))
+        self.file_counter.set_text(str(len(self.transfer_list)))
+
     def update(self, transfer=None, forceupdate=False):
 
         curtime = time()
@@ -363,6 +369,7 @@ class TransferList(UserInterface):
         self.status_page.set_visible(not self.transfer_list)
         self.Main.set_visible(self.transfer_list)
 
+        self.update_num_users_files()
         self.last_ui_update = time()
 
     def get_hplace(self, place):

@@ -1876,18 +1876,8 @@ class NicotineFrame(UserInterface):
 
             return human_speed(bandwidth), num_active_users
 
-        def _users(transfers, users):
-            return len(users), len(transfers)
-
         down, active_usersdown = _bandwidth(self.downloads.transfer_list)
         up, active_usersup = _bandwidth(self.uploads.transfer_list)
-        total_usersdown, filesdown = _users(self.downloads.transfer_list, self.downloads.users)
-        total_usersup, filesup = _users(self.uploads.transfer_list, self.uploads.users)
-
-        self.DownloadUsers.set_text(str(total_usersdown))
-        self.UploadUsers.set_text(str(total_usersup))
-        self.DownloadFiles.set_text(str(filesdown))
-        self.UploadFiles.set_text(str(filesup))
 
         self.DownStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersdown, 'speed': down})
         self.UpStatus.set_text("%(speed)s (%(num)i)" % {'num': active_usersup, 'speed': up})
