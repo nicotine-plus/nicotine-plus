@@ -24,13 +24,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="filename_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">File Name</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">filename_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -57,13 +57,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="folder_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Folder</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">folder_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -90,13 +90,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="filesize_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">File Size</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">filesize_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -123,14 +123,14 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="length_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Length</property>
                 <property name="margin-top">12</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">length_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -158,13 +158,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="bitrate_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Bitrate</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">bitrate_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -191,14 +191,14 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="username_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Username</property>
                 <property name="margin-top">12</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">username_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -226,13 +226,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="queue_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">In Queue</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">queue_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -259,13 +259,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="speed_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Last Speed</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">speed_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -292,13 +292,13 @@
         <child>
           <object class="GtkFlowBoxChild">
             <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="sensitive">0</property>
             <child>
               <object class="GtkLabel" id="country_label">
                 <property name="visible">1</property>
                 <property name="label" translatable="yes">Country</property>
-                <property name="selectable">1</property>
                 <property name="xalign">1</property>
+                <property name="mnemonic_widget">country_value</property>
                 <style>
                   <class name="dim-label"/>
                 </style>

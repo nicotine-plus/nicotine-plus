@@ -52,7 +52,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -97,7 +97,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -162,7 +162,7 @@
                   <object class="GtkCheckButton" id="CompletionTabCheck">
                     <property name="label" translatable="yes">Enable tab-key completion</property>
                     <property name="visible">1</property>
-                    <signal name="toggled" handler="on_completion_tab_check"/>
+                    <signal name="toggled" handler="on_completion_changed"/>
                   </object>
                 </child>
                 <child>
@@ -176,7 +176,8 @@
                   <object class="GtkCheckButton" id="CompletionDropdownCheck">
                     <property name="label" translatable="yes">Enable completion drop-down list</property>
                     <property name="visible">1</property>
-                    <signal name="toggled" handler="on_completion_dropdown_check"/>
+                    <property name="margin-top">12</property>
+                    <signal name="toggled" handler="on_completion_changed"/>
                   </object>
                 </child>
                 <child>
@@ -196,7 +197,7 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="sensitive">0</property>
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">1</property>
@@ -223,17 +224,11 @@
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">18</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
                     <property name="label" translatable="yes">Allowed chat completions:</property>
+                    <property name="margin-top">12</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">CompleteBuddiesCheck</property>
                   </object>
@@ -344,7 +339,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -403,7 +398,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -494,7 +489,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -556,7 +551,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -613,7 +608,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -707,7 +702,6 @@
                       <object class="GtkCheckButton" id="CensorCheck">
                         <property name="label" translatable="yes">Enable censoring of text patterns</property>
                         <property name="visible">1</property>
-                        <signal name="toggled" handler="on_censor_check" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -719,7 +713,7 @@
                         <child>
                           <object class="GtkFlowBoxChild">
                             <property name="visible">1</property>
-                            <property name="focusable">0</property>
+                            <property name="sensitive">0</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">1</property>
@@ -903,7 +897,6 @@
                       <object class="GtkCheckButton" id="ReplaceCheck">
                         <property name="visible">1</property>
                         <property name="label" translatable="yes">Enable automatic replacement of words</property>
-                        <signal name="toggled" handler="on_replace_check" swapped="no"/>
                       </object>
                     </child>
                   </object>

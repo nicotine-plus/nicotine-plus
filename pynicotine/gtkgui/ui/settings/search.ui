@@ -77,7 +77,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="MaxDisLabel">
                     <property name="visible">1</property>
@@ -163,7 +163,6 @@
             <property name="label" translatable="yes">Enable search result filters by default</property>
             <property name="visible">1</property>
             <property name="use-underline">1</property>
-            <signal name="toggled" handler="on_enable_filters_toggled" swapped="no"/>
           </object>
         </child>
         <child>
@@ -183,7 +182,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -210,7 +209,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -237,7 +236,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -269,7 +268,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -300,7 +299,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -331,7 +330,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -363,7 +362,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -455,7 +454,6 @@
                 <property name="label" translatable="yes">Respond to search requests from other users</property>
                 <property name="tooltip-text" translatable="yes">If a user on the Soulseek network searches for a file that exists in your shares, search results will be sent to the user.</property>
                 <property name="visible">1</property>
-                <signal name="toggled" handler="on_enable_search_results" swapped="no"/>
               </object>
             </child>
             <child>
@@ -468,9 +466,9 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="sensitive">0</property>
                     <child>
-                      <object class="GtkLabel" id="MinSearchCharsL1">
+                      <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
@@ -497,9 +495,9 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="sensitive">0</property>
                     <child>
-                      <object class="GtkLabel" id="MaxResultsL1">
+                      <object class="GtkLabel">
                         <property name="visible">1</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Maximum search results to send per search request:</property>

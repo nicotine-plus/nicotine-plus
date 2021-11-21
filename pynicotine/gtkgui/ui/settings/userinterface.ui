@@ -74,7 +74,7 @@
                     <child>
                       <object class="GtkFlowBoxChild">
                         <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="sensitive">0</property>
                         <child>
                           <object class="GtkLabel" id="MainTabsLabel">
                             <property name="visible">1</property>
@@ -245,7 +245,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
@@ -451,7 +451,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="ChatRoomsLabel">
                     <property name="visible">1</property>
@@ -477,7 +477,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="PrivateChatLabel">
                     <property name="visible">1</property>
@@ -503,7 +503,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="SearchLabel">
                     <property name="visible">1</property>
@@ -529,7 +529,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="UserInfoLabel">
                     <property name="visible">1</property>
@@ -555,7 +555,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="UserBrowseLabel">
                     <property name="visible">1</property>
@@ -806,7 +806,6 @@
                 <property name="label" translatable="yes">Colored and clickable usernames</property>
                 <property name="visible">1</property>
                 <property name="use-underline">1</property>
-                <signal name="toggled" handler="on_username_hotspots_toggled" swapped="no"/>
               </object>
             </child>
             <child>
@@ -819,7 +818,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
@@ -1654,7 +1653,6 @@
           <object class="GtkCheckButton" id="NotificationTabColors">
             <property name="visible">1</property>
             <property name="label" translatable="yes">Notification changes the tab&apos;s text color</property>
-            <signal name="toggled" handler="on_tab_notification_color_toggled" swapped="no"/>
           </object>
         </child>
         <child>
@@ -1917,7 +1915,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -1978,7 +1976,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -2039,7 +2037,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -2100,7 +2098,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -2161,7 +2159,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -2222,7 +2220,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -2315,7 +2313,7 @@
                 <child>
                   <object class="GtkFlowBoxChild">
                     <property name="visible">1</property>
-                    <property name="focusable">0</property>
+                    <property name="sensitive">0</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>

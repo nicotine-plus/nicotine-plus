@@ -57,7 +57,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -142,7 +142,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="RoomLogDirLabel">
                     <property name="visible">1</property>
@@ -168,7 +168,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="PrivateLogDirLabel">
                     <property name="visible">1</property>
@@ -194,7 +194,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="TransfersLogDirLabel">
                     <property name="visible">1</property>
@@ -220,7 +220,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="DebugLogDirLabel">
                     <property name="visible">1</property>

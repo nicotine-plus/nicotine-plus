@@ -66,7 +66,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -156,7 +156,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -186,7 +186,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -261,7 +261,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -304,7 +304,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -375,7 +375,7 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
@@ -407,7 +407,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="sensitive">0</property>
                 <child>
                   <object class="GtkLabel" id="QueueBandwidthText1">
                     <property name="visible">1</property>

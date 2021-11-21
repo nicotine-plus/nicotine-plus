@@ -105,16 +105,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Upload Slots</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">uploads</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -137,16 +134,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Free Upload Slots</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">slotsavail</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -169,16 +163,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Queued Uploads</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">queuesize</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -201,16 +192,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Upload Speed</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">speed</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -233,16 +221,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Shared Files</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">filesshared</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -265,16 +250,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Shared Folders</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">dirsshared</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>
@@ -297,16 +279,13 @@
                             <child>
                               <object class="GtkFlowBoxChild">
                                 <property name="visible">1</property>
-                                <property name="focusable">0</property>
+                                <property name="sensitive">0</property>
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">1</property>
                                     <property name="label" translatable="yes">Country</property>
                                     <property name="xalign">0</property>
                                     <property name="mnemonic_widget">country</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
                                   </object>
                                 </child>
                               </object>

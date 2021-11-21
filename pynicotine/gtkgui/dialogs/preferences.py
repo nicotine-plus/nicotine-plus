@@ -211,7 +211,7 @@ class NetworkFrame(UserInterface):
         active = widget.get_active()
         self.needportmap = active
 
-        self.UPnPInterval.set_sensitive(active)
+        self.UPnPInterval.get_parent().set_sensitive(active)
 
     def on_modify_upnp_interval(self, widget, *args):
         self.needportmap = True
@@ -279,7 +279,7 @@ class DownloadsFrame(UserInterface):
 
         self.p.set_widgets_data(self.options)
 
-        self.UploadsAllowed.set_sensitive(self.RemoteDownloads.get_active())
+        self.UploadsAllowed.get_parent().set_sensitive(self.RemoteDownloads.get_active())
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -290,8 +290,6 @@ class DownloadsFrame(UserInterface):
                 self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
                     -1, self.column_numbers, [str(dfilter), bool(escaped)]
                 )
-
-        self.on_enable_filters_toggle(self.DownloadFilter)
 
         self.needrescan = False
 
@@ -327,22 +325,8 @@ class DownloadsFrame(UserInterface):
         }
 
     def on_remote_downloads(self, widget):
-
         sensitive = widget.get_active()
-
-        self.UploadsAllowed.set_sensitive(sensitive)
-
-    def on_enable_filters_toggle(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.VerifyFilters.set_sensitive(sensitive)
-        self.VerifiedLabel.set_sensitive(sensitive)
-        self.DefaultFilters.set_sensitive(sensitive)
-        self.RemoveFilter.set_sensitive(sensitive)
-        self.EditFilter.set_sensitive(sensitive)
-        self.AddFilter.set_sensitive(sensitive)
-        self.FilterView.set_sensitive(sensitive)
+        self.UploadsAllowed.get_parent().set_sensitive(sensitive)
 
     def on_add_filter_response(self, dialog, response_id, data):
 
@@ -838,14 +822,14 @@ class UploadsFrame(UserInterface):
 
         sensitive = widget.get_active()
 
-        self.QueueSlots.set_sensitive(sensitive)
+        self.QueueSlots.get_parent().set_sensitive(sensitive)
 
-        self.QueueBandwidth.set_sensitive(not sensitive)
-        self.QueueBandwidthText1.set_sensitive(not sensitive)
+        self.QueueBandwidth.get_parent().set_sensitive(not sensitive)
+        self.QueueBandwidthText1.get_parent().set_sensitive(not sensitive)
 
     def on_limit_toggled(self, widget):
         sensitive = widget.get_active()
-        self.LimitSpeed.set_sensitive(sensitive)
+        self.LimitSpeed.get_parent().set_sensitive(sensitive)
 
 
 class UserInfoFrame(UserInterface):
@@ -1137,13 +1121,13 @@ class BannedUsersFrame(UserInterface):
         }
 
     def on_country_codes_toggled(self, widget):
-        self.GeoBlockCC.set_sensitive(widget.get_active())
+        self.GeoBlockCC.get_parent().set_sensitive(widget.get_active())
 
     def on_use_custom_geo_block_toggled(self, widget):
-        self.CustomGeoBlock.set_sensitive(widget.get_active())
+        self.CustomGeoBlock.get_parent().set_sensitive(widget.get_active())
 
     def on_use_custom_ban_toggled(self, widget):
-        self.CustomBan.set_sensitive(widget.get_active())
+        self.CustomBan.get_parent().set_sensitive(widget.get_active())
 
     def on_add_banned_response(self, dialog, response_id, data):
 
@@ -1311,27 +1295,6 @@ class ChatsFrame(UserInterface):
     def on_completion_changed(self, widget):
         self.needcompletion = True
 
-    def on_completion_tab_check(self, widget):
-        sensitive = self.CompletionTabCheck.get_active()
-        self.needcompletion = True
-
-        self.CompletionCycleCheck.set_sensitive(sensitive)
-        self.CompleteRoomNamesCheck.set_sensitive(sensitive)
-        self.CompleteBuddiesCheck.set_sensitive(sensitive)
-        self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
-        self.CompleteCommandsCheck.set_sensitive(sensitive)
-        self.CompleteAliasesCheck.set_sensitive(sensitive)
-        self.CompletionDropdownCheck.set_sensitive(sensitive)
-
-        self.on_completion_dropdown_check(widget)
-
-    def on_completion_dropdown_check(self, widget):
-        sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
-        self.needcompletion = True
-
-        self.CharactersCompletion.set_sensitive(sensitive)
-        self.OneMatchCheck.set_sensitive(sensitive)
-
     def on_default_private(self, widget):
         self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
 
@@ -1362,14 +1325,6 @@ class ChatsFrame(UserInterface):
         store = treeview.get_model()
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
-
-    def on_replace_check(self, widget):
-        sensitive = widget.get_active()
-        self.ReplacementsContainer.set_sensitive(sensitive)
-
-    def on_censor_check(self, widget):
-        sensitive = widget.get_active()
-        self.CensorContainer.set_sensitive(sensitive)
 
     def on_add_censored_response(self, dialog, response_id, data):
 
@@ -1445,9 +1400,6 @@ class ChatsFrame(UserInterface):
                 str(word),
                 str(replacement)
             ])
-
-        self.on_censor_check(self.CensorCheck)
-        self.on_replace_check(self.ReplaceCheck)
 
     def get_settings(self):
 
@@ -1670,9 +1622,6 @@ class UserInterfaceFrame(UserInterface):
             if widget is not None:
                 widget.set_active(enabled)
 
-        self.on_username_hotspots_toggled(self.UsernameHotspots)
-        self.on_tab_notification_color_toggled(self.NotificationTabColors)
-
         self.update_color_buttons()
         self.needcolors = False
 
@@ -1831,35 +1780,6 @@ class UserInterfaceFrame(UserInterface):
 
         entry.set_text("")
 
-    def on_username_hotspots_toggled(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.EntryAway.set_sensitive(sensitive)
-        self.EntryOnline.set_sensitive(sensitive)
-        self.EntryOffline.set_sensitive(sensitive)
-
-        self.DefaultAway.set_sensitive(sensitive)
-        self.DefaultOnline.set_sensitive(sensitive)
-        self.DefaultOffline.set_sensitive(sensitive)
-
-        self.PickAway.set_sensitive(sensitive)
-        self.PickOnline.set_sensitive(sensitive)
-        self.PickOffline.set_sensitive(sensitive)
-
-    def on_tab_notification_color_toggled(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.EntryChangedTab.set_sensitive(sensitive)
-        self.EntryHighlightTab.set_sensitive(sensitive)
-
-        self.DefaultChangedTab.set_sensitive(sensitive)
-        self.DefaultHighlightTab.set_sensitive(sensitive)
-
-        self.PickChangedTab.set_sensitive(sensitive)
-        self.PickHighlightTab.set_sensitive(sensitive)
-
     def on_colors_changed(self, widget):
 
         if isinstance(widget, Gtk.Entry):
@@ -1982,9 +1902,6 @@ class SearchesFrame(UserInterface):
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
 
-        self.on_enable_filters_toggled(self.EnableFilters)
-        self.on_enable_search_results(self.ToggleResults)
-
     def get_settings(self):
 
         return {
@@ -2017,18 +1934,6 @@ class SearchesFrame(UserInterface):
     def on_clear_filter_history(self, widget):
         self.frame.search.clear_filter_history()
         self.ClearFilterHistorySuccess.show()
-
-    def on_enable_filters_toggled(self, widget):
-        active = widget.get_active()
-        for w in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
-                  self.FilterBR, self.FilterCC, self.FilterFree):
-            w.set_sensitive(active)
-
-    def on_enable_search_results(self, widget):
-        active = widget.get_active()
-        for w in (self.MinSearchCharsL1, self.MinSearchChars,
-                  self.MaxResults, self.MaxResultsL1):
-            w.set_sensitive(active)
 
 
 class UrlHandlersFrame(UserInterface):
@@ -2143,260 +2048,6 @@ class UrlHandlersFrame(UserInterface):
 
             model.remove(iterator)
             del self.protocols[protocol]
-
-
-class CensorReplaceListFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/censorreplace.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "words": {
-                "censored": self.CensorList,
-                "censorwords": self.CensorCheck,
-                "censorfill": self.CensorReplaceCombo,
-                "autoreplaced": self.ReplacementList,
-                "replacewords": self.ReplaceCheck
-            }
-        }
-
-        self.censor_list_model = Gtk.ListStore(str)
-
-        cols = initialise_columns(
-            None, self.CensorList,
-            ["pattern", _("Pattern"), -1, "edit", None]
-        )
-        cols["pattern"].set_sort_column_id(0)
-
-        self.CensorList.set_model(self.censor_list_model)
-
-        renderers = cols["pattern"].get_cells()
-        for render in renderers:
-            render.connect('edited', self.censor_cell_edited_callback, self.CensorList, 0)
-
-        self.replace_list_model = Gtk.ListStore(str, str)
-
-        self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
-        cols = initialise_columns(
-            None, self.ReplacementList,
-            ["pattern", _("Pattern"), 150, "edit", None],
-            ["replacement", _("Replacement"), -1, "edit", None]
-        )
-        cols["pattern"].set_sort_column_id(0)
-        cols["replacement"].set_sort_column_id(1)
-
-        self.ReplacementList.set_model(self.replace_list_model)
-
-        pos = 0
-        for (column_id, column) in cols.items():
-            renderers = column.get_cells()
-            for render in renderers:
-                render.connect('edited', self.replace_cell_edited_callback, self.ReplacementList, pos)
-
-            pos += 1
-
-    def set_settings(self):
-
-        self.censor_list_model.clear()
-        self.replace_list_model.clear()
-
-        self.p.set_widgets_data(self.options)
-
-        for word, replacement in config.sections["words"]["autoreplaced"].items():
-            self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
-                str(word),
-                str(replacement)
-            ])
-
-        self.on_censor_check(self.CensorCheck)
-        self.on_replace_check(self.ReplaceCheck)
-
-    def get_settings(self):
-
-        censored = []
-        autoreplaced = {}
-
-        iterator = self.censor_list_model.get_iter_first()
-
-        while iterator is not None:
-            word = self.censor_list_model.get_value(iterator, 0)
-            censored.append(word)
-            iterator = self.censor_list_model.iter_next(iterator)
-
-        iterator = self.replace_list_model.get_iter_first()
-
-        while iterator is not None:
-            word = self.replace_list_model.get_value(iterator, 0)
-            replacement = self.replace_list_model.get_value(iterator, 1)
-            autoreplaced[word] = replacement
-            iterator = self.replace_list_model.iter_next(iterator)
-
-        return {
-            "words": {
-                "censored": censored,
-                "censorwords": self.CensorCheck.get_active(),
-                "censorfill": self.CensorReplaceCombo.get_active_id(),
-                "autoreplaced": autoreplaced,
-                "replacewords": self.ReplaceCheck.get_active()
-            }
-        }
-
-    def censor_cell_edited_callback(self, widget, index, value, treeview, pos):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-
-        if value != "" and not value.isspace() and len(value) > 2:
-            store.set(iterator, pos, value)
-        else:
-            store.remove(iterator)
-
-    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
-
-        store = treeview.get_model()
-        iterator = store.get_iter(index)
-        store.set(iterator, pos, value)
-
-    def on_replace_check(self, widget):
-        sensitive = widget.get_active()
-        self.ReplacementsContainer.set_sensitive(sensitive)
-
-    def on_censor_check(self, widget):
-        sensitive = widget.get_active()
-        self.CensorContainer.set_sensitive(sensitive)
-
-    def on_add_censored_response(self, dialog, response_id, data):
-
-        pattern = dialog.get_response_value()
-        dialog.destroy()
-
-        if response_id != Gtk.ResponseType.OK:
-            return
-
-        if pattern:
-            self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
-
-    def on_add_censored(self, widget):
-
-        entry_dialog(
-            parent=self.p.dialog,
-            title=_("Censor Pattern"),
-            message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
-                      "want to match strings inside words (may fail at the beginning and end of lines)."),
-            callback=self.on_add_censored_response
-        )
-
-    def on_remove_censored(self, widget):
-
-        model, paths = self.CensorList.get_selection().get_selected_rows()
-
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            model.remove(iterator)
-
-    def on_add_replacement(self, widget):
-
-        iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
-        selection = self.ReplacementList.get_selection()
-        selection.select_iter(iterator)
-        col = self.ReplacementList.get_column(0)
-
-        self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
-
-    def on_remove_replacement(self, widget):
-
-        model, paths = self.ReplacementList.get_selection().get_selected_rows()
-
-        for path in reversed(paths):
-            iterator = model.get_iter(path)
-            model.remove(iterator)
-
-
-class CompletionFrame(UserInterface):
-
-    def __init__(self, parent):
-
-        super().__init__("ui/settings/completion.ui")
-
-        self.p = parent
-        self.frame = self.p.frame
-
-        self.options = {
-            "words": {
-                "tab": self.CompletionTabCheck,
-                "cycle": self.CompletionCycleCheck,
-                "dropdown": self.CompletionDropdownCheck,
-                "characters": self.CharactersCompletion,
-                "roomnames": self.CompleteRoomNamesCheck,
-                "buddies": self.CompleteBuddiesCheck,
-                "roomusers": self.CompleteUsersInRoomsCheck,
-                "commands": self.CompleteCommandsCheck,
-                "aliases": self.CompleteAliasesCheck,
-                "onematch": self.OneMatchCheck
-            },
-            "ui": {
-                "spellcheck": self.SpellCheck
-            }
-        }
-
-    def set_settings(self):
-        self.needcompletion = False
-
-        try:
-            gi.require_version('Gspell', '1')
-            from gi.repository import Gspell  # noqa: F401
-
-        except (ImportError, ValueError):
-            self.SpellCheck.hide()
-
-        self.p.set_widgets_data(self.options)
-
-    def on_completion_changed(self, widget):
-        self.needcompletion = True
-
-    def on_completion_tab_check(self, widget):
-        sensitive = self.CompletionTabCheck.get_active()
-        self.needcompletion = True
-
-        self.CompletionCycleCheck.set_sensitive(sensitive)
-        self.CompleteRoomNamesCheck.set_sensitive(sensitive)
-        self.CompleteBuddiesCheck.set_sensitive(sensitive)
-        self.CompleteUsersInRoomsCheck.set_sensitive(sensitive)
-        self.CompleteCommandsCheck.set_sensitive(sensitive)
-        self.CompleteAliasesCheck.set_sensitive(sensitive)
-        self.CompletionDropdownCheck.set_sensitive(sensitive)
-
-        self.on_completion_dropdown_check(widget)
-
-    def on_completion_dropdown_check(self, widget):
-        sensitive = (self.CompletionTabCheck.get_active() and self.CompletionDropdownCheck.get_active())
-        self.needcompletion = True
-
-        self.CharactersCompletion.set_sensitive(sensitive)
-        self.OneMatchCheck.set_sensitive(sensitive)
-
-    def get_settings(self):
-        return {
-            "words": {
-                "tab": self.CompletionTabCheck.get_active(),
-                "cycle": self.CompletionCycleCheck.get_active(),
-                "dropdown": self.CompletionDropdownCheck.get_active(),
-                "characters": self.CharactersCompletion.get_value_as_int(),
-                "roomnames": self.CompleteRoomNamesCheck.get_active(),
-                "buddies": self.CompleteBuddiesCheck.get_active(),
-                "roomusers": self.CompleteUsersInRoomsCheck.get_active(),
-                "commands": self.CompleteCommandsCheck.get_active(),
-                "aliases": self.CompleteAliasesCheck.get_active(),
-                "onematch": self.OneMatchCheck.get_active()
-            },
-            "ui": {
-                "spellcheck": self.SpellCheck.get_active()
-            }
-        }
 
 
 class NowPlayingFrame(UserInterface):

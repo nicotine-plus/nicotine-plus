@@ -84,6 +84,10 @@ def set_global_css():
         padding: 0;
     }
 
+    flowboxchild:disabled label {
+        color: @theme_fg_color;
+    }
+
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
