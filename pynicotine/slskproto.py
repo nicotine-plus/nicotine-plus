@@ -1357,15 +1357,15 @@ class SlskProtoThread(threading.Thread):
             elif msg_class is SetUploadLimit:
                 if msg_obj.uselimit:
                     if msg_obj.limitby:
-                        callback = self._calc_upload_limit
+                        self._calc_upload_limit_function = self._calc_upload_limit
                     else:
-                        callback = self._calc_upload_limit_by_transfer
+                        self._calc_upload_limit_function = self._calc_upload_limit_by_transfer
 
                 else:
-                    callback = self._calc_upload_limit_none
+                    self._calc_upload_limit_function = self._calc_upload_limit_none
 
                 self._upload_limit = msg_obj.limit * 1024
-                callback()
+                self._calc_upload_limit_function()
 
     def read_data(self, conn_obj):
 
