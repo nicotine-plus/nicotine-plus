@@ -282,7 +282,12 @@ class NicotineFrame(UserInterface):
             page.save_columns()
 
     def show(self):
+
         self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+        if Gtk.get_major_version() == 3:
+            # Fix for Windows where minimized window is not shown when unhiding from tray
+            self.MainWindow.deiconify()
 
     """ Init UI """
 
