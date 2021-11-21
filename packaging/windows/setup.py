@@ -71,7 +71,12 @@ def add_gtk_libraries():
 
     if sys.platform == "win32":
         add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
+
+        # Path for portable build (gdbus required for single-instance application)
         add_files_by_pattern("bin", "gdbus", ".exe", output_path="")
+
+        # Path for installed build
+        add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib/gi")
 
     elif sys.platform == "darwin":
         add_files_by_pattern("lib", required_dlls, ".dylib", output_path="")
