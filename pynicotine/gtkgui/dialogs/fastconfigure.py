@@ -208,5 +208,7 @@ class FastConfigureAssistant(UserInterface):
         self.frame.np.shares.rescan_shares()
         self.frame.np.connect()
 
+        self.FastConfigureDialog.destroy()
+
     def on_cancel(self, *args):
         self.FastConfigureDialog.destroy()
