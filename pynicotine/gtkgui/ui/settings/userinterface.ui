@@ -109,7 +109,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Visible primary tabs:</property>
+                    <property name="label" translatable="yes">Visible main tabs:</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">EnableSearchTab</property>
                   </object>

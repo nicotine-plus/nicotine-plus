@@ -105,7 +105,7 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">1</property>
                 <property name="accelerator">&lt;Ctrl&gt;1...9</property>
-                <property name="title" translatable="yes">Change Primary Tab</property>
+                <property name="title" translatable="yes">Change Main Tab</property>
               </object>
             </child>
             <child>
