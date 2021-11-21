@@ -106,7 +106,7 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit…"), self.on_quit)  # always prompt
+        self.create_item(_("Quit"), self.frame.np.quit)
 
     def on_downloads(self, *args):
         self.frame.change_main_page("downloads")
@@ -182,9 +182,6 @@ class TrayIcon:
             callback=self.on_get_a_users_shares_response,
             droplist=users
         )
-
-    def on_quit(self, *args):
-        self.frame.show_exit_dialog(remember=False)
 
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, status_icon, button, activate_time):
