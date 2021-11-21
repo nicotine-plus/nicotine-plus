@@ -71,7 +71,7 @@ def add_gtk_libraries():
 
     if sys.platform == "win32":
         add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
-        add_files_by_pattern("bin", "gdbus.exe", output_path="")
+        add_files_by_pattern("bin", "gdbus", ".exe", output_path="")
 
     elif sys.platform == "darwin":
         add_files_by_pattern("lib", required_dlls, ".dylib", output_path="")
