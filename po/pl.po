@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-20 17:18+0200\n"
-"PO-Revision-Date: 2021-11-15 01:58+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"PO-Revision-Date: 2021-11-23 04:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9.1-dev\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -6311,8 +6311,10 @@ msgid "Restore the previously active main tab at startup"
 msgstr "Ustaw ostatni prywatny czat na starcie"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
+#, fuzzy
 msgid "By default the search files tab is activated at startup."
 msgstr ""
+"Domyślnie karta wyszukiwania plików jest aktywowana podczas uruchamiania."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:112
 #, fuzzy
