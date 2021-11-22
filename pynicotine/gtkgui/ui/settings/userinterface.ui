@@ -59,8 +59,8 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="TabSelectPrevious">
-                    <property name="label" translatable="yes">Remember previous primary tab on startup</property>
-                    <property name="tooltip_text" translatable="yes">Start with Search Files by default.</property>
+                    <property name="label" translatable="yes">Restore the previously active main tab at startup</property>
+                    <property name="tooltip_text" translatable="yes">By default the search files tab is activated at startup.</property>
                     <property name="visible">1</property>
                   </object>
                 </child>
@@ -109,7 +109,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Visible primary tabs:</property>
+                    <property name="label" translatable="yes">Visible main tabs:</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">EnableSearchTab</property>
                   </object>
