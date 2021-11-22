@@ -1781,6 +1781,7 @@ msgid "Program"
 msgstr "Program"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2238
+#: pynicotine/gtkgui/dialogs/preferences.py:2587
 #, python-format
 msgid "%s Settings"
 msgstr "Ustawienia %s"
@@ -2402,11 +2403,11 @@ msgstr ""
 "Program Nicotine+ napotkał błąd krytyczny i musi zostać zamknięty. Proszę "
 "skopiować poniższy błąd i dołączyć go do raportu o błędzie:"
 
-#: pynicotine/gtkgui/frame.py:1947
+#: pynicotine/gtkgui/frame.py:1947 pynicotine/gtkgui/frame.py:1980
 msgid "_Quit Nicotine+"
 msgstr "_Zamknij Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1948
+#: pynicotine/gtkgui/frame.py:1948 pynicotine/gtkgui/frame.py:1981
 msgid "_Copy & Report Bug"
 msgstr "_Skopiuj i zgłoś błąd"
 
@@ -2417,11 +2418,11 @@ msgstr "_Skopiuj i zgłoś błąd"
 msgid "Quit Nicotine+"
 msgstr "Zamknij Nicotine+"
 
-#: pynicotine/gtkgui/frame.py:1992
+#: pynicotine/gtkgui/frame.py:1992 pynicotine/gtkgui/frame.py:2025
 msgid "Do you really want to exit?"
 msgstr "Czy na pewno chcesz wyjść?"
 
-#: pynicotine/gtkgui/frame.py:1994
+#: pynicotine/gtkgui/frame.py:1994 pynicotine/gtkgui/frame.py:2027
 msgid "_Run in Background"
 msgstr "Uruchom w tle"
 
@@ -2429,7 +2430,7 @@ msgstr "Uruchom w tle"
 msgid "Remember choice"
 msgstr "Zapamiętaj wybór"
 
-#: pynicotine/gtkgui/frame.py:2025
+#: pynicotine/gtkgui/frame.py:2025 pynicotine/gtkgui/frame.py:2058
 msgid "Nicotine+ is running in the background"
 msgstr "Nicotine+ działa w tle"
 
@@ -6318,8 +6319,9 @@ msgstr ""
 msgid "Visible main tabs:"
 msgstr "Widoczne karty podstawowe:"
 
-#~ msgid "Quit…"
-#~ msgstr "Zamknij…"
+#: pynicotine/gtkgui/widgets/trayicon.py:109
+msgid "Quit…"
+msgstr "Zamknij…"
 
 #~ msgid "Close Nicotine+?"
 #~ msgstr "Zamknąć Nicotine+?"
