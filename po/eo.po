@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 00:09+0200\n"
-"PO-Revision-Date: 2021-11-04 13:25+0000\n"
+"PO-Revision-Date: 2021-11-23 04:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -6754,8 +6754,9 @@ msgid "Restore the previously active main tab at startup"
 msgstr "Restarigu antaŭe malfermitajn privatajn babilojn ĉe ekfunkciigo"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
+#, fuzzy
 msgid "By default the search files tab is activated at startup."
-msgstr ""
+msgstr "Defaŭlte la langeto de serĉdosieroj estas aktivigita ĉe ekfunkciigo."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 #, fuzzy
