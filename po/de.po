@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 00:09+0200\n"
-"PO-Revision-Date: 2021-11-22 22:32+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2021-11-23 04:00+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -5798,19 +5798,17 @@ msgid "Restore the previously active main tab at startup"
 msgstr "Wiederherstellen der zuvor aktiven Hauptregisterkarte beim Start"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-#, fuzzy
 msgid "By default the search files tab is activated at startup."
 msgstr ""
-"Standardmäßig ist die Registerkarte Dateien suchen beim Start aktiviert."
+"Standardmäßig ist die Registerkarte \"Dateien suchen\" beim Start aktiviert."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
 msgstr "Position der Tableiste:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:112
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Sichtbare primäre Tabs:"
+msgstr "Sichtbare Hauptregisterkarten:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:252
 msgid "When closing Nicotine+:"
