@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-18 22:52+0200\n"
-"PO-Revision-Date: 2021-11-15 21:01+0000\n"
+"PO-Revision-Date: 2021-11-19 15:28+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9.1-dev\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1710,9 +1710,9 @@ msgid "Program"
 msgstr "Program"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, fuzzy, python-format
+#, python-format
 msgid "%s Settings"
-msgstr "%s Ayarlar"
+msgstr "%s Ayarları"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -2027,9 +2027,8 @@ msgid "_Cancel"
 msgstr "_İptal"
 
 #: pynicotine/gtkgui/frame.py:401 pynicotine/gtkgui/frame.py:416
-#, fuzzy
 msgid "Change _Login Details"
-msgstr "Oturum Açma Bilgilerini Değiştir"
+msgstr "_Oturum Açma Bilgilerini Değiştir"
 
 #: pynicotine/gtkgui/frame.py:647 pynicotine/gtkgui/frame.py:662
 msgid "Error retrieving latest version"
@@ -2314,14 +2313,12 @@ msgstr ""
 "aşağıdaki mesajı kopyalayın ve hata bildirimine ekleyin:"
 
 #: pynicotine/gtkgui/frame.py:1963 pynicotine/gtkgui/frame.py:1992
-#, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Nicotine+'tan çık"
+msgstr "Nicotine+'tan _çık"
 
 #: pynicotine/gtkgui/frame.py:1964 pynicotine/gtkgui/frame.py:1993
-#, fuzzy
 msgid "_Copy & Report Bug"
-msgstr "Kopyala ve Hatayı Bildir"
+msgstr "_Kopyala ve Hatayı Bildir"
 
 #: pynicotine/gtkgui/frame.py:2014
 msgid "Close Nicotine+?"
@@ -2467,24 +2464,20 @@ msgstr ""
 "bildirilir ve yanlış olabilir."
 
 #: pynicotine/gtkgui/search.py:74
-#, fuzzy
 msgid "_Global"
-msgstr "Genel"
+msgstr "_Genel"
 
 #: pynicotine/gtkgui/search.py:75
-#, fuzzy
 msgid "_Buddies"
-msgstr "Arkadaşlar"
+msgstr "_Arkadaşlar"
 
 #: pynicotine/gtkgui/search.py:76
-#, fuzzy
 msgid "_Rooms"
-msgstr "Odalar"
+msgstr "_Odalar"
 
 #: pynicotine/gtkgui/search.py:77
-#, fuzzy
 msgid "_User"
-msgstr "Kullanıcı"
+msgstr "_Kullanıcı"
 
 #: pynicotine/gtkgui/search.py:360
 msgid "ID"
@@ -2588,9 +2581,9 @@ msgid "Select User's Results"
 msgstr "Kullanıcının Sonuçlarını Seç"
 
 #: pynicotine/gtkgui/search.py:1148
-#, fuzzy, python-format
+#, python-format
 msgid "Total: %s"
-msgstr "Toplam"
+msgstr "Toplam: %s"
 
 #: pynicotine/gtkgui/search.py:1246 pynicotine/gtkgui/userbrowse.py:997
 msgid "Select Destination Folder for File(s)"
@@ -2979,12 +2972,10 @@ msgid "Add a note about user %s:"
 msgstr "%s kullanıcısı hakkında bir not ekleyin:"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
-#, fuzzy
 msgid "_No"
-msgstr "Hayır"
+msgstr "_Hayır"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
-#, fuzzy
 msgid "_Yes"
 msgstr "_Evet"
 
@@ -3582,7 +3573,7 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "Yeniden taramadan önce %(num)s klasör bulundu, yeniden oluşturuluyor…"
 
 #: pynicotine/shares.py:107
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Yeniden tarama tamamlandı: %(num)s klasör bulundu"
 
@@ -3655,9 +3646,9 @@ msgid "Failed to send number of shared files to the server: %s"
 msgstr "Paylaşılan dosya sayısı sunucuya gönderilemedi: %s"
 
 #: pynicotine/shares.py:868
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan progress: %s"
-msgstr "İlerleme: %s"
+msgstr "Yeniden tarama ilerlemesi: %s"
 
 #: pynicotine/slskmessages.py:2266
 #, python-format
@@ -5549,9 +5540,8 @@ msgid "_Add Plugins"
 msgstr "_Eklenti Ekle"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:132
-#, fuzzy
 msgid "_Settings"
-msgstr "Durum alınıyor"
+msgstr "_Ayarlar"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
 msgid "Version:"
@@ -6185,34 +6175,28 @@ msgid "_Refresh Info"
 msgstr "Bilgileri _Yenile"
 
 #: pynicotine/gtkgui/frame.py:954
-#, fuzzy
 msgid "_Quit…"
-msgstr "_Çıkış"
+msgstr "_Çıkış…"
 
 #: pynicotine/gtkgui/frame.py:2037
-#, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Nikotin+'tan gerçekten çıkmak istiyor musunuz?"
+msgstr "Gerçekten çıkmak istiyor musunuz?"
 
 #: pynicotine/gtkgui/frame.py:2039
-#, fuzzy
 msgid "_Run in Background"
-msgstr "Arka Planda Çalıştır"
+msgstr "_Arka Planda Çalıştır"
 
 #: pynicotine/gtkgui/frame.py:2070
-#, fuzzy
 msgid "Nicotine+ is running in the background"
-msgstr "Arka planda çalıştır"
+msgstr "Nicotine+ arka planda çalışıyor"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
-#, fuzzy
 msgid "Quit…"
-msgstr "Çıkış"
+msgstr "Çıkış…"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Quit / Run in Background"
-msgstr "Arka Planda Çalıştır"
+msgstr "Çık / Arka Planda Çalıştır"
 
 #~ msgid "Unable to Share Folder"
 #~ msgstr "Klasör Paylaşılamıyor"
