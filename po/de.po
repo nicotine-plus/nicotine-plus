@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-18 22:52+0200\n"
-"PO-Revision-Date: 2021-11-16 07:32+0000\n"
+"PO-Revision-Date: 2021-11-19 18:26+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9.1-dev\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1717,9 +1717,9 @@ msgid "Program"
 msgstr "Programm"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2603
-#, fuzzy, python-format
+#, python-format
 msgid "%s Settings"
-msgstr "Einstellungen"
+msgstr "%s Einstellungen"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2612
 #: pynicotine/gtkgui/dialogs/preferences.py:3095
@@ -2035,9 +2035,8 @@ msgid "_Cancel"
 msgstr "Abbrechen"
 
 #: pynicotine/gtkgui/frame.py:401 pynicotine/gtkgui/frame.py:416
-#, fuzzy
 msgid "Change _Login Details"
-msgstr "Anmeldedaten ändern"
+msgstr "_Anmeldedaten ändern"
 
 #: pynicotine/gtkgui/frame.py:647 pynicotine/gtkgui/frame.py:662
 msgid "Error retrieving latest version"
@@ -2323,14 +2322,12 @@ msgstr ""
 "Fehlerbericht ein:"
 
 #: pynicotine/gtkgui/frame.py:1963 pynicotine/gtkgui/frame.py:1992
-#, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Nicotine+ beenden"
+msgstr "_Nicotine+ beenden"
 
 #: pynicotine/gtkgui/frame.py:1964 pynicotine/gtkgui/frame.py:1993
-#, fuzzy
 msgid "_Copy & Report Bug"
-msgstr "Fehler kopieren und melden"
+msgstr "_Fehler kopieren und melden"
 
 #: pynicotine/gtkgui/frame.py:2014
 msgid "Close Nicotine+?"
@@ -2476,24 +2473,20 @@ msgstr ""
 "vom Server und können falsch sein."
 
 #: pynicotine/gtkgui/search.py:74
-#, fuzzy
 msgid "_Global"
-msgstr "Global"
+msgstr "_Global"
 
 #: pynicotine/gtkgui/search.py:75
-#, fuzzy
 msgid "_Buddies"
-msgstr "Freunde"
+msgstr "_Freunde"
 
 #: pynicotine/gtkgui/search.py:76
-#, fuzzy
 msgid "_Rooms"
-msgstr "Räume"
+msgstr "_Räume"
 
 #: pynicotine/gtkgui/search.py:77
-#, fuzzy
 msgid "_User"
-msgstr "Benutzer"
+msgstr "_Benutzer"
 
 #: pynicotine/gtkgui/search.py:360
 msgid "ID"
@@ -2597,9 +2590,9 @@ msgid "Select User's Results"
 msgstr "Treffer dieses Benutzers markieren"
 
 #: pynicotine/gtkgui/search.py:1148
-#, fuzzy, python-format
+#, python-format
 msgid "Total: %s"
-msgstr "Insgesamt"
+msgstr "Insgesamt %s"
 
 #: pynicotine/gtkgui/search.py:1246 pynicotine/gtkgui/userbrowse.py:997
 msgid "Select Destination Folder for File(s)"
@@ -2989,14 +2982,12 @@ msgid "Add a note about user %s:"
 msgstr "Fügen Sie eine Notiz zum Benutzer %s hinzu:"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
-#, fuzzy
 msgid "_No"
-msgstr "Nein"
+msgstr "_Nein"
 
 #: pynicotine/gtkgui/widgets/dialogs.py:197
-#, fuzzy
 msgid "_Yes"
-msgstr "_Jawohl"
+msgstr "_Ja"
 
 #: pynicotine/gtkgui/widgets/filechooser.py:72
 msgid "Select a Folder"
@@ -3610,7 +3601,7 @@ msgid "%(num)s folders found before rescan, rebuilding…"
 msgstr "%(num)s Ordner vor erneutem Scan gefunden, Neuaufbau…"
 
 #: pynicotine/shares.py:107
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan complete: %(num)s folders found"
 msgstr "Erneuter Scan abgeschlossen: %(num)s Ordner gefunden"
 
@@ -3689,9 +3680,9 @@ msgstr ""
 "werden: %s"
 
 #: pynicotine/shares.py:868
-#, fuzzy, python-format
+#, python-format
 msgid "Rescan progress: %s"
-msgstr "Fortschritt: %s"
+msgstr "Fortschritt des Rescans: %s"
 
 #: pynicotine/slskmessages.py:2266
 #, python-format
@@ -5608,9 +5599,8 @@ msgid "_Add Plugins"
 msgstr "_Plugins hinzufügen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:132
-#, fuzzy
 msgid "_Settings"
-msgstr "Einstellungen"
+msgstr "_Einstellungen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
 msgid "Version:"
@@ -6250,34 +6240,28 @@ msgid "_Refresh Info"
 msgstr "_Info aktualisieren"
 
 #: pynicotine/gtkgui/frame.py:954
-#, fuzzy
 msgid "_Quit…"
-msgstr "_Beenden"
+msgstr "_Beenden…"
 
 #: pynicotine/gtkgui/frame.py:2037
-#, fuzzy
 msgid "Do you really want to exit?"
 msgstr "Möchten Sie Nikotin+ wirklich beenden?"
 
 #: pynicotine/gtkgui/frame.py:2039
-#, fuzzy
 msgid "_Run in Background"
-msgstr "Im Hintergrund ausführen"
+msgstr "_Im Hintergrund ausführen"
 
 #: pynicotine/gtkgui/frame.py:2070
-#, fuzzy
 msgid "Nicotine+ is running in the background"
-msgstr "Im Hintergrund laufen"
+msgstr "Nicotine+ läuft im Hintergrund"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:110
-#, fuzzy
 msgid "Quit…"
-msgstr "Beenden"
+msgstr "Beenden…"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:68
-#, fuzzy
 msgid "Quit / Run in Background"
-msgstr "Im Hintergrund ausführen"
+msgstr "Beenden / Ausführen im Hintergrund"
 
 #~ msgid "Unable to Share Folder"
 #~ msgstr "Freigabe des Ordners nicht möglich"
