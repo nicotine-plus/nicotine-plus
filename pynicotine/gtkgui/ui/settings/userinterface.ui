@@ -60,7 +60,7 @@
                 <child>
                   <object class="GtkCheckButton" id="TabSelectPrevious">
                     <property name="label" translatable="yes">Restore the previously active main tab at startup</property>
-                    <property name="tooltip_text" translatable="yes">By default the search files tab is activated at startup.</property>
+                    <property name="tooltip_text" translatable="yes">By default the leftmost tab is activated at startup</property>
                     <property name="visible">1</property>
                   </object>
                 </child>
