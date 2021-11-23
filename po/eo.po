@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 00:09+0200\n"
+"POT-Creation-Date: 2021-11-23 06:01+0200\n"
 "PO-Revision-Date: 2021-11-23 04:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -6755,7 +6755,7 @@ msgstr "Restarigu antaŭe malfermitajn privatajn babilojn ĉe ekfunkciigo"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
 #, fuzzy
-msgid "By default the search files tab is activated at startup."
+msgid "By default the leftmost tab is activated at startup"
 msgstr "Defaŭlte la langeto de serĉdosieroj estas aktivigita ĉe ekfunkciigo."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82

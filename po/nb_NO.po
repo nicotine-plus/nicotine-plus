@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 00:09+0200\n"
+"POT-Creation-Date: 2021-11-23 06:01+0200\n"
 "PO-Revision-Date: 2021-11-23 04:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
@@ -6285,7 +6285,7 @@ msgstr "Gjenopprett tidligere åpne private chatter ved oppstart"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
 #, fuzzy
-msgid "By default the search files tab is activated at startup."
+msgid "By default the leftmost tab is activated at startup"
 msgstr "Som standard er fanen for søkefiler aktivert ved oppstart."
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
