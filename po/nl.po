@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-23 00:09+0200\n"
-"PO-Revision-Date: 2021-11-19 18:26+0000\n"
+"POT-Creation-Date: 2021-11-23 06:01+0200\n"
+"PO-Revision-Date: 2021-11-23 16:45+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9.1\n"
+"X-Generator: Weblate 4.10-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3998,9 +3998,8 @@ msgid "Tabs"
 msgstr "Tabbladen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:108
-#, fuzzy
 msgid "Change Main Tab"
-msgstr "Primair tabblad wijzigen"
+msgstr "Hoofdtabblad wijzigen"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:115
 msgid "Go to Previous Secondary Tab"
@@ -5743,22 +5742,20 @@ msgid "Minimize to tray on startup"
 msgstr "Minimaliseren naar lade bij opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:62
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "Herstel eerder geopende privé chats bij het opstarten"
+msgstr "Herstel het eerder actieve hoofdtabblad bij het opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-msgid "By default the search files tab is activated at startup."
-msgstr ""
+msgid "By default the leftmost tab is activated at startup"
+msgstr "Standaard wordt het meest linkse tabblad geactiveerd bij het opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
 msgstr "Tab balk positie:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:112
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Zichtbare primaire tabbladen:"
+msgstr "Zichtbare hoofdtabbladen:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:252
 msgid "When closing Nicotine+:"
