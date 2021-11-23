@@ -108,8 +108,10 @@
                         <items>
                           <item>xdg-open $</item>
                           <item>firefox $</item>
-                          <item>firefox -a firefox --remote &quot;openURL($,new-tab)&quot;</item>
-                          <item>opera $</item>
+                          <item>firefox --new-tab $</item>
+                          <item>epiphany $</item>
+                          <item>chromium-browser $</item>
+                          <item>falkon $</item>
                           <item>links -g $</item>
                           <item>dillo $</item>
                           <item>konqueror $</item>

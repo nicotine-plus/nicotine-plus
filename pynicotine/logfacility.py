@@ -55,7 +55,7 @@ class Logger:
         if prefix:
             msg = "[%s] %s" % (prefix, msg)
 
-        return msg
+        return str(msg)
 
     def add(self, msg, msg_args=None, level=None):
 
