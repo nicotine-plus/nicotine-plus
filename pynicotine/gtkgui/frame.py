@@ -1661,7 +1661,7 @@ class NicotineFrame(UserInterface):
 
     def create_away_timer(self):
 
-        if self.np.away:
+        if self.np.away or not self.np.logged_in:
             return
 
         away_interval = config.sections["server"]["autoaway"]
