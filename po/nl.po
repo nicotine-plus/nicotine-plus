@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 06:01+0200\n"
-"PO-Revision-Date: 2021-11-23 04:00+0000\n"
+"PO-Revision-Date: 2021-11-23 16:45+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -5746,10 +5746,8 @@ msgid "Restore the previously active main tab at startup"
 msgstr "Herstel het eerder actieve hoofdtabblad bij het opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-#, fuzzy
 msgid "By default the leftmost tab is activated at startup"
-msgstr ""
-"Standaard is het tabblad bestanden zoeken geactiveerd bij het opstarten."
+msgstr "Standaard wordt het meest linkse tabblad geactiveerd bij het opstarten"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
