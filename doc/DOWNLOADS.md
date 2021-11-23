@@ -60,7 +60,7 @@ pkg install py-nicotine-plus
 
 ### pip
 
-If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [runtime dependencies](doc/DEPENDENCIES.md) are installed, and run the following:
+If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
@@ -98,7 +98,7 @@ choco install nicotine-plus
 
 ### Official Builds (Catalina/10.15 and newer)
 
-NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](doc/TESTING.html#macos-catalina1015-and-newer).
+NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](TESTING.html#macos-catalina1015-and-newer).
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
