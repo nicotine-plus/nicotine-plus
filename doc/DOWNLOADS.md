@@ -98,11 +98,15 @@ choco install nicotine-plus
 
 ### Official Builds (Catalina/10.15 and newer)
 
+NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](doc/TESTING.html#macos-catalina1015-and-newer).
+
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
 - [Download Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
 
 ### Homebrew (Mojave/10.14 and newer)
+
+NOTE: Nicotine+ installed from Homebrew will currently NOT run on Apple M1 Macs due to issues in upstream dependencies. Please use the official build above instead.
 
 On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
 
