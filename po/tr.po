@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 06:01+0200\n"
-"PO-Revision-Date: 2021-11-23 04:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2021-11-23 16:45+0000\n"
+"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -3994,9 +3994,8 @@ msgid "Tabs"
 msgstr "Sekmeler"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:108
-#, fuzzy
 msgid "Change Main Tab"
-msgstr "Birincil Sekmeyi Değiştir"
+msgstr "Ana Sekmeyi Değiştir"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:115
 msgid "Go to Previous Secondary Tab"
@@ -5734,24 +5733,20 @@ msgid "Minimize to tray on startup"
 msgstr "Başlangıçta tepsi simgesine küçült"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:62
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
-msgstr "Önceden açık olan özel sohbetleri başlangıçta geri yükle"
+msgstr "Önceden etkin olan ana sekmeyi başlangıçta geri yükle"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:63
-#, fuzzy
 msgid "By default the leftmost tab is activated at startup"
-msgstr ""
-"Varsayılan olarak, arama dosyaları sekmesi başlangıçta etkinleştirilir."
+msgstr "Öntanımlı olarak, en soldaki sekme başlangıçta etkinleştirilir"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:82
 msgid "Tab bar position:"
 msgstr "Sekme çubuğu konumu:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:112
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Görünür birincil sekmeler:"
+msgstr "Görünür ana sekmeler:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:252
 msgid "When closing Nicotine+:"
