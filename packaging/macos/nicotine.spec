@@ -41,7 +41,7 @@ from stdlib_list import stdlib_list
 binaries = []
 
 # Add plugins and standard modules (for plugins)
-hiddenimports = list(stdlib_list()) + \
+hiddenimports = ["certifi"] + list(stdlib_list()) + \
     [name for importer, name, ispkg in walk_packages(path=pynicotine.plugins.__path__, prefix="pynicotine.plugins.") if ispkg]
 
 
@@ -51,9 +51,6 @@ mo_entries, languages = generate_translations()
 
 for target_path, mo_files in mo_entries:
     datas.append(("../../" + mo_files[0], target_path))
-
-ssl_paths = ssl.get_default_verify_paths()
-datas.append((ssl_paths.openssl_cafile, "ssl/cert.pem"))
 
 
 # Analyze required files

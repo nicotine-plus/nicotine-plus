@@ -195,8 +195,9 @@ def run():
         import os
         import multiprocessing
 
-        # Support SSL in frozen Windows and macOS binaries
-        os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "ssl/cert.pem")
+        # Support SSL in frozen Windows binaries
+        if sys.platform == "win32":
+            os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "ssl/cert.pem")
 
         # Support file scanning process in frozen Windows and macOS binaries
         multiprocessing.freeze_support()
