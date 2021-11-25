@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="48"
+   height="48"
+   version="1.1"
+   id="svg10"
+   sodipodi:docname="source-square-small.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     id="namedview12"
+     showgrid="true"
+     inkscape:zoom="46.786899"
+     inkscape:cx="14.934035"
+     inkscape:cy="17.989951"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10"
+     inkscape:document-rotation="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid841" />
+  </sodipodi:namedview>
+  <path
+     d="M 0,6 V 48 H 9 V 15 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -6 h -6 v -9 h -9 v 9 H 27 V 21 C 27,18 24,6 12,6 Z"
+     fill="#d38c2d"
+     id="path2"
+     sodipodi:nodetypes="ccccssccccccccccccccssc" />
+  <path
+     d="M 0,3 V 45 H 9 V 12 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -6 h -6 v -9 h -9 v 9 H 27 V 18 C 27,15 24,3 12,3 Z"
+     fill="#f9aa40"
+     id="path4"
+     sodipodi:nodetypes="ccccssccccccccccccccssc" />
+</svg>
