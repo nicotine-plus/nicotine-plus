@@ -8,7 +8,7 @@ Version 3.2.0 (Release Candidate 2)
 
 Changes
 
- * Performance improvements throughout the application, including file searching, browsing, transfers and shares
+ * Performance improvements across the entire application, including file searching, transfers, user shares and chats
  * Accessibility improvements to various components, including result filters, browse shares, wishlist and chat rooms
  * Several new keyboard shortcuts for easier navigation, a list of shortcuts can be viewed by pressing the F1 key
  * User interface improvements, including several clean-ups related to core client functions and preferences
@@ -18,7 +18,7 @@ Changes
  * Double-clicking a folder in search results now downloads the folder
  * Moved main tab visibility settings to "User Interface" category in preferences dialog
  * Moved log category options to right-click menu in log history pane
- * Improved terminology used in the output of the status bar and log history
+ * Improved terminology used for various client functions, including clearer output of the status bar and log history
  * Removed a few outdated and obsolete preferences
  * Removed the option to automatically share completed downloads, convert to standard shared folder
  * The Leech Detector plugin now sends the polite message after a leecher's first download has finished
@@ -27,16 +27,16 @@ Changes
 
 Corrections
 
- * Various stability improvements related to file scanning
+ * Several stability improvements related to file scanning
  * Fixed issues where UPnP did not work with certain routers
  * Fixed an issue where the password could not be changed while logged out
+ * Fixed an issue where the incorrect bitrate was reported for certain MP3 files after scanning shares
  * Fixed a critical error when hiding the "Chat Rooms" tab
  * Fixed an issue where column header menus did not work in older GTK versions
  * Fixed an issue where column widths would not be remembered if multiple tabs were open
  * Fixed critical errors when quitting Nicotine+ in certain cases
  * Fixed a critical error when receiving invalid search results
  * Fixed an issue where downloads could not be manually resumed after a connection error
- * Fixed an issue where incorrect bitrates were reported for non-compliant MP3 files
  * Fixed an issue where taskbar notifications were not cleared in older GTK versions
  * Fixed an issue where transfer statistics did not update properly
  * Fixed an issue where the tray icon did not appear in LXDE
