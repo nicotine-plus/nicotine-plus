@@ -3,25 +3,27 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.2.0 (Unreleased)
------------------------------
+Version 3.2.0 (Release Candidate 2)
+-----------------------------------
 
 Changes
 
- * Several performance improvements, mainly related to file transfers and user shares
- * Several new keyboard shortcuts for easier navigation. A list of shortcuts can be seen when pressing the F1 key.
- * Several accessibility improvements
- * Several user interface improvements and clean-ups
+ * Performance improvements throughout the application, including file searching, browsing, transfers and shares
+ * Accessibility improvements to various components, including result filters, browse shares, wishlist and chat rooms
+ * Several new keyboard shortcuts for easier navigation, a list of shortcuts can be viewed by pressing the F1 key
+ * User interface improvements, including several clean-ups related to core client functions and preferences
+ * Added an emoji picker in chat text entry
  * Added an option to disable search history
- * Added an emoji picker in chats
  * Increased the number of search history items from 15 to 200
  * Double-clicking a folder in search results now downloads the folder
- * Moved main tab visibility preferences to "User Interface" category in preferences dialog
+ * Moved main tab visibility settings to "User Interface" category in preferences dialog
  * Moved log category options to right-click menu in log history pane
- * Removed a few outdated and rarely used preferences
- * The leech detector plugin now sends complaints after a user's first download has finished
+ * Improved terminology used in the output of the status bar and log history
+ * Removed a few outdated and obsolete preferences
+ * Removed the option to automatically share completed downloads, convert to standard shared folder
+ * The Leech Detector plugin now sends the polite message after a leecher's first download has finished
  * New and improved translations for many languages
- * Lowered Python version requirement to 3.5 for Debian Stretch
+ * Lowered Python version requirement to 3.5 for Debian Stretch LTS based distros
 
 Corrections
 
@@ -30,26 +32,29 @@ Corrections
  * Fixed an issue where the password could not be changed while logged out
  * Fixed a critical error when hiding the "Chat Rooms" tab
  * Fixed an issue where column header menus did not work in older GTK versions
+ * Fixed an issue where column widths would not be remembered if multiple tabs were open
  * Fixed critical errors when quitting Nicotine+ in certain cases
  * Fixed a critical error when receiving invalid search results
+ * Fixed an issue where downloads could not be manually resumed after a connection error
+ * Fixed an issue where incorrect bitrates were reported for non-compliant MP3 files
  * Fixed an issue where taskbar notifications were not cleared in older GTK versions
  * Fixed an issue where transfer statistics did not update properly
  * Fixed an issue where the tray icon did not appear in LXDE
- * Fixed an issue where tab hilites were removed too early
+ * Fixed an issue where tab notification highlights were removed too early
  * Fixed an issue where fetching data from Last.fm was unsuccessful in certain cases
  * Fixed an issue where the scrollbar could not be dragged from the edge of the window in the Breeze theme
  * Fixed an issue where the preferences dialog was too large on small screen resolutions
- * Network interface feature can now be used on systems with Linux <5.7
+ * Fixed an issue where the 'When closing Nicotine+' preference was not respected when pressing Ctrl+Q
+ * Network interface binding can now be used on systems with Linux <5.7 kernel
  * Debian: the stable PPA is compatible with Debian again
- * macOS: fixed an issue where the main window did not render in macOS Monterey
+ * macOS: fixed an issue where the main window did not render in MacOS Monterey
  * Windows: improved compatibility with Windows 11
  * Windows: reduced the number of false antivirus positives
 
 Issues closed on GitHub
 
- * It's possible to open more than one instance of Nicotine+ ([#1418](https://github.com/nicotine-plus/nicotine-plus/issues/1418))
  * Nicotine+ database needs recovery ([#1467](https://github.com/nicotine-plus/nicotine-plus/issues/1467))
- * \[Feature request\] Option to not remember search history ([#1468](https://github.com/nicotine-plus/nicotine-plus/issues/1468))
+ * Feature request: Option to not remember search history ([#1468](https://github.com/nicotine-plus/nicotine-plus/issues/1468))
  * Double-click on search result to start download ([#1469](https://github.com/nicotine-plus/nicotine-plus/issues/1469))
  * Consider bumping listen socket backlog length ([#1471](https://github.com/nicotine-plus/nicotine-plus/issues/1471))
  * Generate releases hashes? ([#1473](https://github.com/nicotine-plus/nicotine-plus/issues/1473))
@@ -70,7 +75,6 @@ Issues closed on GitHub
  * Fix missing Alt+R accelerator for Result Filter bar show/hide button in Search Files ([#1500](https://github.com/nicotine-plus/nicotine-plus/issues/1500))
  * Redundent Find pop-up TextBox in Search Files TreeView widget hinders Ctrl+F so it needs to be disabled ([#1501](https://github.com/nicotine-plus/nicotine-plus/issues/1501))
  * Primary Tab Bar fails to surrender focus after second mouse-click (Main Window) ([#1502](https://github.com/nicotine-plus/nicotine-plus/issues/1502))
- * Lock Tabs option for the Primary Tab Bar to prevent accidental dragging and hiding (Main Window) ([#1504](https://github.com/nicotine-plus/nicotine-plus/issues/1504))
  * Put the options for Tab Label Colors into the Tab section (Preferences) ([#1505](https://github.com/nicotine-plus/nicotine-plus/issues/1505))
  * Scrap the redundant 'Clear All Colors' button from User Interface catagory (Preferences) ([#1506](https://github.com/nicotine-plus/nicotine-plus/issues/1506))
  * General captions of General sections generally conflict with General category name, in general (Preferences) ([#1507](https://github.com/nicotine-plus/nicotine-plus/issues/1507))
@@ -89,10 +93,10 @@ Issues closed on GitHub
  * Nicotine crashes upon quitting ([#1525](https://github.com/nicotine-plus/nicotine-plus/issues/1525))
  * Plugin System Expansion ([#1542](https://github.com/nicotine-plus/nicotine-plus/issues/1542))
  * Notification badge cleared too early ([#1543](https://github.com/nicotine-plus/nicotine-plus/issues/1543))
- * (Feature Request) Upload tab when someone uploads from you ([#1544](https://github.com/nicotine-plus/nicotine-plus/issues/1544))
- * (gtk 3 Bug) MacOS gtk_widget gdk_window ([#1545](https://github.com/nicotine-plus/nicotine-plus/issues/1545))
+ * Feature Request: Upload tab when someone uploads from you ([#1544](https://github.com/nicotine-plus/nicotine-plus/issues/1544))
+ * Gtk 3 Bug: MacOS gtk_widget gdk_window ([#1545](https://github.com/nicotine-plus/nicotine-plus/issues/1545))
  * Search issue ([#1547](https://github.com/nicotine-plus/nicotine-plus/issues/1547))
- * (Bug) 3.2.0 dev Arch Linux Error loading plugin libhunspell and libaspell ([#1548](https://github.com/nicotine-plus/nicotine-plus/issues/1548))
+ * Bug: 3.2.0 dev Arch Linux Error loading plugin libhunspell and libaspell ([#1548](https://github.com/nicotine-plus/nicotine-plus/issues/1548))
  * Arch Linux GTK 4.4.0 crashes upon quitting if double login ([#1552](https://github.com/nicotine-plus/nicotine-plus/issues/1552))
  * Arch Linux GTK 4.4.0 Allocation width too small needs at least 31x25 ([#1553](https://github.com/nicotine-plus/nicotine-plus/issues/1553))
  * Moving mouse over the dragging-point of a column/frame doesnt change the mouse pointer ([#1561](https://github.com/nicotine-plus/nicotine-plus/issues/1561))
@@ -103,46 +107,45 @@ Issues closed on GitHub
  * Critical Error that I'm getting after updating ([#1572](https://github.com/nicotine-plus/nicotine-plus/issues/1572))
  * Still Critical Error ([#1573](https://github.com/nicotine-plus/nicotine-plus/issues/1573))
  * lastfm: Could not get recent track from audioscrobbler ([#1574](https://github.com/nicotine-plus/nicotine-plus/issues/1574))
- * critical error after closing search tab ([#1575](https://github.com/nicotine-plus/nicotine-plus/issues/1575))
+ * Critical error after closing search tab ([#1575](https://github.com/nicotine-plus/nicotine-plus/issues/1575))
  * UPnP stopped working with current unstable build ([#1580](https://github.com/nicotine-plus/nicotine-plus/issues/1580))
  * Trigger Browse Files once when online for Buddy List ([#1583](https://github.com/nicotine-plus/nicotine-plus/issues/1583))
  * Wishlist ([#1591](https://github.com/nicotine-plus/nicotine-plus/issues/1591))
- * remove - hyphen ([#1592](https://github.com/nicotine-plus/nicotine-plus/issues/1592))
+ * Remove - hyphen ([#1592](https://github.com/nicotine-plus/nicotine-plus/issues/1592))
  * Failed to execute script nictoine win 10 ([#1597](https://github.com/nicotine-plus/nicotine-plus/issues/1597))
  * Wishlist quick search ([#1599](https://github.com/nicotine-plus/nicotine-plus/issues/1599))
  * Wishlist hot key ([#1600](https://github.com/nicotine-plus/nicotine-plus/issues/1600))
- * filters button ([#1601](https://github.com/nicotine-plus/nicotine-plus/issues/1601))
- * pressing enter in the wishlist when the line is empty. ([#1603](https://github.com/nicotine-plus/nicotine-plus/issues/1603))
- * keeps telling me my database is corrupt ([#1620](https://github.com/nicotine-plus/nicotine-plus/issues/1620))
- * i do not know if it's bug or not ([#1623](https://github.com/nicotine-plus/nicotine-plus/issues/1623))
+ * Filters button ([#1601](https://github.com/nicotine-plus/nicotine-plus/issues/1601))
+ * Pressing enter in the wishlist when the line is empty ([#1603](https://github.com/nicotine-plus/nicotine-plus/issues/1603))
+ * Keeps telling me my database is corrupt ([#1620](https://github.com/nicotine-plus/nicotine-plus/issues/1620))
+ * I do not know if it's bug or not ([#1623](https://github.com/nicotine-plus/nicotine-plus/issues/1623))
  * Serious error occurred while rescanning shares ([#1625](https://github.com/nicotine-plus/nicotine-plus/issues/1625))
- * No idea, that's what I saw, when I came back. ([#1626](https://github.com/nicotine-plus/nicotine-plus/issues/1626))
- * Wrong apssword results in lockdown ([#1627](https://github.com/nicotine-plus/nicotine-plus/issues/1627))
- * exclude documentation and translation from workflows ([#1629](https://github.com/nicotine-plus/nicotine-plus/issues/1629))
+ * No idea, that's what I saw, when I came back ([#1626](https://github.com/nicotine-plus/nicotine-plus/issues/1626))
+ * Wrong password results in lockdown ([#1627](https://github.com/nicotine-plus/nicotine-plus/issues/1627))
  * Cannot find gdbm or semidm on openbsd ([#1631](https://github.com/nicotine-plus/nicotine-plus/issues/1631))
  * Critical Error on Launch ([#1633](https://github.com/nicotine-plus/nicotine-plus/issues/1633))
- * pop up about translated languages ([#1635](https://github.com/nicotine-plus/nicotine-plus/issues/1635))
+ * Pop up about translated languages ([#1635](https://github.com/nicotine-plus/nicotine-plus/issues/1635))
  * Nicotine+ has encountered a critical error ([#1636](https://github.com/nicotine-plus/nicotine-plus/issues/1636))
  * Logs reporting 0 folders found after rescan ([#1642](https://github.com/nicotine-plus/nicotine-plus/issues/1642))
  * Crashed on expanding folder ([#1643](https://github.com/nicotine-plus/nicotine-plus/issues/1643))
- * remove wish not possible when search contains parens ([#1652](https://github.com/nicotine-plus/nicotine-plus/issues/1652))
+ * Remove wish not possible when search contains parens ([#1652](https://github.com/nicotine-plus/nicotine-plus/issues/1652))
  * Critical Error ([#1654](https://github.com/nicotine-plus/nicotine-plus/issues/1654))
  * Leech Detector not working??!! ([#1656](https://github.com/nicotine-plus/nicotine-plus/issues/1656))
  * Nicotine+ not working with latest MacOS Monteray ([#1660](https://github.com/nicotine-plus/nicotine-plus/issues/1660))
  * \[3.2.0.dev1\] Critical error on popover context menu when disconnected ([#1662](https://github.com/nicotine-plus/nicotine-plus/issues/1662))
  * Nicotine Critical Error Operation not permitted ([#1663](https://github.com/nicotine-plus/nicotine-plus/issues/1663))
- * Nicotine+ x64 3.2.0.dev1 fails to launch with "Failed to execute script nicotine" error ([#1665](https://github.com/nicotine-plus/nicotine-plus/issues/1665))
+ * \[3.2.0.dev1\] Nicotine+ x64 fails to launch with "Failed to execute script nicotine" error ([#1665](https://github.com/nicotine-plus/nicotine-plus/issues/1665))
  * Nicotine+ has encountered a critical error ([#1666](https://github.com/nicotine-plus/nicotine-plus/issues/1666))
  * Critical Error "Value: 'Box' object has no attribute 'add_action'" ([#1670](https://github.com/nicotine-plus/nicotine-plus/issues/1670))
- * bug with user status ([#1680](https://github.com/nicotine-plus/nicotine-plus/issues/1680))
+ * Bug with user status ([#1680](https://github.com/nicotine-plus/nicotine-plus/issues/1680))
  * Critical Error: Value: 'NoneType' object has no attribute 'get_hilite_image' ([#1682](https://github.com/nicotine-plus/nicotine-plus/issues/1682))
  * Having several issues getting all my files to share, or share correctly ([#1686](https://github.com/nicotine-plus/nicotine-plus/issues/1686))
- * Crash on Ctrl+w in Search tab ([#1692](https://github.com/nicotine-plus/nicotine-plus/issues/1692))
+ * Crash on Ctrl+W in Search tab ([#1692](https://github.com/nicotine-plus/nicotine-plus/issues/1692))
  * Move to Tray on Exit ([#1694](https://github.com/nicotine-plus/nicotine-plus/issues/1694))
  * OSError on Manjaro Linux ([#1703](https://github.com/nicotine-plus/nicotine-plus/issues/1703))
  * Conform to Windows window-arrangement hotkeys ([#1704](https://github.com/nicotine-plus/nicotine-plus/issues/1704))
- * Cannot Use App or See App Windows ([#1709](https://github.com/nicotine-plus/nicotine-plus/issues/1709))
- * crash report on "about nicotine+" ([#1715](https://github.com/nicotine-plus/nicotine-plus/issues/1715))
+ * Cannot Use App or See App Window (MacOS Monterey) ([#1709](https://github.com/nicotine-plus/nicotine-plus/issues/1709))
+ * Crash report on "About Nicotine+" ([#1715](https://github.com/nicotine-plus/nicotine-plus/issues/1715))
 
 Version 3.1.1 (August 2, 2021)
 -----------------------------
