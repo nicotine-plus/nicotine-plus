@@ -8,7 +8,7 @@ Version 3.2.0 (Unreleased)
 
 Changes
 
- * Several performance improvements, mainly related to file transfers and user shares
+ * Performance improvements across the entire application, including file searching, transfers, user shares and chats
  * Several new keyboard shortcuts for easier navigation. A list of shortcuts can be seen when pressing the F1 key.
  * Several accessibility improvements
  * Several user interface improvements and clean-ups
@@ -18,6 +18,7 @@ Changes
  * Double-clicking a folder in search results now downloads the folder
  * Moved main tab visibility preferences to "User Interface" category in preferences dialog
  * Moved log category options to right-click menu in log history pane
+ * Improved terminology used for various client functions, including clearer output of the status bar and log history
  * Removed a few outdated and rarely used preferences
  * The leech detector plugin now sends complaints after a user's first download has finished
  * New and improved translations for many languages
@@ -25,9 +26,10 @@ Changes
 
 Corrections
 
- * Various stability improvements related to file scanning
+ * Several stability improvements related to file scanning
  * Fixed issues where UPnP did not work with certain routers
  * Fixed an issue where the password could not be changed while logged out
+ * Fixed an issue where the incorrect bitrate was reported for certain MP3 files after scanning shares
  * Fixed a critical error when hiding the "Chat Rooms" tab
  * Fixed an issue where column header menus did not work in older GTK versions
  * Fixed critical errors when quitting Nicotine+ in certain cases
