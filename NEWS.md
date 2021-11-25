@@ -8,11 +8,42 @@ Version 3.2.0 (Unreleased)
 
 Changes
 
-...
+ * Several performance improvements, mainly related to file transfers and user shares
+ * Several new keyboard shortcuts for easier navigation. A list of shortcuts can be seen when pressing the F1 key.
+ * Several accessibility improvements
+ * Several user interface improvements and clean-ups
+ * Added an option to disable search history
+ * Added an emoji picker in chats
+ * Increased the number of search history items from 15 to 200
+ * Double-clicking a folder in search results now downloads the folder
+ * Moved main tab visibility preferences to "User Interface" category in preferences dialog
+ * Moved log category options to right-click menu in log history pane
+ * Removed a few outdated and rarely used preferences
+ * The leech detector plugin now sends complaints after a user's first download has finished
+ * New and improved translations for many languages
+ * Lowered Python version requirement to 3.5 for Debian Stretch
 
 Corrections
 
-...
+ * Various stability improvements related to file scanning
+ * Fixed issues where UPnP did not work with certain routers
+ * Fixed an issue where the password could not be changed while logged out
+ * Fixed a critical error when hiding the "Chat Rooms" tab
+ * Fixed an issue where column header menus did not work in older GTK versions
+ * Fixed critical errors when quitting Nicotine+ in certain cases
+ * Fixed a critical error when receiving invalid search results
+ * Fixed an issue where taskbar notifications were not cleared in older GTK versions
+ * Fixed an issue where transfer statistics did not update properly
+ * Fixed an issue where the tray icon did not appear in LXDE
+ * Fixed an issue where tab hilites were removed too early
+ * Fixed an issue where fetching data from Last.fm was unsuccessful in certain cases
+ * Fixed an issue where the scrollbar could not be dragged from the edge of the window in the Breeze theme
+ * Fixed an issue where the preferences dialog was too large on small screen resolutions
+ * Network interface feature can now be used on systems with Linux <5.7
+ * Debian: the stable PPA is compatible with Debian again
+ * macOS: fixed an issue where the main window did not render in macOS Monterey
+ * Windows: improved compatibility with Windows 11
+ * Windows: reduced the number of false antivirus positives
 
 Issues closed on GitHub
 
