@@ -278,7 +278,7 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
         config.sections["ui"]["last_tab_id"] = self.current_page_id
 
-        for page in (self.userbrowse, self.userlist, self.chatrooms, self.downloads, self.uploads, self.search):
+        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
             page.save_columns()
 
     def show(self):

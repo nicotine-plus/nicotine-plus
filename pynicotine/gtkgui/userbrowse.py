@@ -81,8 +81,6 @@ class UserBrowses(IconNotebook):
     def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         if user not in self.pages:
-            self.save_columns()
-
             try:
                 status = self.frame.np.users[user].status
             except Exception:
@@ -144,16 +142,6 @@ class UserBrowses(IconNotebook):
     def server_disconnect(self):
         for user, page in self.pages.items():
             self.set_user_status(page.Main, user, 0)
-
-    def save_columns(self):
-        """ Save the treeview state of the currently selected tab """
-
-        current_page = self.get_nth_page(self.get_current_page())
-
-        for page in self.pages.values():
-            if page.Main == current_page:
-                page.save_columns()
-                break
 
 
 class UserBrowse(UserInterface):
@@ -234,6 +222,7 @@ class UserBrowse(UserInterface):
             )
 
         # Setup FileTreeView
+        self.treeview_name = "user_browse"
         self.file_store = Gtk.ListStore(
             str,                  # (0) file name
             str,                  # (1) hsize
@@ -244,6 +233,7 @@ class UserBrowse(UserInterface):
             GObject.TYPE_UINT64   # (6) length
         )
 
+        self.file_column_offsets = {}
         self.file_column_numbers = [i for i in range(self.file_store.get_n_columns())]
         cols = initialise_columns(
             "user_browse", self.FileTreeView,
@@ -259,6 +249,10 @@ class UserBrowse(UserInterface):
 
         self.FileTreeView.get_selection().connect("changed", self.on_select_file)
         self.FileTreeView.set_model(self.file_store)
+
+        for column in self.FileTreeView.get_columns():
+            self.file_column_offsets[column.get_title()] = 0
+            column.connect("notify::x-offset", self.on_column_position_changed)
 
         # Popup Menu (FileTreeView)
         self.file_popup_menu = PopupMenu(self.frame, self.FileTreeView, self.on_file_popup_menu)
@@ -343,9 +337,6 @@ class UserBrowse(UserInterface):
 
     def set_label(self, label):
         self.user_popup.set_widget(label)
-
-    def save_columns(self):
-        save_columns("user_browse", self.FileTreeView.get_columns())
 
     def update_visuals(self):
 
@@ -938,6 +929,18 @@ class UserBrowse(UserInterface):
         return True
 
     """ Callbacks (FileTreeView) """
+
+    def on_column_position_changed(self, column, param):
+        """ Save column position and width to config """
+
+        col_title = column.get_title()
+        offset = column.get_x_offset()
+
+        if self.file_column_offsets[col_title] == offset:
+            return
+
+        self.file_column_offsets[col_title] = offset
+        save_columns(self.treeview_name, self.FileTreeView.get_columns())
 
     def on_select_file(self, selection):
         self.num_selected_files = selection.count_selected_rows()

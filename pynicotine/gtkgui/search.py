@@ -127,8 +127,6 @@ class Searches(IconNotebook):
 
     def on_search(self):
 
-        self.save_columns()
-
         text = self.frame.SearchEntry.get_text().strip()
 
         if not text:
@@ -255,16 +253,6 @@ class Searches(IconNotebook):
     def server_disconnect(self):
         self.wish_list.server_disconnect()
 
-    def save_columns(self):
-        """ Save the treeview state of the currently selected tab """
-
-        current_page = self.get_nth_page(self.get_current_page())
-
-        for tab in self.pages.values():
-            if tab.Main == current_page:
-                tab.save_columns()
-                break
-
 
 class Search(UserInterface):
 
@@ -332,6 +320,7 @@ class Search(UserInterface):
 
         """ Columns """
 
+        self.treeview_name = "file_search"
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
@@ -353,6 +342,7 @@ class Search(UserInterface):
             str                   # (17) color
         )
 
+        self.column_offsets = {}
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 17
         self.cols = cols = initialise_columns(
@@ -383,6 +373,10 @@ class Search(UserInterface):
         cols["country"].get_widget().hide()
 
         self.ResultsList.set_model(self.resultsmodel)
+
+        for column in self.ResultsList.get_columns():
+            self.column_offsets[column.get_title()] = 0
+            column.connect("notify::x-offset", self.on_column_position_changed)
 
         self.update_visuals()
 
@@ -1158,8 +1152,17 @@ class Search(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="searchfont")
 
-    def save_columns(self):
-        save_columns("file_search", self.ResultsList.get_columns())
+    def on_column_position_changed(self, column, param):
+        """ Save column position and width to config """
+
+        col_title = column.get_title()
+        offset = column.get_x_offset()
+
+        if self.column_offsets[col_title] == offset:
+            return
+
+        self.column_offsets[col_title] = offset
+        save_columns(self.treeview_name, self.ResultsList.get_columns())
 
     def on_row_activated(self, treeview, path, column):
 
