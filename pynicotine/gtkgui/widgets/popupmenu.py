@@ -259,10 +259,6 @@ class PopupMenu:
         if not self.useritem:
             return
 
-        if Gtk.get_major_version() == 4:
-            from html import escape
-            user = escape(user)
-
         self.useritem.set_label(user)
 
         # Rather ugly solution, but otherwise the label update doesn't display

@@ -77,7 +77,7 @@ class Searches(IconNotebook):
             "user": _("_User")
         }
 
-        mode_menu = PopupMenu(self)
+        mode_menu = PopupMenu(self.frame)
         mode_menu.setup(
             ("O" + self.modes["global"], "win.searchmode", "global"),
             ("O" + self.modes["buddies"], "win.searchmode", "buddies"),
