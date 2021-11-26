@@ -866,7 +866,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -961,7 +961,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1055,7 +1055,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1149,7 +1149,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1244,7 +1244,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1339,7 +1339,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1434,7 +1434,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
@@ -1528,7 +1528,7 @@
                                             <property name="wrap">1</property>
                                             <attributes>
                                               <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20000"/>
+                                              <attribute name="size" value="20480"/>
                                             </attributes>
                                           </object>
                                         </child>
