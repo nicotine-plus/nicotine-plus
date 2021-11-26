@@ -144,6 +144,10 @@ class NicotineFrame(UserInterface):
 
             config.load_config()
 
+        if sys.platform == "darwin":
+            # Disable header bar in macOS for now due to GTK 3 performance issues
+            config.sections["ui"]["header_bar"] = False
+
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
         log.add("Loading GTK %s", config.gtk_version)
 

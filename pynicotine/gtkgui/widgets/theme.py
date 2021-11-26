@@ -67,10 +67,6 @@ def set_visual_settings():
         # Left align window controls on macOS
         GTK_SETTINGS.set_property("gtk-decoration-layout", "close,minimize,maximize:")
 
-        # Disable header bar in macOS for now due to GTK 3 performance issues
-        set_use_header_bar(False)
-        return
-
     set_use_header_bar(config.sections["ui"]["header_bar"])
 
 
