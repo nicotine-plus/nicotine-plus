@@ -694,16 +694,16 @@
     <property name="visible">1</property>
     <property name="spacing">6</property>
     <child>
-      <object class="GtkImage">
-        <property name="visible">1</property>
-        <property name="icon-name">view-list-symbolic</property>
-      </object>
-    </child>
-    <child>
       <object class="GtkLabel">
         <property name="visible">1</property>
         <property name="label" translatable="yes">_Room List</property>
         <property name="use-underline">1</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">1</property>
+        <property name="icon-name">pan-down-symbolic</property>
       </object>
     </child>
   </object>

@@ -83,10 +83,8 @@ class RoomList(UserInterface):
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
         if Gtk.get_major_version() == 4:
-            button = frame.RoomList.get_first_child()
-            button.set_child(frame.RoomListLabel)
-            button.get_style_context().add_class("image-text-button")
-            button.get_style_context().remove_class("image-button")
+            frame.RoomList.set_use_underline(True)
+            frame.RoomList.set_label(frame.RoomListLabel.get_first_child().get_label())
         else:
             frame.RoomList.add(frame.RoomListLabel)
 
