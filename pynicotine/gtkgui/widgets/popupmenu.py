@@ -51,7 +51,6 @@ class PopupMenu:
         self.gesture_click = None
         self.gesture_press = None
         self.last_controller = None
-        self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() == 4 else (Gtk.Box, Gtk.EventBox)
 
         if connect_events and widget:
             self.connect_events(widget)
@@ -89,8 +88,8 @@ class PopupMenu:
         if self.popup_menu:
             return self.popup_menu
 
-        # Menus can only attach to a Gtk.Box/Gtk.EventBox parent, otherwise sizing and theming issues may occur
-        while not isinstance(widget, self.valid_parent_widgets):
+        # Menus can only attach to a Gtk.Box parent, otherwise sizing and theming issues may occur
+        while not isinstance(widget, Gtk.Box):
             widget = widget.get_parent()
 
         if Gtk.get_major_version() == 4:

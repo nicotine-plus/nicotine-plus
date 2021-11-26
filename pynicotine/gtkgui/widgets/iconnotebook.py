@@ -43,6 +43,8 @@ class ImageLabel(Gtk.Box):
         self.set_hexpand(False)
         self.centered = False
 
+        self.wrapper = Gtk.Box()
+
         if Gtk.get_major_version() == 4:
             self.eventbox = Gtk.Box()
         else:
@@ -82,7 +84,8 @@ class ImageLabel(Gtk.Box):
             self.box.remove(widget)
 
         self.eventbox.remove(self.box)
-        self.remove(self.eventbox)
+        self.wrapper.remove(self.eventbox)
+        self.remove(self.wrapper)
 
     def _add_close_button(self):
 
@@ -130,7 +133,11 @@ class ImageLabel(Gtk.Box):
             # Left align close button on macOS
             self._add_close_button()
 
-        self.add(self.eventbox)
+        self.add(self.wrapper)
+
+        self.wrapper.add(self.eventbox)
+        self.wrapper.show()
+
         self.eventbox.add(self.box)
         self.eventbox.show()
 
@@ -334,7 +341,6 @@ class IconNotebook:
 
         # menu for all tabs
         label_tab_menu = ImageLabel(text)
-
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
         self.set_user_status(page, text, status)
