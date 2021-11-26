@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 06:01+0200\n"
-"PO-Revision-Date: 2021-11-25 17:37+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2021-11-26 15:33+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es\n"
@@ -101,9 +101,8 @@ msgid "ip"
 msgstr "ip"
 
 #: pynicotine/__init__.py:60
-#, fuzzy
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "enlazar sockets a la IP dada (útil para VPN)"
+msgstr "enlazar los sockets a la IP especificada (útil para las VPN)"
 
 #: pynicotine/__init__.py:63
 msgid "port"
