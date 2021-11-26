@@ -89,7 +89,7 @@ class PopupMenu:
             return self.popup_menu
 
         if Gtk.get_major_version() == 4:
-            if isinstance(widget, (Gtk.TextView, Gtk.TreeView)):
+            if isinstance(widget, (Gtk.ScrolledWindow, Gtk.TextView, Gtk.TreeView)):
                 """ In GTK 4, attaching directly to a Gtk.TextView or Gtk.TreeView seems to cause
                 issues related to resizing the menu and updating the hover state of menu items.
                 Wrap the GtkScrolledWindow parent of Gtk.TextView and Gtk.TreeView in a Gtk.Box and

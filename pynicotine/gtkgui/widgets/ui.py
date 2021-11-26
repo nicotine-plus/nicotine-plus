@@ -42,7 +42,6 @@ class UserInterface:
                     builder = Gtk.Builder(self)
                     builder.add_from_string(
                         f.read()
-                        .replace("GtkEventBox", "GtkBox")
                         .replace("GtkRadioButton", "GtkCheckButton")
                     )
                     Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id

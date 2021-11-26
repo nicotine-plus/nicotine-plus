@@ -149,18 +149,18 @@ class UserInfo(UserInterface):
             self.image.set_halign(Gtk.Align.CENTER)
             self.image.set_valign(Gtk.Align.CENTER)
 
-            self.ImageViewport.set_child(self.image)
+            self.image_view.set_child(self.image)
 
             self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
-            self.ImageViewport.add_controller(self.scroll_controller)
+            self.image_view.add_controller(self.scroll_controller)
 
         else:
             self.image = Gtk.Image()
             self.image.show()
 
-            self.ImageViewport.add(self.image)
-            self.ImageViewport.connect("scroll-event", self.on_scroll_event)
+            self.image_view.add(self.image)
+            self.image_view.connect("scroll-event", self.on_scroll_event)
 
         self.user = user
         self.conn = None
@@ -215,7 +215,7 @@ class UserInfo(UserInterface):
         self.hates_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(*get_interest_items(popup))
 
-        self.image_menu = popup = PopupMenu(self.frame, self.ImageContainer, self.on_image_popup_menu)
+        self.image_menu = popup = PopupMenu(self.frame, self.image_view, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -258,7 +258,7 @@ class UserInfo(UserInterface):
                 image_width = self.image_pixbuf.get_width()
                 image_height = self.image_pixbuf.get_height()
 
-                allocation = self.ImageViewport.get_allocation()
+                allocation = self.image_view.get_allocation()
                 max_width = allocation.width - 24
                 max_height = allocation.height - 24
 
@@ -519,6 +519,8 @@ class UserInfo(UserInterface):
             self.make_zoom_in()
         else:
             self.make_zoom_out()
+
+        return True
 
     def on_scroll_event(self, widget, event):
 
