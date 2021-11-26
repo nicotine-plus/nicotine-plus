@@ -25,16 +25,11 @@
       </object>
     </child>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkScrolledWindow" id="container">
         <property name="visible">1</property>
         <property name="hexpand">1</property>
         <property name="hscrollbar-policy">never</property>
-        <child>
-          <object class="GtkViewport" id="viewport">
-            <property name="visible">1</property>
-            <property name="width-request">380</property>
-          </object>
-        </child>
+        <property name="width-request">380</property>
       </object>
     </child>
   </object>

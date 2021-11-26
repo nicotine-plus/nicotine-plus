@@ -3126,13 +3126,13 @@ class Preferences(UserInterface):
     def on_switch_page(self, listbox, row):
 
         page_id, _label, _icon_name = self.page_ids[row.get_index()]
-        child = self.viewport.get_child()
+        child = self.container.get_child()
 
         if child:
             if Gtk.get_major_version() == 4:
-                self.viewport.set_child(None)
+                self.container.set_child(None)
             else:
-                self.viewport.remove(child)
+                self.container.remove(child)
 
         if page_id not in self.pages:
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
@@ -3152,10 +3152,11 @@ class Preferences(UserInterface):
 
             self.update_visuals(page)
 
+        self.container.set_property("child", self.pages[page_id].Main)
+
         if Gtk.get_major_version() == 4:
-            self.viewport.set_child(self.pages[page_id].Main)
-        else:
-            self.viewport.add(self.pages[page_id].Main)
+            # Scroll to the focused widget
+            self.container.get_child().set_scroll_to_focus(True)
 
     def on_delete(self, *args):
         dialog_hide(self.dialog)
