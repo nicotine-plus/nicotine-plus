@@ -35,12 +35,7 @@ class RoomWall(UserInterface):
         self.room = room
         self.room_wall_textview = TextView(self.message_view)
 
-        if Gtk.get_major_version() == 4:
-            button = room.ShowRoomWall.get_first_child()
-            button.connect("clicked", self.on_show)
-        else:
-            room.ShowRoomWall.connect("clicked", self.on_show)
-
+        self.popover.connect("notify::visible", self.on_show)
         room.ShowRoomWall.set_popover(self.popover)
 
     def update_message_list(self):
@@ -90,7 +85,10 @@ class RoomWall(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def on_show(self, *args):
+    def on_show(self, popover, param):
+
+        if not popover.get_property(param.name):
+            return
 
         self.room_wall_textview.clear()
         self.update_message_list()
