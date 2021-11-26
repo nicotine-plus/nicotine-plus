@@ -1859,6 +1859,7 @@ class SearchesFrame(UserInterface):
             button = self.ShowSearchHelp.get_first_child()
             button.set_child(self.FilterHelpLabel)
             button.get_style_context().remove_class("image-button")
+            button.get_style_context().add_class("image-text-button")
         else:
             self.ShowSearchHelp.add(self.FilterHelpLabel)
 

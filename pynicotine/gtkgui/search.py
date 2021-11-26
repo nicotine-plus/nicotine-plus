@@ -85,14 +85,12 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.searchmode", "user")
         )
         frame.SearchMode.set_menu_model(mode_menu.model)
-        frame.SearchModeLabel.set_markup_with_mnemonic(self.modes["global"])
 
         if Gtk.get_major_version() == 4:
-            button = frame.SearchMode.get_first_child()
-            button.set_child(frame.SearchModeLabelBox)
-            button.get_style_context().add_class("image-text-button")
-            button.get_style_context().remove_class("image-button")
+            frame.SearchMode.set_use_underline(True)
+            frame.SearchMode.set_label(self.modes["global"])
         else:
+            frame.SearchModeLabel.set_label(self.modes["global"])
             frame.SearchMode.add(frame.SearchModeLabelBox)
 
         CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
@@ -117,7 +115,11 @@ class Searches(IconNotebook):
 
         action.set_state(state)
         search_mode = state.get_string()
-        self.frame.SearchModeLabel.set_markup_with_mnemonic(self.modes[search_mode])
+
+        if Gtk.get_major_version() == 4:
+            self.frame.SearchMode.set_label(self.modes[search_mode])
+        else:
+            self.frame.SearchModeLabel.set_label(self.modes[search_mode])
 
         self.frame.UserSearchCombo.set_visible(search_mode == "user")
         self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")

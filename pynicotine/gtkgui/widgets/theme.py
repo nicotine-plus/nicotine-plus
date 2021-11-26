@@ -155,7 +155,7 @@ def set_global_css():
         border-spacing: 0;
     }
 
-    button box {
+    .image-text-button box {
         /* Remove unwanted spacing from buttons */
         border-spacing: 0;
     }
