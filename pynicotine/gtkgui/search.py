@@ -1036,7 +1036,6 @@ class Search(UserInterface):
             ("", None),
             ("#" + _("Select User's Results"), self.on_select_user_results, user)
         )
-
         popup.toggle_user_items()
 
     def populate_popup_menu_users(self):

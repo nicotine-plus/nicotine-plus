@@ -122,16 +122,13 @@ class PopupMenu:
             $ - boolean
             O - choice
             # - regular
+            U - user
         """
 
         submenu = False
         boolean = False
         choice = False
-
-        if item[0][0] in (">", "$", "#", "O"):
-            label = item[0][1:]
-        else:
-            label = "dummy"
+        label = item[0][1:]
 
         if item[0][0] == ">":
             submenu = True
@@ -159,7 +156,7 @@ class PopupMenu:
 
         menuitem = Gio.MenuItem.new(label, action_id)
 
-        if item[0] == "USER":
+        if item[0] == "U":
             self.useritem = menuitem
 
         if submenu:
@@ -208,8 +205,14 @@ class PopupMenu:
 
     def setup_user_menu(self, user=None, page=""):
 
+        user_label = "U"
+
+        if user is not None:
+            self.user = user
+            user_label += self.user
+
         self.setup(
-            ("USER", self.on_copy_user),
+            (user_label, self.on_copy_user),
             ("", None)
         )
 
@@ -238,14 +241,10 @@ class PopupMenu:
             ("$" + _("Ignore User's IP Address"), self.on_ignore_ip),
         )
 
-        self.set_user(user)
-
     def set_num_selected_files(self, num_files):
 
         self.actions["selected_files"].set_enabled(False)
         self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
-
-        # Rather ugly solution, but otherwise the label update doesn't display
         self.model.remove(0)
         self.model.prepend_item(self.items["selected_files"])
 
@@ -260,11 +259,8 @@ class PopupMenu:
             return
 
         self.useritem.set_label(user)
-
-        # Rather ugly solution, but otherwise the label update doesn't display
-        section = self.model.get_item_link(0, Gio.MENU_LINK_SECTION)
-        section.remove(0)
-        section.prepend_item(self.useritem)
+        self.model.remove(0)
+        self.model.prepend_item(self.useritem)
 
     def get_user(self):
         return self.user

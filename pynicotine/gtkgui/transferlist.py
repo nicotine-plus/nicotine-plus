@@ -719,7 +719,6 @@ class TransferList(UserInterface):
             ("", None),
             ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
         )
-
         popup.toggle_user_items()
 
     def populate_popup_menu_users(self):
