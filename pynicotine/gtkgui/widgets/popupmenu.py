@@ -88,29 +88,17 @@ class PopupMenu:
         if self.popup_menu:
             return self.popup_menu
 
+        # Popovers can only attach to a Gtk.Box parent, otherwise sizing and theming issues may occur
+        while not isinstance(widget, Gtk.Box):
+            widget = widget.get_parent()
+
         if Gtk.get_major_version() == 4:
-            if isinstance(widget, (Gtk.ScrolledWindow, Gtk.TextView, Gtk.TreeView)):
-                """ In GTK 4, attaching directly to a Gtk.TextView or Gtk.TreeView seems to cause
-                issues related to resizing the menu and updating the hover state of menu items.
-                Wrap the GtkScrolledWindow parent of Gtk.TextView and Gtk.TreeView in a Gtk.Box and
-                attach to it instead. """
-
-                while not isinstance(widget, Gtk.Box):
-                    widget = widget.get_parent()
-
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model, Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(widget)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
 
             return self.popup_menu
-
-        if isinstance(widget, (Gtk.Button, Gtk.TreeView)):
-            """ In GTK 3, attaching directly to a Gtk.Button or Gtk.TreeView seems to cause
-            theming issues with checkboxes. Attach to the nearest Gtk.Box instead. """
-
-            while not isinstance(widget, Gtk.Box):
-                widget = widget.get_parent()
 
         self.popup_menu = Gtk.Menu.new_from_model(self.model)
         self.popup_menu.attach_to_widget(widget, None)
