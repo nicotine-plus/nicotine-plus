@@ -3165,7 +3165,7 @@ class Preferences(UserInterface):
             self.container.get_child().set_scroll_to_focus(True)
 
     def on_delete(self, *args):
-        dialog_hide(self.dialog)
+        self.hide()
         return True
 
     def on_response(self, dialog, response_id):
@@ -3181,11 +3181,15 @@ class Preferences(UserInterface):
             self.back_up_config()
             return True
 
-        dialog_hide(self.dialog)
+        self.hide()
         return True
 
-    def show(self, *args):
-        dialog_show(self.dialog)
+    def hide(self):
 
         # Scroll to the top
         self.container.get_vadjustment().set_value(0)
+
+        dialog_hide(self.dialog)
+
+    def show(self, *args):
+        dialog_show(self.dialog)
