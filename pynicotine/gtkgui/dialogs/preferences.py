@@ -3142,7 +3142,7 @@ class Preferences(UserInterface):
                     if Gtk.get_major_version() == 4:
                         obj.get_last_child().set_wrap(True)
                     else:
-                        obj.get_children()[-1].set_line_wrap(True)
+                        obj.get_child().set_line_wrap(True)
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)

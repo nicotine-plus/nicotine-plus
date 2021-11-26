@@ -56,7 +56,7 @@ class TransferList(UserInterface):
     def __init__(self, frame, type):
 
         super().__init__("ui/" + type + "s.ui")
-        getattr(frame, type + "svbox").add(self.Main)
+        getattr(frame, type + "s_content").add(self.Main)
 
         self.frame = frame
         self.type = type

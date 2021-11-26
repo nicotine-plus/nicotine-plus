@@ -808,7 +808,6 @@
                     <child>
                       <object class="GtkBox" id="searchvbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -904,7 +903,6 @@
                     <child>
                       <object class="GtkBox" id="downloadsvbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -986,6 +984,11 @@
                                 </child>
                               </object>
                             </child>
+                            <child>
+                              <object class="GtkBox" id="downloads_content">
+                                <property name="visible">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -994,7 +997,6 @@
                     <child>
                       <object class="GtkBox" id="uploadsvbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1076,6 +1078,11 @@
                                 </child>
                               </object>
                             </child>
+                            <child>
+                              <object class="GtkBox" id="uploads_content">
+                                <property name="visible">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1084,7 +1091,6 @@
                     <child>
                       <object class="GtkBox" id="userbrowsevbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1180,7 +1186,6 @@
                     <child>
                       <object class="GtkBox" id="userinfovbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1276,7 +1281,6 @@
                     <child>
                       <object class="GtkBox" id="privatevbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1372,7 +1376,6 @@
                     <child>
                       <object class="GtkBox" id="userlistvbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1454,6 +1457,11 @@
                                 </child>
                               </object>
                             </child>
+                            <child>
+                              <object class="GtkBox" id="userlist_content">
+                                <property name="visible">1</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1462,7 +1470,6 @@
                     <child>
                       <object class="GtkBox" id="chatroomsvbox">
                         <property name="visible">1</property>
-                        <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>

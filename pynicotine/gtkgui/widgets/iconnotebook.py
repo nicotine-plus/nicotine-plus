@@ -43,6 +43,14 @@ class ImageLabel(Gtk.Box):
         self.set_hexpand(False)
         self.centered = False
 
+        if Gtk.get_major_version() == 4:
+            self.eventbox = Gtk.Box()
+        else:
+            self.eventbox = Gtk.EventBox()
+
+        self.box = Gtk.Box()
+        self.box.set_spacing(6)
+
         self.label = Gtk.Label()
         self.label.set_halign(Gtk.Align.START)
         self.label.set_hexpand(True)
@@ -67,12 +75,14 @@ class ImageLabel(Gtk.Box):
 
     def _remove_tab_label(self):
 
-        if hasattr(self, "eventbox"):
-            for widget in self.box.get_children():
-                self.box.remove(widget)
+        if self.eventbox.get_parent() is None:
+            return
 
-            self.eventbox.remove(self.box)
-            self.remove(self.eventbox)
+        for widget in (self.status_image, self.label, self.hilite_image):
+            self.box.remove(widget)
+
+        self.eventbox.remove(self.box)
+        self.remove(self.eventbox)
 
     def _add_close_button(self):
 
@@ -119,14 +129,6 @@ class ImageLabel(Gtk.Box):
         if sys.platform == "darwin":
             # Left align close button on macOS
             self._add_close_button()
-
-        if Gtk.get_major_version() == 4:
-            self.eventbox = Gtk.Box()
-        else:
-            self.eventbox = Gtk.EventBox()
-
-        self.box = Gtk.Box()
-        self.box.set_spacing(6)
 
         self.add(self.eventbox)
         self.eventbox.add(self.box)
@@ -271,11 +273,7 @@ class IconNotebook:
         return tab_label, menu_label
 
     def get_tab_label_inner(self, page):
-
-        if Gtk.get_major_version() == 4:
-            return self.notebook.get_tab_label(page).get_first_child()
-        else:
-            return self.notebook.get_tab_label(page).get_children()[0]
+        return self.notebook.get_tab_label(page).eventbox
 
     def set_tab_closers(self):
 
@@ -507,14 +505,15 @@ class IconNotebook:
 
     def on_switch_page(self, notebook, new_page, page_num):
 
-        # Hide widgets on previous page for a performance boost
+        # Hide container widget on previous page for a performance boost
         current_page = self.get_nth_page(self.get_current_page())
 
-        for child in current_page.get_children():
-            child.hide()
-
-        for child in new_page.get_children():
-            child.show()
+        if Gtk.get_major_version() == 4:
+            current_page.get_first_child().hide()
+            new_page.get_first_child().show()
+        else:
+            current_page.get_children()[0].hide()
+            new_page.get_children()[0].show()
 
         # Dismiss tab notification
         self.set_hilite_image(new_page, status=0)

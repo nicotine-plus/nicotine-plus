@@ -536,7 +536,7 @@ class NicotineFrame(UserInterface):
 
         page_id = self.userlist.page_id
 
-        if self.userlist.Main in self.MainPaned.get_children():
+        if self.userlist.Main.get_parent() == self.MainPaned:
 
             if mode == "always":
                 return
@@ -546,7 +546,7 @@ class NicotineFrame(UserInterface):
             else:
                 self.MainPaned.remove(self.userlist.Main)
 
-        elif self.userlist.Main in self.ChatroomsPane.get_children():
+        elif self.userlist.Main.get_parent() == self.ChatroomsPane:
 
             if mode == "chatrooms":
                 return
@@ -556,17 +556,17 @@ class NicotineFrame(UserInterface):
             else:
                 self.ChatroomsPane.remove(self.userlist.Main)
 
-        elif self.userlist.Main in self.userlistvbox.get_children():
+        elif self.userlist.Main.get_parent() == self.userlist_content:
 
             if mode == "tab":
                 return
 
-            self.userlistvbox.remove(self.userlist.Main)
+            self.userlist_content.remove(self.userlist.Main)
             self.hide_tab(page_id)
 
         if mode == "always":
 
-            if self.userlist.Main not in self.MainPaned.get_children():
+            if self.userlist.Main.get_parent() != self.MainPaned:
                 if Gtk.get_major_version() == 4:
                     self.MainPaned.set_end_child(self.userlist.Main)
                     self.MainPaned.set_resize_end_child(False)
@@ -580,7 +580,7 @@ class NicotineFrame(UserInterface):
 
         if mode == "chatrooms":
 
-            if self.userlist.Main not in self.ChatroomsPane.get_children():
+            if self.userlist.Main.get_parent() != self.ChatroomsPane:
                 if Gtk.get_major_version() == 4:
                     self.ChatroomsPane.set_end_child(self.userlist.Main)
                     self.ChatroomsPane.set_resize_end_child(False)
@@ -592,7 +592,7 @@ class NicotineFrame(UserInterface):
             self.userlist.Main.show()
             return
 
-        self.userlistvbox.add(self.userlist.Main)
+        self.userlist_content.add(self.userlist.Main)
         self.show_tab(page_id)
 
         self.userlist.BuddiesToolbar.hide()
@@ -1213,14 +1213,15 @@ class NicotineFrame(UserInterface):
 
     def on_switch_page(self, notebook, page, page_num):
 
-        # Hide widgets on previous page for a performance boost
+        # Hide container widget on previous page for a performance boost
         current_page = notebook.get_nth_page(notebook.get_current_page())
 
-        for child in current_page.get_children():
-            child.hide()
-
-        for child in page.get_children():
-            child.show()
+        if Gtk.get_major_version() == 4:
+            current_page.get_first_child().hide()
+            page.get_first_child().show()
+        else:
+            current_page.get_children()[0].hide()
+            page.get_children()[0].show()
 
         self.set_active_header_bar(page.page_id)
 
@@ -2074,14 +2075,10 @@ class Application(Gtk.Application):
 
         try:
             Gtk.Box.add
-            Gtk.Box.get_children
-            Gtk.Paned.get_children
 
         except AttributeError:
             # GTK 4 replacement
             Gtk.Box.add = Gtk.Box.append
-            Gtk.Box.get_children = Gtk.Box.__iter__
-            Gtk.Paned.get_children = Gtk.Paned.__iter__
 
     def do_activate(self):
         if not self.get_windows():
