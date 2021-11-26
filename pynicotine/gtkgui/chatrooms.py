@@ -358,6 +358,9 @@ class ChatRoom(UserInterface):
             self.ChatPaned.set_resize_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
 
+            # Scroll to the focused widget
+            self.command_help.container.get_child().set_scroll_to_focus(True)
+
         else:
             self.ShowRoomWall.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))

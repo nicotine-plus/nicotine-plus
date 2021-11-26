@@ -1860,6 +1860,9 @@ class SearchesFrame(UserInterface):
             button.set_child(self.FilterHelpLabel)
             button.get_style_context().remove_class("image-button")
             button.get_style_context().add_class("image-text-button")
+
+            # Scroll to the focused widget
+            self.filter_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.ShowSearchHelp.add(self.FilterHelpLabel)
 

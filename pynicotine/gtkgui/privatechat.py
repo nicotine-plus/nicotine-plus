@@ -179,6 +179,9 @@ class PrivateChat(UserInterface):
 
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
+
+            # Scroll to the focused widget
+            self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 

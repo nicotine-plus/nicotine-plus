@@ -2,7 +2,7 @@
 <interface>
   <object class="GtkPopover" id="popover">
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkScrolledWindow" id="container">
         <property name="visible">1</property>
         <property name="hscrollbar-policy">never</property>
         <property name="height-request">400</property>
