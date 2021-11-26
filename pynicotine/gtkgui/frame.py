@@ -114,7 +114,7 @@ class NicotineFrame(UserInterface):
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
-            self.header_menu.set_image(self.header_menu_icon)
+            self.header_menu.set_image(Gtk.Image.new_from_icon_name("open-menu-symbolic", Gtk.IconSize.BUTTON))
 
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)

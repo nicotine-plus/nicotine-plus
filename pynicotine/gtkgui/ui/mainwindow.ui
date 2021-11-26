@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <object class="GtkImage" id="header_menu_icon">
-    <property name="visible">1</property>
-    <property name="icon-name">open-menu-symbolic</property>
-  </object>
   <object class="GtkMenuButton" id="header_menu">
     <property name="visible">1</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
