@@ -2798,6 +2798,9 @@ class Preferences(UserInterface):
 
     def set_active_page(self, page):
 
+        if page is None:
+            return
+
         pos = 0
         for page_id, _label, _icon_name in self.page_ids:
             if page_id == page:
@@ -3179,6 +3182,10 @@ class Preferences(UserInterface):
             return True
 
         dialog_hide(self.dialog)
+        return True
 
     def show(self, *args):
         dialog_show(self.dialog)
+
+        # Scroll to the top
+        self.container.get_vadjustment().set_value(0)

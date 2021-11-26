@@ -480,11 +480,8 @@ class NicotineFrame(UserInterface):
             return
 
         self.preferences.set_settings()
-
-        if page:
-            self.preferences.set_active_page(page)
-
         self.preferences.show()
+        self.preferences.set_active_page(page)
 
     # View
 
