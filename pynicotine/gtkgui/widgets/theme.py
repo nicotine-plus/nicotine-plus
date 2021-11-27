@@ -129,7 +129,7 @@ def set_global_css():
     css_gtk3_20 = b"""
     /* Tweaks (GTK 3.20+) */
 
-    .preferences flowboxchild:disabled label {
+    flowboxchild:disabled label {
         /* Reset 'sensitive' widget style for preferences dialog */
         color: inherit;
         opacity: inherit;
@@ -143,7 +143,7 @@ def set_global_css():
     css_gtk4 = b"""
     /* Tweaks (GTK 4+) */
 
-    .preferences flowboxchild:disabled label {
+    flowboxchild:disabled label {
         /* Reset 'sensitive' widget style for preferences dialog */
         filter: inherit;
     }
