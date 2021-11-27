@@ -80,11 +80,6 @@ def set_global_css():
         padding: 0;
     }
 
-    flowboxchild label {
-        color: unset;
-        opacity: unset;
-    }
-
     scrollbar {
         /* Workaround for themes breaking scrollbar hitbox with margins */
         margin: 0;
@@ -134,13 +129,26 @@ def set_global_css():
     """
 
     css_gtk3_20 = b"""
+    /* Tweaks (GTK 3.20+) */
+
+    flowboxchild label:disabled {
+        /* Reset 'sensitive' widget style for preferences dialog */
+        color: inherit;
+        opacity: inherit;
+    }
+
     .count {
         min-width: 12px;
     }
     """
 
     css_gtk4 = b"""
-    /* Tweaks */
+    /* Tweaks (GTK 4+) */
+
+    flowboxchild label:disabled {
+        /* Reset 'sensitive' widget style for preferences dialog */
+        filter: inherit;
+    }
 
     .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
