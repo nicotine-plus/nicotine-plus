@@ -137,6 +137,7 @@ def rescan_shares():
     from collections import deque
 
     from pynicotine.config import config
+    from pynicotine.logfacility import log
     from pynicotine.shares import Shares
 
     config.load_config()
@@ -145,8 +146,8 @@ def rescan_shares():
     error = shares.rescan_shares(use_thread=False)
 
     if error:
-        print("--------------------------------------------------")
-        print(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
+        log.add("--------------------------------------------------")
+        log.add(_("Failed to scan shares. Please close other Nicotine+ instances and try again."))
         return 1
 
     return 0
@@ -202,9 +203,11 @@ def run():
         # Support file scanning process in frozen Windows and macOS binaries
         multiprocessing.freeze_support()
 
+    from pynicotine.logfacility import log
+
     # Require pynicotine module
     if not importlib.util.find_spec("pynicotine"):
-        print("""Cannot find Nicotine+ modules.
+        log.add("""Cannot find Nicotine+ modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
 (there could be a version mismatch between
@@ -219,7 +222,7 @@ binary package and what you try to run Nicotine+ with).""")
     error = check_core_dependencies()
 
     if error:
-        print(error)
+        log.add(error)
         return 1
 
     # Dump tracebacks for C modules (in addition to pure Python code)
@@ -228,7 +231,7 @@ binary package and what you try to run Nicotine+ with).""")
         faulthandler.enable()
 
     except Exception as error:
-        print("Faulthandler module could not be enabled. Error: %s" % error)
+        log.add("Faulthandler module could not be enabled. Error: %s" % error)
 
     if rescan:
         return rescan_shares()

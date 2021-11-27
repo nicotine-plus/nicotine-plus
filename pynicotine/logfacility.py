@@ -62,7 +62,7 @@ class Logger:
         if self.log_levels:
             levels = self.log_levels
         else:
-            levels = config.sections["logging"]["debugmodes"]
+            levels = config.sections["logging"].get("debugmodes", "")
 
         # Important messages are always visible
         if level and not level.startswith("important") and level not in levels:
@@ -77,9 +77,9 @@ class Logger:
         if msg_args:
             msg = msg % msg_args
 
-        timestamp_format = config.sections["logging"]["log_timestamp"]
+        timestamp_format = config.sections["logging"].get("log_timestamp", "%Y-%m-%d %H:%M:%S")
 
-        if config.sections["logging"]["debug_file_output"]:
+        if config.sections["logging"].get("debug_file_output", False):
             folder = config.sections["logging"]["debuglogsdir"]
 
             self.write_log(folder, self.file_name, msg, timestamp_format)
@@ -165,7 +165,8 @@ class Logger:
             get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp_format, msg))
 
         except Exception as error:
-            print(_("Couldn't write to log file \"%(filename)s\": %(error)s") % {"filename": filename, "error": error})
+            self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s") %
+                     {"filename": filename, "error": error})
 
     @staticmethod
     def write_log_callback(path, data):
@@ -186,7 +187,11 @@ class Console:
 
     @staticmethod
     def console_logger(timestamp_format, msg, _level):
-        print("[" + time.strftime(timestamp_format) + "] " + msg)
+        try:
+            print("[" + time.strftime(timestamp_format) + "] " + msg)
+        except OSError:
+            # stdout is gone
+            pass
 
 
 log = Logger()

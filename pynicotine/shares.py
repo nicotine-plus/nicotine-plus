@@ -54,7 +54,7 @@ elif importlib.util.find_spec("semidbm"):
     shelve.open = shelve_open_semidbm
 
 else:
-    print(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
+    log.add(_("Cannot find %(option1)s or %(option2)s, please install either one.") % {
         "option1": "gdbm",
         "option2": "semidbm"
     })

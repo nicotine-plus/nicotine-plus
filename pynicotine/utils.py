@@ -72,7 +72,7 @@ def rename_process(new_name, debug_info=False):
         msg = ["Errors occurred while trying to change process name:"]
         for i in errors:
             msg.append("%s" % (i,))
-        print('\n'.join(msg))
+        log.add('\n'.join(msg))
 
 
 def clean_file(filename):
@@ -474,8 +474,8 @@ def execute_command(command, replacement=None, background=True, returnoutput=Fal
     if command.endswith("&"):
         command = command[:-1]
         if returnoutput:
-            print("Yikes, I was asked to return output but I'm also asked to launch "
-                  "the process in the background. returnoutput gets precedent.")
+            log.add("Yikes, I was asked to return output but I'm also asked to launch "
+                    "the process in the background. returnoutput gets precedent.")
         else:
             background = True
 
@@ -848,7 +848,7 @@ def debug(*args):
     """ Prints debugging info. """
 
     truncated_args = [arg[:200] if isinstance(arg, str) else arg for arg in args]
-    print('*' * 8, truncated_args)
+    log.add('*' * 8, truncated_args)
 
 
 def strace(function):
@@ -858,9 +858,9 @@ def strace(function):
 
     def newfunc(*args, **kwargs):
         name = function.__name__
-        print(("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))))))
+        log.add(("%s(%s)" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))))))
         retvalue = function(*args, **kwargs)
-        print(("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue))))
+        log.add(("%s(%s): %s" % (name, ", ".join(map(repr, chain(args, list(kwargs.values())))), repr(retvalue))))
         return retvalue
 
     return newfunc

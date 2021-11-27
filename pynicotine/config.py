@@ -523,7 +523,9 @@ class Config:
             from chardet import detect
 
         except ImportError:
-            print("Failed to convert config file to UTF-8. Please install python3-chardet and start Nicotine+ again.")
+            from pynicotine.logfacility import log
+
+            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start Nicotine+ again.")
             sys.exit()
 
         os.rename(self.filename, self.filename + ".conv")

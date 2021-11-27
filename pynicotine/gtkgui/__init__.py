@@ -59,10 +59,11 @@ def check_gui_dependencies():
 def run_gui(network_processor, trayicon, hidden, bindip, port, ci_mode, multi_instance):
     """ Run Nicotine+ GTK GUI """
 
+    from pynicotine.logfacility import log
     error = check_gui_dependencies()
 
     if error:
-        print(error)
+        log.add(error)
         return 1
 
     from pynicotine.gtkgui.frame import Application
