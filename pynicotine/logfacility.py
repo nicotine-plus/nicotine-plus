@@ -88,7 +88,11 @@ class Logger:
             try:
                 callback(timestamp_format, msg, level)
             except Exception as error:
-                print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
+                try:
+                    print("Callback on %s failed: %s %s\n%s" % (callback, level, msg, error))
+                except OSError:
+                    # stdout is gone
+                    pass
 
     def add_download(self, msg, msg_args=None):
         self.log_transfer(msg, msg_args)
