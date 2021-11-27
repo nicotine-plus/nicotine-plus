@@ -80,8 +80,9 @@ def set_global_css():
         padding: 0;
     }
 
-    flowboxchild:disabled label {
-        color: @theme_fg_color;
+    flowboxchild label {
+        color: unset;
+        opacity: unset;
     }
 
     scrollbar {
@@ -148,7 +149,7 @@ def set_global_css():
 
     window.dialog.message .dialog-action-area {
         /* Undo spacing change for message dialogs */
-        border-spacing: 0;
+        border-spacing: unset;
     }
 
     .image-text-button box {
