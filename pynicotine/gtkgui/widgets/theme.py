@@ -92,10 +92,6 @@ def set_global_css():
 
     /* Borders */
 
-    .background-border {
-        background: @borders;
-    }
-
     .border-top {
         border-top: 1px solid @borders;
     }

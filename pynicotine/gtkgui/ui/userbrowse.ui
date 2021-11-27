@@ -242,7 +242,7 @@
                       </object>
                     </child>
                     <style>
-                      <class name="view"/>
+                      <class name="border-right"/>
                     </style>
                   </object>
                 </child>
@@ -285,14 +285,8 @@
                     </child>
                   </object>
                 </child>
-                <style>
-                  <class name="view"/>
-                </style>
               </object>
             </child>
-            <style>
-              <class name="background-border"/>
-            </style>
           </object>
         </child>
       </object>
