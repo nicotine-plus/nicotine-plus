@@ -75,7 +75,7 @@ def set_global_css():
     css = b"""
     /* Tweaks */
 
-    flowboxchild {
+    flowbox, flowboxchild {
         /* GTK adds unwanted padding to flowbox children by default */
         padding: 0;
     }
