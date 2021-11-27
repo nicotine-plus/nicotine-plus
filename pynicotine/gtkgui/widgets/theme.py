@@ -77,6 +77,8 @@ def set_global_css():
 
     flowbox, flowboxchild {
         /* GTK adds unwanted padding to flowbox children by default */
+        border: 0;
+        background: inherit;
         padding: 0;
     }
 
