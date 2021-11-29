@@ -31,12 +31,8 @@ if sys.platform == "win32":
     gui_base = "Win32GUI"
     sys_base = sys.prefix
 
-elif sys.platform == "darwin":
-    gui_base = None
-    sys_base = "/usr/local"
-
 else:
-    raise RuntimeError("Only Windows and macOS is supported")
+    raise RuntimeError("Only Windows is supported")
 
 include_files = []
 plugin_packages = []
@@ -69,19 +65,14 @@ def add_gtk_libraries():
         "libgtk-" + str(gtk_version)
     )
 
-    if sys.platform == "win32":
-        add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
-
-        # Path for portable build (gdbus required for single-instance application)
-        add_files_by_pattern("bin", "gdbus", ".exe", output_path="")
-
-        # Path for installed build
-        add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib/gi")
-
-    elif sys.platform == "darwin":
-        add_files_by_pattern("lib", required_dlls, ".dylib", output_path="")
-
+    add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
     add_files_by_pattern("share/glib-2.0/schemas", "gschemas", ".compiled")
+
+    # Path for portable build (gdbus required for single-instance application)
+    add_files_by_pattern("bin", "gdbus", ".exe", output_path="")
+
+    # Path for installed build
+    add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib/gi")
 
 
 def add_gi_typelibs():
@@ -110,17 +101,11 @@ def add_pixbuf_loaders():
 
     with open(temp_loaders_file, "w") as file_handle:
         data = open(os.path.join(sys_base, loaders_file)).read()
-
-        if sys.platform == "win32":
-            data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", "")
-
-        elif sys.platform == "darwin":
-            data = data.replace(os.path.join(sys_base, "lib/gdk-pixbuf-2.0/2.10.0/loaders/"), "")
-
+        data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", "")
         file_handle.write(data)
 
     include_files.append((temp_loaders_file, loaders_file))
-    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", (".dll", ".so"), output_path="")
+    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", ".dll", output_path="")
 
 
 def add_icon_packs():
@@ -198,13 +183,6 @@ setup(
             install_icon=os.path.join(pynicotine_path, "packaging/windows/nicotine.ico"),
             target_name="Nicotine+-%s.msi" % config.version,
             upgrade_code="{8ffb9dbb-7106-41fc-9e8a-b2469aa1fe9f}"
-        ),
-        "bdist_mac": dict(
-            iconfile=os.path.join(pynicotine_path, "packaging/macos/nicotine.icns"),
-            bundle_name="Nicotine+"
-        ),
-        "bdist_dmg": dict(
-            applications_shortcut=True
         )
     },
     executables=[
