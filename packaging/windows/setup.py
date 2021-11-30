@@ -177,7 +177,9 @@ setup(
         "build_exe": dict(
             packages=["gi"] + plugin_packages,
             excludes=["pygtkcompat", "tkinter"],
-            include_files=include_files
+            include_files=include_files,
+            zip_include_packages=["*"],
+            zip_exclude_packages=["pynicotine"]
         ),
         "bdist_msi": dict(
             all_users=True,
