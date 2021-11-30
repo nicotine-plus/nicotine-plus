@@ -60,21 +60,30 @@ def add_files_by_pattern(rel_path, starts_with, ends_with, output_path=None, rec
         include_files.append((full_path, os.path.join(output_path, short_path)))
 
 
-def add_gtk_libraries():
+def add_gtk():
 
-    required_dlls = (
-        "libgtk-" + str(gtk_version)
-    )
-
-    add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
-    add_files_by_pattern("share/glib-2.0/schemas", "gschemas", ".compiled")
+    # This also includes all dlls required by GTK
+    add_files_by_pattern("bin", "libgtk-" + str(gtk_version), ".dll", output_path="lib")
+    include_files.append((os.path.join(sys_base, "share/glib-2.0/schemas/gschemas.compiled"),
+                         "share/glib-2.0/schemas/gschemas.compiled"))
 
     # gdbus required for single-instance application
-    add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib")
+    include_files.append((os.path.join(sys_base, "bin/gdbus.exe"), "lib/gdbus.exe"))
 
+    # Pixbuf loaders
+    temp_dir = tempfile.mkdtemp()
+    loaders_file = "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
+    temp_loaders_file = os.path.join(temp_dir, "loaders.cache")
 
-def add_gi_typelibs():
+    with open(temp_loaders_file, "w") as file_handle:
+        data = open(os.path.join(sys_base, loaders_file)).read()
+        data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", "lib\\\\")
+        file_handle.write(data)
 
+    include_files.append((temp_loaders_file, loaders_file))
+    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", ".dll", output_path="lib")
+
+    # Typelibs
     required_typelibs = (
         "Gtk-" + str(gtk_version),
         "Gio-",
@@ -91,21 +100,6 @@ def add_gi_typelibs():
     add_files_by_pattern("lib/girepository-1.0", required_typelibs, ".typelib")
 
 
-def add_pixbuf_loaders():
-
-    temp_dir = tempfile.mkdtemp()
-    loaders_file = "lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
-    temp_loaders_file = os.path.join(temp_dir, "loaders.cache")
-
-    with open(temp_loaders_file, "w") as file_handle:
-        data = open(os.path.join(sys_base, loaders_file)).read()
-        data = data.replace("lib\\\\gdk-pixbuf-2.0\\\\2.10.0\\\\loaders\\\\", "")
-        file_handle.write(data)
-
-    include_files.append((temp_loaders_file, loaders_file))
-    add_files_by_pattern("lib/gdk-pixbuf-2.0/2.10.0/loaders", "libpixbufloader-", ".dll", output_path="")
-
-
 def add_icon_packs():
 
     required_icon_packs = (
@@ -117,6 +111,7 @@ def add_icon_packs():
 
 def add_themes():
 
+    # "Mac" is required for macOS-specific keybindings in GTK
     required_themes = (
         "Default",
         "Mac"
@@ -126,7 +121,7 @@ def add_themes():
 
 def add_ssl_certs():
     ssl_paths = ssl.get_default_verify_paths()
-    include_files.append((ssl_paths.openssl_cafile, "ssl/cert.pem"))
+    include_files.append((ssl_paths.openssl_cafile, "share/ssl/cert.pem"))
 
 
 def add_translations():
@@ -148,9 +143,7 @@ def add_plugin_packages():
 
 
 # GTK
-add_gtk_libraries()
-add_gi_typelibs()
-add_pixbuf_loaders()
+add_gtk()
 add_icon_packs()
 add_themes()
 

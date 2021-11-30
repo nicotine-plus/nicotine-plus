@@ -198,7 +198,7 @@ def run():
 
         # Support SSL in frozen Windows binaries
         if sys.platform == "win32":
-            os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "ssl/cert.pem")
+            os.environ["SSL_CERT_FILE"] = os.path.join(os.path.dirname(sys.executable), "share/ssl/cert.pem")
 
         # Support file scanning process in frozen Windows and macOS binaries
         multiprocessing.freeze_support()
