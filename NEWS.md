@@ -18,6 +18,7 @@ Changes
  * Double-clicking a folder in search results now downloads the folder
  * Moved main tab visibility settings to "User Interface" category in preferences dialog
  * Moved log category options to right-click menu in log history pane
+ * The 'When closing Nicotine+' preference now also applies when pressing Ctrl+Q
  * Improved terminology used for various client functions, including clearer output of the status bar and log history
  * Removed a few outdated and obsolete preferences
  * Removed the option to automatically share completed downloads, convert to standard shared folder
@@ -36,7 +37,7 @@ Corrections
  * Fixed an issue where column widths would not be remembered if multiple tabs were open
  * Fixed critical errors when quitting Nicotine+ in certain cases
  * Fixed a critical error when receiving invalid search results
- * Fixed an issue where downloads could not be manually resumed after a connection error
+ * Fixed an issue where uploads could not be manually resumed after a connection error
  * Fixed an issue where taskbar notifications were not cleared in older GTK versions
  * Fixed an issue where transfer statistics did not update properly
  * Fixed an issue where the tray icon did not appear in LXDE
@@ -44,15 +45,15 @@ Corrections
  * Fixed an issue where fetching data from Last.fm was unsuccessful in certain cases
  * Fixed an issue where the scrollbar could not be dragged from the edge of the window in the Breeze theme
  * Fixed an issue where the preferences dialog was too large on small screen resolutions
- * Fixed an issue where the 'When closing Nicotine+' preference was not respected when pressing Ctrl+Q
  * Network interface binding can now be used on systems with Linux <5.7 kernel
  * Debian: the stable PPA is compatible with Debian again
- * macOS: fixed an issue where the main window did not render in MacOS Monterey
+ * macOS: fixed an issue where the main window did not render in macOS Monterey
  * Windows: improved compatibility with Windows 11
  * Windows: reduced the number of false antivirus positives
 
 Issues closed on GitHub
 
+ * It's possible to open more than one instance of Nicotine+ ([#1418](https://github.com/nicotine-plus/nicotine-plus/issues/1418))
  * Nicotine+ database needs recovery ([#1467](https://github.com/nicotine-plus/nicotine-plus/issues/1467))
  * Feature request: Option to not remember search history ([#1468](https://github.com/nicotine-plus/nicotine-plus/issues/1468))
  * Double-click on search result to start download ([#1469](https://github.com/nicotine-plus/nicotine-plus/issues/1469))
