@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-23 06:01+0200\n"
-"PO-Revision-Date: 2021-11-26 15:51+0000\n"
+"PO-Revision-Date: 2021-11-30 07:47+0000\n"
 "Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
@@ -4387,8 +4387,8 @@ msgid ""
 "also save the list to disk, and inspect it later on."
 msgstr ""
 "Saisissez le nom d'un utilisateur dont vous souhaitez parcourir les fichiers "
-"partagés. Vous pouvez également enregistrer la liste sur le disque et "
-"l'inspecter ultérieurement."
+"partagés. Vous pouvez également sauvegarder la liste pour la parcourir plus "
+"tard."
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1253
 msgid ""
@@ -4656,11 +4656,11 @@ msgstr "Ferme la fenêtre de dialogue privé courante"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:255
 msgid "Add user to your buddy-list"
-msgstr "Ajouter un utilisateur à votre liste d’amis"
+msgstr "Ajouter l'utilisateur à votre liste d'amis"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:281
 msgid "Remove user from your buddy-list"
-msgstr "Supprimer l’utilisateur de votre liste d’amis"
+msgstr "Retirer l’utilisateur de votre liste d’amis"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:307
 msgid "Add user to your ban list"
