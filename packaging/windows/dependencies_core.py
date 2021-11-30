@@ -33,6 +33,7 @@ def install_pacman():
     packages = [prefix + "gettext",
                 prefix + "gspell",
                 prefix + "gtk" + str(gtk_version),
+                prefix + "python-chardet",
                 prefix + "python-flake8",
                 prefix + "python-pip",
                 prefix + "python-pylint",
