@@ -69,11 +69,8 @@ def add_gtk_libraries():
     add_files_by_pattern("bin", required_dlls, ".dll", output_path="")
     add_files_by_pattern("share/glib-2.0/schemas", "gschemas", ".compiled")
 
-    # Path for portable build (gdbus required for single-instance application)
-    add_files_by_pattern("bin", "gdbus", ".exe", output_path="")
-
-    # Path for installed build
-    add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib/gi")
+    # gdbus required for single-instance application
+    add_files_by_pattern("bin", "gdbus", ".exe", output_path="lib")
 
 
 def add_gi_typelibs():
