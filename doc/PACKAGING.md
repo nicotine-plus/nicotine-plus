@@ -53,7 +53,7 @@ sbuild ../nicotine_*.dsc
 
 GitHub Actions currently builds Nicotine+ installers for Windows. However, the following instructions may be useful if you wish to generate an installer on your own machine.
 
-### Building a Frozen Application via PyInstaller
+### Building a Frozen Application with cx_Freeze
 
 Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows](https://pygobject.readthedocs.io/en/latest/getting_started.html#windows-logo-windows)
 
@@ -75,25 +75,15 @@ python3 packaging/windows/dependencies_core.py
 python3 packaging/windows/dependencies_packaging.py
 ```
 
-Run PyInstaller:
+Build the application:
 
 ```console
-python3 -m pyinstaller packaging/windows/nicotine.spec
+python3 packaging/windows/setup.py bdist_msi
 ```
 
-When the frozen application has finished building, it is located in the `dist\Nicotine+\` subfolder.
+When the application has finished building, it is located in the `build\exe.*\` subfolder. The installer is located in the `dist\` subfolder.
 
-If you want to run the application, you can launch the executable `dist\Nicotine+\Nicotine+.exe`.
-
-### Building a NSIS installer from the Frozen Application
-
-Run the following:
-
-```console
-python3 packaging/windows/create_installer.py
-```
-
-A `Nicotine+-$(version).exe` installer is now present in the `packaging\windows\` folder.
+If you want to run the application, you can launch the executable `build\exe.*\Nicotine+.exe`.
 
 ### Building a 32-bit (i686) Application and Installer
 
