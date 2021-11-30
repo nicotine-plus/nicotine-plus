@@ -19,6 +19,7 @@
 
 import glob
 import os
+import re
 import ssl
 import sys
 import tempfile
@@ -171,7 +172,7 @@ from pynicotine.config import config  # noqa: E402
 setup(
     name="Nicotine+",
     author="Nicotine+ Team",
-    version=config.version.replace("dev", "").replace("rc", ""),
+    version=re.sub(r".(dev|rc)(.*)", "", config.version),
     options={
         "build_exe": dict(
             packages=["gi"] + plugin_packages,
