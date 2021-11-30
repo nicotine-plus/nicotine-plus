@@ -20,6 +20,7 @@
 
 import os
 
+from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -27,6 +28,7 @@ from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
@@ -49,6 +51,13 @@ class FastConfigureAssistant(UserInterface):
 
         self.FastConfigureDialog.set_page_type(self.welcomepage, Gtk.AssistantPageType.CUSTOM)
         self.FastConfigureDialog.set_page_type(self.summarypage, Gtk.AssistantPageType.SUMMARY)
+
+        logo = get_icon("n")
+
+        if logo:
+            self.icon.set_from_pixbuf(logo)
+        else:
+            self.icon.set_property("icon-name", GLib.get_prgname())
 
         # Page specific, sharepage
         self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")

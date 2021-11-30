@@ -18,10 +18,9 @@
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
     <child>
-      <object class="GtkImage">
+      <object class="GtkImage" id="icon">
         <property name="visible">1</property>
         <property name="halign">center</property>
-        <property name="icon-name">org.nicotine_plus.Nicotine</property>
         <property name="pixel-size">128</property>
       </object>
     </child>
