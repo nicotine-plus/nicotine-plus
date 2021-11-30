@@ -1276,7 +1276,7 @@ class NicotineCore:
             # Ask for a list of parents to connect to (distributed network)
             self.send_have_no_parent()
 
-            """ TODO: Nicotine+ can currently receive search requests from a parent connection, but
+            """ TODO: We can currently receive search requests from a parent connection, but
             redirecting results to children is not implemented yet. Tell the server we don't accept
             children for now. """
             self.queue.append(slskmessages.AcceptChildren(0))

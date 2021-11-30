@@ -20,7 +20,6 @@ import gi
 import os
 import sys
 
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -133,7 +132,7 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Start Messaging"),
+            title=config.application_name + ": " + _("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=users
@@ -155,7 +154,7 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Request User Info"),
+            title=config.application_name + ": " + _("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
             droplist=users
@@ -177,7 +176,7 @@ class TrayIcon:
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
             parent=self.frame.application.get_active_window(),
-            title=GLib.get_application_name() + ": " + _("Request Shares List"),
+            title=config.application_name + ": " + _("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
             droplist=users
@@ -200,7 +199,7 @@ class TrayIcon:
         """
 
         if icon_type == "local":
-            icon_scheme = GLib.get_prgname() + "-" + icon_name + "."
+            icon_scheme = config.application_id + "-" + icon_name + "."
         else:
             icon_scheme = "trayicon_" + icon_name + "."
 
@@ -273,7 +272,7 @@ class TrayIcon:
         if self.tray_icon is None:
             if self.appindicator is not None:
                 tray_icon = self.appindicator.Indicator.new(
-                    GLib.get_application_name(),
+                    config.application_name,
                     "",
                     self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 tray_icon.set_menu(self.tray_popup_menu)
@@ -290,7 +289,7 @@ class TrayIcon:
             else:
                 # GtkStatusIcon fallback
                 tray_icon = Gtk.StatusIcon()
-                tray_icon.set_tooltip_text(GLib.get_application_name())
+                tray_icon.set_tooltip_text(config.application_name)
                 tray_icon.connect("activate", self.frame.on_window_hide_unhide)
                 tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
@@ -378,10 +377,10 @@ class TrayIcon:
         if self.custom_icons:
             icon_name = "trayicon_" + icon_name
         else:
-            icon_name = GLib.get_prgname() + "-" + icon_name
+            icon_name = config.application_id + "-" + icon_name
 
         if self.appindicator is not None:
-            self.tray_icon.set_icon_full(icon_name, GLib.get_application_name())
+            self.tray_icon.set_icon_full(icon_name, config.application_name)
 
         else:
             # GtkStatusIcon fallback

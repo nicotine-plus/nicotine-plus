@@ -120,7 +120,7 @@ class Plugin(BasePlugin):
                 'https', 'www.googleapis.com',
                 '/youtube/v3/videos?part=snippet,statistics,contentDetails&id={}&key={}'.format(
                     video_id, self.settings['api_key']),
-                headers={'User-Agent': 'Nicotine+'})
+                headers={'User-Agent': self.config.application_name})
 
         except Exception as error:
             self.log('Failed to connect to www.googleapis.com: %s', error)

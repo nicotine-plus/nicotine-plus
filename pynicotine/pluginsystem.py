@@ -641,7 +641,7 @@ class BasePlugin:
         pass
 
     def shutdown_notification(self):
-        # Nicotine+ is shutting down
+        # Application is shutting down
         pass
 
     def public_room_message_notification(self, room, user, line):

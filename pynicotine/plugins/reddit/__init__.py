@@ -68,7 +68,7 @@ class Plugin(BasePlugin):
 
         try:
             response = http_request('https', 'www.reddit.com', '/r/' + subreddit + '/.json',
-                                    headers={"User-Agent": "Nicotine+"})
+                                    headers={"User-Agent": self.config.application_name})
 
         except Exception as error:
             self.log("Could not connect to Reddit: %(error)s", {"error": error})

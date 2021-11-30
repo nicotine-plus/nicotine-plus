@@ -72,7 +72,7 @@ def check_arguments():
         help=_("start the program in headless mode (no GUI)")
     )
     parser.add_argument(
-        "-v", "--version", action="version", version="Nicotine+ %s" % config.version,
+        "-v", "--version", action="version", version="%s %s" % (config.application_name, config.version),
         help=_("display version and exit")
     )
 
@@ -86,7 +86,7 @@ def check_arguments():
     if args.config:
         config.filename = args.config
 
-        # Since a custom config was specified, allow another instance of Nicotine+ to open
+        # Since a custom config was specified, allow another instance of the application to open
         multi_instance = True
 
     if args.user_data:
@@ -154,7 +154,7 @@ def rescan_shares():
 
 
 def run_headless(core, ci_mode):
-    """ Run Nicotine+ in headless (no GUI) mode """
+    """ Run application in headless (no GUI) mode """
 
     import time
 
@@ -182,7 +182,7 @@ def run_headless(core, ci_mode):
 
 
 def run():
-    """ Run Nicotine+ and return its exit code """
+    """ Run application and return its exit code """
 
     import importlib.util
     import io
@@ -207,12 +207,12 @@ def run():
 
     # Require pynicotine module
     if not importlib.util.find_spec("pynicotine"):
-        log.add("""Cannot find Nicotine+ modules.
+        log.add("""Cannot find application modules.
 Perhaps they're installed in a directory which is not
 in an interpreter's module search path.
 (there could be a version mismatch between
-what version of Python was used to build the Nicotine
-binary package and what you try to run Nicotine+ with).""")
+what version of Python was used to build the application
+binary package and what you try to run the application with).""")
         return 1
 
     from pynicotine.utils import rename_process

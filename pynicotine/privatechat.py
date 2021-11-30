@@ -225,7 +225,7 @@ class PrivateChats:
         self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
 
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
-            self.send_message(msg.user, "Nicotine+ " + self.config.version)
+            self.send_message(msg.user, "%s %s" % (self.config.application_name, self.config.version))
 
         autoreply = self.config.sections["server"]["autoreply"]
 

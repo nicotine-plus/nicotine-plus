@@ -140,7 +140,7 @@ class NowPlaying:
             response = http_request(
                 "https", "ws.audioscrobbler.com",
                 "/2.0/?method=user.getrecenttracks&user=" + user + "&api_key=" + apikey + "&limit=1&format=json",
-                headers={"User-Agent": "Nicotine+"})
+                headers={"User-Agent": self.config.application_name})
 
         except Exception as error:
             log.add_important_error(_("Last.fm: Could not connect to Audioscrobbler: %(error)s"), {"error": error})
@@ -277,7 +277,7 @@ class NowPlaying:
         try:
             response = http_request('https', 'api.listenbrainz.org',
                                     '/1/user/{}/playing-now'.format(username),
-                                    headers={'User-Agent': 'Nicotine+'})
+                                    headers={'User-Agent': self.config.application_name})
 
         except Exception as error:
             log.add_important_error(_("ListenBrainz: Could not connect to ListenBrainz: %(error)s"), {'error': error})

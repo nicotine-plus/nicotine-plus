@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gdk
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -48,7 +47,7 @@ class About(UserInterface):
 
             self.dialog.set_logo(logo)
         else:
-            self.dialog.set_logo_icon_name(GLib.get_prgname())
+            self.dialog.set_logo_icon_name(config.application_id)
 
         if Gtk.get_major_version() == 4:
             self.dialog.connect("close-request", lambda x: x.destroy())

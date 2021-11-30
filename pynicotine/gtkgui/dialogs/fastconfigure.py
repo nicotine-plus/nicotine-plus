@@ -20,7 +20,6 @@
 
 import os
 
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -57,7 +56,7 @@ class FastConfigureAssistant(UserInterface):
         if logo:
             self.icon.set_from_pixbuf(logo)
         else:
-            self.icon.set_property("icon-name", GLib.get_prgname())
+            self.icon.set_property("icon-name", config.application_id)
 
         # Page specific, sharepage
         self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")

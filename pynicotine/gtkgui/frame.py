@@ -327,14 +327,14 @@ class NicotineFrame(UserInterface):
             self.MainWindow.connect("delete-event", self.on_close_request)
 
         # Set main window title and icon
-        self.MainWindow.set_title(GLib.get_application_name())
+        self.MainWindow.set_title(config.application_name)
 
         main_icon = get_icon("n")
 
         if main_icon and Gtk.get_major_version() == 3:
             self.MainWindow.set_default_icon(main_icon)
         else:
-            self.MainWindow.set_default_icon_name(GLib.get_prgname())
+            self.MainWindow.set_default_icon_name(config.application_id)
 
         # Set main window size
         width = config.sections["ui"]["width"]
@@ -2051,11 +2051,9 @@ class Application(Gtk.Application):
 
     def __init__(self, network_processor, tray_icon, start_hidden, bindip, port, ci_mode, multi_instance):
 
-        application_id = "org.nicotine_plus.Nicotine"
-
-        super().__init__(application_id=application_id)
-        GLib.set_application_name("Nicotine+")
-        GLib.set_prgname(application_id)
+        super().__init__(application_id=config.application_id)
+        GLib.set_application_name(config.application_name)
+        GLib.set_prgname(config.application_id)
 
         if multi_instance:
             self.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
@@ -2096,5 +2094,5 @@ class Application(Gtk.Application):
             )
             return
 
-        # Show the window of the running Nicotine+ instance
+        # Show the window of the running application instance
         self.get_active_window().present_with_time(Gdk.CURRENT_TIME)

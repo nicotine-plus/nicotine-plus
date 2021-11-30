@@ -223,7 +223,7 @@ def get_latest_version():
 
     response = http_request(
         "https", "pypi.org", "/pypi/nicotine-plus/json",
-        headers={"User-Agent": "Nicotine+"}
+        headers={"User-Agent": config.application_name}
     )
     data = json.loads(response)
 

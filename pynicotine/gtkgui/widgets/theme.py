@@ -285,7 +285,7 @@ def load_custom_icons(names):
 
 
 def load_icons():
-    """ Load custom icons necessary for Nicotine+ to function """
+    """ Load custom icons necessary for the application to function """
 
     names = [
         "away",
@@ -306,7 +306,7 @@ def load_icons():
     if load_custom_icons(names):
         return
 
-    """ Load icons required by Nicotine+, such as status icons """
+    """ Load icons required by the application, such as status icons """
 
     for name in names:
         IMAGES[name] = load_ui_icon(name)

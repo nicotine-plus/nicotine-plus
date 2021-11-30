@@ -59,6 +59,8 @@ class Config:
         self.python_version = sys.version
         self.gtk_version = ""
 
+        self.application_name = "Nicotine+"
+        self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
         self.copyright = """© 2001-2003 PySoulSeek Contributors
 © 2003-2004 Nicotine Team
@@ -525,7 +527,8 @@ class Config:
         except ImportError:
             from pynicotine.logfacility import log
 
-            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start Nicotine+ again.")
+            log.add(("Failed to convert config file to UTF-8. Please install python3-chardet and start "
+                     "the application again."))
             sys.exit()
 
         os.rename(self.filename, self.filename + ".conv")

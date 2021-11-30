@@ -25,7 +25,6 @@ from ctypes import Structure, byref, sizeof
 
 from gi.repository import Gdk
 from gi.repository import Gio
-from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
@@ -66,7 +65,7 @@ class Notifications:
 
     def set_title(self, user=None):
 
-        app_name = GLib.get_application_name()
+        app_name = config.application_name
 
         if (not self.frame.np.notifications.chat_hilites["rooms"]
                 and not self.frame.np.notifications.chat_hilites["private"]):
@@ -101,7 +100,7 @@ class Notifications:
     def new_text_notification(self, message, title=None, priority=Gio.NotificationPriority.NORMAL):
 
         if title is None:
-            title = GLib.get_application_name()
+            title = config.application_name
 
         try:
             if sys.platform == "win32":

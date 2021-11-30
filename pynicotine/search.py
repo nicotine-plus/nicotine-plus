@@ -421,7 +421,7 @@ class Search:
             return results
 
         except ValueError:
-            # DB is closed, perhaps due to rescanning shares or closing Nicotine+
+            # DB is closed, perhaps due to rescanning shares or closing the application
             return None
 
     def process_search_request(self, searchterm, user, searchid, direct=False):
