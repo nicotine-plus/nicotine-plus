@@ -326,6 +326,8 @@ class PopupMenu:
             else:
                 popup.append_item(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
 
+            popup.append_item(("", None))
+
     def clear(self):
 
         for submenu in self.submenus:
