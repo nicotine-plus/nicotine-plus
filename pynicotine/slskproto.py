@@ -606,18 +606,16 @@ class SlskProtoThread(threading.Thread):
     def _calc_upload_limit(self, limit_disabled=False, limit_per_transfer=False):
 
         limit = self._upload_limit
+        loop_limit = 1024  # 1 KB/s is the minimum upload speed per transfer
 
-        if limit_disabled or limit == 0:
+        if limit_disabled or limit < loop_limit:
             self._upload_limit_split = 0
             return
 
         if not limit_per_transfer and self.total_uploads > 1:
             limit = limit // self.total_uploads
 
-        loop_limit = 1024  # 1 KB/s is the minimum upload speed per transfer
-
-        if limit > loop_limit:
-            self._upload_limit_split = int(limit)
+        self._upload_limit_split = int(limit)
 
     def _calc_upload_limit_by_transfer(self):
         return self._calc_upload_limit(limit_per_transfer=True)
@@ -628,8 +626,9 @@ class SlskProtoThread(threading.Thread):
     def _calc_download_limit(self):
 
         limit = self._download_limit
+        loop_limit = 1024  # 1 KB/s is the minimum download speed per transfer
 
-        if limit == 0:
+        if limit < loop_limit:
             # Download limit disabled
             self._download_limit_split = 0
             return
@@ -637,10 +636,7 @@ class SlskProtoThread(threading.Thread):
         if self.total_downloads > 1:
             limit = limit // self.total_downloads
 
-        loop_limit = 1024  # 1 KB/s is the minimum download speed per transfer
-
-        if limit > loop_limit:
-            self._download_limit_split = int(limit)
+        self._download_limit_split = int(limit)
 
     def _calc_loops_per_second(self):
         """ Calculate number of loops per second. This value is used to split the
