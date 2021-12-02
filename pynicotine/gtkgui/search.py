@@ -925,7 +925,10 @@ class Search(UserInterface):
 
     def update_results_model(self):
 
-        self.ResultsList.set_model(None)
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.resultsmodel.get_sort_column_id()
+        self.resultsmodel.set_default_sort_func(lambda *unused: 0)
+        self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.usersiters.clear()
         self.directoryiters.clear()
@@ -940,7 +943,8 @@ class Search(UserInterface):
         self.update_result_counter()
         self.update_filter_counter(self.active_filter_count)
 
-        self.ResultsList.set_model(self.resultsmodel)
+        if sort_column is not None and sort_type is not None:
+            self.resultsmodel.set_sort_column_id(sort_column, sort_type)
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
