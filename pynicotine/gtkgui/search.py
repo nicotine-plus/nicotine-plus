@@ -481,20 +481,11 @@ class Search(UserInterface):
 
             self.on_refilter()
 
-        for i in ['0', '128', '160', '192', '256', '320']:
-            self.FilterBitrate.append_text(i)
-
-        for i in [">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0"]:
-            self.FilterSize.append_text(i)
-
-        for i in ['flac|wav|ape|aiff|wv|cue', 'mp3|m4a|aac|ogg|opus|wma', '!mp3']:
-            self.FilterType.append_text(i)
-
         for filter_id, widget in self.filter_widgets.items():
             if not isinstance(widget, Gtk.ComboBoxText):
                 continue
 
-            self.update_history_combobox(filter_id)
+            self.update_filter_combobox(filter_id)
 
     def focus_combobox(self, button):
 
@@ -512,13 +503,27 @@ class Search(UserInterface):
 
         self.focus_combobox(parent)
 
-    def update_history_combobox(self, filter_id):
+    def update_filter_combobox(self, filter_id):
 
+        presets = ""
         combobox = self.filter_widgets[filter_id]
         combobox.remove_all()
 
-        for value in config.sections["searches"][filter_id]:
+        if filter_id == "filterbr":
+            presets = ("0", "128", "160", "192", "256", "320")
+
+        elif filter_id == "filtersize":
+            presets = (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0")
+
+        elif filter_id == "filtertype":
+            presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
+
+        for value in presets:
             combobox.append_text(value)
+
+        for value in config.sections["searches"][filter_id]:
+            if value not in presets:
+                combobox.append_text(value)
 
     def add_result_list(self, result_list, user, country, inqueue, ulspeed, h_speed,
                         h_queue, color, private=False):
@@ -1323,7 +1328,7 @@ class Search(UserInterface):
         history.insert(0, value)
         config.write_configuration()
 
-        self.update_history_combobox(filter_id)
+        self.update_filter_combobox(filter_id)
 
     def on_refilter(self, *args):
 
