@@ -25,7 +25,6 @@ interface =
 incompletedir = /home/default/.local/share/nicotine/incomplete
 downloaddir = /home/default/.local/share/nicotine/downloads
 uploaddir = /home/default/.local/share/nicotine/received
-sharedownloaddir = False
 shared = []
 buddyshared = []
 uploadbandwidth = 10
