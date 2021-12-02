@@ -250,6 +250,7 @@
                           <object class="GtkCheckButton" id="CompleteBuddiesCheck">
                             <property name="label" translatable="yes">Buddy names</property>
                             <property name="visible">1</property>
+                            <signal name="toggled" handler="on_completion_changed"/>
                           </object>
                         </child>
                       </object>

@@ -64,7 +64,7 @@ class NetworkFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.needportmap = False
+        self.portmap_required = False
 
         self.options = {
             "server": {
@@ -111,7 +111,6 @@ class NetworkFrame(UserInterface):
         if server["ctcpmsgs"] is not None:
             self.ctcptogglebutton.set_active(not server["ctcpmsgs"])
 
-        self.needportmap = False
         self.on_toggle_upnp(self.UseUPnP)
 
         if sys.platform not in ("linux", "darwin"):
@@ -130,7 +129,11 @@ class NetworkFrame(UserInterface):
         except (AttributeError, OSError):
             pass
 
+        self.portmap_required = False
+
     def get_settings(self):
+
+        self.portmap_required = False
 
         try:
             server = self.Server.get_text().split(":")
@@ -208,12 +211,12 @@ class NetworkFrame(UserInterface):
     def on_toggle_upnp(self, widget, *_args):
 
         active = widget.get_active()
-        self.needportmap = active
+        self.portmap_required = active
 
         self.UPnPInterval.get_parent().set_sensitive(active)
 
     def on_modify_upnp_interval(self, *_args):
-        self.needportmap = True
+        self.portmap_required = True
 
 
 class DownloadsFrame(UserInterface):
@@ -224,7 +227,6 @@ class DownloadsFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.needrescan = False
 
         self.incomplete_dir = FileChooserButton(self.IncompleteDir, preferences.dialog, "folder")
         self.download_dir = FileChooserButton(self.DownloadDir, preferences.dialog, "folder")
@@ -290,8 +292,6 @@ class DownloadsFrame(UserInterface):
                 self.filtersiters[dfilter] = self.filterlist.insert_with_valuesv(
                     -1, self.column_numbers, [str(dfilter), bool(escaped)]
                 )
-
-        self.needrescan = False
 
     def get_settings(self):
 
@@ -536,7 +536,7 @@ class SharesFrame(UserInterface):
         self.preferences = preferences
         self.frame = preferences.frame
 
-        self.needrescan = False
+        self.rescan_required = False
         self.shareddirs = []
         self.bshareddirs = []
 
@@ -595,7 +595,7 @@ class SharesFrame(UserInterface):
         self.shareddirs = transfers["shared"][:]
         self.bshareddirs = transfers["buddyshared"][:]
 
-        self.needrescan = False
+        self.rescan_required = False
 
     def get_settings(self):
 
@@ -608,9 +608,6 @@ class SharesFrame(UserInterface):
             }
         }
 
-    def on_share_download_dir_toggled(self, *_args):
-        self.needrescan = True
-
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
 
         if buddy_only == self.shareslist.get_value(iterator, 2):
@@ -619,7 +616,7 @@ class SharesFrame(UserInterface):
         virtual = self.shareslist.get_value(iterator, 0)
         directory = self.shareslist.get_value(iterator, 1)
         share = (virtual, directory)
-        self.needrescan = True
+        self.rescan_required = True
 
         self.shareslist.set_value(iterator, 2, buddy_only)
 
@@ -670,7 +667,7 @@ class SharesFrame(UserInterface):
         self.Shares.grab_focus()
 
         self.shareddirs.append((virtual_final, folder))
-        self.needrescan = True
+        self.rescan_required = True
 
     def on_add_shared_dir_selected(self, selected, _data):
 
@@ -716,7 +713,7 @@ class SharesFrame(UserInterface):
         shared_dirs.remove(oldmapping)
         shared_dirs.append(newmapping)
 
-        self.needrescan = True
+        self.rescan_required = True
 
     def on_edit_shared_dir(self, *_args):
 
@@ -759,7 +756,7 @@ class SharesFrame(UserInterface):
             model.remove(iterator)
 
         if paths:
-            self.needrescan = True
+            self.rescan_required = True
 
 
 class UploadsFrame(UserInterface):
@@ -1036,7 +1033,7 @@ class BannedUsersFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.need_ip_block = False
+        self.ip_block_required = False
 
         self.options = {
             "server": {
@@ -1081,7 +1078,6 @@ class BannedUsersFrame(UserInterface):
 
     def set_settings(self):
 
-        self.need_ip_block = False
         self.banlist_model.clear()
         self.blocked_list_model.clear()
 
@@ -1104,7 +1100,12 @@ class BannedUsersFrame(UserInterface):
                     str(user)
                 ])
 
+        self.ip_block_required = False
+
     def get_settings(self):
+
+        self.ip_block_required = False
+
         return {
             "server": {
                 "banlist": self.banlist[:],
@@ -1188,7 +1189,7 @@ class BannedUsersFrame(UserInterface):
         if ip_address not in self.blocked_list:
             self.blocked_list[ip_address] = ""
             self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip_address, ""])
-            self.need_ip_block = True
+            self.ip_block_required = True
 
     def on_add_blocked(self, *_args):
 
@@ -1219,7 +1220,7 @@ class ChatsFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.needcompletion = False
+        self.completion_required = False
 
         self.options = {
             "logging": {
@@ -1294,7 +1295,7 @@ class ChatsFrame(UserInterface):
             pos += 1
 
     def on_completion_changed(self, *_args):
-        self.needcompletion = True
+        self.completion_required = True
 
     def on_default_private(self, *_args):
         self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
@@ -1382,8 +1383,6 @@ class ChatsFrame(UserInterface):
 
         self.preferences.set_widgets_data(self.options)
 
-        self.needcompletion = False
-
         try:
             gi.require_version('Gspell', '1')
             from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
@@ -1404,8 +1403,11 @@ class ChatsFrame(UserInterface):
                 str(replacement)
             ])
 
+        self.completion_required = False
+
     def get_settings(self):
 
+        self.completion_required = False
         censored = []
         autoreplaced = {}
 
@@ -1470,7 +1472,7 @@ class UserInterfaceFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
-        self.needcolors = False
+        self.theme_required = False
 
         self.theme_dir = FileChooserButton(self.ThemeDir, preferences.dialog, "folder")
 
@@ -1611,6 +1613,7 @@ class UserInterfaceFrame(UserInterface):
     def set_settings(self):
 
         self.preferences.set_widgets_data(self.options)
+        self.theme_required = False
 
         if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
@@ -1626,10 +1629,10 @@ class UserInterfaceFrame(UserInterface):
                 widget.set_active(enabled)
 
         self.update_color_buttons()
-        self.needcolors = False
 
     def get_settings(self):
 
+        self.theme_required = False
         enabled_tabs = {}
 
         for page_id, widget in self.tabs.items():
@@ -1720,10 +1723,10 @@ class UserInterfaceFrame(UserInterface):
         font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
         font_button.set_font_name("")
 
-        self.needcolors = True
+        self.theme_required = True
 
     def on_fonts_changed(self, *_args):
-        self.needcolors = True
+        self.theme_required = True
 
     """ Colors """
 
@@ -1792,7 +1795,7 @@ class UserInterfaceFrame(UserInterface):
             color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
             color_button.set_rgba(rgba)
 
-        self.needcolors = True
+        self.theme_required = True
 
 
 class LoggingFrame(UserInterface):
@@ -2999,61 +3002,54 @@ class Preferences(UserInterface):
             "plugins": {}
         }
 
+        try:
+            portmap_required = self.pages["Network"].portmap_required
+
+        except KeyError:
+            portmap_required = False
+
+        try:
+            rescan_required = self.pages["Shares"].rescan_required
+
+        except KeyError:
+            rescan_required = False
+
+        try:
+            theme_required = self.pages["UserInterface"].theme_required
+
+        except KeyError:
+            theme_required = False
+
+        try:
+            completion_required = self.pages["Chats"].completion_required
+
+        except KeyError:
+            completion_required = False
+
+        try:
+            ip_block_required = self.pages["BannedUsers"].ip_block_required
+
+        except KeyError:
+            ip_block_required = False
+
         for page in self.pages.values():
-            sub = page.get_settings()
-            for key, data in sub.items():
+            for key, data in page.get_settings().items():
                 options[key].update(data)
 
-        try:
-            need_portmap = self.pages["Network"].needportmap
-
-        except KeyError:
-            need_portmap = False
-
-        try:
-            need_rescan = self.pages["Shares"].needrescan
-
-        except KeyError:
-            need_rescan = False
-
-        if not need_rescan:
-            try:
-                need_rescan = self.pages["Downloads"].needrescan
-
-            except KeyError:
-                need_rescan = False
-
-        try:
-            need_colors = self.pages["UserInterface"].needcolors
-
-        except KeyError:
-            need_colors = False
-
-        try:
-            need_completion = self.pages["Completion"].needcompletion
-
-        except KeyError:
-            need_completion = False
-
-        try:
-            need_ip_block = self.pages["BannedUsers"].need_ip_block
-
-        except KeyError:
-            need_ip_block = False
-
-        return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, options
+        return portmap_required, rescan_required, theme_required, completion_required, ip_block_required, options
 
     def update_settings(self, settings_closed=False):
 
-        need_portmap, need_rescan, need_colors, need_completion, need_ip_block, options = self.get_settings()
+        (portmap_required, rescan_required, theme_required, completion_required,
+            ip_block_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
 
-        if need_portmap:
+        if portmap_required:
             self.frame.np.add_upnp_portmapping()
 
-        if need_colors:
+        if theme_required:
             set_global_font(config.sections["ui"]["globalfont"])
 
             self.frame.chatrooms.update_visuals()
@@ -3069,10 +3065,10 @@ class Preferences(UserInterface):
             self.frame.update_visuals()
             self.update_visuals()
 
-        if need_completion:
+        if completion_required:
             self.frame.update_completions()
 
-        if need_ip_block:
+        if ip_block_required:
             self.frame.np.network_filter.close_blocked_ip_connections()
 
         # Dark mode
@@ -3131,7 +3127,7 @@ class Preferences(UserInterface):
         if not settings_closed:
             return
 
-        if need_rescan:
+        if rescan_required:
             self.frame.np.shares.rescan_shares()
 
         if not config.sections["ui"]["trayicon"]:
