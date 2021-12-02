@@ -1419,8 +1419,7 @@ class Search(UserInterface):
             if isinstance(widget, Gtk.ComboBoxText):
                 widget.get_child().set_text("")
 
-            elif isinstance(widget, Gtk.CheckButton):
-                widget.set_active(False)
+        self.FilterFreeSlot.set_active(False)
 
         self.clearing_filters = False
         self.FilterIn.get_child().grab_focus()
