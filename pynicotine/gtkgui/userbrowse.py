@@ -527,6 +527,11 @@ class UserBrowse(UserInterface):
         if not files:
             return
 
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.file_store.get_sort_column_id()
+        self.file_store.set_default_sort_func(lambda *unused: 0)
+        self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
+
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length
             filename = file[1]
@@ -539,6 +544,9 @@ class UserBrowse(UserInterface):
                  GObject.Value(GObject.TYPE_UINT64, length)]
 
             self.file_iters[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, f)
+
+        if sort_column is not None and sort_type is not None:
+            self.file_store.set_sort_column_id(sort_column, sort_type)
 
     def select_files(self):
 
