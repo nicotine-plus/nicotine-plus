@@ -427,6 +427,16 @@ class Search(UserInterface):
 
         """ Filters """
 
+        self.filter_widgets = {
+            "filterin": self.FilterIn,
+            "filterout": self.FilterOut,
+            "filtersize": self.FilterSize,
+            "filterbr": self.FilterBitrate,
+            "filterslot": self.FilterFreeSlot,
+            "filtercc": self.FilterCountry,
+            "filtertype": self.FilterType
+        }
+
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
 
@@ -450,25 +460,24 @@ class Search(UserInterface):
 
     def populate_filters(self, set_default_filters=True):
 
-        for combobox in (self.FilterIn, self.FilterOut, self.FilterType, self.FilterSize,
-                         self.FilterBitrate, self.FilterCountry):
-            combobox.remove_all()
+        for widget in self.filter_widgets:
+            if isinstance(widget, Gtk.ComboBoxText):
+                widget.remove_all()
 
         if set_default_filters and config.sections["searches"]["enablefilters"]:
-
             sfilter = config.sections["searches"]["defilter"]
 
-            self.FilterInEntry.set_text(str(sfilter[0]))
-            self.FilterOutEntry.set_text(str(sfilter[1]))
-            self.FilterSizeEntry.set_text(str(sfilter[2]))
-            self.FilterBitrateEntry.set_text(str(sfilter[3]))
+            self.FilterIn.get_child().set_text(str(sfilter[0]))
+            self.FilterOut.get_child().set_text(str(sfilter[1]))
+            self.FilterSize.get_child().set_text(str(sfilter[2]))
+            self.FilterBitrate.get_child().set_text(str(sfilter[3]))
             self.FilterFreeSlot.set_active(sfilter[4])
 
             if len(sfilter) > 5:
-                self.FilterCountryEntry.set_text(str(sfilter[5]))
+                self.FilterCountry.get_child().set_text(str(sfilter[5]))
 
             if len(sfilter) > 6:
-                self.FilterTypeEntry.set_text(str(sfilter[6]))
+                self.FilterType.get_child().set_text(str(sfilter[6]))
 
             self.on_refilter()
 
@@ -481,23 +490,12 @@ class Search(UserInterface):
         for i in ['flac|wav|ape|aiff|wv|cue', 'mp3|m4a|aac|ogg|opus|wma', '!mp3']:
             self.FilterType.append_text(i)
 
-        for i in config.sections["searches"]["filterin"]:
-            self.add_combo(self.FilterIn, i, True)
+        for filter_id, widget in self.filter_widgets.items():
+            if not isinstance(widget, Gtk.ComboBoxText):
+                continue
 
-        for i in config.sections["searches"]["filterout"]:
-            self.add_combo(self.FilterOut, i, True)
-
-        for i in config.sections["searches"]["filtersize"]:
-            self.add_combo(self.FilterSize, i, True)
-
-        for i in config.sections["searches"]["filterbr"]:
-            self.add_combo(self.FilterBitrate, i, True)
-
-        for i in config.sections["searches"]["filtercc"]:
-            self.add_combo(self.FilterCountry, i, True)
-
-        for i in config.sections["searches"]["filtertype"]:
-            self.add_combo(self.FilterType, i, True)
+            for value in config.sections["searches"][filter_id]:
+                self.add_combo(widget, value, True)
 
     def focus_combobox(self, button):
 
@@ -886,31 +884,32 @@ class Search(UserInterface):
 
     def check_filter(self, row):
 
-        filters = self.filters
         if self.active_filter_count == 0:
             return True
 
+        filters = self.filters
+
         # "Included text"-filter, check full file path (located at index 11 in row)
-        if filters["include"] and not filters["include"].search(row[11].lower()):
+        if filters["filterin"] and not filters["filterin"].search(row[11].lower()):
             return False
 
         # "Excluded text"-filter, check full file path (located at index 11 in row)
-        if filters["exclude"] and filters["exclude"].search(row[11].lower()):
+        if filters["filterout"] and filters["filterout"].search(row[11].lower()):
             return False
 
-        if filters["size"] and not self.check_digit(filters["size"], row[13].get_uint64()):
+        if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_uint64()):
             return False
 
-        if filters["bitrate"] and not self.check_digit(filters["bitrate"], row[10].get_uint64(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint64(), False):
             return False
 
-        if filters["freeslot"] and row[15].get_uint64() > 0:
+        if filters["filterslot"] and row[15].get_uint64() > 0:
             return False
 
-        if filters["country"] and not self.check_country(filters["country"], row[12]):
+        if filters["filtercc"] and not self.check_country(filters["filtercc"], row[12]):
             return False
 
-        if filters["type"] and not self.check_file_type(filters["type"], row[11]):
+        if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
             return False
 
         return True
@@ -950,63 +949,6 @@ class Search(UserInterface):
                 self.ResultsList.expand_all()
             else:
                 collapse_treeview(self.ResultsList, self.grouping_mode)
-
-    def set_filters(self, enable, f_in, f_out, size, bitrate, freeslot, country, f_type):
-
-        self.filters = {
-            "include": None,
-            "exclude": None,
-            "size": None,
-            "bitrate": None,
-            "freeslot": freeslot,
-            "country": None,
-            "type": None
-        }
-
-        self.active_filter_count = 0
-
-        if f_in:
-            try:
-                f_in = re.compile(f_in.lower())
-                self.filters["include"] = f_in
-            except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterInEntry, bg_color="#e04f5e", fg_color="white")
-            else:
-                update_widget_visuals(self.FilterInEntry)
-
-            self.active_filter_count += 1
-
-        if f_out:
-            try:
-                f_out = re.compile(f_out.lower())
-                self.filters["exclude"] = f_out
-            except sre_constants.error:
-                set_widget_fg_bg_css(self.FilterOutEntry, bg_color="#e04f5e", fg_color="white")
-            else:
-                update_widget_visuals(self.FilterOutEntry)
-
-            self.active_filter_count += 1
-
-        if size:
-            self.filters["size"] = size
-            self.active_filter_count += 1
-
-        if bitrate:
-            self.filters["bitrate"] = bitrate
-            self.active_filter_count += 1
-
-        if country:
-            self.filters["country"] = country.upper()
-            self.active_filter_count += 1
-
-        if f_type:
-            self.filters["type"] = f_type.lower()
-            self.active_filter_count += 1
-
-        if freeslot:
-            self.active_filter_count += 1
-
-        self.update_results_model()
 
     def update_wish_button(self):
 
@@ -1376,41 +1318,90 @@ class Search(UserInterface):
     def on_copy_search_term(self, *args):
         copy_text(self.text)
 
-    def push_history(self, widget, title):
+    def push_history(self, filter_id, value):
 
-        text = widget.get_active_text()
-        if not text.strip():
-            return None
+        if not value:
+            return
 
-        text = text.strip()
-        history = config.sections["searches"][title]
+        history = config.sections["searches"].get(filter_id)
 
-        if text in history:
-            history.remove(text)
+        if history is None:
+            return
+
+        if value in history:
+            history.remove(value)
 
         elif len(history) >= 5:
             del history[-1]
 
-        history.insert(0, text)
+        history.insert(0, value)
         config.write_configuration()
 
-        self.add_combo(widget, text)
-        return text
+        self.add_combo(self.filter_widgets[filter_id], value)
 
     def on_refilter(self, *args):
 
         if self.clearing_filters:
             return
 
-        f_in = self.push_history(self.FilterIn, "filterin")
-        f_out = self.push_history(self.FilterOut, "filterout")
-        f_size = self.push_history(self.FilterSize, "filtersize")
-        f_br = self.push_history(self.FilterBitrate, "filterbr")
-        f_free = self.FilterFreeSlot.get_active()
-        f_country = self.push_history(self.FilterCountry, "filtercc")
-        f_type = self.push_history(self.FilterType, "filtertype")
+        filter_in = self.FilterIn.get_active_text().strip().lower()
+        filter_out = self.FilterOut.get_active_text().strip().lower()
 
-        self.set_filters(1, f_in, f_out, f_size, f_br, f_free, f_country, f_type)
+        if filter_in:
+            try:
+                filter_in = re.compile(filter_in)
+            except sre_constants.error:
+                filter_in = None
+
+        if filter_out:
+            try:
+                filter_out = re.compile(filter_out)
+            except sre_constants.error:
+                filter_out = None
+
+        filters = {
+            "filterin": filter_in,
+            "filterout": filter_out,
+            "filtersize": self.FilterSize.get_active_text().strip(),
+            "filterbr": self.FilterBitrate.get_active_text().strip(),
+            "filterslot": self.FilterFreeSlot.get_active(),
+            "filtercc": self.FilterCountry.get_active_text().strip().upper(),
+            "filtertype": self.FilterType.get_active_text().strip().lower()
+        }
+
+        if self.filters == filters:
+            # Filters have not changed, no need to refilter
+            return
+
+        self.active_filter_count = 0
+
+        # Set red background if invalid regex pattern is detected
+        if filter_in is None:
+            set_widget_fg_bg_css(self.FilterIn.get_child(), bg_color="#e04f5e", fg_color="white")
+        else:
+            update_widget_visuals(self.FilterIn.get_child())
+
+        if filter_out is None:
+            set_widget_fg_bg_css(self.FilterOut.get_child(), bg_color="#e04f5e", fg_color="white")
+        else:
+            update_widget_visuals(self.FilterOut.get_child())
+
+        # Add filters to history
+        for filter_id, value in filters.items():
+            try:
+                value = value.pattern
+            except AttributeError:
+                pass
+
+            if not value:
+                continue
+
+            self.push_history(filter_id, value)
+            self.active_filter_count += 1
+
+        # Apply the new filters
+        self.filters = filters
+        self.update_results_model()
 
     def on_filter_entry_changed(self, widget):
         if not widget.get_text():
@@ -1420,16 +1411,15 @@ class Search(UserInterface):
 
         self.clearing_filters = True
 
-        self.FilterInEntry.set_text("")
-        self.FilterOutEntry.set_text("")
-        self.FilterSizeEntry.set_text("")
-        self.FilterBitrateEntry.set_text("")
-        self.FilterCountryEntry.set_text("")
-        self.FilterTypeEntry.set_text("")
-        self.FilterFreeSlot.set_active(False)
+        for widget in self.filter_widgets.values():
+            if isinstance(widget, Gtk.ComboBoxText):
+                widget.get_child().set_text("")
+
+            elif isinstance(widget, Gtk.CheckButton):
+                widget.set_active(False)
 
         self.clearing_filters = False
-        self.FilterInEntry.grab_focus()
+        self.FilterIn.get_child().grab_focus()
         self.on_refilter()
 
     def on_clear(self, *args):
