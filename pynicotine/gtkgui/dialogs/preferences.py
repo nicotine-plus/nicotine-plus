@@ -1870,7 +1870,6 @@ class SearchesFrame(UserInterface):
             "searches": {
                 "maxresults": self.MaxResults,
                 "enablefilters": self.EnableFilters,
-                "re_filter": self.RegexpFilters,
                 "defilter": None,
                 "search_results": self.ToggleResults,
                 "max_displayed_results": self.MaxDisplayedResults,
@@ -1923,7 +1922,6 @@ class SearchesFrame(UserInterface):
             "searches": {
                 "maxresults": self.MaxResults.get_value_as_int(),
                 "enablefilters": self.EnableFilters.get_active(),
-                "re_filter": self.RegexpFilters.get_active(),
                 "defilter": [
                     self.FilterIn.get_text(),
                     self.FilterOut.get_text(),
