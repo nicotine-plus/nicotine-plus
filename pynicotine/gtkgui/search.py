@@ -109,6 +109,7 @@ class Searches(IconNotebook):
         for tab in self.pages.values():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
+                tab.populate_filters(set_default_filters=False)
                 return True
 
     def on_search_mode(self, action, state):
