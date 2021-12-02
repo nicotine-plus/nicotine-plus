@@ -507,17 +507,27 @@ class Search(UserInterface):
             return
 
         sfilter = config.sections["searches"]["defilter"]
+        num_filters = len(sfilter)
 
-        self.FilterIn.get_child().set_text(str(sfilter[0]))
-        self.FilterOut.get_child().set_text(str(sfilter[1]))
-        self.FilterSize.get_child().set_text(str(sfilter[2]))
-        self.FilterBitrate.get_child().set_text(str(sfilter[3]))
-        self.FilterFreeSlot.set_active(sfilter[4])
+        if num_filters > 0:
+            self.FilterIn.get_child().set_text(str(sfilter[0]))
 
-        if len(sfilter) > 5:
+        if num_filters > 1:
+            self.FilterOut.get_child().set_text(str(sfilter[1]))
+
+        if num_filters > 2:
+            self.FilterSize.get_child().set_text(str(sfilter[2]))
+
+        if num_filters > 3:
+            self.FilterBitrate.get_child().set_text(str(sfilter[3]))
+
+        if num_filters > 4:
+            self.FilterFreeSlot.set_active(bool(sfilter[4]))
+
+        if num_filters > 5:
             self.FilterCountry.get_child().set_text(str(sfilter[5]))
 
-        if len(sfilter) > 6:
+        if num_filters > 6:
             self.FilterType.get_child().set_text(str(sfilter[6]))
 
         self.on_refilter()
