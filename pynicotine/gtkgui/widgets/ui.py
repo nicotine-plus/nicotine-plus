@@ -37,18 +37,18 @@ class UserInterface:
         try:
             filename = os.path.join(GUI_DIR, filename)
 
-            with open(filename, "r", encoding="utf-8") as f:
+            with open(filename, "r", encoding="utf-8") as file_handle:
                 if Gtk.get_major_version() == 4:
                     builder = Gtk.Builder(self)
                     builder.add_from_string(
-                        f.read()
+                        file_handle.read()
                         .replace("GtkRadioButton", "GtkCheckButton")
                     )
                     Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
                 else:
                     builder = Gtk.Builder()
                     builder.add_from_string(
-                        f.read()
+                        file_handle.read()
                         .replace("<property name=\"focusable\">0</property>",
                                  "<property name=\"can-focus\">0</property>")
                     )
@@ -64,9 +64,9 @@ class UserInterface:
                 except TypeError:
                     pass
 
-        except Exception as e:
+        except Exception as error:
             log.add(_("Failed to load ui file %(file)s: %(error)s"), {
                 "file": filename,
-                "error": e
+                "error": error
             })
             sys.exit()

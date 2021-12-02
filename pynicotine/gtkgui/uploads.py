@@ -39,7 +39,7 @@ class Uploads(TransferList):
         self.aborted_status = _("Aborted")
         self.tray_template = _("Uploads: %(speed)s")
 
-        TransferList.__init__(self, frame, type='upload')
+        TransferList.__init__(self, frame, transfer_type="upload")
 
         self.popup_menu_clear.setup(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
@@ -53,7 +53,7 @@ class Uploads(TransferList):
             ("#" + _("Clear All…"), self.on_try_clear_all),
         )
 
-    def on_try_clear_queued(self, *args):
+    def on_try_clear_queued(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -63,7 +63,7 @@ class Uploads(TransferList):
             callback_data="queued"
         )
 
-    def on_try_clear_all(self, *args):
+    def on_try_clear_all(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -73,7 +73,7 @@ class Uploads(TransferList):
             callback_data="all"
         )
 
-    def on_open_file_manager(self, *args):
+    def on_open_file_manager(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -84,7 +84,7 @@ class Uploads(TransferList):
         command = config.sections["ui"]["filemanager"]
         open_file_path(transfer.path, command)
 
-    def on_play_files(self, *args):
+    def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
             basename = str.split(transfer.filename, '\\')[-1]
@@ -94,7 +94,7 @@ class Uploads(TransferList):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
-    def on_browse_folder(self, *args):
+    def on_browse_folder(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -106,7 +106,7 @@ class Uploads(TransferList):
 
         self.frame.np.userbrowse.browse_user(user, folder=folder)
 
-    def on_abort_user(self, *args):
+    def on_abort_user(self, *_args):
 
         self.select_transfers()
 
@@ -117,15 +117,15 @@ class Uploads(TransferList):
 
         self.abort_transfers()
 
-    def on_clear_aborted(self, *args):
+    def on_clear_aborted(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off"])
 
-    def on_clear_failed(self, *args):
+    def on_clear_failed(self, *_args):
         self.clear_transfers(["Cannot connect", "Local file error", "Remote file error"])
 
-    def on_clear_finished_aborted(self, *args):
+    def on_clear_finished_aborted(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished"])
 
-    def on_clear_finished_failed(self, *args):
+    def on_clear_finished_failed(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished",
                               "Cannot connect", "Local file error", "Remote file error"])

@@ -154,7 +154,7 @@ class Interests(UserInterface):
             ("#" + _("_Search for Item"), self.on_r_recommend_search)
         )
 
-        self.ru_popup_menu = popup = PopupMenu(self.frame, self.RecommendationUsersList, self.on_popup_ru_menu)
+        popup = PopupMenu(self.frame, self.RecommendationUsersList, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         self.update_visuals()
@@ -182,7 +182,7 @@ class Interests(UserInterface):
         self.frame.SearchEntry.set_text(item)
         self.frame.change_main_page("search")
 
-    def on_add_thing_i_like(self, widget, *args):
+    def on_add_thing_i_like(self, widget, *_args):
 
         thing = widget.get_text().lower()
         widget.set_text("")
@@ -190,7 +190,7 @@ class Interests(UserInterface):
         if self.frame.np.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
-    def on_add_thing_i_dislike(self, widget, *args):
+    def on_add_thing_i_dislike(self, widget, *_args):
 
         thing = widget.get_text().lower()
         widget.set_text("")
@@ -198,7 +198,7 @@ class Interests(UserInterface):
         if self.frame.np.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
-    def on_remove_thing_i_like(self, *args):
+    def on_remove_thing_i_like(self, *_args):
 
         thing = self.til_popup_menu.get_user()
 
@@ -208,10 +208,10 @@ class Interests(UserInterface):
         self.likes_model.remove(self.likes[thing])
         del self.likes[thing]
 
-    def on_til_recommend_search(self, *args):
+    def on_til_recommend_search(self, *_args):
         self.recommend_search(self.til_popup_menu.get_user())
 
-    def on_remove_thing_i_dislike(self, *args):
+    def on_remove_thing_i_dislike(self, *_args):
 
         thing = self.tidl_popup_menu.get_user()
 
@@ -221,7 +221,7 @@ class Interests(UserInterface):
         self.dislikes_model.remove(self.dislikes[thing])
         del self.dislikes[thing]
 
-    def on_tidl_recommend_search(self, *args):
+    def on_tidl_recommend_search(self, *_args):
         self.recommend_search(self.tidl_popup_menu.get_user())
 
     def on_like_recommendation(self, action, state, thing=None):
@@ -252,22 +252,22 @@ class Interests(UserInterface):
 
         action.set_state(state)
 
-    def on_recommend_item(self, *args):
+    def on_recommend_item(self, *_args):
 
         thing = self.til_popup_menu.get_user()
         self.frame.np.interests.request_item_recommendations(thing)
         self.frame.np.interests.request_item_similar_users(thing)
 
-    def on_recommend_recommendation(self, *args):
+    def on_recommend_recommendation(self, *_args):
 
         thing = self.r_popup_menu.get_user()
         self.frame.np.interests.request_item_recommendations(thing)
         self.frame.np.interests.request_item_similar_users(thing)
 
-    def on_r_recommend_search(self, *args):
+    def on_r_recommend_search(self, *_args):
         self.recommend_search(self.r_popup_menu.get_user())
 
-    def on_recommendations_clicked(self, *args):
+    def on_recommendations_clicked(self, *_args):
 
         if not self.likes and not self.dislikes:
             self.frame.np.interests.request_global_recommendations()
@@ -275,7 +275,7 @@ class Interests(UserInterface):
 
         self.frame.np.interests.request_recommendations()
 
-    def on_similar_users_clicked(self, *args):
+    def on_similar_users_clicked(self, *_args):
         self.frame.np.interests.request_similar_users()
 
     def set_recommendations(self, recommendations):
@@ -336,7 +336,8 @@ class Interests(UserInterface):
         self.recommendation_users_model.set(
             self.recommendation_users[msg.user], 2, h_speed, 3, h_files, 5, avgspeed, 6, files)
 
-    def get_selected_item(self, treeview, column=0):
+    @staticmethod
+    def get_selected_item(treeview, column=0):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -348,17 +349,11 @@ class Interests(UserInterface):
     def on_popup_til_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=0)
-        if item is None:
-            return True
-
         menu.set_user(item)
 
     def on_popup_r_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=1)
-        if item is None:
-            return True
-
         menu.set_user(item)
 
         actions = menu.get_actions()
@@ -372,13 +367,10 @@ class Interests(UserInterface):
     def on_popup_ru_menu(self, menu, widget):
 
         user = self.get_selected_item(widget, column=1)
-        if user is None:
-            return True
-
         menu.set_user(user)
         menu.toggle_user_items()
 
-    def on_ru_row_activated(self, treeview, path, column):
+    def on_ru_row_activated(self, treeview, _path, _column):
 
         user = self.get_selected_item(treeview, column=1)
 
@@ -386,8 +378,9 @@ class Interests(UserInterface):
             self.frame.np.privatechats.show_user(user)
             self.frame.change_main_page("private")
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_user_status_tooltip(widget, x, y, tooltip, 4)
+    @staticmethod
+    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
+        return show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 4)
 
     def update_visuals(self):
 

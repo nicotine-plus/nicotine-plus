@@ -199,4 +199,4 @@ class Console:
 
 
 log = Logger()
-console = Console(log)
+Console(log)

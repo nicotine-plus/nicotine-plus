@@ -53,20 +53,20 @@ from pynicotine.utils import human_speed
 
 class TransferList(UserInterface):
 
-    def __init__(self, frame, type):
+    def __init__(self, frame, transfer_type):
 
-        super().__init__("ui/" + type + "s.ui")
-        getattr(frame, type + "s_content").add(self.Main)
+        super().__init__("ui/" + transfer_type + "s.ui")
+        getattr(frame, transfer_type + "s_content").add(self.Main)
 
         self.frame = frame
-        self.type = type
-        self.page_id = self.type + "s"
+        self.type = transfer_type
+        self.page_id = transfer_type + "s"
 
-        self.user_counter = getattr(frame, "%sUsers" % type.title())
-        self.file_counter = getattr(frame, "%sFiles" % type.title())
-        self.bandwidth_status = getattr(frame, "%s_status" % type)
-        self.tray_callback = getattr(frame.tray_icon, "set_%s_status" % type)
-        grouping_button = getattr(frame, "ToggleTree%ss" % type.title())
+        self.user_counter = getattr(frame, "%sUsers" % transfer_type.title())
+        self.file_counter = getattr(frame, "%sFiles" % transfer_type.title())
+        self.bandwidth_status = getattr(frame, "%s_status" % transfer_type)
+        self.tray_callback = getattr(frame.tray_icon, "set_%s_status" % transfer_type)
+        grouping_button = getattr(frame, "ToggleTree%ss" % transfer_type.title())
 
         if Gtk.get_major_version() == 4:
             grouping_button.set_icon_name("view-list-symbolic")
@@ -87,6 +87,9 @@ class TransferList(UserInterface):
         self.transfer_list = []
         self.users = {}
         self.paths = {}
+        self.selected_users = set()
+        self.selected_transfers = set()
+        self.tree_users = None
 
         # Status list
         self.statuses = {
@@ -117,10 +120,6 @@ class TransferList(UserInterface):
             "Remote file error": _("Remote file error")
         }
 
-        # String templates
-        self.extension_list_template = _("All %(ext)s")
-        self.files_template = _("%(number)2s files ")
-
         self.transfersmodel = Gtk.TreeStore(
             str,                   # (0)  user
             str,                   # (1)  path
@@ -142,7 +141,7 @@ class TransferList(UserInterface):
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            type, self.Transfers,
+            transfer_type, self.Transfers,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -168,21 +167,21 @@ class TransferList(UserInterface):
 
         self.Transfers.set_model(self.transfersmodel)
 
-        self.status_page = getattr(frame, "%ss_status_page" % self.type)
-        self.expand_button = getattr(frame, "Expand%ss" % self.type.title())
+        self.status_page = getattr(frame, "%ss_status_page" % transfer_type)
+        self.expand_button = getattr(frame, "Expand%ss" % transfer_type.title())
 
-        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % self.type]))
-        action = Gio.SimpleAction.new_stateful("%sgrouping" % self.type, GLib.VariantType.new("s"), state)
+        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
+        action = Gio.SimpleAction.new_stateful("%sgrouping" % transfer_type, GLib.VariantType.new("s"), state)
         action.connect("change-state", self.on_toggle_tree)
         frame.MainWindow.add_action(action)
         action.change_state(state)
 
         menu = create_grouping_menu(
-            frame.MainWindow, config.sections["transfers"]["group%ss" % self.type], self.on_toggle_tree)
+            frame.MainWindow, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
         grouping_button.set_menu_model(menu)
 
         self.expand_button.connect("toggled", self.on_expand_tree)
-        self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % self.type])
+        self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
 
         self.popup_menu_users = PopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
@@ -274,14 +273,14 @@ class TransferList(UserInterface):
     def new_transfer_notification(self):
         self.frame.request_tab_hilite(self.page_id)
 
-    def on_ban(self, *args):
+    def on_ban(self, *_args):
 
         self.select_transfers()
 
         for user in self.selected_users:
             self.frame.np.network_filter.ban_user(user)
 
-    def on_file_search(self, *args):
+    def on_file_search(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
@@ -350,8 +349,8 @@ class TransferList(UserInterface):
             self.update_specific(transfer)
 
         elif self.transfer_list:
-            for transfer in reversed(self.transfer_list):
-                self.update_specific(transfer)
+            for transfer_i in reversed(self.transfer_list):
+                self.update_specific(transfer_i)
 
         if forceupdate or finished or (curtime - last_ui_update) > 1:
 
@@ -391,22 +390,28 @@ class TransferList(UserInterface):
         self.update_num_users_files()
         self.last_ui_update = time()
 
-    def get_hplace(self, place):
+    @staticmethod
+    def get_hplace(place):
         return str(place) if place > 0 else ""
 
-    def get_hsize(self, currentbytes, size):
+    @staticmethod
+    def get_hsize(currentbytes, size):
         return "%s / %s" % (human_size(currentbytes), human_size(size))
 
-    def get_hspeed(self, speed):
+    @staticmethod
+    def get_hspeed(speed):
         return human_speed(speed) if speed > 0 else ""
 
-    def get_helapsed(self, elapsed):
+    @staticmethod
+    def get_helapsed(elapsed):
         return human_length(elapsed) if elapsed > 0 else ""
 
-    def get_percent(self, currentbytes, size):
+    @staticmethod
+    def get_percent(currentbytes, size):
         return min(((100 * int(currentbytes)) / int(size)), 100) if size > 0 else 100
 
-    def get_size(self, size):
+    @staticmethod
+    def get_size(size):
 
         try:
             size = int(size)
@@ -535,9 +540,9 @@ class TransferList(UserInterface):
 
             return
 
-        fn = transfer.filename
+        filename = transfer.filename
         user = transfer.user
-        shortfn = fn.split("\\")[-1]
+        shortfn = filename.split("\\")[-1]
 
         if self.tree_users != "ungrouped":
             # Group by folder or user
@@ -636,7 +641,7 @@ class TransferList(UserInterface):
                 hspeed,
                 helapsed,
                 transfer.timeleft or "",
-                fn,
+                filename,
                 GObject.Value(GObject.TYPE_UINT64, size),
                 GObject.Value(GObject.TYPE_UINT64, currentbytes),
                 GObject.Value(GObject.TYPE_UINT64, speed),
@@ -786,10 +791,11 @@ class TransferList(UserInterface):
 
         action.set_state(state)
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
-        return show_file_path_tooltip(widget, x, y, tooltip, 10)
+    @staticmethod
+    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
+        return show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 10)
 
-    def on_popup_menu(self, menu, widget):
+    def on_popup_menu(self, menu, _widget):
 
         self.select_transfers()
         num_selected_transfers = len(self.selected_transfers)
@@ -797,24 +803,30 @@ class TransferList(UserInterface):
 
         self.populate_popup_menu_users()
 
-    def on_row_activated(self, treeview, path, column):
+    def on_row_activated(self, _treeview, _path, _column):
 
         self.select_transfers()
-        dc = config.sections["transfers"]["%s_doubleclick" % self.type]
+        action = config.sections["transfers"]["%s_doubleclick" % self.type]
 
-        if dc == 1:  # Send to Player
+        if action == 1:    # Send to Player
             self.on_play_files()
-        elif dc == 2:  # Open in File Manager
+
+        elif action == 2:  # Open in File Manager
             self.on_open_file_manager()
-        elif dc == 3:  # Search
+
+        elif action == 3:  # Search
             self.on_file_search()
-        elif dc == 4:  # Pause / Abort
+
+        elif action == 4:  # Pause / Abort
             self.abort_transfers()
-        elif dc == 5:  # Clear
+
+        elif action == 5:  # Clear
             self.abort_transfers(clear=True)
-        elif dc == 6:  # Resume / Retry
+
+        elif action == 6:  # Resume / Retry
             self.retry_transfers()
-        elif dc == 7:  # Browse Folder
+
+        elif action == 7:  # Browse Folder
             self.on_browse_folder()
 
     def on_select_user_transfers(self, *args):
@@ -834,35 +846,35 @@ class TransferList(UserInterface):
 
         self.select_transfers()
 
-    def on_abort_transfers_accelerator(self, *args):
+    def on_abort_transfers_accelerator(self, *_args):
         """ T: abort transfer """
 
         self.select_transfers()
         self.abort_transfers()
         return True
 
-    def on_retry_transfers_accelerator(self, *args):
+    def on_retry_transfers_accelerator(self, *_args):
         """ R: retry transfers """
 
         self.select_transfers()
         self.retry_transfers()
         return True
 
-    def on_clear_transfers_accelerator(self, *args):
+    def on_clear_transfers_accelerator(self, *_args):
         """ Delete: clear transfers """
 
         self.select_transfers()
         self.abort_transfers(clear=True)
         return True
 
-    def on_file_properties_accelerator(self, *args):
+    def on_file_properties_accelerator(self, *_args):
         """ Alt+Return: show file properties dialog """
 
         self.select_transfers()
         self.on_file_properties()
         return True
 
-    def on_file_properties(self, *args):
+    def on_file_properties(self, *_args):
 
         data = []
 
@@ -899,36 +911,36 @@ class TransferList(UserInterface):
         if data:
             FileProperties(self.frame, data).show()
 
-    def on_copy_file_path(self, *args):
+    def on_copy_file_path(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             copy_text(transfer.filename)
 
-    def on_copy_url(self, *args):
+    def on_copy_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             copy_file_url(transfer.user, transfer.filename)
 
-    def on_copy_dir_url(self, *args):
+    def on_copy_dir_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
 
-    def on_retry_transfer(self, *args):
+    def on_retry_transfer(self, *_args):
         self.select_transfers()
         self.retry_transfers()
 
-    def on_abort_transfer(self, *args):
+    def on_abort_transfer(self, *_args):
         self.select_transfers()
         self.abort_transfers()
 
-    def on_clear_transfer(self, *args):
+    def on_clear_transfer(self, *_args):
         self.select_transfers()
         self.abort_transfers(clear=True)
 
@@ -943,8 +955,8 @@ class TransferList(UserInterface):
             elif data == "all":
                 self.clear()
 
-    def on_clear_queued(self, *args):
+    def on_clear_queued(self, *_args):
         self.clear_transfers(["Queued"])
 
-    def on_clear_finished(self, *args):
+    def on_clear_finished(self, *_args):
         self.clear_transfers(["Finished"])

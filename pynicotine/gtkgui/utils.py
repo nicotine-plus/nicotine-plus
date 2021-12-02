@@ -32,16 +32,16 @@ from gi.repository import Gtk
 def _parse_accelerator(accelerator):
 
     keys = keycodes = []
-    *args, key, mods = Gtk.accelerator_parse(accelerator)
+    *_args, key, mods = Gtk.accelerator_parse(accelerator)
 
     if not key:
         return keycodes, mods
 
     if Gtk.get_major_version() == 4:
-        valid, keys = Gdk.Display.get_default().map_keyval(key)
+        _valid, keys = Gdk.Display.get_default().map_keyval(key)
     else:
         keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
-        valid, keys = keymap.get_entries_for_keyval(key)
+        _valid, keys = keymap.get_entries_for_keyval(key)
 
     keycodes = set(key.keycode for key in keys)
     return keycodes, mods

@@ -151,10 +151,10 @@ class FastConfigureAssistant(UserInterface):
 
         self.FastConfigureDialog.set_page_complete(page, complete)
 
-    def on_entry_changed(self, *args):
+    def on_entry_changed(self, *_args):
         self.reset_completeness()
 
-    def on_add_share_selected(self, selected, data):
+    def on_add_share_selected(self, selected, _data):
 
         shared = config.sections["transfers"]["shared"]
         buddy_shared = config.sections["transfers"]["buddyshared"]
@@ -180,7 +180,7 @@ class FastConfigureAssistant(UserInterface):
             self.sharelist.insert_with_valuesv(-1, self.column_numbers, [virtual, folder])
             self.shared_folders.append((virtual, folder))
 
-    def on_add_share(self, *args):
+    def on_add_share(self, *_args):
 
         choose_dir(
             parent=self.FastConfigureDialog,
@@ -188,21 +188,21 @@ class FastConfigureAssistant(UserInterface):
             callback=self.on_add_share_selected
         )
 
-    def on_remove_share(self, *args):
+    def on_remove_share(self, *_args):
 
         model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
-    def on_set_up(self, *args):
+    def on_set_up(self, *_args):
         self.FastConfigureDialog.next_page()
         self.username.grab_focus()
 
-    def on_prepare(self, *args):
+    def on_prepare(self, *_args):
         self.reset_completeness()
 
-    def on_close(self, *args):
+    def on_close(self, *_args):
 
         # userpasspage
         config.sections["server"]["login"] = self.username.get_text()
@@ -218,5 +218,5 @@ class FastConfigureAssistant(UserInterface):
 
         self.FastConfigureDialog.destroy()
 
-    def on_cancel(self, *args):
+    def on_cancel(self, *_args):
         self.FastConfigureDialog.destroy()

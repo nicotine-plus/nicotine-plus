@@ -28,7 +28,7 @@ from gi.repository import Pango
 
 
 # We need to keep a reference to GtkFileChooserNative, as GTK does not keep it alive
-active_chooser = None
+ACTIVE_CHOOSER = None
 
 
 def _on_selected(dialog, response_id, callback, callback_data):
@@ -71,22 +71,20 @@ def _set_filechooser_folder(dialog, folder_path):
 
 def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Select a Folder"), multichoice=True):
 
+    global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = Gtk.FileChooserNative.new(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
     except AttributeError:
-        self = Gtk.FileChooserDialog(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
         self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
-
-    global active_chooser
-    active_chooser = self
 
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
@@ -104,22 +102,20 @@ def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Se
 
 def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("Select a File"), multiple=False):
 
+    global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = Gtk.FileChooserNative.new(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
-        self = Gtk.FileChooserDialog(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
         self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
-
-    global active_chooser
-    active_chooser = self
 
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
@@ -155,22 +151,20 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
         except Exception:
             chooser.set_preview_widget_active(False)
 
+    global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = Gtk.FileChooserNative.new(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
-        self = Gtk.FileChooserDialog(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
         self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Open"), Gtk.ResponseType.ACCEPT)
-
-    global active_chooser
-    active_chooser = self
 
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
@@ -193,22 +187,20 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
 
 def save_file(parent, callback, callback_data=None, initialdir="~", initialfile="", title=None):
 
+    global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = Gtk.FileChooserNative.new(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.SAVE
         )
     except AttributeError:
-        self = Gtk.FileChooserDialog(
+        self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
             parent=parent,
             title=title,
             action=Gtk.FileChooserAction.SAVE
         )
         self.add_buttons(_("_Cancel"), Gtk.ResponseType.CANCEL, _("_Save"), Gtk.ResponseType.ACCEPT)
-
-    global active_chooser
-    active_chooser = self
 
     self.connect("response", _on_selected, callback, callback_data)
     self.set_modal(True)
@@ -266,7 +258,7 @@ class FileChooserButton:
 
         self.button.connect("clicked", self.open_file_chooser)
 
-    def open_file_chooser_response(self, selected, data):
+    def open_file_chooser_response(self, selected, _data):
 
         self.set_path(selected)
 
@@ -277,7 +269,7 @@ class FileChooserButton:
             # No function defined
             return
 
-    def open_file_chooser(self, *args):
+    def open_file_chooser(self, *_args):
 
         if self.chooser_type == "folder":
             choose_dir(

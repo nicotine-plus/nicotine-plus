@@ -62,14 +62,14 @@ class PrivateChats(IconNotebook):
 
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
 
-    def on_switch_chat(self, notebook, page, page_num):
+    def on_switch_chat(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.page_id:
             return
 
-        for user, tab in list(self.pages.items()):
+        for user, tab in self.pages.items():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)
+                GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
@@ -77,7 +77,7 @@ class PrivateChats(IconNotebook):
                     tab.opened = True
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
-                self.frame.notifications.clear("private", tab.user)
+                self.frame.notifications.clear("private", user)
                 break
 
     def clear_notifications(self):
@@ -87,10 +87,10 @@ class PrivateChats(IconNotebook):
 
         page = self.get_nth_page(self.get_current_page())
 
-        for user, tab in list(self.pages.items()):
+        for user, tab in self.pages.items():
             if tab.Main == page:
                 # Remove hilite
-                self.frame.notifications.clear("private", tab.user)
+                self.frame.notifications.clear("private", user)
                 break
 
     def get_user_status(self, msg):
@@ -154,7 +154,7 @@ class PrivateChats(IconNotebook):
             page.update_tags()
 
     def server_login(self):
-        for user, page in self.pages.items():
+        for page in self.pages.values():
             page.server_login()
 
     def server_disconnect(self):
@@ -284,7 +284,7 @@ class PrivateChat(UserInterface):
     def set_label(self, label):
         self.popup_menu_user.set_widget(label)
 
-    def on_popup_menu_chat(self, menu, widget):
+    def on_popup_menu_chat(self, menu, _widget):
 
         self.popup_menu_user.toggle_user_items()
 
@@ -292,16 +292,16 @@ class PrivateChat(UserInterface):
         actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
         actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
-    def on_popup_menu_user(self, menu, widget):
+    def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user.toggle_user_items()
 
-    def on_find_chat_log(self, *args):
+    def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
 
-    def on_view_chat_log(self, *args):
+    def on_view_chat_log(self, *_args):
         open_log(config.sections["logging"]["privatelogsdir"], self.user)
 
-    def on_delete_chat_log_response(self, dialog, response_id, data):
+    def on_delete_chat_log_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
@@ -309,7 +309,7 @@ class PrivateChat(UserInterface):
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.chat_textview.clear()
 
-    def on_delete_chat_log(self, *args):
+    def on_delete_chat_log(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -426,9 +426,9 @@ class PrivateChat(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def user_name_event(self, x, y, user):
+    def user_name_event(self, pos_x, pos_y, _user):
         self.popup_menu_user.toggle_user_items()
-        self.popup_menu_user.popup(x, y, button=1)
+        self.popup_menu_user.popup(pos_x, pos_y, button=1)
 
     def create_tags(self):
 
@@ -468,7 +468,7 @@ class PrivateChat(UserInterface):
                     self.tag_username, self.tag_my_username):
             self.chat_textview.update_tag(tag)
 
-    def on_close(self, *args):
+    def on_close(self, *_args):
 
         self.frame.notifications.clear("private", self.user)
         del self.chats.pages[self.user]
@@ -479,7 +479,7 @@ class PrivateChat(UserInterface):
         if self.chats.get_n_pages() == 0:
             self.frame.private_status_page.show()
 
-    def on_close_all_tabs(self, *args):
+    def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()
 
     def set_completion_list(self, completion_list):

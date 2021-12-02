@@ -144,10 +144,10 @@ class TextView:
             _usertag(buffer, line)
 
         if scroll:
-            va = self.scrollable.get_vadjustment()
+            alignment = self.scrollable.get_vadjustment()
 
             # Scroll to bottom if we had scrolled up less than ~2 lines previously
-            if (va.get_value() + va.get_page_size()) >= va.get_upper() - 40:
+            if (alignment.get_value() + alignment.get_page_size()) >= alignment.get_upper() - 40:
                 GLib.idle_add(self.scroll_bottom, priority=GLib.PRIORITY_LOW)
 
         return linenr
@@ -159,7 +159,7 @@ class TextView:
 
         buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                              self.pressed_x, self.pressed_y)
-        over_text, iterator = self.textview.get_iter_at_location(buf_x, buf_y)
+        _over_text, iterator = self.textview.get_iter_at_location(buf_x, buf_y)
         return iterator.get_tags()
 
     def get_url_for_selected_pos(self):
@@ -212,13 +212,13 @@ class TextView:
 
     """ Events """
 
-    def _callback_pressed(self, controller, num_p, x, y):
-        self.pressed_x = x
-        self.pressed_y = y
+    def _callback_pressed(self, _controller, _num_p, pressed_x, pressed_y):
+        self.pressed_x = pressed_x
+        self.pressed_y = pressed_y
 
-    def _callback_released(self, controller, num_p, x, y):
+    def _callback_released(self, _controller, _num_p, pressed_x, pressed_y):
 
-        if x != self.pressed_x or y != self.pressed_y:
+        if pressed_x != self.pressed_x or pressed_y != self.pressed_y:
             return False
 
         for tag in self.get_tags_for_selected_pos():
@@ -227,22 +227,22 @@ class TextView:
                 return True
 
             if hasattr(tag, "username"):
-                tag.callback(x, y, tag.username)
+                tag.callback(pressed_x, pressed_y, tag.username)
                 return True
 
         return False
 
-    def on_copy_text(self, *args):
+    def on_copy_text(self, *_args):
         self.textview.emit("copy-clipboard")
 
-    def on_copy_link(self, *args):
+    def on_copy_link(self, *_args):
         copy_text(self.get_url_for_selected_pos())
 
-    def on_copy_all_text(self, *args):
+    def on_copy_all_text(self, *_args):
         copy_all_text(self.textview)
 
-    def on_clear_all_text(self, *args):
+    def on_clear_all_text(self, *_args):
         self.clear()
 
-    def on_realize(self, *args):
+    def on_realize(self, *_args):
         self.scroll_bottom()

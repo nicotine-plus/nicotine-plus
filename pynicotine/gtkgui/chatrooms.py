@@ -84,17 +84,17 @@ class ChatRooms(IconNotebook):
 
         self.update_visuals()
 
-    def on_reordered_page(self, notebook, page, page_num, force=0):
+    def on_reordered_page(self, notebook, _page, _page_num):
 
         room_tab_order = {}
 
         # Find position of opened autojoined rooms
-        for room, page in self.pages.items():
+        for room, room_page in self.pages.items():
 
             if room not in config.sections["server"]["autojoin"]:
                 continue
 
-            room_tab_order[notebook.page_num(page.Main)] = room
+            room_tab_order[notebook.page_num(room_page.Main)] = room
 
         pos = 1000
 
@@ -113,14 +113,14 @@ class ChatRooms(IconNotebook):
         # Save
         config.sections["server"]["autojoin"] = new_autojoin
 
-    def on_switch_chat(self, notebook, page, page_num):
+    def on_switch_chat(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.page_id:
             return
 
         for room, tab in self.pages.items():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.ChatEntry.grab_focus() == -1)
+                GLib.idle_add(lambda: tab.ChatEntry.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
@@ -624,13 +624,14 @@ class ChatRoom(UserInterface):
 
         self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
-    def on_find_activity_log(self, *args):
+    def on_find_activity_log(self, *_args):
         self.LogSearchBar.set_search_mode(True)
 
-    def on_find_room_log(self, *args):
+    def on_find_room_log(self, *_args):
         self.ChatSearchBar.set_search_mode(True)
 
-    def get_selected_username(self, treeview):
+    @staticmethod
+    def get_selected_username(treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -639,7 +640,7 @@ class ChatRoom(UserInterface):
 
         return model.get_value(iterator, 2)
 
-    def on_row_activated(self, treeview, path, column):
+    def on_row_activated(self, treeview, _path, _column):
 
         user = self.get_selected_username(treeview)
 
@@ -647,20 +648,21 @@ class ChatRoom(UserInterface):
             self.frame.np.privatechats.show_user(user)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, menu, treeview):
+    def on_popup_menu(self, _menu, treeview):
 
         user = self.get_selected_username(treeview)
         if user is None:
             return True
 
         self.populate_user_menu(user)
+        return False
 
-    def on_popup_menu_log(self, menu, textview):
+    def on_popup_menu_log(self, menu, _textview):
 
         actions = menu.get_actions()
         actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
 
-    def on_popup_menu_chat(self, menu, textview):
+    def on_popup_menu_chat(self, menu, _textview):
 
         actions = menu.get_actions()
         actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
@@ -949,9 +951,9 @@ class ChatRoom(UserInterface):
 
         self.room_wall.update_visuals()
 
-    def user_name_event(self, x, y, user):
+    def user_name_event(self, pos_x, pos_y, user):
         self.populate_user_menu(user)
-        self.popup_menu.popup(x, y, button=1)
+        self.popup_menu.popup(pos_x, pos_y, button=1)
 
     def create_tags(self):
 
@@ -1060,7 +1062,7 @@ class ChatRoom(UserInterface):
 
         config.write_configuration()
 
-    def on_leave_room(self, *args):
+    def on_leave_room(self, *_args):
 
         if self.leaving:
             return
@@ -1076,16 +1078,19 @@ class ChatRoom(UserInterface):
 
         self.frame.np.chatrooms.request_leave_room(self.room)
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+    @staticmethod
+    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        status_tooltip = show_user_status_tooltip(widget, x, y, tooltip, 5)
-        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 8, strip_prefix="")
+        status_tooltip = show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 5)
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 8, strip_prefix="")
 
         if status_tooltip:
             return status_tooltip
 
         if country_tooltip:
             return country_tooltip
+
+        return None
 
     def on_log_toggled(self, widget):
 
@@ -1097,10 +1102,10 @@ class ChatRoom(UserInterface):
         if self.room not in config.sections["logging"]["rooms"]:
             config.sections["logging"]["rooms"].append(self.room)
 
-    def on_view_room_log(self, *args):
+    def on_view_room_log(self, *_args):
         open_log(config.sections["logging"]["roomlogsdir"], self.room)
 
-    def on_delete_room_log_response(self, dialog, response_id, data):
+    def on_delete_room_log_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
@@ -1109,7 +1114,7 @@ class ChatRoom(UserInterface):
             self.log_textview.clear()
             self.chat_textview.clear()
 
-    def on_delete_room_log(self, *args):
+    def on_delete_room_log(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -1118,7 +1123,7 @@ class ChatRoom(UserInterface):
             callback=self.on_delete_room_log_response
         )
 
-    def on_ignore_users_settings(self, *args):
+    def on_ignore_users_settings(self, *_args):
         self.frame.on_settings(page='IgnoredUsers')
 
     def set_completion_list(self, completion_list):

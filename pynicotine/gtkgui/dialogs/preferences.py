@@ -58,13 +58,12 @@ from pynicotine.utils import unescape
 
 class NetworkFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/network.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
-
+        self.preferences = preferences
+        self.frame = preferences.frame
         self.needportmap = False
 
         self.options = {
@@ -84,7 +83,7 @@ class NetworkFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         server = config.sections["server"]
 
@@ -168,9 +167,9 @@ class NetworkFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if logged_in != self.p.frame.np.logged_in:
+        if logged_in != self.frame.np.logged_in:
             message_dialog(
-                parent=self.p.dialog,
+                parent=self.preferences.dialog,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
             )
@@ -180,16 +179,16 @@ class NetworkFrame(UserInterface):
             self.on_change_password()
             return
 
-        if not self.p.frame.np.logged_in:
+        if not self.frame.np.logged_in:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
 
         self.frame.np.request_change_password(password)
 
-    def on_change_password(self, *args):
+    def on_change_password(self, *_args):
 
-        if self.p.frame.np.logged_in:
+        if self.frame.np.logged_in:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -198,38 +197,38 @@ class NetworkFrame(UserInterface):
                        + _("Enter password to use when logging in:"))
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Change Password"),
             message=message,
             visibility=False,
             callback=self.on_change_password_response,
-            callback_data=self.p.frame.np.logged_in
+            callback_data=self.frame.np.logged_in
         )
 
-    def on_toggle_upnp(self, widget, *args):
+    def on_toggle_upnp(self, widget, *_args):
 
         active = widget.get_active()
         self.needportmap = active
 
         self.UPnPInterval.get_parent().set_sensitive(active)
 
-    def on_modify_upnp_interval(self, widget, *args):
+    def on_modify_upnp_interval(self, *_args):
         self.needportmap = True
 
 
 class DownloadsFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/downloads.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
         self.needrescan = False
 
-        self.IncompleteDir = FileChooserButton(self.IncompleteDir, parent.dialog, "folder")
-        self.DownloadDir = FileChooserButton(self.DownloadDir, parent.dialog, "folder")
-        self.UploadDir = FileChooserButton(self.UploadDir, parent.dialog, "folder")
+        self.incomplete_dir = FileChooserButton(self.IncompleteDir, preferences.dialog, "folder")
+        self.download_dir = FileChooserButton(self.DownloadDir, preferences.dialog, "folder")
+        self.upload_dir = FileChooserButton(self.UploadDir, preferences.dialog, "folder")
 
         self.options = {
             "transfers": {
@@ -238,9 +237,9 @@ class DownloadsFrame(UserInterface):
                 "reverseorder": self.DownloadReverseOrder,
                 "remotedownloads": self.RemoteDownloads,
                 "uploadallowed": self.UploadsAllowed,
-                "incompletedir": self.IncompleteDir,
-                "downloaddir": self.DownloadDir,
-                "uploaddir": self.UploadDir,
+                "incompletedir": self.incomplete_dir,
+                "downloaddir": self.download_dir,
+                "uploaddir": self.upload_dir,
                 "downloadfilters": self.FilterView,
                 "enablefilters": self.DownloadFilter,
                 "downloadlimit": self.DownloadSpeed,
@@ -257,6 +256,7 @@ class DownloadsFrame(UserInterface):
             bool
         )
 
+        self.filtersiters = {}
         self.downloadfilters = []
 
         self.column_numbers = list(range(self.filterlist.get_n_columns()))
@@ -277,11 +277,11 @@ class DownloadsFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         self.UploadsAllowed.get_parent().set_sensitive(self.RemoteDownloads.get_active())
 
-        self.filtersiters = {}
+        self.filtersiters.clear()
         self.filterlist.clear()
 
         if config.sections["transfers"]["downloadfilters"]:
@@ -310,9 +310,9 @@ class DownloadsFrame(UserInterface):
                 "reverseorder": self.DownloadReverseOrder.get_active(),
                 "remotedownloads": self.RemoteDownloads.get_active(),
                 "uploadallowed": uploadallowed,
-                "incompletedir": self.IncompleteDir.get_path(),
-                "downloaddir": self.DownloadDir.get_path(),
-                "uploaddir": self.UploadDir.get_path(),
+                "incompletedir": self.incomplete_dir.get_path(),
+                "downloaddir": self.download_dir.get_path(),
+                "uploaddir": self.upload_dir.get_path(),
                 "downloadfilters": self.get_filter_list(),
                 "enablefilters": self.DownloadFilter.get_active(),
                 "downloadlimit": self.DownloadSpeed.get_value_as_int(),
@@ -328,7 +328,7 @@ class DownloadsFrame(UserInterface):
         sensitive = widget.get_active()
         self.UploadsAllowed.get_parent().set_sensitive(sensitive)
 
-    def on_add_filter_response(self, dialog, response_id, data):
+    def on_add_filter_response(self, dialog, response_id, _data):
 
         dfilter = dialog.get_response_value()
         escaped = dialog.get_second_response_value()
@@ -346,10 +346,10 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_add_filter(self, *args):
+    def on_add_filter(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
@@ -363,9 +363,9 @@ class DownloadsFrame(UserInterface):
 
         self.downloadfilters = []
 
-        df = sorted(self.filtersiters.keys())
+        download_filters = sorted(self.filtersiters.keys())
 
-        for dfilter in df:
+        for dfilter in download_filters:
             iterator = self.filtersiters[dfilter]
             dfilter = self.filterlist.get_value(iterator, 0)
             escaped = self.filterlist.get_value(iterator, 1)
@@ -373,7 +373,7 @@ class DownloadsFrame(UserInterface):
 
         return self.downloadfilters
 
-    def on_edit_filter_response(self, dialog, response_id, data):
+    def on_edit_filter_response(self, dialog, response_id, _data):
 
         new_dfilter = dialog.get_response_value()
         escaped = dialog.get_second_response_value()
@@ -400,7 +400,7 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_edit_filter(self, *args):
+    def on_edit_filter(self, *_args):
 
         dfilter = self.get_selected_filter()
 
@@ -411,7 +411,7 @@ class DownloadsFrame(UserInterface):
         escapedvalue = self.filterlist.get_value(iterator, 1)
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Edit Download Filter"),
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
@@ -432,7 +432,7 @@ class DownloadsFrame(UserInterface):
 
         return None
 
-    def on_remove_filter(self, *args):
+    def on_remove_filter(self, *_args):
 
         dfilter = self.get_selected_filter()
 
@@ -446,7 +446,7 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_default_filters(self, *args):
+    def on_default_filters(self, *_args):
 
         self.filtersiters = {}
         self.filterlist.clear()
@@ -459,16 +459,16 @@ class DownloadsFrame(UserInterface):
 
         self.on_verify_filter(self.VerifyFilters)
 
-    def on_verify_filter(self, widget):
+    def on_verify_filter(self, *_args):
 
         outfilter = "(\\\\("
 
-        df = sorted(self.filtersiters.keys())
+        download_filters = sorted(self.filtersiters.keys())
 
         proccessedfilters = []
         failed = {}
 
-        for dfilter in df:
+        for dfilter in download_filters:
 
             iterator = self.filtersiters[dfilter]
             dfilter = self.filterlist.get_value(iterator, 0)
@@ -485,10 +485,10 @@ class DownloadsFrame(UserInterface):
                 re.compile("(" + dfilter + ")")
                 outfilter += dfilter
                 proccessedfilters.append(dfilter)
-            except Exception as e:
-                failed[dfilter] = e
+            except Exception as error:
+                failed[dfilter] = error
 
-            if filter is not df[-1]:
+            if filter is not download_filters[-1]:
                 outfilter += "|"
 
         outfilter += ")$)"
@@ -496,8 +496,8 @@ class DownloadsFrame(UserInterface):
         try:
             re.compile(outfilter)
 
-        except Exception as e:
-            failed[outfilter] = e
+        except Exception as error:
+            failed[outfilter] = error
 
         if failed:
             errors = ""
@@ -517,7 +517,7 @@ class DownloadsFrame(UserInterface):
         else:
             self.VerifiedLabel.set_text(_("Filters Successful"))
 
-    def cell_toggle_callback(self, widget, index, treeview, pos):
+    def cell_toggle_callback(self, _widget, index, _treeview, pos):
 
         iterator = self.filterlist.get_iter(index)
         value = self.filterlist.get_value(iterator, pos)
@@ -529,12 +529,12 @@ class DownloadsFrame(UserInterface):
 
 class SharesFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/shares.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.needrescan = False
         self.shareddirs = []
@@ -574,9 +574,9 @@ class SharesFrame(UserInterface):
         transfers = config.sections["transfers"]
         self.shareslist.clear()
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
-        for (virtual, actual, *unused) in transfers["buddyshared"]:
+        for virtual, actual, *_unused in transfers["buddyshared"]:
 
             self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
                 str(virtual),
@@ -584,7 +584,7 @@ class SharesFrame(UserInterface):
                 True
             ])
 
-        for (virtual, actual, *unused) in transfers["shared"]:
+        for virtual, actual, *_unused in transfers["shared"]:
 
             self.shareslist.insert_with_valuesv(-1, self.column_numbers, [
                 str(virtual),
@@ -608,7 +608,7 @@ class SharesFrame(UserInterface):
             }
         }
 
-    def on_share_download_dir_toggled(self, widget):
+    def on_share_download_dir_toggled(self, *_args):
         self.needrescan = True
 
     def set_shared_dir_buddy_only(self, iterator, buddy_only):
@@ -631,7 +631,7 @@ class SharesFrame(UserInterface):
         self.bshareddirs.remove(share)
         self.shareddirs.append(share)
 
-    def cell_toggle_callback(self, widget, index, treeview):
+    def cell_toggle_callback(self, _widget, index, treeview):
 
         store = treeview.get_model()
         iterator = store.get_iter(index)
@@ -672,15 +672,15 @@ class SharesFrame(UserInterface):
         self.shareddirs.append((virtual_final, folder))
         self.needrescan = True
 
-    def on_add_shared_dir_selected(self, selected, data):
+    def on_add_shared_dir_selected(self, selected, _data):
 
         for folder in selected:
             self.add_shared_dir(folder)
 
-    def on_add_shared_dir(self, *args):
+    def on_add_shared_dir(self, *_args):
 
         choose_dir(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             callback=self.on_add_shared_dir_selected,
             title=_("Add a Shared Folder")
         )
@@ -718,7 +718,7 @@ class SharesFrame(UserInterface):
 
         self.needrescan = True
 
-    def on_edit_shared_dir(self, *args):
+    def on_edit_shared_dir(self, *_args):
 
         model, paths = self.Shares.get_selection().get_selected_rows()
 
@@ -729,7 +729,7 @@ class SharesFrame(UserInterface):
             buddy_only = model.get_value(iterator, 2)
 
             entry_dialog(
-                parent=self.p.dialog,
+                parent=self.preferences.dialog,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
@@ -741,7 +741,7 @@ class SharesFrame(UserInterface):
             )
             return
 
-    def on_remove_shared_dir(self, *args):
+    def on_remove_shared_dir(self, *_args):
 
         model, paths = self.Shares.get_selection().get_selected_rows()
 
@@ -764,12 +764,12 @@ class SharesFrame(UserInterface):
 
 class UploadsFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/uploads.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.options = {
             "transfers": {
@@ -792,7 +792,7 @@ class UploadsFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         self.on_queue_use_slots_toggled(self.QueueUseSlots)
         self.on_limit_toggled(self.Limit)
@@ -834,25 +834,25 @@ class UploadsFrame(UserInterface):
 
 class UserInfoFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/userinfo.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
-        self.ImageChooser = FileChooserButton(self.ImageChooser, parent.dialog, "image")
+        self.image_chooser = FileChooserButton(self.ImageChooser, preferences.dialog, "image")
 
         self.options = {
             "userinfo": {
                 "descr": None,
-                "pic": self.ImageChooser
+                "pic": self.image_chooser
             }
         }
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         if config.sections["userinfo"]["descr"] is not None:
             descr = unescape(config.sections["userinfo"]["descr"])
@@ -870,22 +870,22 @@ class UserInfoFrame(UserInterface):
         return {
             "userinfo": {
                 "descr": descr,
-                "pic": self.ImageChooser.get_path()
+                "pic": self.image_chooser.get_path()
             }
         }
 
-    def on_default_image(self, widget):
-        self.ImageChooser.clear()
+    def on_default_image(self, *_args):
+        self.image_chooser.clear()
 
 
 class IgnoredUsersFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/ignore.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = self.preferences.frame
 
         self.options = {
             "server": {
@@ -927,16 +927,16 @@ class IgnoredUsersFrame(UserInterface):
         self.ignored_ips_list.clear()
         self.ignored_users = []
         self.ignored_ips = {}
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         if server["ignorelist"] is not None:
             self.ignored_users = server["ignorelist"][:]
 
         if server["ipignorelist"] is not None:
             self.ignored_ips = server["ipignorelist"].copy()
-            for ip, user in self.ignored_ips.items():
+            for ip_address, user in self.ignored_ips.items():
                 self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [
-                    str(ip), str(user)
+                    str(ip_address), str(user)
                 ])
 
     def get_settings(self):
@@ -947,7 +947,7 @@ class IgnoredUsersFrame(UserInterface):
             }
         }
 
-    def on_add_ignored_response(self, dialog, response_id, data):
+    def on_add_ignored_response(self, dialog, response_id, _data):
 
         user = dialog.get_response_value()
         dialog.destroy()
@@ -959,16 +959,16 @@ class IgnoredUsersFrame(UserInterface):
             self.ignored_users.append(user)
             self.ignorelist.insert_with_valuesv(-1, self.user_column_numbers, [str(user)])
 
-    def on_add_ignored(self, widget):
+    def on_add_ignored(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
             callback=self.on_add_ignored_response
         )
 
-    def on_remove_ignored(self, widget):
+    def on_remove_ignored(self, *_args):
 
         model, paths = self.IgnoredUsers.get_selection().get_selected_rows()
 
@@ -979,18 +979,18 @@ class IgnoredUsersFrame(UserInterface):
             model.remove(iterator)
             self.ignored_users.remove(user)
 
-    def on_add_ignored_ip_response(self, dialog, response_id, data):
+    def on_add_ignored_ip_response(self, dialog, response_id, _data):
 
-        ip = dialog.get_response_value()
+        ip_address = dialog.get_response_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if ip is None or ip == "" or ip.count(".") != 3:
+        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
 
-        for chars in ip.split("."):
+        for chars in ip_address.split("."):
 
             if chars == "*":
                 continue
@@ -1003,39 +1003,40 @@ class IgnoredUsersFrame(UserInterface):
             except Exception:
                 return
 
-        if ip not in self.ignored_ips:
-            self.ignored_ips[ip] = ""
-            self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [ip, ""])
+        if ip_address not in self.ignored_ips:
+            self.ignored_ips[ip_address] = ""
+            self.ignored_ips_list.insert_with_valuesv(-1, self.ip_column_numbers, [ip_address, ""])
 
-    def on_add_ignored_ip(self, widget):
+    def on_add_ignored_ip(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
         )
 
-    def on_remove_ignored_ip(self, widget):
+    def on_remove_ignored_ip(self, *_args):
 
         model, paths = self.IgnoredIPs.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
-            ip = model.get_value(iterator, 0)
+            ip_address = model.get_value(iterator, 0)
 
             model.remove(iterator)
-            del self.ignored_ips[ip]
+            del self.ignored_ips[ip_address]
 
 
 class BannedUsersFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/ban.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
+        self.need_ip_block = False
 
         self.options = {
             "server": {
@@ -1081,12 +1082,11 @@ class BannedUsersFrame(UserInterface):
     def set_settings(self):
 
         self.need_ip_block = False
-        server = config.sections["server"]
         self.banlist_model.clear()
         self.blocked_list_model.clear()
 
-        self.banlist = server["banlist"][:]
-        self.p.set_widgets_data(self.options)
+        self.banlist = config.sections["server"]["banlist"][:]
+        self.preferences.set_widgets_data(self.options)
 
         self.on_country_codes_toggled(self.GeoBlock)
 
@@ -1096,9 +1096,9 @@ class BannedUsersFrame(UserInterface):
         self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
         self.on_use_custom_ban_toggled(self.UseCustomBan)
 
-        if server["ipblocklist"] is not None:
-            self.blocked_list = server["ipblocklist"].copy()
-            for blocked, user in server["ipblocklist"].items():
+        if config.sections["server"]["ipblocklist"] is not None:
+            self.blocked_list = config.sections["server"]["ipblocklist"].copy()
+            for blocked, user in config.sections["server"]["ipblocklist"].items():
                 self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [
                     str(blocked),
                     str(user)
@@ -1129,7 +1129,7 @@ class BannedUsersFrame(UserInterface):
     def on_use_custom_ban_toggled(self, widget):
         self.CustomBan.get_parent().set_sensitive(widget.get_active())
 
-    def on_add_banned_response(self, dialog, response_id, data):
+    def on_add_banned_response(self, dialog, response_id, _data):
 
         user = dialog.get_response_value()
         dialog.destroy()
@@ -1141,16 +1141,16 @@ class BannedUsersFrame(UserInterface):
             self.banlist.append(user)
             self.banlist_model.insert_with_valuesv(-1, self.ban_column_numbers, [user])
 
-    def on_add_banned(self, widget):
+    def on_add_banned(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
             callback=self.on_add_banned_response
         )
 
-    def on_remove_banned(self, widget):
+    def on_remove_banned(self, *_args):
 
         model, paths = self.BannedList.get_selection().get_selected_rows()
 
@@ -1161,18 +1161,18 @@ class BannedUsersFrame(UserInterface):
             model.remove(iterator)
             self.banlist.remove(user)
 
-    def on_add_blocked_response(self, dialog, response_id, data):
+    def on_add_blocked_response(self, dialog, response_id, _data):
 
-        ip = dialog.get_response_value()
+        ip_address = dialog.get_response_value()
         dialog.destroy()
 
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if ip is None or ip == "" or ip.count(".") != 3:
+        if ip_address is None or ip_address == "" or ip_address.count(".") != 3:
             return
 
-        for chars in ip.split("."):
+        for chars in ip_address.split("."):
 
             if chars == "*":
                 continue
@@ -1185,40 +1185,41 @@ class BannedUsersFrame(UserInterface):
             except Exception:
                 return
 
-        if ip not in self.blocked_list:
-            self.blocked_list[ip] = ""
-            self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip, ""])
+        if ip_address not in self.blocked_list:
+            self.blocked_list[ip_address] = ""
+            self.blocked_list_model.insert_with_valuesv(-1, self.block_column_numbers, [ip_address, ""])
             self.need_ip_block = True
 
-    def on_add_blocked(self, widget):
+    def on_add_blocked(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Block IP Address"),
             message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
         )
 
-    def on_remove_blocked(self, widget):
+    def on_remove_blocked(self, *_args):
 
         model, paths = self.BlockedList.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             iterator = model.get_iter(path)
-            ip = model.get_value(iterator, 0)
+            ip_address = model.get_value(iterator, 0)
 
             self.blocked_list_model.remove(iterator)
-            del self.blocked_list[ip]
+            del self.blocked_list[ip_address]
 
 
 class ChatsFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/chats.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
+        self.needcompletion = False
 
         self.options = {
             "logging": {
@@ -1285,32 +1286,33 @@ class ChatsFrame(UserInterface):
         self.ReplacementList.set_model(self.replace_list_model)
 
         pos = 0
-        for (column_id, column) in cols.items():
+        for column in cols.values():
             renderers = column.get_cells()
             for render in renderers:
                 render.connect('edited', self.replace_cell_edited_callback, self.ReplacementList, pos)
 
             pos += 1
 
-    def on_completion_changed(self, widget):
+    def on_completion_changed(self, *_args):
         self.needcompletion = True
 
-    def on_default_private(self, widget):
+    def on_default_private(self, *_args):
         self.PrivateMessage.set_text(config.defaults["ui"]["speechprivate"])
 
-    def on_default_rooms(self, widget):
+    def on_default_rooms(self, *_args):
         self.RoomMessage.set_text(config.defaults["ui"]["speechrooms"])
 
-    def on_default_tts(self, widget):
+    def on_default_tts(self, *_args):
         self.TTSCommand.get_child().set_text(config.defaults["ui"]["speechcommand"])
 
-    def on_room_default_timestamp(self, widget):
+    def on_room_default_timestamp(self, *_args):
         self.ChatRoomFormat.set_text(config.defaults["logging"]["rooms_timestamp"])
 
-    def on_private_default_timestamp(self, widget):
+    def on_private_default_timestamp(self, *_args):
         self.PrivateChatFormat.set_text(config.defaults["logging"]["private_timestamp"])
 
-    def censor_cell_edited_callback(self, widget, index, value, treeview, pos):
+    @staticmethod
+    def censor_cell_edited_callback(_widget, index, value, treeview, pos):
 
         store = treeview.get_model()
         iterator = store.get_iter(index)
@@ -1320,13 +1322,14 @@ class ChatsFrame(UserInterface):
         else:
             store.remove(iterator)
 
-    def replace_cell_edited_callback(self, widget, index, value, treeview, pos):
+    @staticmethod
+    def replace_cell_edited_callback(_widget, index, value, treeview, pos):
 
         store = treeview.get_model()
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def on_add_censored_response(self, dialog, response_id, data):
+    def on_add_censored_response(self, dialog, response_id, _data):
 
         pattern = dialog.get_response_value()
         dialog.destroy()
@@ -1337,17 +1340,17 @@ class ChatsFrame(UserInterface):
         if pattern:
             self.censor_list_model.insert_with_valuesv(-1, [0], [pattern])
 
-    def on_add_censored(self, widget):
+    def on_add_censored(self, *_args):
 
         entry_dialog(
-            parent=self.p.dialog,
+            parent=self.preferences.dialog,
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             callback=self.on_add_censored_response
         )
 
-    def on_remove_censored(self, widget):
+    def on_remove_censored(self, *_args):
 
         model, paths = self.CensorList.get_selection().get_selected_rows()
 
@@ -1355,7 +1358,7 @@ class ChatsFrame(UserInterface):
             iterator = model.get_iter(path)
             model.remove(iterator)
 
-    def on_add_replacement(self, widget):
+    def on_add_replacement(self, *_args):
 
         iterator = self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, ["", ""])
         selection = self.ReplacementList.get_selection()
@@ -1364,7 +1367,7 @@ class ChatsFrame(UserInterface):
 
         self.ReplacementList.set_cursor(self.replace_list_model.get_path(iterator), col, True)
 
-    def on_remove_replacement(self, widget):
+    def on_remove_replacement(self, *_args):
 
         model, paths = self.ReplacementList.get_selection().get_selected_rows()
 
@@ -1377,13 +1380,13 @@ class ChatsFrame(UserInterface):
         self.censor_list_model.clear()
         self.replace_list_model.clear()
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         self.needcompletion = False
 
         try:
             gi.require_version('Gspell', '1')
-            from gi.repository import Gspell  # noqa: F401
+            from gi.repository import Gspell  # noqa: F401; pylint:disable=unused-import
 
         except (ImportError, ValueError):
             self.SpellCheck.hide()
@@ -1461,15 +1464,15 @@ class ChatsFrame(UserInterface):
 
 class UserInterfaceFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/userinterface.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
         self.needcolors = False
 
-        self.ThemeDir = FileChooserButton(self.ThemeDir, parent.dialog, "folder")
+        self.theme_dir = FileChooserButton(self.ThemeDir, preferences.dialog, "folder")
 
         self.tabs = {
             "search": self.EnableSearchTab,
@@ -1560,7 +1563,7 @@ class UserInterfaceFrame(UserInterface):
                 "tabclosers": self.TabClosers,
                 "tab_status_icons": self.TabStatusIcons,
 
-                "icontheme": self.ThemeDir,
+                "icontheme": self.theme_dir,
 
                 "chatlocal": self.EntryLocal,
                 "chatremote": self.EntryRemote,
@@ -1607,7 +1610,7 @@ class UserInterfaceFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
@@ -1666,7 +1669,7 @@ class UserInterfaceFrame(UserInterface):
                 "tabclosers": self.TabClosers.get_active(),
                 "tab_status_icons": self.TabStatusIcons.get_active(),
 
-                "icontheme": self.ThemeDir.get_path(),
+                "icontheme": self.theme_dir.get_path(),
 
                 "chatlocal": self.EntryLocal.get_text(),
                 "chatremote": self.EntryRemote.get_text(),
@@ -1707,8 +1710,8 @@ class UserInterfaceFrame(UserInterface):
 
     """ Icons """
 
-    def on_default_theme(self, widget):
-        self.ThemeDir.clear()
+    def on_default_theme(self, *_args):
+        self.theme_dir.clear()
 
     """ Fonts """
 
@@ -1719,25 +1722,25 @@ class UserInterfaceFrame(UserInterface):
 
         self.needcolors = True
 
-    def on_fonts_changed(self, widget):
+    def on_fonts_changed(self, *_args):
         self.needcolors = True
 
     """ Colors """
 
-    def update_color_button(self, config, color_id):
+    def update_color_button(self, input_config, color_id):
 
         for section, value in self.colorsd.items():
             if color_id in value:
-                color_button = self.colorsd[section][color_id]
+                color_button = value[color_id]
                 rgba = Gdk.RGBA()
 
-                rgba.parse(config[section][color_id])
+                rgba.parse(input_config[section][color_id])
                 color_button.set_rgba(rgba)
                 break
 
     def update_color_buttons(self):
 
-        for section, color_ids in self.colorsd.items():
+        for color_ids in self.colorsd.values():
             for color_id in color_ids:
                 self.update_color_button(config.sections, color_id)
 
@@ -1772,8 +1775,8 @@ class UserInterfaceFrame(UserInterface):
 
         entry = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Entry"))
 
-        for section in self.options:
-            for key, value in self.options[section].items():
+        for section, section_options in self.options.items():
+            for key, value in section_options.items():
                 if value is entry:
                     self.set_default_color(section, key)
                     return
@@ -1794,63 +1797,63 @@ class UserInterfaceFrame(UserInterface):
 
 class LoggingFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/log.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
-        self.PrivateLogDir = FileChooserButton(self.PrivateLogDir, parent.dialog, "folder")
-        self.RoomLogDir = FileChooserButton(self.RoomLogDir, parent.dialog, "folder")
-        self.TransfersLogDir = FileChooserButton(self.TransfersLogDir, parent.dialog, "folder")
-        self.DebugLogDir = FileChooserButton(self.DebugLogDir, parent.dialog, "folder")
+        self.private_log_dir = FileChooserButton(self.PrivateLogDir, preferences.dialog, "folder")
+        self.room_log_dir = FileChooserButton(self.RoomLogDir, preferences.dialog, "folder")
+        self.transfers_log_dir = FileChooserButton(self.TransfersLogDir, preferences.dialog, "folder")
+        self.debug_log_dir = FileChooserButton(self.DebugLogDir, preferences.dialog, "folder")
 
         self.options = {
             "logging": {
                 "privatechat": self.LogPrivate,
-                "privatelogsdir": self.PrivateLogDir,
+                "privatelogsdir": self.private_log_dir,
                 "chatrooms": self.LogRooms,
-                "roomlogsdir": self.RoomLogDir,
+                "roomlogsdir": self.room_log_dir,
                 "transfers": self.LogTransfers,
-                "transferslogsdir": self.TransfersLogDir,
+                "transferslogsdir": self.transfers_log_dir,
                 "debug_file_output": self.LogDebug,
-                "debuglogsdir": self.DebugLogDir,
+                "debuglogsdir": self.debug_log_dir,
                 "log_timestamp": self.LogFileFormat
             }
         }
 
     def set_settings(self):
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
     def get_settings(self):
 
         return {
             "logging": {
                 "privatechat": self.LogPrivate.get_active(),
-                "privatelogsdir": self.PrivateLogDir.get_path(),
+                "privatelogsdir": self.private_log_dir.get_path(),
                 "chatrooms": self.LogRooms.get_active(),
-                "roomlogsdir": self.RoomLogDir.get_path(),
+                "roomlogsdir": self.room_log_dir.get_path(),
                 "transfers": self.LogTransfers.get_active(),
-                "transferslogsdir": self.TransfersLogDir.get_path(),
+                "transferslogsdir": self.transfers_log_dir.get_path(),
                 "debug_file_output": self.LogDebug.get_active(),
-                "debuglogsdir": self.DebugLogDir.get_path(),
+                "debuglogsdir": self.debug_log_dir.get_path(),
                 "log_timestamp": self.LogFileFormat.get_text()
             }
         }
 
-    def on_default_timestamp(self, widget):
+    def on_default_timestamp(self, *_args):
         self.LogFileFormat.set_text(config.defaults["logging"]["log_timestamp"])
 
 
 class SearchesFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/search.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
@@ -1882,12 +1885,8 @@ class SearchesFrame(UserInterface):
 
     def set_settings(self):
 
-        try:
-            searches = config.sections["searches"]
-        except Exception:
-            searches = None
-
-        self.p.set_widgets_data(self.options)
+        searches = config.sections["searches"]
+        self.preferences.set_widgets_data(self.options)
 
         if searches["defilter"] is not None:
             num_filters = len(searches["defilter"])
@@ -1940,23 +1939,23 @@ class SearchesFrame(UserInterface):
             }
         }
 
-    def on_clear_search_history(self, widget):
+    def on_clear_search_history(self, *_args):
         self.frame.search.clear_search_history()
         self.ClearSearchHistorySuccess.show()
 
-    def on_clear_filter_history(self, widget):
+    def on_clear_filter_history(self, *_args):
         self.frame.search.clear_filter_history()
         self.ClearFilterHistorySuccess.show()
 
 
 class UrlHandlersFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/urlhandlers.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.options = {
             "urls": {
@@ -1994,7 +1993,7 @@ class UrlHandlersFrame(UserInterface):
         self.protocolmodel.clear()
         self.protocols.clear()
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         for key in config.sections["urls"]["protocols"].keys():
             if config.sections["urls"]["protocols"][key][-1:] == "&":
@@ -2030,13 +2029,14 @@ class UrlHandlersFrame(UserInterface):
             }
         }
 
-    def cell_edited_callback(self, widget, index, value, treeview, pos):
+    @staticmethod
+    def cell_edited_callback(_widget, index, value, treeview, pos):
 
         store = treeview.get_model()
         iterator = store.get_iter(index)
         store.set(iterator, pos, value)
 
-    def on_add(self, widget):
+    def on_add(self, *_args):
 
         protocol = self.ProtocolCombo.get_active_text()
         command = self.Handler.get_active_text()
@@ -2051,7 +2051,7 @@ class UrlHandlersFrame(UserInterface):
                 -1, self.column_numbers, [protocol, command]
             )
 
-    def on_remove(self, widget):
+    def on_remove(self, *_args):
 
         model, paths = self.ProtocolHandlers.get_selection().get_selected_rows()
 
@@ -2065,12 +2065,12 @@ class UrlHandlersFrame(UserInterface):
 
 class NowPlayingFrame(UserInterface):
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/nowplaying.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.options = {
             "players": {
@@ -2094,7 +2094,7 @@ class NowPlayingFrame(UserInterface):
         # Suppy the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
             "clicked",
-            self.p.frame.np.now_playing.display_now_playing,
+            self.frame.np.now_playing.display_now_playing,
             self.set_now_playing_example,  # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
@@ -2103,7 +2103,7 @@ class NowPlayingFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
 
         # Save reference to format list for get_settings()
         self.custom_format_list = config.sections["players"]["npformatlist"]
@@ -2127,8 +2127,8 @@ class NowPlayingFrame(UserInterface):
             self.NPFormat.set_active(0)
         else:
             # If there's is a default format in the config: select the right item
-            for (i, v) in enumerate(self.NPFormat.get_model()):
-                if v[0] == config.sections["players"]["npformat"]:
+            for i, value in enumerate(self.NPFormat.get_model()):
+                if value[0] == config.sections["players"]["npformat"]:
                     self.NPFormat.set_active(i)
 
     def get_player(self):
@@ -2161,7 +2161,7 @@ class NowPlayingFrame(UserInterface):
         else:
             self.NP_mpris.set_active(True)
 
-    def update_now_playing_info(self, widget=None):
+    def update_now_playing_info(self, *_args):
 
         if self.NP_lastfm.get_active():
             self.player_replacers = ["$n", "$t", "$a", "$b"]
@@ -2243,7 +2243,7 @@ class PluginsFrame(UserInterface):
 
         def __init__(self, parent, name):
 
-            self.settings = parent.p
+            self.settings = parent.preferences
 
             # Build the window
             Gtk.Dialog.__init__(
@@ -2273,11 +2273,12 @@ class PluginsFrame(UserInterface):
 
             self.get_content_area().add(self.primary_container)
 
-            self.tw = {}
+            self.option_widgets = {}
             self.options = {}
             self.plugin = None
 
-        def generate_label(self, text):
+        @staticmethod
+        def generate_label(text):
 
             label = Gtk.Label.new(text)
             label.set_use_markup(True)
@@ -2317,48 +2318,50 @@ class PluginsFrame(UserInterface):
             scrolled_window.set_min_content_width(350)
             scrolled_window.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
 
-            self.tw[name] = Gtk.TreeView()
-            self.tw[name].set_model(Gtk.ListStore(str))
+            self.option_widgets[name] = Gtk.TreeView()
+            self.option_widgets[name].set_model(Gtk.ListStore(str))
 
             if Gtk.get_major_version() == 4:
                 scrolled_window.set_has_frame(True)
-                scrolled_window.set_child(self.tw[name])
+                scrolled_window.set_child(self.option_widgets[name])
             else:
                 scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
-                scrolled_window.add(self.tw[name])
+                scrolled_window.add(self.option_widgets[name])
 
             container.add(scrolled_window)
 
             cols = initialise_columns(
-                None, self.tw[name],
+                None, self.option_widgets[name],
                 [description, description, 150, "edit", None]
             )
 
             try:
-                self.settings.set_widget(self.tw[name], value)
+                self.settings.set_widget(self.option_widgets[name], value)
             except Exception:
                 pass
 
-            self.add_button = Gtk.Button.new_with_label(_("Add"))
-            self.remove_button = Gtk.Button.new_with_label(_("Remove"))
+            add_button = Gtk.Button.new_with_label(_("Add"))
+            remove_button = Gtk.Button.new_with_label(_("Remove"))
 
             box = Gtk.Box()
             box.set_spacing(6)
 
-            box.add(self.add_button)
-            box.add(self.remove_button)
+            box.add(add_button)
+            box.add(remove_button)
 
             self.primary_container.add(container)
             self.primary_container.add(box)
 
             renderers = cols[description].get_cells()
             for render in renderers:
-                render.connect('edited', self.cell_edited_callback, self.tw[name])
+                render.connect('edited', self.cell_edited_callback, self.option_widgets[name])
 
-            self.add_button.connect("clicked", self.on_add, self.tw[name])
-            self.remove_button.connect("clicked", self.on_remove, self.tw[name])
+            add_button.connect("clicked", self.on_add, self.option_widgets[name])
+            remove_button.connect("clicked", self.on_remove, self.option_widgets[name])
 
-        def cell_edited_callback(self, widget, index, value, treeview):
+        @staticmethod
+        def cell_edited_callback(_widget, index, value, treeview):
+
             store = treeview.get_model()
             iterator = store.get_iter(index)
             store.set(iterator, 0, value)
@@ -2392,23 +2395,23 @@ class PluginsFrame(UserInterface):
                     if data["type"] in ("integer", "int"):
                         decimals = 0
 
-                    self.tw[name] = button = Gtk.SpinButton.new(
+                    self.option_widgets[name] = button = Gtk.SpinButton.new(
                         Gtk.Adjustment.new(0, minimum, maximum, stepsize, 10, 0),
                         1, decimals)
                     button.set_valign(Gtk.Align.CENTER)
                     label.set_mnemonic_widget(button)
                     self.settings.set_widget(button, config.sections["plugins"][config_name][name])
 
-                    container.add(self.tw[name])
+                    container.add(self.option_widgets[name])
 
                 elif data["type"] in ("bool",):
                     container = Gtk.Box()
 
-                    self.tw[name] = Gtk.CheckButton.new_with_label(data["description"])
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    self.option_widgets[name] = Gtk.CheckButton.new_with_label(data["description"])
+                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
 
                     self.primary_container.add(container)
-                    container.add(self.tw[name])
+                    container.add(self.option_widgets[name])
 
                 elif data["type"] in ("radio",):
                     container, label = self.generate_widget_container(data["description"])
@@ -2428,7 +2431,7 @@ class PluginsFrame(UserInterface):
                             radio = Gtk.RadioButton.new_with_label_from_widget(last_radio, label)
 
                         if not last_radio:
-                            self.tw[name] = radio
+                            self.option_widgets[name] = radio
 
                         elif Gtk.get_major_version() == 4:
                             radio.set_group(last_radio)
@@ -2437,14 +2440,14 @@ class PluginsFrame(UserInterface):
                         group_radios.append(radio)
                         vbox.add(radio)
 
-                    label.set_mnemonic_widget(self.tw[name])
-                    self.tw[name].group_radios = group_radios
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    label.set_mnemonic_widget(self.option_widgets[name])
+                    self.option_widgets[name].group_radios = group_radios
+                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
 
                 elif data["type"] in ("dropdown",):
                     container, label = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = combobox = Gtk.ComboBoxText()
+                    self.option_widgets[name] = combobox = Gtk.ComboBoxText()
                     label.set_mnemonic_widget(combobox)
                     combobox.set_valign(Gtk.Align.CENTER)
 
@@ -2453,12 +2456,12 @@ class PluginsFrame(UserInterface):
 
                     self.settings.set_widget(combobox, config.sections["plugins"][config_name][name])
 
-                    container.add(self.tw[name])
+                    container.add(self.option_widgets[name])
 
                 elif data["type"] in ("str", "string"):
                     container, label = self.generate_widget_container(data["description"])
 
-                    self.tw[name] = entry = Gtk.Entry()
+                    self.option_widgets[name] = entry = Gtk.Entry()
                     entry.set_hexpand(True)
                     entry.set_valign(Gtk.Align.CENTER)
                     label.set_mnemonic_widget(entry)
@@ -2469,7 +2472,7 @@ class PluginsFrame(UserInterface):
                 elif data["type"] in ("textview"):
                     container, label = self.generate_widget_container(data["description"], vertical=True)
 
-                    self.tw[name] = textview = Gtk.TextView()
+                    self.option_widgets[name] = textview = Gtk.TextView()
                     textview.set_accepts_tab(False)
                     textview.set_pixels_above_lines(1)
                     textview.set_pixels_below_lines(1)
@@ -2513,10 +2516,10 @@ class PluginsFrame(UserInterface):
                     except KeyError:
                         chooser = None
 
-                    self.tw[name] = FileChooserButton(button_widget, self, chooser)
+                    self.option_widgets[name] = FileChooserButton(button_widget, self, chooser)
                     button_widget.set_valign(Gtk.Align.CENTER)
                     label.set_mnemonic_widget(button_widget)
-                    self.settings.set_widget(self.tw[name], config.sections["plugins"][config_name][name])
+                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
 
                     container.add(button_widget)
 
@@ -2526,24 +2529,27 @@ class PluginsFrame(UserInterface):
             if Gtk.get_major_version() == 3:
                 self.show_all()
 
-        def on_add(self, widget, treeview):
+        @staticmethod
+        def on_add(_widget, treeview):
 
             iterator = treeview.get_model().append([""])
             col = treeview.get_column(0)
 
             treeview.set_cursor(treeview.get_model().get_path(iterator), col, True)
 
-        def on_remove(self, widget, treeview):
+        @staticmethod
+        def on_remove(_widget, treeview):
+
             selection = treeview.get_selection()
             iterator = selection.get_selected()[1]
             if iterator is not None:
                 treeview.get_model().remove(iterator)
 
-        def on_response(self, dialog, response_id):
+        def on_response(self, _dialog, response_id):
 
             if response_id == Gtk.ResponseType.OK:
                 for name in self.options:
-                    value = self.settings.get_widget_data(self.tw[name])
+                    value = self.settings.get_widget_data(self.option_widgets[name])
                     if value is not None:
                         config.sections["plugins"][self.plugin.lower()][name] = value
 
@@ -2554,12 +2560,12 @@ class PluginsFrame(UserInterface):
 
     """ Initialize plugin list """
 
-    def __init__(self, parent):
+    def __init__(self, preferences):
 
         super().__init__("ui/settings/plugin.ui")
 
-        self.p = parent
-        self.frame = self.p.frame
+        self.preferences = preferences
+        self.frame = preferences.frame
 
         self.options = {
             "plugins": {
@@ -2591,7 +2597,8 @@ class PluginsFrame(UserInterface):
 
         self.PluginTreeView.set_model(self.plugins_model)
 
-    def on_add_plugins(self, widget):
+    @staticmethod
+    def on_add_plugins(*_args):
 
         try:
             if not os.path.isdir(config.plugin_dir):
@@ -2599,10 +2606,10 @@ class PluginsFrame(UserInterface):
 
             open_file_path(config.plugin_dir)
 
-        except Exception as e:
-            log.add("Failed to open folder containing user plugins: %s", e)
+        except Exception as error:
+            log.add("Failed to open folder containing user plugins: %s", error)
 
-    def on_plugin_properties(self, widget):
+    def on_plugin_properties(self, *_args):
 
         if self.selected_plugin is None:
             return
@@ -2639,7 +2646,7 @@ class PluginsFrame(UserInterface):
 
         self.check_properties_button(self.selected_plugin)
 
-    def cell_toggle_callback(self, widget, index, treeview, pos):
+    def cell_toggle_callback(self, _widget, index, _treeview, pos):
 
         iterator = self.plugins_model.get_iter(index)
         plugin = self.plugins_model.get_value(iterator, 2)
@@ -2663,7 +2670,7 @@ class PluginsFrame(UserInterface):
 
     def set_settings(self):
 
-        self.p.set_widgets_data(self.options)
+        self.preferences.set_widgets_data(self.options)
         self.on_plugins_enable(None)
         self.pluginsiters = {}
         self.plugins_model.clear()
@@ -2695,7 +2702,7 @@ class PluginsFrame(UserInterface):
 
         return enabled_plugins
 
-    def on_plugins_enable(self, *args):
+    def on_plugins_enable(self, *_args):
 
         active = self.PluginsEnable.get_active()
 
@@ -2770,7 +2777,7 @@ class Preferences(UserInterface):
             ("Plugins", _("Plugins"), "list-add-symbolic"),
             ("UrlHandlers", _("URL Handlers"), "insert-link-symbolic")]
 
-        for page_id, label, icon_name in self.page_ids:
+        for _page_id, label, icon_name in self.page_ids:
             box = Gtk.Box()
             box.set_margin_top(8)
             box.set_margin_bottom(8)
@@ -2837,7 +2844,8 @@ class Preferences(UserInterface):
                 else:
                     self.set_widget(widget, config.sections[section][key])
 
-    def get_widget_data(self, widget):
+    @staticmethod
+    def get_widget_data(widget):
 
         if isinstance(widget, Gtk.SpinButton):
             if widget.get_digits() > 0:
@@ -2845,16 +2853,16 @@ class Preferences(UserInterface):
 
             return widget.get_value_as_int()
 
-        elif isinstance(widget, Gtk.Entry):
+        if isinstance(widget, Gtk.Entry):
             return widget.get_text()
 
-        elif isinstance(widget, Gtk.TextView):
+        if isinstance(widget, Gtk.TextView):
             buffer = widget.get_buffer()
             start, end = buffer.get_bounds()
 
             return widget.get_buffer().get_text(start, end, True)
 
-        elif isinstance(widget, Gtk.CheckButton):
+        if isinstance(widget, Gtk.CheckButton):
             try:
                 # Radio button
                 for radio in widget.group_radios:
@@ -2867,13 +2875,13 @@ class Preferences(UserInterface):
                 # Regular check button
                 return widget.get_active()
 
-        elif isinstance(widget, Gtk.ComboBoxText):
+        if isinstance(widget, Gtk.ComboBoxText):
             return widget.get_active_text()
 
-        elif isinstance(widget, Gtk.FontButton):
-            widget.get_font()
+        if isinstance(widget, Gtk.FontButton):
+            return widget.get_font()
 
-        elif isinstance(widget, Gtk.TreeView) and widget.get_model().get_n_columns() == 1:
+        if isinstance(widget, Gtk.TreeView) and widget.get_model().get_n_columns() == 1:
             wlist = []
             iterator = widget.get_model().get_iter_first()
 
@@ -2887,10 +2895,13 @@ class Preferences(UserInterface):
 
             return wlist
 
-        elif isinstance(widget, FileChooserButton):
+        if isinstance(widget, FileChooserButton):
             return widget.get_path()
 
-    def clear_widget(self, widget):
+        return None
+
+    @staticmethod
+    def clear_widget(widget):
 
         if isinstance(widget, Gtk.SpinButton):
             widget.set_value(0)
@@ -2910,7 +2921,8 @@ class Preferences(UserInterface):
         elif isinstance(widget, Gtk.FontButton):
             widget.set_font("")
 
-    def set_widget(self, widget, value):
+    @staticmethod
+    def set_widget(widget, value):
 
         if isinstance(widget, Gtk.SpinButton):
             try:
@@ -2972,7 +2984,7 @@ class Preferences(UserInterface):
 
     def get_settings(self):
 
-        config = {
+        options = {
             "server": {},
             "transfers": {},
             "userinfo": {},
@@ -2990,7 +3002,7 @@ class Preferences(UserInterface):
         for page in self.pages.values():
             sub = page.get_settings()
             for key, data in sub.items():
-                config[key].update(data)
+                options[key].update(data)
 
         try:
             need_portmap = self.pages["Network"].needportmap
@@ -3029,13 +3041,13 @@ class Preferences(UserInterface):
         except KeyError:
             need_ip_block = False
 
-        return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, config
+        return need_portmap, need_rescan, need_colors, need_completion, need_ip_block, options
 
     def update_settings(self, settings_closed=False):
 
-        need_portmap, need_rescan, need_colors, need_completion, need_ip_block, new_config = self.get_settings()
+        need_portmap, need_rescan, need_colors, need_completion, need_ip_block, options = self.get_settings()
 
-        for key, data in new_config.items():
+        for key, data in options.items():
             config.sections[key].update(data)
 
         if need_portmap:
@@ -3101,10 +3113,10 @@ class Preferences(UserInterface):
             self.frame.set_tab_expand(page)
 
         # Other notebooks
-        for w in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
-                  self.frame.userbrowse, self.frame.search):
-            w.set_tab_closers()
-            w.set_text_colors(None)
+        for notebook in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
+                         self.frame.userbrowse, self.frame.search):
+            notebook.set_tab_closers()
+            notebook.set_text_colors(None)
 
         # Update configuration
         config.write_configuration()
@@ -3125,10 +3137,11 @@ class Preferences(UserInterface):
         if not config.sections["ui"]["trayicon"]:
             self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
-    def back_up_config_response(self, selected, data):
+    @staticmethod
+    def back_up_config_response(selected, _data):
         config.write_config_backup(selected)
 
-    def back_up_config(self, *args):
+    def back_up_config(self, *_args):
 
         save_file(
             parent=self.frame.MainWindow,
@@ -3138,21 +3151,21 @@ class Preferences(UserInterface):
             title=_("Pick a File Name for Config Backup")
         )
 
-    def on_widget_scroll_event(self, widget, event):
+    def on_widget_scroll_event(self, _widget, event):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
         to container (GTK 3) """
 
         self.container.event(event)
         return True
 
-    def on_widget_scroll(self, controller, x, y):
+    def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
         in the container (GTK 4) """
 
         adjustment = self.container.get_vadjustment()
         value = adjustment.get_value()
 
-        if y < 0:
+        if scroll_y < 0:
             value -= adjustment.get_step_increment()
         else:
             value += adjustment.get_step_increment()
@@ -3160,7 +3173,7 @@ class Preferences(UserInterface):
         adjustment.set_value(value)
         return True
 
-    def on_switch_page(self, listbox, row):
+    def on_switch_page(self, _listbox, row):
 
         page_id, _label, _icon_name = self.page_ids[row.get_index()]
         old_viewport = self.container.get_child()
@@ -3206,11 +3219,11 @@ class Preferences(UserInterface):
             viewport = self.container.get_child()
             viewport.set_scroll_to_focus(True)
 
-    def on_delete(self, *args):
+    def on_delete(self, *_args):
         self.hide()
         return True
 
-    def on_response(self, dialog, response_id):
+    def on_response(self, _dialog, response_id):
 
         if response_id == Gtk.ResponseType.OK:
             self.update_settings(settings_closed=True)
@@ -3233,5 +3246,5 @@ class Preferences(UserInterface):
 
         dialog_hide(self.dialog)
 
-    def show(self, *args):
+    def show(self, *_args):
         dialog_show(self.dialog)

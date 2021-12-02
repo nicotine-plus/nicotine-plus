@@ -40,7 +40,7 @@ class FileProperties(UserInterface):
 
         self.current_index = 0
 
-    def on_previous(self, *args):
+    def on_previous(self, *_args):
 
         self.current_index -= 1
 
@@ -49,7 +49,7 @@ class FileProperties(UserInterface):
 
         self.update_current_file()
 
-    def on_next(self, *args):
+    def on_next(self, *_args):
 
         self.current_index += 1
 
@@ -58,7 +58,7 @@ class FileProperties(UserInterface):
 
         self.update_current_file()
 
-    def on_download_item(self, *args):
+    def on_download_item(self, *_args):
         properties = self.properties[self.current_index]
         self.frame.np.transfers.get_file(properties["user"], properties["fn"])
 

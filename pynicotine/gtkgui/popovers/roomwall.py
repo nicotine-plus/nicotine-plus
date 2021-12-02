@@ -61,7 +61,7 @@ class RoomWall(UserInterface):
 
         return entry_text
 
-    def on_set_room_wall_message(self, *args):
+    def on_set_room_wall_message(self, *_args):
 
         entry_text = self.clear_room_wall_message(update_list=False)
         self.frame.np.queue.append(slskmessages.RoomTickerSet(self.room.room, entry_text))
@@ -72,7 +72,7 @@ class RoomWall(UserInterface):
 
         self.update_message_list()
 
-    def on_icon_pressed(self, entry, icon_pos, *args):
+    def on_icon_pressed(self, _entry, icon_pos, *_args):
 
         if icon_pos == Gtk.EntryIconPosition.PRIMARY:
             self.on_set_room_wall_message()

@@ -52,7 +52,7 @@ class About(UserInterface):
         if Gtk.get_major_version() == 4:
             self.dialog.connect("close-request", lambda x: x.destroy())
         else:
-            self.dialog.connect("response", lambda x, y: x.destroy())
+            self.dialog.connect("response", lambda x, _y: x.destroy())
 
         self.dialog.set_comments(config.summary)
         self.dialog.set_copyright(config.copyright)

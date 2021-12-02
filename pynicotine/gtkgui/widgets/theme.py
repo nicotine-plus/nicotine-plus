@@ -196,9 +196,9 @@ IMAGES = {}
 
 def load_pixbuf_from_path(path):
 
-    with open(path, 'rb') as f:
+    with open(path, 'rb') as file_handle:
         loader = GdkPixbuf.PixbufLoader()
-        loader.write(f.read())
+        loader.write(file_handle.read())
         loader.close()
         return loader.get_pixbuf()
 
@@ -270,10 +270,10 @@ def load_custom_icons(names):
                         IMAGES[name] = load_pixbuf_from_path(path)
                         loaded = True
 
-                    except Exception as e:
+                    except Exception as error:
                         log.add(_("Error loading custom icon %(path)s: %(error)s"), {
                             "path": path,
-                            "error": str(e)
+                            "error": error
                         })
 
             if name not in IMAGES:
@@ -359,18 +359,18 @@ def parse_color_string(color_string):
 
 def set_list_color(listview, color):
 
-    for c in listview.get_columns():
-        for r in c.get_cells():
-            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                set_widget_color(r, color)
+    for column in listview.get_columns():
+        for cell in column.get_cells():
+            if isinstance(cell, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                set_widget_color(cell, color)
 
 
 def set_list_font(listview, font):
 
-    for c in listview.get_columns():
-        for r in c.get_cells():
-            if isinstance(r, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
-                set_widget_font(r, font)
+    for column in listview.get_columns():
+        for cell in column.get_cells():
+            if isinstance(cell, (Gtk.CellRendererText, Gtk.CellRendererCombo)):
+                set_widget_font(cell, font)
 
 
 def set_widget_color(widget, color):

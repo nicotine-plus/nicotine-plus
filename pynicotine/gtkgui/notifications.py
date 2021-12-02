@@ -110,7 +110,7 @@ class Notifications:
                 )
 
                 if config.sections["notifications"]["notification_popup_sound"]:
-                    import winsound
+                    import winsound  # pylint:disable=import-error
                     winsound.PlaySound("SystemAsterisk", winsound.SND_ALIAS)
 
                 return
@@ -146,19 +146,19 @@ class WinNotify:
 
         class NOTIFYICONDATA(Structure):
             _fields_ = [
-                ("cbSize", DWORD),
-                ("hWnd", HWND),
-                ("uID", UINT),
-                ("uFlags", UINT),
-                ("uCallbackMessage", UINT),
-                ("hIcon", HICON),
-                ("szTip", WCHAR * 128),
-                ("dwState", DWORD),
-                ("dwStateMask", DWORD),
-                ("szInfo", WCHAR * 256),
-                ("uVersion", UINT),
-                ("szInfoTitle", WCHAR * 64),
-                ("dwInfoFlags", DWORD)
+                ("cb_size", DWORD),
+                ("h_wnd", HWND),
+                ("u_id", UINT),
+                ("u_flags", UINT),
+                ("u_callback_message", UINT),
+                ("h_icon", HICON),
+                ("sz_tip", WCHAR * 128),
+                ("dw_state", DWORD),
+                ("dw_state_mask", DWORD),
+                ("sz_info", WCHAR * 256),
+                ("u_version", UINT),
+                ("sz_info_title", WCHAR * 64),
+                ("dw_info_flags", DWORD)
             ]
 
         self.tray_icon = tray_icon
@@ -166,10 +166,12 @@ class WinNotify:
         self.worker = None
 
         self.nid = NOTIFYICONDATA()
-        self.nid.cbSize = sizeof(NOTIFYICONDATA)
-        self.nid.hWnd = windll.user32.FindWindowW("gtkstatusicon-observer", None)
-        self.nid.uFlags = self.NIF_INFO
-        self.nid.dwInfoFlags = self.NIIF_NOSOUND
+        self.nid.cb_size = sizeof(NOTIFYICONDATA)
+        self.nid.h_wnd = windll.user32.FindWindowW("gtkstatusicon-observer", None)
+        self.nid.u_flags = self.NIF_INFO
+        self.nid.dw_info_flags = self.NIIF_NOSOUND
+        self.nid.sz_info_title = ""
+        self.nid.sz_info = ""
 
     def notify(self, **kwargs):
 
@@ -198,8 +200,8 @@ class WinNotify:
             # Tray icon was disabled by the user. Enable it temporarily to show a notification.
             self.tray_icon.show()
 
-        self.nid.szInfoTitle = textwrap.shorten(title, width=63, placeholder="...")
-        self.nid.szInfo = textwrap.shorten(message, width=255, placeholder="...")
+        self.nid.sz_info_title = textwrap.shorten(title, width=63, placeholder="...")
+        self.nid.sz_info = textwrap.shorten(message, width=255, placeholder="...")
 
         windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)

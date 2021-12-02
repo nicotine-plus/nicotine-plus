@@ -111,7 +111,7 @@ def dialog_hide(dialog):
 
 def entry_dialog(parent, title, message, callback, callback_data=None, default="",
                  option=False, optionmessage="", optionvalue=False, visibility=True,
-                 droplist=[]):
+                 droplist=None):
 
     self = Gtk.MessageDialog(
         transient_for=parent,
@@ -177,8 +177,8 @@ def message_dialog(parent, title, message, callback=None):
     )
 
     if not callback:
-        def callback(x, y):
-            x.destroy()
+        def callback(dialog, *_args):
+            dialog.destroy()
 
     self.connect("response", callback)
     self.set_destroy_with_parent(True)

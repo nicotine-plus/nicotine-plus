@@ -50,7 +50,6 @@ class PopupMenu:
         self.popup_menu = None
         self.gesture_click = None
         self.gesture_press = None
-        self.last_controller = None
         self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() == 4 else (Gtk.Box, Gtk.EventBox)
 
         if connect_events and widget:
@@ -189,16 +188,13 @@ class PopupMenu:
             self.model.append_item(menuitem)
 
             if not item[0]:
-                return menuitem
+                return
 
         menuitem = self.create_menu_item(item)
         self.menu_section.append_item(menuitem)
 
     def get_actions(self):
         return self.actions
-
-    def get_items(self):
-        return self.items
 
     def setup(self, *items):
         for item in items:
@@ -346,17 +342,17 @@ class PopupMenu:
         self.menu_section = None
         self.useritem = None
 
-    def popup(self, x, y, controller=None, button=3, menu=None):
+    def popup(self, pos_x, pos_y, controller=None, button=3, menu=None):
 
         if menu is None:
             menu = self.create_context_menu(self.widget)
 
         if Gtk.get_major_version() == 4:
-            if not x and not y:
-                x = y = 0
+            if not pos_x and not pos_y:
+                pos_x = pos_y = 0
 
-            menu.set_offset(x, y)
-            menu.set_pointing_to(Gdk.Rectangle(x, y, 1, 1))
+            menu.set_offset(pos_x, pos_y)
+            menu.set_pointing_to(Gdk.Rectangle(pos_x, pos_y, 1, 1))
             menu.popup()
             return
 
@@ -375,17 +371,17 @@ class PopupMenu:
 
     """ Events """
 
-    def _callback(self, controller, x, y):
+    def _callback(self, controller, pos_x, pos_y):
 
         menu = None
         menu_model = self
         callback = self.callback
 
         if isinstance(self.widget, Gtk.TreeView):
-            if x and y:
+            if pos_x and pos_y:
                 from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 
-                bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(x, y)
+                bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
                 set_treeview_selected_row(self.widget, bin_x, bin_y)
 
                 if not self.widget.get_path_at_pos(bin_x, bin_y):
@@ -405,15 +401,15 @@ class PopupMenu:
             if cancel:
                 return
 
-        self.popup(x, y, controller, menu=menu)
+        self.popup(pos_x, pos_y, controller, menu=menu)
 
         if controller:
             controller.set_state(Gtk.EventSequenceState.CLAIMED)
 
-    def _callback_click(self, controller, num_p, x, y):
-        self._callback(controller, x, y)
+    def _callback_click(self, controller, _num_p, pos_x, pos_y):
+        self._callback(controller, pos_x, pos_y)
 
-    def _callback_menu(self, *args):
+    def _callback_menu(self, *_args):
         self._callback(None, None, None)
         return True
 
@@ -443,23 +439,23 @@ class PopupMenu:
         self.gesture_press.set_touch_only(True)
         self.gesture_press.connect("pressed", self._callback)
 
-    def on_search_user(self, *args):
+    def on_search_user(self, *_args):
 
         self.frame.search_mode_action.change_state(GLib.Variant.new_string("user"))
         self.frame.UserSearchEntry.set_text(self.user)
         self.frame.change_main_page("search")
 
-    def on_send_message(self, *args):
+    def on_send_message(self, *_args):
         self.frame.np.privatechats.show_user(self.user)
         self.frame.change_main_page("private")
 
-    def on_show_ip_address(self, *args):
+    def on_show_ip_address(self, *_args):
         self.frame.np.request_ip_address(self.user)
 
-    def on_get_user_info(self, *args):
+    def on_get_user_info(self, *_args):
         self.frame.np.userinfo.request_user_info(self.user)
 
-    def on_browse_user(self, *args):
+    def on_browse_user(self, *_args):
         self.frame.np.userbrowse.browse_user(self.user)
 
     def on_private_room_add_user(self, *args):
@@ -538,10 +534,10 @@ class PopupMenu:
 
         action.set_state(state)
 
-    def on_copy_user(self, *args):
+    def on_copy_user(self, *_args):
         copy_text(self.user)
 
-    def on_give_privileges_response(self, dialog, response_id, data):
+    def on_give_privileges_response(self, dialog, _response_id, _data):
 
         days = dialog.get_response_value()
         dialog.destroy()
@@ -556,7 +552,7 @@ class PopupMenu:
         except ValueError:
             self.on_give_privileges(error=_("Please enter number of days!"))
 
-    def on_give_privileges(self, *args, error=None):
+    def on_give_privileges(self, *_args, error=None):
 
         self.frame.np.request_check_privileges()
 

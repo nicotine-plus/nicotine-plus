@@ -76,7 +76,6 @@ class RoomList(UserInterface):
 
         self.list_view.set_headers_clickable(True)
 
-        self.search_iter = None
         self.query = ""
 
         self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
@@ -90,7 +89,8 @@ class RoomList(UserInterface):
 
         frame.RoomList.set_popover(self.popover)
 
-    def get_selected_room(self, treeview):
+    @staticmethod
+    def get_selected_room(treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -99,7 +99,8 @@ class RoomList(UserInterface):
 
         return model.get_value(iterator, 0)
 
-    def private_rooms_sort(self, model, iter1, iter2, column):
+    @staticmethod
+    def private_rooms_sort(model, iter1, iter2, _column):
 
         try:
             private1 = model.get_value(iter1, 2) * 10000
@@ -115,7 +116,7 @@ class RoomList(UserInterface):
 
         return (private1 > private2) - (private1 < private2)
 
-    def room_match_function(self, model, iterator, data=None):
+    def room_match_function(self, model, iterator, _data=None):
 
         query = self.search_entry.get_text().lower()
 
@@ -132,8 +133,8 @@ class RoomList(UserInterface):
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         # Temporarily disable sorting for improved performance
-        self.room_model.set_sort_func(1, lambda *args: 0)
-        self.room_model.set_default_sort_func(lambda *args: 0)
+        self.room_model.set_sort_func(1, lambda *_args: 0)
+        self.room_model.set_default_sort_func(lambda *_args: 0)
         self.room_model.set_sort_column_id(-1, Gtk.SortType.DESCENDING)
 
         self.clear()
@@ -167,7 +168,7 @@ class RoomList(UserInterface):
             [room, user_count, text_weight, text_underline]
         )
 
-    def on_row_activated(self, treeview, path, column):
+    def on_row_activated(self, treeview, _path, _column):
 
         room = self.get_selected_room(treeview)
 
@@ -193,11 +194,12 @@ class RoomList(UserInterface):
         actions[_("Disown Private Room")].set_enabled(self.frame.np.chatrooms.is_private_room_owned(self.popup_room))
         actions[_("Cancel Room Membership")].set_enabled(
             (prooms_enabled and self.frame.np.chatrooms.is_private_room_member(self.popup_room)))
+        return False
 
-    def on_popup_join(self, *args):
+    def on_popup_join(self, *_args):
         self.frame.np.chatrooms.request_join_room(self.popup_room)
 
-    def on_show_chat_feed(self, *args):
+    def on_show_chat_feed(self, *_args):
 
         if self.feed_check.get_active():
             self.frame.np.chatrooms.request_join_public_room()
@@ -205,22 +207,22 @@ class RoomList(UserInterface):
 
         self.frame.np.chatrooms.request_leave_public_room()
 
-    def on_popup_private_room_disown(self, *args):
+    def on_popup_private_room_disown(self, *_args):
         self.frame.np.chatrooms.request_private_room_disown(self.popup_room)
 
-    def on_popup_private_room_dismember(self, *args):
+    def on_popup_private_room_dismember(self, *_args):
         self.frame.np.chatrooms.request_private_room_dismember(self.popup_room)
 
-    def on_popup_leave(self, *args):
+    def on_popup_leave(self, *_args):
         self.frame.np.chatrooms.request_leave_room(self.popup_room)
 
-    def on_search_room(self, *args):
+    def on_search_room(self, *_args):
         self.room_filter.refilter()
 
-    def on_refresh(self, *args):
+    def on_refresh(self, *_args):
         self.frame.np.chatrooms.request_room_list()
 
-    def on_toggle_accept_private_room(self, widget):
+    def on_toggle_accept_private_room(self, *_args):
         self.frame.np.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
 
     def update_visuals(self):

@@ -118,7 +118,7 @@ def initialise_columns(treeview_name, treeview, *args):
     cols = OrderedDict()
     column_config = None
 
-    for (id, title, width, type, extra) in args:
+    for column_id, title, width, column_type, extra in args:
         if treeview_name:
             try:
                 column_config = config.sections["columns"][treeview_name[0]][treeview_name[1]]
@@ -126,7 +126,7 @@ def initialise_columns(treeview_name, treeview, *args):
                 column_config = config.sections["columns"][treeview_name]
 
             try:
-                width = column_config[id]["width"]
+                width = column_config[column_id]["width"]
             except Exception:
                 # Invalid value
                 pass
@@ -140,50 +140,50 @@ def initialise_columns(treeview_name, treeview, *args):
         else:
             height_padding = 3
 
-        if type == "text":
+        if column_type == "text":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, height_padding)
 
-            column = Gtk.TreeViewColumn(id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
-        elif type == "center":
+        elif column_type == "center":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.5)
 
-            column = Gtk.TreeViewColumn(id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
-        elif type == "number":
+        elif column_type == "number":
             renderer = Gtk.CellRendererText()
             renderer.set_property("xalign", 0.9)
 
-            column = Gtk.TreeViewColumn(id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
             column.set_alignment(0.9)
 
-        elif type == "edit":
+        elif column_type == "edit":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, height_padding)
             renderer.set_property('editable', True)
-            column = Gtk.TreeViewColumn(id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
-        elif type == "combo":
+        elif column_type == "combo":
             renderer = Gtk.CellRendererCombo()
             renderer.set_padding(10, height_padding)
             renderer.set_property('text-column', 0)
             renderer.set_property('editable', True)
-            column = Gtk.TreeViewColumn(id, renderer, text=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
-        elif type == "progress":
+        elif column_type == "progress":
             renderer = Gtk.CellRendererProgress()
-            column = Gtk.TreeViewColumn(id, renderer, value=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, value=i)
 
-        elif type == "toggle":
+        elif column_type == "toggle":
             renderer = Gtk.CellRendererToggle()
-            column = Gtk.TreeViewColumn(id, renderer, active=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, active=i)
             renderer.set_property("xalign", 0.5)
 
         else:
             renderer = Gtk.CellRendererPixbuf()
-            column = Gtk.TreeViewColumn(id, renderer, pixbuf=i)
+            column = Gtk.TreeViewColumn(column_id, renderer, pixbuf=i)
 
         if width == -1:
             column.set_resizable(False)
@@ -214,7 +214,7 @@ def initialise_columns(treeview_name, treeview, *args):
         column.get_widget().set_margin_start(5)
         column.get_widget().show()
 
-        cols[id] = column
+        cols[column_id] = column
 
         i += 1
 
@@ -235,7 +235,7 @@ def initialise_columns(treeview_name, treeview, *args):
     return cols
 
 
-def on_copy_cell_data_accelerator(treeview, *args):
+def on_copy_cell_data_accelerator(treeview, *_args):
     """ Ctrl+C: copy cell data """
 
     path, column = treeview.get_cursor()
@@ -251,16 +251,16 @@ def on_copy_cell_data_accelerator(treeview, *args):
     return True
 
 
-def append_columns(treeview, cols, config):
+def append_columns(treeview, cols, column_config):
 
     # Column order not supported in Python 3.5
-    if not config or sys.version_info[:2] <= (3, 5):
-        for (column_id, column) in cols.items():
+    if not column_config or sys.version_info[:2] <= (3, 5):
+        for column_id, column in cols.items():
             treeview.append_column(column)
         return
 
     # Restore column order from config
-    for column_id in config:
+    for column_id in column_config:
         try:
             treeview.append_column(cols[column_id])
         except Exception:
@@ -271,7 +271,7 @@ def append_columns(treeview, cols, config):
 
     # If any columns were missing in the config, append them
     pos = 0
-    for (column_id, column) in cols.items():
+    for column_id, column in cols.items():
         if column not in added_columns:
             treeview.insert_column(column, pos)
 
@@ -309,16 +309,18 @@ def set_last_column_autosize(treeview):
     prev_column.set_resizable(True)
 
 
-def hide_columns(treeview, cols, config):
+def hide_columns(_treeview, cols, column_config):
 
-    for (column_id, column) in cols.items():
+    for column_id, column in cols.items():
         # Read Show / Hide column settings from last session
-        if config:
-            try:
-                column.set_visible(config[column_id]["visible"])
-            except Exception:
-                # Invalid value
-                pass
+        if not column_config:
+            continue
+
+        try:
+            column.set_visible(column_config[column_id]["visible"])
+        except Exception:
+            # Invalid value
+            pass
 
 
 def save_columns(treeview_name, columns, subpage=None):
@@ -396,8 +398,10 @@ def press_header(menu, treeview):
         actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
         pos += 1
 
+    return False
 
-def header_toggle(action, state, treeview, columns, index):
+
+def header_toggle(_action, _state, treeview, columns, index):
 
     column = columns[index]
     column.set_visible(not column.get_visible())
@@ -411,22 +415,22 @@ def set_treeview_selected_row(treeview, bin_x, bin_y):
     selection = treeview.get_selection()
 
     if pathinfo is not None:
-        path, col, cell_x, cell_y = pathinfo
+        path, column, _cell_x, _cell_y = pathinfo
 
         # Make sure we don't attempt to select a single row if the row is already
         # in a selection of multiple rows, otherwise the other rows will be unselected
         if selection.count_selected_rows() <= 1 or not selection.path_is_selected(path):
             treeview.grab_focus()
-            treeview.set_cursor(path, col, False)
+            treeview.set_cursor(path, column, False)
     else:
         selection.unselect_all()
 
 
-def show_tooltip(treeview, x, y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
+def show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, column_titles, text_function, strip_prefix=""):
 
     try:
-        bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(x, y)
-        path, column, cx, cy = treeview.get_path_at_pos(bin_x, bin_y)
+        bin_x, bin_y = treeview.convert_widget_to_bin_window_coords(pos_x, pos_y)
+        path, column, _cell_x, _cell_y = treeview.get_path_at_pos(bin_x, bin_y)
 
     except TypeError:
         return False
@@ -461,11 +465,11 @@ def get_country_tooltip_text(column_value, strip_prefix):
     return _("Earth")
 
 
-def get_file_path_tooltip_text(column_value, strip_prefix):
+def get_file_path_tooltip_text(column_value, _strip_prefix):
     return column_value
 
 
-def get_user_status_tooltip_text(column_value, strip_prefix):
+def get_user_status_tooltip_text(column_value, _strip_prefix):
 
     if column_value == 1:
         return _("Away")
@@ -476,17 +480,19 @@ def get_user_status_tooltip_text(column_value, strip_prefix):
     return _("Offline")
 
 
-def show_country_tooltip(treeview, x, y, tooltip, sourcecolumn, strip_prefix='flag_'):
-    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("country",), get_country_tooltip_text, strip_prefix)
+def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_prefix='flag_'):
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
+                        ("country",), get_country_tooltip_text, strip_prefix)
 
 
-def show_file_path_tooltip(treeview, x, y, tooltip, sourcecolumn):
+def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
 
     if not config.sections["ui"]["file_path_tooltips"]:
         return False
 
-    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("folder", "filename"), get_file_path_tooltip_text)
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
+                        ("folder", "filename"), get_file_path_tooltip_text)
 
 
-def show_user_status_tooltip(treeview, x, y, tooltip, sourcecolumn):
-    return show_tooltip(treeview, x, y, tooltip, sourcecolumn, ("status",), get_user_status_tooltip_text)
+def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
+    return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, ("status",), get_user_status_tooltip_text)

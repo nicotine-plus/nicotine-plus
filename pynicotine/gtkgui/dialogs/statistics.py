@@ -48,7 +48,7 @@ class Statistics(UserInterface):
 
         total_value = config.sections["statistics"][stat_id]
 
-        if stat_id == "downloaded_size" or stat_id == "uploaded_size":
+        if stat_id in ("downloaded_size", "uploaded_size"):
             session_value = human_size(session_value)
             total_value = human_size(total_value)
         else:
@@ -58,14 +58,14 @@ class Statistics(UserInterface):
         getattr(self, stat_id + "_session").set_text(session_value)
         getattr(self, stat_id + "_total").set_text(total_value)
 
-    def on_reset_statistics_response(self, dialog, response_id, data):
+    def on_reset_statistics_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
         if response_id == 2:
             self.frame.np.statistics.reset_stats()
 
-    def on_reset_statistics(self, *args):
+    def on_reset_statistics(self, *_args):
 
         option_dialog(
             parent=self.dialog,
@@ -74,7 +74,7 @@ class Statistics(UserInterface):
             callback=self.on_reset_statistics_response
         )
 
-    def hide(self, *args):
+    def hide(self, *_args):
         dialog_hide(self.dialog)
         return True
 

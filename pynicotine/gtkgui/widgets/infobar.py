@@ -41,7 +41,7 @@ class InfoBar:
 
         self.set_visible(False)
 
-    def _hide(self, *args):
+    def _hide(self, *_args):
         self.set_visible(False)
 
     def set_visible(self, visible):

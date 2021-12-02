@@ -76,11 +76,11 @@ class WishList(UserInterface):
         setup_accelerator("Delete", self.wish_entry, self.on_remove_wish)
         setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
-    def on_list_focus_entry_accelerator(self, *args):
+    def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()
         return True
 
-    def on_add_wish(self, *args):
+    def on_add_wish(self, *_args):
 
         wish = self.wish_entry.get_text()
         wish_exists = (wish in self.wishes)
@@ -108,7 +108,7 @@ class WishList(UserInterface):
         self.frame.np.search.add_wish(wish)
         self.select_wish(wish)
 
-    def on_edit_wish(self, *args):
+    def on_edit_wish(self, *_args):
 
         model, paths = self.list_view.get_selection().get_selected_rows()
 
@@ -126,7 +126,7 @@ class WishList(UserInterface):
             )
             return
 
-    def on_remove_wish(self, *args):
+    def on_remove_wish(self, *_args):
 
         model, paths = self.list_view.get_selection().get_selected_rows()
 
@@ -138,7 +138,7 @@ class WishList(UserInterface):
         self.wish_entry.grab_focus()
         return True
 
-    def clear_wishlist_response(self, dialog, response_id, data):
+    def clear_wishlist_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
@@ -148,7 +148,7 @@ class WishList(UserInterface):
 
         self.wish_entry.grab_focus()
 
-    def on_clear_wishlist(self, *args):
+    def on_clear_wishlist(self, *_args):
 
         option_dialog(
             parent=self.dialog,
@@ -202,7 +202,7 @@ class WishList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def show(self, *args):
+    def show(self, *_args):
 
         dialog_show(self.dialog)
         page = self.searches.get_nth_page(self.searches.get_current_page())
@@ -235,6 +235,6 @@ class WishList(UserInterface):
         self.wish_entry.set_text(text)
         self.wish_entry.grab_focus()
 
-    def hide(self, *args):
+    def hide(self, *_args):
         dialog_hide(self.dialog)
         return True

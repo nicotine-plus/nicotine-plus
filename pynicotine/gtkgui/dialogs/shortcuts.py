@@ -41,7 +41,7 @@ class Shortcuts(UserInterface):
         dialog_show(self.dialog)
         dialog_hide(self.dialog)
 
-    def hide(self, *args):
+    def hide(self, *_args):
         dialog_hide(self.dialog)
         return True
 

@@ -56,14 +56,14 @@ class UserInfos(IconNotebook):
 
         CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())
 
-    def on_switch_info_page(self, notebook, page, page_num):
+    def on_switch_info_page(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.page_id:
             return
 
         for tab in self.pages.values():
             if tab.Main == page:
-                GLib.idle_add(lambda: tab.descr.grab_focus() == -1)
+                GLib.idle_add(lambda: tab.descr.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
                 break
 
     def show_user(self, user, switch_page=True):
@@ -209,13 +209,13 @@ class UserInfo(UserInterface):
                     ("", None),
                     ("#" + _("_Search for Item"), self.on_interest_recommend_search, popup))
 
-        self.likes_popup_menu = popup = PopupMenu(self.frame, self.Likes, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.Likes, self.on_popup_interest_menu)
         popup.setup(*get_interest_items(popup))
 
-        self.hates_popup_menu = popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(*get_interest_items(popup))
 
-        self.image_menu = popup = PopupMenu(self.frame, self.image_view, self.on_image_popup_menu)
+        popup = PopupMenu(self.frame, self.image_view, self.on_image_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -250,11 +250,11 @@ class UserInfo(UserInterface):
             import gc
             import tempfile
 
-            with tempfile.NamedTemporaryFile() as f:
-                f.write(data)
+            with tempfile.NamedTemporaryFile() as file_handle:
+                file_handle.write(data)
                 del data
 
-                self.image_pixbuf = pixbuf = GdkPixbuf.Pixbuf.new_from_file(f.name)
+                self.image_pixbuf = pixbuf = GdkPixbuf.Pixbuf.new_from_file(file_handle.name)
                 image_width = self.image_pixbuf.get_width()
                 image_height = self.image_pixbuf.get_height()
 
@@ -279,27 +279,27 @@ class UserInfo(UserInterface):
 
             self.image.show()
 
-        except Exception as e:
+        except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
                 "user": self.user,
-                "error": str(e)
+                "error": error
             })
 
-    def make_zoom_normal(self, *args):
+    def make_zoom_normal(self, *_args):
         self.make_zoom_in(zoom=True)
 
-    def make_zoom_in(self, *args, zoom=None):
+    def make_zoom_in(self, *_args, zoom=None):
 
-        def calc_zoom_in(a):
-            return a + a * self.actual_zoom / 100 + a * self.zoom_factor / 100
+        def calc_zoom_in(w_h):
+            return w_h + w_h * self.actual_zoom / 100 + w_h * self.zoom_factor / 100
 
         import gc
 
         if self.image is None or self.image_pixbuf is None or self.actual_zoom > 100:
             return
 
-        x = self.image_pixbuf.get_width()
-        y = self.image_pixbuf.get_height()
+        width = self.image_pixbuf.get_width()
+        height = self.image_pixbuf.get_height()
 
         if zoom:
             self.actual_zoom = 0
@@ -308,7 +308,7 @@ class UserInfo(UserInterface):
         else:
             self.actual_zoom += self.zoom_factor
             pixbuf_zoomed = self.image_pixbuf.scale_simple(
-                calc_zoom_in(x), calc_zoom_in(y), GdkPixbuf.InterpType.BILINEAR)
+                calc_zoom_in(width), calc_zoom_in(height), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
             self.image.set_pixbuf(pixbuf_zoomed)
@@ -319,27 +319,27 @@ class UserInfo(UserInterface):
 
         gc.collect()
 
-    def make_zoom_out(self, *args):
+    def make_zoom_out(self, *_args):
 
-        def calc_zoom_out(a):
-            return a + a * self.actual_zoom / 100 - a * self.zoom_factor / 100
+        def calc_zoom_out(w_h):
+            return w_h + w_h * self.actual_zoom / 100 - w_h * self.zoom_factor / 100
 
         import gc
 
         if self.image is None or self.image_pixbuf is None:
             return
 
-        x = self.image_pixbuf.get_width()
-        y = self.image_pixbuf.get_height()
+        width = self.image_pixbuf.get_width()
+        height = self.image_pixbuf.get_height()
 
         self.actual_zoom -= self.zoom_factor
 
-        if calc_zoom_out(x) < 10 or calc_zoom_out(y) < 10:
+        if calc_zoom_out(width) < 10 or calc_zoom_out(height) < 10:
             self.actual_zoom += self.zoom_factor
             return
 
         pixbuf_zoomed = self.image_pixbuf.scale_simple(
-            calc_zoom_out(x), calc_zoom_out(y), GdkPixbuf.InterpType.BILINEAR)
+            calc_zoom_out(width), calc_zoom_out(height), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
             self.image.set_pixbuf(pixbuf_zoomed)
@@ -428,21 +428,14 @@ class UserInfo(UserInterface):
 
     """ Callbacks """
 
-    def on_tab_popup(self, *args):
+    def on_tab_popup(self, *_args):
         self.user_popup.toggle_user_items()
 
-    def on_popup_interest_menu(self, menu, widget):
+    @staticmethod
+    def on_popup_interest_menu(menu, widget):
 
         model, iterator = widget.get_selection().get_selected()
-
-        if iterator is None:
-            return True
-
         item = model.get_value(iterator, 0)
-
-        if item is None:
-            return True
-
         menu.set_user(item)
 
         actions = menu.get_actions()
@@ -459,29 +452,29 @@ class UserInfo(UserInterface):
     def on_dislike_recommendation(self, action, state, popup):
         self.frame.interests.on_dislike_recommendation(action, state, popup.get_user())
 
-    def on_interest_recommend_search(self, action, state, popup):
+    def on_interest_recommend_search(self, _action, _state, popup):
         self.frame.interests.recommend_search(popup.get_user())
 
-    def on_send_message(self, *args):
+    def on_send_message(self, *_args):
         self.frame.np.privatechats.show_user(self.user)
         self.frame.change_main_page("private")
 
-    def on_show_ip_address(self, *args):
+    def on_show_ip_address(self, *_args):
         self.frame.np.request_ip_address(self.user)
 
-    def on_browse_user(self, *args):
+    def on_browse_user(self, *_args):
         self.frame.np.userbrowse.browse_user(self.user)
 
-    def on_add_to_list(self, *args):
+    def on_add_to_list(self, *_args):
         self.frame.np.userlist.add_user(self.user)
 
-    def on_ban_user(self, *args):
+    def on_ban_user(self, *_args):
         self.frame.np.network_filter.ban_user(self.user)
 
-    def on_ignore_user(self, *args):
+    def on_ignore_user(self, *_args):
         self.frame.np.network_filter.ignore_user(self.user)
 
-    def on_save_picture_response(self, selected, data):
+    def on_save_picture_response(self, selected, _data):
 
         if not os.path.exists(selected):
             self.image_pixbuf.savev(selected, "jpeg", ["quality"], ["100"])
@@ -489,7 +482,7 @@ class UserInfo(UserInterface):
         else:
             log.add(_("Picture not saved, %s already exists."), selected)
 
-    def on_save_picture(self, *args):
+    def on_save_picture(self, *_args):
 
         if self.image is None or self.image_pixbuf is None:
             return
@@ -502,27 +495,20 @@ class UserInfo(UserInterface):
             title=_("Save as…")
         )
 
-    def on_image_popup_menu(self, menu, widget):
+    def on_image_popup_menu(self, menu, _widget):
+        for action in menu.get_actions().values():
+            action.set_enabled(self.image is None or self.image_pixbuf is None)
 
-        act = True
+    def on_scroll(self, _controller, _scroll_x, scroll_y):
 
-        if self.image is None or self.image_pixbuf is None:
-            act = False
-
-        actions = menu.get_actions()
-        for (action_id, action) in actions.items():
-            action.set_enabled(act)
-
-    def on_scroll(self, controller, x, y):
-
-        if y < 0:
+        if scroll_y < 0:
             self.make_zoom_in()
         else:
             self.make_zoom_out()
 
         return True
 
-    def on_scroll_event(self, widget, event):
+    def on_scroll_event(self, _widget, event):
 
         if event.get_scroll_deltas().delta_y < 0:
             self.make_zoom_in()
@@ -531,14 +517,14 @@ class UserInfo(UserInterface):
 
         return True
 
-    def on_refresh(self, *args):
+    def on_refresh(self, *_args):
 
         self.info_bar.set_visible(False)
         self.progressbar.set_fraction(0.0)
 
         self.frame.np.userinfo.request_user_info(self.user)
 
-    def on_close(self, *args):
+    def on_close(self, *_args):
 
         del self.userinfos.pages[self.user]
         self.frame.np.userinfo.remove_user(self.user)
@@ -547,5 +533,5 @@ class UserInfo(UserInterface):
         if self.userinfos.get_n_pages() == 0:
             self.frame.userinfo_status_page.show()
 
-    def on_close_all_tabs(self, *args):
+    def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

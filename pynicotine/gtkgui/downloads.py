@@ -40,7 +40,7 @@ class Downloads(TransferList):
         self.aborted_status = _("Paused")
         self.tray_template = _("Downloads: %(speed)s")
 
-        TransferList.__init__(self, frame, type='download')
+        TransferList.__init__(self, frame, transfer_type="download")
 
         self.popup_menu_clear.setup(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
@@ -57,7 +57,7 @@ class Downloads(TransferList):
     def switch_tab(self):
         self.frame.change_main_page("downloads")
 
-    def on_try_clear_queued(self, *args):
+    def on_try_clear_queued(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -67,7 +67,7 @@ class Downloads(TransferList):
             callback_data="queued"
         )
 
-    def on_try_clear_all(self, *args):
+    def on_try_clear_all(self, *_args):
 
         option_dialog(
             parent=self.frame.MainWindow,
@@ -95,7 +95,7 @@ class Downloads(TransferList):
             callback_data=msg
         )
 
-    def on_open_file_manager(self, *args):
+    def on_open_file_manager(self, *_args):
 
         downloaddir = config.sections["transfers"]["downloaddir"]
         incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
@@ -117,7 +117,7 @@ class Downloads(TransferList):
         command = config.sections["ui"]["filemanager"]
         open_file_path(final_path, command)
 
-    def on_play_files(self, *args):
+    def on_play_files(self, *_args):
 
         for transfer in self.selected_transfers:
 
@@ -140,7 +140,7 @@ class Downloads(TransferList):
                 command = config.sections["players"]["default"]
                 open_file_path(playfile, command)
 
-    def on_browse_folder(self, *args):
+    def on_browse_folder(self, *_args):
 
         requested_users = set()
         requested_folders = set()
@@ -155,14 +155,14 @@ class Downloads(TransferList):
                 requested_users.add(user)
                 requested_folders.add(folder)
 
-    def on_clear_paused(self, *args):
+    def on_clear_paused(self, *_args):
         self.clear_transfers(["Paused"])
 
-    def on_clear_finished_filtered(self, *args):
+    def on_clear_finished_filtered(self, *_args):
         self.clear_transfers(["Finished", "Filtered"])
 
-    def on_clear_failed(self, *args):
+    def on_clear_failed(self, *_args):
         self.clear_transfers(["Cannot connect", "Local file error", "Remote file error", "File not shared"])
 
-    def on_clear_filtered(self, *args):
+    def on_clear_filtered(self, *_args):
         self.clear_transfers(["Filtered"])

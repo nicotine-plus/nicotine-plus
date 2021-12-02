@@ -42,6 +42,7 @@ class ImageLabel(Gtk.Box):
         Gtk.Box.__init__(self)
         self.set_hexpand(False)
         self.centered = False
+        self.gesture_click = None
 
         if Gtk.get_major_version() == 4:
             self.eventbox = Gtk.Box()
@@ -278,8 +279,7 @@ class IconNotebook:
 
         for i in range(self.notebook.get_n_pages()):
             page = self.notebook.get_nth_page(i)
-            tab_label, menu_label = self.get_labels(page)
-
+            tab_label, _menu_label = self.get_labels(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
     def set_tab_pos(self, pos):
@@ -290,7 +290,7 @@ class IconNotebook:
         self.popup_menu_unread.clear()
 
         for page in self.unread_pages:
-            tab_label, menu_label = self.get_labels(page)
+            tab_label, _menu_label = self.get_labels(page)
             self.popup_menu_unread.setup(
                 ("#" + tab_label.get_text(), self.set_unread_page, page)
             )
@@ -349,14 +349,14 @@ class IconNotebook:
         if self.notebook.get_n_pages() == 0:
             self.notebook.hide()
 
-    def remove_all_pages_response(self, dialog, response_id, data):
+    def remove_all_pages_response(self, dialog, response_id, _data):
 
         dialog.destroy()
 
         if response_id == 2:
             for i in reversed(range(self.notebook.get_n_pages())):
                 page = self.notebook.get_nth_page(i)
-                tab_label, menu_label = self.get_labels(page)
+                tab_label, _menu_label = self.get_labels(page)
                 tab_label.close_callback(dialog)
 
     def remove_all_pages(self):
@@ -367,13 +367,6 @@ class IconNotebook:
             message=_('Do you really want to close all tabs?'),
             callback=self.remove_all_pages_response
         )
-
-    def get_page_owner(self, page, items):
-
-        n = self.page_num(page)
-        page = self.get_nth_page(n)
-
-        return next(owner for owner, tab in items.items() if tab.Main is page)
 
     def on_tab_popup(self, widget, page):
         # Dummy implementation
@@ -407,7 +400,7 @@ class IconNotebook:
         self.set_status_image(page, status)
 
         # Set a tab tooltip containing the user's status and name
-        tab_label, menu_label = self.get_labels(page)
+        tab_label, _menu_label = self.get_labels(page)
         tab_label.set_tooltip_text("%s (%s)" % (user, status_text))
 
     def set_hilite_image(self, page, status):
@@ -447,7 +440,7 @@ class IconNotebook:
 
     def set_text_color(self, page, status):
 
-        tab_label, menu_label = self.get_labels(page)
+        tab_label, _menu_label = self.get_labels(page)
         tab_label.set_text_color(status)
 
     def request_hilite(self, page):
@@ -474,7 +467,7 @@ class IconNotebook:
     def set_current_page(self, page_num):
         return self.notebook.set_current_page(page_num)
 
-    def set_unread_page(self, action, state, page):
+    def set_unread_page(self, _action, _state, page):
         page_num = self.page_num(page)
         self.notebook.set_current_page(page_num)
 
@@ -493,7 +486,7 @@ class IconNotebook:
     def prev_page(self):
         return self.notebook.prev_page()
 
-    def on_switch_page(self, notebook, new_page, page_num):
+    def on_switch_page(self, _notebook, new_page, _page_num):
 
         # Hide container widget on previous page for a performance boost
         current_page = self.get_nth_page(self.get_current_page())

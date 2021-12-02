@@ -68,7 +68,7 @@ class ChatEntry:
                 self.frame.init_spell_checker()
 
             if self.frame.spell_checker:
-                from gi.repository import Gspell
+                from gi.repository import Gspell  # pylint:disable=no-name-in-module
                 spell_buffer = Gspell.EntryBuffer.get_from_gtk_entry_buffer(entry.get_buffer())
                 spell_buffer.set_spell_checker(self.frame.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(entry)
@@ -101,22 +101,23 @@ class ChatEntry:
             model = self.entry.get_completion().get_model()
             self.completion_iters[item] = model.insert_with_valuesv(-1, self.column_numbers, [item])
 
-    def get_completion(self, part, list):
+    def get_completion(self, part, completion_list):
 
-        matches = self.get_completions(part, list)
+        matches = self.get_completions(part, completion_list)
 
         if not matches:
             return None, 0
 
         if len(matches) == 1:
             return matches[0], 1
-        else:
-            return commonprefix([x.lower() for x in matches]), 0
 
-    def get_completions(self, part, list):
+        return commonprefix([x.lower() for x in matches]), 0
+
+    @staticmethod
+    def get_completions(part, completion_list):
 
         lowerpart = part.lower()
-        matches = [x for x in list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
+        matches = [x for x in completion_list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
         return matches
 
     def remove_completion(self, item):
@@ -175,8 +176,8 @@ class ChatEntry:
 
         # Get word to the left of current position
         if " " in entry_text:
-            ix = self.entry.get_position()
-            split_key = entry_text[:ix].split(" ")[-1]
+            i = self.entry.get_position()
+            split_key = entry_text[:i].split(" ")[-1]
         else:
             split_key = entry_text
 
@@ -191,7 +192,7 @@ class ChatEntry:
 
         return False
 
-    def entry_completion_found_match(self, completion, model, iterator):
+    def entry_completion_found_match(self, _completion, model, iterator):
 
         current_text = self.entry.get_text()
         completion_value = model.get_value(iterator, 0)
@@ -201,9 +202,9 @@ class ChatEntry:
         # to replace it with the matching word
 
         if " " in current_text:
-            ix = self.entry.get_position()
-            prefix = " ".join(current_text[:ix].split(" ")[:-1])
-            suffix = " ".join(current_text[ix:].split(" "))
+            i = self.entry.get_position()
+            prefix = " ".join(current_text[:i].split(" ")[:-1])
+            suffix = " ".join(current_text[i:].split(" "))
 
             # add the matching word
             new_text = "%s %s%s" % (prefix, completion_value, suffix)
@@ -218,7 +219,7 @@ class ChatEntry:
         # stop the event propagation
         return True
 
-    def on_enter(self, widget):
+    def on_enter(self, *_args):
 
         if not self.frame.np.logged_in:
             return
@@ -414,11 +415,11 @@ class ChatEntry:
         elif not self.is_chatroom:
             self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
-    def on_entry_changed(self, *args):
+    def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
         self.midwaycompletion = False
 
-    def on_tab_complete_accelerator(self, widget, state, backwards=False):
+    def on_tab_complete_accelerator(self, _widget, _state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """
 
         if not config.sections["words"]["tab"]:
@@ -434,19 +435,19 @@ class ChatEntry:
         #   1  4  7  10 13      16 19 22 25 28 31
         #    2  5  8  11 14      17 20 23 26 29 32
         #
-        # ix = 16
+        # i = 16
         # text = Miss
         # preix = 12
-        ix = self.entry.get_position()
-        text = text[:ix].split(" ")[-1]
-        preix = ix - len(text)
+        i = self.entry.get_position()
+        text = text[:i].split(" ")[-1]
+        preix = i - len(text)
 
         if not config.sections["words"]["cycle"]:
             completion, single = self.get_completion(text, self.completion_list)
             if completion:
-                if single and ix == len(text) and not text.startswith("/"):
+                if single and i == len(text) and not text.startswith("/"):
                     completion += ": "
-                self.entry.delete_text(preix, ix)
+                self.entry.delete_text(preix, i)
                 self.entry.insert_text(completion, preix)
                 self.entry.set_position(preix + len(completion))
 
@@ -465,7 +466,7 @@ class ChatEntry:
         if self.midwaycompletion:
             # We're still completing, block handler to avoid modifying midwaycompletion value
             with self.entry.handler_block(self.entry_changed_handler):
-                self.entry.delete_text(ix - len(currentnick), ix)
+                self.entry.delete_text(i - len(currentnick), i)
                 direction = 1  # Forward cycle
 
                 if backwards:
@@ -549,22 +550,22 @@ class TextSearchBar:
 
             self.on_search_match(search_type, restarted=True)
 
-    def on_search_changed(self, *args):
+    def on_search_changed(self, *_args):
         self.on_search_match(search_type="typing")
 
-    def on_search_previous_match(self, *args):
+    def on_search_previous_match(self, *_args):
         self.on_search_match(search_type="previous")
 
-    def on_search_next_match(self, *args):
+    def on_search_next_match(self, *_args):
         self.on_search_match(search_type="next")
 
-    def on_hide_search_accelerator(self, *args):
+    def on_hide_search_accelerator(self, *_args):
         """ Escape: hide search bar """
 
         self.hide_search_bar()
         return True
 
-    def on_show_search_accelerator(self, *args):
+    def on_show_search_accelerator(self, *_args):
         """ Ctrl+F: show search bar """
 
         self.show_search_bar()
@@ -595,7 +596,8 @@ class CompletionEntry:
 
         entry.set_completion(completion)
 
-    def entry_completion_find_match(self, completion, entry_text, iterator):
+    @staticmethod
+    def entry_completion_find_match(completion, entry_text, iterator):
 
         if not entry_text:
             return False

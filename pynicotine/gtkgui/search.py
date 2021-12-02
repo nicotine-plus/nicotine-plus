@@ -101,7 +101,7 @@ class Searches(IconNotebook):
         self.populate_search_history()
         self.update_visuals()
 
-    def on_switch_search_page(self, notebook, page, page_num):
+    def on_switch_search_page(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.page_id:
             return
@@ -109,8 +109,8 @@ class Searches(IconNotebook):
         for tab in self.pages.values():
             if tab.Main == page:
                 tab.update_filter_comboboxes()
-                GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
-                return True
+                GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+                break
 
     def on_search_mode(self, action, state):
 
@@ -199,11 +199,11 @@ class Searches(IconNotebook):
         self.pages[search_id] = tab = Search(self, text, search_id, mode, mode_label, showtab)
 
         if showtab:
-            self.show_tab(tab, search_id, text, mode)
+            self.show_tab(tab, text)
 
         return tab
 
-    def show_tab(self, tab, search_id, text, mode):
+    def show_tab(self, tab, text):
 
         if tab.mode_label is not None:
             full_text = "(%s) %s" % (tab.mode_label, text)
@@ -259,7 +259,7 @@ class Searches(IconNotebook):
 
 class Search(UserInterface):
 
-    def __init__(self, searches, text, id, mode, mode_label, showtab):
+    def __init__(self, searches, text, search_id, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
 
@@ -293,7 +293,7 @@ class Search(UserInterface):
             else:
                 self.searchterm_words_include.append(word)
 
-        self.id = id
+        self.search_id = search_id
         self.mode = mode
         self.mode_label = mode_label
         self.showtab = showtab
@@ -304,6 +304,7 @@ class Search(UserInterface):
         self.selected_results = []
         self.selected_users = []
         self.selected_files_count = 0
+        self.grouping_mode = None
         self.filters = None
         self.clearing_filters = False
         self.active_filter_count = 0
@@ -448,16 +449,19 @@ class Search(UserInterface):
     def set_label(self, label):
         self.tab_menu.set_widget(label)
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+    @staticmethod
+    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 12, strip_prefix="")
-        file_path_tooltip = show_file_path_tooltip(widget, x, y, tooltip, 11)
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 12, strip_prefix="")
+        file_path_tooltip = show_file_path_tooltip(widget, pos_x, pos_y, tooltip, 11)
 
         if country_tooltip:
             return country_tooltip
 
-        elif file_path_tooltip:
+        if file_path_tooltip:
             return file_path_tooltip
+
+        return False
 
     def focus_combobox(self, button):
 
@@ -482,8 +486,7 @@ class Search(UserInterface):
                 continue
 
             presets = ""
-            combobox = self.filter_widgets[filter_id]
-            combobox.remove_all()
+            widget.remove_all()
 
             if filter_id == "filterbr":
                 presets = ("0", "128", "160", "192", "256", "320")
@@ -495,11 +498,11 @@ class Search(UserInterface):
                 presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
 
             for value in presets:
-                combobox.append_text(value)
+                widget.append_text(value)
 
             for value in config.sections["searches"][filter_id]:
                 if value not in presets:
-                    combobox.append_text(value)
+                    widget.append_text(value)
 
     def populate_filters(self):
 
@@ -638,7 +641,7 @@ class Search(UserInterface):
         if ulspeed > 0:
             h_speed = human_speed(ulspeed)
 
-        color_id = (msg.freeulslots and "search" or "searchq")
+        color_id = "search" if msg.freeulslots else "searchq"
         color = config.sections["ui"][color_id] or None
 
         update_ui = self.add_result_list(msg.list, user, country, inqueue, ulspeed, h_speed, h_queue, color)
@@ -653,7 +656,7 @@ class Search(UserInterface):
         if update_ui:
             # If this search wasn't initiated by us (e.g. wishlist), and the results aren't spoofed, show tab
             if not self.showtab:
-                self.searches.show_tab(self, self.id, self.text, self.mode)
+                self.searches.show_tab(self, self.text)
                 self.showtab = True
 
             # Update number of results
@@ -689,8 +692,8 @@ class Search(UserInterface):
         return True
 
     def add_row_to_model(self, row):
-        (_counter, user, flag, h_speed, h_queue, directory, filename, h_size, h_bitrate,
-            h_length, bitrate, fullpath, country, size, speed, queue, length, color) = row
+        (_counter, user, flag, h_speed, h_queue, directory, _filename, _h_size, _h_bitrate,
+            _h_length, _bitrate, fullpath, country, _size, speed, queue, _length, color) = row
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -770,22 +773,22 @@ class Search(UserInterface):
 
             self.num_results_visible += 1
 
-        except Exception as e:
+        except Exception as error:
             types = []
 
             for i in row:
                 types.append(type(i))
 
-            log.add("Search row error: %(exception)s %(row)s", {'exception': e, 'row': row})
+            log.add("Search row error: %(exception)s %(row)s", {'exception': error, 'row': row})
             iterator = None
 
         return iterator
 
     def check_digit(self, sfilter, value, factorize=True):
 
-        op = ">="
+        used_operator = ">="
         if sfilter.startswith((">", "<", "=")):
-            op, sfilter = sfilter[:1] + "=", sfilter[1:]
+            used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
 
         if not sfilter:
             return True
@@ -822,10 +825,11 @@ class Search(UserInterface):
         except ValueError:
             return True
 
-        operation = self.operators.get(op)
+        operation = self.operators.get(used_operator)
         return operation(value, sfilter)
 
-    def check_country(self, sfilter, value):
+    @staticmethod
+    def check_country(sfilter, value):
 
         if not isinstance(value, str):
             return False
@@ -833,19 +837,20 @@ class Search(UserInterface):
         value = value.upper()
         allowed = False
 
-        for cc in sfilter.split("|"):
-            if cc == value:
+        for country_code in sfilter.split("|"):
+            if country_code == value:
                 allowed = True
 
-            elif cc.startswith("!") and cc[1:] != value:
+            elif country_code.startswith("!") and country_code[1:] != value:
                 allowed = True
 
-            elif cc.startswith("!") and cc[1:] == value:
+            elif country_code.startswith("!") and country_code[1:] == value:
                 return False
 
         return allowed
 
-    def check_file_type(self, sfilter, value):
+    @staticmethod
+    def check_file_type(sfilter, value):
 
         if not isinstance(value, str):
             return False
@@ -921,7 +926,7 @@ class Search(UserInterface):
 
         # Temporarily disable sorting for increased performance
         sort_column, sort_type = self.resultsmodel.get_sort_column_id()
-        self.resultsmodel.set_default_sort_func(lambda *unused: 0)
+        self.resultsmodel.set_default_sort_func(lambda *_args: 0)
         self.resultsmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         self.usersiters.clear()
@@ -962,7 +967,7 @@ class Search(UserInterface):
         self.AddWishIcon.set_property("icon-name", "list-remove-symbolic")
         self.AddWishLabel.set_label(_("Remove Wi_sh"))
 
-    def on_add_wish(self, *args):
+    def on_add_wish(self, *_args):
 
         if self.frame.np.search.is_wish(self.text):
             self.frame.np.search.remove_wish(self.text)
@@ -998,20 +1003,20 @@ class Search(UserInterface):
         # Single user, add items directly to "User(s)" submenu
         self.add_popup_menu_user(self.popup_menu_users, self.selected_users[0])
 
-    def on_close_filter_bar_accelerator(self, *args):
+    def on_close_filter_bar_accelerator(self, *_args):
         """ Escape: hide filter bar """
 
         self.ShowFilters.set_active(False)
         return True
 
-    def on_show_filter_bar_accelerator(self, *args):
+    def on_show_filter_bar_accelerator(self, *_args):
         """ Ctrl+F: show filter bar """
 
         self.ShowFilters.set_active(True)
         self.FilterIn.grab_focus()
         return True
 
-    def on_file_properties_accelerator(self, *args):
+    def on_file_properties_accelerator(self, *_args):
         """ Alt+Return: show file properties dialog """
 
         self.on_file_properties()
@@ -1093,7 +1098,7 @@ class Search(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget, list_font_target="searchfont")
 
-    def on_column_position_changed(self, column, param):
+    def on_column_position_changed(self, column, _param):
         """ Save column position and width to config """
 
         col_title = column.get_title()
@@ -1105,20 +1110,20 @@ class Search(UserInterface):
         self.column_offsets[col_title] = offset
         save_columns(self.treeview_name, self.ResultsList.get_columns())
 
-    def on_row_activated(self, treeview, path, column):
+    def on_row_activated(self, treeview, _path, _column):
 
         self.select_results()
 
         self.on_download_files()
         treeview.get_selection().unselect_all()
 
-    def on_popup_menu(self, menu, widget):
+    def on_popup_menu(self, menu, _widget):
 
         self.select_results()
         self.populate_popup_menu_users()
         menu.set_num_selected_files(self.selected_files_count)
 
-    def on_browse_folder(self, *args):
+    def on_browse_folder(self, *_args):
 
         requested_users = set()
         requested_folders = set()
@@ -1133,7 +1138,7 @@ class Search(UserInterface):
                 requested_users.add(user)
                 requested_folders.add(folder)
 
-    def on_file_properties(self, *args):
+    def on_file_properties(self, *_args):
 
         data = []
 
@@ -1146,14 +1151,14 @@ class Search(UserInterface):
             size = self.resultsmodel.get_value(iterator, 7)
             bitratestr = self.resultsmodel.get_value(iterator, 8)
             length = self.resultsmodel.get_value(iterator, 9)
-            fn = self.resultsmodel.get_value(iterator, 11)
-            directory, filename = fn.rsplit('\\', 1)
-            cc = self.resultsmodel.get_value(iterator, 12)
-            country = "%s / %s" % (cc, self.frame.np.geoip.country_code_to_name(cc))
+            virtual_path = self.resultsmodel.get_value(iterator, 11)
+            directory, filename = virtual_path.rsplit('\\', 1)
+            country_code = self.resultsmodel.get_value(iterator, 12)
+            country = "%s / %s" % (country_code, self.frame.np.geoip.country_code_to_name(country_code))
 
             data.append({
                 "user": user,
-                "fn": fn,
+                "fn": virtual_path,
                 "position": num,
                 "filename": filename,
                 "directory": directory,
@@ -1168,7 +1173,7 @@ class Search(UserInterface):
         if data:
             FileProperties(self.frame, data).show()
 
-    def on_download_files(self, *args, prefix=""):
+    def on_download_files(self, *_args, prefix=""):
 
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
@@ -1180,10 +1185,10 @@ class Search(UserInterface):
             self.frame.np.transfers.get_file(
                 user, filepath, prefix, size=size, bitrate=bitrate, length=length)
 
-    def on_download_files_to_selected(self, selected, data):
+    def on_download_files_to_selected(self, selected, _data):
         self.on_download_files(prefix=selected)
 
-    def on_download_files_to(self, *args):
+    def on_download_files_to(self, *_args):
 
         choose_dir(
             parent=self.frame.MainWindow,
@@ -1193,7 +1198,7 @@ class Search(UserInterface):
             multichoice=False
         )
 
-    def on_download_folders(self, *args, download_location=""):
+    def on_download_folders(self, *_args, download_location=""):
 
         if download_location:
             """ Custom download location specified, remember it when peer sends a folder
@@ -1222,18 +1227,18 @@ class Search(UserInterface):
                     continue
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
-                (counter, user, flag, h_speed, h_queue, directory, filename,
-                    h_size, h_bitrate, h_length, bitrate, fullpath, country, size, speed,
-                    queue, length, color) = row
+                (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
+                    _h_size, _h_bitrate, _h_length, bitrate, fullpath, _country, size, _speed,
+                    _queue, length, _color) = row
                 visible_files.append(
                     (user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
 
             self.frame.np.search.request_folder_download(user, folder, visible_files)
 
-    def on_download_folders_to_selected(self, selected, data):
+    def on_download_folders_to_selected(self, selected, _data):
         self.on_download_folders(download_location=selected)
 
-    def on_download_folders_to(self, *args):
+    def on_download_folders_to(self, *_args):
 
         choose_dir(
             parent=self.frame.MainWindow,
@@ -1243,14 +1248,14 @@ class Search(UserInterface):
             multichoice=False
         )
 
-    def on_copy_file_path(self, *args):
+    def on_copy_file_path(self, *_args):
 
         for iterator in self.selected_results:
             filepath = self.resultsmodel.get_value(iterator, 11)
             copy_text(filepath)
             return
 
-    def on_copy_url(self, *args):
+    def on_copy_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
@@ -1258,7 +1263,7 @@ class Search(UserInterface):
             copy_file_url(user, filepath)
             return
 
-    def on_copy_dir_url(self, *args):
+    def on_copy_dir_url(self, *_args):
 
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
@@ -1266,7 +1271,7 @@ class Search(UserInterface):
             copy_file_url(user, filepath.rsplit('\\', 1)[0] + '\\')
             return
 
-    def on_counter_button(self, *args):
+    def on_counter_button(self, *_args):
 
         if self.num_results_found > self.num_results_visible:
             self.on_clear_filters()
@@ -1288,7 +1293,7 @@ class Search(UserInterface):
 
         action.set_state(state)
 
-    def on_toggle_expand_all(self, widget):
+    def on_toggle_expand_all(self, *_args):
 
         active = self.ExpandButton.get_active()
 
@@ -1313,10 +1318,11 @@ class Search(UserInterface):
 
         self.ResultsList.grab_focus()
 
-    def on_copy_search_term(self, *args):
+    def on_copy_search_term(self, *_args):
         copy_text(self.text)
 
-    def push_history(self, filter_id, value):
+    @staticmethod
+    def push_history(filter_id, value):
 
         if not value:
             return
@@ -1335,7 +1341,7 @@ class Search(UserInterface):
         history.insert(0, value)
         config.write_configuration()
 
-    def on_refilter(self, *args):
+    def on_refilter(self, *_args):
 
         if self.clearing_filters:
             return
@@ -1404,7 +1410,7 @@ class Search(UserInterface):
         if not widget.get_text():
             self.on_refilter()
 
-    def on_clear_filters(self, *args):
+    def on_clear_filters(self, *_args):
 
         self.clearing_filters = True
 
@@ -1419,7 +1425,7 @@ class Search(UserInterface):
         self.FilterIn.get_child().grab_focus()
         self.on_refilter()
 
-    def on_clear(self, *args):
+    def on_clear(self, *_args):
 
         self.all_data = []
         self.usersiters.clear()
@@ -1431,19 +1437,19 @@ class Search(UserInterface):
         self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         # Allow parsing search result messages again
-        self.frame.np.search.add_allowed_search_id(self.id)
+        self.frame.np.search.add_allowed_search_id(self.search_id)
 
         # Update number of results widget
         self.update_result_counter()
 
-    def on_close(self, *args):
+    def on_close(self, *_args):
 
-        del self.searches.pages[self.id]
-        self.frame.np.search.remove_search(self.id)
+        del self.searches.pages[self.search_id]
+        self.frame.np.search.remove_search(self.search_id)
         self.searches.remove_page(self.Main)
 
         if self.searches.get_n_pages() == 0:
             self.frame.search_status_page.show()
 
-    def on_close_all_tabs(self, *args):
+    def on_close_all_tabs(self, *_args):
         self.searches.remove_all_pages()

@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gi
 import os
 import sys
+import gi
 
 from gi.repository import Gtk
 
@@ -81,41 +81,41 @@ class TrayIcon:
             return
 
         self.tray_popup_menu = Gtk.Menu()
-        self.hide_show_item, handler = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
+        self.hide_show_item, _handler = self.create_item(_("Show Nicotine+"), self.frame.on_window_hide_unhide)
         self.alt_speed_item, self.alt_speed_handler = self.create_item(
             _("Alternative Speed Limits"), self.frame.on_alternative_speed_limit, check=True)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
-        self.downloads_item, handler = self.create_item(_("Downloads"), self.on_downloads)
-        self.uploads_item, handler = self.create_item(_("Uploads"), self.on_uploads)
+        self.downloads_item, _handler = self.create_item(_("Downloads"), self.on_downloads)
+        self.uploads_item, _handler = self.create_item(_("Uploads"), self.on_uploads)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
-        self.connect_item, handler = self.create_item(_("Connect"), self.frame.on_connect)
-        self.disconnect_item, handler = self.create_item(_("Disconnect"), self.frame.on_disconnect)
+        self.connect_item, _handler = self.create_item(_("Connect"), self.frame.on_connect)
+        self.disconnect_item, _handler = self.create_item(_("Disconnect"), self.frame.on_disconnect)
         self.away_item, self.away_handler = self.create_item(_("Away"), self.frame.on_away, check=True)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
-        self.send_message_item, handler = self.create_item(_("Send Message"), self.on_open_private_chat)
-        self.lookup_info_item, handler = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
-        self.lookup_shares_item, handler = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
+        self.send_message_item, _handler = self.create_item(_("Send Message"), self.on_open_private_chat)
+        self.lookup_info_item, _handler = self.create_item(_("Request User's Info"), self.on_get_a_users_info)
+        self.lookup_shares_item, _handler = self.create_item(_("Request User's Shares"), self.on_get_a_users_shares)
 
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
         self.create_item(_("Quit"), self.frame.np.quit)
 
-    def on_downloads(self, *args):
+    def on_downloads(self, *_args):
         self.frame.change_main_page("downloads")
         self.frame.show()
 
-    def on_uploads(self, *args):
+    def on_uploads(self, *_args):
         self.frame.change_main_page("uploads")
         self.frame.show()
 
-    def on_open_private_chat_response(self, dialog, response_id, data):
+    def on_open_private_chat_response(self, dialog, response_id, _data):
 
         user = dialog.get_response_value()
         dialog.destroy()
@@ -127,7 +127,7 @@ class TrayIcon:
         self.frame.change_main_page("private")
         self.frame.show()
 
-    def on_open_private_chat(self, *args):
+    def on_open_private_chat(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
@@ -138,7 +138,7 @@ class TrayIcon:
             droplist=users
         )
 
-    def on_get_a_users_info_response(self, dialog, response_id, data):
+    def on_get_a_users_info_response(self, dialog, response_id, _data):
 
         user = dialog.get_response_value()
         dialog.destroy()
@@ -149,7 +149,7 @@ class TrayIcon:
         self.frame.np.userinfo.request_user_info(user)
         self.frame.show()
 
-    def on_get_a_users_info(self, *args):
+    def on_get_a_users_info(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
@@ -160,7 +160,7 @@ class TrayIcon:
             droplist=users
         )
 
-    def on_get_a_users_shares_response(self, dialog, response_id, data):
+    def on_get_a_users_shares_response(self, dialog, response_id, _data):
 
         user = dialog.get_response_value()
         dialog.destroy()
@@ -171,7 +171,7 @@ class TrayIcon:
         self.frame.np.userbrowse.browse_user(user)
         self.frame.show()
 
-    def on_get_a_users_shares(self, *args):
+    def on_get_a_users_shares(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
         entry_dialog(
@@ -183,13 +183,14 @@ class TrayIcon:
         )
 
     # GtkStatusIcon fallback
-    def on_status_icon_popup(self, status_icon, button, activate_time):
+    def on_status_icon_popup(self, _status_icon, button, _activate_time):
 
         if button == 3:
             time = Gtk.get_current_event_time()
             self.tray_popup_menu.popup(None, None, None, None, button, time)
 
-    def check_icon_path(self, icon_name, icon_path, icon_type="local"):
+    @staticmethod
+    def check_icon_path(icon_name, icon_path, icon_type="local"):
 
         """
         Check if tray icons exist in the specified icon path.
@@ -244,7 +245,6 @@ class TrayIcon:
 
             # Check if local icons exist
             if self.check_icon_path(icon_name, local_icon_path, icon_type="local"):
-                self.local_icons = True
                 return local_icon_path
 
         return None

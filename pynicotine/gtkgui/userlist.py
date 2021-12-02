@@ -219,10 +219,11 @@ class UserList(UserInterface):
                 if row and isinstance(row, list):
                     widget.append_text(str(row[0]))
 
-    def on_tooltip(self, widget, x, y, keyboard_mode, tooltip):
+    @staticmethod
+    def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
 
-        status_tooltip = show_user_status_tooltip(widget, x, y, tooltip, 10)
-        country_tooltip = show_country_tooltip(widget, x, y, tooltip, 14)
+        status_tooltip = show_user_status_tooltip(widget, pos_x, pos_y, tooltip, 10)
+        country_tooltip = show_country_tooltip(widget, pos_x, pos_y, tooltip, 14)
 
         if status_tooltip:
             return status_tooltip
@@ -230,7 +231,9 @@ class UserList(UserInterface):
         if country_tooltip:
             return country_tooltip
 
-    def on_add_user(self, widget, *args):
+        return False
+
+    def on_add_user(self, widget, *_args):
 
         username = widget.get_text()
 
@@ -253,7 +256,7 @@ class UserList(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def cell_toggle_callback(self, widget, index, treeview, pos):
+    def cell_toggle_callback(self, _widget, index, treeview, pos):
 
         store = treeview.get_model()
         iterator = store.get_iter(index)
@@ -263,7 +266,7 @@ class UserList(UserInterface):
 
         self.save_user_list()
 
-    def cell_edited_callback(self, widget, index, value, treeview, pos):
+    def cell_edited_callback(self, _widget, index, value, treeview, pos):
 
         if pos != 9:
             return
@@ -299,7 +302,8 @@ class UserList(UserInterface):
             store.set_value(iterator, 9, note)
             self.save_user_list()
 
-    def get_selected_username(self, treeview):
+    @staticmethod
+    def get_selected_username(treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -308,7 +312,8 @@ class UserList(UserInterface):
 
         return model.get_value(iterator, 2)
 
-    def get_selected_username_details(self, treeview):
+    @staticmethod
+    def get_selected_username_details(treeview):
 
         model, iterator = treeview.get_selection().get_selected()
 
@@ -321,7 +326,7 @@ class UserList(UserInterface):
 
         return username, status
 
-    def on_row_activated(self, treeview, path, column):
+    def on_row_activated(self, treeview, _path, _column):
 
         user = self.get_selected_username(treeview)
 
@@ -332,9 +337,6 @@ class UserList(UserInterface):
     def on_popup_menu(self, menu, widget):
 
         username, status = self.get_selected_username_details(widget)
-        if username is None:
-            return True
-
         menu.set_user(username)
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
@@ -478,8 +480,8 @@ class UserList(UserInterface):
         user_list = []
 
         for i in self.usersmodel:
-            (status_icon, flag, user, hspeed, hfile_count, trusted, notify, prioritized,
-                hlast_seen, note, status, speed, file_count, last_seen, country) = i
+            (_status_icon, _flag, user, _hspeed, _hfile_count, trusted, notify, prioritized,
+                hlast_seen, note, _status, _speed, _file_count, _last_seen, country) = i
             user_list.append([user, note, notify, prioritized, trusted, hlast_seen, country])
 
         self.frame.np.userlist.save_user_list(user_list)
@@ -526,7 +528,7 @@ class UserList(UserInterface):
         self.save_user_list()
         action.set_state(state)
 
-    def on_add_note_response(self, dialog, response_id, user):
+    def on_add_note_response(self, dialog, _response_id, user):
 
         iterator = self.user_iterators.get(user)
 
@@ -542,7 +544,7 @@ class UserList(UserInterface):
         self.usersmodel.set_value(iterator, 9, note)
         self.save_user_list()
 
-    def on_add_note(self, *args):
+    def on_add_note(self, *_args):
 
         user = self.popup_menu.get_user()
         iterator = self.user_iterators.get(user)
@@ -561,7 +563,7 @@ class UserList(UserInterface):
             default=note
         )
 
-    def on_remove_user(self, *args):
+    def on_remove_user(self, *_args):
         self.frame.np.userlist.remove_user(self.popup_menu.get_user())
 
     def server_disconnect(self):
