@@ -223,15 +223,15 @@ class NowPlaying:
 
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 
-        except Exception as exception:
+        except Exception as error:
             log.add_important_error(_("MPRIS: Something went wrong while querying %(player)s: %(exception)s"),
-                                    {'player': player, 'exception': exception})
+                                    {'player': player, 'exception': error})
             return None
 
         self.title['program'] = player
         list_mapping = [('xesam:artist', 'artist')]
 
-        for (source, dest) in list_mapping:
+        for source, dest in list_mapping:
             try:
                 self.title[dest] = '+'.join(metadata[source])
             except KeyError:
@@ -247,7 +247,7 @@ class NowPlaying:
             ('xesak:trackNumber', 'track')
         ]
 
-        for (source, dest) in mapping:
+        for source, dest in mapping:
             try:
                 self.title[dest] = str(metadata[source])
             except KeyError:

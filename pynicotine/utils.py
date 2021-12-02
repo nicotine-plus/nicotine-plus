@@ -686,7 +686,7 @@ def add_alias(rest):
 
     msg = "\n" + _("Aliases:") + "\n"
 
-    for (key, value) in aliases.items():
+    for key, value in aliases.items():
         msg = msg + "%s: %s\n" % (key, value)
 
     return msg + "\n"

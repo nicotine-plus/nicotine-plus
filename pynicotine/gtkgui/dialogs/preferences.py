@@ -2469,7 +2469,7 @@ class PluginsFrame(UserInterface):
 
                     container.add(entry)
 
-                elif data["type"] in ("textview"):
+                elif data["type"] in ("textview",):
                     container, label = self.generate_widget_container(data["description"], vertical=True)
 
                     self.option_widgets[name] = textview = Gtk.TextView()

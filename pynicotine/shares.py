@@ -212,10 +212,10 @@ class Scanner:
                 new_streams = {**new_streams, **streams}
                 new_mtimes = {**new_mtimes, **mtimes}
 
-            except OSError as errtuple:
+            except OSError as error:
                 self.queue.put((_("Error while scanning folder %(path)s: %(error)s"), {
                     'path': folder,
-                    'error': errtuple
+                    'error': error
                 }, None))
 
         # Save data to databases
@@ -326,9 +326,9 @@ class Scanner:
                             data = self.get_file_info(filename, path, self.tinytag, entry_stat)
                             file_list.append(data)
 
-                    except Exception as errtuple:
+                    except Exception as error:
                         self.queue.put((_("Error while scanning file %(path)s: %(error)s"),
-                                       {'path': entry.path, 'error': errtuple}, None))
+                                       {'path': entry.path, 'error': error}, None))
 
                     continue
 
@@ -345,9 +345,9 @@ class Scanner:
                 streams = {**streams, **dir_streams}
                 mtimes = {**mtimes, **dir_mtimes}
 
-        except OSError as errtuple:
+        except OSError as error:
             self.queue.put((_("Error while scanning folder %(path)s: %(error)s"),
-                           {'path': folder, 'error': errtuple}, None))
+                           {'path': folder, 'error': error}, None))
 
         if not folder_unchanged:
             files[virtual_folder] = file_list
@@ -374,9 +374,9 @@ class Scanner:
             try:
                 audio = tinytag.get(pathname, size, tags=False)
 
-            except Exception as errtuple:
+            except Exception as error:
                 error = _("Error while scanning metadata for file %(path)s: %(error)s")
-                args = {'path': pathname, 'error': errtuple}
+                args = {'path': pathname, 'error': error}
 
                 self.queue.put((error, args, None))
 
@@ -509,7 +509,7 @@ class Shares:
 
         path = path.replace('/', '\\')
 
-        for (virtual, real, *_unused) in cls._virtualmapping(config):
+        for virtual, real, *_unused in cls._virtualmapping(config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
@@ -530,7 +530,7 @@ class Shares:
 
         path = path.replace('/', os.sep).replace('\\', os.sep)
 
-        for (virtual, real, *_unused) in self._virtualmapping(self.config):
+        for virtual, real, *_unused in self._virtualmapping(self.config):
             # Remove slashes from share name to avoid path conflicts
             virtual = virtual.replace('/', '_').replace('\\', '_')
 
