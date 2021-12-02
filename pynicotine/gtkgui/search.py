@@ -233,6 +233,7 @@ class Searches(IconNotebook):
         if tab.num_results_found >= tab.max_limit:
             self.frame.np.search.remove_allowed_search_id(msg.token)
             tab.max_limited = True
+            tab.update_result_counter()
             return
 
         tab.add_user_results(msg, username, country)
@@ -659,12 +660,12 @@ class Search(UserInterface):
                 self.searches.show_tab(self, self.text)
                 self.showtab = True
 
-            # Update number of results
-            self.update_result_counter()
-
             # Update tab notification
             self.searches.request_changed(self.Main)
             self.frame.request_tab_hilite(self.searches.page_id)
+
+        # Update number of results, even if they are all filtered
+        self.update_result_counter()
 
     def append(self, row):
 
