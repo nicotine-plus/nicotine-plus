@@ -262,7 +262,7 @@ class IconNotebook:
         self.unread_button.set_menu_model(self.popup_menu_unread.model)
         self.unread_pages = []
 
-        self.popup_enable()
+        self.notebook.popup_enable()
         self.notebook.hide()
 
     def get_labels(self, page):
@@ -492,15 +492,6 @@ class IconNotebook:
 
     def prev_page(self):
         return self.notebook.prev_page()
-
-    def popup_enable(self):
-        self.notebook.popup_enable()
-
-    def popup_disable(self):
-        self.notebook.popup_disable()
-
-    def show(self):
-        self.notebook.show()
 
     def on_switch_page(self, notebook, new_page, page_num):
 

@@ -108,6 +108,7 @@ class Searches(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
+                tab.update_filter_comboboxes()
                 GLib.idle_add(lambda: tab.ResultsList.grab_focus() == -1)
                 return True
 
@@ -191,7 +192,7 @@ class Searches(IconNotebook):
 
         # Update filters in search tabs
         for page in self.pages.values():
-            page.populate_filters(set_default_filters=False)
+            page.update_filter_comboboxes()
 
     def create_tab(self, search_id, text, mode, mode_label, showtab=True):
 
@@ -458,35 +459,6 @@ class Search(UserInterface):
         elif file_path_tooltip:
             return file_path_tooltip
 
-    def populate_filters(self, set_default_filters=True):
-
-        for widget in self.filter_widgets:
-            if isinstance(widget, Gtk.ComboBoxText):
-                widget.remove_all()
-
-        if set_default_filters and config.sections["searches"]["enablefilters"]:
-            sfilter = config.sections["searches"]["defilter"]
-
-            self.FilterIn.get_child().set_text(str(sfilter[0]))
-            self.FilterOut.get_child().set_text(str(sfilter[1]))
-            self.FilterSize.get_child().set_text(str(sfilter[2]))
-            self.FilterBitrate.get_child().set_text(str(sfilter[3]))
-            self.FilterFreeSlot.set_active(sfilter[4])
-
-            if len(sfilter) > 5:
-                self.FilterCountry.get_child().set_text(str(sfilter[5]))
-
-            if len(sfilter) > 6:
-                self.FilterType.get_child().set_text(str(sfilter[6]))
-
-            self.on_refilter()
-
-        for filter_id, widget in self.filter_widgets.items():
-            if not isinstance(widget, Gtk.ComboBoxText):
-                continue
-
-            self.update_filter_combobox(filter_id)
-
     def focus_combobox(self, button):
 
         # We have the button of a combobox, find the entry
@@ -503,27 +475,52 @@ class Search(UserInterface):
 
         self.focus_combobox(parent)
 
-    def update_filter_combobox(self, filter_id):
+    def update_filter_comboboxes(self):
 
-        presets = ""
-        combobox = self.filter_widgets[filter_id]
-        combobox.remove_all()
+        for filter_id, widget in self.filter_widgets.items():
+            if not isinstance(widget, Gtk.ComboBoxText):
+                continue
 
-        if filter_id == "filterbr":
-            presets = ("0", "128", "160", "192", "256", "320")
+            presets = ""
+            combobox = self.filter_widgets[filter_id]
+            combobox.remove_all()
 
-        elif filter_id == "filtersize":
-            presets = (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0")
+            if filter_id == "filterbr":
+                presets = ("0", "128", "160", "192", "256", "320")
 
-        elif filter_id == "filtertype":
-            presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
+            elif filter_id == "filtersize":
+                presets = (">10MiB", "<10MiB", "<5MiB", "<1MiB", ">0")
 
-        for value in presets:
-            combobox.append_text(value)
+            elif filter_id == "filtertype":
+                presets = ("flac|wav|ape|aiff|wv|cue", "mp3|m4a|aac|ogg|opus|wma", "!mp3")
 
-        for value in config.sections["searches"][filter_id]:
-            if value not in presets:
+            for value in presets:
                 combobox.append_text(value)
+
+            for value in config.sections["searches"][filter_id]:
+                if value not in presets:
+                    combobox.append_text(value)
+
+    def populate_filters(self):
+
+        if not config.sections["searches"]["enablefilters"]:
+            return
+
+        sfilter = config.sections["searches"]["defilter"]
+
+        self.FilterIn.get_child().set_text(str(sfilter[0]))
+        self.FilterOut.get_child().set_text(str(sfilter[1]))
+        self.FilterSize.get_child().set_text(str(sfilter[2]))
+        self.FilterBitrate.get_child().set_text(str(sfilter[3]))
+        self.FilterFreeSlot.set_active(sfilter[4])
+
+        if len(sfilter) > 5:
+            self.FilterCountry.get_child().set_text(str(sfilter[5]))
+
+        if len(sfilter) > 6:
+            self.FilterType.get_child().set_text(str(sfilter[6]))
+
+        self.on_refilter()
 
     def add_result_list(self, result_list, user, country, inqueue, ulspeed, h_speed,
                         h_queue, color, private=False):
@@ -1328,8 +1325,6 @@ class Search(UserInterface):
         history.insert(0, value)
         config.write_configuration()
 
-        self.update_filter_combobox(filter_id)
-
     def on_refilter(self, *args):
 
         if self.clearing_filters:
@@ -1392,6 +1387,7 @@ class Search(UserInterface):
 
         # Apply the new filters
         self.filters = filters
+        self.update_filter_comboboxes()
         self.update_results_model()
 
     def on_filter_entry_changed(self, widget):
