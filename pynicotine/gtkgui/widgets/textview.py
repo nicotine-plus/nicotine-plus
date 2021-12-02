@@ -159,7 +159,15 @@ class TextView:
 
         buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                              self.pressed_x, self.pressed_y)
-        _over_text, iterator = self.textview.get_iter_at_location(buf_x, buf_y)
+        iterator_data = self.textview.get_iter_at_location(buf_x, buf_y)
+
+        try:
+            _over_text, iterator = iterator_data
+
+        except TypeError:
+            # Support older GTK 3 versions
+            iterator = iterator_data
+
         return iterator.get_tags()
 
     def get_url_for_selected_pos(self):
