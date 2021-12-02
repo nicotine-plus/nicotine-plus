@@ -3129,6 +3129,28 @@ class Preferences(UserInterface):
             title=_("Pick a File Name for Config Backup")
         )
 
+    def on_widget_scroll_event(self, widget, event):
+        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
+        to container (GTK 3) """
+
+        self.container.event(event)
+        return True
+
+    def on_widget_scroll(self, controller, x, y):
+        """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
+        in the container (GTK 4) """
+
+        adjustment = self.container.get_vadjustment()
+        value = adjustment.get_value()
+
+        if y < 0:
+            value -= adjustment.get_step_increment()
+        else:
+            value += adjustment.get_step_increment()
+
+        adjustment.set_value(value)
+        return True
+
     def on_switch_page(self, listbox, row):
 
         page_id, _label, _icon_name = self.page_ids[row.get_index()]
@@ -3152,6 +3174,14 @@ class Preferences(UserInterface):
                         obj.get_last_child().set_wrap(True)
                     else:
                         obj.get_child().set_line_wrap(True)
+
+                elif isinstance(obj, (Gtk.ComboBoxText, Gtk.SpinButton)):
+                    if Gtk.get_major_version() == 4:
+                        scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+                        scroll_controller.connect("scroll", self.on_widget_scroll)
+                        obj.add_controller(scroll_controller)
+                    else:
+                        obj.connect("scroll-event", self.on_widget_scroll_event)
 
             page.Main.set_margin_start(18)
             page.Main.set_margin_end(18)
