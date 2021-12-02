@@ -29,6 +29,10 @@ alekksander
 - Tester
 - Redesign of some graphics
 
+slook
+- Tester
+- Accessibility improvements
+
 ### Retired
 
 daelstorm
