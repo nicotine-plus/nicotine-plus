@@ -551,11 +551,7 @@ class ChatRoom(UserInterface):
             return
 
         filename = self.room.replace(os.sep, "-") + ".log"
-
-        try:
-            numlines = int(config.sections["logging"]["readroomlines"])
-        except Exception:
-            numlines = 15
+        numlines = config.sections["logging"]["readroomlines"]
 
         try:
             get_path(config.sections["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
@@ -566,12 +562,12 @@ class ChatRoom(UserInterface):
     def append_log_lines(self, path, numlines):
 
         try:
-            self._append_log_lines(path, numlines, 'utf-8')
+            self._append_log_lines(path, numlines, "utf-8")
 
         except UnicodeDecodeError:
-            self._append_log_lines(path, numlines, 'latin-1')
+            self._append_log_lines(path, numlines, "latin-1")
 
-    def _append_log_lines(self, path, numlines, encoding='utf-8'):
+    def _append_log_lines(self, path, numlines, encoding="utf-8"):
 
         with open(path, 'r', encoding=encoding) as lines:
             # Only show as many log lines as specified in config
