@@ -494,8 +494,7 @@ class Search(UserInterface):
             if not isinstance(widget, Gtk.ComboBoxText):
                 continue
 
-            for value in config.sections["searches"][filter_id]:
-                self.add_combo(widget, value, True)
+            self.update_history_combobox(filter_id)
 
     def focus_combobox(self, button):
 
@@ -513,30 +512,13 @@ class Search(UserInterface):
 
         self.focus_combobox(parent)
 
-    def add_combo(self, combobox, text, list=False):
+    def update_history_combobox(self, filter_id):
 
-        text = str(text).strip()
-        if not text:
-            return False
+        combobox = self.filter_widgets[filter_id]
+        combobox.remove_all()
 
-        model = combobox.get_model()
-        iterator = model.get_iter_first()
-        match = False
-
-        while iterator is not None:
-
-            value = model.get_value(iterator, 0)
-
-            if value.strip() == text:
-                match = True
-
-            iterator = model.iter_next(iterator)
-
-        if not match:
-            if list:
-                combobox.append_text(text)
-            else:
-                combobox.prepend_text(text)
+        for value in config.sections["searches"][filter_id]:
+            combobox.append_text(value)
 
     def add_result_list(self, result_list, user, country, inqueue, ulspeed, h_speed,
                         h_queue, color, private=False):
@@ -1341,7 +1323,7 @@ class Search(UserInterface):
         history.insert(0, value)
         config.write_configuration()
 
-        self.add_combo(self.filter_widgets[filter_id], value)
+        self.update_history_combobox(filter_id)
 
     def on_refilter(self, *args):
 
