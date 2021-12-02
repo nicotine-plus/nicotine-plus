@@ -439,7 +439,9 @@ class Search(UserInterface):
         }
 
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
-        self.populate_filters()
+
+        if config.sections["searches"]["enablefilters"]:
+            self.populate_filters()
 
         """ Wishlist """
 
@@ -650,12 +652,12 @@ class Search(UserInterface):
                 self.searches.show_tab(self, self.id, self.text, self.mode)
                 self.showtab = True
 
-            # Update number of results
-            self.update_result_counter()
-
             # Update tab notification
             self.searches.request_changed(self.Main)
             self.frame.request_tab_hilite(self.searches.page_id)
+
+        # Update number of results
+        self.update_result_counter()
 
     def append(self, row):
 
