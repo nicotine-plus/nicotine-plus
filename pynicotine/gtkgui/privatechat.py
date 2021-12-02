@@ -280,6 +280,10 @@ class PrivateChat(UserInterface):
     def set_label(self, label):
         self.popup_menu_user.set_widget(label)
 
+    def populate_user_menu(self, user):
+        self.popup_menu_user.set_user(user)
+        self.popup_menu_user.toggle_user_items()
+
     def on_popup_menu_chat(self, menu, _widget):
 
         self.popup_menu_user.toggle_user_items()
@@ -289,7 +293,7 @@ class PrivateChat(UserInterface):
         actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
-        self.popup_menu_user.toggle_user_items()
+        self.populate_user_menu(self.user)
 
     def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
@@ -422,8 +426,8 @@ class PrivateChat(UserInterface):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
 
-    def user_name_event(self, pos_x, pos_y, _user):
-        self.popup_menu_user.toggle_user_items()
+    def user_name_event(self, pos_x, pos_y, user):
+        self.populate_user_menu(user)
         self.popup_menu_user.popup(pos_x, pos_y, button=1)
 
     def create_tags(self):

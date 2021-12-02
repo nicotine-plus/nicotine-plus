@@ -156,7 +156,7 @@ class PopupMenu:
 
         menuitem = Gio.MenuItem.new(label, action_id)
 
-        if item[0] == "U":
+        if item[0][0] == "U":
             self.useritem = menuitem
 
         if submenu:

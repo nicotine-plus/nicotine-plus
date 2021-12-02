@@ -645,13 +645,8 @@ class ChatRoom(UserInterface):
             self.frame.change_main_page("private")
 
     def on_popup_menu(self, _menu, treeview):
-
         user = self.get_selected_username(treeview)
-        if user is None:
-            return True
-
         self.populate_user_menu(user)
-        return False
 
     def on_popup_menu_log(self, menu, _textview):
 
