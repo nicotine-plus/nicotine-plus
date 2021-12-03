@@ -65,7 +65,7 @@ Nicotine+ will try to autodetect your language based on what locale you are usin
 
 ## Adding Yourself to Translators
 
-If you want you can add yourself to `TRANSLATORS.md` and the credits list in Help → About: `pynicotine/gtkgui/ui/dialogs/about.ui`. Add yourself to the top of matching section and then create a PR (pull request).
+If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/master/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/ui/dialogs/about.ui](https://github.com/nicotine-plus/nicotine-plus/blob/master/pynicotine/gtkgui/ui/dialogs/about.ui). Add yourself to the top of matching section and then create a PR (pull request).
 
 
 ## Updating Translation Template
