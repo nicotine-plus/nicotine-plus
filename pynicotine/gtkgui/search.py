@@ -430,12 +430,11 @@ class Search(UserInterface):
 
         """ Filters """
 
-        self.filter_widgets = {
+        self.filter_comboboxes = {
             "filterin": self.FilterIn,
             "filterout": self.FilterOut,
             "filtersize": self.FilterSize,
             "filterbr": self.FilterBitrate,
-            "filterslot": self.FilterFreeSlot,
             "filtercc": self.FilterCountry,
             "filtertype": self.FilterType
         }
@@ -482,10 +481,7 @@ class Search(UserInterface):
 
     def update_filter_comboboxes(self):
 
-        for filter_id, widget in self.filter_widgets.items():
-            if not isinstance(widget, Gtk.ComboBoxText):
-                continue
-
+        for filter_id, widget in self.filter_comboboxes.items():
             presets = ""
             widget.remove_all()
 
@@ -1415,12 +1411,10 @@ class Search(UserInterface):
 
         self.clearing_filters = True
 
-        for widget in self.filter_widgets.values():
-            if isinstance(widget, Gtk.ComboBoxText):
-                widget.get_child().set_text("")
+        for widget in self.filter_comboboxes.values():
+            widget.get_child().set_text("")
 
-            elif isinstance(widget, Gtk.CheckButton):
-                widget.set_active(False)
+        self.FilterFreeSlot.set_active(False)
 
         self.clearing_filters = False
         self.FilterIn.get_child().grab_focus()
