@@ -1075,7 +1075,6 @@ class NicotineFrame(UserInterface):
         enabled) """
 
         if not self.MainWindow.get_titlebar():
-            self.header_menu.set_menu_model(self.hamburger_menu.model)
             self.application.set_accels_for_action("app.menu", ["F10"])
             self.MainWindow.set_show_menubar(False)
 
@@ -1097,6 +1096,8 @@ class NicotineFrame(UserInterface):
         header_bar.pack_end(end_widget)
         end_widget.add(self.header_menu)
 
+        # Reset menu model after moving menu button to avoid GTK warnings in old GTK versions
+        self.header_menu.set_menu_model(self.hamburger_menu.model)
         self.MainWindow.set_titlebar(header_bar)
 
     def set_toolbar(self, page_id):
