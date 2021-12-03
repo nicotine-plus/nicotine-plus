@@ -98,7 +98,7 @@ choco install nicotine-plus
 
 ### Official Builds (Catalina/10.15 and newer)
 
-NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](TESTING.html#macos-catalina1015-and-newer).
+NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](TESTING.md#macos-catalina1015-and-newer).
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
