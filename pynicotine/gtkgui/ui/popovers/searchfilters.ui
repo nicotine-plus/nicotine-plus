@@ -4,8 +4,8 @@
     <child>
       <object class="GtkScrolledWindow" id="container">
         <property name="visible">1</property>
-        <property name="hscrollbar-policy">never</property>
-        <property name="height-request">500</property>
+        <property name="height-request">350</property>
+        <property name="width-request">400</property>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
@@ -49,7 +49,6 @@
                     <property name="visible">1</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Each list of search results has its own filter which can be revealed by toggling the Result Filters button. A filter is made up of multiple fields, all of which are applied when pressing Enter in any one of its fields. Filtering is applied immediately to results already received, and also to those yet to arrive. To view the full results again, simply clear the filter of all terms and re-apply it. As the name suggests, a search result filter cannot expand your original search, it can only narrow it down. To broaden or change your search terms, perform a new search.</property>
-                    <property name="width-chars">40</property>
                     <property name="selectable">1</property>
                     <property name="wrap">1</property>
                   </object>
