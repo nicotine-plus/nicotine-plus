@@ -282,19 +282,19 @@ class Interests(UserInterface):
 
         self.recommendations_model.clear()
 
-        for thing, rating in recommendations.items():
+        for thing, rating in recommendations:
             self.recommendations_model.insert_with_valuesv(
                 -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
             )
 
     def global_recommendations(self, msg):
-        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
+        self.set_recommendations(msg.recommendations + msg.unrecommendations)
 
     def recommendations(self, msg):
-        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
+        self.set_recommendations(msg.recommendations + msg.unrecommendations)
 
     def item_recommendations(self, msg):
-        self.set_recommendations({**msg.recommendations, **msg.unrecommendations})
+        self.set_recommendations(msg.recommendations + msg.unrecommendations)
 
     def similar_users(self, msg):
 

@@ -929,8 +929,8 @@ class Recommendations(ServerMessage):
     """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
-        self.recommendations = {}
-        self.unrecommendations = {}
+        self.recommendations = []
+        self.unrecommendations = []
 
     def make_network_message(self):
         return b""
@@ -947,7 +947,7 @@ class Recommendations(ServerMessage):
 
             # The server also includes unrecommendations here for some reason, don't add them
             if rating >= 0:
-                self.recommendations[key] = rating
+                self.recommendations.append((key, rating))
 
         if not message[pos:]:
             return
@@ -960,7 +960,7 @@ class Recommendations(ServerMessage):
 
             # The server also includes recommendations here for some reason, don't add them
             if rating < 0:
-                self.unrecommendations[key] = rating
+                self.unrecommendations.append((key, rating))
 
 
 class GlobalRecommendations(Recommendations):
@@ -1261,12 +1261,11 @@ class PrivilegedUsers(ServerMessage):
     have donated. """
 
     def __init__(self):
-        self.users = None
+        self.users = []
 
     def parse_network_message(self, message):
         pos, numusers = self.get_object(message, int)
 
-        self.users = []
         for _ in range(numusers):
             pos, user = self.get_object(message, str, pos)
 
@@ -1438,12 +1437,11 @@ class PossibleParents(ServerMessage):
     need more possible parents, through a HaveNoParent message. """
 
     def __init__(self):
-        self.list = None
+        self.list = {}
 
     def parse_network_message(self, message):
         pos, num = self.get_object(message, int)
 
-        self.list = {}
         for _ in range(num):
             pos, username = self.get_object(message, str, pos)
             pos, ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
@@ -1472,7 +1470,7 @@ class SimilarUsers(ServerMessage):
     """ DEPRECATED, used in Soulseek NS but not SoulseekQt """
 
     def __init__(self):
-        self.users = None
+        self.users = []
 
     def make_network_message(self):
         return b""
@@ -1480,12 +1478,11 @@ class SimilarUsers(ServerMessage):
     def parse_network_message(self, message):
         pos, num = self.get_object(message, int)
 
-        self.users = {}
         for _ in range(num):
             pos, user = self.get_object(message, str, pos)
-            pos, rating = self.get_object(message, int, pos)
+            pos, _rating = self.get_object(message, int, pos)
 
-            self.users[user] = rating
+            self.users.append(user)
 
 
 class ItemRecommendations(Recommendations):
@@ -1515,7 +1512,7 @@ class ItemSimilarUsers(ServerMessage):
 
     def __init__(self, thing=None):
         self.thing = thing
-        self.users = None
+        self.users = []
 
     def make_network_message(self):
         return self.pack_object(self.thing)
@@ -1524,10 +1521,8 @@ class ItemSimilarUsers(ServerMessage):
         pos, self.thing = self.get_object(message, str)
         pos, num = self.get_object(message, int, pos)
 
-        self.users = []
         for _ in range(num):
             pos, user = self.get_object(message, str, pos)
-
             self.users.append(user)
 
 
