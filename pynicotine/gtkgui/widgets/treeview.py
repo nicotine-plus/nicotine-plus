@@ -469,6 +469,10 @@ def get_file_path_tooltip_text(column_value, _strip_prefix):
     return column_value
 
 
+def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
+    return column_value.filename
+
+
 def get_user_status_tooltip_text(column_value, _strip_prefix):
 
     if column_value == 1:
@@ -485,13 +489,15 @@ def show_country_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, strip_pr
                         ("country",), get_country_tooltip_text, strip_prefix)
 
 
-def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
+def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transfer=False):
 
     if not config.sections["ui"]["file_path_tooltips"]:
         return False
 
+    function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
+
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("folder", "filename"), get_file_path_tooltip_text)
+                        ("folder", "filename"), function)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
