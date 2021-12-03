@@ -407,7 +407,7 @@ class Tickers:
     def add_ticker(self, user, message):
 
         message = message.replace("\n", " ")
-        self.messages.insert(0, [user, message])
+        self.messages.insert(0, (user, message))
 
     def remove_ticker(self, user):
 
@@ -419,5 +419,5 @@ class Tickers:
     def get_tickers(self):
         return self.messages
 
-    def set_ticker(self, msgs):
-        self.messages = msgs
+    def clear_tickers(self):
+        self.messages.clear()

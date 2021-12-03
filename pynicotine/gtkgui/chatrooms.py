@@ -680,11 +680,11 @@ class ChatRoom(UserInterface):
 
     def ticker_set(self, msg):
 
-        self.tickers.set_ticker([])
+        self.tickers.clear_tickers()
         login = config.sections["server"]["login"]
         has_own_ticker = False
 
-        for user in msg.msgs:
+        for user, message in msg.msgs:
             if user == login:
                 has_own_ticker = True
 
@@ -693,7 +693,7 @@ class ChatRoom(UserInterface):
                 # User ignored, ignore Ticker messages
                 continue
 
-            self.tickers.add_ticker(user, msg.msgs[user])
+            self.tickers.add_ticker(user, message)
 
         self.update_room_wall_tooltip(has_own_ticker)
 
@@ -1008,8 +1008,6 @@ class ChatRoom(UserInterface):
         if (self.room not in config.sections["server"]["autojoin"]
                 and self.room in config.sections["columns"]["chat_room"]):
             del config.sections["columns"]["chat_room"][self.room]
-
-        self.tickers.set_ticker([])
 
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
         self.UserList.set_sensitive(False)

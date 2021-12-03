@@ -1541,7 +1541,7 @@ class RoomTickerState(ServerMessage):
     def __init__(self):
         self.room = None
         self.user = None
-        self.msgs = {}
+        self.msgs = []
 
     def parse_network_message(self, message):
         pos, self.room = self.get_object(message, str)
@@ -1551,7 +1551,7 @@ class RoomTickerState(ServerMessage):
             pos, user = self.get_object(message, str, pos)
             pos, msg = self.get_object(message, str, pos)
 
-            self.msgs[user] = msg
+            self.msgs.append((user, msg))
 
 
 class RoomTickerAdd(ServerMessage):
