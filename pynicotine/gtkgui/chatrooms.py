@@ -443,15 +443,22 @@ class ChatRoom(UserInterface):
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        self.popup_menu_private_rooms = PopupMenu(self.frame)
+        self.popup_menu_private_rooms_chat = PopupMenu(self.frame)
+        self.popup_menu_private_rooms_list = PopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(self.frame, self.UserList, self.on_popup_menu)
-        popup.setup_user_menu()
-        popup.setup(
-            ("", None),
-            ("#" + _("Sear_ch User's Files"), popup.on_search_user),
-            (">" + _("Private Rooms"), self.popup_menu_private_rooms)
-        )
+        self.popup_menu_user_chat = PopupMenu(self.frame, self.ChatScroll, connect_events=False)
+        self.popup_menu_user_list = PopupMenu(self.frame, self.UserList, self.on_popup_menu_user)
+
+        for menu, menu_private_rooms in (
+            (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),
+            (self.popup_menu_user_list, self.popup_menu_private_rooms_list)
+        ):
+            menu.setup_user_menu()
+            menu.setup(
+                ("", None),
+                ("#" + _("Sear_ch User's Files"), menu.on_search_user),
+                (">" + _("Private Rooms"), menu_private_rooms)
+            )
 
         PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).setup(
             ("#" + _("Find…"), self.on_find_activity_log),
@@ -492,7 +499,7 @@ class ChatRoom(UserInterface):
         self.read_room_logs()
 
     def set_label(self, label):
-        self.tab_menu.set_widget(label)
+        self.tab_menu.set_parent(label)
 
     def add_user_row(self, userdata):
 
@@ -609,16 +616,17 @@ class ChatRoom(UserInterface):
             if lines:
                 self.chat_textview.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False)
 
-    def populate_user_menu(self, user):
+    @staticmethod
+    def populate_user_menu(user, menu, menu_private_rooms):
 
-        self.popup_menu.set_user(user)
-        self.popup_menu.toggle_user_items()
-        self.popup_menu.populate_private_rooms(self.popup_menu_private_rooms)
+        menu.set_user(user)
+        menu.toggle_user_items()
+        menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items
-                                 and self.popup_menu.user != config.sections["server"]["login"])
+        private_rooms_enabled = (menu_private_rooms.items
+                                 and menu.user != config.sections["server"]["login"])
 
-        self.popup_menu.get_actions()[_("Private Rooms")].set_enabled(private_rooms_enabled)
+        menu.get_actions()[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
         self.LogSearchBar.set_search_mode(True)
@@ -644,9 +652,9 @@ class ChatRoom(UserInterface):
             self.frame.np.privatechats.show_user(user)
             self.frame.change_main_page("private")
 
-    def on_popup_menu(self, _menu, treeview):
+    def on_popup_menu_user(self, menu, treeview):
         user = self.get_selected_username(treeview)
-        self.populate_user_menu(user)
+        self.populate_user_menu(user, menu, self.popup_menu_private_rooms_list)
 
     def on_popup_menu_log(self, menu, _textview):
 
@@ -943,8 +951,10 @@ class ChatRoom(UserInterface):
         self.room_wall.update_visuals()
 
     def user_name_event(self, pos_x, pos_y, user):
-        self.populate_user_menu(user)
-        self.popup_menu.popup(pos_x, pos_y, button=1)
+
+        menu = self.popup_menu_user_chat
+        self.populate_user_menu(user, menu, self.popup_menu_private_rooms_chat)
+        menu.popup(pos_x, pos_y, button=1)
 
     def create_tags(self):
 

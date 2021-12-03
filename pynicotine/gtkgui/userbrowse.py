@@ -336,7 +336,7 @@ class UserBrowse(UserInterface):
         self.update_visuals()
 
     def set_label(self, label):
-        self.user_popup.set_widget(label)
+        self.user_popup.set_parent(label)
 
     def update_visuals(self):
 

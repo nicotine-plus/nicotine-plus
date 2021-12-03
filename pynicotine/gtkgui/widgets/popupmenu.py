@@ -40,11 +40,11 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 class PopupMenu:
 
-    def __init__(self, frame=None, widget=None, callback=None, connect_events=True):
+    def __init__(self, frame=None, parent=None, callback=None, connect_events=True):
 
         self.model = Gio.Menu()
         self.frame = frame
-        self.widget = widget
+        self.parent = parent
         self.callback = callback
 
         self.popup_menu = None
@@ -52,8 +52,8 @@ class PopupMenu:
         self.gesture_press = None
         self.valid_parent_widgets = Gtk.Box if Gtk.get_major_version() == 4 else (Gtk.Box, Gtk.EventBox)
 
-        if connect_events and widget:
-            self.connect_events(widget)
+        if connect_events and parent:
+            self.connect_events(parent)
 
         self.actions = {}
         self.items = {}
@@ -73,35 +73,33 @@ class PopupMenu:
             return self.frame.MainWindow
 
         if Gtk.get_major_version() == 4:
-            return self.widget.get_root()
+            return self.parent.get_root()
 
-        return self.widget.get_toplevel()
+        return self.parent.get_toplevel()
 
-    def set_widget(self, widget):
+    def set_parent(self, parent):
 
-        if widget:
-            self.connect_events(widget)
-            self.widget = widget
+        if parent:
+            self.connect_events(parent)
+            self.parent = parent
 
-    def create_context_menu(self, widget):
+    def create_context_menu(self, parent):
 
         if self.popup_menu:
             return self.popup_menu
 
         # Menus can only attach to a Gtk.Box/Gtk.EventBox parent, otherwise sizing and theming issues may occur
-        while not isinstance(widget, self.valid_parent_widgets):
-            widget = widget.get_parent()
+        while not isinstance(parent, self.valid_parent_widgets):
+            parent = parent.get_parent()
 
         if Gtk.get_major_version() == 4:
             self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model, Gtk.PopoverMenuFlags.NESTED)
-            self.popup_menu.set_parent(widget)
+            self.popup_menu.set_parent(parent)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
-
-            return self.popup_menu
-
-        self.popup_menu = Gtk.Menu.new_from_model(self.model)
-        self.popup_menu.attach_to_widget(widget, None)
+        else:
+            self.popup_menu = Gtk.Menu.new_from_model(self.model)
+            self.popup_menu.attach_to_widget(parent, None)
 
         return self.popup_menu
 
@@ -247,7 +245,7 @@ class PopupMenu:
 
     def set_user(self, user):
 
-        if not user:
+        if not user or self.user == user:
             return
 
         self.user = user
@@ -345,7 +343,7 @@ class PopupMenu:
     def popup(self, pos_x, pos_y, controller=None, button=3, menu=None):
 
         if menu is None:
-            menu = self.create_context_menu(self.widget)
+            menu = self.create_context_menu(self.parent)
 
         if Gtk.get_major_version() == 4:
             if not pos_x and not pos_y:
@@ -377,26 +375,26 @@ class PopupMenu:
         menu_model = self
         callback = self.callback
 
-        if isinstance(self.widget, Gtk.TreeView):
+        if isinstance(self.parent, Gtk.TreeView):
             if pos_x and pos_y:
                 from pynicotine.gtkgui.widgets.treeview import set_treeview_selected_row
 
-                bin_x, bin_y = self.widget.convert_widget_to_bin_window_coords(pos_x, pos_y)
-                set_treeview_selected_row(self.widget, bin_x, bin_y)
+                bin_x, bin_y = self.parent.convert_widget_to_bin_window_coords(pos_x, pos_y)
+                set_treeview_selected_row(self.parent, bin_x, bin_y)
 
-                if not self.widget.get_path_at_pos(bin_x, bin_y):
+                if not self.parent.get_path_at_pos(bin_x, bin_y):
                     # Special case for column header menu
 
-                    menu_model = self.widget.column_menu
-                    menu = menu_model.create_context_menu(menu_model.widget)
+                    menu_model = self.parent.column_menu
+                    menu = menu_model.create_context_menu(menu_model.parent)
                     callback = menu_model.callback
 
-            elif not self.widget.get_selection().count_selected_rows():
+            elif not self.parent.get_selection().count_selected_rows():
                 # No rows selected, don't show menu
                 return
 
         if callback:
-            cancel = callback(menu_model, self.widget)
+            cancel = callback(menu_model, self.parent)
 
             if cancel:
                 return
@@ -413,23 +411,23 @@ class PopupMenu:
         self._callback(None, None, None)
         return True
 
-    def connect_events(self, widget):
+    def connect_events(self, parent):
 
         if Gtk.get_major_version() == 4:
             self.gesture_click = Gtk.GestureClick()
-            widget.add_controller(self.gesture_click)
+            parent.add_controller(self.gesture_click)
 
             self.gesture_press = Gtk.GestureLongPress()
-            widget.add_controller(self.gesture_press)
+            parent.add_controller(self.gesture_press)
 
-            setup_accelerator("<Shift>F10", widget, self._callback_menu)
+            setup_accelerator("<Shift>F10", parent, self._callback_menu)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress.new(widget)
-            self.gesture_press = Gtk.GestureLongPress.new(widget)
+            self.gesture_click = Gtk.GestureMultiPress.new(parent)
+            self.gesture_press = Gtk.GestureLongPress.new(parent)
 
             # Shift+F10
-            widget.connect("popup-menu", self._callback_menu)
+            parent.connect("popup-menu", self._callback_menu)
 
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click.set_button(Gdk.BUTTON_SECONDARY)

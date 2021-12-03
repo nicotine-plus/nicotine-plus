@@ -227,7 +227,7 @@ class UserInfo(UserInterface):
         self.update_visuals()
 
     def set_label(self, label):
-        self.user_popup.set_widget(label)
+        self.user_popup.set_parent(label)
 
     def save_columns(self):
         # Unused

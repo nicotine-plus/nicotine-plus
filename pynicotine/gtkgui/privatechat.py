@@ -201,13 +201,16 @@ class PrivateChat(UserInterface):
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
-        self.popup_menu_user = popup = PopupMenu(self.frame, None, self.on_popup_menu_user)
-        popup.setup_user_menu(user, page="privatechat")
-        popup.setup(
-            ("", None),
-            ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
-            ("#" + _("_Close Tab"), self.on_close)
-        )
+        self.popup_menu_user_chat = PopupMenu(self.frame, self.ChatScroll, connect_events=False)
+        self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
+
+        for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
+            menu.setup_user_menu(user, page="privatechat")
+            menu.setup(
+                ("", None),
+                ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
+                ("#" + _("_Close Tab"), self.on_close)
+            )
 
         popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat)
         popup.setup(
@@ -222,7 +225,7 @@ class PrivateChat(UserInterface):
             ("", None),
             ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
             ("", None),
-            (">" + _("User"), self.popup_menu_user),
+            (">" + _("User"), self.popup_menu_user_tab),
         )
 
         self.create_tags()
@@ -278,22 +281,18 @@ class PrivateChat(UserInterface):
         self.update_local_username_tag(status)
 
     def set_label(self, label):
-        self.popup_menu_user.set_widget(label)
-
-    def populate_user_menu(self, user):
-        self.popup_menu_user.set_user(user)
-        self.popup_menu_user.toggle_user_items()
+        self.popup_menu_user_tab.set_parent(label)
 
     def on_popup_menu_chat(self, menu, _widget):
 
-        self.popup_menu_user.toggle_user_items()
+        self.popup_menu_user_tab.toggle_user_items()
 
         actions = menu.get_actions()
         actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
         actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
-        self.populate_user_menu(self.user)
+        self.popup_menu_user_tab.toggle_user_items()
 
     def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
@@ -427,8 +426,10 @@ class PrivateChat(UserInterface):
             update_widget_visuals(widget)
 
     def user_name_event(self, pos_x, pos_y, user):
-        self.populate_user_menu(user)
-        self.popup_menu_user.popup(pos_x, pos_y, button=1)
+
+        self.popup_menu_user_chat.set_user(user)
+        self.popup_menu_user_chat.toggle_user_items()
+        self.popup_menu_user_chat.popup(pos_x, pos_y, button=1)
 
     def create_tags(self):
 

@@ -448,7 +448,7 @@ class Search(UserInterface):
         self.update_wish_button()
 
     def set_label(self, label):
-        self.tab_menu.set_widget(label)
+        self.tab_menu.set_parent(label)
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
