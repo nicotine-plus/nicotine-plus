@@ -38,6 +38,7 @@ Corrections
  * Fixed critical errors when quitting Nicotine+ in certain cases
  * Fixed a critical error when receiving invalid search results
  * Fixed an issue where uploads could not be manually resumed after a connection error
+ * Fixed an issue where certain special characters were not removed from search terms
  * Fixed an issue where taskbar notifications were not cleared in older GTK versions
  * Fixed an issue where transfer statistics did not update properly
  * Fixed an issue where the tray icon did not appear in LXDE
@@ -147,6 +148,11 @@ Issues closed on GitHub
  * Conform to Windows window-arrangement hotkeys ([#1704](https://github.com/nicotine-plus/nicotine-plus/issues/1704))
  * Cannot Use App or See App Window (MacOS Monterey) ([#1709](https://github.com/nicotine-plus/nicotine-plus/issues/1709))
  * Crash report on "About Nicotine+" ([#1715](https://github.com/nicotine-plus/nicotine-plus/issues/1715))
+ * 3.2.0.rc2 64-bit portable won't launch (Windows) ([#1724](https://github.com/nicotine-plus/nicotine-plus/issues/1724))
+ * Clicking in a result filter field scrolls the results list to the top ([#1732](https://github.com/nicotine-plus/nicotine-plus/issues/1732))
+ * Result filter fields cause results list to require an extra click ([#1733](https://github.com/nicotine-plus/nicotine-plus/issues/1733))
+ * UI hangs for seconds at a time in the Search Files view ([#1734](https://github.com/nicotine-plus/nicotine-plus/issues/1734))
+ * Scrolling on a Preferences field changes the field's value ([#1735](https://github.com/nicotine-plus/nicotine-plus/issues/1735))
 
 Version 3.1.1 (August 2, 2021)
 -----------------------------
