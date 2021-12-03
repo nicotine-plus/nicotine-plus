@@ -1416,8 +1416,12 @@ class Search(UserInterface):
 
         self.FilterFreeSlot.set_active(False)
 
+        if self.ShowFilters.get_active():
+            self.FilterIn.get_child().grab_focus()
+        else:
+            self.ResultsList.grab_focus()
+
         self.clearing_filters = False
-        self.FilterIn.get_child().grab_focus()
         self.on_refilter()
 
     def on_clear(self, *_args):
