@@ -50,7 +50,7 @@ class Interests(UserInterface):
 
         self.likes_column_numbers = list(range(self.likes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.LikesList,
+            frame, None, self.LikesList,
             ["likes", _("Likes"), -1, "text", None]
         )
 
@@ -63,7 +63,7 @@ class Interests(UserInterface):
 
         self.dislikes_column_numbers = list(range(self.dislikes_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.DislikesList,
+            frame, None, self.DislikesList,
             ["dislikes", _("Dislikes"), -1, "text", None]
         )
 
@@ -78,7 +78,7 @@ class Interests(UserInterface):
 
         self.recommendations_column_numbers = list(range(self.recommendations_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationsList,
+            frame, None, self.RecommendationsList,
             ["rating", _("Rating"), 0, "number", None],
             ["item", _("Item"), -1, "text", None]
         )
@@ -102,7 +102,7 @@ class Interests(UserInterface):
 
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.RecommendationUsersList,
+            frame, None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],

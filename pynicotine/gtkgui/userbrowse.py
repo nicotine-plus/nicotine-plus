@@ -176,7 +176,7 @@ class UserBrowse(UserInterface):
         self.dir_store = Gtk.TreeStore(str)
         self.dir_column_numbers = list(range(self.dir_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.FolderTreeView,
+            self.frame, None, self.FolderTreeView,
             ["folder", _("Folder"), -1, "text", None]  # 0
         )
         cols["folder"].set_sort_column_id(0)
@@ -236,7 +236,7 @@ class UserBrowse(UserInterface):
         self.file_column_offsets = {}
         self.file_column_numbers = list(range(self.file_store.get_n_columns()))
         cols = initialise_columns(
-            "user_browse", self.FileTreeView,
+            self.frame, "user_browse", self.FileTreeView,
             ["filename", _("Filename"), 600, "text", None],
             ["size", _("Size"), 100, "number", None],
             ["bitrate", _("Bitrate"), 100, "number", None],

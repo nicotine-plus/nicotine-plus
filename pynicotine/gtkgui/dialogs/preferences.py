@@ -263,7 +263,7 @@ class DownloadsFrame(UserInterface):
 
         self.column_numbers = list(range(self.filterlist.get_n_columns()))
         cols = initialise_columns(
-            None, self.FilterView,
+            self.frame, None, self.FilterView,
             ["filter", _("Filter"), -1, "text", None],
             ["escaped", _("Escaped"), 40, "toggle", None]
         )
@@ -549,7 +549,7 @@ class SharesFrame(UserInterface):
         self.Shares.set_model(self.shareslist)
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
-            None, self.Shares,
+            self.frame, None, self.Shares,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), -1, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
@@ -896,7 +896,7 @@ class IgnoredUsersFrame(UserInterface):
 
         self.user_column_numbers = list(range(self.ignorelist.get_n_columns()))
         cols = initialise_columns(
-            None, self.IgnoredUsers,
+            self.frame, None, self.IgnoredUsers,
             ["username", _("Username"), -1, "text", None]
         )
         cols["username"].set_sort_column_id(0)
@@ -908,7 +908,7 @@ class IgnoredUsersFrame(UserInterface):
 
         self.ip_column_numbers = list(range(self.ignored_ips_list.get_n_columns()))
         cols = initialise_columns(
-            None, self.IgnoredIPs,
+            self.frame, None, self.IgnoredIPs,
             ["ip_address", _("IP Address"), -1, "text", None],
             ["user", _("User"), -1, "text", None]
         )
@@ -1055,7 +1055,7 @@ class BannedUsersFrame(UserInterface):
 
         self.ban_column_numbers = list(range(self.banlist_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.BannedList,
+            self.frame, None, self.BannedList,
             ["username", _("Username"), -1, "text", None]
         )
         cols["username"].set_sort_column_id(0)
@@ -1067,7 +1067,7 @@ class BannedUsersFrame(UserInterface):
 
         self.block_column_numbers = list(range(self.blocked_list_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.BlockedList,
+            self.frame, None, self.BlockedList,
             ["ip_address", _("IP Address"), -1, "text", None],
             ["user", _("User"), -1, "text", None]
         )
@@ -1262,7 +1262,7 @@ class ChatsFrame(UserInterface):
         self.censor_list_model = Gtk.ListStore(str)
 
         cols = initialise_columns(
-            None, self.CensorList,
+            self.frame, None, self.CensorList,
             ["pattern", _("Pattern"), -1, "edit", None]
         )
         cols["pattern"].set_sort_column_id(0)
@@ -1277,7 +1277,7 @@ class ChatsFrame(UserInterface):
 
         self.column_numbers = list(range(self.replace_list_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.ReplacementList,
+            self.frame, None, self.ReplacementList,
             ["pattern", _("Pattern"), 150, "edit", None],
             ["replacement", _("Replacement"), -1, "edit", None]
         )
@@ -1977,7 +1977,7 @@ class UrlHandlersFrame(UserInterface):
 
         self.column_numbers = list(range(self.protocolmodel.get_n_columns()))
         cols = initialise_columns(
-            None, self.ProtocolHandlers,
+            self.frame, None, self.ProtocolHandlers,
             ["protocol", _("Protocol"), -1, "text", None],
             ["command", _("Command"), -1, "combo", None]
         )
@@ -2334,7 +2334,7 @@ class PluginsFrame(UserInterface):
             container.add(scrolled_window)
 
             cols = initialise_columns(
-                None, self.option_widgets[name],
+                self.settings.frame, None, self.option_widgets[name],
                 [description, description, 150, "edit", None]
             )
 
@@ -2584,7 +2584,7 @@ class PluginsFrame(UserInterface):
 
         self.column_numbers = list(range(self.plugins_model.get_n_columns()))
         cols = initialise_columns(
-            None, self.PluginTreeView,
+            self.frame, None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
             ["plugin", _("Plugin"), 380, "text", None]
         )

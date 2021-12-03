@@ -421,7 +421,7 @@ class ChatRoom(UserInterface):
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         attribute_columns = (9, 10)
         self.cols = cols = initialise_columns(
-            ("chat_room", room), self.UserList,
+            self.frame, ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 100, "text", attribute_columns],

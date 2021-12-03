@@ -173,7 +173,7 @@ class UserInfo(UserInterface):
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Likes,
+            self.frame, None, self.Likes,
             ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
@@ -186,7 +186,7 @@ class UserInfo(UserInterface):
 
         self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
         cols = initialise_columns(
-            None, self.Hates,
+            self.frame, None, self.Hates,
             ["dislikes", _("Dislikes"), 0, "text", None]
         )
         cols["dislikes"].set_sort_column_id(0)

@@ -57,7 +57,7 @@ class WishList(UserInterface):
 
         self.column_numbers = list(range(self.store.get_n_columns()))
         cols = initialise_columns(
-            None, self.list_view,
+            frame, None, self.list_view,
             ["wish", _("Wish"), -1, "text", None]
         )
 

@@ -351,7 +351,7 @@ class Search(UserInterface):
         self.column_numbers = list(range(self.resultsmodel.get_n_columns()))
         color_col = 17
         self.cols = cols = initialise_columns(
-            "file_search", self.ResultsList,
+            self.frame, "file_search", self.ResultsList,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "pixbuf", None],

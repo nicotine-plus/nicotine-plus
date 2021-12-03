@@ -112,7 +112,7 @@ def collapse_treeview(treeview, grouping_mode):
             iterator = model.iter_next(iterator)
 
 
-def initialise_columns(treeview_name, treeview, *args):
+def initialise_columns(frame, treeview_name, treeview, *args):
 
     i = 0
     cols = OrderedDict()
@@ -225,7 +225,7 @@ def initialise_columns(treeview_name, treeview, *args):
     treeview.emit("columns-changed")
 
     setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
-    treeview.column_menu = PopupMenu(parent=treeview, callback=press_header, connect_events=False)
+    treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
     if Gtk.get_major_version() == 4:
         # Hotfix: disable rubber-band selection in GTK 4 to avoid crash bug

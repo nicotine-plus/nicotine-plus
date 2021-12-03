@@ -57,7 +57,7 @@ class RoomList(UserInterface):
         self.column_numbers = list(range(self.room_model.get_n_columns()))
         attribute_columns = (2, 3)
         self.cols = initialise_columns(
-            None, self.list_view,
+            frame, None, self.list_view,
             ["room", _("Room"), 260, "text", attribute_columns],
             ["users", _("Users"), 100, "number", attribute_columns]
         )

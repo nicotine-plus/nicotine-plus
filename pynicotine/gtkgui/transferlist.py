@@ -141,7 +141,7 @@ class TransferList(UserInterface):
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            transfer_type, self.Transfers,
+            frame, transfer_type, self.Transfers,
             ["user", _("User"), 200, "text", None],
             ["path", _("Path"), 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],

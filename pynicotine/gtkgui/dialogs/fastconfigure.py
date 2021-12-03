@@ -69,7 +69,7 @@ class FastConfigureAssistant(UserInterface):
 
         self.column_numbers = list(range(self.sharelist.get_n_columns()))
         initialise_columns(
-            None, self.shareddirectoriestree,
+            frame, None, self.shareddirectoriestree,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), 0, "text", None]
         )

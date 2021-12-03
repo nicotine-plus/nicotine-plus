@@ -40,7 +40,7 @@ from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 class PopupMenu:
 
-    def __init__(self, frame=None, parent=None, callback=None, connect_events=True):
+    def __init__(self, frame, parent=None, callback=None, connect_events=True):
 
         self.model = Gio.Menu()
         self.frame = frame
@@ -66,16 +66,6 @@ class PopupMenu:
 
         self.user = None
         self.useritem = None
-
-    def get_window(self):
-
-        if self.frame:
-            return self.frame.MainWindow
-
-        if Gtk.get_major_version() == 4:
-            return self.parent.get_root()
-
-        return self.parent.get_toplevel()
 
     def set_parent(self, parent):
 
@@ -110,7 +100,7 @@ class PopupMenu:
         else:
             action = Gio.SimpleAction.new_stateful(action_id, None, GLib.Variant.new_boolean(False))
 
-        self.get_window().add_action(action)
+        self.frame.MainWindow.add_action(action)
         return action
 
     def create_menu_item(self, item):
@@ -332,7 +322,7 @@ class PopupMenu:
         self.model.remove_all()
 
         for action in self.actions:
-            self.get_window().remove_action(action)
+            self.frame.MainWindow.remove_action(action)
 
         self.actions.clear()
         self.items.clear()
@@ -566,7 +556,7 @@ class PopupMenu:
             message += "\n\n" + error
 
         entry_dialog(
-            parent=self.get_window(),
+            parent=self.frame.MainWindow,
             title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response

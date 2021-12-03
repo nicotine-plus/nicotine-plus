@@ -74,7 +74,7 @@ class UserList(UserInterface):
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            "buddy_list", self.UserListTree,
+            frame, "buddy_list", self.UserListTree,
             ["status", _("Status"), 25, "pixbuf", None],
             ["country", _("Country"), 25, "pixbuf", None],
             ["user", _("User"), 250, "text", None],
