@@ -47,7 +47,7 @@ class Notifications:
         item = room if location == "rooms" else user
 
         if self.frame.np.notifications.add_hilite_item(location, item):
-            self.frame.tray_icon.set_image()
+            self.frame.tray_icon.set_icon()
 
         if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
                 and not self.frame.MainWindow.is_active()):
@@ -61,7 +61,7 @@ class Notifications:
 
         if self.frame.np.notifications.remove_hilite_item(location, item):
             self.set_title(item)
-            self.frame.tray_icon.set_image()
+            self.frame.tray_icon.set_icon()
 
     def set_title(self, user=None):
 
