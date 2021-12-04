@@ -136,7 +136,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         if Gtk.get_major_version() == 4:
             # GTK 4 rows need more padding to match GTK 3
-            height_padding = 5
+            height_padding = 4
         else:
             height_padding = 3
 
