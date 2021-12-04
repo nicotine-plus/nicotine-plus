@@ -381,21 +381,19 @@ class PopupMenu:
 
             elif not self.parent.get_selection().count_selected_rows():
                 # No rows selected, don't show menu
-                return
+                return False
 
         if callback:
             cancel = callback(menu_model, self.parent)
 
             if cancel:
-                return
+                return False
 
         self.popup(pos_x, pos_y, controller, menu=menu)
-
-        if controller:
-            controller.set_state(Gtk.EventSequenceState.CLAIMED)
+        return False
 
     def _callback_click(self, controller, _num_p, pos_x, pos_y):
-        self._callback(controller, pos_x, pos_y)
+        return self._callback(controller, pos_x, pos_y)
 
     def _callback_menu(self, *_args):
         self._callback(None, None, None)
