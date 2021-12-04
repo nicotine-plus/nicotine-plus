@@ -103,7 +103,7 @@ class Interests(UserInterface):
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
         cols = initialise_columns(
             frame, None, self.RecommendationUsersList,
-            ["status", _("Status"), 25, "pixbuf", None],
+            ["status", _("Status"), 25, "icon", None],
             ["user", _("User"), 100, "text", None],
             ["speed", _("Speed"), 100, "text", None],
             ["files", _("Files"), 100, "text", None],

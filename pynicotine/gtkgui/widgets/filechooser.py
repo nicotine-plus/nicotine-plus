@@ -135,17 +135,17 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
         path = chooser.get_preview_filename()
 
         try:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+            image_data = GdkPixbuf.Pixbuf.new_from_file(path)
 
             maxwidth, maxheight = 300.0, 700.0
-            width, height = pixbuf.get_width(), pixbuf.get_height()
+            width, height = image_data.get_width(), image_data.get_height()
             scale = min(maxwidth / width, maxheight / height)
 
             if scale < 1:
                 width, height = int(width * scale), int(height * scale)
-                pixbuf = pixbuf.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
+                image_data = image_data.scale_simple(width, height, GdkPixbuf.InterpType.BILINEAR)
 
-            preview.set_from_pixbuf(pixbuf)
+            preview.set_from_pixbuf(image_data)
             chooser.set_preview_widget_active(True)
 
         except Exception:

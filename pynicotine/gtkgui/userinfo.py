@@ -140,27 +140,27 @@ class UserInfo(UserInterface):
         self.descr_textview = TextView(self.descr)
 
         if Gtk.get_major_version() == 4:
-            self.image = Gtk.Picture()
-            self.image.set_can_shrink(False)
-            self.image.set_halign(Gtk.Align.CENTER)
-            self.image.set_valign(Gtk.Align.CENTER)
+            self.picture = Gtk.Picture()
+            self.picture.set_can_shrink(False)
+            self.picture.set_halign(Gtk.Align.CENTER)
+            self.picture.set_valign(Gtk.Align.CENTER)
 
-            self.image_view.set_child(self.image)
+            self.picture_view.set_child(self.picture)
 
             self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
-            self.image_view.add_controller(self.scroll_controller)
+            self.picture_view.add_controller(self.scroll_controller)
 
         else:
-            self.image = Gtk.Image()
-            self.image.show()
+            self.picture = Gtk.Image()
+            self.picture.show()
 
-            self.image_view.add(self.image)
-            self.image_view.connect("scroll-event", self.on_scroll_event)
+            self.picture_view.add(self.picture)
+            self.picture_view.connect("scroll-event", self.on_scroll_event)
 
         self.user = user
         self.conn = None
-        self.image_pixbuf = None
+        self.picture_data = None
         self.zoom_factor = 5
         self.actual_zoom = 0
 
@@ -211,7 +211,7 @@ class UserInfo(UserInterface):
         popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.setup(*get_interest_items(popup))
 
-        popup = PopupMenu(self.frame, self.image_view, self.on_image_popup_menu)
+        popup = PopupMenu(self.frame, self.picture_view, self.on_picture_popup_menu)
         popup.setup(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -239,7 +239,7 @@ class UserInfo(UserInterface):
     def load_picture(self, data):
 
         if not data:
-            self.image.hide()
+            self.picture.hide()
             return
 
         try:
@@ -250,30 +250,30 @@ class UserInfo(UserInterface):
                 file_handle.write(data)
                 del data
 
-                self.image_pixbuf = pixbuf = GdkPixbuf.Pixbuf.new_from_file(file_handle.name)
-                image_width = self.image_pixbuf.get_width()
-                image_height = self.image_pixbuf.get_height()
+                self.picture_data = GdkPixbuf.Pixbuf.new_from_file(file_handle.name)
+                picture_width = self.picture_data.get_width()
+                picture_height = self.picture_data.get_height()
 
-                allocation = self.image_view.get_allocation()
+                allocation = self.picture_view.get_allocation()
                 max_width = allocation.width - 24
                 max_height = allocation.height - 24
 
-                # Resize pixbuf to fit container
-                ratio = min(max_width / image_width, max_height / image_height)
-                pixbuf = self.image_pixbuf.scale_simple(
-                    ratio * image_width, ratio * image_height, GdkPixbuf.InterpType.BILINEAR)
+                # Resize picture to fit container
+                ratio = min(max_width / picture_width, max_height / picture_height)
+                self.picture_data = self.picture_data.scale_simple(
+                    ratio * picture_width, ratio * picture_height, GdkPixbuf.InterpType.BILINEAR)
 
                 if Gtk.get_major_version() == 4:
-                    self.image.set_pixbuf(pixbuf)
+                    self.picture.set_pixbuf(self.picture_data)
                 else:
-                    self.image.set_from_pixbuf(pixbuf)
+                    self.picture.set_from_pixbuf(self.picture_data)
 
             gc.collect()
 
             self.actual_zoom = 0
             self.SavePicture.set_sensitive(True)
 
-            self.image.show()
+            self.picture.show()
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -291,28 +291,27 @@ class UserInfo(UserInterface):
 
         import gc
 
-        if self.image is None or self.image_pixbuf is None or self.actual_zoom > 100:
+        if self.picture is None or self.picture_data is None or self.actual_zoom > 100:
             return
 
-        width = self.image_pixbuf.get_width()
-        height = self.image_pixbuf.get_height()
+        width = self.picture_data.get_width()
+        height = self.picture_data.get_height()
 
         if zoom:
             self.actual_zoom = 0
-            pixbuf_zoomed = self.image_pixbuf
+            picture_zoomed = self.picture_data
 
         else:
             self.actual_zoom += self.zoom_factor
-            pixbuf_zoomed = self.image_pixbuf.scale_simple(
+            picture_zoomed = self.picture_data.scale_simple(
                 calc_zoom_in(width), calc_zoom_in(height), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
-            self.image.set_pixbuf(pixbuf_zoomed)
+            self.picture.set_pixbuf(picture_zoomed)
         else:
-            self.image.set_from_pixbuf(pixbuf_zoomed)
+            self.picture.set_from_pixbuf(picture_zoomed)
 
-        del pixbuf_zoomed
-
+        del picture_zoomed
         gc.collect()
 
     def make_zoom_out(self, *_args):
@@ -322,11 +321,11 @@ class UserInfo(UserInterface):
 
         import gc
 
-        if self.image is None or self.image_pixbuf is None:
+        if self.picture is None or self.picture_data is None:
             return
 
-        width = self.image_pixbuf.get_width()
-        height = self.image_pixbuf.get_height()
+        width = self.picture_data.get_width()
+        height = self.picture_data.get_height()
 
         self.actual_zoom -= self.zoom_factor
 
@@ -334,16 +333,15 @@ class UserInfo(UserInterface):
             self.actual_zoom += self.zoom_factor
             return
 
-        pixbuf_zoomed = self.image_pixbuf.scale_simple(
+        picture_zoomed = self.picture_data.scale_simple(
             calc_zoom_out(width), calc_zoom_out(height), GdkPixbuf.InterpType.BILINEAR)
 
         if Gtk.get_major_version() == 4:
-            self.image.set_pixbuf(pixbuf_zoomed)
+            self.picture.set_pixbuf(picture_zoomed)
         else:
-            self.image.set_from_pixbuf(pixbuf_zoomed)
+            self.picture.set_from_pixbuf(picture_zoomed)
 
-        del pixbuf_zoomed
-
+        del picture_zoomed
         gc.collect()
 
     def show_connection_error(self):
@@ -384,7 +382,7 @@ class UserInfo(UserInterface):
         self.queuesize.set_text(humanize(msg.queuesize))
         self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
 
-        self.image_pixbuf = None
+        self.picture_data = None
         self.load_picture(msg.pic)
 
         self.info_bar.set_visible(False)
@@ -470,14 +468,14 @@ class UserInfo(UserInterface):
     def on_save_picture_response(self, selected, _data):
 
         if not os.path.exists(selected):
-            self.image_pixbuf.savev(selected, "jpeg", ["quality"], ["100"])
+            self.picture_data.savev(selected, "jpeg", ["quality"], ["100"])
             log.add(_("Picture saved to %s"), selected)
         else:
             log.add(_("Picture not saved, %s already exists."), selected)
 
     def on_save_picture(self, *_args):
 
-        if self.image is None or self.image_pixbuf is None:
+        if self.picture is None or self.picture_data is None:
             return
 
         save_file(
@@ -488,9 +486,9 @@ class UserInfo(UserInterface):
             title=_("Save as…")
         )
 
-    def on_image_popup_menu(self, menu, _widget):
+    def on_picture_popup_menu(self, menu, _widget):
         for action in menu.get_actions().values():
-            action.set_enabled(self.image is None or self.image_pixbuf is None)
+            action.set_enabled(self.picture is None or self.picture_data is None)
 
     def on_scroll(self, _controller, _scroll_x, scroll_y):
 

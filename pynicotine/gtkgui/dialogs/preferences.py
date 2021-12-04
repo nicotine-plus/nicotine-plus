@@ -1513,14 +1513,14 @@ class UserInterfaceFrame(UserInterface):
                 (get_icon("trayicon_away"), _("Away (Tray)"), 16),
                 (get_icon("trayicon_msg"), _("Message (Tray)"), 16)]
 
-        for pixbuf, label, pixel_size in icon_list:
+        for icon_data, label, pixel_size in icon_list:
             box = Gtk.Box()
             box.set_orientation(Gtk.Orientation.VERTICAL)
             box.set_valign(Gtk.Align.CENTER)
             box.set_spacing(6)
             box.show()
 
-            icon = Gtk.Image.new_from_pixbuf(pixbuf)
+            icon = Gtk.Image.new_from_pixbuf(icon_data)
             icon.set_pixel_size(pixel_size)
             icon.show()
 

@@ -350,7 +350,7 @@ class Search(UserInterface):
             self.frame, "file_search", self.ResultsList,
             ["id", _("ID"), 50, "text", color_col],
             ["user", _("User"), 200, "text", color_col],
-            ["country", _("Country"), 25, "pixbuf", None],
+            ["country", _("Country"), 25, "icon", None],
             ["speed", _("Speed"), 100, "number", color_col],
             ["in_queue", _("In Queue"), 90, "center", color_col],
             ["folder", _("Folder"), 400, "text", color_col],
