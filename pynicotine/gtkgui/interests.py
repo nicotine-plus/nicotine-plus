@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -91,7 +92,7 @@ class Interests(UserInterface):
 
         self.recommendation_users = {}
         self.recommendation_users_model = Gtk.ListStore(
-            GObject.TYPE_OBJECT,  # (0) status icon
+            Gio.Icon,             # (0) status icon
             str,                  # (1) user
             str,                  # (2) hspeed
             str,                  # (3) hfiles
@@ -304,7 +305,7 @@ class Interests(UserInterface):
         for user in msg.users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
-                [GObject.Value(GObject.TYPE_OBJECT, get_status_icon(0)), user, "", "0", 0, 0, 0]
+                [get_status_icon(0), user, "", "0", 0, 0, 0]
             )
             self.recommendation_users[user] = iterator
 

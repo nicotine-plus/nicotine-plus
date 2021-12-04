@@ -333,7 +333,8 @@ class NicotineFrame(UserInterface):
         main_icon = get_icon("n")
 
         if main_icon and Gtk.get_major_version() == 3:
-            self.MainWindow.set_default_icon(main_icon)
+            icon_data = Gtk.IconTheme.get_default().lookup_by_gicon(main_icon, 128, 0).load_icon()
+            self.MainWindow.set_default_icon(icon_data)
         else:
             self.MainWindow.set_default_icon_name(config.application_id)
 

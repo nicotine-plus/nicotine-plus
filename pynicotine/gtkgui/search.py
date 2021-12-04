@@ -27,6 +27,7 @@ import sre_constants
 
 from collections import defaultdict
 
+from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -325,7 +326,7 @@ class Search(UserInterface):
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
-            GObject.TYPE_OBJECT,  # (2)  flag
+            Gio.Icon,             # (2)  flag
             str,                  # (3)  h_speed
             str,                  # (4)  h_queue
             str,                  # (5)  directory
@@ -590,7 +591,7 @@ class Search(UserInterface):
                 [
                     GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
                     user,
-                    GObject.Value(GObject.TYPE_OBJECT, get_flag_icon(country)),
+                    get_flag_icon(country) or GObject.Value(GObject.TYPE_OBJECT, None),
                     h_speed,
                     h_queue,
                     directory,

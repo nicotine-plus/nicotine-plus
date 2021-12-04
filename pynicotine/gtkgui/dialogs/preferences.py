@@ -1520,7 +1520,8 @@ class UserInterfaceFrame(UserInterface):
             box.set_spacing(6)
             box.show()
 
-            icon = Gtk.Image.new_from_pixbuf(icon_data)
+            icon = Gtk.Image()
+            icon.set_property("gicon", icon_data)
             icon.set_pixel_size(pixel_size)
             icon.show()
 

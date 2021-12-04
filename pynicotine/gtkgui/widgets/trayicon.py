@@ -385,8 +385,7 @@ class TrayIcon:
         else:
             # GtkStatusIcon fallback
             if self.custom_icons:
-                self.tray_icon.set_from_pixbuf(get_icon(icon_name))
-
+                self.tray_icon.set_from_gicon(get_icon(icon_name))
             else:
                 self.tray_icon.set_from_icon_name(icon_name)
 

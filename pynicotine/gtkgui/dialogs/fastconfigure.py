@@ -54,7 +54,7 @@ class FastConfigureAssistant(UserInterface):
         logo = get_icon("n")
 
         if logo:
-            self.icon.set_from_pixbuf(logo)
+            self.icon.set_property("gicon", logo)
         else:
             self.icon.set_property("icon-name", config.application_id)
 

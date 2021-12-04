@@ -39,18 +39,17 @@ class About(UserInterface):
         # Override link handler with our own
         self.dialog.connect("activate-link", lambda x, url: open_uri(url))
 
-        logo = get_icon("n")
+        main_icon = get_icon("n")
 
-        if logo:
-            if Gtk.get_major_version() == 4:
-                logo = Gdk.Texture.new_for_pixbuf(logo)
-
-            self.dialog.set_logo(logo)
-        else:
+        if not main_icon:
             self.dialog.set_logo_icon_name(config.application_id)
 
         if Gtk.get_major_version() == 4:
             self.dialog.connect("close-request", lambda x: x.destroy())
+
+            if main_icon:
+                icon_path = main_icon.get_file()
+                self.dialog.set_logo(Gdk.Texture.new_from_file(icon_path))
         else:
             self.dialog.connect("response", lambda x, _y: x.destroy())
 

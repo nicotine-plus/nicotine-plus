@@ -401,8 +401,8 @@ class ChatRoom(UserInterface):
             config.sections["columns"]["chat_room"][room] = {}
 
         self.usersmodel = Gtk.ListStore(
-            GObject.TYPE_OBJECT,  # (0)  status_icon
-            GObject.TYPE_OBJECT,  # (1)  flag
+            Gio.Icon,             # (0)  status_icon
+            Gio.Icon,             # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  h_speed
             str,                  # (4)  h_files
@@ -504,7 +504,7 @@ class ChatRoom(UserInterface):
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
         status_icon = get_status_icon(status)
-        flag_icon = get_flag_icon(country)
+        flag_icon = get_flag_icon(country) or GObject.Value(GObject.TYPE_OBJECT, None)
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         self.frame.np.queue.append(slskmessages.GetPeerAddress(username))
@@ -533,8 +533,8 @@ class ChatRoom(UserInterface):
         iterator = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                GObject.Value(GObject.TYPE_OBJECT, status_icon),
-                GObject.Value(GObject.TYPE_OBJECT, flag_icon),
+                status_icon,
+                flag_icon,
                 username,
                 h_speed,
                 h_files,
@@ -904,7 +904,7 @@ class ChatRoom(UserInterface):
                 not self.frame.np.network_filter.is_user_ip_ignored(user):
             self.log_textview.append_line(action % user, self.tag_log)
 
-        self.usersmodel.set_value(self.users[user], 0, GObject.Value(GObject.TYPE_OBJECT, status_icon))
+        self.usersmodel.set_value(self.users[user], 0, status_icon)
         self.usersmodel.set_value(self.users[user], 5, status)
 
         self.update_user_tag(user)
@@ -923,7 +923,7 @@ class ChatRoom(UserInterface):
         if not flag_icon:
             return
 
-        self.usersmodel.set_value(self.users[user], 1, GObject.Value(GObject.TYPE_OBJECT, flag_icon))
+        self.usersmodel.set_value(self.users[user], 1, flag_icon)
         self.usersmodel.set_value(self.users[user], 8, country)
 
     def update_visuals(self):

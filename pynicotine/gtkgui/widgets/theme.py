@@ -20,7 +20,7 @@ import os
 import sys
 
 from gi.repository import Gdk
-from gi.repository import GdkPixbuf
+from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -194,15 +194,6 @@ def set_global_style():
 ICONS = {}
 
 
-def load_pixbuf_from_path(path):
-
-    with open(path, 'rb') as file_handle:
-        loader = GdkPixbuf.PixbufLoader()
-        loader.write(file_handle.read())
-        loader.close()
-        return loader.get_pixbuf()
-
-
 def get_icon(icon_name):
     return ICONS.get(icon_name)
 
@@ -214,14 +205,11 @@ def get_flag_icon(country):
 
     country = country.lower().replace("flag_", "")
 
-    try:
-        if country not in ICONS:
-            ICONS[country] = load_pixbuf_from_path(
-                os.path.join(GUI_DIR, "icons", "flags", country + ".svg")
-            )
+    if country not in ICONS:
+        path = os.path.join(GUI_DIR, "icons", "flags", country + ".svg")
 
-    except Exception:
-        return None
+        if os.path.isfile(path):
+            ICONS[country] = Gio.Icon.new_for_string(path)
 
     return get_icon(country)
 
@@ -240,48 +228,47 @@ def get_status_icon(status):
 def load_ui_icon(name):
     """ Load icon required by the UI """
 
-    try:
-        return load_pixbuf_from_path(
-            os.path.join(GUI_DIR, "icons", name + ".svg")
-        )
+    path = os.path.join(GUI_DIR, "icons", name + ".svg")
 
-    except Exception:
-        return None
+    if os.path.isfile(path):
+        return Gio.Icon.new_for_string(path)
+
+    return None
 
 
 def load_custom_icons(names):
     """ Load custom icon theme if one is selected """
 
-    if config.sections["ui"].get("icontheme"):
-        log.add_debug("Loading custom icons when available")
-        extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
+    if not config.sections["ui"].get("icontheme"):
+        return False
 
-        for name in names:
-            path = None
-            exts = extensions[:]
-            loaded = False
+    log.add_debug("Loading custom icons when available")
+    extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
-            while not path or (exts and not loaded):
-                path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
-                                          (name, exts.pop())))
+    for name in names:
+        path = None
+        exts = extensions[:]
+        loaded = False
 
+        while not path or (exts and not loaded):
+            path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
+                                      (name, exts.pop())))
+
+            try:
                 if os.path.isfile(path):
-                    try:
-                        ICONS[name] = load_pixbuf_from_path(path)
-                        loaded = True
+                    ICONS[name] = Gio.Icon.new_for_string(path)
+                    loaded = True
 
-                    except Exception as error:
-                        log.add(_("Error loading custom icon %(path)s: %(error)s"), {
-                            "path": path,
-                            "error": error
-                        })
+            except Exception as error:
+                log.add(_("Error loading custom icon %(path)s: %(error)s"), {
+                    "path": path,
+                    "error": error
+                })
 
-            if name not in ICONS:
-                ICONS[name] = load_ui_icon(name)
+        if name not in ICONS:
+            ICONS[name] = load_ui_icon(name)
 
-        return True
-
-    return False
+    return True
 
 
 def load_icons():
@@ -317,6 +304,7 @@ def load_icons():
         icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
         icon_theme.append_search_path = icon_theme.add_search_path
     else:
+        Gtk.IconSize.register("country_flag", 21, 21)
         icon_theme = Gtk.IconTheme.get_default()
 
     # Support running from folder, as well as macOS and Windows

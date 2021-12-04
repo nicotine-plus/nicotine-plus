@@ -202,7 +202,7 @@ class TabLabel(Gtk.Box):
             return
 
         self.end_icon_data = icon_data
-        self.end_icon.set_from_pixbuf(icon_data)
+        self.end_icon.set_property("gicon", icon_data)
         self.end_icon.show()
 
     def remove_hilite(self):
@@ -213,7 +213,7 @@ class TabLabel(Gtk.Box):
         self._set_text_color(config.sections["ui"]["tab_default"])
 
         self.end_icon_data = None
-        self.end_icon.set_from_pixbuf(None)
+        self.end_icon.set_property("gicon", None)
         self.end_icon.hide()
 
     def set_status_icon(self, status):
@@ -224,7 +224,7 @@ class TabLabel(Gtk.Box):
             return
 
         self.start_icon_data = icon_data
-        self.start_icon.set_from_pixbuf(icon_data)
+        self.start_icon.set_property("gicon", icon_data)
         self.start_icon.set_visible(config.sections["ui"]["tab_status_icons"])
 
     def set_start_icon_name(self, icon_name):

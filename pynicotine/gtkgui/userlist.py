@@ -23,6 +23,7 @@
 
 import time
 
+from gi.repository import Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 
@@ -55,8 +56,8 @@ class UserList(UserInterface):
 
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
-            GObject.TYPE_OBJECT,  # (0)  status icon
-            GObject.TYPE_OBJECT,  # (1)  flag
+            Gio.Icon,             # (0)  status icon
+            Gio.Icon,             # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
             str,                  # (4)  hfile count
@@ -190,8 +191,8 @@ class UserList(UserInterface):
             country = ""
 
         row = [
-            GObject.Value(GObject.TYPE_OBJECT, get_status_icon(0)),
-            GObject.Value(GObject.TYPE_OBJECT, get_flag_icon(country)),
+            get_status_icon(0),
+            get_flag_icon(country) or GObject.Value(GObject.TYPE_OBJECT, None),
             username,
             "",
             "",
@@ -378,8 +379,8 @@ class UserList(UserInterface):
             self.frame.notifications.new_text_notification(status_text % user)
 
         status_icon = get_status_icon(status)
-        self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, status_icon))
-        self.usersmodel.set_value(iterator, 10, GObject.Value(GObject.TYPE_INT64, status))
+        self.usersmodel.set_value(iterator, 0, status_icon)
+        self.usersmodel.set_value(iterator, 10, status)
 
         if status:  # online
             self.set_last_seen(user, online=True)
@@ -421,7 +422,7 @@ class UserList(UserInterface):
         if not flag_icon:
             return
 
-        self.usersmodel.set_value(iterator, 1, GObject.Value(GObject.TYPE_OBJECT, flag_icon))
+        self.usersmodel.set_value(iterator, 1, flag_icon)
         self.usersmodel.set_value(iterator, 14, "flag_" + country_code)
 
     def add_user(self, user):
@@ -435,7 +436,7 @@ class UserList(UserInterface):
         self.user_iterators[user] = self.usersmodel.insert_with_valuesv(
             -1, self.column_numbers,
             [
-                GObject.Value(GObject.TYPE_OBJECT, get_status_icon(0)),
+                get_status_icon(0),
                 GObject.Value(GObject.TYPE_OBJECT, None),
                 user,
                 empty_str,
@@ -571,7 +572,7 @@ class UserList(UserInterface):
         for i in self.usersmodel:
             iterator = i.iter
 
-            self.usersmodel.set_value(iterator, 0, GObject.Value(GObject.TYPE_OBJECT, get_status_icon(0)))
+            self.usersmodel.set_value(iterator, 0, get_status_icon(0))
             self.usersmodel.set_value(iterator, 3, "")
             self.usersmodel.set_value(iterator, 4, "")
             self.usersmodel.set_value(iterator, 10, 0)
