@@ -45,6 +45,7 @@ from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon
+from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -504,7 +505,7 @@ class ChatRoom(UserInterface):
         status = userdata.status
         country = userdata.country or ""  # country can be None, ensure string is used
         status_icon = get_status_icon(status)
-        flag_icon = get_flag_icon(country) or GObject.Value(GObject.TYPE_OBJECT, None)
+        flag_icon = get_flag_icon(country) or get_icon("empty")
 
         # Request user's IP address, so we can get the country and ignore messages by IP
         self.frame.np.queue.append(slskmessages.GetPeerAddress(username))

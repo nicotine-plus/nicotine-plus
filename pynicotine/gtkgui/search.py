@@ -43,6 +43,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon
+from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
@@ -591,7 +592,7 @@ class Search(UserInterface):
                 [
                     GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
                     user,
-                    get_flag_icon(country) or GObject.Value(GObject.TYPE_OBJECT, None),
+                    get_flag_icon(country) or get_icon("empty"),
                     h_speed,
                     h_queue,
                     directory,

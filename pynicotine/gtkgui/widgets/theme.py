@@ -275,6 +275,7 @@ def load_icons():
     """ Load custom icons necessary for the application to function """
 
     names = [
+        "empty",
         "away",
         "online",
         "offline",
