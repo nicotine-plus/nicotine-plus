@@ -24,14 +24,6 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="UserLabel">
-            <property name="visible">1</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
-            <property name="label" translatable="yes">User:</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkEntry" id="AddUserEntry">
             <property name="visible">1</property>
             <property name="hexpand">1</property>

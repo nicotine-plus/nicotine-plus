@@ -536,7 +536,7 @@ class NicotineFrame(UserInterface):
 
         config.sections["logging"]["logcollapsed"] = not state
 
-    def set_toggle_buddy_list(self, mode):
+    def set_toggle_buddy_list(self, mode, force_show=True):
 
         page_id = self.userlist.page_id
 
@@ -578,7 +578,6 @@ class NicotineFrame(UserInterface):
                     self.MainPaned.pack2(self.userlist.Main, False, True)
 
             self.userlist.BuddiesToolbar.show()
-            self.userlist.UserLabel.hide()
             self.userlist.Main.show()
             return
 
@@ -592,16 +591,16 @@ class NicotineFrame(UserInterface):
                     self.ChatroomsPane.pack2(self.userlist.Main, False, True)
 
             self.userlist.BuddiesToolbar.show()
-            self.userlist.UserLabel.hide()
             self.userlist.Main.show()
             return
 
-        self.userlist_content.add(self.userlist.Main)
-        self.show_tab(page_id)
-
         self.userlist.BuddiesToolbar.hide()
-        self.userlist.UserLabel.show()
         self.userlist.Main.hide()
+
+        self.userlist_content.add(self.userlist.Main)
+
+        if force_show:
+            self.show_tab(page_id)
 
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
@@ -781,7 +780,7 @@ class NicotineFrame(UserInterface):
             "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
-        self.set_toggle_buddy_list(state)
+        self.set_toggle_buddy_list(state, force_show=False)
 
         # Shares
 
