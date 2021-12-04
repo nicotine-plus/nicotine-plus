@@ -53,11 +53,7 @@ class UserBrowses(IconNotebook):
 
     def __init__(self, frame):
 
-        self.frame = frame
-        self.page_id = "userbrowse"
-        self.pages = {}
-
-        IconNotebook.__init__(self, self.frame, self.frame.userbrowse_notebook)
+        IconNotebook.__init__(self, frame, frame.userbrowse_notebook, "userbrowse")
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
         CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
@@ -504,9 +500,7 @@ class UserBrowse(UserInterface):
 
     def set_finished(self):
 
-        self.frame.request_tab_hilite(self.userbrowses.page_id)
-        self.userbrowses.request_changed(self.Main)
-
+        self.userbrowses.request_tab_hilite(self.Main)
         self.progressbar1.set_fraction(1.0)
         self.RefreshButton.set_sensitive(True)
 

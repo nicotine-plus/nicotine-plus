@@ -52,7 +52,7 @@ from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.iconnotebook import ImageLabel
+from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -1211,8 +1211,7 @@ class NicotineFrame(UserInterface):
             page = self.MainNotebook.get_nth_page(i)
             page.page_id = tab_id
 
-            # Initialize the image label
-            tab_label = ImageLabel(tab_text)
+            tab_label = TabLabel(tab_text)
             tab_label.set_icon(tab_icon_name)
             tab_label.show()
 
@@ -1256,14 +1255,14 @@ class NicotineFrame(UserInterface):
 
         elif page == self.uploadsvbox:
             self.uploads.update(forceupdate=True)
-            self.clear_tab_hilite()
+            self.remove_tab_hilite(self.uploads.page_id)
 
             if self.uploads.Main.get_visible():
                 GLib.idle_add(lambda: self.uploads.Transfers.grab_focus() == -1)
 
         elif page == self.downloadsvbox:
             self.downloads.update(forceupdate=True)
-            self.clear_tab_hilite()
+            self.remove_tab_hilite(self.downloads.page_id)
 
             if self.downloads.Main.get_visible():
                 GLib.idle_add(lambda: self.downloads.Transfers.grab_focus() == -1)
@@ -1378,37 +1377,13 @@ class NicotineFrame(UserInterface):
         self.MainNotebook.set_current_page(page_num)
         return True
 
-    def request_tab_hilite(self, page_id, status=1):
-
-        if self.current_page_id == page_id:
-            return
-
+    def request_tab_hilite(self, page_id, mentioned=False):
         tab_label = getattr(self, page_id + "_tab_label")
+        tab_label.request_hilite(mentioned)
 
-        if status == 1:
-            hilite_icon = get_icon("hilite")
-        else:
-            hilite_icon = get_icon("hilite3")
-
-            if tab_label.hilite_pixbuf == get_icon("hilite"):
-                # Chat mentions have priority over normal notifications
-                return
-
-        if hilite_icon == tab_label.hilite_pixbuf:
-            return
-
-        tab_label.set_hilite_image(hilite_icon)
-        tab_label.set_text_color(status + 1)
-
-    def clear_tab_hilite(self):
-
-        tab_label = getattr(self, self.current_page_id + "_tab_label")
-
-        if not tab_label.hilite_pixbuf:
-            return
-
-        tab_label.set_hilite_image(None)
-        tab_label.set_text_color(0)
+    def remove_tab_hilite(self, page_id):
+        tab_label = getattr(self, page_id + "_tab_label")
+        tab_label.remove_hilite()
 
     def change_main_page(self, page_id):
 

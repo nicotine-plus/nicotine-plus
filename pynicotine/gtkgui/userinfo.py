@@ -48,10 +48,8 @@ class UserInfos(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "userinfo"
-        self.pages = {}
 
-        IconNotebook.__init__(self, self.frame, self.frame.userinfo_notebook)
+        IconNotebook.__init__(self, self.frame, self.frame.userinfo_notebook, "userinfo")
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
         CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())
@@ -360,10 +358,7 @@ class UserInfo(UserInterface):
         self.set_finished()
 
     def set_finished(self):
-
-        self.frame.request_tab_hilite(self.userinfos.page_id)
-        self.userinfos.request_changed(self.Main)
-
+        self.userinfos.request_tab_hilite(self.Main)
         self.progressbar.set_fraction(1.0)
 
     def update_gauge(self, msg):

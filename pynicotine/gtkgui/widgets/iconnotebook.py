@@ -35,12 +35,15 @@ from pynicotine.config import config
 """ Icon Notebook """
 
 
-class ImageLabel(Gtk.Box):
+class TabLabel(Gtk.Box):
 
     def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
 
         Gtk.Box.__init__(self)
         self.set_hexpand(False)
+
+        self.highlighted = False
+        self.mentioned = False
         self.centered = False
         self.gesture_click = None
 
@@ -65,11 +68,11 @@ class ImageLabel(Gtk.Box):
         self.close_callback = close_callback
 
         self.status_image = Gtk.Image()
-        self.status_pixbuf = None
+        self.status_image_data = None
         self.status_image.hide()
 
         self.hilite_image = Gtk.Image()
-        self.hilite_pixbuf = None
+        self.hilite_image_data = None
         self.hilite_image.hide()
 
         self._pack_children()
@@ -147,6 +150,21 @@ class ImageLabel(Gtk.Box):
         if sys.platform != "darwin":
             self._add_close_button()
 
+    def _set_text_color(self, color):
+
+        color_rgba = Gdk.RGBA()
+
+        if color_rgba.parse(color):
+            from html import escape
+            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
+            return
+
+        self.label.set_text("%s" % self.text)
+
+    def set_centered(self, centered):
+        self.centered = centered
+        self._pack_children()
+
     def set_close_button_visibility(self, visible):
 
         self.close_button_visible = visible
@@ -157,84 +175,100 @@ class ImageLabel(Gtk.Box):
 
         self._remove_close_button()
 
-    def set_centered(self, centered):
-        self.centered = centered
-        self._pack_children()
+    def request_hilite(self, mentioned=False):
 
-    def set_hilite_image(self, pixbuf):
+        self.highlighted = True
 
-        if pixbuf is self.hilite_pixbuf:
+        # Chat mentions have priority over normal notifications
+        if not self.mentioned:
+            self.mentioned = mentioned
+
+        color = config.sections["ui"]["tab_default"]
+
+        if config.sections["notifications"]["notification_tab_colors"]:
+            if self.mentioned:
+                color = config.sections["ui"]["tab_hilite"]
+            else:
+                color = config.sections["ui"]["tab_changed"]
+
+        self._set_text_color(color)
+
+        if self.mentioned:
+            image = get_icon("hilite")
+        else:
+            image = get_icon("hilite3")
+
+        if image is self.hilite_image_data:
             return
 
-        self.hilite_pixbuf = pixbuf
-        self.hilite_image.set_from_pixbuf(pixbuf)
-        self.hilite_image.set_visible(pixbuf is not None)
+        self.hilite_image_data = image
+        self.hilite_image.set_from_pixbuf(image)
+        self.hilite_image.show()
 
-    def set_status_image(self, pixbuf):
+    def remove_hilite(self):
 
-        if pixbuf is self.status_pixbuf:
+        self.highlighted = False
+        self.mentioned = False
+
+        self._set_text_color(config.sections["ui"]["tab_default"])
+
+        self.hilite_image_data = None
+        self.hilite_image.set_from_pixbuf(None)
+        self.hilite_image.hide()
+
+    def set_status_image(self, status):
+
+        image = get_status_image(status)
+
+        if image is self.status_image_data:
             return
 
-        self.status_pixbuf = pixbuf
-        self.status_image.set_from_pixbuf(pixbuf)
+        self.status_image_data = image
+        self.status_image.set_from_pixbuf(image)
         self.status_image.set_visible(config.sections["ui"]["tab_status_icons"])
 
     def set_icon(self, icon_name):
         self.status_image.set_property("icon-name", icon_name)
         self.status_image.show()
 
-    def set_text(self, text, status=None):
-
-        color_rgba = Gdk.RGBA()
-        color = config.sections["ui"]["tab_default"]
-
-        if config.sections["notifications"]["notification_tab_colors"]:
-            if status == 1:
-                color = config.sections["ui"]["tab_changed"]
-            elif status == 2:
-                color = config.sections["ui"]["tab_hilite"]
-
-        if not color_rgba.parse(color):
-            color = ""
+    def set_text(self, text):
 
         self.text = text
 
-        if not color:
-            self.label.set_text("%s" % self.text)
-        else:
-            from html import escape
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
+        if self.highlighted:
+            self.request_hilite()
+            return
 
-    def set_text_color(self, status):
-        self.set_text(self.text, status)
+        self._set_text_color(config.sections["ui"]["tab_default"])
 
     def get_text(self):
         return self.label.get_text()
 
 
 class IconNotebook:
-    """ This class implements a pseudo Gtk.Notebook
-    On top of what a Gtk.Notebook provides:
-    - Icons on the notebook tab
+    """ This class extends the functionality of a Gtk.Notebook widget. On top of what a Gtk.Notebook provides:
+    - Icons on tabs
+    - Context (right-click) menus for tabs
     - Dropdown menu for unread tabs
-    - A few shortcuts
     """
 
-    def __init__(self, frame, notebook):
+    def __init__(self, frame, notebook, page_id):
 
-        # We store the real Gtk.Notebook object
         self.notebook = notebook
         self.notebook.set_show_border(False)
         self.notebook.connect("switch-page", self.on_switch_page)
 
         self.frame = frame
+        self.page_id = page_id
         self.unread_button = Gtk.MenuButton.new()
+        self.pages = {}
 
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
 
             self.unread_button.set_icon_name("emblem-important-symbolic")
             self.unread_button.set_has_frame(False)
+            self.unread_button.hide()
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             controllers = self.notebook.observe_controllers()
@@ -266,6 +300,8 @@ class IconNotebook:
         self.notebook.popup_enable()
         self.notebook.hide()
 
+    """ Tabs """
+
     def get_labels(self, page):
         tab_label = self.notebook.get_tab_label(page)
         menu_label = self.notebook.get_menu_label(page)
@@ -282,43 +318,19 @@ class IconNotebook:
             tab_label, _menu_label = self.get_labels(page)
             tab_label.set_close_button_visibility(config.sections["ui"]["tabclosers"])
 
-    def set_tab_pos(self, pos):
-        self.notebook.set_tab_pos(pos)
+    def set_tab_text_colors(self):
 
-    def update_unread_pages_menu(self):
-
-        self.popup_menu_unread.clear()
-
-        for page in self.unread_pages:
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             tab_label, _menu_label = self.get_labels(page)
-            self.popup_menu_unread.setup(
-                ("#" + tab_label.get_text(), self.set_unread_page, page)
-            )
-
-    def append_unread_page(self, page):
-
-        if page in self.unread_pages:
-            return
-
-        self.unread_pages.append(page)
-        self.update_unread_pages_menu()
-        self.unread_button.show()
-
-    def remove_unread_page(self, page):
-
-        if page in self.unread_pages:
-            self.unread_pages.remove(page)
-            self.update_unread_pages_menu()
-
-        if not self.unread_pages:
-            self.unread_button.hide()
+            tab_label.set_text(tab_label.get_text())
 
     def append_page(self, page, text, close_callback=None, full_text=None, status=None):
 
         if full_text is None:
             full_text = text
 
-        label_tab = ImageLabel(text, full_text, config.sections["ui"]["tabclosers"], close_callback)
+        label_tab = TabLabel(text, full_text, config.sections["ui"]["tabclosers"], close_callback)
         label_tab.set_tooltip_text(full_text)
         label_tab.show()
 
@@ -332,7 +344,7 @@ class IconNotebook:
         label_tab.gesture_click.connect("pressed", label_tab.close_callback, page)
 
         # menu for all tabs
-        label_tab_menu = ImageLabel(text)
+        label_tab_menu = TabLabel(text)
 
         Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
 
@@ -368,108 +380,14 @@ class IconNotebook:
             callback=self.remove_all_pages_response
         )
 
-    def on_tab_popup(self, widget, page):
-        # Dummy implementation
-        pass
-
-    def set_status_image(self, page, status):
-
-        image = get_status_image(status)
-        tab_label, menu_label = self.get_labels(page)
-
-        tab_label.set_status_image(image)
-        menu_label.set_status_image(image)
-
-    def set_user_status(self, page, user, status):
-
-        if status is None:
-            return
-
-        if status == 1:
-            status_text = _("Away")
-        elif status == 2:
-            status_text = _("Online")
-        else:
-            status_text = _("Offline")
-
-        if not config.sections["ui"]["tab_status_icons"]:
-            self.set_text(page, "%s (%s)" % (user[:15], status_text))
-        else:
-            self.set_text(page, user)
-
-        self.set_status_image(page, status)
-
-        # Set a tab tooltip containing the user's status and name
-        tab_label, _menu_label = self.get_labels(page)
-        tab_label.set_tooltip_text("%s (%s)" % (user, status_text))
-
-    def set_hilite_image(self, page, status):
-
-        tab_label, menu_label = self.get_labels(page)
-        image = None
-
-        if status > 0:
-            image = get_icon(("hilite3", "hilite")[status - 1])
-
-        if status == 1 and tab_label.hilite_pixbuf == get_icon("hilite"):
-            # Chat mentions have priority over normal notifications
-            return
-
-        tab_label.set_hilite_image(image)
-        menu_label.set_hilite_image(image)
-
-        # Determine if button for unread notifications should be shown
-        if image:
-            self.append_unread_page(page)
-            return
-
-        self.remove_unread_page(page)
-
-    def set_text(self, page, label):
-
-        tab_label, menu_label = self.get_labels(page)
-
-        tab_label.set_text(label)
-        menu_label.set_text(label)
-
-    def set_text_colors(self, status):
-
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
-            self.set_text_color(page, status)
-
-    def set_text_color(self, page, status):
-
-        tab_label, _menu_label = self.get_labels(page)
-        tab_label.set_text_color(status)
-
-    def request_hilite(self, page):
-
-        current = self.get_nth_page(self.get_current_page())
-        if current == page:
-            return
-
-        self.set_hilite_image(page, status=2)
-        self.set_text_color(page, status=2)
-
-    def request_changed(self, page):
-
-        current = self.get_nth_page(self.get_current_page())
-        if current == page:
-            return
-
-        self.set_hilite_image(page, status=1)
-        self.set_text_color(page, status=1)
-
     def get_current_page(self):
         return self.notebook.get_current_page()
 
     def set_current_page(self, page_num):
         return self.notebook.set_current_page(page_num)
 
-    def set_unread_page(self, _action, _state, page):
-        page_num = self.page_num(page)
-        self.notebook.set_current_page(page_num)
+    def set_tab_pos(self, pos):
+        self.notebook.set_tab_pos(pos)
 
     def get_n_pages(self):
         return self.notebook.get_n_pages()
@@ -486,6 +404,95 @@ class IconNotebook:
     def prev_page(self):
         return self.notebook.prev_page()
 
+    """ Tab Highlights """
+
+    def request_tab_hilite(self, page, mentioned=False):
+
+        page_active = (self.get_nth_page(self.get_current_page()) == page)
+
+        if self.frame.current_page_id != self.page_id or not page_active:
+            # Highlight top-level tab
+            self.frame.request_tab_hilite(self.page_id, mentioned)
+
+        if page_active:
+            return
+
+        tab_label, menu_label = self.get_labels(page)
+        tab_label.request_hilite(mentioned)
+        menu_label.request_hilite(mentioned)
+
+        self.append_unread_page(page)
+
+    def remove_tab_hilite(self, page):
+
+        tab_label, menu_label = self.get_labels(page)
+        tab_label.remove_hilite()
+        menu_label.remove_hilite()
+
+        self.remove_unread_page(page)
+
+    def append_unread_page(self, page):
+
+        if page in self.unread_pages:
+            return
+
+        self.unread_pages.append(page)
+        self.update_unread_pages_menu()
+        self.unread_button.show()
+
+    def remove_unread_page(self, page):
+
+        if page in self.unread_pages:
+            self.unread_pages.remove(page)
+            self.update_unread_pages_menu()
+
+        if not self.unread_pages:
+            self.unread_button.hide()
+
+    def set_unread_page(self, _action, _state, page):
+        self.notebook.set_current_page(self.page_num(page))
+
+    def update_unread_pages_menu(self):
+
+        self.popup_menu_unread.clear()
+
+        for page in self.unread_pages:
+            tab_label, _menu_label = self.get_labels(page)
+            self.popup_menu_unread.setup(
+                ("#" + tab_label.get_text(), self.set_unread_page, page)
+            )
+
+    """ Tab User Status """
+
+    def set_user_status(self, page, user, status):
+
+        if status is None:
+            return
+
+        if status == 1:
+            status_text = _("Away")
+        elif status == 2:
+            status_text = _("Online")
+        else:
+            status_text = _("Offline")
+
+        if not config.sections["ui"]["tab_status_icons"]:
+            tab_text = "%s (%s)" % (user[:15], status_text)
+        else:
+            tab_text = user
+
+        tab_label, menu_label = self.get_labels(page)
+
+        tab_label.set_status_image(status)
+        menu_label.set_status_image(status)
+
+        tab_label.set_text(tab_text)
+        menu_label.set_text(tab_text)
+
+        tab_label.set_tooltip_text("%s (%s)" % (user, status_text))
+
+    """ Signals """
+
     def on_switch_page(self, _notebook, new_page, _page_num):
 
         # Hide container widget on previous page for a performance boost
@@ -498,9 +505,12 @@ class IconNotebook:
             current_page.get_children()[0].hide()
             new_page.get_children()[0].show()
 
-        # Dismiss tab notification
-        self.set_hilite_image(new_page, status=0)
-        self.set_text_color(new_page, status=0)
+        # Dismiss tab highlight
+        self.remove_tab_hilite(new_page)
 
         if not self.unread_pages:
-            self.frame.clear_tab_hilite()
+            self.frame.remove_tab_hilite(self.page_id)
+
+    def on_tab_popup(self, widget, page):
+        # Dummy implementation
+        pass

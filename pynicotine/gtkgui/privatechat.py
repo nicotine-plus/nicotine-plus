@@ -54,10 +54,8 @@ class PrivateChats(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "private"
-        self.pages = {}
 
-        IconNotebook.__init__(self, self.frame, self.frame.private_notebook)
+        IconNotebook.__init__(self, self.frame, self.frame.private_notebook, "private")
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
@@ -319,17 +317,10 @@ class PrivateChat(UserInterface):
 
     def show_notification(self, text):
 
-        # Hilight top-level tab label
-        self.frame.request_tab_hilite(self.chats.page_id)
+        self.chats.request_tab_hilite(self.Main)
 
-        # Highlight sub-level tab label
-        self.chats.request_changed(self.Main)
-
-        # Don't show notifications if the private chat is open and the window
-        # is in use
-        if self.chats.get_current_page() == self.chats.page_num(self.Main) and \
-           self.frame.current_page_id == self.chats.page_id and \
-           self.frame.MainWindow.is_active():
+        if self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active():
+            # Don't show notifications if the chat is open and the window is in use
             return
 
         # Update tray icon and show urgency hint

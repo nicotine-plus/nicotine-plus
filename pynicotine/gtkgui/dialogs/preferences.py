@@ -3105,14 +3105,14 @@ class Preferences(UserInterface):
         for i in range(self.frame.MainNotebook.get_n_pages()):
             page = self.frame.MainNotebook.get_nth_page(i)
             tab_label = self.frame.MainNotebook.get_tab_label(page)
-            tab_label.set_text_color(0)
+            tab_label.set_text(tab_label.get_text())
             self.frame.set_tab_expand(page)
 
         # Other notebooks
         for notebook in (self.frame.chatrooms, self.frame.privatechat, self.frame.userinfo,
                          self.frame.userbrowse, self.frame.search):
             notebook.set_tab_closers()
-            notebook.set_text_colors(None)
+            notebook.set_tab_text_colors()
 
         # Update configuration
         config.write_configuration()

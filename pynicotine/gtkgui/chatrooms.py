@@ -66,12 +66,10 @@ class ChatRooms(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "chatrooms"
-        self.pages = {}
         self.autojoin_rooms = set()
         self.roomlist = RoomList(self.frame)
 
-        IconNotebook.__init__(self, self.frame, self.frame.chatrooms_notebook)
+        IconNotebook.__init__(self, self.frame, self.frame.chatrooms_notebook, "chatrooms")
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
@@ -725,41 +723,27 @@ class ChatRoom(UserInterface):
         if user == login:
             return
 
-        if tag == self.tag_hilite:
+        mentioned = (tag == self.tag_hilite)
 
-            # Hilight top-level tab label
-            self.frame.request_tab_hilite(self.chatrooms.page_id, status=1)
+        if mentioned and config.sections["notifications"]["notification_popup_chatroom_mention"]:
+            self.frame.notifications.new_text_notification(
+                text,
+                title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
+                priority=Gio.NotificationPriority.HIGH
+            )
 
-            # Hilight sub-level tab label
-            self.chatrooms.request_hilite(self.Main)
+        self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
-            if config.sections["notifications"]["notification_popup_chatroom_mention"]:
-                self.frame.notifications.new_text_notification(
-                    text,
-                    title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
-                    priority=Gio.NotificationPriority.HIGH
-                )
-
-        else:
-            # Hilight top-level tab label
-            self.frame.request_tab_hilite(self.chatrooms.page_id, status=0)
-
-            # Hilight sub-level tab label
-            self.chatrooms.request_changed(self.Main)
-
-        # Don't show notifications if the chat is open and the window
-        # is in use
-        if self.chatrooms.get_current_page() == \
-           self.chatrooms.page_num(self.Main) and \
-           self.frame.current_page_id == self.chatrooms.page_id and \
-           self.frame.MainWindow.is_active():
+        if self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active():
+            # Don't show notifications if the chat is open and the window is in use
             return
 
-        if tag == self.tag_hilite:
+        if mentioned:
             # We were mentioned, update tray icon and show urgency hint
             self.frame.notifications.add("rooms", user, self.room)
+            return
 
-        elif config.sections["notifications"]["notification_popup_chatroom"]:
+        if config.sections["notifications"]["notification_popup_chatroom"]:
             self.frame.notifications.new_text_notification(
                 text,
                 title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": self.room},

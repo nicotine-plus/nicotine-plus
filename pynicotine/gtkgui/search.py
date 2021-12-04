@@ -64,10 +64,8 @@ class Searches(IconNotebook):
     def __init__(self, frame):
 
         self.frame = frame
-        self.page_id = "search"
-        self.pages = {}
 
-        IconNotebook.__init__(self, self.frame, self.frame.search_notebook)
+        IconNotebook.__init__(self, self.frame, self.frame.search_notebook, "search")
         self.notebook.connect("switch-page", self.on_switch_search_page)
 
         self.modes = {
@@ -656,9 +654,7 @@ class Search(UserInterface):
                 self.searches.show_tab(self, self.text)
                 self.showtab = True
 
-            # Update tab notification
-            self.searches.request_changed(self.Main)
-            self.frame.request_tab_hilite(self.searches.page_id)
+            self.searches.request_tab_hilite(self.Main)
 
         # Update number of results, even if they are all filtered
         self.update_result_counter()
