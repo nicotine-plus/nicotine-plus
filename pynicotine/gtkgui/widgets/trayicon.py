@@ -301,10 +301,10 @@ class TrayIcon:
             self.show()
 
             # Gtk.StatusIcon.is_embedded() may not be true yet (observed in LXDE), force an icon update
-            self.set_image(self.tray_status["status"], force_update=True)
+            self.set_icon(self.tray_status["status"], force_update=True)
             return
 
-        self.set_image("msg", force_update=True)
+        self.set_icon("msg", force_update=True)
         self.hide()
 
     def show(self):
@@ -354,7 +354,7 @@ class TrayIcon:
 
         self.hide_show_item.set_label(text)
 
-    def set_image(self, status=None, force_update=False):
+    def set_icon(self, status=None, force_update=False):
 
         if not force_update and not self.is_visible():
             return
@@ -400,7 +400,7 @@ class TrayIcon:
         else:
             self.tray_status["status"] = "connect"
 
-        self.set_image()
+        self.set_icon()
 
         with self.away_item.handler_block(self.away_handler):
             # Temporarily disable handler, we only want to change the visual checkbox appearance
@@ -416,7 +416,7 @@ class TrayIcon:
         else:
             self.tray_status["status"] = "disconnect"
 
-        self.set_image()
+        self.set_icon()
 
     def set_server_actions_sensitive(self, status):
 

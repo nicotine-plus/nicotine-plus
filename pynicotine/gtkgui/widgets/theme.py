@@ -191,7 +191,7 @@ def set_global_style():
 """ Icons """
 
 
-IMAGES = {}
+ICONS = {}
 
 
 def load_pixbuf_from_path(path):
@@ -204,10 +204,10 @@ def load_pixbuf_from_path(path):
 
 
 def get_icon(icon_name):
-    return IMAGES.get(icon_name)
+    return ICONS.get(icon_name)
 
 
-def get_flag_image(country):
+def get_flag_icon(country):
 
     if not country:
         return None
@@ -215,8 +215,8 @@ def get_flag_image(country):
     country = country.lower().replace("flag_", "")
 
     try:
-        if country not in IMAGES:
-            IMAGES[country] = load_pixbuf_from_path(
+        if country not in ICONS:
+            ICONS[country] = load_pixbuf_from_path(
                 os.path.join(GUI_DIR, "icons", "flags", country + ".svg")
             )
 
@@ -226,7 +226,7 @@ def get_flag_image(country):
     return get_icon(country)
 
 
-def get_status_image(status):
+def get_status_icon(status):
 
     if status == 1:
         return get_icon("away")
@@ -267,7 +267,7 @@ def load_custom_icons(names):
 
                 if os.path.isfile(path):
                     try:
-                        IMAGES[name] = load_pixbuf_from_path(path)
+                        ICONS[name] = load_pixbuf_from_path(path)
                         loaded = True
 
                     except Exception as error:
@@ -276,8 +276,8 @@ def load_custom_icons(names):
                             "error": error
                         })
 
-            if name not in IMAGES:
-                IMAGES[name] = load_ui_icon(name)
+            if name not in ICONS:
+                ICONS[name] = load_ui_icon(name)
 
         return True
 
@@ -309,7 +309,7 @@ def load_icons():
     """ Load icons required by the application, such as status icons """
 
     for name in names:
-        IMAGES[name] = load_ui_icon(name)
+        ICONS[name] = load_ui_icon(name)
 
     """ Load local app and tray icons, if available """
 

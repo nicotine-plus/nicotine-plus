@@ -28,7 +28,7 @@ from gi.repository import Gtk
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_icon
-from pynicotine.gtkgui.widgets.theme import get_status_image
+from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.config import config
 
 
@@ -67,13 +67,13 @@ class TabLabel(Gtk.Box):
         self.close_button_visible = close_button_visible
         self.close_callback = close_callback
 
-        self.status_image = Gtk.Image()
-        self.status_image_data = None
-        self.status_image.hide()
+        self.start_icon = Gtk.Image()
+        self.start_icon_data = None
+        self.start_icon.hide()
 
-        self.hilite_image = Gtk.Image()
-        self.hilite_image_data = None
-        self.hilite_image.hide()
+        self.end_icon = Gtk.Image()
+        self.end_icon_data = None
+        self.end_icon.hide()
 
         self._pack_children()
 
@@ -82,7 +82,7 @@ class TabLabel(Gtk.Box):
         if self.eventbox.get_parent() is None:
             return
 
-        for widget in (self.status_image, self.label, self.hilite_image):
+        for widget in (self.start_icon, self.label, self.end_icon):
             self.box.remove(widget)
 
         self.eventbox.remove(self.box)
@@ -142,9 +142,9 @@ class TabLabel(Gtk.Box):
         else:
             self.set_halign(Gtk.Align.FILL)
 
-        self.box.add(self.status_image)
+        self.box.add(self.start_icon)
         self.box.add(self.label)
-        self.box.add(self.hilite_image)
+        self.box.add(self.end_icon)
         self.box.show()
 
         if sys.platform != "darwin":
@@ -194,16 +194,16 @@ class TabLabel(Gtk.Box):
         self._set_text_color(color)
 
         if self.mentioned:
-            image = get_icon("hilite")
+            icon_data = get_icon("hilite")
         else:
-            image = get_icon("hilite3")
+            icon_data = get_icon("hilite3")
 
-        if image is self.hilite_image_data:
+        if icon_data is self.end_icon_data:
             return
 
-        self.hilite_image_data = image
-        self.hilite_image.set_from_pixbuf(image)
-        self.hilite_image.show()
+        self.end_icon_data = icon_data
+        self.end_icon.set_from_pixbuf(icon_data)
+        self.end_icon.show()
 
     def remove_hilite(self):
 
@@ -212,24 +212,24 @@ class TabLabel(Gtk.Box):
 
         self._set_text_color(config.sections["ui"]["tab_default"])
 
-        self.hilite_image_data = None
-        self.hilite_image.set_from_pixbuf(None)
-        self.hilite_image.hide()
+        self.end_icon_data = None
+        self.end_icon.set_from_pixbuf(None)
+        self.end_icon.hide()
 
-    def set_status_image(self, status):
+    def set_status_icon(self, status):
 
-        image = get_status_image(status)
+        icon_data = get_status_icon(status)
 
-        if image is self.status_image_data:
+        if icon_data is self.start_icon_data:
             return
 
-        self.status_image_data = image
-        self.status_image.set_from_pixbuf(image)
-        self.status_image.set_visible(config.sections["ui"]["tab_status_icons"])
+        self.start_icon_data = icon_data
+        self.start_icon.set_from_pixbuf(icon_data)
+        self.start_icon.set_visible(config.sections["ui"]["tab_status_icons"])
 
-    def set_icon(self, icon_name):
-        self.status_image.set_property("icon-name", icon_name)
-        self.status_image.show()
+    def set_start_icon_name(self, icon_name):
+        self.start_icon.set_property("icon-name", icon_name)
+        self.start_icon.show()
 
     def set_text(self, text):
 
@@ -483,8 +483,8 @@ class IconNotebook:
 
         tab_label, menu_label = self.get_labels(page)
 
-        tab_label.set_status_image(status)
-        menu_label.set_status_image(status)
+        tab_label.set_status_icon(status)
+        menu_label.set_status_icon(status)
 
         tab_label.set_text(tab_text)
         menu_label.set_text(tab_text)

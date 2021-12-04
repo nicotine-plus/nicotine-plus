@@ -1212,7 +1212,7 @@ class NicotineFrame(UserInterface):
             page.page_id = tab_id
 
             tab_label = TabLabel(tab_text)
-            tab_label.set_icon(tab_icon_name)
+            tab_label.set_start_icon_name(tab_icon_name)
             tab_label.show()
 
             # Apply tab label
