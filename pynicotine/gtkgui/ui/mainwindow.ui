@@ -803,7 +803,7 @@
                     <!-- Search -->
                     <child>
                       <object class="GtkBox" id="searchvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -899,7 +899,7 @@
                     <!-- Downloads -->
                     <child>
                       <object class="GtkBox" id="downloadsvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -993,7 +993,7 @@
                     <!-- Uploads -->
                     <child>
                       <object class="GtkBox" id="uploadsvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1087,7 +1087,7 @@
                     <!-- Browse Shares -->
                     <child>
                       <object class="GtkBox" id="userbrowsevbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1183,7 +1183,7 @@
                     <!-- User Info -->
                     <child>
                       <object class="GtkBox" id="userinfovbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1279,7 +1279,7 @@
                     <!-- Private Chat -->
                     <child>
                       <object class="GtkBox" id="privatevbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1375,7 +1375,7 @@
                     <!-- Buddies -->
                     <child>
                       <object class="GtkBox" id="userlistvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1469,7 +1469,7 @@
                     <!-- Chat Rooms -->
                     <child>
                       <object class="GtkBox" id="chatroomsvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">0</property>
@@ -1570,7 +1570,7 @@
                     <!-- Interests -->
                     <child>
                       <object class="GtkBox" id="interestsvbox">
-                        <property name="visible">1</property>
+                        <property name="visible">0</property>
                       </object>
                     </child>
                   </object>

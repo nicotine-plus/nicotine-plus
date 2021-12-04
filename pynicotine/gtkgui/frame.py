@@ -1223,9 +1223,9 @@ class NicotineFrame(UserInterface):
 
     def on_switch_page(self, notebook, page, _page_num):
 
-        # Hide container widget on previous page for a performance boost
         current_page = notebook.get_nth_page(notebook.get_current_page())
 
+        # Hide container widget on previous page for a performance boost
         if Gtk.get_major_version() == 4:
             current_page.get_first_child().hide()
             page.get_first_child().show()
@@ -1440,41 +1440,47 @@ class NicotineFrame(UserInterface):
 
     def set_main_tabs_visibility(self):
 
+        visible_tab_found = False
+
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             if enabled:
+                visible_tab_found = True
                 self.show_tab(page_id)
                 continue
 
             self.hide_tab(page_id)
 
+        if not visible_tab_found:
+            # Ensure at least one tab is visible
+            self.show_tab("search")
+
     def set_last_session_tab(self):
 
-        # Ensure we set a header bar, by activating the "switch-page" signal at least once
-        default_page = self.MainNotebook.get_nth_page(0)
-        self.MainNotebook.emit("switch-page", default_page, 0)
+        if config.sections["ui"]["tab_select_previous"]:
+            last_tab_id = config.sections["ui"]["last_tab_id"]
 
-        if not config.sections["ui"]["tab_select_previous"]:
-            return
+            try:
+                page = getattr(self, last_tab_id + "vbox")
 
-        last_tab_id = config.sections["ui"]["last_tab_id"]
+                if page.get_visible():
+                    self.MainNotebook.set_current_page(self.MainNotebook.page_num(page))
+                    return
 
-        try:
-            page = getattr(self, last_tab_id + "vbox")
-        except AttributeError:
-            return
+            except AttributeError:
+                pass
 
-        if page.get_visible():
-            self.MainNotebook.set_current_page(self.MainNotebook.page_num(page))
+        for i in range(self.MainNotebook.get_n_pages()):
+            page = self.MainNotebook.get_nth_page(i)
+
+            if page.get_visible():
+                self.MainNotebook.set_current_page(i)
+                return
 
     def set_tab_expand(self, page):
 
         tab_label = self.MainNotebook.get_tab_label(page)
         tab_position = config.sections["ui"]["tabmain"]
-
-        if tab_position in ("Left", "Right"):
-            expand = False
-        else:
-            expand = True
+        expand = tab_position in ("Top", "Bottom")
 
         if Gtk.get_major_version() == 4:
             self.MainNotebook.get_page(page).set_property("tab-expand", expand)
