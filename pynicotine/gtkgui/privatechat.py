@@ -53,9 +53,7 @@ class PrivateChats(IconNotebook):
 
     def __init__(self, frame):
 
-        self.frame = frame
-
-        IconNotebook.__init__(self, self.frame, self.frame.private_notebook, "private")
+        IconNotebook.__init__(self, frame, frame.private_notebook, "private")
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())

@@ -65,11 +65,10 @@ class ChatRooms(IconNotebook):
 
     def __init__(self, frame):
 
-        self.frame = frame
         self.autojoin_rooms = set()
-        self.roomlist = RoomList(self.frame)
+        self.roomlist = RoomList(frame)
 
-        IconNotebook.__init__(self, self.frame, self.frame.chatrooms_notebook, "chatrooms")
+        IconNotebook.__init__(self, frame, frame.chatrooms_notebook, "chatrooms")
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 

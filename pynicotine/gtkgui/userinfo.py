@@ -47,9 +47,7 @@ class UserInfos(IconNotebook):
 
     def __init__(self, frame):
 
-        self.frame = frame
-
-        IconNotebook.__init__(self, self.frame, self.frame.userinfo_notebook, "userinfo")
+        IconNotebook.__init__(self, frame, frame.userinfo_notebook, "userinfo")
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
         CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())

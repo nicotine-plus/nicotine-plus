@@ -63,9 +63,7 @@ class Searches(IconNotebook):
 
     def __init__(self, frame):
 
-        self.frame = frame
-
-        IconNotebook.__init__(self, self.frame, self.frame.search_notebook, "search")
+        IconNotebook.__init__(self, frame, frame.search_notebook, "search")
         self.notebook.connect("switch-page", self.on_switch_search_page)
 
         self.modes = {
@@ -75,7 +73,7 @@ class Searches(IconNotebook):
             "user": _("_User")
         }
 
-        mode_menu = PopupMenu(self.frame)
+        mode_menu = PopupMenu(frame)
         mode_menu.setup(
             ("O" + self.modes["global"], "win.searchmode", "global"),
             ("O" + self.modes["buddies"], "win.searchmode", "buddies"),
