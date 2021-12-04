@@ -1429,9 +1429,9 @@ class NicotineFrame(UserInterface):
 
         order = 0
 
-        for name in config.sections["ui"]["modes_order"]:
+        for page_id in config.sections["ui"]["modes_order"]:
             try:
-                page = getattr(self, name + "vbox")
+                page = getattr(self, page_id + "vbox")
                 self.MainNotebook.reorder_child(page, order)
             except AttributeError:
                 pass
@@ -1442,8 +1442,10 @@ class NicotineFrame(UserInterface):
 
         visible_tab_found = False
 
-        for page_id, enabled in config.sections["ui"]["modes_visible"].items():
-            if enabled:
+        for i in range(self.MainNotebook.get_n_pages()):
+            page_id = self.MainNotebook.get_nth_page(i).page_id
+
+            if config.sections["ui"]["modes_visible"].get(page_id, True):
                 visible_tab_found = True
                 self.show_tab(page_id)
                 continue
@@ -1456,25 +1458,20 @@ class NicotineFrame(UserInterface):
 
     def set_last_session_tab(self):
 
-        if config.sections["ui"]["tab_select_previous"]:
-            last_tab_id = config.sections["ui"]["last_tab_id"]
+        if not config.sections["ui"]["tab_select_previous"]:
+            return
 
-            try:
-                page = getattr(self, last_tab_id + "vbox")
+        last_tab_id = config.sections["ui"]["last_tab_id"]
 
-                if page.get_visible():
-                    self.MainNotebook.set_current_page(self.MainNotebook.page_num(page))
-                    return
-
-            except AttributeError:
-                pass
-
-        for i in range(self.MainNotebook.get_n_pages()):
-            page = self.MainNotebook.get_nth_page(i)
+        try:
+            page = getattr(self, last_tab_id + "vbox")
 
             if page.get_visible():
-                self.MainNotebook.set_current_page(i)
+                self.MainNotebook.set_current_page(self.MainNotebook.page_num(page))
                 return
+
+        except AttributeError:
+            pass
 
     def set_tab_expand(self, page):
 
