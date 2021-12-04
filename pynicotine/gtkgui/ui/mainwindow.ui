@@ -1682,14 +1682,12 @@
                           <object class="GtkLabel" id="SocketStatus">
                             <property name="visible">1</property>
                             <property name="label">0</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
+                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -1712,14 +1710,12 @@
                         <child>
                           <object class="GtkLabel" id="download_status">
                             <property name="visible">1</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
+                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -1742,14 +1738,12 @@
                         <child>
                           <object class="GtkLabel" id="upload_status">
                             <property name="visible">1</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
+                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>

@@ -48,22 +48,22 @@ class TextView:
         self.pressed_y = 0
 
         if Gtk.get_major_version() == 4:
-            self.gesture_click = Gtk.GestureClick()
+            self.gesture_click_primary = Gtk.GestureClick()
+            self.scrollable.get_parent().add_controller(self.gesture_click_primary)
+
             self.gesture_click_secondary = Gtk.GestureClick()
-            self.scrollable.add_controller(self.gesture_click)
-            self.scrollable.add_controller(self.gesture_click_secondary)
-
+            self.scrollable.get_parent().add_controller(self.gesture_click_secondary)
         else:
-            self.gesture_click = Gtk.GestureMultiPress.new(self.scrollable)
-            self.gesture_click_secondary = Gtk.GestureMultiPress.new(self.scrollable)
+            self.gesture_click_primary = Gtk.GestureMultiPress.new(self.scrollable.get_parent())
+            self.gesture_click_secondary = Gtk.GestureMultiPress.new(self.scrollable.get_parent())
 
-        self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click.connect("pressed", self._callback_pressed)
-        self.gesture_click.connect("released", self._callback_released)
+        self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+        self.gesture_click_primary.connect("pressed", self._callback_pressed_primary)
+        self.gesture_click_primary.connect("released", self._callback_released_primary)
 
         self.gesture_click_secondary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-        self.gesture_click_secondary.connect("pressed", self._callback_pressed)
         self.gesture_click_secondary.set_button(Gdk.BUTTON_SECONDARY)
+        self.gesture_click_secondary.connect("pressed", self._callback_pressed_secondary)
 
         self.textview.connect("realize", self.on_realize)
 
@@ -220,11 +220,14 @@ class TextView:
 
     """ Events """
 
-    def _callback_pressed(self, _controller, _num_p, pressed_x, pressed_y):
+    def _callback_pressed_primary(self, _controller, _num_p, pressed_x, pressed_y):
+
         self.pressed_x = pressed_x
         self.pressed_y = pressed_y
 
-    def _callback_released(self, _controller, _num_p, pressed_x, pressed_y):
+        return False
+
+    def _callback_released_primary(self, _controller, _num_p, pressed_x, pressed_y):
 
         if pressed_x != self.pressed_x or pressed_y != self.pressed_y:
             return False
@@ -234,6 +237,18 @@ class TextView:
                 open_uri(tag.url)
                 return True
 
+            if hasattr(tag, "username"):
+                tag.callback(pressed_x, pressed_y, tag.username)
+                return True
+
+        return False
+
+    def _callback_pressed_secondary(self, _controller, _num_p, pressed_x, pressed_y):
+
+        self.pressed_x = pressed_x
+        self.pressed_y = pressed_y
+
+        for tag in self.get_tags_for_selected_pos():
             if hasattr(tag, "username"):
                 tag.callback(pressed_x, pressed_y, tag.username)
                 return True
