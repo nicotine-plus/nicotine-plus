@@ -1411,7 +1411,7 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["modes_visible"][page_id] = True
         page.show()
 
-        self.MainNotebook.show()
+        self.MainNotebook.set_show_tabs(True)
 
     def hide_tab(self, page_id):
 
@@ -1424,7 +1424,7 @@ class NicotineFrame(UserInterface):
         page.hide()
 
         if self.MainNotebook.get_n_pages() <= 1:
-            self.MainNotebook.hide()
+            self.MainNotebook.set_show_tabs(False)
 
     def set_main_tabs_order(self):
 

@@ -888,6 +888,7 @@
                             <child>
                               <object class="GtkNotebook" id="search_notebook">
                                 <property name="visible">1</property>
+                                <property name="show-border">0</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1171,6 +1172,7 @@
                             <child>
                               <object class="GtkNotebook" id="userbrowse_notebook">
                                 <property name="visible">1</property>
+                                <property name="show-border">0</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1266,6 +1268,7 @@
                             <child>
                               <object class="GtkNotebook" id="userinfo_notebook">
                                 <property name="visible">1</property>
+                                <property name="show-border">0</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>
@@ -1361,6 +1364,7 @@
                             <child>
                               <object class="GtkNotebook" id="private_notebook">
                                 <property name="visible">1</property>
+                                <property name="show-border">0</property>
                                 <property name="scrollable">1</property>
                               </object>
                             </child>

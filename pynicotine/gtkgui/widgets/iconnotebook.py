@@ -255,7 +255,7 @@ class IconNotebook:
     def __init__(self, frame, notebook, page_id):
 
         self.notebook = notebook
-        self.notebook.set_show_border(False)
+        self.notebook.set_show_tabs(False)
         self.notebook.connect("switch-page", self.on_switch_page)
 
         self.frame = frame
@@ -298,7 +298,6 @@ class IconNotebook:
         self.unread_pages = []
 
         self.notebook.popup_enable()
-        self.notebook.hide()
 
     """ Tabs """
 
@@ -346,20 +345,20 @@ class IconNotebook:
         # menu for all tabs
         label_tab_menu = TabLabel(text)
 
-        Gtk.Notebook.append_page_menu(self.notebook, page, label_tab, label_tab_menu)
+        self.notebook.append_page_menu(page, label_tab, label_tab_menu)
 
         self.set_user_status(page, text, status)
         self.notebook.set_tab_reorderable(page, True)
-        self.notebook.show()
+        self.notebook.set_show_tabs(True)
 
     def remove_page(self, page):
 
-        Gtk.Notebook.remove_page(self.notebook, self.page_num(page))
+        self.notebook.remove_page(self.page_num(page))
 
         self.remove_unread_page(page)
 
         if self.notebook.get_n_pages() == 0:
-            self.notebook.hide()
+            self.notebook.set_show_tabs(False)
 
     def remove_all_pages_response(self, dialog, response_id, _data):
 
