@@ -148,6 +148,11 @@ def set_global_css():
         filter: inherit;
     }
 
+    treeview.normal-icons {
+        /* Country flag icon size in treeviews */
+        -gtk-icon-size: 21px;
+    }
+
     .dialog-action-area {
         /* Add missing spacing to dialog action buttons */
         border-spacing: 6px;
