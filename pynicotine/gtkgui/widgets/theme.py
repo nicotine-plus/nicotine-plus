@@ -305,7 +305,6 @@ def load_icons():
         icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
         icon_theme.append_search_path = icon_theme.add_search_path
     else:
-        Gtk.IconSize.register("country_flag", 21, 21)
         icon_theme = Gtk.IconTheme.get_default()
 
     # Support running from folder, as well as macOS and Windows

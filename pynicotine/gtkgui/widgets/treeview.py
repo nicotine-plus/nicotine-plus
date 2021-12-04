@@ -185,8 +185,9 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             renderer = Gtk.CellRendererPixbuf()
             column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
 
-            if column_id == "country" and Gtk.get_major_version() == 3:
-                renderer.set_property("stock-size", Gtk.IconSize.from_name("country_flag"))
+            if Gtk.get_major_version() == 3:
+                # Use the same size as the original icon
+                renderer.set_property("stock-size", 0)
 
         if width == -1:
             column.set_resizable(False)
