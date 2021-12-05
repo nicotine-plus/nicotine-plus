@@ -1722,7 +1722,7 @@ class UserInterfaceFrame(UserInterface):
     def on_default_font(self, widget):
 
         font_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Default", "Select"))
-        font_button.set_font_name("")
+        font_button.set_font("")
 
         self.theme_required = True
 

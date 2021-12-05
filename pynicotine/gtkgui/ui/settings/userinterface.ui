@@ -1939,7 +1939,7 @@
                       <object class="GtkFontButton" id="SelectGlobalFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
+                        <property name="level">family | size</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
@@ -2000,7 +2000,6 @@
                       <object class="GtkFontButton" id="SelectChatFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
@@ -2061,7 +2060,6 @@
                       <object class="GtkFontButton" id="SelectListFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
@@ -2122,7 +2120,6 @@
                       <object class="GtkFontButton" id="SelectTransfersFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
@@ -2183,7 +2180,6 @@
                       <object class="GtkFontButton" id="SelectSearchFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
@@ -2244,7 +2240,6 @@
                       <object class="GtkFontButton" id="SelectBrowserFont">
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
-                        <property name="font">Sans 12</property>
                         <property name="width-request">250</property>
                         <signal name="font-set" handler="on_fonts_changed"/>
                       </object>
