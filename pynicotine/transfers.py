@@ -1933,9 +1933,13 @@ class Transfers:
         self.file_downloaded_actions(i.user, newname)
         self.folder_downloaded_actions(i.user, i.path)
 
-        # Attempt to autoclear this download, if configured
-        if not self.auto_clear_download(i) and self.downloadsview:
-            self.downloadsview.update(i)
+        if self.downloadsview:
+            # Main tab highlight (bright)
+            self.downloadsview.new_transfer_notification(finished=True)
+
+            # Attempt to autoclear this download, if configured
+            if not self.auto_clear_download(i):
+                self.downloadsview.update(i)
 
         self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
         self.save_transfers("downloads")
