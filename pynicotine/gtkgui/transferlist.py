@@ -269,9 +269,9 @@ class TransferList(UserInterface):
         if select_user:
             self.selected_users.add(transfer.user)
 
-    def new_transfer_notification(self):
+    def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.page_id:
-            self.frame.request_tab_hilite(self.page_id)
+            self.frame.request_tab_hilite(self.page_id, mentioned=finished)
 
     def on_ban(self, *_args):
 
