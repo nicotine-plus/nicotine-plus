@@ -37,7 +37,7 @@ Using consistent terms for the same things makes the translation easier to under
 You can use the "Search and Replace" tool to help you with that.
 
 ### Underscores(_) in the strings
-In case you are wondering what to do with the underscores, the Alt-shortcuts (called mnemonics in GTK) provide quick access to a visible UI element (button, menu item etc), so it doesn't really matter what they are. So you can translate "_Quit" to "_Cerrar". If in the same menu the "C" is already in use, simply put the underscore in front of another letter. 
+In case you are wondering what to do with the underscores, the Alt-shortcuts (called mnemonics in GTK) provide quick access to a visible UI element (button, menu item etc), so it doesn't really matter what they are. So you can translate "_Quit" to "_Cerrar". If in the same menu the "C" is already in use, simply put the underscore in front of another letter. Of course the "C" is the most prominent letter in the word, so use the "C" if possible.
 
 ## Testing Updated Translations
 
