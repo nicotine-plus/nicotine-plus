@@ -133,25 +133,25 @@ class Interests(UserInterface):
 
         self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
         popup.setup(
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_like),
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),
+            ("#" + _("_Search for Item"), self.on_til_recommend_search),
             ("", None),
-            ("#" + _("_Search for Item"), self.on_til_recommend_search)
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
         self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_til_menu)
         popup.setup(
-            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike),
+            ("#" + _("_Search for Item"), self.on_tidl_recommend_search),
             ("", None),
-            ("#" + _("_Search for Item"), self.on_tidl_recommend_search)
+            ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
         self.r_popup_menu = popup = PopupMenu(self.frame, self.RecommendationsList, self.on_popup_r_menu)
         popup.setup(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
-            ("#" + _("_Recommendations for Item"), self.on_recommend_recommendation),
             ("", None),
+            ("#" + _("_Recommendations for Item"), self.on_recommend_recommendation),
             ("#" + _("_Search for Item"), self.on_r_recommend_search)
         )
 
