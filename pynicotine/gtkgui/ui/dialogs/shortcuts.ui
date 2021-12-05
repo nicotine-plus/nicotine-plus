@@ -142,13 +142,6 @@
                 <property name="title" translatable="yes">Copy Selected Cell</property>
               </object>
             </child>
-            <child>
-              <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
-                <property name="accelerator">Delete</property>
-                <property name="title" translatable="yes">Remove Selected Row</property>
-              </object>
-            </child>
           </object>
         </child>
         <child>
@@ -194,6 +187,13 @@
                 <property name="visible">1</property>
                 <property name="accelerator">t</property>
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">1</property>
+                <property name="accelerator">Delete</property>
+                <property name="title" translatable="yes">Remove Selected Row</property>
               </object>
             </child>
           </object>
