@@ -19,6 +19,7 @@
 - hyriand (2003)
 
 ## Spanish
+- tagomago (2021)
 - Strange (2021)
 - Silvio Orta (2007)
 - Dreslo
