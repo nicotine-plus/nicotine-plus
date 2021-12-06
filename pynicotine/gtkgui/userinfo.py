@@ -488,7 +488,7 @@ class UserInfo(UserInterface):
 
     def on_picture_popup_menu(self, menu, _widget):
         for action in menu.get_actions().values():
-            action.set_enabled(self.picture is None or self.picture_data is None)
+            action.set_enabled(self.picture is not None and self.picture_data is not None)
 
     def on_scroll(self, _controller, _scroll_x, scroll_y):
 
