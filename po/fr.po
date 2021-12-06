@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-02 21:58+0200\n"
-"PO-Revision-Date: 2021-11-30 23:29+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2021-12-06 18:56+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -2654,6 +2654,7 @@ msgid "File not shared"
 msgstr "Fichier non partagé"
 
 #: pynicotine/gtkgui/transferlist.py:118 pynicotine/transfers.py:1893
+#, fuzzy
 msgid "Download folder error"
 msgstr "Erreur au téléchargement d'un répertoire"
 
@@ -6026,10 +6027,12 @@ msgid "Transfers font:"
 msgstr "Police des transferts :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2166
+#, fuzzy
 msgid "Search font:"
 msgstr "Recherchez la police :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2227
+#, fuzzy
 msgid "Browse font:"
 msgstr "Parcourir la police :"
 

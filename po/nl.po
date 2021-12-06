@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-02 21:58+0200\n"
-"PO-Revision-Date: 2021-11-23 16:45+0000\n"
+"PO-Revision-Date: 2021-12-06 18:34+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -293,7 +293,7 @@ msgstr "Bolivia"
 
 #: pynicotine/geoip/geoip.py:51
 msgid "Bonaire), Sint Eustatius and Saba"
-msgstr "Bonaire), Sint Eustatius en Saba"
+msgstr "Bonaire, Sint Eustatius en Saba"
 
 #: pynicotine/geoip/geoip.py:52
 msgid "Brazil"
