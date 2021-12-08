@@ -1633,15 +1633,16 @@ class Transfers:
                         user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
 
             elif not locally_queued:
+                transfer.req = self.core.get_new_token()
+                transfer.status = "Getting status"
+                self.transfer_request_times[transfer] = time.time()
+
                 log.add_transfer("Requesting to upload file %(filename)s with transfer "
                                  + "request %(request)s to user %(user)s", {
                                      "filename": filename,
                                      "request": transfer.req,
                                      "user": user
                                  })
-                transfer.req = self.core.get_new_token()
-                transfer.status = "Getting status"
-                self.transfer_request_times[transfer] = time.time()
 
                 real_path = self.core.shares.virtual2real(filename)
                 self.core.send_message_to_peer(
