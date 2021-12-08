@@ -687,15 +687,12 @@ class Shares:
     def send_num_shared_folders_files(self):
         """ Send number publicly shared files to the server. """
 
-        if not (self.core and self.core.logged_in):
-            return
-
         try:
             shared = self.share_dbs.get("files")
             index = self.share_dbs.get("fileindex")
 
             if shared is None or index is None:
-                return
+                return None, None
 
             try:
                 sharedfolders = len(shared)
@@ -705,10 +702,15 @@ class Shares:
                 sharedfolders = len(list(shared))
                 sharedfiles = len(list(index))
 
-            self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
+            if self.core and self.core.logged_in:
+                self.queue.append(slskmessages.SharedFoldersFiles(sharedfolders, sharedfiles))
 
         except Exception as error:
             log.add(_("Failed to send number of shared files to the server: %s"), error)
+            return False, False
+
+        # Pass numbers to progress bar
+        return sharedfolders, sharedfiles
 
     """ Scanning """
 
@@ -759,10 +761,12 @@ class Shares:
                     log.add(template, args, log_level)
 
                 elif isinstance(item, float):
+                    str_progress = _("Rescan progress: %s") % str(int(item * 100)) + " %"
+
                     if self.ui_callback:
-                        self.ui_callback.set_scan_progress(item)
+                        self.ui_callback.set_scan_progress(item, str_progress)
                     else:
-                        log.add(_("Rescan progress: %s"), str(int(item * 100)) + " %")
+                        log.add(str_progress)
 
                 elif isinstance(item, slskmessages.SharedFileList):
                     if item.type == "normal":
@@ -807,14 +811,19 @@ class Shares:
         # Let the scanner process do its thing
         error = self.process_scanner_messages(scanner, scanner_queue)
 
-        if self.ui_callback:
-            self.ui_callback.hide_scan_progress()
-
         # Scanning done, load shares in the main process again
         self.load_shares(self.share_dbs, self.share_db_paths)
 
-        if not error:
-            self.send_num_shared_folders_files()
+        # Send stats to server and get number for progress bar
+        folders, files = self.send_num_shared_folders_files()
+
+        log.add_debug("Scanning item exception=" + str(error) + " Folders=" + str(folders) + " Files=" + str(files))
+
+        if self.ui_callback:
+            if error or (folders == 0):
+                self.ui_callback.set_scan_error(str(folders) + " shared folders")
+            else:
+                self.ui_callback.hide_scan_progress()
 
         self.rescanning = False
         return error
