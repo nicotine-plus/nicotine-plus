@@ -1836,13 +1836,21 @@ class NicotineFrame(UserInterface):
         self.scan_progress_indeterminate = True
         GLib.idle_add(self.SharesProgress.show)
 
-    def set_scan_progress(self, value):
+    def set_scan_progress(self, value, text):
 
         self.scan_progress_indeterminate = False
         GLib.idle_add(self.SharesProgress.set_fraction, value)
+        GLib.idle_add(self.SharesProgress.set_text, text)
+
+    def set_scan_error(self, text):
+
+        self.scan_progress_indeterminate = False
+        GLib.idle_add(self.SharesProgress.set_fraction, 1.0)  # ToDo: bar stuck after manual scan
+        GLib.idle_add(self.SharesProgress.set_text, text)  # ToDo: set_style_context
 
     def set_scan_indeterminate(self):
         GLib.timeout_add(100, self.pulse_scan_progress)
+        GLib.idle_add(self.SharesProgress.set_text, _("Scanning Shares"))  # ToDo: set_style_context
 
     def pulse_scan_progress(self):
 
