@@ -737,32 +737,54 @@ class Transfers:
 
     def transfer_request_downloads(self, msg, user):
 
-        for i in self.downloads:
-            if i.filename == msg.file and user == i.user and i.status not in ("Finished", "Paused", "Filtered"):
+        filename = msg.file
+        size = msg.filesize
 
-                # Remote peer is signalling a tranfer is ready, attempting to download it
+        if self.get_existing_download_path(user, filename, "", size):
+            # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
+            cancel_reason = "Complete"
+            accepted = False
 
-                """ If the file is larger than 2GB, the SoulseekQt client seems to
-                send a malformed file size (0 bytes) in the TransferRequest response.
-                In that case, we rely on the cached, correct file size we received when
-                we initially added the download. """
+        else:
+            cancel_reason = "Cancelled"
+            accepted = True
 
-                if msg.filesize > 0:
-                    i.size = msg.filesize
+            for i in self.downloads:
+                if i.filename == filename and user == i.user:
+                    status = i.status
 
-                i.req = msg.req
-                i.status = "Getting status"
-                self.transfer_request_times[i] = time.time()
+                    if status == "Finished":
+                        cancel_reason = "Complete"
+                        accepted = False
+                        break
 
-                if self.downloadsview:
-                    self.downloadsview.update(i)
+                    if status in ("Paused", "Filtered"):
+                        accepted = False
+                        break
 
-                response = slskmessages.TransferResponse(None, 1, req=i.req)
-                return response
+                    # Remote peer is signaling a transfer is ready, attempting to download it
+
+                    """ If the file is larger than 2GB, the SoulseekQt client seems to
+                    send a malformed file size (0 bytes) in the TransferRequest response.
+                    In that case, we rely on the cached, correct file size we received when
+                    we initially added the download. """
+
+                    if msg.filesize > 0:
+                        i.size = size
+
+                    i.req = msg.req
+                    i.status = "Getting status"
+                    self.transfer_request_times[i] = time.time()
+
+                    if self.downloadsview:
+                        self.downloadsview.update(i)
+
+                    response = slskmessages.TransferResponse(None, 1, req=i.req)
+                    return response
 
         # If this file is not in your download queue, then it must be
-        # a remotely initated download and someone is manually uploading to you
-        if self.can_upload(user):
+        # a remotely initiated download and someone is manually uploading to you
+        if accepted and self.can_upload(user):
             path = ""
             if self.config.sections["transfers"]["uploadsinsubdirs"]:
                 parentdir = msg.file.replace('/', '\\').split('\\')[-2]
@@ -773,7 +795,6 @@ class Transfers:
                 status="Queued", size=msg.filesize, req=msg.req
             )
             self.downloads.appendleft(transfer)
-
             self.core.watch_user(user)
 
             response = slskmessages.TransferResponse(None, 0, reason="Queued", req=transfer.req)
@@ -782,7 +803,7 @@ class Transfers:
                 self.downloadsview.update(transfer)
 
         else:
-            response = slskmessages.TransferResponse(None, 0, reason="Cancelled", req=msg.req)
+            response = slskmessages.TransferResponse(None, 0, reason=cancel_reason, req=msg.req)
             log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
                 'user': user,
                 'msg': str(vars(msg))
@@ -896,7 +917,6 @@ class Transfers:
         if msg.reason is not None:
 
             for i in self.uploads:
-
                 if i.req != msg.req:
                     continue
 
@@ -917,14 +937,10 @@ class Transfers:
                         j.timequeued = curtime
 
                 if msg.reason == "Complete":
-
-                    """ Edge case. There are rare cases where a "Complete" status is sent to us by
-                    SoulseekQt, even though it shouldn't be (?) """
-
+                    # A complete download of this file already exists on the user's end
                     self.upload_finished(i)
 
                 elif msg.reason in ("Cancelled", "Disallowed extension"):
-
                     self.auto_clear_upload(i)
 
                 self.check_upload_queue()
@@ -932,7 +948,6 @@ class Transfers:
 
         else:
             for i in self.uploads:
-
                 if i.req != msg.req:
                     continue
 
