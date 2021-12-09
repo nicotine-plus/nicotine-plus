@@ -3,8 +3,8 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.2.0 (Release Candidate 2)
------------------------------------
+Version 3.2.0 (December 18, 2021)
+---------------------------------
 
 Changes
 

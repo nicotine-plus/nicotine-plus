@@ -78,6 +78,8 @@ pip3 install --upgrade nicotine-plus
 
 Stable Windows installers for Nicotine+ are available for download. Installing Nicotine+ requires administrator privileges.
 
+NOTE: The installer format has changed in Nicotine+ 3.2.0. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).
+
 - [64-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
 - [32-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
 
@@ -97,8 +99,6 @@ choco install nicotine-plus
 ## macOS
 
 ### Official Builds (Catalina/10.15 and newer)
-
-NOTE: If you are running macOS Monterey, the stable version is currently non-functional. You need to use the Nicotine+ development version until the next stable release is ready in early December. Download the development version [here](TESTING.md#macos-catalina1015-and-newer).
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
