@@ -1159,6 +1159,7 @@ class Transfers:
 
                 self.abort_transfer(i)
                 i.status = "Local file error"
+                self.check_upload_queue()
 
             else:
                 i.file = file_handle
@@ -1532,6 +1533,9 @@ class Transfers:
 
     """ Transfer Actions """
 
+    def get_folder(self, user, folder):
+        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+
     def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
 
         path = clean_path(path, absolute=True)
@@ -1540,30 +1544,75 @@ class Transfers:
             for i in self.downloads:
                 if i.user == user and i.filename == filename and i.path == path:
                     if i.status == "Finished":
-                        # Duplicate finished download found, verify that it's still present on disk in transfer_file
+                        # Duplicate finished download found, verify that it's still present on disk later
                         transfer = i
                         break
 
                     # Duplicate active/cancelled download found, stop here
                     return
 
-        self.transfer_file(0, user, filename, path, transfer, size, bitrate, length)
+            transfer = Transfer(
+                user=user, filename=filename, path=path,
+                status="Queued", size=size, bitrate=bitrate,
+                length=length
+            )
+            self.downloads.appendleft(transfer)
+        else:
+            transfer.filename = filename
+            transfer.status = "Queued"
 
-    def get_folder(self, user, folder):
-        self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
+        if user not in self.users:
+            self.core.watch_user(user)
 
-    def push_file(self, user, filename, path="", transfer=None, size=None, bitrate=None,
-                  length=None, locally_queued=False):
-        self.transfer_file(1, user, filename, path, transfer, size, bitrate, length, locally_queued)
+        if self.config.sections["transfers"]["enablefilters"]:
+            try:
+                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], re.I)
 
-    def transfer_file(self, direction, user, filename, path="", transfer=None, size=None,
-                      bitrate=None, length=None, locally_queued=False):
+                if downloadregexp.search(filename) is not None:
+                    log.add_transfer("Filtering: %s", filename)
+                    self.abort_transfer(transfer)
+                    # The string to be displayed on the GUI
+                    transfer.status = "Filtered"
 
-        """ Get a single file. path is a local path. if transfer object is
-        not None, update it, otherwise create a new one."""
+                    if self.auto_clear_download(transfer):
+                        return
+
+            except Exception:
+                pass
+
+        if self.user_logged_out(user):
+            transfer.status = "User logged off"
+
+        elif transfer.status != "Filtered":
+            download_path = self.get_existing_download_path(user, filename, path, size)
+
+            if download_path:
+                transfer.status = "Finished"
+                transfer.size = transfer.currentbytes = size
+
+                log.add_transfer("File %s is already downloaded", download_path)
+
+            else:
+                log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
+                    "filename": filename,
+                    "user": user
+                })
+                self.core.send_message_to_peer(
+                    user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
+
+        if self.downloadsview:
+            self.downloadsview.update(transfer)
+
+    def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
 
         if not self.core.logged_in:
             return
+
+        real_path = self.core.shares.virtual2real(filename)
+        size_attempt = self.get_file_size(real_path)
+
+        if size_attempt > 0:
+            size = size_attempt
 
         if transfer is None:
             transfer = Transfer(
@@ -1571,90 +1620,42 @@ class Transfers:
                 status="Queued", size=size, bitrate=bitrate,
                 length=length
             )
-
-            if direction == 0:
-                self.downloads.appendleft(transfer)
-            else:
-                self._append_upload(user, filename, transfer)
+            self._append_upload(user, filename, transfer)
         else:
+            transfer.filename = filename
+            transfer.size = size
             transfer.status = "Queued"
 
-        if direction == 1:
-            log.add_transfer(
-                "Initializing upload request for file %(file)s to user %(user)s", {
-                    'file': filename,
-                    'user': user
-                }
-            )
+        log.add_transfer(
+            "Initializing upload request for file %(file)s to user %(user)s", {
+                'file': filename,
+                'user': user
+            }
+        )
 
-        try:
-            status = self.users[user].status
-        except KeyError:
-            status = None
-
-        shouldupdate = True
-
-        if direction == 0 and self.config.sections["transfers"]["enablefilters"]:
-            # Only filter downloads, never uploads!
-            try:
-                downloadregexp = re.compile(self.config.sections["transfers"]["downloadregexp"], re.I)
-                if downloadregexp.search(filename) is not None:
-                    log.add_transfer("Filtering: %s", filename)
-                    self.abort_transfer(transfer)
-                    # The string to be displayed on the GUI
-                    transfer.status = "Filtered"
-
-                    shouldupdate = not self.auto_clear_download(transfer)
-            except Exception:
-                pass
-
-        if status is None:
+        if user not in self.users:
             self.core.watch_user(user)
 
-        elif self.user_logged_out(user):
+        if self.user_logged_out(user):
             transfer.status = "User logged off"
 
-        if transfer.status not in ("Filtered", "User logged off"):
-            if direction == 0:
-                download_path = self.get_existing_download_path(user, filename, path, size)
+        elif not locally_queued:
+            transfer.req = self.core.get_new_token()
+            transfer.status = "Getting status"
+            self.transfer_request_times[transfer] = time.time()
 
-                if download_path:
-                    transfer.status = "Finished"
-                    transfer.size = transfer.currentbytes = size
+            log.add_transfer("Requesting to upload file %(filename)s with transfer "
+                             + "request %(request)s to user %(user)s", {
+                                 "filename": filename,
+                                 "request": transfer.req,
+                                 "user": user
+                             })
 
-                    log.add_transfer("File %s is already downloaded", download_path)
+            self.core.send_message_to_peer(
+                user, slskmessages.TransferRequest(None, 1, transfer.req, filename, size, real_path))
 
-                else:
-                    log.add_transfer("Adding file %(filename)s from user %(user)s to download queue", {
-                        "filename": filename,
-                        "user": user
-                    })
-                    self.core.send_message_to_peer(
-                        user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
-
-            elif not locally_queued:
-                transfer.req = self.core.get_new_token()
-                transfer.status = "Getting status"
-                self.transfer_request_times[transfer] = time.time()
-
-                log.add_transfer("Requesting to upload file %(filename)s with transfer "
-                                 + "request %(request)s to user %(user)s", {
-                                     "filename": filename,
-                                     "request": transfer.req,
-                                     "user": user
-                                 })
-
-                real_path = self.core.shares.virtual2real(filename)
-                self.core.send_message_to_peer(
-                    user, slskmessages.TransferRequest(None, direction, transfer.req, filename,
-                                                       self.get_file_size(real_path), real_path))
-
-        if shouldupdate:
-            if direction == 0 and self.downloadsview:
-                self.downloadsview.update(transfer)
-
-            elif self.uploadsview:
-                self.uploadsview.update(transfer)
+        if self.uploadsview:
+            self.uploadsview.update(transfer)
 
     def _append_upload(self, user, filename, transferobj):
 
@@ -2198,7 +2199,7 @@ class Transfers:
                 continue
 
             self.push_file(
-                user=user, filename=upload_candidate.filename, transfer=upload_candidate
+                user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
             )
             return
 
@@ -2269,7 +2270,7 @@ class Transfers:
                 self.uploadsview.update(transfer)
             return
 
-        self.push_file(user, transfer.filename, transfer.path, transfer=transfer)
+        self.push_file(user, transfer.filename, transfer.size, transfer.path, transfer=transfer)
 
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=False):
 

@@ -602,7 +602,7 @@ class UserBrowse(UserInterface):
             for file_data in files:
                 filename = "\\".join([folder, file_data[1]])
                 size = file_data[2]
-                self.frame.np.transfers.push_file(user, filename, ldir, size=size, locally_queued=locally_queued)
+                self.frame.np.transfers.push_file(user, filename, size, ldir, locally_queued=locally_queued)
                 locally_queued = True
 
         if not recurse:
@@ -1023,7 +1023,7 @@ class UserBrowse(UserInterface):
 
         for basename, size in self.selected_files.items():
             self.frame.np.transfers.push_file(
-                user, "\\".join([folder, basename]), prefix, size=size, locally_queued=locally_queued)
+                user, "\\".join([folder, basename]), size, prefix, locally_queued=locally_queued)
             locally_queued = True
 
     def on_upload_files(self, *_args):
