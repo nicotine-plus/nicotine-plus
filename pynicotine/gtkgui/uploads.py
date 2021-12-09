@@ -26,6 +26,7 @@ import os
 
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
+from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.utils import open_file_path
 
@@ -72,6 +73,22 @@ class Uploads(TransferList):
             callback=self.on_clear_response,
             callback_data="all"
         )
+
+    def on_copy_url(self, *_args):
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if transfer:
+            user = config.sections["server"]["login"]
+            copy_file_url(user, transfer.filename)
+
+    def on_copy_dir_url(self, *_args):
+
+        transfer = next(iter(self.selected_transfers), None)
+
+        if transfer:
+            user = config.sections["server"]["login"]
+            copy_file_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
 
     def on_open_file_manager(self, *_args):
 

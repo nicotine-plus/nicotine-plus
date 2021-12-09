@@ -40,7 +40,7 @@ PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 REPLACEMENTCHAR = '_'
-OPEN_SOULSEEK_URL = lambda: None
+OPEN_SOULSEEK_URL = None
 
 
 def rename_process(new_name, debug_info=False):

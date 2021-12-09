@@ -32,7 +32,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -914,20 +913,6 @@ class TransferList(UserInterface):
 
         if transfer:
             copy_text(transfer.filename)
-
-    def on_copy_url(self, *_args):
-
-        transfer = next(iter(self.selected_transfers), None)
-
-        if transfer:
-            copy_file_url(transfer.user, transfer.filename)
-
-    def on_copy_dir_url(self, *_args):
-
-        transfer = next(iter(self.selected_transfers), None)
-
-        if transfer:
-            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
 
     def on_retry_transfer(self, *_args):
         self.select_transfers()
