@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-02 21:58+0200\n"
-"PO-Revision-Date: 2021-12-06 18:56+0000\n"
-"Last-Translator: Tagomago <tagomago@disroot.org>\n"
+"PO-Revision-Date: 2021-12-08 17:08+0000\n"
+"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -1864,9 +1864,8 @@ msgstr "Souhaitez-vous vraiment réinitialiser les statistiques de transfert ?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:46
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:176
-#, fuzzy
 msgid "Search Wishlist"
-msgstr "Rechercher une liste de souhaits"
+msgstr "Recherche des listes de souhaits"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:61 pynicotine/gtkgui/search.py:229
 msgid "Wish"
@@ -2654,9 +2653,8 @@ msgid "File not shared"
 msgstr "Fichier non partagé"
 
 #: pynicotine/gtkgui/transferlist.py:118 pynicotine/transfers.py:1893
-#, fuzzy
 msgid "Download folder error"
-msgstr "Erreur au téléchargement d'un répertoire"
+msgstr "Erreur du téléchargement d'un répertoire"
 
 #: pynicotine/gtkgui/transferlist.py:119
 msgid "Local file error"
@@ -3123,7 +3121,6 @@ msgid "Request User's Info"
 msgstr "Demande d'informations sur l'utilisateur"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:103
-#, fuzzy
 msgid "Request User's Shares"
 msgstr "Demander les partages de l'utilisateur"
 
@@ -5063,9 +5060,8 @@ msgstr ""
 "Restauration au démarrage des discussions privées précédemment ouvertes"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:138
-#, fuzzy
 msgid "Chat Completion"
-msgstr "Complétion des salons"
+msgstr "Complétion des discussions"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:157
 msgid "Enable spell checker (requires a restart)"
@@ -5093,9 +5089,8 @@ msgstr ""
 "Nombre de caractères minimum requis pour afficher la liste déroulante :"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:230
-#, fuzzy
 msgid "Allowed chat completions:"
-msgstr "Complétions autorisées des salons :"
+msgstr "Complétions autorisées des discussions :"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:251
 msgid "Buddy names"
@@ -6027,14 +6022,12 @@ msgid "Transfers font:"
 msgstr "Police des transferts :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2166
-#, fuzzy
 msgid "Search font:"
-msgstr "Recherchez la police :"
+msgstr "Police des recherches :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2227
-#, fuzzy
 msgid "Browse font:"
-msgstr "Parcourir la police :"
+msgstr "Police de navigation :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2293
 msgid "Icons"
