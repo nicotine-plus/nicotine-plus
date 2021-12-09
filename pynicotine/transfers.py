@@ -40,7 +40,6 @@ from collections import defaultdict
 from collections import deque
 
 from pynicotine import slskmessages
-from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
@@ -119,7 +118,6 @@ class Transfers:
         self.download_queue_timer_count = -1
         self.downloadsview = None
         self.uploadsview = None
-        utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
 
         if hasattr(ui_callback, "downloads"):
             self.downloadsview = ui_callback.downloads
@@ -2324,23 +2322,6 @@ class Transfers:
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
                 transfer.user, slskmessages.UploadDenied(None, file=transfer.filename, reason=reason))
-
-    def open_soulseek_url(self, url):
-
-        import urllib.parse
-
-        try:
-            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-
-            if file_path[-1] == "/":
-                self.get_folder(user, file_path[:-1].replace("/", "\\"))
-            else:
-                self.get_file(user, file_path.replace("/", "\\"))
-
-            self.downloadsview.switch_tab()
-
-        except Exception:
-            log.add(_("Invalid Soulseek URL: %s"), url)
 
     """ Filters """
 

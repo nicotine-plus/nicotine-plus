@@ -21,6 +21,7 @@ import os
 import threading
 
 from pynicotine import slskmessages
+from pynicotine import utils
 from pynicotine.logfacility import log
 from pynicotine.utils import get_path
 from pynicotine.utils import RestrictedUnpickler
@@ -34,6 +35,7 @@ class UserBrowse:
         self.config = config
         self.users = set()
         self.ui_callback = None
+        utils.OPEN_SOULSEEK_URL = self.open_soulseek_url
 
         if hasattr(ui_callback, "userbrowse"):
             self.ui_callback = ui_callback.userbrowse
@@ -180,6 +182,19 @@ class UserBrowse:
 
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': msg})
+
+    def open_soulseek_url(self, url):
+
+        import urllib.parse
+
+        try:
+            user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
+            folder_path = file_path.rsplit("/", 1)[0]
+
+            self.browse_user(user, folder=folder_path.replace("/", "\\"))
+
+        except Exception:
+            log.add(_("Invalid Soulseek URL: %s"), url)
 
     def show_connection_error(self, username):
         if self.ui_callback:
