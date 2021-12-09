@@ -118,8 +118,8 @@ class TransfersTest(unittest.TestCase):
     def test_push_upload(self):
         """ Verify that new uploads are prepended to the list """
 
-        self.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", "/home/test")
-        self.transfers.push_file("newuser99", "Home\\None.mp3", "")
+        self.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
+        self.transfers.push_file("newuser99", "Home\\None.mp3", 100, "")
         transfer = self.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")
