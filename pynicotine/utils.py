@@ -40,7 +40,7 @@ PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 REPLACEMENTCHAR = '_'
-OPEN_SOULSEEK_URL = None
+OPEN_SOULSEEK_URL = None  # pylint:disable=not-callable
 
 
 def rename_process(new_name, debug_info=False):
