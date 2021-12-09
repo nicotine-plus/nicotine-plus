@@ -40,7 +40,7 @@ PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-',
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
 ILLEGALFILECHARS = ILLEGALPATHCHARS + ['\\', '/']
 REPLACEMENTCHAR = '_'
-OPEN_SOULSEEK_URL = None  # pylint:disable=not-callable
+OPEN_SOULSEEK_URL = None
 
 
 def rename_process(new_name, debug_info=False):
@@ -163,7 +163,7 @@ def open_uri(uri):
             log.add(error)
 
     if protocol == "slsk":
-        OPEN_SOULSEEK_URL(uri.strip())
+        OPEN_SOULSEEK_URL(uri.strip())  # pylint:disable=not-callable
         return True
 
     # Situation 2, user did not define a way of handling the protocol
