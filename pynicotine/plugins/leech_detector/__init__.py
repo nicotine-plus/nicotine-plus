@@ -54,7 +54,7 @@ class Plugin(BasePlugin):
         }
 
         self.probed = {}
-        str_action = ""
+        self.str_action = ""
 
     def loaded_notification(self):
 
