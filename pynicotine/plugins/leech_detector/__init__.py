@@ -54,6 +54,7 @@ class Plugin(BasePlugin):
         }
 
         self.probed = {}
+        str_action = ""
 
     def loaded_notification(self):
 
@@ -67,13 +68,13 @@ class Plugin(BasePlugin):
             self.settings['num_folders'] = min_num_folders
 
         if self.settings['message']:
-            self.str_log_start = "message leecher"
+            self.str_action = "message leecher"
         else:
-            self.str_log_start = "log leecher"
+            self.str_action = "log leecher"
 
         self.log(
             "Ready to %ss, require users have a minimum of %d files in %d shared public folders.",
-            (self.str_log_start, self.settings['num_files'], self.settings['num_folders'])
+            (self.str_action, self.settings['num_files'], self.settings['num_folders'])
         )
 
     def upload_queued_notification(self, user, virtual_path, real_path):
@@ -120,11 +121,11 @@ class Plugin(BasePlugin):
         if stats['files'] == 0 and stats['dirs'] == 0:
             # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
             self.log("User %s seems to have zero files and no public shared folder, the server could be wrong. "
-                     + "Going to " + self.str_log_start + " after transfer…", user)
+                     + "Going to " + self.str_action + " after transfer…", user)
             # ToDo: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request #
 
-        self.log("Leecher %s detected, only sharing %s files in %s folders. "
-                 + "Going to " + self.str_log_start + " after transfer…", (user, stats['files'], stats['dirs']))
+        self.log("Leecher detected, %s is only sharing %s files in %s folders. "
+                 + "Going to " + self.str_action + " after transfer…", (user, stats['files'], stats['dirs']))
         self.probed[user] = 'leecher'
 
     def upload_finished_notification(self, user, *_):
