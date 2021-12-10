@@ -41,7 +41,7 @@ class Plugin(BasePlugin):
             },
             'num_files': {
                 'description': 'Require users to have a minimum number of shared files:',
-                'type': 'int', 'minimum': 1
+                'type': 'int', 'minimum': 0
             },
             'num_folders': {
                 'description': 'Require users to have a minimum number of shared folders:',
@@ -111,18 +111,14 @@ class Plugin(BasePlugin):
         if stats['files'] == 0 and stats['dirs'] >= self.settings['num_folders']:
             # SoulseekQt seems to only send the number of folders to the server in at least some cases
             self.log(
-                "User %s seems to have zero files but does have %s shared folders, "
-                + "the remote client is probably Qt. Not complaining.",
+                "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
                 (user, stats['dirs'])
             )
-            self.probed[user] = 'zero'
-            return
+            # ToDo: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request #
 
         if stats['files'] == 0 and stats['dirs'] == 0:
             # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
-            self.log("User %s seems to have zero files and no public shared folder, the server could be wrong. "
-                     + "Going to " + self.str_action + " after transfer…", user)
-            # ToDo: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request #
+            self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
 
         self.log("Leecher detected, %s is only sharing %s files in %s folders. "
                  + "Going to " + self.str_action + " after transfer…", (user, stats['files'], stats['dirs']))
