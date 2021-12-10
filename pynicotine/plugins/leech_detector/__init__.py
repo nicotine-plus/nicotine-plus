@@ -41,7 +41,7 @@ class Plugin(BasePlugin):
             },
             'num_files': {
                 'description': 'Require users to have a minimum number of shared files:',
-                'type': 'int', 'minimum': 1
+                'type': 'int', 'minimum': 0
             },
             'num_folders': {
                 'description': 'Require users to have a minimum number of shared folders:',
@@ -54,6 +54,7 @@ class Plugin(BasePlugin):
         }
 
         self.probed = {}
+        self.str_action = ""
 
     def loaded_notification(self):
 
@@ -67,13 +68,13 @@ class Plugin(BasePlugin):
             self.settings['num_folders'] = min_num_folders
 
         if self.settings['message']:
-            str_log_start = "complain to leecher"
+            self.str_action = "message leecher"
         else:
-            str_log_start = "log leecher"
+            self.str_action = "log leecher"
 
         self.log(
             "Ready to %ss, require users have a minimum of %d files in %d shared public folders.",
-            (str_log_start, self.settings['num_files'], self.settings['num_folders'])
+            (self.str_action, self.settings['num_files'], self.settings['num_folders'])
         )
 
     def upload_queued_notification(self, user, virtual_path, real_path):
@@ -84,7 +85,7 @@ class Plugin(BasePlugin):
 
         self.probed[user] = 'requesting'
         self.core.queue.append(slskmessages.GetUserStats(user))
-        self.log("Requesting statistics for new user %s…", user)
+        self.log("Getting statistics from the server for new user %s…", user)
 
     def user_stats_notification(self, user, stats):
 
@@ -102,15 +103,25 @@ class Plugin(BasePlugin):
             return
 
         if user in (i[0] for i in self.config.sections["server"]["userlist"]):
-            self.log("Buddy %s is only sharing %s files in %s folders.", (user, stats['files'], stats['dirs']))
+            self.log("Buddy %s is only sharing %s files in %s folders. Not complaining.",
+                     (user, stats['files'], stats['dirs']))
             self.probed[user] = 'buddy'
             return
 
+        if stats['files'] == 0 and stats['dirs'] >= self.settings['num_folders']:
+            # SoulseekQt seems to only send the number of folders to the server in at least some cases
+            self.log(
+                "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
+                (user, stats['dirs'])
+            )
+            # ToDo: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request #
+
         if stats['files'] == 0 and stats['dirs'] == 0:
-            # ToDo: Implement alternate fallback method (num_files | num_folders) from Browse Shares (Issue #1565) #
+            # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)
             self.log("User %s seems to have zero files and no public shared folder, the server could be wrong.", user)
 
-        self.log("Leecher %s detected, only sharing %s files in %s folders.", (user, stats['files'], stats['dirs']))
+        self.log("Leecher detected, %s is only sharing %s files in %s folders. "
+                 + "Going to " + self.str_action + " after transfer…", (user, stats['files'], stats['dirs']))
         self.probed[user] = 'leecher'
 
     def upload_finished_notification(self, user, *_):
@@ -124,10 +135,10 @@ class Plugin(BasePlugin):
         self.probed[user] = 'processed'
 
         if not self.settings['message']:
-            self.log("Leecher %s doesn't share enough files, but no complaint message is specified.", user)
+            self.log("Leecher %s doesn't share enough files. No message is specified in plugin settings.", user)
             return
 
         for line in self.settings['message'].splitlines():
             self.send_private(user, line, show_ui=self.settings['open_private_chat'], switch_page=False)
 
-        self.log("Leecher %s doesn't share enough files, complaint message sent.", user)
+        self.log("Leecher %s doesn't share enough files. Message sent.", user)
