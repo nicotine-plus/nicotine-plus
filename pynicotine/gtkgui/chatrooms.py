@@ -898,8 +898,12 @@ class ChatRoom(UserInterface):
 
         if status == 1:
             action = _("%s has gone away")
-        else:
+        elif status == 2:
             action = _("%s has returned")
+        else:
+            # If we reach this point, the server did something wrong. The user should have
+            # left the room before an offline status is sent.
+            return
 
         if not self.frame.np.network_filter.is_user_ignored(user) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(user):
