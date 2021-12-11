@@ -466,7 +466,7 @@ class IconNotebook:
     def set_user_status(self, page, user, status):
 
         if status is None:
-            return
+            status = 0
 
         if status == 1:
             status_text = _("Away")
