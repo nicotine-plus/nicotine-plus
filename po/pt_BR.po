@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-02 21:58+0200\n"
-"PO-Revision-Date: 2021-12-06 18:36+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2021-12-12 15:53+0000\n"
+"Last-Translator: Nicolas Abril <nicolas.abril@protonmail.ch>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -19,65 +19,54 @@ msgstr ""
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
-#, fuzzy
 msgid "Nicotine+"
-msgstr "Nicotina+"
+msgstr "Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
-#, fuzzy
 msgid "Soulseek Client"
-msgstr "Nicotine+ é um cliente Soulseek."
+msgstr "Cliente Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:7
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:47
-#, fuzzy
 msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Cliente gráfico para a rede peer-to-peer Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek; Nicotina;compartilhamento;música; P2P;peer-to-peer; GTK;"
+msgstr "Soulseek;Nicotine;compartilhamento;música; P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
-#, fuzzy
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotina+ é um cliente gráfico para a rede peer-to-peer Soulseek."
+msgstr "Nicotine+ é um cliente gráfico para a rede peer-to-peer Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
-#, fuzzy
 msgid ""
 "Nicotine+ aims to be a pleasant, free and open source (FOSS) alternative to "
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
-"Nicotina+ pretende ser uma alternativa agradável, livre e de código aberto "
-"(FOSS) ao cliente oficial da Soulseek, fornecendo funcionalidade adicional, "
+"Nicotine+ pretende ser uma alternativa agradável, livre e de código aberto "
+"(FOSS) ao cliente oficial de Soulseek, fornecendo funcionalidade adicional e "
 "mantendo-se atualizado com o protocolo Soulseek."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:57
-#, fuzzy
 msgid "Nicotine+ Team"
-msgstr "Nicotine+ versão %s"
+msgstr "Equipe Nicotine+"
 
 #: pynicotine/__init__.py:27
-#, fuzzy
 msgid "Nicotine+ is a Soulseek client"
-msgstr "Nicotine+ é um cliente Soulseek."
+msgstr "Nicotine+ é um cliente Soulseek"
 
 #: pynicotine/__init__.py:32
-#, fuzzy
 msgid "show this help message and exit"
 msgstr "mostrar esta mensagem de ajuda e sair"
 
 #: pynicotine/__init__.py:35
-#, fuzzy
 msgid "file"
 msgstr "arquivo"
 
 #: pynicotine/__init__.py:36
-#, fuzzy
 msgid "use non-default configuration file"
 msgstr "usar arquivo de configuração não padrão"
 
@@ -109,44 +98,36 @@ msgid "disable the tray icon"
 msgstr "desativar o ícone da bandeja"
 
 #: pynicotine/__init__.py:56
-#, fuzzy
 msgid "start the program without showing window"
-msgstr "iniciar o programa sem mostrar janela"
+msgstr "iniciar o programa sem mostrar a janela"
 
 #: pynicotine/__init__.py:59
-#, fuzzy
 msgid "ip"
-msgstr "IP"
+msgstr "ip"
 
 #: pynicotine/__init__.py:60
-#, fuzzy
 msgid "bind sockets to the given IP (useful for VPN)"
-msgstr "vincular soquetes ao IP dado (útil para VPN)"
+msgstr "vincular sockets ao IP dado (útil para as VPN)"
 
 #: pynicotine/__init__.py:63
-#, fuzzy
 msgid "port"
 msgstr "porta"
 
 #: pynicotine/__init__.py:64
-#, fuzzy
 msgid "listen on the given port"
-msgstr "ouvir a porta dada"
+msgstr "escutar na porta dada"
 
 #: pynicotine/__init__.py:68
-#, fuzzy
 msgid "rescan shared files"
-msgstr "Nova varredura dos compartilhamentos"
+msgstr "reescanear os arquivos compartilhados"
 
 #: pynicotine/__init__.py:72
-#, fuzzy
 msgid "start the program in headless mode (no GUI)"
-msgstr "iniciar o programa no modo sem cabeça (sem GUI)"
+msgstr "iniciar o programa no modo sem interface gráfica (headless)"
 
 #: pynicotine/__init__.py:76
-#, fuzzy
 msgid "display version and exit"
-msgstr "versão de exibição e saída"
+msgstr "mostrar a versão e sair"
 
 #: pynicotine/__init__.py:117
 #, fuzzy, python-format
@@ -183,9 +164,9 @@ msgid "Can't create directory '%(path)s', reported error: %(error)s"
 msgstr "Não foi possível criar diretório '%(path)s', erro relatado: %(error)s"
 
 #: pynicotine/config.py:566
-#, fuzzy, python-format
+#, python-format
 msgid "Unknown config section '%s'"
-msgstr "Seção de config desconhecida '%s'"
+msgstr "Seção de configuração desconhecida '%s'"
 
 #: pynicotine/config.py:570
 #, fuzzy, python-format
@@ -203,47 +184,38 @@ msgid "Config backed up to: %s"
 msgstr "Config backup até: %s"
 
 #: pynicotine/geoip/geoip.py:22
-#, fuzzy
 msgid "Andorra"
 msgstr "Andorra"
 
 #: pynicotine/geoip/geoip.py:23
-#, fuzzy
 msgid "United Arab Emirates"
 msgstr "Emirados Árabes Unidos"
 
 #: pynicotine/geoip/geoip.py:24
-#, fuzzy
 msgid "Afghanistan"
 msgstr "Afeganistão"
 
 #: pynicotine/geoip/geoip.py:25
-#, fuzzy
 msgid "Antigua & Barbuda"
-msgstr "Antígua & Barbuda"
+msgstr "Antígua e Barbuda"
 
 #: pynicotine/geoip/geoip.py:26
-#, fuzzy
 msgid "Anguilla"
-msgstr "Anguilla"
+msgstr "Anguila"
 
 #: pynicotine/geoip/geoip.py:27
-#, fuzzy
 msgid "Albania"
 msgstr "Albânia"
 
 #: pynicotine/geoip/geoip.py:28
-#, fuzzy
 msgid "Armenia"
 msgstr "Armênia"
 
 #: pynicotine/geoip/geoip.py:29
-#, fuzzy
 msgid "Angola"
 msgstr "Angola"
 
 #: pynicotine/geoip/geoip.py:30
-#, fuzzy
 msgid "Antarctica"
 msgstr "Antártida"
 
