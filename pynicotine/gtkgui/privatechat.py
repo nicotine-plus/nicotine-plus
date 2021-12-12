@@ -108,15 +108,8 @@ class PrivateChats(IconNotebook):
     def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
-            try:
-                status = self.frame.np.users[user].status
-            except Exception:
-                # Offline
-                status = 0
-
-            self.pages[user] = page = PrivateChat(self, user, status)
-
-            self.append_page(page.Main, user, page.on_close, status=status)
+            self.pages[user] = page = PrivateChat(self, user)
+            self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
@@ -162,7 +155,7 @@ class PrivateChats(IconNotebook):
 
 class PrivateChat(UserInterface):
 
-    def __init__(self, chats, user, status):
+    def __init__(self, chats, user):
 
         super().__init__("ui/privatechat.ui")
 
@@ -183,7 +176,10 @@ class PrivateChat(UserInterface):
 
         self.opened = False
         self.offlinemessage = False
-        self.status = status
+        self.status = 0
+
+        if user in self.frame.np.users:
+            self.status = self.frame.np.users[user].status or 0
 
         # Text Search
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry,

@@ -324,7 +324,7 @@ class IconNotebook:
             tab_label, _menu_label = self.get_labels(page)
             tab_label.set_text(tab_label.get_text())
 
-    def append_page(self, page, text, close_callback=None, full_text=None, status=None):
+    def append_page(self, page, text, close_callback=None, full_text=None, user=None):
 
         if full_text is None:
             full_text = text
@@ -347,7 +347,14 @@ class IconNotebook:
 
         self.notebook.append_page_menu(page, label_tab, label_tab_menu)
 
-        self.set_user_status(page, text, status)
+        if user is not None:
+            status = 0
+
+            if user in self.frame.np.users:
+                status = self.frame.np.users[user].status or 0
+
+            self.set_user_status(page, text, status)
+
         self.notebook.set_tab_reorderable(page, True)
         self.notebook.set_show_tabs(True)
 
@@ -466,7 +473,7 @@ class IconNotebook:
     def set_user_status(self, page, user, status):
 
         if status is None:
-            status = 0
+            return
 
         if status == 1:
             status_text = _("Away")

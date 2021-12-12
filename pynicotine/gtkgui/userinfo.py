@@ -65,14 +65,8 @@ class UserInfos(IconNotebook):
     def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
-            try:
-                status = self.frame.np.users[user].status
-            except Exception:
-                # Offline
-                status = 0
-
             self.pages[user] = page = UserInfo(self, user)
-            self.append_page(page.Main, user, page.on_close, status=status)
+            self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
             if self.get_n_pages() > 0:
