@@ -53,6 +53,16 @@ def check_gui_dependencies():
             "major_version": gtk_version[0],
             "complete_version": '.'.join(map(str, gtk_version))}
 
+    try:
+        if gtk_version[0] == 4 and os.getenv("NICOTINE_LIBADWAITA") == '1':
+            gi.require_version('Adw', '1')
+
+            from gi.repository import Adw
+            Adw.init()
+
+    except (ImportError, ValueError):
+        pass
+
     return None
 
 
