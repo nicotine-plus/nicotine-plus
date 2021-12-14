@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-02 21:58+0200\n"
-"PO-Revision-Date: 2021-12-06 18:36+0000\n"
+"PO-Revision-Date: 2021-12-14 21:50+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -6393,14 +6393,13 @@ msgid "_Settings"
 msgstr "Získání stavu"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:202
-#, fuzzy
 msgid "Version:"
-msgstr "Verze: "
+msgstr "Verze:"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:223
 #, fuzzy
 msgid "Author(s):"
-msgstr "Autoři: "
+msgstr "Autoři:"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:50
 #, fuzzy
