@@ -284,7 +284,7 @@ def load_custom_icons(names):
 def load_icons():
     """ Load custom icons necessary for the application to function """
 
-    names = [
+    names = (
         "empty",
         "away",
         "online",
@@ -297,7 +297,7 @@ def load_icons():
         "trayicon_msg",
         "n",
         "notify"
-    ]
+    )
 
     """ Load custom icon theme if available """
 
@@ -311,21 +311,16 @@ def load_icons():
 
     """ Load local app and tray icons, if available """
 
-    # Support running from folder, as well as macOS and Windows
-    path = os.path.join(GUI_DIR, "icons")
+    paths = (
+        os.path.join(GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
+        os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")  # Support Python venv
+    )
 
-    if Gtk.get_major_version() == 4:
-        ICON_THEME.add_search_path(path)
-    else:
-        ICON_THEME.append_search_path(path)
-
-    # Support Python venv
-    path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
-
-    if Gtk.get_major_version() == 4:
-        ICON_THEME.add_search_path(path)
-    else:
-        ICON_THEME.append_search_path(path)
+    for path in paths:
+        if Gtk.get_major_version() == 4:
+            ICON_THEME.add_search_path(path)
+        else:
+            ICON_THEME.append_search_path(path)
 
 
 """ Widget Fonts and Colors """
