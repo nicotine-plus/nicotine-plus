@@ -198,6 +198,11 @@ def set_global_style():
 
 ICONS = {}
 
+if Gtk.get_major_version() == 4:
+    ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+else:
+    ICON_THEME = Gtk.IconTheme.get_default()
+
 
 def get_icon(icon_name):
     return ICONS.get(icon_name)
@@ -306,19 +311,21 @@ def load_icons():
 
     """ Load local app and tray icons, if available """
 
-    if Gtk.get_major_version() == 4:
-        icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
-        icon_theme.append_search_path = icon_theme.add_search_path
-    else:
-        icon_theme = Gtk.IconTheme.get_default()
-
     # Support running from folder, as well as macOS and Windows
     path = os.path.join(GUI_DIR, "icons")
-    icon_theme.append_search_path(path)
+
+    if Gtk.get_major_version() == 4:
+        ICON_THEME.add_search_path(path)
+    else:
+        ICON_THEME.append_search_path(path)
 
     # Support Python venv
     path = os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")
-    icon_theme.append_search_path(path)
+
+    if Gtk.get_major_version() == 4:
+        ICON_THEME.add_search_path(path)
+    else:
+        ICON_THEME.append_search_path(path)
 
 
 """ Widget Fonts and Colors """
