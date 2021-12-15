@@ -75,6 +75,7 @@ class Config:
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
+        self.removed_options = {}
 
     @staticmethod
     def get_user_directories():
@@ -466,6 +467,91 @@ class Config:
             }
         }
 
+        self.removed_options = {
+            "transfers": (
+                "pmqueueddir",
+                "autoretry_downloads",
+                "shownotification",
+                "shownotificationperfolder",
+                "prioritize",
+                "sharedownloaddir"
+            ),
+            "server": (
+                "lastportstatuscheck",
+                "serverlist",
+                "enc",
+                "fallbackencodings",
+                "roomencoding",
+                "userencoding",
+                "firewalled"
+            ),
+            "ui": (
+                "enabletrans",
+                "mozembed",
+                "open_in_mozembed",
+                "tooltips",
+                "transalpha",
+                "transfilter",
+                "transtint",
+                "soundenabled",
+                "soundtheme",
+                "soundcommand",
+                "tab_colors",
+                "tab_icons",
+                "searchoffline",
+                "chat_hidebuttons",
+                "tab_reorderable",
+                "private_search_results",
+                "private_shares"
+            ),
+            "columns": (
+                "downloads",
+                "uploads",
+                "search",
+                "search_widths",
+                "downloads_columns",
+                "downloads_widths",
+                "uploads_columns",
+                "uploads_widths",
+                "userbrowse",
+                "userbrowse_widths",
+                "userlist",
+                "userlist_widths",
+                "chatrooms",
+                "chatrooms_widths",
+                "download_columns",
+                "download_widths",
+                "upload_columns",
+                "upload_widths",
+                "filesearch_columns",
+                "filesearch_widths"
+            ),
+            "searches": (
+                "distrib_timer",
+                "distrib_ignore",
+                "reopen_tabs",
+                "max_stored_results"
+            ),
+            "userinfo": (
+                "descrutf8"
+            ),
+            "private_rooms": (
+                "enabled"
+            ),
+            "logging": (
+                "logsdir"
+            ),
+            "ticker": (
+                "default",
+                "rooms",
+                "hide"
+            ),
+            "language": (
+                "language",
+                "setlanguage"
+            )
+        }
+
         # Windows specific stuff
         if sys.platform == "win32":
             self.defaults['players']['npplayer'] = 'other'
@@ -479,14 +565,11 @@ class Config:
 
         load_file(self.filename, self.parse_config)
 
-        # Clean up old config options
-        migrate_download_share = self.remove_old_options()
-
         # Update config values from file
         self.set_config()
 
         # Convert special download folder share to regular share
-        if migrate_download_share:
+        if self.sections["transfers"].get("sharedownloaddir", False):
             shares = self.sections["transfers"]["shared"]
             virtual_name = "Downloaded"
             shared_folder = (virtual_name, self.sections["transfers"]["downloaddir"])
@@ -562,11 +645,12 @@ class Config:
             for j, val in self.parser.items(i, raw=True):
 
                 # Check if config section exists in defaults
-                if i not in self.defaults:
+                if i not in self.defaults and i not in self.removed_options:
                     log.add(_("Unknown config section '%s'"), i)
 
                 # Check if config option exists in defaults
-                elif j not in self.defaults[i] and i != "plugins" and j != "filter":
+                elif (j not in self.defaults.get(i, "") and j not in self.removed_options.get(i, "")
+                        and i != "plugins" and j != "filter"):
                     log.add(_("Unknown config option '%(option)s' in section '%(section)s'"),
                             {'option': j, 'section': i})
 
@@ -639,137 +723,26 @@ class Config:
             # Setting the port range in numerical order
             server["portrange"] = (min(server["portrange"]), max(server["portrange"]))
 
-    def remove_old_options(self):
-
-        # Transition from 1.2.16 -> 1.4.0
-        # Do the cleanup early so we don't get the annoying
-        # 'Unknown config option ...' message
-        self.remove_old_option("transfers", "pmqueueddir")
-        self.remove_old_option("server", "lastportstatuscheck")
-        self.remove_old_option("server", "serverlist")
-        self.remove_old_option("userinfo", "descrutf8")
-        self.remove_old_option("ui", "enabletrans")
-        self.remove_old_option("ui", "mozembed")
-        self.remove_old_option("ui", "open_in_mozembed")
-        self.remove_old_option("ui", "tooltips")
-        self.remove_old_option("ui", "transalpha")
-        self.remove_old_option("ui", "transfilter")
-        self.remove_old_option("ui", "transtint")
-        self.remove_old_option("language", "language")
-        self.remove_old_option("language", "setlanguage")
-        self.remove_old_section("language")
-
-        # Transition from 1.4.1 -> 1.4.2
-        self.remove_old_option("columns", "downloads")
-        self.remove_old_option("columns", "uploads")
-
-        # Remove old encoding settings (1.4.3)
-        self.remove_old_option("server", "enc")
-        self.remove_old_option("server", "fallbackencodings")
-        self.remove_old_option("server", "roomencoding")
-        self.remove_old_option("server", "userencoding")
-
-        # Remove soundcommand config, replaced by GSound (1.4.3)
-        self.remove_old_option("ui", "soundcommand")
-
-        # Remove old column widths in preparation for "group by folder"-feature
-        self.remove_old_option("columns", "search")
-        self.remove_old_option("columns", "search_widths")
-        self.remove_old_option("columns", "downloads_columns")
-        self.remove_old_option("columns", "downloads_widths")
-        self.remove_old_option("columns", "uploads_columns")
-        self.remove_old_option("columns", "uploads_widths")
-
-        # Remove auto-retry failed downloads-option, this is now default behavior
-        self.remove_old_option("transfers", "autoretry_downloads")
-
-        # Remove old notification/sound settings
-        self.remove_old_option("transfers", "shownotification")
-        self.remove_old_option("transfers", "shownotificationperfolder")
-        self.remove_old_option("ui", "soundenabled")
-        self.remove_old_option("ui", "soundtheme")
-        self.remove_old_option("ui", "tab_colors")
-        self.remove_old_option("ui", "tab_icons")
-
-        # Remove dropped offline user text color in search results
-        self.remove_old_option("ui", "searchoffline")
-
-        # Seems to be superseded by ("server", "private_chatrooms")
-        self.remove_old_option("private_rooms", "enabled")
-
-        # Remove everything ticker-related, no longer necessary after the introduction of room walls
-        self.remove_old_section("ticker")
-
-        # Remove old log folder option, superseded by individual log folders for transfers and debug messages
-        self.remove_old_option("logging", "logsdir")
-
-        # Remove option to stop responding to searches for a certain time
-        self.remove_old_option("searches", "distrib_timer")
-        self.remove_old_option("searches", "distrib_ignore")
-
-        # Remove "I can receive direct connections"-option, it's redundant now
-        self.remove_old_option("server", "firewalled")
-
-        # Remove old column options
-        self.remove_old_option("columns", "userbrowse")
-        self.remove_old_option("columns", "userbrowse_widths")
-        self.remove_old_option("columns", "userlist")
-        self.remove_old_option("columns", "userlist_widths")
-        self.remove_old_option("columns", "chatrooms")
-        self.remove_old_option("columns", "chatrooms_widths")
-        self.remove_old_option("columns", "download_columns")
-        self.remove_old_option("columns", "download_widths")
-        self.remove_old_option("columns", "upload_columns")
-        self.remove_old_option("columns", "upload_widths")
-        self.remove_old_option("columns", "filesearch_columns")
-        self.remove_old_option("columns", "filesearch_widths")
-
-        # Remove option to prioritize sfv/md5 files when downloading
-        self.remove_old_option("transfers", "prioritize")
-
-        # Remove option to reopen closed search tabs when new results come in
-        self.remove_old_option("searches", "reopen_tabs")
-
-        # Remove option to toggle chatroom arrow buttons, since they no longer exist
-        self.remove_old_option("ui", "chat_hidebuttons")
-
-        # Remove max stored search results, only visible search result limit is used now
-        self.remove_old_option("searches", "max_stored_results")
-
-        # Remove option to specify if tabs are reorderable, since there's no clear advantage
-        self.remove_old_option("ui", "tab_reorderable")
-
-        # Remove old private search result option, moved to "searches" category
-        self.remove_old_option("ui", "private_search_results")
-        self.remove_old_option("ui", "private_shares")
-
-        # Remove auto-share download folder option, share folder manually instead
-        migrate_download_share = self.remove_old_option("transfers", "sharedownloaddir")
-        return migrate_download_share
-
-    def remove_old_option(self, section, option):
-
-        if section in self.parser.sections() and option in self.parser.options(section):
-            return self.parser.remove_option(section, option)
-
-        return False
-
-    def remove_old_section(self, section):
-
-        if section in self.parser.sections():
-            self.parser.remove_section(section)
-
     def write_config_callback(self, filename):
         self.parser.write(filename)
 
     def write_configuration(self):
 
-        for i in self.sections:
-            if not self.parser.has_section(i):
-                self.parser.add_section(i)
+        # Write new config options to file
+        for section, options in self.sections.items():
+            if not self.parser.has_section(section):
+                self.parser.add_section(section)
 
-            for j in self.sections[i]:
-                self.parser.set(i, j, str(self.sections[i][j]))
+            for option, value in options.items():
+                self.parser.set(section, option, str(value))
+
+        # Remove legacy config options
+        for section, options in self.removed_options.items():
+            if not self.parser.has_section(section):
+                continue
+
+            for option in options:
+                self.parser.remove_option(section, option)
 
         if not self.create_config_folder():
             return
