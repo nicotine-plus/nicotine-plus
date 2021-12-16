@@ -2,3 +2,4 @@
 builtins = _
 max-line-length = 120
 ignore = W503
+exclude = pynicotine/metadata/tinytag.py
