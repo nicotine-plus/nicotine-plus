@@ -106,7 +106,7 @@ A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Cata
 
 ### Homebrew (Mojave/10.14 and newer)
 
-NOTE: Nicotine+ installed from Homebrew will currently NOT run on Apple M1 Macs due to issues in upstream dependencies. Please use the official build above instead.
+NOTE: If your Mac has an Apple M1 chip, please use the [official installer](#official-builds-catalina1015-and-newer) instead. Nicotine+ installed from Homebrew will currently not work on these devices due to issues in upstream dependencies.
 
 On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
 
