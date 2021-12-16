@@ -385,7 +385,7 @@ class Scanner:
             duration = int(audio.duration)
 
             if UINT_LIMIT > bitrate > 0:
-                bitrate_info = (bitrate, int(False))  # Second argument used to be VBR (variable bitrate)
+                bitrate_info = (bitrate, int(audio.is_vbr))
 
             if UINT_LIMIT > duration >= 0:
                 duration_info = duration

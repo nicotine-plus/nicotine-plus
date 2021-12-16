@@ -94,6 +94,7 @@ class TinyTag(object):
         self.audio_offset = None
         self.bitrate = None
         self.channels = None
+        self.is_vbr = False
         self.comment = None
         self.composer = None
         self.disc = None
@@ -579,6 +580,7 @@ class ID3(TinyTag):
                         self.duration = xframes * ID3.samples_per_frame / float(self.samplerate) / self.channels
                         self.bitrate = int(byte_count * 8 / self.duration / 1000)
                         self.audio_offset = fh.tell()
+                        self.is_vbr = True
                         return
                     continue
 
