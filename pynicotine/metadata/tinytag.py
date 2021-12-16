@@ -546,7 +546,7 @@ class ID3(TinyTag):
             b = fh.peek(4)
             if len(b) < 4:
                 if frames:
-                    self.bitrate = int(bitrate_accu // frames)
+                    self.bitrate = int(bitrate_accu / frames)
                 break  # EOF
             sync, conf, bitrate_freq, rest = struct.unpack('BBBB', b[0:4])
             br_id = (bitrate_freq >> 4) & 0x0F  # biterate id
