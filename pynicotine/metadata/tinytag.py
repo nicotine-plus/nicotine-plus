@@ -131,7 +131,7 @@ class TinyTag(object):
                 ('.wav',): Wave,
                 ('.flac',): Flac,
                 ('.wma',): Wma,
-                ('.m4b', '.m4a', '.mp4'): MP4,
+                ('.m4b', '.m4a', '.m4r', '.mp4'): MP4,
                 ('.aiff', '.aifc', '.aif', '.afc'): Aiff,
             }
         for ext, tagclass in self._mapping.items():
