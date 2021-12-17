@@ -50,7 +50,7 @@ class SharesTest(unittest.TestCase):
 
         # Verify that shared files were added
         self.assertIn(['dummy_file', 0, None, None], shares.share_dbs["files"]["Shares"])
-        self.assertIn(['nicotinetestdata.mp3', 80919, (127, 0), 5], shares.share_dbs["files"]["Shares"])
+        self.assertIn(['nicotinetestdata.mp3', 80919, (128, 0), 5], shares.share_dbs["files"]["Shares"])
         self.assertIn(['vbr44.mp3', 36609, (32, 1), 9], shares.share_dbs["files"]["Shares"])  # 1 = VBR
 
         # Verify that expected folder is empty
