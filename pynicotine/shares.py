@@ -379,7 +379,7 @@ class Scanner:
                                {'path': pathname, 'error': error}, None))
 
         if audio is not None and audio.bitrate is not None and audio.duration is not None:
-            bitrate = int(audio.bitrate)
+            bitrate = int(audio.bitrate + 0.5)  # Round the value with minimal performance loss
             duration = int(audio.duration)
 
             if UINT_LIMIT > bitrate >= 0:

@@ -559,7 +559,7 @@ class ID3(TinyTag):
             b = fh.peek(4)
             if len(b) < 4:
                 if frames:
-                    self.bitrate = int(bitrate_accu / frames)
+                    self.bitrate = bitrate_accu / frames
                 break  # EOF
             sync, conf, bitrate_freq, rest = struct.unpack('BBBB', b[0:4])
             br_id = (bitrate_freq >> 4) & 0x0F  # biterate id
@@ -593,7 +593,7 @@ class ID3(TinyTag):
                         # MPEG-2 Audio Layer III uses 576 samples per frame
                         samples_per_frame = 576 if mpeg_id <= 2 else ID3.samples_per_frame
                         self.duration = xframes * samples_per_frame / float(self.samplerate)
-                        self.bitrate = int(byte_count * 8 / self.duration / 1000)
+                        self.bitrate = byte_count * 8 / self.duration / 1000
                         self.audio_offset = fh.tell()
                         self.is_vbr = True
                         return
@@ -619,7 +619,7 @@ class ID3(TinyTag):
                 est_frame_count = audio_stream_size / (frame_size_accu / float(frames))
                 samples = est_frame_count * ID3.samples_per_frame
                 self.duration = samples / float(self.samplerate)
-                self.bitrate = int(bitrate_accu / frames)
+                self.bitrate = bitrate_accu / frames
                 return
 
             if frame_length > 1:  # jump over current frame body
