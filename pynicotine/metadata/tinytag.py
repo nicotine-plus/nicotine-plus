@@ -805,7 +805,7 @@ class Ogg(TinyTag):
                 (channels, self.samplerate, max_bitrate, bitrate,
                  min_bitrate) = struct.unpack("<B4i", packet[11:28])
                 if not self.audio_offset:
-                    self.bitrate = bitrate / 1024.0
+                    self.bitrate = bitrate / 1000.0
                     self.audio_offset = page_start_pos
             elif packet[0:7] == b"\x03vorbis":
                 walker.seek(7, os.SEEK_CUR)  # jump over header name
@@ -924,7 +924,7 @@ class Wave(TinyTag):
             if subchunkid == b'fmt ':
                 _, self.channels, self.samplerate = struct.unpack('HHI', fh.read(8))
                 _, _, bitdepth = struct.unpack('<IHH', fh.read(8))
-                self.bitrate = self.samplerate * self.channels * bitdepth / 1024.0
+                self.bitrate = self.samplerate * self.channels * bitdepth / 1000.0
             elif subchunkid == b'data':
                 self.duration = float(subchunksize)/self.channels/self.samplerate/(bitdepth/8)
                 self.audio_offest = fh.tell() - 8  # rewind to data header
@@ -1021,7 +1021,7 @@ class Flac(TinyTag):
                 total_samples = _bytes_to_int(total_sample_bytes)
                 self.duration = float(total_samples) / self.samplerate
                 if self.duration > 0:
-                    self.bitrate = self.filesize / self.duration * 8 / 1024
+                    self.bitrate = self.filesize / self.duration * 8 / 1000
             elif block_type == Flac.METADATA_VORBIS_COMMENT and not skip_tags:
                 oggtag = Ogg(fh, 0)
                 oggtag._parse_vorbis_comment(fh)
@@ -1244,7 +1244,7 @@ class Aiff(ID3):
         self.channels = aiffobj.getnchannels()
         self.samplerate = aiffobj.getframerate()
         self.duration = float(aiffobj.getnframes()) / float(self.samplerate)
-        self.bitrate = self.samplerate * self.channels * 16.0 / 1024.0
+        self.bitrate = self.samplerate * self.channels * 16.0 / 1000.0
 
     def _parse_tag(self, fh):
         fh.seek(0, 0)
