@@ -126,7 +126,7 @@ class TinyTag(object):
         parser_class = None
         if self._mapping is None:
             self._mapping = {
-                ('.mp3',): ID3,
+                ('.mp1', '.mp2', '.mp3'): ID3,
                 ('.oga', '.ogg', '.opus'): Ogg,
                 ('.wav',): Wave,
                 ('.flac',): Flac,
