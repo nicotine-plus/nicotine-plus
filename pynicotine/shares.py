@@ -375,10 +375,8 @@ class Scanner:
                 audio = tinytag.get(pathname, size, tags=False)
 
             except Exception as error:
-                error = _("Error while scanning metadata for file %(path)s: %(error)s")
-                args = {'path': pathname, 'error': error}
-
-                self.queue.put((error, args, None))
+                self.queue.put((_("Error while scanning metadata for file %(path)s: %(error)s"),
+                               {'path': pathname, 'error': error}, None))
 
         if audio is not None and audio.bitrate is not None and audio.duration is not None:
             bitrate = int(audio.bitrate)
@@ -391,10 +389,9 @@ class Scanner:
                 duration_info = duration
 
             if bitrate_info is None or duration_info is None:
-                error = "Ignoring invalid metadata for file %(path)s: %(metadata)s"
-                args = {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)}
-
-                self.queue.put((error, args, "miscellaneous"))
+                self.queue.put(("Ignoring invalid metadata for file %(path)s: %(metadata)s",
+                               {'path': pathname, 'metadata': "bitrate: %s, duration: %s s" % (bitrate, duration)},
+                               "miscellaneous"))
 
         return [name, size, bitrate_info, duration_info]
 
