@@ -1244,7 +1244,7 @@ class Aiff(ID3):
         self.channels = aiffobj.getnchannels()
         self.samplerate = aiffobj.getframerate()
         self.duration = float(aiffobj.getnframes()) / float(self.samplerate)
-        self.bitrate = self.samplerate * self.channels * 16.0 / 1000.0
+        self.bitrate = self.samplerate * self.channels * aiffobj.getsampwidth() * 8 / 1000.0
 
     def _parse_tag(self, fh):
         fh.seek(0, 0)
