@@ -1166,7 +1166,9 @@ class Wma(TinyTag):
                     ('maximum_data_packet_size', 4, True),
                     ('maximum_bitrate', 4, False),
                 ])
-                self.duration = blocks.get('play_duration') / float(10000000)
+                # According to the specification, we need to subtract the preroll from play_duration
+                # to get the actual duration of the file
+                self.duration = max(blocks.get('play_duration') / float(10000000) - blocks.get('preroll') / float(1000), 0.0)
             elif object_id == Wma.ASF_STREAM_PROPERTIES_OBJECT:
                 blocks = self.read_blocks(fh, [
                     ('stream_type', 16, False),
