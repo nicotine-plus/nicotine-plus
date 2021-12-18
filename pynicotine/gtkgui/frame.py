@@ -93,7 +93,7 @@ class NicotineFrame(UserInterface):
         self.auto_away = False
         self.away_timer = None
         self.away_cooldown_time = 0
-        self.scan_progress_indeterminate = True
+        self.scan_progress_indeterminate = False
         self.bindip = bindip
         self.port = port
 
@@ -1833,26 +1833,23 @@ class NicotineFrame(UserInterface):
         self.SocketStatus.set_text(str(status))
 
     def show_scan_progress(self):
-
         self.scan_progress_indeterminate = True
         GLib.idle_add(self.SharesProgress.show)
 
     def set_scan_progress(self, value):
-
         self.scan_progress_indeterminate = False
         GLib.idle_add(self.SharesProgress.set_fraction, value)
 
     def set_scan_indeterminate(self):
-        GLib.timeout_add(100, self.pulse_scan_progress)
+        self.SharesProgress.pulse()
+        GLib.timeout_add(500, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
-
-        self.SharesProgress.pulse()
-
         if self.scan_progress_indeterminate:
             self.set_scan_indeterminate()
 
     def hide_scan_progress(self):
+        self.scan_progress_indeterminate = False
         GLib.idle_add(self.SharesProgress.hide)
 
     def update_alternative_speed_icon(self, active):
