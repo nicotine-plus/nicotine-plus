@@ -281,21 +281,36 @@ class MP4(TinyTag):
             return {'genre': None}
 
         @classmethod
+        def read_extended_descriptor(cls, esds_atom):
+            for i in range(4):
+                if esds_atom.read(1) != b'\x80':
+                    break
+
+        @classmethod
         def parse_audio_sample_entry_mp4a(cls, data):
             # this atom also contains the esds atom:
             # https://ffmpeg.org/doxygen/0.6/mov_8c-source.html
             # http://xhelmboyx.tripod.com/formats/mp4-layout.txt
+            # http://sasperger.tistory.com/103
             datafh = BytesIO(data)
             datafh.seek(16, os.SEEK_CUR)  # jump over version and flags
             channels = struct.unpack('>H', datafh.read(2))[0]
             datafh.seek(2, os.SEEK_CUR)   # jump over bit_depth
             datafh.seek(2, os.SEEK_CUR)   # jump over QT compr id & pkt size
             sr = struct.unpack('>I', datafh.read(4))[0]
+
+            # ES Description Atom
             esds_atom_size = struct.unpack('>I', data[28:32])[0]
             esds_atom = BytesIO(data[36:36 + esds_atom_size])
-            # http://sasperger.tistory.com/103
-            esds_atom.seek(22, os.SEEK_CUR)  # jump over most data...
-            esds_atom.seek(4, os.SEEK_CUR)   # jump over max bitrate
+            esds_atom.seek(5, os.SEEK_CUR)   # jump over version, flags and tag
+
+            # ES Descriptor
+            cls.read_extended_descriptor(esds_atom)
+            esds_atom.seek(4, os.SEEK_CUR)   # jump over ES id, flags and tag
+
+            # Decoder Config Descriptor
+            cls.read_extended_descriptor(esds_atom)
+            esds_atom.seek(9, os.SEEK_CUR)
             avg_br = struct.unpack('>I', esds_atom.read(4))[0] / 1000.0  # kbit/s
             return {'channels': channels, 'samplerate': sr, 'bitrate': avg_br}
 
