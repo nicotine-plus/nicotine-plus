@@ -97,7 +97,7 @@ class Transfer:
 class Transfers:
     """ This is the transfers manager """
 
-    def __init__(self, core, config, queue, users, network_callback, ui_callback=None):
+    def __init__(self, core, config, queue, network_callback, ui_callback=None):
 
         self.core = core
         self.config = config
@@ -113,7 +113,6 @@ class Transfers:
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
 
-        self.users = users
         self.network_callback = network_callback
         self.download_queue_timer_count = -1
         self.downloadsview = None
@@ -1574,8 +1573,7 @@ class Transfers:
             transfer.filename = filename
             transfer.status = "Queued"
 
-        if user not in self.users:
-            self.core.watch_user(user)
+        self.core.watch_user(user)
 
         if self.config.sections["transfers"]["enablefilters"]:
             try:
@@ -1646,8 +1644,7 @@ class Transfers:
             }
         )
 
-        if user not in self.users:
-            self.core.watch_user(user)
+        self.core.watch_user(user)
 
         if self.user_logged_out(user):
             transfer.status = "User logged off"
@@ -1738,7 +1735,7 @@ class Transfers:
             return True
 
         try:
-            return self.users[user].status <= 0
+            return self.core.users[user].status <= 0
 
         except (KeyError, TypeError):
             return False

@@ -1019,7 +1019,8 @@ class SlskProtoThread(threading.Thread):
 
                 if peer_class in (SharedFileList, UserInfoReply):
                     # Send progress to the main thread
-                    self._callback_msgs.append(MessageProgress(conn.init.target_user, peer_class, buffer_len, msgsize_total))
+                    self._callback_msgs.append(
+                        MessageProgress(conn.init.target_user, peer_class, buffer_len, msgsize_total))
 
             except KeyError:
                 pass

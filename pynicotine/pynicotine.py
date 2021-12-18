@@ -127,7 +127,7 @@ class NicotineCore:
         self.port = port
 
         self.peerconns = []
-        self.watchedusers = set()
+        self.watched_users = set()
         self.ip_requested = set()
         self.users = {}
         self.out_indirect_conn_request_times = {}
@@ -290,7 +290,7 @@ class NicotineCore:
 
         self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
-        self.transfers = Transfers(self, config, self.queue, self.users, self.network_callback, ui_callback)
+        self.transfers = Transfers(self, config, self.queue, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
         self.userbrowse = UserBrowse(self, config, ui_callback)
         self.userinfo = UserInfo(self, config, self.queue, ui_callback)
@@ -919,7 +919,7 @@ class NicotineCore:
         self.server_conn = msg.conn
         self.server_address = msg.addr
         self.server_timeout_value = -1
-        self.users.clear()
+
         self.queue.append(
             slskmessages.Login(
                 config.sections["server"]["login"],
@@ -968,7 +968,8 @@ class NicotineCore:
         # Clean up connections
         self.peerconns.clear()
         self.out_indirect_conn_request_times.clear()
-        self.watchedusers.clear()
+        self.watched_users.clear()
+        self.users.clear()
 
         self.pluginhandler.server_disconnect_notification(self.manual_disconnect)
 
@@ -1173,7 +1174,7 @@ class NicotineCore:
         if not isinstance(user, str):
             return
 
-        if not force_update and user in self.watchedusers:
+        if not force_update and user in self.watched_users:
             # Already being watched, and we don't need to re-fetch the status/stats
             return
 
@@ -1299,7 +1300,7 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        self.watchedusers.add(msg.user)
+        self.watched_users.add(msg.user)
 
         if msg.userexists and msg.status is None:
             # Legacy support (Soulfind server)

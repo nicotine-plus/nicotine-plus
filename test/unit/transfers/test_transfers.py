@@ -35,7 +35,7 @@ class TransfersTest(unittest.TestCase):
 
         config.load_config()
 
-        self.transfers = Transfers(Mock(), config, deque(), {}, Mock())
+        self.transfers = Transfers(Mock(), config, deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
 
