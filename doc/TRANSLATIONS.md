@@ -36,6 +36,14 @@ Using consistent terms for the same things makes the translation easier to under
 
 You can use the "Search and Replace" tool to help you with that.
 
+### _Underscores in the strings
+In case you are wondering what to do with the underscores, the Alt-shortcuts (called mnemonics in GTK) provide quick access to a visible UI element (button, menu item etc). If you open any menu and hold down the Alt-key you will see some letters will get an underline. Pressing Alt and the underlined key is the same as pressing that menu item with the mouse.
+
+So you can translate "_Quit" to "_Cerrar". If in the same menu the "C" is already in use, simply put the underscore in front of another letter. Of course the "C" is the most prominent letter in the word, so use "_C" if possible.
+
+Our first priority is to get all strings translated.
+Please use an underscore in the translated string, if the original string also has one. Just pick the letter that strikes you as most suitable.
+Getting the right underscore next to the right letter is something that's easier to do if you see nicotine+ running with the updated translation strings.
 
 ## Testing Updated Translations
 
