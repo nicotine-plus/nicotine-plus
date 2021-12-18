@@ -31,7 +31,7 @@ Corrections
  * Several stability improvements related to file scanning
  * Fixed issues where UPnP did not work with certain routers
  * Fixed an issue where the password could not be changed while logged out
- * Fixed an issue where the incorrect bitrate was reported for certain MP3 files after scanning shares
+ * Fixed an issue where inaccurate bitrates and durations were reported for certain files after scanning shares
  * Fixed a critical error when hiding the "Chat Rooms" tab
  * Fixed an issue where column header menus did not work in older GTK versions
  * Fixed an issue where column widths would not be remembered if multiple tabs were open
