@@ -49,6 +49,7 @@
           <object class="GtkCheckButton" id="EnableSearchHistory">
             <property name="label" translatable="yes">Enable search history</property>
             <property name="visible">1</property>
+            <signal name="toggled" handler="on_toggle_search_history" swapped="no"/>
           </object>
         </child>
         <child>

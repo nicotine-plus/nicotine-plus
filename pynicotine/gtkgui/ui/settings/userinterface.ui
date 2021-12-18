@@ -34,6 +34,7 @@
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">1</property>
                     <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+                    <signal name="toggled" handler="on_theme_changed" swapped="no"/>
                   </object>
                 </child>
                 <child>
@@ -1940,7 +1941,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
@@ -2000,7 +2001,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
@@ -2060,7 +2061,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
@@ -2120,7 +2121,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
@@ -2180,7 +2181,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>
@@ -2240,7 +2241,7 @@
                         <property name="visible">1</property>
                         <property name="hexpand">1</property>
                         <property name="width-request">250</property>
-                        <signal name="font-set" handler="on_fonts_changed"/>
+                        <signal name="font-set" handler="on_theme_changed"/>
                       </object>
                     </child>
                     <child>

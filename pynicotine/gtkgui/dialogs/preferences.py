@@ -1726,10 +1726,10 @@ class UserInterfaceFrame(UserInterface):
 
         self.theme_required = True
 
-    def on_fonts_changed(self, *_args):
-        self.theme_required = True
-
     """ Colors """
+
+    def on_theme_changed(self, *_args):
+        self.theme_required = True
 
     def update_color_button(self, input_config, color_id):
 
@@ -1858,6 +1858,7 @@ class SearchesFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.search_required = False
 
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
@@ -1891,6 +1892,7 @@ class SearchesFrame(UserInterface):
 
         searches = config.sections["searches"]
         self.preferences.set_widgets_data(self.options)
+        self.search_required = False
 
         if searches["defilter"] is not None:
             num_filters = len(searches["defilter"])
@@ -1921,6 +1923,8 @@ class SearchesFrame(UserInterface):
 
     def get_settings(self):
 
+        self.search_required = False
+
         return {
             "searches": {
                 "maxresults": self.MaxResults.get_value_as_int(),
@@ -1942,6 +1946,9 @@ class SearchesFrame(UserInterface):
                 "private_search_results": self.ShowPrivateSearchResults.get_active()
             }
         }
+
+    def on_toggle_search_history(self, *_args):
+        self.search_required = True
 
     def on_clear_search_history(self, *_args):
         self.frame.search.clear_search_history()
@@ -3033,16 +3040,23 @@ class Preferences(UserInterface):
         except KeyError:
             ip_block_required = False
 
+        try:
+            search_required = self.pages["Searches"].search_required
+
+        except KeyError:
+            search_required = False
+
         for page in self.pages.values():
             for key, data in page.get_settings().items():
                 options[key].update(data)
 
-        return portmap_required, rescan_required, theme_required, completion_required, ip_block_required, options
+        return (portmap_required, rescan_required, theme_required, completion_required,
+                ip_block_required, search_required, options)
 
     def update_settings(self, settings_closed=False):
 
         (portmap_required, rescan_required, theme_required, completion_required,
-            ip_block_required, options) = self.get_settings()
+            ip_block_required, search_required, options) = self.get_settings()
 
         for key, data in options.items():
             config.sections[key].update(data)
@@ -3051,6 +3065,11 @@ class Preferences(UserInterface):
             self.frame.np.add_upnp_portmapping()
 
         if theme_required:
+            # Dark mode
+            dark_mode_state = config.sections["ui"]["dark_mode"]
+            set_dark_mode(dark_mode_state)
+            self.frame.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
+
             set_global_font(config.sections["ui"]["globalfont"])
 
             self.frame.chatrooms.update_visuals()
@@ -3072,10 +3091,8 @@ class Preferences(UserInterface):
         if ip_block_required:
             self.frame.np.network_filter.close_blocked_ip_connections()
 
-        # Dark mode
-        dark_mode_state = config.sections["ui"]["dark_mode"]
-        set_dark_mode(dark_mode_state)
-        self.frame.dark_mode_action.set_state(GLib.Variant.new_boolean(dark_mode_state))
+        if search_required:
+            self.frame.search.populate_search_history()
 
         # UPnP
         if not config.sections["server"]["upnp"] and self.frame.np.upnp_timer:
@@ -3083,9 +3100,6 @@ class Preferences(UserInterface):
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
-
-        # Search
-        self.frame.search.populate_search_history()
 
         # Transfers
         self.frame.np.transfers.update_limits()
