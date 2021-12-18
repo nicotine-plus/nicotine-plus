@@ -76,13 +76,13 @@ class UserInfos(IconNotebook):
             self.set_current_page(self.page_num(self.pages[user].Main))
             self.frame.change_main_page("userinfo")
 
-    def set_conn(self, user, conn):
-        if user in self.pages:
-            self.pages[user].conn = conn
-
     def show_connection_error(self, user):
         if user in self.pages:
             self.pages[user].show_connection_error()
+
+    def message_progress(self, msg):
+        if msg.user in self.pages:
+            self.pages[msg.user].message_progress(msg)
 
     def get_user_stats(self, msg):
         if msg.user in self.pages:
@@ -105,12 +105,6 @@ class UserInfos(IconNotebook):
     def user_info_reply(self, user, msg):
         if user in self.pages:
             self.pages[user].user_info_reply(msg)
-
-    def update_gauge(self, msg):
-
-        for page in self.pages.values():
-            if page.conn == msg.conn.conn:
-                page.update_gauge(msg)
 
     def update_visuals(self):
         for page in self.pages.values():
@@ -153,7 +147,6 @@ class UserInfo(UserInterface):
             self.picture_view.connect("scroll-event", self.on_scroll_event)
 
         self.user = user
-        self.conn = None
         self.picture_data = None
         self.zoom_factor = 5
         self.actual_zoom = 0
@@ -351,14 +344,14 @@ class UserInfo(UserInterface):
         self.userinfos.request_tab_hilite(self.Main)
         self.progressbar.set_fraction(1.0)
 
-    def update_gauge(self, msg):
+    def message_progress(self, msg):
 
-        if msg.total == 0 or msg.bufferlen == 0:
+        if msg.total == 0 or msg.position == 0:
             fraction = 0.0
-        elif msg.bufferlen >= msg.total:
+        elif msg.position >= msg.total:
             fraction = 1.0
         else:
-            fraction = float(msg.bufferlen) / msg.total
+            fraction = float(msg.position) / msg.total
 
         self.progressbar.set_fraction(fraction)
 

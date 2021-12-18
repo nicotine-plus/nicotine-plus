@@ -87,6 +87,7 @@ from pynicotine.slskmessages import LeavePublicRoom
 from pynicotine.slskmessages import LeaveRoom
 from pynicotine.slskmessages import Login
 from pynicotine.slskmessages import MessageAcked
+from pynicotine.slskmessages import MessageProgress
 from pynicotine.slskmessages import MessageUser
 from pynicotine.slskmessages import MessageUsers
 from pynicotine.slskmessages import MinParentsInCache
@@ -98,7 +99,6 @@ from pynicotine.slskmessages import ParentSpeedRatio
 from pynicotine.slskmessages import PeerInit
 from pynicotine.slskmessages import PeerInitMessage
 from pynicotine.slskmessages import PeerMessage
-from pynicotine.slskmessages import PeerTransfer
 from pynicotine.slskmessages import PierceFireWall
 from pynicotine.slskmessages import PlaceholdUpload
 from pynicotine.slskmessages import PlaceInLineResponse
@@ -1019,7 +1019,7 @@ class SlskProtoThread(threading.Thread):
 
                 if peer_class in (SharedFileList, UserInfoReply):
                     # Send progress to the main thread
-                    self._callback_msgs.append(PeerTransfer(conn, msgsize, buffer_len - 4, peer_class))
+                    self._callback_msgs.append(MessageProgress(conn.init.target_user, peer_class, buffer_len, msgsize_total))
 
             except KeyError:
                 pass

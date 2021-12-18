@@ -200,9 +200,9 @@ class UserBrowse:
         if self.ui_callback:
             self.ui_callback.show_connection_error(username)
 
-    def set_conn(self, username, conn):
+    def message_progress(self, msg):
         if self.ui_callback:
-            self.ui_callback.set_conn(username, conn)
+            self.ui_callback.message_progress(msg)
 
     def get_user_status(self, msg):
         if self.ui_callback:
@@ -211,7 +211,3 @@ class UserBrowse:
     def shared_file_list(self, user, msg):
         if self.ui_callback:
             self.ui_callback.shared_file_list(user, msg)
-
-    def update_gauge(self, msg):
-        if self.ui_callback:
-            self.ui_callback.update_gauge(msg)

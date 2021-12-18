@@ -97,13 +97,13 @@ class UserBrowses(IconNotebook):
             self.set_current_page(self.page_num(page.Main))
             self.frame.change_main_page("userbrowse")
 
-    def set_conn(self, user, conn):
-        if user in self.pages:
-            self.pages[user].conn = conn
-
     def show_connection_error(self, user):
         if user in self.pages:
             self.pages[user].show_connection_error()
+
+    def message_progress(self, msg):
+        if msg.user in self.pages:
+            self.pages[msg.user].message_progress(msg)
 
     def get_user_status(self, msg):
 
@@ -118,12 +118,6 @@ class UserBrowses(IconNotebook):
     def shared_file_list(self, user, msg):
         # We can potentially arrive here from a different thread. Run in main thread.
         GLib.idle_add(self._shared_file_list, user, msg)
-
-    def update_gauge(self, msg):
-
-        for page in self.pages.values():
-            if page.conn == msg.conn.conn:
-                page.update_gauge(msg)
 
     def update_visuals(self):
         for page in self.pages.values():
@@ -143,7 +137,6 @@ class UserBrowse(UserInterface):
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
         self.user = user
-        self.conn = None
         self.local_shares_type = None
         self.queued_folder = None
 
@@ -481,14 +474,14 @@ class UserBrowse(UserInterface):
 
         self.RefreshButton.set_sensitive(False)
 
-    def update_gauge(self, msg):
+    def message_progress(self, msg):
 
-        if msg.total == 0 or msg.bufferlen == 0:
+        if msg.total == 0 or msg.position == 0:
             fraction = 0.0
-        elif msg.bufferlen >= msg.total:
+        elif msg.position >= msg.total:
             fraction = 1.0
         else:
-            fraction = float(msg.bufferlen) / msg.total
+            fraction = float(msg.position) / msg.total
 
         self.progressbar1.set_fraction(fraction)
 

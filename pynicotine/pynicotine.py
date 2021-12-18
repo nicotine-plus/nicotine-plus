@@ -182,7 +182,7 @@ class NicotineCore:
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.pierce_fire_wall,
             slskmessages.CantConnectToPeer: self.cant_connect_to_peer,
-            slskmessages.PeerTransfer: self.peer_transfer,
+            slskmessages.MessageProgress: self.message_progress,
             slskmessages.SharedFileList: self.shared_file_list,
             slskmessages.GetSharedFileList: self.get_shared_file_list,
             slskmessages.FileSearchRequest: self.dummy_message,
@@ -760,13 +760,6 @@ class NicotineCore:
         messages for delivery """
 
         for j in peerconn.msgs:
-
-            if j.__class__ is slskmessages.UserInfoRequest:
-                self.userinfo.set_conn(peerconn.username, conn)
-
-            elif j.__class__ is slskmessages.GetSharedFileList:
-                self.userbrowse.set_conn(peerconn.username, conn)
-
             j.conn = conn
             self.queue.append(j)
 
@@ -1201,13 +1194,13 @@ class NicotineCore:
         # Ignore received message
         pass
 
-    def peer_transfer(self, msg):
+    def message_progress(self, msg):
 
-        if msg.msg is slskmessages.UserInfoReply:
-            self.userinfo.update_gauge(msg)
+        if msg.msg_type is slskmessages.SharedFileList:
+            self.userbrowse.message_progress(msg)
 
-        if msg.msg is slskmessages.SharedFileList:
-            self.userbrowse.update_gauge(msg)
+        elif msg.msg_type is slskmessages.UserInfoReply:
+            self.userinfo.message_progress(msg)
 
     def check_download_queue(self, msg):
         log.add_msg_contents(msg)

@@ -112,16 +112,16 @@ class ConnectToPeerTimeout:
         self.conn = conn
 
 
-class PeerTransfer(InternalMessage):
+class MessageProgress(InternalMessage):
     """ Used to indicate progress of long transfers. """
 
-    __slots__ = ("conn", "total", "bufferlen", "msg")
+    __slots__ = ("user", "msg_type", "position", "total")
 
-    def __init__(self, conn=None, total=None, bufferlen=None, msg=None):
-        self.conn = conn
-        self.bufferlen = bufferlen
+    def __init__(self, user=None, msg_type=None, position=None, total=None):
+        self.user = user
+        self.msg_type = msg_type
+        self.position = position
         self.total = total
-        self.msg = msg
 
 
 class TransferTimeout:

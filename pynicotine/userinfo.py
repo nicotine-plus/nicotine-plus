@@ -68,13 +68,13 @@ class UserInfo:
         # Request user country
         self.set_user_country(user, self.core.get_user_country(user))
 
-    def set_conn(self, username, conn):
-        if self.ui_callback:
-            self.ui_callback.set_conn(username, conn)
-
     def show_connection_error(self, username):
         if self.ui_callback:
             self.ui_callback.show_connection_error(username)
+
+    def message_progress(self, msg):
+        if self.ui_callback:
+            self.ui_callback.message_progress(msg)
 
     def get_user_stats(self, msg):
         if self.ui_callback:
@@ -87,10 +87,6 @@ class UserInfo:
     def set_user_country(self, user, country_code):
         if self.ui_callback:
             self.ui_callback.set_user_country(user, country_code)
-
-    def update_gauge(self, msg):
-        if self.ui_callback:
-            self.ui_callback.update_gauge(msg)
 
     def user_info_reply(self, user, msg):
         if self.ui_callback:
