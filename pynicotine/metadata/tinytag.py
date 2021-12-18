@@ -958,7 +958,7 @@ class Wave(TinyTag):
                     bitdepth = 1
                 self.bitrate = self.samplerate * self.channels * bitdepth / 1000.0
                 remaining_size = subchunksize - 16
-                if remaining_size:
+                if remaining_size > 0:
                     fh.seek(remaining_size, 1)  # skip remaining data in chunk
             elif subchunkid == b'data':
                 self.duration = float(subchunksize) / self.channels / self.samplerate / (bitdepth / 8)
