@@ -136,7 +136,7 @@ class UserList(UserInterface):
 
         self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
-        popup.setup(
+        popup.add_items(
             ("", None),
             ("#" + _("Add User _Note…"), self.on_add_note),
             (">" + _("Private Rooms"), self.popup_menu_private_rooms),
@@ -343,11 +343,10 @@ class UserList(UserInterface):
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        actions = menu.get_actions()
         private_rooms_enabled = (self.popup_menu_private_rooms.items
                                  and status > 0 and menu.user != config.sections["server"]["login"])
 
-        actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
+        menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def get_user_status(self, msg):
 

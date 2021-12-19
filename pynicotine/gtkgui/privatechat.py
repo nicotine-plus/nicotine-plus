@@ -198,14 +198,14 @@ class PrivateChat(UserInterface):
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
             menu.setup_user_menu(user, page="privatechat")
-            menu.setup(
+            menu.add_items(
                 ("", None),
                 ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
         popup = PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat)
-        popup.setup(
+        popup.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
@@ -279,9 +279,8 @@ class PrivateChat(UserInterface):
 
         self.popup_menu_user_tab.toggle_user_items()
 
-        actions = menu.get_actions()
-        actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
-        actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
+        menu.actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()

@@ -464,7 +464,7 @@ class IconNotebook:
 
         for page in self.unread_pages:
             tab_label, _menu_label = self.get_labels(page)
-            self.popup_menu_unread.setup(
+            self.popup_menu_unread.add_items(
                 ("#" + tab_label.get_text(), self.set_unread_page, page)
             )
 

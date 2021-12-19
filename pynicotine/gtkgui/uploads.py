@@ -42,7 +42,7 @@ class Uploads(TransferList):
 
         TransferList.__init__(self, frame, transfer_type="upload")
 
-        self.popup_menu_clear.setup(
+        self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
             ("#" + _("Finished / Aborted"), self.on_clear_finished_aborted),
             ("", None),

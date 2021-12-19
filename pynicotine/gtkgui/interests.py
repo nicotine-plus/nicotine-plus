@@ -132,7 +132,7 @@ class Interests(UserInterface):
         """ Popup """
 
         self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
-        popup.setup(
+        popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),
             ("#" + _("_Search for Item"), self.on_til_recommend_search),
             ("", None),
@@ -140,14 +140,14 @@ class Interests(UserInterface):
         )
 
         self.tidl_popup_menu = popup = PopupMenu(self.frame, self.DislikesList, self.on_popup_til_menu)
-        popup.setup(
+        popup.add_items(
             ("#" + _("_Search for Item"), self.on_tidl_recommend_search),
             ("", None),
             ("#" + _("_Remove Item"), self.on_remove_thing_i_dislike)
         )
 
         self.r_popup_menu = popup = PopupMenu(self.frame, self.RecommendationsList, self.on_popup_r_menu)
-        popup.setup(
+        popup.add_items(
             ("$" + _("I _Like This"), self.on_like_recommendation),
             ("$" + _("I _Dislike This"), self.on_dislike_recommendation),
             ("", None),
@@ -357,11 +357,10 @@ class Interests(UserInterface):
         item = self.get_selected_item(widget, column=1)
         menu.set_user(item)
 
-        actions = menu.get_actions()
-        actions[_("I _Like This")].set_state(
+        menu.actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
-        actions[_("I _Dislike This")].set_state(
+        menu.actions[_("I _Dislike This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 

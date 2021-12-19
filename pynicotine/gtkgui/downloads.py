@@ -43,7 +43,7 @@ class Downloads(TransferList):
 
         TransferList.__init__(self, frame, transfer_type="download")
 
-        self.popup_menu_clear.setup(
+        self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
             ("", None),
             ("#" + _("Finished"), self.on_clear_finished),

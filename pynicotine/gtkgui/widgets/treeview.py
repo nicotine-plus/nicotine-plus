@@ -383,7 +383,6 @@ def press_header(menu, treeview):
 
     visible_columns = [column for column in columns if column.get_visible()]
     menu.clear()
-    actions = menu.get_actions()
     pos = 1
 
     for column in columns:
@@ -392,19 +391,19 @@ def press_header(menu, treeview):
         if title == "":
             title = _("Column #%i") % pos
 
-        menu.setup(
+        menu.add_items(
             ("$" + title, None)
         )
         menu.update_model()
 
-        actions[title].set_state(
+        menu.actions[title].set_state(
             GLib.Variant.new_boolean(column in visible_columns)
         )
 
         if column in visible_columns:
-            actions[title].set_enabled(len(visible_columns) > 1)
+            menu.actions[title].set_enabled(len(visible_columns) > 1)
 
-        actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
+        menu.actions[title].connect("activate", header_toggle, treeview, columns, pos - 1)
         pos += 1
 
     return False

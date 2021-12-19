@@ -197,15 +197,9 @@ class PopupMenu:
         for submenu in self.submenus:
             submenu.update_model()
 
-    def append_item(self, item):
-        self.pending_items.append(item)
-
-    def get_actions(self):
-        return self.actions
-
-    def setup(self, *items):
+    def add_items(self, *items):
         for item in items:
-            self.append_item(item)
+            self.pending_items.append(item)
 
     def setup_user_menu(self, user=None, page=""):
 
@@ -215,30 +209,30 @@ class PopupMenu:
             self.user = user
             user_label += self.user
 
-        self.setup(
+        self.add_items(
             (user_label, self.on_copy_user),
             ("", None)
         )
 
         if page != "privatechat":
-            self.append_item(("#" + _("Send M_essage"), self.on_send_message))
+            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
 
         if page != "userinfo":
-            self.append_item(("#" + _("Show User I_nfo"), self.on_get_user_info))
+            self.add_items(("#" + _("Show User I_nfo"), self.on_get_user_info))
 
         if page != "userbrowse":
-            self.append_item(("#" + _("_Browse Files"), self.on_browse_user))
+            self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
 
-        self.setup(
+        self.add_items(
             ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
             ("#" + _("_Gift Privileges…"), self.on_give_privileges),
             ("", None)
         )
 
         if page != "userlist":
-            self.append_item(("$" + _("_Add to Buddy List"), self.on_add_to_list))
+            self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
 
-        self.setup(
+        self.add_items(
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
             ("$" + _("Block User's IP Address"), self.on_block_user),
@@ -315,21 +309,21 @@ class PopupMenu:
                 continue
 
             if self.user in data["users"]:
-                popup.append_item(
+                popup.add_items(
                     ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
             else:
-                popup.append_item(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
+                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
 
             if not is_owned:
                 continue
 
             if self.user in data["operators"]:
-                popup.append_item(
+                popup.add_items(
                     ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
             else:
-                popup.append_item(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
+                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
 
-            popup.append_item(("", None))
+            popup.add_items(("", None))
 
     def clear(self):
 

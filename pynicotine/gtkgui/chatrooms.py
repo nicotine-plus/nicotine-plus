@@ -452,13 +452,13 @@ class ChatRoom(UserInterface):
             (self.popup_menu_user_list, self.popup_menu_private_rooms_list)
         ):
             menu.setup_user_menu()
-            menu.setup(
+            menu.add_items(
                 ("", None),
                 ("#" + _("Sear_ch User's Files"), menu.on_search_user),
                 (">" + _("Private Rooms"), menu_private_rooms)
             )
 
-        PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).setup(
+        PopupMenu(self.frame, self.RoomLog, self.on_popup_menu_log).add_items(
             ("#" + _("Find…"), self.on_find_activity_log),
             ("", None),
             ("#" + _("Copy"), self.log_textview.on_copy_text),
@@ -469,7 +469,7 @@ class ChatRoom(UserInterface):
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
-        PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat).setup(
+        PopupMenu(self.frame, self.ChatScroll, self.on_popup_menu_chat).add_items(
             ("#" + _("Find…"), self.on_find_room_log),
             ("", None),
             ("#" + _("Copy"), self.chat_textview.on_copy_text),
@@ -484,7 +484,7 @@ class ChatRoom(UserInterface):
         )
 
         self.tab_menu = PopupMenu(self.frame)
-        self.tab_menu.setup(
+        self.tab_menu.add_items(
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
@@ -624,7 +624,7 @@ class ChatRoom(UserInterface):
         private_rooms_enabled = (menu_private_rooms.items
                                  and menu.user != config.sections["server"]["login"])
 
-        menu.get_actions()[_("Private Rooms")].set_enabled(private_rooms_enabled)
+        menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
         self.LogSearchBar.set_search_mode(True)
@@ -655,15 +655,11 @@ class ChatRoom(UserInterface):
         self.populate_user_menu(user, menu, self.popup_menu_private_rooms_list)
 
     def on_popup_menu_log(self, menu, _textview):
-
-        actions = menu.get_actions()
-        actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
+        menu.actions[_("Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_popup_menu_chat(self, menu, _textview):
-
-        actions = menu.get_actions()
-        actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
-        actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
+        menu.actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
 
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])

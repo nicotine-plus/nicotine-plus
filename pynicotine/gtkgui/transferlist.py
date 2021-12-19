@@ -186,14 +186,14 @@ class TransferList(UserInterface):
         self.ClearTransfers.set_menu_model(self.popup_menu_clear.model)
 
         self.popup_menu_copy = PopupMenu(frame)
-        self.popup_menu_copy.setup(
+        self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
         self.popup_menu = PopupMenu(frame, self.Transfers, self.on_popup_menu)
-        self.popup_menu.setup(
+        self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("Send to _Player"), self.on_play_files),
@@ -716,7 +716,7 @@ class TransferList(UserInterface):
     def add_popup_menu_user(self, popup, user):
 
         popup.setup_user_menu(user)
-        popup.setup(
+        popup.add_items(
             ("", None),
             ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
         )
@@ -735,9 +735,7 @@ class TransferList(UserInterface):
             for user in self.selected_users:
                 popup = PopupMenu(self.frame)
                 self.add_popup_menu_user(popup, user)
-                self.popup_menu_users.setup(
-                    (">" + user, popup)
-                )
+                self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
             return
 

@@ -66,7 +66,7 @@ class RoomList(UserInterface):
 
         self.popup_room = None
         self.popup_menu = PopupMenu(self.frame, self.list_view, self.on_popup_menu)
-        self.popup_menu.setup(
+        self.popup_menu.add_items(
             ("#" + _("Join Room"), self.on_popup_join),
             ("#" + _("Leave Room"), self.on_popup_leave),
             ("", None),
@@ -182,18 +182,13 @@ class RoomList(UserInterface):
             return True
 
         room = self.get_selected_room(widget)
-
         self.popup_room = room
-        prooms_enabled = True
 
-        actions = menu.get_actions()
+        menu.actions[_("Join Room")].set_enabled(room not in self.frame.np.chatrooms.joined_rooms)
+        menu.actions[_("Leave Room")].set_enabled(room in self.frame.np.chatrooms.joined_rooms)
 
-        actions[_("Join Room")].set_enabled(room not in self.frame.np.chatrooms.joined_rooms)
-        actions[_("Leave Room")].set_enabled(room in self.frame.np.chatrooms.joined_rooms)
-
-        actions[_("Disown Private Room")].set_enabled(self.frame.np.chatrooms.is_private_room_owned(self.popup_room))
-        actions[_("Cancel Room Membership")].set_enabled(
-            (prooms_enabled and self.frame.np.chatrooms.is_private_room_member(self.popup_room)))
+        menu.actions[_("Disown Private Room")].set_enabled(self.frame.np.chatrooms.is_private_room_owned(room))
+        menu.actions[_("Cancel Room Membership")].set_enabled(self.frame.np.chatrooms.is_private_room_member(room))
         return False
 
     def on_popup_join(self, *_args):

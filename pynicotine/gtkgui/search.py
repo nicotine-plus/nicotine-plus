@@ -76,7 +76,7 @@ class Searches(IconNotebook):
         }
 
         mode_menu = PopupMenu(frame)
-        mode_menu.setup(
+        mode_menu.add_items(
             ("O" + self.modes["global"], "win.searchmode", "global"),
             ("O" + self.modes["buddies"], "win.searchmode", "buddies"),
             ("O" + self.modes["rooms"], "win.searchmode", "rooms"),
@@ -389,14 +389,14 @@ class Search(UserInterface):
         self.popup_menu_users = PopupMenu(self.frame)
 
         self.popup_menu_copy = PopupMenu(self.frame)
-        self.popup_menu_copy.setup(
+        self.popup_menu_copy.add_items(
             ("#" + _("Copy _File Path"), self.on_copy_file_path),
             ("#" + _("Copy _URL"), self.on_copy_url),
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
         self.popup_menu = PopupMenu(self.frame, self.ResultsList, self.on_popup_menu)
-        self.popup_menu.setup(
+        self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
             ("#" + _("_Download File(s)"), self.on_download_files),
@@ -412,7 +412,7 @@ class Search(UserInterface):
         )
 
         self.tab_menu = PopupMenu(self.frame)
-        self.tab_menu.setup(
+        self.tab_menu.add_items(
             ("#" + _("Copy Search Term"), self.on_copy_search_term),
             ("", None),
             ("#" + _("Clear All Results"), self.on_clear),
@@ -971,7 +971,7 @@ class Search(UserInterface):
     def add_popup_menu_user(self, popup, user):
 
         popup.setup_user_menu(user)
-        popup.setup(
+        popup.add_items(
             ("", None),
             ("#" + _("Select User's Results"), self.on_select_user_results, user)
         )
@@ -990,9 +990,7 @@ class Search(UserInterface):
             for user in self.selected_users:
                 popup = PopupMenu(self.frame)
                 self.add_popup_menu_user(popup, user)
-                self.popup_menu_users.setup(
-                    (">" + user, popup)
-                )
+                self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()
             return
 

@@ -169,7 +169,7 @@ class UserBrowse(UserInterface):
         # Popup Menu (FolderTreeView)
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userbrowse")
-        popup.setup(
+        popup.add_items(
             ("", None),
             ("#" + _("_Save Shares List to Disk"), self.on_save),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
@@ -179,7 +179,7 @@ class UserBrowse(UserInterface):
         self.folder_popup_menu = PopupMenu(self.frame, self.FolderTreeView, self.on_folder_popup_menu)
 
         if user == config.sections["server"]["login"]:
-            self.folder_popup_menu.setup(
+            self.folder_popup_menu.add_items(
                 ("#" + _("Upload Folder…"), self.on_upload_directory_to),
                 ("#" + _("Upload Folder & Subfolder(s)…"), self.on_upload_directory_recursive_to),
                 ("", None),
@@ -191,7 +191,7 @@ class UserBrowse(UserInterface):
                 (">" + _("User"), self.user_popup)
             )
         else:
-            self.folder_popup_menu.setup(
+            self.folder_popup_menu.add_items(
                 ("#" + _("_Download Folder"), self.on_download_directory),
                 ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download Folder & Subfolder(s)"), self.on_download_directory_recursive),
@@ -240,7 +240,7 @@ class UserBrowse(UserInterface):
         self.file_popup_menu = PopupMenu(self.frame, self.FileTreeView, self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
-            self.file_popup_menu.setup(
+            self.file_popup_menu.add_items(
                 ("#" + "selected_files", None),
                 ("", None),
                 ("#" + _("Up_load File(s)…"), self.on_upload_files),
@@ -256,7 +256,7 @@ class UserBrowse(UserInterface):
                 (">" + _("User"), self.user_popup)
             )
         else:
-            self.file_popup_menu.setup(
+            self.file_popup_menu.add_items(
                 ("#" + "selected_files", None),
                 ("", None),
                 ("#" + _("_Download File(s)"), self.on_download_files),

@@ -933,7 +933,7 @@ class NicotineFrame(UserInterface):
     @staticmethod
     def add_connection_section(menu):
 
-        menu.setup(
+        menu.add_items(
             ("#" + _("_Connect"), "app.connect"),
             ("#" + _("_Disconnect"), "app.disconnect"),
             ("#" + _("_Away"), "win.away"),
@@ -943,14 +943,14 @@ class NicotineFrame(UserInterface):
 
     @staticmethod
     def add_preferences_item(menu):
-        menu.setup(("#" + _("_Preferences"), "app.settings"))
+        menu.add_items(("#" + _("_Preferences"), "app.settings"))
 
     @staticmethod
     def add_quit_item(menu):
 
         label = _("_Quit…") if config.sections["ui"]["exitdialog"] else _("_Quit")
 
-        menu.setup(
+        menu.add_items(
             ("", None),
             ("#" + label, "app.quit")
         )
@@ -967,7 +967,7 @@ class NicotineFrame(UserInterface):
     def create_view_menu(self):
 
         menu = PopupMenu(self)
-        menu.setup(
+        menu.add_items(
             ("$" + _("Prefer Dark _Mode"), "win.preferdarkmode"),
             ("$" + _("Use _Header Bar"), "win.showheaderbar"),
             ("$" + _("Show _Log History Pane"), "win.showlog"),
@@ -982,7 +982,7 @@ class NicotineFrame(UserInterface):
     @staticmethod
     def add_configure_shares_section(menu):
 
-        menu.setup(
+        menu.add_items(
             ("#" + _("_Rescan Shares"), "app.rescanshares"),
             ("#" + _("_Configure Shares"), "app.configureshares"),
             ("", None)
@@ -991,7 +991,7 @@ class NicotineFrame(UserInterface):
     @staticmethod
     def add_browse_shares_section(menu):
 
-        menu.setup(
+        menu.add_items(
             ("#" + _("_Browse Public Shares"), "app.browsepublicshares"),
             ("#" + _("Bro_wse Buddy Shares"), "app.browsebuddyshares"),
             ("", None)
@@ -1008,7 +1008,7 @@ class NicotineFrame(UserInterface):
     def create_help_menu(self):
 
         menu = PopupMenu(self)
-        menu.setup(
+        menu.add_items(
             ("#" + _("_Keyboard Shortcuts"), "app.keyboardshortcuts"),
             ("#" + _("_Setup Assistant"), "app.fastconfigure"),
             ("#" + _("_Transfer Statistics"), "app.transferstatistics"),
@@ -1028,7 +1028,7 @@ class NicotineFrame(UserInterface):
         menu = PopupMenu(self)
         self.add_connection_section(menu)
 
-        menu.setup(
+        menu.add_items(
             (">" + _("_View"), self.create_view_menu()),
             ("", None)
         )
@@ -1036,7 +1036,7 @@ class NicotineFrame(UserInterface):
         self.add_configure_shares_section(menu)
         self.add_browse_shares_section(menu)
 
-        menu.setup((">" + _("_Help"), self.create_help_menu()))
+        menu.add_items((">" + _("_Help"), self.create_help_menu()))
         self.add_preferences_item(menu)
         self.add_quit_item(menu)
 
@@ -1047,7 +1047,7 @@ class NicotineFrame(UserInterface):
         """ Classic menu bar (header bar disabled) """
 
         menu = PopupMenu(self)
-        menu.setup(
+        menu.add_items(
             (">" + _("_File"), self.create_file_menu()),
             (">" + _("_View"), self.create_view_menu()),
             (">" + _("_Shares"), self.create_shares_menu()),
@@ -1711,7 +1711,7 @@ class NicotineFrame(UserInterface):
     def create_log_context_menu(self):
 
         popup_menu_log_categories = PopupMenu(self)
-        popup_menu_log_categories.setup(
+        popup_menu_log_categories.add_items(
             ("$" + _("Downloads"), "win.logdownloads"),
             ("$" + _("Uploads"), "win.loguploads"),
             ("$" + _("Search"), "win.logsearches"),
@@ -1723,7 +1723,7 @@ class NicotineFrame(UserInterface):
             ("$" + _("[Debug] Miscellaneous"), "win.logmiscellaneous"),
         )
 
-        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).setup(
+        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
             ("#" + _("_Copy"), self.log_textview.on_copy_text),
@@ -1755,8 +1755,7 @@ class NicotineFrame(UserInterface):
         return False
 
     def on_popup_menu_log(self, menu, _textview):
-        actions = menu.get_actions()
-        actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
+        menu.actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *_args):
         self.LogSearchBar.set_search_mode(True)

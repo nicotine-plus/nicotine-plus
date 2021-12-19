@@ -180,7 +180,7 @@ class UserInfo(UserInterface):
         # Popup menus
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userinfo")
-        popup.setup(
+        popup.add_items(
             ("", None),
             ("#" + _("Close All Tabs…"), self.on_close_all_tabs),
             ("#" + _("_Close Tab"), self.on_close)
@@ -193,13 +193,13 @@ class UserInfo(UserInterface):
                     ("#" + _("_Search for Item"), self.on_interest_recommend_search, popup))
 
         popup = PopupMenu(self.frame, self.Likes, self.on_popup_interest_menu)
-        popup.setup(*get_interest_items(popup))
+        popup.add_items(*get_interest_items(popup))
 
         popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
-        popup.setup(*get_interest_items(popup))
+        popup.add_items(*get_interest_items(popup))
 
         popup = PopupMenu(self.frame, self.picture_view, self.on_picture_popup_menu)
-        popup.setup(
+        popup.add_items(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
             ("#" + _("Zoom Out"), self.make_zoom_out),
@@ -416,11 +416,10 @@ class UserInfo(UserInterface):
         item = model.get_value(iterator, 0)
         menu.set_user(item)
 
-        actions = menu.get_actions()
-        actions[_("I _Like This")].set_state(
+        menu.actions[_("I _Like This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
         )
-        actions[_("I _Dislike This")].set_state(
+        menu.actions[_("I _Dislike This")].set_state(
             GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
         )
 
@@ -474,7 +473,7 @@ class UserInfo(UserInterface):
         )
 
     def on_picture_popup_menu(self, menu, _widget):
-        for action in menu.get_actions().values():
+        for action in menu.actions.values():
             action.set_enabled(self.picture is not None and self.picture_data is not None)
 
     def on_scroll(self, _controller, _scroll_x, scroll_y):
