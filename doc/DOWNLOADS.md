@@ -88,6 +88,21 @@ Portable packages are also available. They can be run from your home directory, 
 - [64-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
 - [32-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
 
+### Scoop
+
+Nicotine+ can be installed using [Scoop](https://scoop.sh/). Run the following:
+
+```sh
+scoop bucket add extras
+scoop install nicotine-plus
+```
+
+In order to upgrade Nicotine+ to a newer release, run the following:
+
+```sh
+scoop update nicotine-plus
+```
+
 ### Chocolatey
 
 Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following:
