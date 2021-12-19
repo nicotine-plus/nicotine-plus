@@ -468,6 +468,8 @@ class IconNotebook:
                 ("#" + tab_label.get_text(), self.set_unread_page, page)
             )
 
+        self.popup_menu_unread.update_model()
+
     """ Tab User Status """
 
     def set_user_status(self, page, user, status):

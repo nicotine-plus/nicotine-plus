@@ -720,6 +720,7 @@ class TransferList(UserInterface):
             ("", None),
             ("#" + _("Select User's Transfers"), self.on_select_user_transfers, user)
         )
+        popup.update_model()
         popup.toggle_user_items()
 
     def populate_popup_menu_users(self):
@@ -737,6 +738,7 @@ class TransferList(UserInterface):
                 self.popup_menu_users.setup(
                     (">" + user, popup)
                 )
+                self.popup_menu_users.update_model()
             return
 
         # Single user, add items directly to "User(s)" submenu

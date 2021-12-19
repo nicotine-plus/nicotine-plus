@@ -395,6 +395,7 @@ def press_header(menu, treeview):
         menu.setup(
             ("$" + title, None)
         )
+        menu.update_model()
 
         actions[title].set_state(
             GLib.Variant.new_boolean(column in visible_columns)

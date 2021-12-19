@@ -82,6 +82,7 @@ class Searches(IconNotebook):
             ("O" + self.modes["rooms"], "win.searchmode", "rooms"),
             ("O" + self.modes["user"], "win.searchmode", "user")
         )
+        mode_menu.update_model()
         frame.SearchMode.set_menu_model(mode_menu.model)
 
         if Gtk.get_major_version() == 4:
@@ -974,6 +975,7 @@ class Search(UserInterface):
             ("", None),
             ("#" + _("Select User's Results"), self.on_select_user_results, user)
         )
+        popup.update_model()
         popup.toggle_user_items()
 
     def populate_popup_menu_users(self):
@@ -991,6 +993,7 @@ class Search(UserInterface):
                 self.popup_menu_users.setup(
                     (">" + user, popup)
                 )
+                self.popup_menu_users.update_model()
             return
 
         # Single user, add items directly to "User(s)" submenu

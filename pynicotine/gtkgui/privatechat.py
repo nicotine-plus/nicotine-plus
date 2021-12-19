@@ -412,6 +412,7 @@ class PrivateChat(UserInterface):
 
     def user_name_event(self, pos_x, pos_y, user):
 
+        self.popup_menu_user_chat.update_model()
         self.popup_menu_user_chat.set_user(user)
         self.popup_menu_user_chat.toggle_user_items()
         self.popup_menu_user_chat.popup(pos_x, pos_y, button=1)

@@ -55,6 +55,7 @@ class PopupMenu:
         if connect_events and parent:
             self.connect_events(parent)
 
+        self.pending_items = []
         self.actions = {}
         self.items = {}
         self.submenus = []
@@ -93,7 +94,7 @@ class PopupMenu:
 
         return self.popup_menu
 
-    def create_action(self, action_id, stateful=False):
+    def _create_action(self, action_id, stateful=False):
 
         if not stateful:
             action = Gio.SimpleAction.new(action_id, None)
@@ -103,7 +104,7 @@ class PopupMenu:
         self.frame.MainWindow.add_action(action)
         return action
 
-    def create_menu_item(self, item):
+    def _create_menu_item(self, item):
         """
         Types of menu items:
             > - submenu
@@ -136,7 +137,7 @@ class PopupMenu:
             action_id = "win." + (label + self.popup_id).replace(" ", "").lower().translate(
                 str.maketrans(dict.fromkeys(string.punctuation)))
 
-            action = self.create_action(action_id[4:], (boolean or choice))
+            action = self._create_action(action_id[4:], (boolean or choice))
 
         if choice and len(item) > 2 and isinstance(item[2], str):
             # Choice target name
@@ -166,7 +167,7 @@ class PopupMenu:
 
         return menuitem
 
-    def append_item(self, item):
+    def _add_item_to_section(self, item):
 
         if not self.menu_section or not item[0]:
             # Create new section
@@ -178,8 +179,26 @@ class PopupMenu:
             if not item[0]:
                 return
 
-        menuitem = self.create_menu_item(item)
+        menuitem = self._create_menu_item(item)
         self.menu_section.append_item(menuitem)
+
+    def update_model(self):
+        """ This function is called before a menu model needs to be manipulated
+        (enabling/disabling actions, showing a menu in the GUI) """
+
+        if not self.pending_items:
+            return
+
+        for item in self.pending_items:
+            self._add_item_to_section(item)
+
+        self.pending_items.clear()
+
+        for submenu in self.submenus:
+            submenu.update_model()
+
+    def append_item(self, item):
+        self.pending_items.append(item)
 
     def get_actions(self):
         return self.actions
@@ -364,6 +383,7 @@ class PopupMenu:
         menu = None
         menu_model = self
         callback = self.callback
+        self.update_model()
 
         if isinstance(self.parent, Gtk.TreeView):
             if pos_x and pos_y:

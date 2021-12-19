@@ -54,6 +54,7 @@ class Downloads(TransferList):
             ("", None),
             ("#" + _("Clear All…"), self.on_try_clear_all),
         )
+        self.popup_menu_clear.update_model()
 
     def switch_tab(self):
         self.frame.change_main_page("downloads")

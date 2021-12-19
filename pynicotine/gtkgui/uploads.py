@@ -53,6 +53,7 @@ class Uploads(TransferList):
             ("", None),
             ("#" + _("Clear All…"), self.on_try_clear_all),
         )
+        self.popup_menu_clear.update_model()
 
     def on_try_clear_queued(self, *_args):
 

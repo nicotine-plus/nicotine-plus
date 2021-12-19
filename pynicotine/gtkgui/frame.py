@@ -1040,6 +1040,7 @@ class NicotineFrame(UserInterface):
         self.add_preferences_item(menu)
         self.add_quit_item(menu)
 
+        menu.update_model()
         return menu
 
     def create_menu_bar(self):
@@ -1053,6 +1054,7 @@ class NicotineFrame(UserInterface):
             (">" + _("_Help"), self.create_help_menu())
         )
 
+        menu.update_model()
         return menu
 
     def set_up_menu(self):
