@@ -4,6 +4,12 @@ nicotine (3.2.1-dev1) impish; urgency=medium
 
  -- Mat <mail@mathias.is>  Sun, 19 Dec 2021 05:57:09 +0300
 
+nicotine (3.2.0-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 18 Dec 2021 21:59:03 +0300
+
 nicotine (3.1.1-1) hirsute; urgency=medium
 
   * Latest upstream.
