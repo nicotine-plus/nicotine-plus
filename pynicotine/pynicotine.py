@@ -925,8 +925,8 @@ class NicotineCore:
                 config.sections["server"]["login"],
                 config.sections["server"]["passw"],
 
-                # Soulseek client version; 155, 156, 157
-                # SoulseekQt seems to be using 157
+                # Soulseek client version
+                # NS and SoulseekQt use 157
                 # We use a custom version number for Nicotine+
                 160,
 

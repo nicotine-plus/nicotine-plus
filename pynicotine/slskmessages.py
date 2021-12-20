@@ -365,7 +365,7 @@ class Login(ServerMessage):
             log.add("Error unpacking IP address: %s", error)
 
         # MD5 hexdigest of the password you sent
-        if message[pos:]:
+        if len(message[pos:]) >= 4:
             pos, self.checksum = self.get_object(message, str, pos)
 
 
