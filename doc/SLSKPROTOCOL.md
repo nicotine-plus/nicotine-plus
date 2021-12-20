@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on November 2, 2021
+Last updated on December 20, 2021
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
 
@@ -115,6 +115,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 18   | [Connect To Peer](#server-code-18)                |            |
 | 22   | [Private Messages](#server-code-22)               |            |
 | 23   | [Acknowledge Private Message](#server-code-23)    |            |
+| 25   | [File Search Room](#server-code-25)               | Obsolete   |
 | 26   | [File Search](#server-code-26)                    |            |
 | 28   | [Set Online Status](#server-code-28)              |            |
 | 32   | [Ping](#server-code-32)                           | Deprecated |
@@ -605,6 +606,30 @@ Museekd also resets timestamps to account for server-time bugginess.
 
   - Send
     1.  **uint** <ins>message ID</ins>
+  - Receive
+      - *No Message*
+
+### Server Code 25
+
+**File Search Room**
+
+#### Function Names
+
+Museekd: Unimplemented  
+Nicotine: FileSearchRoom
+
+#### Description
+
+**OBSOLETE, use [RoomSearch](#server-code-120) server message**
+
+We send this to the server when we search for something in a room.
+
+#### Data Order
+
+  - Send
+    1.  **uint** <ins>ticket</ins>
+    1.  **uint** <ins>room id</ins>
+    2.  **string** <ins>search query</ins>
   - Receive
       - *No Message*
 

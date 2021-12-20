@@ -64,6 +64,7 @@ from pynicotine.slskmessages import FileMessage
 from pynicotine.slskmessages import FileOffset
 from pynicotine.slskmessages import FileRequest
 from pynicotine.slskmessages import FileSearch
+from pynicotine.slskmessages import FileSearchRoom
 from pynicotine.slskmessages import FileSearchRequest
 from pynicotine.slskmessages import FileSearchResult
 from pynicotine.slskmessages import FolderContentsRequest
@@ -289,6 +290,7 @@ class SlskProtoThread(threading.Thread):
         ConnectToPeer: 18,
         MessageUser: 22,
         MessageAcked: 23,
+        FileSearchRoom: 25,           # Obsolete
         FileSearch: 26,
         SetStatus: 28,
         ServerPing: 32,               # Deprecated

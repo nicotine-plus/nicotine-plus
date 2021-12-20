@@ -710,6 +710,25 @@ class MessageAcked(ServerMessage):
         return self.pack_object(self.msgid)
 
 
+class FileSearchRoom(ServerMessage):
+    """ Server code: 25 """
+    """ We send this to the server when we search for something in a room. """
+    """ OBSOLETE, use RoomSearch server message """
+
+    def __init__(self, requestid=None, roomid=None, text=None):
+        self.searchid = requestid
+        self.roomid = roomid
+        self.searchterm = text
+
+    def make_network_message(self):
+        msg = bytearray()
+        msg.extend(self.pack_object(self.searchid))
+        msg.extend(self.pack_object(self.roomid))
+        msg.extend(self.pack_object(self.searchterm))
+
+        return msg
+
+
 class FileSearch(ServerMessage):
     """ Server code: 26 """
     """ We send this to the server when we search for something. Alternatively,
