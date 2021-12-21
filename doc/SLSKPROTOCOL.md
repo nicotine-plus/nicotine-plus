@@ -2627,12 +2627,17 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 | Code | Message                                    | Status     |
 | ---- | ------------------------------------------ | ---------- |
+| 1    | Private Message                            | Deprecated, contents unknown |
 | 4    | [Shares Request](#peer-code-4)             |            |
 | 5    | [Shares Reply](#peer-code-5)               |            |
 | 8    | [Search Request](#peer-code-8)             | Obsolete   |
 | 9    | [Search Reply](#peer-code-9)               |            |
+| 10   | Room Invitation                            | Obsolete, contents unknown |
+| 14   | Cancelled Queued Transfer                  | Obsolete, contents unknown |
 | 15   | [User Info Request](#peer-code-15)         |            |
 | 16   | [User Info Reply](#peer-code-16)           |            |
+| 33   | Send Connect Token                         | Obsolete, contents unknown |
+| 34   | Move Download To Top                       | Obsolete, contents unknown |
 | 36   | [Folder Contents Request](#peer-code-36)   |            |
 | 37   | [Folder Contents Reply](#peer-code-37)     |            |
 | 40   | [Transfer Request](#peer-code-40)          |            |
@@ -2643,6 +2648,9 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 | 43   | [Queue Upload](#peer-code-43)              |            |
 | 44   | [Place In Queue Reply](#peer-code-44)      |            |
 | 46   | [Upload Failed](#peer-code-46)             |            |
+| 47   | Exact File Search Request                  | Obsolete, contents unknown |
+| 48   | Queued Downloads                           | Obsolete, contents unknown |
+| 49   | Indirect File Search Request               | Obsolete, contents unknown |
 | 50   | [Upload Denied](#peer-code-50)             |            |
 | 51   | [Place In Queue Request](#peer-code-51)    |            |
 | 52   | [Upload Queue Notification](#peer-code-52) | Deprecated |
