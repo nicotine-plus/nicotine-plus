@@ -1710,7 +1710,7 @@ class GivePrivileges(ServerMessage):
 
 class NotifyPrivileges(ServerMessage):
     """ Server code: 124 """
-    """ DEPRECATED, no longer used """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     def __init__(self, token=None, user=None):
         self.token = token
@@ -1770,6 +1770,7 @@ class ChildDepth(ServerMessage):
     """ Server code: 129 """
     """ We tell the server the maximum number of generation of children we
     have on the distributed network. """
+    """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
     def __init__(self, value=None):
         self.value = value

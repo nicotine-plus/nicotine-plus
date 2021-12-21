@@ -1928,7 +1928,7 @@ Nicotine: NotifyPrivileges
 
 #### Description
 
-**DEPRECATED, no longer used**
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 #### Data Order
 
@@ -2004,6 +2004,8 @@ Nicotine: BranchRoot
 **Child Depth**
 
 #### Description
+
+**DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We tell the server the maximum number of generation of children we have on the distributed network.
 
@@ -2625,35 +2627,35 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 #### Message Index
 
-| Code | Message                                    | Status     |
-| ---- | ------------------------------------------ | ---------- |
-| 1    | Private Message                            | Deprecated, contents unknown |
-| 4    | [Shares Request](#peer-code-4)             |            |
-| 5    | [Shares Reply](#peer-code-5)               |            |
-| 8    | [Search Request](#peer-code-8)             | Obsolete   |
-| 9    | [Search Reply](#peer-code-9)               |            |
+| Code | Message                                    | Status                     |
+| ---- | ------------------------------------------ | -------------------------- |
+| 1    | Private Message                            | Obsolete, contents unknown |
+| 4    | [Shares Request](#peer-code-4)             |                            |
+| 5    | [Shares Reply](#peer-code-5)               |                            |
+| 8    | [Search Request](#peer-code-8)             | Obsolete                   |
+| 9    | [Search Reply](#peer-code-9)               |                            |
 | 10   | Room Invitation                            | Obsolete, contents unknown |
 | 14   | Cancelled Queued Transfer                  | Obsolete, contents unknown |
-| 15   | [User Info Request](#peer-code-15)         |            |
-| 16   | [User Info Reply](#peer-code-16)           |            |
+| 15   | [User Info Request](#peer-code-15)         |                            |
+| 16   | [User Info Reply](#peer-code-16)           |                            |
 | 33   | Send Connect Token                         | Obsolete, contents unknown |
 | 34   | Move Download To Top                       | Obsolete, contents unknown |
-| 36   | [Folder Contents Request](#peer-code-36)   |            |
-| 37   | [Folder Contents Reply](#peer-code-37)     |            |
-| 40   | [Transfer Request](#peer-code-40)          |            |
-| 41   | [Upload Reply](#peer-code-41-a)            |            |
-| 41   | [Download Reply](#peer-code-41-b)          | Deprecated |
-| 41   | [Transfer Reply](#peer-code-41-c)          |            |
-| 42   | [Upload Placehold](#peer-code-42)          | Obsolete   |
-| 43   | [Queue Upload](#peer-code-43)              |            |
-| 44   | [Place In Queue Reply](#peer-code-44)      |            |
-| 46   | [Upload Failed](#peer-code-46)             |            |
+| 36   | [Folder Contents Request](#peer-code-36)   |                            |
+| 37   | [Folder Contents Reply](#peer-code-37)     |                            |
+| 40   | [Transfer Request](#peer-code-40)          |                            |
+| 41   | [Upload Reply](#peer-code-41-a)            |                            |
+| 41   | [Download Reply](#peer-code-41-b)          | Deprecated                 |
+| 41   | [Transfer Reply](#peer-code-41-c)          |                            |
+| 42   | [Upload Placehold](#peer-code-42)          | Obsolete                   |
+| 43   | [Queue Upload](#peer-code-43)              |                            |
+| 44   | [Place In Queue Reply](#peer-code-44)      |                            |
+| 46   | [Upload Failed](#peer-code-46)             |                            |
 | 47   | Exact File Search Request                  | Obsolete, contents unknown |
 | 48   | Queued Downloads                           | Obsolete, contents unknown |
 | 49   | Indirect File Search Request               | Obsolete, contents unknown |
-| 50   | [Upload Denied](#peer-code-50)             |            |
-| 51   | [Place In Queue Request](#peer-code-51)    |            |
-| 52   | [Upload Queue Notification](#peer-code-52) | Deprecated |
+| 50   | [Upload Denied](#peer-code-50)             |                            |
+| 51   | [Place In Queue Request](#peer-code-51)    |                            |
+| 52   | [Upload Queue Notification](#peer-code-52) | Deprecated                 |
 
 ### Peer Code 4
 

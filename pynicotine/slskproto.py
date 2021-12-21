@@ -348,7 +348,7 @@ class SlskProtoThread(threading.Thread):
         AckNotifyPrivileges: 125,     # Deprecated
         BranchLevel: 126,
         BranchRoot: 127,
-        ChildDepth: 129,
+        ChildDepth: 129,              # Deprecated
         ResetDistributed: 130,
         PrivateRoomUsers: 133,
         PrivateRoomAddUser: 134,
