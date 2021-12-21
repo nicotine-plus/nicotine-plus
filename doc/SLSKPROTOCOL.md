@@ -173,7 +173,7 @@ and callbacks for the messages are set in pynicotine.py.
 | 125  | [Acknowledge Notify Privileges](#server-code-125) | Deprecated |
 | 126  | [Branch Level](#server-code-126)                  |            |
 | 127  | [Branch Root](#server-code-127)                   |            |
-| 129  | [Child Depth](#server-code-129)                   |            |
+| 129  | [Child Depth](#server-code-129)                   | Deprecated |
 | 130  | [Reset Distributed](#server-code-130)             |            |
 | 133  | [Private Room Users](#server-code-133)            |            |
 | 134  | [Private Room Add User](#server-code-134)         |            |
