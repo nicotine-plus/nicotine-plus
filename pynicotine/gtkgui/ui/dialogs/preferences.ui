@@ -30,6 +30,11 @@
         <property name="hexpand">1</property>
         <property name="hscrollbar-policy">never</property>
         <property name="width-request">380</property>
+        <child>
+          <object class="GtkViewport" id="viewport">
+            <property name="visible">1</property>
+          </object>
+        </child>
       </object>
     </child>
   </object>

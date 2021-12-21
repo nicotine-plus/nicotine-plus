@@ -2810,6 +2810,13 @@ class Preferences(UserInterface):
 
             self.preferences_list.insert(box, -1)
 
+        # Scroll to focused widgets
+        if Gtk.get_major_version() == 4:
+            self.viewport.set_scroll_to_focus(True)
+        else:
+            self.viewport.set_focus_vadjustment(self.container.get_vadjustment())
+
+        self.set_active_page("Network")
         self.update_visuals()
 
     def update_visuals(self, scope=None):
@@ -3187,15 +3194,13 @@ class Preferences(UserInterface):
     def on_switch_page(self, _listbox, row):
 
         page_id, _label, _icon_name = self.page_ids[row.get_index()]
-        old_viewport = self.container.get_child()
+        old_page = self.viewport.get_child()
 
-        if old_viewport:
+        if old_page:
             if Gtk.get_major_version() == 4:
-                self.container.set_child(None)
+                self.viewport.set_child(None)
             else:
-                old_page = old_viewport.get_child()
-                old_viewport.remove(old_page)
-                self.container.remove(old_viewport)
+                self.viewport.remove(old_page)
 
         if page_id not in self.pages:
             self.pages[page_id] = page = getattr(sys.modules[__name__], page_id + "Frame")(self)
@@ -3223,12 +3228,10 @@ class Preferences(UserInterface):
 
             self.update_visuals(page)
 
-        self.container.set_property("child", self.pages[page_id].Main)
+        self.viewport.set_property("child", self.pages[page_id].Main)
 
-        if Gtk.get_major_version() == 4:
-            # Scroll to the focused widget
-            viewport = self.container.get_child()
-            viewport.set_scroll_to_focus(True)
+        # Scroll to the top
+        self.container.get_vadjustment().set_value(0)
 
     def on_delete(self, *_args):
         self.hide()
