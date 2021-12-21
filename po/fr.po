@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-18 22:19+0200\n"
-"PO-Revision-Date: 2021-12-08 17:08+0000\n"
-"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2021-12-21 02:52+0000\n"
+"Last-Translator: Mohamed El Morabity <pikachu.2014@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3451,7 +3451,7 @@ msgid ""
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 "Vous n'avez pas de privilèges. Les privilèges ne sont pas nécessaires, mais "
-"permettent à vos téléchargements d'être mis en file d'attente avant les "
+"permettent à vos téléchargements d'être mis en file d'attente avant ceux des "
 "utilisateurs non privilégiés."
 
 #: pynicotine/pynicotine.py:1517
@@ -4355,8 +4355,8 @@ msgid ""
 "Files you download from other users are queued here, and can be paused and "
 "resumed on demand"
 msgstr ""
-"Les fichiers que vous téléchargez à d'autres utilisateurs sont mis en file "
-"d'attente ici, et peuvent être mis en pause et repris à la demande"
+"Les fichiers que vous téléchargez auprès d'autres utilisateurs sont mis en "
+"file d'attente ici, et peuvent être mis en pause et repris à la demande"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1066
 msgid ""
@@ -5220,7 +5220,7 @@ msgid ""
 "for NFS)"
 msgstr ""
 "Empêcher l'accès en écriture par d'autres programmes pour les fichiers en "
-"cours de téléchargement (désactivé pour NFS)"
+"cours de téléchargement (désactiver pour NFS)"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:72
 msgid "Allow these users to send you files:"
