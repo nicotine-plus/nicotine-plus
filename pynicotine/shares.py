@@ -609,13 +609,22 @@ class Shares:
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
-        log.add_transfer("Checking if file %(virtual_name)s with real path %(path)s is shared", {
+        log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s", {
             "virtual_name": virtualfilename,
             "path": realfilename
         })
 
-        if not os.access(realfilename, os.R_OK):
-            log.add_transfer("Can't access file %(virtual_name)s with real path %(path)s, not sharing", {
+        try:
+            if not os.access(realfilename, os.R_OK):
+                log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                    "virtual_name": virtualfilename,
+                    "path": realfilename
+                })
+                return False
+
+        except Exception:
+            log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
                 "virtual_name": virtualfilename,
                 "path": realfilename
             })
@@ -643,7 +652,7 @@ class Shares:
                 if file == fileinfo[0]:
                     return True
 
-        log.add_transfer("Failed to share file %(virtual_name)s with real path %(path)s, since it wasn't found", {
+        log.add_transfer("Failed to share file, since it wasn't found: %(virtual_name)s with real path %(path)s", {
             "virtual_name": virtualfilename,
             "path": realfilename
         })
