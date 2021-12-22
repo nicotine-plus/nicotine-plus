@@ -612,15 +612,6 @@ class Transfers:
                     if self.config.sections["transfers"]["reverseorder"]:
                         files.sort(key=lambda x: x[1], reverse=True)
 
-                    for file in files:
-                        virtualpath = directory.rstrip('\\') + '\\' + file[1]
-                        size = file[2]
-                        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
-
-                        self.get_file(
-                            username, virtualpath, destination,
-                            size=size, bitrate=h_bitrate, length=h_length)
-
                     log.add_transfer(
                         "Attempting to download files in folder %(folder)s for user %(user)s. "
                         + "Destination path: %(destination)s", {
@@ -629,6 +620,15 @@ class Transfers:
                             "destination": destination
                         }
                     )
+
+                    for file in files:
+                        virtualpath = directory.rstrip('\\') + '\\' + file[1]
+                        size = file[2]
+                        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
+
+                        self.get_file(
+                            username, virtualpath, destination,
+                            size=size, bitrate=h_bitrate, length=h_length)
 
     def queue_upload(self, msg):
         """ Peer remotely queued a download (upload here). This is the modern replacement to
@@ -737,47 +737,47 @@ class Transfers:
         filename = msg.file
         size = msg.filesize
 
+        cancel_reason = "Cancelled"
+        accepted = True
+
+        for i in self.downloads:
+            if i.filename == filename and user == i.user:
+                status = i.status
+
+                if status == "Finished":
+                    # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
+                    cancel_reason = "Complete"
+                    accepted = False
+                    break
+
+                if status in ("Paused", "Filtered"):
+                    accepted = False
+                    break
+
+                # Remote peer is signaling a transfer is ready, attempting to download it
+
+                """ If the file is larger than 2GB, the SoulseekQt client seems to
+                send a malformed file size (0 bytes) in the TransferRequest response.
+                In that case, we rely on the cached, correct file size we received when
+                we initially added the download. """
+
+                if msg.filesize > 0:
+                    i.size = size
+
+                i.req = msg.req
+                i.status = "Getting status"
+                self.transfer_request_times[i] = time.time()
+
+                if self.downloadsview:
+                    self.downloadsview.update(i)
+
+                response = slskmessages.TransferResponse(None, 1, req=i.req)
+                return response
+
+        # Check if download exists in our default download folder
         if self.get_existing_download_path(user, filename, "", size):
-            # SoulseekQt sends "Complete" as the reason for rejecting the download if it exists
             cancel_reason = "Complete"
             accepted = False
-
-        else:
-            cancel_reason = "Cancelled"
-            accepted = True
-
-            for i in self.downloads:
-                if i.filename == filename and user == i.user:
-                    status = i.status
-
-                    if status == "Finished":
-                        cancel_reason = "Complete"
-                        accepted = False
-                        break
-
-                    if status in ("Paused", "Filtered"):
-                        accepted = False
-                        break
-
-                    # Remote peer is signaling a transfer is ready, attempting to download it
-
-                    """ If the file is larger than 2GB, the SoulseekQt client seems to
-                    send a malformed file size (0 bytes) in the TransferRequest response.
-                    In that case, we rely on the cached, correct file size we received when
-                    we initially added the download. """
-
-                    if msg.filesize > 0:
-                        i.size = size
-
-                    i.req = msg.req
-                    i.status = "Getting status"
-                    self.transfer_request_times[i] = time.time()
-
-                    if self.downloadsview:
-                        self.downloadsview.update(i)
-
-                    response = slskmessages.TransferResponse(None, 1, req=i.req)
-                    return response
 
         # If this file is not in your download queue, then it must be
         # a remotely initiated download and someone is manually uploading to you
@@ -1563,12 +1563,13 @@ class Transfers:
                     # Duplicate active/cancelled download found, stop here
                     return
 
-            transfer = Transfer(
-                user=user, filename=filename, path=path,
-                status="Queued", size=size, bitrate=bitrate,
-                length=length
-            )
-            self.downloads.appendleft(transfer)
+            else:
+                transfer = Transfer(
+                    user=user, filename=filename, path=path,
+                    status="Queued", size=size, bitrate=bitrate,
+                    length=length
+                )
+                self.downloads.appendleft(transfer)
         else:
             transfer.filename = filename
             transfer.status = "Queued"
