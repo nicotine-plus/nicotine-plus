@@ -614,6 +614,39 @@ class Shares:
             "path": realfilename
         })
 
+        folder, _sep, file = virtualfilename.rpartition('\\')
+        shared_files = self.share_dbs.get("files")
+        bshared_files = self.share_dbs.get("buddyfiles")
+        file_is_shared = False
+
+        if bshared_files is not None:
+            for row in self.config.sections["server"]["userlist"]:
+                if row[0] != user:
+                    continue
+
+                # Check if buddy is trusted
+                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
+                    break
+
+                for fileinfo in bshared_files.get(str(folder), ""):
+                    if file == fileinfo[0]:
+                        file_is_shared = True
+                        break
+
+        if not file_is_shared and shared_files is not None:
+            for fileinfo in shared_files.get(str(folder), ""):
+                if file == fileinfo[0]:
+                    file_is_shared = True
+                    break
+
+        if not file_is_shared:
+            log.add_transfer(("File is not present in the database of shared files, not sharing: "
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
+            return False
+
         try:
             if not os.access(realfilename, os.R_OK):
                 log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
@@ -630,33 +663,7 @@ class Shares:
             })
             return False
 
-        folder, _sep, file = virtualfilename.rpartition('\\')
-        shared = self.share_dbs.get("files")
-        bshared = self.share_dbs.get("buddyfiles")
-
-        if bshared is not None:
-            for row in self.config.sections["server"]["userlist"]:
-                if row[0] != user:
-                    continue
-
-                # Check if buddy is trusted
-                if self.config.sections["transfers"]["buddysharestrustedonly"] and not row[4]:
-                    break
-
-                for fileinfo in bshared.get(str(folder), ""):
-                    if file == fileinfo[0]:
-                        return True
-
-        if shared is not None:
-            for fileinfo in shared.get(str(folder), ""):
-                if file == fileinfo[0]:
-                    return True
-
-        log.add_transfer("Failed to share file, since it wasn't found: %(virtual_name)s with real path %(path)s", {
-            "virtual_name": virtualfilename,
-            "path": realfilename
-        })
-        return False
+        return True
 
     def get_compressed_shares_message(self, share_type):
         """ Returns the compressed shares message. Creates a new one if necessary, e.g.
