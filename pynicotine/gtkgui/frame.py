@@ -111,6 +111,9 @@ class NicotineFrame(UserInterface):
             self.header_menu.set_icon_name("open-menu-symbolic")
 
             self.MainPaned.set_resize_start_child(True)
+            self.MainPaned.set_resize_end_child(False)
+            self.ChatroomsPane.set_resize_end_child(False)
+
             self.NotebooksPane.set_resize_start_child(True)
             self.NotebooksPane.set_shrink_start_child(False)
             self.NotebooksPane.set_resize_end_child(False)
@@ -119,6 +122,9 @@ class NicotineFrame(UserInterface):
             self.header_menu.set_image(Gtk.Image.new_from_icon_name("open-menu-symbolic", Gtk.IconSize.BUTTON))
 
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
+            self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
+            self.ChatroomsPane.child_set_property(self.userlist_pane_chatrooms, "resize", False)
+
             self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
             self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
             self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
@@ -541,25 +547,21 @@ class NicotineFrame(UserInterface):
 
         page_id = self.userlist.page_id
 
-        if self.userlist.Main.get_parent() == self.MainPaned:
+        if self.userlist.Main.get_parent() == self.userlist_pane:
 
             if mode == "always":
                 return
 
-            if Gtk.get_major_version() == 4:
-                self.MainPaned.set_property("end-child", None)
-            else:
-                self.MainPaned.remove(self.userlist.Main)
+            self.userlist_pane.remove(self.userlist.Main)
+            self.userlist_pane.hide()
 
-        elif self.userlist.Main.get_parent() == self.ChatroomsPane:
+        elif self.userlist.Main.get_parent() == self.userlist_pane_chatrooms:
 
             if mode == "chatrooms":
                 return
 
-            if Gtk.get_major_version() == 4:
-                self.ChatroomsPane.set_property("end-child", None)
-            else:
-                self.ChatroomsPane.remove(self.userlist.Main)
+            self.userlist_pane_chatrooms.remove(self.userlist.Main)
+            self.userlist_pane_chatrooms.hide()
 
         elif self.userlist.Main.get_parent() == self.userlist_content:
 
@@ -571,33 +573,23 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            if self.userlist.Main.get_parent() != self.MainPaned:
-                if Gtk.get_major_version() == 4:
-                    self.MainPaned.set_end_child(self.userlist.Main)
-                    self.MainPaned.set_resize_end_child(False)
-                else:
-                    self.MainPaned.pack2(self.userlist.Main, False, True)
+            if self.userlist.Main.get_parent() != self.userlist_pane:
+                self.userlist_pane.add(self.userlist.Main)
 
             self.userlist.BuddiesToolbar.show()
-            self.userlist.Main.show()
+            self.userlist_pane.show()
             return
 
         if mode == "chatrooms":
 
             if self.userlist.Main.get_parent() != self.ChatroomsPane:
-                if Gtk.get_major_version() == 4:
-                    self.ChatroomsPane.set_end_child(self.userlist.Main)
-                    self.ChatroomsPane.set_resize_end_child(False)
-                else:
-                    self.ChatroomsPane.pack2(self.userlist.Main, False, True)
+                self.userlist_pane_chatrooms.add(self.userlist.Main)
 
             self.userlist.BuddiesToolbar.show()
-            self.userlist.Main.show()
+            self.userlist_pane_chatrooms.show()
             return
 
         self.userlist.BuddiesToolbar.hide()
-        self.userlist.Main.hide()
-
         self.userlist_content.add(self.userlist.Main)
 
         if force_show:

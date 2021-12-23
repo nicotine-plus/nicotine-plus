@@ -1471,89 +1471,89 @@
                       <object class="GtkBox" id="chatroomsvbox">
                         <property name="visible">0</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkPaned" id="ChatroomsPane">
                             <property name="visible">0</property>
-                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkBox" id="chatrooms_toolbar">
-                                <property name="visible">0</property>
-                                <child>
-                                  <object class="GtkBox" id="chatrooms_toolbar_contents">
-                                    <property name="visible">1</property>
-                                    <property name="hexpand">1</property>
-                                    <property name="margin-start">6</property>
-                                    <property name="margin-end">6</property>
-                                    <property name="margin-top">6</property>
-                                    <property name="margin-bottom">6</property>
-                                    <property name="spacing">6</property>
-                                  </object>
-                                </child>
-                                <style>
-                                  <class name="border-bottom"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox" id="chatrooms_status_page">
+                              <object class="GtkBox" id="chatrooms_container">
                                 <property name="visible">1</property>
+                                <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">1</property>
-                                    <property name="halign">center</property>
-                                    <property name="valign">center</property>
-                                    <property name="margin-start">24</property>
-                                    <property name="margin-end">24</property>
-                                    <property name="margin-top">30</property>
-                                    <property name="margin-bottom">30</property>
-                                    <property name="spacing">30</property>
-                                    <property name="orientation">vertical</property>
-                                    <property name="hexpand">1</property>
-                                    <property name="vexpand">1</property>
+                                  <object class="GtkBox" id="chatrooms_toolbar">
+                                    <property name="visible">0</property>
                                     <child>
-                                      <object class="GtkImage">
+                                      <object class="GtkBox" id="chatrooms_toolbar_contents">
                                         <property name="visible">1</property>
-                                        <property name="icon-name">user-available-symbolic</property>
-                                        <property name="pixel-size">128</property>
-                                        <style>
-                                          <class name="dim-label"/>
-                                        </style>
+                                        <property name="hexpand">1</property>
+                                        <property name="margin-start">6</property>
+                                        <property name="margin-end">6</property>
+                                        <property name="margin-top">6</property>
+                                        <property name="margin-bottom">6</property>
+                                        <property name="spacing">6</property>
                                       </object>
                                     </child>
+                                    <style>
+                                      <class name="border-bottom"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkBox" id="chatrooms_status_page">
+                                    <property name="visible">1</property>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">1</property>
-                                        <property name="spacing">12</property>
+                                        <property name="halign">center</property>
+                                        <property name="valign">center</property>
+                                        <property name="margin-start">24</property>
+                                        <property name="margin-end">24</property>
+                                        <property name="margin-top">30</property>
+                                        <property name="margin-bottom">30</property>
+                                        <property name="spacing">30</property>
                                         <property name="orientation">vertical</property>
+                                        <property name="hexpand">1</property>
+                                        <property name="vexpand">1</property>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkImage">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">Chat Rooms</property>
-                                            <property name="justify">center</property>
-                                            <property name="wrap">1</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <property name="icon-name">user-available-symbolic</property>
+                                            <property name="pixel-size">128</property>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel">
+                                          <object class="GtkBox">
                                             <property name="visible">1</property>
-                                            <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
-                                            <property name="max-width-chars">55</property>
-                                            <property name="justify">center</property>
-                                            <property name="wrap">1</property>
+                                            <property name="spacing">12</property>
+                                            <property name="orientation">vertical</property>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">1</property>
+                                                <property name="label" translatable="yes">Chat Rooms</property>
+                                                <property name="justify">center</property>
+                                                <property name="wrap">1</property>
+                                                <attributes>
+                                                  <attribute name="weight" value="ultrabold"/>
+                                                  <attribute name="size" value="20480"/>
+                                                </attributes>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">1</property>
+                                                <property name="label" translatable="yes">Join an existing chat room, or create a new room to chat with other users on the Soulseek network</property>
+                                                <property name="max-width-chars">55</property>
+                                                <property name="justify">center</property>
+                                                <property name="wrap">1</property>
+                                              </object>
+                                            </child>
                                           </object>
                                         </child>
                                       </object>
                                     </child>
                                   </object>
                                 </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkPaned" id="ChatroomsPane">
-                                <property name="visible">1</property>
                                 <child>
                                   <object class="GtkNotebook" id="chatrooms_notebook">
                                     <property name="visible">1</property>
@@ -1561,6 +1561,11 @@
                                     <property name="scrollable">1</property>
                                   </object>
                                 </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox" id="userlist_pane_chatrooms">
+                                <property name="visible">0</property>
                               </object>
                             </child>
                           </object>
@@ -1621,6 +1626,11 @@
                     </child>
                   </object>
                 </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox" id="userlist_pane">
+                <property name="visible">0</property>
               </object>
             </child>
           </object>

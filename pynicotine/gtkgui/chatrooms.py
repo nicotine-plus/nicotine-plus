@@ -78,7 +78,7 @@ class ChatRooms(IconNotebook):
         if Gtk.get_major_version() == 4:
             self.frame.ChatroomsPane.set_resize_start_child(True)
         else:
-            self.frame.ChatroomsPane.child_set_property(self.notebook, "resize", True)
+            self.frame.ChatroomsPane.child_set_property(self.frame.chatrooms_container, "resize", True)
 
         self.update_visuals()
 
