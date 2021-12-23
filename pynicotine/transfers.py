@@ -604,31 +604,35 @@ class Transfers:
 
         for i in file_list:
             for directory in file_list[i]:
+                if os.path.commonprefix([i, directory]) != directory:
+                    continue
 
-                if os.path.commonprefix([i, directory]) == directory:
-                    files = file_list[i][directory][:]
-                    destination = self.get_folder_destination(username, directory)
+                files = file_list[i][directory][:]
+                destination = self.get_folder_destination(username, directory)
 
-                    if self.config.sections["transfers"]["reverseorder"]:
-                        files.sort(key=lambda x: x[1], reverse=True)
+                if self.config.sections["transfers"]["reverseorder"]:
+                    files.sort(key=lambda x: x[1], reverse=True)
 
-                    log.add_transfer(
-                        "Attempting to download files in folder %(folder)s for user %(user)s. "
-                        + "Destination path: %(destination)s", {
-                            "folder": directory,
-                            "user": username,
-                            "destination": destination
-                        }
-                    )
+                log.add_transfer(
+                    "Attempting to download files in folder %(folder)s for user %(user)s. "
+                    + "Destination path: %(destination)s", {
+                        "folder": directory,
+                        "user": username,
+                        "destination": destination
+                    }
+                )
 
-                    for file in files:
-                        virtualpath = directory.rstrip('\\') + '\\' + file[1]
-                        size = file[2]
-                        h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
+                for file in files:
+                    virtualpath = directory.rstrip('\\') + '\\' + file[1]
+                    size = file[2]
+                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
 
-                        self.get_file(
-                            username, virtualpath, destination,
-                            size=size, bitrate=h_bitrate, length=h_length)
+                    self.get_file(
+                        username, virtualpath, destination,
+                        size=size, bitrate=h_bitrate, length=h_length)
+
+                if directory in self.requested_folders.get(username, []):
+                    del self.requested_folders[username][directory]
 
     def queue_upload(self, msg):
         """ Peer remotely queued a download (upload here). This is the modern replacement to
