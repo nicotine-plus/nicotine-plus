@@ -573,18 +573,14 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            if self.userlist.Main.get_parent() != self.userlist_pane:
-                self.userlist_pane.add(self.userlist.Main)
-
+            self.userlist_pane.add(self.userlist.Main)
             self.userlist.BuddiesToolbar.show()
             self.userlist_pane.show()
             return
 
         if mode == "chatrooms":
 
-            if self.userlist.Main.get_parent() != self.ChatroomsPane:
-                self.userlist_pane_chatrooms.add(self.userlist.Main)
-
+            self.userlist_pane_chatrooms.add(self.userlist.Main)
             self.userlist.BuddiesToolbar.show()
             self.userlist_pane_chatrooms.show()
             return
