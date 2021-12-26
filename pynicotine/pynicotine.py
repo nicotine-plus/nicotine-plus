@@ -360,8 +360,6 @@ class NicotineCore:
         if not self.protothread.server_disconnected:
             return True
 
-        self.protothread.server_connect()
-
         # Clear any potential messages queued up while offline
         self.queue.clear()
         self.peerconns.clear()
@@ -392,6 +390,8 @@ class NicotineCore:
                 )
             log.add_important_error(message)
             return False
+
+        self.protothread.server_connect()
 
         server = config.sections["server"]["server"]
         log.add(_("Connecting to %(host)s:%(port)s"), {'host': server[0], 'port': server[1]})

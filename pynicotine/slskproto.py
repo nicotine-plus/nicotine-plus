@@ -564,7 +564,8 @@ class SlskProtoThread(threading.Thread):
                 log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
                 break
 
-            except socket.error:
+            except socket.error as error:
+                log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
     def server_connect(self):
