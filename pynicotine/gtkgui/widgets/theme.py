@@ -21,6 +21,7 @@ import sys
 
 from gi.repository import Gdk
 from gi.repository import Gio
+from gi.repository import GLib
 from gi.repository import Gtk
 from gi.repository import Pango
 
@@ -32,10 +33,62 @@ from pynicotine.logfacility import log
 """ Global Style """
 
 
+try:
+    SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
+                                                     Gio.DBusProxyFlags.NONE,
+                                                     None,
+                                                     "org.freedesktop.portal.Desktop",
+                                                     "/org/freedesktop/portal/desktop",
+                                                     "org.freedesktop.portal.Settings",
+                                                     None)
+except Exception:
+    SETTINGS_PORTAL = None
+
 GTK_SETTINGS = Gtk.Settings.get_default()
 
 
-def set_dark_mode(enabled):
+def read_color_scheme():
+
+    try:
+        value = SETTINGS_PORTAL.call_sync("Read",
+                                          GLib.Variant(
+                                              "(ss)",
+                                              ("org.freedesktop.appearance",
+                                               "color-scheme")),
+                                          Gio.DBusCallFlags.NONE,
+                                          -1,
+                                          None)
+
+        return value.get_child_value(0).get_variant().get_variant().get_uint32()
+
+    except Exception:
+        return None
+
+
+def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
+
+    if signal_name != "SettingChanged":
+        return
+
+    namespace = parameters.get_child_value(0).get_string()
+    name = parameters.get_child_value(1).get_string()
+
+    if namespace != "org.freedesktop.appearance" or name != "color-scheme":
+        return
+
+    set_dark_mode()
+
+
+def set_dark_mode(force=False):
+
+    enabled = force
+
+    if not force:
+        color_scheme = read_color_scheme()
+
+        if color_scheme is not None:
+            enabled = bool(color_scheme)
+
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
 
@@ -54,11 +107,12 @@ def set_use_header_bar(enabled):
 
 def set_visual_settings():
 
-    dark_mode = config.sections["ui"]["dark_mode"]
-    global_font = config.sections["ui"]["globalfont"]
+    if SETTINGS_PORTAL is not None:
+        # GNOME 42+ system-wide dark mode
+        SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
-    if dark_mode:
-        set_dark_mode(dark_mode)
+    global_font = config.sections["ui"]["globalfont"]
+    set_dark_mode(config.sections["ui"]["dark_mode"])
 
     if global_font and global_font != "Normal":
         set_global_font(global_font)
