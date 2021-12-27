@@ -1448,6 +1448,7 @@ class Transfers:
 
         elif transfer_type == "upload":
             curtime = time.time()
+
             for j in self.uploads:
                 if j.user == i.user:
                     j.timequeued = curtime
@@ -2264,17 +2265,24 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        if transfer.status == "Finished":
+        if transfer.req is not None or transfer.conn is not None or transfer.status == "Finished":
+            # Don't retry active or finished uploads
             return
 
         user = transfer.user
-        filename = transfer.filename
 
         for i in self.uploads:
-            if i.user != user or i.filename != filename:
+            if i.user != user:
                 continue
 
             if i.req is not None or i.conn is not None or i.status == "Getting status":
+                # User already has an active upload, queue the retry attempt
+                if transfer.status != "Queued":
+                    transfer.status = "Queued"
+                    transfer.timequeued = time.time()
+
+                    if self.uploadsview:
+                        self.uploadsview.update(transfer)
                 return
 
         if self.user_logged_out(user):
