@@ -1992,9 +1992,11 @@ class Transfers:
         i.timeleft = ""
         i.conn = None
 
+        curtime = time.time()
+
         for j in self.uploads:
             if j.user == i.user:
-                j.timequeued = i.lasttime
+                j.timequeued = curtime
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -2171,9 +2173,8 @@ class Transfers:
             mintimequeued = time.time() + 1
 
             for i in queued_uploads:
-                if i.timequeued is not None and i.timequeued < mintimequeued:
+                if i.timequeued < mintimequeued:
                     upload_candidate = i
-                    # Break loop
                     mintimequeued = i.timequeued
 
         return upload_candidate
