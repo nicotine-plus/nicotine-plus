@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-18 22:19+0200\n"
-"PO-Revision-Date: 2021-12-14 21:50+0000\n"
+"PO-Revision-Date: 2021-12-27 14:53+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -2708,7 +2708,7 @@ msgstr "Kopírovat vše"
 #: pynicotine/gtkgui/frame.py:1730
 #, fuzzy
 msgid "_Open Log Folder"
-msgstr "Složka _Download"
+msgstr "_Otevřít složku protokolu"
 
 #: pynicotine/gtkgui/frame.py:1731
 #, fuzzy
