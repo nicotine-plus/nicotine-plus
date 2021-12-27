@@ -645,13 +645,13 @@ class SlskProtoThread(threading.Thread):
         """ Calculate number of loops per second. This value is used to split the
         per-second transfer speed limit evenly for each loop. """
 
-        curtime = time.time()
+        current_time = time.time()
 
-        if curtime - self.last_cycle_time >= 1:
+        if current_time - self.last_cycle_time >= 1:
             self.loops_per_second = (self.last_cycle_loop_count + self.current_cycle_loop_count) // 2
 
             self.last_cycle_loop_count = self.current_cycle_loop_count
-            self.last_cycle_time = curtime
+            self.last_cycle_time = current_time
             self.current_cycle_loop_count = 0
         else:
             self.current_cycle_loop_count = self.current_cycle_loop_count + 1
@@ -1125,15 +1125,15 @@ class SlskProtoThread(threading.Thread):
                     pass
 
             addedbyteslen = len(addedbytes)
-            curtime = time.time()
+            current_time = time.time()
             finished = ((leftbytes - addedbyteslen) == 0)
 
-            if finished or (curtime - conn.lastcallback) > 1:
+            if finished or (current_time - conn.lastcallback) > 1:
                 # We save resources by not sending data back to the NicotineCore
                 # every time a part of a file is downloaded
 
                 self._callback_msgs.append(DownloadFile(conn.conn, conn.filedown.file))
-                conn.lastcallback = curtime
+                conn.lastcallback = current_time
 
             if finished:
                 self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
@@ -1447,15 +1447,15 @@ class SlskProtoThread(threading.Thread):
             if bytes_send <= 0:
                 return
 
-            curtime = time.time()
+            current_time = time.time()
             finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
 
-            if finished or (curtime - conn_obj.lastcallback) > 1:
+            if finished or (current_time - conn_obj.lastcallback) > 1:
                 # We save resources by not sending data back to the NicotineCore
                 # every time a part of a file is uploaded
 
                 self._callback_msgs.append(conn_obj.fileupl)
-                conn_obj.lastcallback = curtime
+                conn_obj.lastcallback = current_time
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
@@ -1476,13 +1476,13 @@ class SlskProtoThread(threading.Thread):
                 time.sleep(0.1)
                 continue
 
-            curtime = time.time()
+            current_time = time.time()
 
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once, if there are a lot of connections.
-            if (curtime - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
+            if (current_time - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
                 self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
-                self.last_conncount_callback = curtime
+                self.last_conncount_callback = current_time
 
             # Process outgoing messages
             if self._queue:
@@ -1546,7 +1546,7 @@ class SlskProtoThread(threading.Thread):
 
                 msg_obj = conn_obj.msg_obj
 
-                if (curtime - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
+                if (current_time - conn_obj.lastactive) > self.IN_PROGRESS_STALE_AFTER:
                     # Connection failed
 
                     self._callback_msgs.append(ConnectError(msg_obj, "Timed out"))
@@ -1602,7 +1602,7 @@ class SlskProtoThread(threading.Thread):
                     continue
 
                 if (connection is not self.server_socket
-                        and (curtime - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
+                        and (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
                     # No recent activity, peer connection is stale
 
                     self._callback_msgs.append(ConnClose(connection, conn_obj.addr))

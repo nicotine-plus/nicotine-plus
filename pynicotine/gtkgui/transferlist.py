@@ -321,10 +321,10 @@ class TransferList(UserInterface):
 
     def update(self, transfer=None, forceupdate=False):
 
-        curtime = time()
+        current_time = time()
         last_ui_update = self.last_ui_update
 
-        if (curtime - self.last_save) > 15:
+        if (current_time - self.last_save) > 15:
 
             """ Save list of transfers to file every 15 seconds """
 
@@ -332,13 +332,13 @@ class TransferList(UserInterface):
                 self.frame.np.transfers.save_transfers("downloads")
                 self.frame.np.transfers.save_transfers("uploads")
 
-            self.last_save = curtime
+            self.last_save = current_time
 
         finished = (transfer is not None and transfer.status == "Finished")
 
-        if forceupdate or finished or (curtime - last_ui_update) > 1:
+        if forceupdate or finished or (current_time - last_ui_update) > 1:
             self.update_bandwidth()
-            self.last_ui_update = curtime
+            self.last_ui_update = current_time
 
         if not forceupdate and self.frame.current_page_id != self.page_id:
             """ No need to do unnecessary work if transfers are not visible """
@@ -351,7 +351,7 @@ class TransferList(UserInterface):
             for transfer_i in reversed(self.transfer_list):
                 self.update_specific(transfer_i)
 
-        if forceupdate or finished or (curtime - last_ui_update) > 1:
+        if forceupdate or finished or (current_time - last_ui_update) > 1:
 
             """ Unless a transfer finishes, use a cooldown to avoid updating
             too often """
@@ -390,12 +390,12 @@ class TransferList(UserInterface):
         self.last_ui_update = time()
 
     @staticmethod
-    def get_hplace(place):
-        return str(place) if place > 0 else ""
+    def get_hqueue_position(queue_position):
+        return str(queue_position) if queue_position > 0 else ""
 
     @staticmethod
-    def get_hsize(currentbytes, size):
-        return "%s / %s" % (human_size(currentbytes), human_size(size))
+    def get_hsize(current_byte_offset, size):
+        return "%s / %s" % (human_size(current_byte_offset), human_size(size))
 
     @staticmethod
     def get_hspeed(speed):
@@ -406,8 +406,8 @@ class TransferList(UserInterface):
         return human_length(elapsed) if elapsed > 0 else ""
 
     @staticmethod
-    def get_percent(currentbytes, size):
-        return min(((100 * int(currentbytes)) / int(size)), 100) if size > 0 else 100
+    def get_percent(current_byte_offset, size):
+        return min(((100 * int(current_byte_offset)) / int(size)), 100) if size > 0 else 100
 
     @staticmethod
     def get_size(size):
@@ -444,9 +444,9 @@ class TransferList(UserInterface):
                 iterator = self.transfersmodel.iter_next(iterator)
                 continue
 
-            elapsed += transfer.timeelapsed or 0
+            elapsed += transfer.time_elapsed or 0
             totalsize += self.get_size(transfer.size)
-            position += transfer.currentbytes or 0
+            position += transfer.current_byte_offset or 0
 
             if status == "Transferring":
                 speed += transfer.speed or 0
@@ -475,7 +475,7 @@ class TransferList(UserInterface):
 
             self.transfersmodel.set_value(initer, 8, helapsed)
             self.transfersmodel.set_value(initer, 9, left)
-            transfer.timeelapsed = elapsed
+            transfer.time_elapsed = elapsed
 
         if self.transfersmodel.get_value(initer, 11) != position:
             percent = self.get_percent(position, totalsize)
@@ -483,7 +483,7 @@ class TransferList(UserInterface):
             self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
             self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, position))
-            transfer.currentbytes = position
+            transfer.current_byte_offset = position
 
         if self.transfersmodel.get_value(initer, 10) != totalsize:
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
@@ -492,8 +492,8 @@ class TransferList(UserInterface):
 
     def update_specific(self, transfer=None):
 
-        currentbytes = transfer.currentbytes or 0
-        place = transfer.place or 0
+        current_byte_offset = transfer.current_byte_offset or 0
+        queue_position = transfer.queue_position or 0
         modifier = transfer.modifier
         status = transfer.status or ""
 
@@ -504,7 +504,7 @@ class TransferList(UserInterface):
         size = self.get_size(transfer.size)
         speed = transfer.speed or 0
         hspeed = self.get_hspeed(speed)
-        helapsed = self.get_helapsed(transfer.timeelapsed or 0)
+        helapsed = self.get_helapsed(transfer.time_elapsed or 0)
         initer = transfer.iterator
 
         # Modify old transfer
@@ -520,22 +520,22 @@ class TransferList(UserInterface):
 
             if self.transfersmodel.get_value(initer, 8) != helapsed:
                 self.transfersmodel.set_value(initer, 8, helapsed)
-                self.transfersmodel.set_value(initer, 9, transfer.timeleft or "")
+                self.transfersmodel.set_value(initer, 9, transfer.time_left or "")
 
-            if self.transfersmodel.get_value(initer, 11) != currentbytes:
-                percent = self.get_percent(currentbytes, size)
+            if self.transfersmodel.get_value(initer, 11) != current_byte_offset:
+                percent = self.get_percent(current_byte_offset, size)
 
                 self.transfersmodel.set_value(initer, 5, GObject.Value(GObject.TYPE_UINT64, percent))
-                self.transfersmodel.set_value(initer, 6, self.get_hsize(currentbytes, size))
-                self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, currentbytes))
+                self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
+                self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_byte_offset))
 
             elif self.transfersmodel.get_value(initer, 10) != size:
-                self.transfersmodel.set_value(initer, 6, self.get_hsize(currentbytes, size))
+                self.transfersmodel.set_value(initer, 6, self.get_hsize(current_byte_offset, size))
                 self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, size))
 
-            if self.transfersmodel.get_value(initer, 13) != place:
-                self.transfersmodel.set_value(initer, 4, self.get_hplace(place))
-                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, place))
+            if self.transfersmodel.get_value(initer, 13) != queue_position:
+                self.transfersmodel.set_value(initer, 4, self.get_hqueue_position(queue_position))
+                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT64, queue_position))
 
             return
 
@@ -632,16 +632,16 @@ class TransferList(UserInterface):
                 path,
                 shortfn,
                 self.translate_status(status),
-                self.get_hplace(place),
-                GObject.Value(GObject.TYPE_UINT64, self.get_percent(currentbytes, size)),
-                self.get_hsize(currentbytes, size),
+                self.get_hqueue_position(queue_position),
+                GObject.Value(GObject.TYPE_UINT64, self.get_percent(current_byte_offset, size)),
+                self.get_hsize(current_byte_offset, size),
                 hspeed,
                 helapsed,
-                transfer.timeleft or "",
+                transfer.time_left or "",
                 GObject.Value(GObject.TYPE_UINT64, size),
-                GObject.Value(GObject.TYPE_UINT64, currentbytes),
+                GObject.Value(GObject.TYPE_UINT64, current_byte_offset),
                 GObject.Value(GObject.TYPE_UINT64, speed),
-                GObject.Value(GObject.TYPE_UINT64, place),
+                GObject.Value(GObject.TYPE_UINT64, queue_position),
                 transfer
             )
         )

@@ -51,7 +51,7 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.filename, "Downloaded\\Song13.mp3")
         self.assertEqual(transfer.status, "Getting status")
         self.assertIsNone(transfer.size)
-        self.assertIsNone(transfer.currentbytes)
+        self.assertIsNone(transfer.current_byte_offset)
         self.assertIsNone(transfer.bitrate)
         self.assertIsNone(transfer.length)
 
@@ -61,7 +61,7 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.filename, "Downloaded\\Song1.mp3")
         self.assertEqual(transfer.status, "Paused")
         self.assertEqual(transfer.size, 10093741)
-        self.assertEqual(transfer.currentbytes, 5000)
+        self.assertEqual(transfer.current_byte_offset, 5000)
         self.assertEqual(transfer.bitrate, "320")
         self.assertEqual(transfer.length, "4:12")
 
@@ -91,7 +91,7 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.filename, "Junk\\Song5.mp3")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 11733776)
-        self.assertEqual(transfer.currentbytes, 11733776)
+        self.assertEqual(transfer.current_byte_offset, 11733776)
         self.assertEqual(transfer.bitrate, "319")
         self.assertEqual(transfer.length, "4:53")
 
@@ -101,7 +101,7 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.filename, "Junk\\Song3.flac")
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 27231044)
-        self.assertEqual(transfer.currentbytes, 27231044)
+        self.assertEqual(transfer.current_byte_offset, 27231044)
         self.assertEqual(transfer.bitrate, "792")
         self.assertEqual(transfer.length, "4:28")
 

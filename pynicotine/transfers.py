@@ -54,44 +54,44 @@ class Transfer:
     """ This class holds information about a single transfer. """
 
     __slots__ = ("conn", "user", "filename",
-                 "path", "req", "size", "file", "starttime", "lasttime",
-                 "currentbytes", "lastbytes", "speed", "timeelapsed",
-                 "timeleft", "timequeued", "modifier", "place", "bitrate", "length",
-                 "iterator", "_status", "laststatuschange", "legacy_attempt")
+                 "path", "req", "size", "file", "start_time", "last_update",
+                 "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
+                 "time_left", "timequeued", "modifier", "queue_position", "bitrate", "length",
+                 "iterator", "_status", "last_status_change", "legacy_attempt")
 
     def __init__(self, user=None, filename=None, path=None, status=None, req=None, size=None,
-                 file=None, currentbytes=None, timequeued=None, place=0, bitrate=None, length=None):
+                 file=None, current_byte_offset=None, timequeued=None, queue_position=0, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
         self.req = req
         self.size = size
         self.file = file
-        self.currentbytes = currentbytes
+        self.current_byte_offset = current_byte_offset
         self.timequeued = timequeued
-        self.place = place
+        self.queue_position = queue_position
         self.bitrate = bitrate
         self.length = length
 
         self.conn = None
         self.modifier = None
-        self.starttime = None
-        self.lasttime = None
-        self.lastbytes = None
+        self.start_time = None
+        self.last_update = None
+        self.last_byte_offset = None
         self.speed = None
-        self.timeelapsed = None
-        self.timeleft = None
+        self.time_elapsed = None
+        self.time_left = None
         self.iterator = None
         self.legacy_attempt = False
-        self.setstatus(status)
+        self.set_status(status)
 
-    def setstatus(self, status):
+    def set_status(self, status):
         self._status = status
-        self.laststatuschange = time.time()
+        self.last_status_change = time.time()
 
-    def getstatus(self):
+    def get_status(self):
         return self._status
-    status = property(getstatus, setstatus)
+    status = property(get_status, set_status)
 
 
 class Transfers:
@@ -248,7 +248,7 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            loaded_status = size = currentbytes = bitrate = length = None
+            loaded_status = size = current_byte_offset = bitrate = length = None
 
             try:
                 loaded_status = i[3]
@@ -261,7 +261,7 @@ class Transfers:
                 pass
 
             try:
-                currentbytes = int(i[5])
+                current_byte_offset = int(i[5])
             except Exception:
                 pass
 
@@ -281,7 +281,7 @@ class Transfers:
             elif loaded_status in ("Filtered", "Finished"):
                 status = loaded_status
 
-            elif currentbytes is not None and size is not None and currentbytes >= size:
+            elif current_byte_offset is not None and size is not None and current_byte_offset >= size:
                 status = "Finished"
 
             else:
@@ -294,7 +294,7 @@ class Transfers:
             transfer_list.appendleft(
                 Transfer(
                     user=i[0], filename=i[1], path=i[2], status=status,
-                    size=size, currentbytes=currentbytes, bitrate=bitrate,
+                    size=size, current_byte_offset=current_byte_offset, bitrate=bitrate,
                     length=length
                 )
             )
@@ -461,7 +461,7 @@ class Transfers:
                 # Currently transferring
                 in_progress_count += 1
 
-            elif (now - i.laststatuschange) < 30:
+            elif (now - i.last_status_change) < 30:
                 # Transfer initiating, changed within last 30 seconds
 
                 if (i.req is not None
@@ -580,12 +580,12 @@ class Transfers:
 
         i.status = "Cannot connect"
         i.req = None
-        i.place = 0
-        curtime = time.time()
+        i.queue_position = 0
+        current_time = time.time()
 
         for j in self.uploads:
             if j.user == i.user:
-                j.timequeued = curtime
+                j.timequeued = current_time
 
         if self.uploadsview:
             self.uploadsview.update(i)
@@ -923,7 +923,7 @@ class Transfers:
 
                 i.status = msg.reason
                 i.req = None
-                i.place = 0
+                i.queue_position = 0
 
                 if self.uploadsview:
                     self.uploadsview.update(i)
@@ -931,11 +931,11 @@ class Transfers:
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
 
-                curtime = time.time()
+                current_time = time.time()
 
                 for j in self.uploads:
                     if j.user == i.user:
-                        j.timequeued = curtime
+                        j.timequeued = current_time
 
                 if msg.reason == "Complete":
                     # A complete download of this file already exists on the user's end
@@ -986,12 +986,12 @@ class Transfers:
             self.downloadsview.update(transfer)
 
         elif transfer in self.uploads:
-            transfer.place = 0
-            curtime = time.time()
+            transfer.queue_position = 0
+            current_time = time.time()
 
             for j in self.uploads:
                 if j.user == transfer.user:
-                    j.timequeued = curtime
+                    j.timequeued = current_time
 
             if self.uploadsview:
                 self.uploadsview.update(transfer)
@@ -1110,8 +1110,8 @@ class Transfers:
 
                 else:
                     i.file = file_handle
-                    i.lastbytes = offset
-                    i.place = 0
+                    i.last_byte_offset = offset
+                    i.queue_position = 0
 
                     self.core.statistics.append_stat_value("started_downloads", 1)
                     self.core.pluginhandler.download_started_notification(i.user, i.filename, incomplete_name)
@@ -1179,8 +1179,8 @@ class Transfers:
 
             else:
                 i.file = file_handle
-                i.lastbytes = offset
-                i.place = 0
+                i.last_byte_offset = offset
+                i.queue_position = 0
 
                 self.core.statistics.append_stat_value("started_uploads", 1)
                 self.core.pluginhandler.upload_started_notification(i.user, i.filename, real_path)
@@ -1205,7 +1205,6 @@ class Transfers:
                         }
                     )
                 else:
-                    i.lasttime = time.time()
                     self.upload_finished(i, file_handle=file_handle)
                     needupdate = False
 
@@ -1310,37 +1309,37 @@ class Transfers:
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
 
-                curtime = time.time()
-                i.currentbytes = msg.file.tell()
+                current_time = time.time()
+                i.current_byte_offset = msg.file.tell()
 
-                if i.starttime is None:
-                    i.starttime = curtime
+                if i.start_time is None:
+                    i.start_time = current_time
 
                 i.status = "Transferring"
-                oldelapsed = i.timeelapsed
-                i.timeelapsed = curtime - i.starttime
-                bytesdifference = i.currentbytes - i.lastbytes
+                oldelapsed = i.time_elapsed
+                i.time_elapsed = current_time - i.start_time
+                byte_difference = i.current_byte_offset - i.last_byte_offset
 
-                if bytesdifference:
-                    self.core.statistics.append_stat_value("downloaded_size", bytesdifference)
+                if byte_difference:
+                    self.core.statistics.append_stat_value("downloaded_size", byte_difference)
 
-                if i.size > i.currentbytes:
-                    if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                        i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
+                if i.size > i.current_byte_offset:
+                    if current_time > i.start_time and i.current_byte_offset > i.last_byte_offset:
+                        i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
 
                         if i.speed <= 0:
-                            i.timeleft = "∞"
+                            i.time_left = "∞"
                         else:
-                            i.timeleft = human_length((i.size - i.currentbytes) / i.speed)
+                            i.time_left = human_length((i.size - i.current_byte_offset) / i.speed)
 
-                    if oldelapsed == i.timeelapsed:
+                    if oldelapsed == i.time_elapsed:
                         needupdate = False
                 else:
                     self.download_finished(msg.file, i)
                     needupdate = False
 
-                i.lastbytes = i.currentbytes
-                i.lasttime = curtime
+                i.last_byte_offset = i.current_byte_offset
+                i.last_update = current_time
 
             except IOError as error:
                 log.add(_("Download I/O error: %s"), error)
@@ -1366,37 +1365,37 @@ class Transfers:
             if i in self.transfer_request_times:
                 del self.transfer_request_times[i]
 
-            curtime = time.time()
-            i.currentbytes = msg.offset + msg.sentbytes
+            current_time = time.time()
+            i.current_byte_offset = msg.offset + msg.sentbytes
 
-            if i.starttime is None:
-                i.starttime = curtime
+            if i.start_time is None:
+                i.start_time = current_time
 
             i.status = "Transferring"
-            oldelapsed = i.timeelapsed
-            i.timeelapsed = curtime - i.starttime
-            bytesdifference = i.currentbytes - i.lastbytes
+            oldelapsed = i.time_elapsed
+            i.time_elapsed = current_time - i.start_time
+            byte_difference = i.current_byte_offset - i.last_byte_offset
 
-            if bytesdifference:
-                self.core.statistics.append_stat_value("uploaded_size", bytesdifference)
+            if byte_difference:
+                self.core.statistics.append_stat_value("uploaded_size", byte_difference)
 
-            if i.size > i.currentbytes:
-                if curtime > i.starttime and i.currentbytes > i.lastbytes:
-                    i.speed = int(max(0, bytesdifference // max(1, curtime - i.lasttime)))
+            if i.size > i.current_byte_offset:
+                if current_time > i.start_time and i.current_byte_offset > i.last_byte_offset:
+                    i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
 
                     if i.speed <= 0:
-                        i.timeleft = "∞"
+                        i.time_left = "∞"
                     else:
-                        i.timeleft = human_length((i.size - i.currentbytes) / i.speed)
+                        i.time_left = human_length((i.size - i.current_byte_offset) / i.speed)
 
-                if oldelapsed == i.timeelapsed:
+                if oldelapsed == i.time_elapsed:
                     needupdate = False
             else:
                 self.upload_finished(i, file_handle=msg.file)
                 needupdate = False
 
-            i.lastbytes = i.currentbytes
-            i.lasttime = curtime
+            i.last_byte_offset = i.current_byte_offset
+            i.last_update = current_time
 
             if needupdate and self.uploadsview:
                 self.uploadsview.update(i)
@@ -1447,11 +1446,11 @@ class Transfers:
             self.downloadsview.update(i)
 
         elif transfer_type == "upload":
-            curtime = time.time()
+            current_time = time.time()
 
             for j in self.uploads:
                 if j.user == i.user:
-                    j.timequeued = curtime
+                    j.timequeued = current_time
 
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
@@ -1465,7 +1464,7 @@ class Transfers:
 
         user = msg.conn.init.target_user
         privileged_user = self.is_privileged(user)
-        place = 0
+        queue_position = 0
         transfer = None
 
         if self.config.sections["transfers"]["fifoqueue"]:
@@ -1475,7 +1474,7 @@ class Transfers:
                     continue
 
                 if not privileged_user or self.is_privileged(i.user):
-                    place += 1
+                    queue_position += 1
 
                 # Stop counting on the matching file
                 if i.user == user and i.filename == msg.file:
@@ -1499,7 +1498,7 @@ class Transfers:
                         continue
 
                     # Count all transfers for requesting user
-                    place += 1
+                    queue_position += 1
 
                     # Stop counting on the matching file
                     if i.filename == msg.file:
@@ -1519,16 +1518,16 @@ class Transfers:
                     queued_users.add(i.user)
 
                     if not privileged_user or self.is_privileged(i.user):
-                        place += 1
+                        queue_position += 1
 
-        if place > 0:
-            self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, place))
+        if queue_position > 0:
+            self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, queue_position))
 
         if transfer is None:
             return
 
         # Update queue position in our list of uploads
-        transfer.place = place
+        transfer.queue_position = queue_position
 
         if self.uploadsview:
             self.uploadsview.update(transfer)
@@ -1541,7 +1540,7 @@ class Transfers:
 
         for i in self.downloads:
             if i.user == username and i.filename == filename and i.status not in ("Finished", "Paused", "Filtered"):
-                i.place = msg.place
+                i.queue_position = msg.place
 
                 if self.downloadsview:
                     self.downloadsview.update(i)
@@ -1605,7 +1604,7 @@ class Transfers:
 
             if download_path:
                 transfer.status = "Finished"
-                transfer.size = transfer.currentbytes = size
+                transfer.size = transfer.current_byte_offset = size
 
                 log.add_transfer("File %s is already downloaded", download_path)
 
@@ -1686,7 +1685,7 @@ class Transfers:
                 if i.status == "Queued":
                     # This upload was queued previously
                     # Use the previous queue position and time
-                    transferobj.place = i.place
+                    transferobj.queue_position = i.queue_position
                     transferobj.timequeued = i.timequeued
                     previously_queued = True
 
@@ -1940,9 +1939,9 @@ class Transfers:
             return
 
         i.status = "Finished"
-        i.currentbytes = i.size
+        i.current_byte_offset = i.size
         i.speed = None
-        i.timeleft = ""
+        i.time_left = ""
         i.conn = None
 
         self.core.statistics.append_stat_value("completed_downloads", 1)
@@ -1987,16 +1986,16 @@ class Transfers:
                 pass
 
         i.status = "Finished"
-        i.currentbytes = i.size
+        i.current_byte_offset = i.size
         i.speed = None
-        i.timeleft = ""
+        i.time_left = ""
         i.conn = None
 
-        curtime = time.time()
+        current_time = time.time()
 
         for j in self.uploads:
             if j.user == i.user:
-                j.timequeued = curtime
+                j.timequeued = current_time
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -2043,11 +2042,11 @@ class Transfers:
     def _check_transfer_timeouts(self):
 
         while True:
-            curtime = time.time()
+            current_time = time.time()
 
             if self.transfer_request_times:
                 for transfer, start_time in self.transfer_request_times.copy().items():
-                    if (curtime - start_time) >= 30:
+                    if (current_time - start_time) >= 30:
                         self.network_callback([slskmessages.TransferTimeout(transfer)])
 
             if self.core.exit.wait(1):
@@ -2301,8 +2300,8 @@ class Transfers:
         transfer.legacy_attempt = False
         transfer.req = None
         transfer.speed = None
-        transfer.place = 0
-        transfer.timeleft = ""
+        transfer.queue_position = 0
+        transfer.time_left = ""
 
         if transfer.conn is not None:
             self.queue.append(slskmessages.ConnClose(transfer.conn))
@@ -2418,12 +2417,12 @@ class Transfers:
 
     def get_downloads(self):
         """ Get a list of downloads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
+        return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
                 for i in reversed(self.downloads)]
 
     def get_uploads(self):
         """ Get a list of finished uploads """
-        return [[i.user, i.filename, i.path, i.status, i.size, i.currentbytes, i.bitrate, i.length]
+        return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
                 for i in reversed(self.uploads)]
 
     def save_downloads_callback(self, filename):

@@ -426,11 +426,11 @@ class NicotineCore:
     def _check_indirect_connection_timeouts(self):
 
         while True:
-            curtime = time.time()
+            current_time = time.time()
 
             if self.out_indirect_conn_request_times:
                 for conn, request_time in self.out_indirect_conn_request_times.copy().items():
-                    if (curtime - request_time) >= 20:
+                    if (current_time - request_time) >= 20:
                         self.network_callback([slskmessages.ConnectToPeerTimeout(conn)])
 
             if self.exit.wait(1):
