@@ -2096,10 +2096,11 @@ class Transfers:
             if i.status == "Queued":
                 user = i.user
 
-                if user not in queued_transfers:
-                    queued_transfers[user] = []
+                if user not in uploading_users:
+                    if user not in queued_transfers:
+                        queued_transfers[user] = []
 
-                queued_transfers[user].append(i)
+                    queued_transfers[user].append(i)
 
                 if user in queued_users:
                     continue
@@ -2111,30 +2112,30 @@ class Transfers:
                     privileged_queue = True
 
             elif i.req is not None or i.conn is not None or i.status == "Getting status":
-                if i.user not in uploading_users:
-                    # We're currently uploading a file to the user
-                    uploading_users.add(i.user)
+                # We're currently uploading a file to the user
+                uploading_users.add(user)
 
-        for user in uploading_users:
-            if user in queued_transfers:
-                del queued_transfers[user]
+                if user in queued_transfers:
+                    del queued_transfers[user]
 
         oldest_time = None
         target_user = None
+
+        if not round_robin_queue:
+            for user in queued_transfers:
+                if not privileged_queue or (privileged_queue and queued_users[user]):
+                    target_user = user
+                    break
 
         for user, update_time in list(self.user_update_times.items()):
             if user not in queued_users:
                 del self.user_update_times[user]
                 continue
 
-            if not round_robin_queue and target_user:
+            if not round_robin_queue:
                 continue
 
             if not privileged_queue or (privileged_queue and queued_users[user]):
-                if not round_robin_queue:
-                    target_user = user
-                    continue
-
                 if not oldest_time:
                     oldest_time = update_time + 1
 
