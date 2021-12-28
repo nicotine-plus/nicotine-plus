@@ -2113,6 +2113,8 @@ class Transfers:
 
             elif i.req is not None or i.conn is not None or i.status == "Getting status":
                 # We're currently uploading a file to the user
+                user = i.user
+
                 uploading_users.add(user)
 
                 if user in queued_transfers:
@@ -2132,7 +2134,7 @@ class Transfers:
                 del self.user_update_times[user]
                 continue
 
-            if not round_robin_queue:
+            if not round_robin_queue or user in uploading_users:
                 continue
 
             if not privileged_queue or (privileged_queue and queued_users[user]):
