@@ -38,6 +38,7 @@ import time
 
 from collections import defaultdict
 from collections import deque
+from collections import OrderedDict
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
@@ -56,11 +57,11 @@ class Transfer:
     __slots__ = ("conn", "user", "filename",
                  "path", "req", "size", "file", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
-                 "time_left", "timequeued", "modifier", "queue_position", "bitrate", "length",
+                 "time_left", "modifier", "queue_position", "bitrate", "length",
                  "iterator", "_status", "last_status_change", "legacy_attempt")
 
     def __init__(self, user=None, filename=None, path=None, status=None, req=None, size=None,
-                 file=None, current_byte_offset=None, timequeued=None, queue_position=0, bitrate=None, length=None):
+                 file=None, current_byte_offset=None, queue_position=0, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
@@ -68,7 +69,6 @@ class Transfer:
         self.size = size
         self.file = file
         self.current_byte_offset = current_byte_offset
-        self.timequeued = timequeued
         self.queue_position = queue_position
         self.bitrate = bitrate
         self.length = length
@@ -105,9 +105,10 @@ class Transfers:
         self.initialized = False
         self.downloads = deque()
         self.uploads = deque()
-        self.privilegedusers = set()
+        self.privileged_users = set()
         self.requested_folders = defaultdict(dict)
         self.transfer_request_times = {}
+        self.user_update_times = {}
         self.upload_speed = 0
 
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
@@ -326,18 +327,18 @@ class Transfers:
             self.add_to_privileged(user)
 
     def add_to_privileged(self, user):
-        self.privilegedusers.add(user)
+        self.privileged_users.add(user)
 
     def remove_from_privileged(self, user):
-        if user in self.privilegedusers:
-            self.privilegedusers.remove(user)
+        if user in self.privileged_users:
+            self.privileged_users.remove(user)
 
     def is_privileged(self, user):
 
         if not user:
             return False
 
-        if user in self.privilegedusers:
+        if user in self.privileged_users:
             return True
 
         return self.is_buddy_prioritized(user)
@@ -581,11 +582,8 @@ class Transfers:
         i.status = "Cannot connect"
         i.req = None
         i.queue_position = 0
-        current_time = time.time()
 
-        for j in self.uploads:
-            if j.user == i.user:
-                j.timequeued = current_time
+        self.user_update_times[i.user] = time.time()
 
         if self.uploadsview:
             self.uploadsview.update(i)
@@ -674,7 +672,7 @@ class Transfers:
                 newupload = Transfer(
                     user=user, filename=msg.file,
                     path=os.path.dirname(real_path), status="Queued",
-                    timequeued=time.time(), size=self.get_file_size(real_path)
+                    size=self.get_file_size(real_path)
                 )
                 self._append_upload(user, msg.file, newupload)
 
@@ -876,7 +874,7 @@ class Transfers:
             newupload = Transfer(
                 user=user, filename=msg.file,
                 path=os.path.dirname(real_path), status="Queued",
-                timequeued=time.time(), size=self.get_file_size(real_path)
+                size=self.get_file_size(real_path)
             )
             self._append_upload(user, msg.file, newupload)
 
@@ -931,11 +929,7 @@ class Transfers:
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
 
-                current_time = time.time()
-
-                for j in self.uploads:
-                    if j.user == i.user:
-                        j.timequeued = current_time
+                self.user_update_times[i.user] = time.time()
 
                 if msg.reason == "Complete":
                     # A complete download of this file already exists on the user's end
@@ -987,11 +981,7 @@ class Transfers:
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
-            current_time = time.time()
-
-            for j in self.uploads:
-                if j.user == transfer.user:
-                    j.timequeued = current_time
+            self.user_update_times[transfer.user] = time.time()
 
             if self.uploadsview:
                 self.uploadsview.update(transfer)
@@ -1446,11 +1436,7 @@ class Transfers:
             self.downloadsview.update(i)
 
         elif transfer_type == "upload":
-            current_time = time.time()
-
-            for j in self.uploads:
-                if j.user == i.user:
-                    j.timequeued = current_time
+            self.user_update_times[i.user] = time.time()
 
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
@@ -1482,43 +1468,22 @@ class Transfers:
                     break
 
         else:
-            # TODO: more accurate calculation, if possible
-            should_count = True
-            queued_users = set()
-            uploading_users = set()
+            num_queued_users = len(self.user_update_times)
 
             for i in reversed(self.uploads):
+                if i.user != user:
+                    continue
 
                 # Ignore non-queued files
                 if i.status != "Queued":
                     continue
 
-                if i.user == user:
-                    if not should_count:
-                        continue
+                queue_position += num_queued_users
 
-                    # Count all transfers for requesting user
-                    queue_position += 1
-
-                    # Stop counting on the matching file
-                    if i.filename == msg.file:
-                        should_count = False
-                        transfer = i
-
-                    continue
-
-                if i.user not in queued_users or i.user not in uploading_users:
-                    user_uploading = (i.req is not None or i.conn is not None or i.status == "Getting status")
-
-                    if user_uploading:
-                        uploading_users.add(i.user)
-                        continue
-
-                    # Each unique user in the queue adds one to the placement
-                    queued_users.add(i.user)
-
-                    if not privileged_user or self.is_privileged(i.user):
-                        queue_position += 1
+                # Stop counting on the matching file
+                if i.filename == msg.file:
+                    transfer = i
+                    break
 
         if queue_position > 0:
             self.queue.append(slskmessages.PlaceInQueue(msg.conn.conn, msg.file, queue_position))
@@ -1678,7 +1643,7 @@ class Transfers:
         old_index = 0
 
         if self.is_privileged(user):
-            transferobj.modifier = "privileged" if user in self.privilegedusers else "prioritized"
+            transferobj.modifier = "privileged" if user in self.privileged_users else "prioritized"
 
         for i in self.uploads:
             if i.user == user and i.filename == filename:
@@ -1686,7 +1651,6 @@ class Transfers:
                     # This upload was queued previously
                     # Use the previous queue position and time
                     transferobj.queue_position = i.queue_position
-                    transferobj.timequeued = i.timequeued
                     previously_queued = True
 
                 if i in self.transfer_request_times:
@@ -1703,8 +1667,12 @@ class Transfers:
 
         if previously_queued:
             self.uploads.insert(old_index, transferobj)
-        else:
-            self.uploads.appendleft(transferobj)
+            return
+
+        if user not in self.user_update_times:
+            self.user_update_times[user] = time.time()
+
+        self.uploads.appendleft(transferobj)
 
     def can_upload(self, user):
 
@@ -1991,11 +1959,7 @@ class Transfers:
         i.time_left = ""
         i.conn = None
 
-        current_time = time.time()
-
-        for j in self.uploads:
-            if j.user == i.user:
-                j.timequeued = current_time
+        self.user_update_times[i.user] = time.time()
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -2115,82 +2079,91 @@ class Transfers:
         if reset_count:
             self.download_queue_timer_count = 0
 
-    def get_queued_uploads(self):
+    def get_upload_candidate(self):
+        """ Retrieve a suitable queued transfer for uploading.
 
-        # List of transfer instances of users who are not currently transferring
-        list_queued = []
+        Round Robin: Get the first queued item from the oldest user
+        FIFO: Get the first queued item in the list """
 
-        # Sublist of privileged users transfers
-        list_privileged = []
-        use_privileged_queue = False
+        round_robin_queue = not self.config.sections["transfers"]["fifoqueue"]
+        privileged_queue = False
 
-        # List of users
-        uploading_users = set()
+        queued_transfers = OrderedDict()
         queued_users = {}
+        uploading_users = set()
 
-        # Check users
         for i in reversed(self.uploads):
-            # some file is being transferred
-            if i.req is not None or i.conn is not None or i.status == "Getting status":
+            if i.status == "Queued":
+                user = i.user
+
+                if user not in queued_transfers:
+                    queued_transfers[user] = []
+
+                queued_transfers[user].append(i)
+
+                if user in queued_users:
+                    continue
+
+                privileged = self.is_privileged(user)
+                queued_users[user] = privileged
+
+                if privileged:
+                    privileged_queue = True
+
+            elif i.req is not None or i.conn is not None or i.status == "Getting status":
                 if i.user not in uploading_users:
+                    # We're currently uploading a file to the user
                     uploading_users.add(i.user)
 
-            elif i.user not in queued_users:
-                queued_users[i.user] = self.is_privileged(i.user)
+        for user in uploading_users:
+            if user in queued_transfers:
+                del queued_transfers[user]
 
-        # Check queued uploads
-        for i in reversed(self.uploads):
-            if i.status == "Queued" and i.user not in uploading_users:
-                if queued_users[i.user]:  # check if user is privileged
-                    list_privileged.append(i)
-                    use_privileged_queue = True
+        oldest_time = None
+        target_user = None
 
-                elif not use_privileged_queue:
-                    list_queued.append(i)
+        for user, update_time in list(self.user_update_times.items()):
+            if user not in queued_users:
+                del self.user_update_times[user]
+                continue
 
-        if use_privileged_queue:
-            # Upload to a privileged user
-            # Only Privileged users' files will get selected
-            return list_privileged
+            if not round_robin_queue and target_user:
+                continue
 
-        return list_queued
+            if not privileged_queue or (privileged_queue and queued_users[user]):
+                if not round_robin_queue:
+                    target_user = user
+                    continue
 
-    def get_upload_candidate(self, queued_uploads):
+                if not oldest_time:
+                    oldest_time = update_time + 1
 
-        if not queued_uploads:
+                if update_time < oldest_time:
+                    target_user = user
+                    oldest_time = update_time
+
+        if not target_user:
             return None
 
-        if self.config.sections["transfers"]["fifoqueue"]:
-            # FIFO
-            # Get the first item in the list
-            upload_candidate = queued_uploads[0]
+        queued_transfers = queued_transfers[target_user]
 
-        else:
-            # Round Robin
-            # Get first transfer that was queued less than one second from now
-            upload_candidate = None
-            mintimequeued = time.time() + 1
+        if not queued_transfers:
+            return None
 
-            for i in queued_uploads:
-                if i.timequeued < mintimequeued:
-                    upload_candidate = i
-                    mintimequeued = i.timequeued
+        return queued_transfers[0]
 
-        return upload_candidate
-
-    # Find next file to upload
     def check_upload_queue(self):
+        """ Find next file to upload """
 
         while True:
-            # Check if any uploads exist
             if not self.uploads:
+                # No uploads exist
                 return
 
             if not self.allow_new_uploads():
                 return
 
-            queued_uploads = self.get_queued_uploads()
-            upload_candidate = self.get_upload_candidate(queued_uploads)
+            upload_candidate = self.get_upload_candidate()
 
             if upload_candidate is None:
                 return
@@ -2279,7 +2252,6 @@ class Transfers:
                 # User already has an active upload, queue the retry attempt
                 if transfer.status != "Queued":
                     transfer.status = "Queued"
-                    transfer.timequeued = time.time()
 
                     if self.uploadsview:
                         self.uploadsview.update(transfer)
@@ -2408,9 +2380,10 @@ class Transfers:
                 if self.uploadsview:
                     self.uploadsview.remove_specific(i, True)
 
-        self.privilegedusers.clear()
+        self.privileged_users.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()
+        self.user_update_times.clear()
 
         self.save_transfers("downloads")
         self.save_transfers("uploads")
