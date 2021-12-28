@@ -293,7 +293,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">1</property>
-                        <property name="label" translatable="yes">MiBs</property>
+                        <property name="label" translatable="yes">MiB</property>
                         <property name="xalign">0</property>
                       </object>
                     </child>
