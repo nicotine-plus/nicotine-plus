@@ -239,16 +239,167 @@
           <object class="GtkLabel">
             <property name="visible">1</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Queue Limits</property>
+            <property name="label" translatable="yes">Upload Queue Behavior</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="FriendsNoLimits">
+          <object class="GtkFlowBox">
             <property name="visible">1</property>
-            <property name="label" translatable="yes">Queue limits do not apply to buddies</property>
+            <property name="row-spacing">12</property>
+            <property name="column-spacing">12</property>
+            <property name="max-children-per-line">2</property>
+            <property name="selection-mode">none</property>
+
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">48</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Upload slot allocation:</property>
+                        <property name="wrap">1</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">FirstInFirstOut</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="PreferFriends">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">Prioritize all buddies</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkComboBoxText" id="FirstInFirstOut">
+                    <property name="visible">1</property>
+                    <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
+First In, First Out: Files will be uploaded in the order they were queued.</property>
+                    <items>
+                      <item translatable="yes">Round Robin</item>
+                      <item translatable="yes">First In, First Out</item>
+                    </items>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <child>
+                  <object class="GtkRadioButton" id="QueueUseBandwidth">
+                    <property name="label" translatable="yes">Allocate upload slots until total transfer speed reaches:</property>
+                    <property name="tooltip-text" translatable="yes">Upload slots automatically determined by available bandwidth.</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                    <property name="active">1</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkSpinButton" id="QueueBandwidth">
+                        <property name="visible">1</property>
+                        <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
+                        <property name="adjustment">adjustment_QueueBandwidth</property>
+                        <property name="hexpand">1</property>
+                        <property name="numeric">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">KiB/s</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">QueueBandwidth</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <child>
+                  <object class="GtkRadioButton" id="QueueUseSlots">
+                    <property name="label" translatable="yes">Fixed number of upload slots:</property>
+                    <property name="tooltip-text" translatable="yes">Upload slots allocated regardless of available bandwidth.</property>
+                    <property name="visible">1</property>
+                    <property name="use-underline">1</property>
+                    <property name="group">QueueUseBandwidth</property>
+                    <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFlowBoxChild">
+                <property name="visible">1</property>
+                <property name="focusable">0</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">1</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkSpinButton" id="QueueSlots">
+                        <property name="visible">1</property>
+                        <property name="adjustment">adjustment_QueueSlots</property>
+                        <property name="hexpand">1</property>
+                        <property name="numeric">1</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">1</property>
+                        <property name="label" translatable="yes">files</property>
+                        <property name="xalign">0</property>
+                        <property name="mnemonic_widget">QueueSlots</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">1</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">1</property>
+            <property name="xalign">0</property>
+            <property name="label" translatable="yes">Individual User Limits</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -340,38 +491,6 @@
                 </child>
               </object>
             </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">1</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">12</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">1</property>
-            <property name="xalign">0</property>
-            <property name="label" translatable="yes">Queue Behavior</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkCheckButton" id="PreferFriends">
-            <property name="visible">1</property>
-            <property name="label" translatable="yes">Prioritize all buddies</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkFlowBox">
-            <property name="visible">1</property>
-            <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
@@ -379,10 +498,6 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">1</property>
-                    <property name="label" translatable="yes">Upload queue type:</property>
-                    <property name="wrap">1</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic_widget">FirstInFirstOut</property>
                   </object>
                 </child>
               </object>
@@ -390,74 +505,10 @@
             <child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">1</property>
-                <property name="focusable">0</property>
                 <child>
-                  <object class="GtkComboBoxText" id="FirstInFirstOut">
+                  <object class="GtkCheckButton" id="FriendsNoLimits">
                     <property name="visible">1</property>
-                    <property name="tooltip-text" translatable="yes">Round Robin: Files will be uploaded in cyclical fashion to the users waiting in queue.
-First In, First Out: Files will be uploaded in the order they were queued.</property>
-                    <items>
-                      <item translatable="yes">Round Robin</item>
-                      <item translatable="yes">First In, First Out</item>
-                    </items>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
-                <child>
-                  <object class="GtkLabel" id="QueueBandwidthText1">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Queue uploads if total transfer speed reaches (KiB/s):</property>
-                    <property name="wrap">1</property>
-                    <property name="xalign">0</property>
-                    <property name="mnemonic_widget">QueueBandwidth</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkSpinButton" id="QueueBandwidth">
-                    <property name="visible">1</property>
-                    <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
-                    <property name="adjustment">adjustment_QueueBandwidth</property>
-                    <property name="hexpand">1</property>
-                    <property name="numeric">1</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkCheckButton" id="QueueUseSlots">
-                    <property name="visible">1</property>
-                    <property name="label" translatable="yes">Limit number of upload slots to:</property>
-                    <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                    <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
-                <child>
-                  <object class="GtkSpinButton" id="QueueSlots">
-                    <property name="visible">1</property>
-                    <property name="adjustment">adjustment_QueueSlots</property>
-                    <property name="hexpand">1</property>
-                    <property name="numeric">1</property>
+                    <property name="label" translatable="yes">Individual limits do not apply to buddies</property>
                   </object>
                 </child>
               </object>
