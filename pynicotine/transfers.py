@@ -449,20 +449,20 @@ class Transfers:
 
     def slot_limit_reached(self):
 
-        maxupslots = self.config.sections["transfers"]["uploadslots"]
+        uploadslots = self.config.sections["transfers"]["uploadslots"]
 
-        if maxupslots <= 0:
-            maxupslots = 1
+        if not uploadslots:
+            return False
 
         in_progress_count = 0
-        now = time.time()
+        current_time = time.time()
 
         for i in self.uploads:
             if i.conn is not None and i.speed is not None:
                 # Currently transferring
                 in_progress_count += 1
 
-            elif (now - i.last_status_change) < 30:
+            elif (current_time - i.last_status_change) < 30:
                 # Transfer initiating, changed within last 30 seconds
 
                 if (i.req is not None
@@ -470,30 +470,28 @@ class Transfers:
                         or i.status == "Getting status"):
                     in_progress_count += 1
 
-        return in_progress_count >= maxupslots
+        return in_progress_count >= uploadslots
 
     def bandwidth_limit_reached(self):
 
-        bandwidthlimit = self.config.sections["transfers"]["uploadbandwidth"] * 1024
+        uploadbandwidth = self.config.sections["transfers"]["uploadbandwidth"] * 1024
 
-        if not bandwidthlimit:
+        if not uploadbandwidth:
             return False
 
         bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
 
-        return bandwidth_sum >= bandwidthlimit
+        return bandwidth_sum >= uploadbandwidth
 
     def allow_new_uploads(self):
 
-        if self.config.sections["transfers"]["useupslots"]:
-            # Limit by upload slots
-            if self.slot_limit_reached():
-                return False
+        # Limit by upload slots
+        if self.slot_limit_reached():
+            return False
 
-        else:
-            # Limit by maximum bandwidth
-            if self.bandwidth_limit_reached():
-                return False
+        # Limit by maximum bandwidth
+        if self.bandwidth_limit_reached():
+            return False
 
         # No limits
         return True
