@@ -1436,7 +1436,6 @@ class Transfers:
             self.downloadsview.update(i)
 
         elif transfer_type == "upload":
-            self.user_update_times[i.user] = time.time()
 
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
@@ -2289,6 +2288,7 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
+                self.user_update_times[transfer.user] = time.time()
                 self.check_upload_queue()
                 log.add_upload(
                     _("Upload aborted, user %(user)s file %(file)s"), {
