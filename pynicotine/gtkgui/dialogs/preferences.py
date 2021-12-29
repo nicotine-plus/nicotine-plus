@@ -820,9 +820,7 @@ class UploadsFrame(UserInterface):
         sensitive = widget.get_active()
 
         self.QueueSlots.get_parent().set_sensitive(sensitive)
-
         self.QueueBandwidth.get_parent().set_sensitive(not sensitive)
-        self.QueueBandwidthText1.get_parent().set_sensitive(not sensitive)
 
     def on_limit_toggled(self, widget):
         sensitive = widget.get_active()
