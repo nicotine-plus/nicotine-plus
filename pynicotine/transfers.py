@@ -2124,9 +2124,11 @@ class Transfers:
             # skip the looping below (except the cleanup) and get the first
             # user of the highest priority we saw above
             for user in first_queued_transfers:
-                if not privileged_queue or (privileged_queue and queued_users[user]):
-                    target_user = user
-                    break
+                if privileged_queue and not queued_users[user]:
+                    continue
+
+                target_user = user
+                break
 
         for user, update_time in list(self.user_update_times.items()):
             # some cleanup, should probably log a warning as this case is
@@ -2138,13 +2140,15 @@ class Transfers:
             if not round_robin_queue or user in uploading_users:
                 continue
 
-            if not privileged_queue or (privileged_queue and queued_users[user]):
-                if not oldest_time:
-                    oldest_time = update_time + 1
+            if privileged_queue and not queued_users[user]:
+                continue
 
-                if update_time < oldest_time:
-                    target_user = user
-                    oldest_time = update_time
+            if not oldest_time:
+                oldest_time = update_time + 1
+
+            if update_time < oldest_time:
+                target_user = user
+                oldest_time = update_time
 
         if not target_user:
             return None
