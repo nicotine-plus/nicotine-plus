@@ -926,7 +926,7 @@ class SlskProtoThread(threading.Thread):
                              'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
 
                     self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
-                    self.close_connection(self._conns, conn)
+                    self.close_connection(self._conns, conn.conn)
 
                 break
 
@@ -1237,7 +1237,7 @@ class SlskProtoThread(threading.Thread):
                 log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
                         {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
                 self._callback_msgs.append(ConnClose(conn.conn, conn.addr))
-                self.close_connection(self._conns, conn)
+                self.close_connection(self._conns, conn.conn)
                 break
 
             idx += msgsize_total
