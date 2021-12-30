@@ -449,14 +449,6 @@ class NicotineCore:
 
     def server_disconnect(self, *_args):
 
-        host, port = self.protothread.server_address
-
-        log.add(
-            _("Disconnected from server %(host)s:%(port)s"), {
-                'host': host,
-                'port': port
-            })
-
         self.logged_in = False
 
         # Clean up connections

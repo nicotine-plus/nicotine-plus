@@ -590,10 +590,6 @@ class SlskProtoThread(threading.Thread):
         self.server_disconnected = True
         self.server_socket = None
 
-        if self.server_timer is not None:
-            self.server_timer.cancel()
-            self.server_timer = None
-
         for sock in self._conns.copy():
             self.close_connection(self._conns, sock)
 
@@ -607,9 +603,44 @@ class SlskProtoThread(threading.Thread):
         self.exit.set()
         self._out_indirect_conn_request_times.clear()
 
-        if not self._want_abort:
-            self._callback_msgs.append(ServerDisconnect())
-            self._callback_msgs.append(SetCurrentConnectionCount(0))
+        if self._want_abort:
+            return
+
+        self._callback_msgs.append(SetCurrentConnectionCount(0))
+
+        if not self.server_address:
+            # We didn't successfully establish a connection to the server
+            return
+
+        ip_address, port = self.server_address
+
+        log.add(
+            _("Disconnected from server %(host)s:%(port)s"), {
+                'host': ip_address,
+                'port': port
+            })
+
+        self.server_address = None
+        self._callback_msgs.append(ServerDisconnect())
+
+    def server_timeout(self):
+        self._core_callback([ServerTimeout()])
+
+    def set_server_timer(self):
+
+        if self.server_timeout_value == -1:
+            self.server_timeout_value = 15
+
+        elif 0 < self.server_timeout_value < 600:
+            self.server_timeout_value = self.server_timeout_value * 2
+
+        self.server_timer = threading.Timer(self.server_timeout_value, self.server_timeout)
+        self.server_timer.name = "ServerTimer"
+        self.server_timer.daemon = True
+        self.server_timer.start()
+
+        log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
+                self.server_timeout_value)
 
     def abort(self):
         """ Call this to abort the thread """
@@ -714,25 +745,6 @@ class SlskProtoThread(threading.Thread):
             if self.exit.wait(1):
                 # Event set, we're exiting
                 return
-
-    def server_timeout(self):
-        self._core_callback([ServerTimeout()])
-
-    def set_server_timer(self):
-
-        if self.server_timeout_value == -1:
-            self.server_timeout_value = 15
-
-        elif 0 < self.server_timeout_value < 600:
-            self.server_timeout_value = self.server_timeout_value * 2
-
-        self.server_timer = threading.Timer(self.server_timeout_value, self.server_timeout)
-        self.server_timer.name = "ServerTimer"
-        self.server_timer.daemon = True
-        self.server_timer.start()
-
-        log.add(_("The server seems to be down or not responding, retrying in %i seconds"),
-                self.server_timeout_value)
 
     def socket_still_active(self, sock):
 
