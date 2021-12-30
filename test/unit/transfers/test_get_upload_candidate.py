@@ -21,12 +21,25 @@ import time
 import unittest
 
 from collections import deque
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from pynicotine.config import config
 from pynicotine.transfers import Transfers, Transfer
 
 
+# Make sure time.time() always monotonically increases between calls.
+# In MSYS2/Ming64 time.time() in python seems to return the same value if you
+# call it quickly.
+_TIME = 0
+
+
+def _time_counter():
+    global _TIME  # pylint: disable=global-statement
+    _TIME += 1
+    return _TIME
+
+
+@patch("pynicotine.transfers.time.time", new=_time_counter)
 class GetCandidateTest(unittest.TestCase):
 
     def setUp(self):
