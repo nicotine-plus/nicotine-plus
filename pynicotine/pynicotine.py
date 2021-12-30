@@ -475,8 +475,10 @@ class NicotineCore:
 
         if msg.sock == self.parent_socket:
             self.send_have_no_parent()
+            return
 
-        self.transfers.conn_close(msg.sock)
+        if msg.conn_type == 'F':
+            self.transfers.conn_close(msg.sock)
 
     def start_upnp_timer(self):
         """ Port mapping entries last 24 hours, we need to regularly renew them.

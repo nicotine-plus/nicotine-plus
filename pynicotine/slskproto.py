@@ -206,9 +206,9 @@ else:
 
     # Set the maximum number of open sockets to a lower value than the hard limit,
     # otherwise we just waste resources.
-    # The maximum is 1024, but can be lower if the file limit is too low.
+    # The maximum is 3072, but can be lower if the file limit is too low.
 
-    MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 1024)
+    MAXSOCKETS = min(max(int(MAXFILELIMIT * 0.75), 50), 3072)
 
 UINT_UNPACK = struct.Struct("<I").unpack
 DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
@@ -1003,7 +1003,7 @@ class SlskProtoThread(threading.Thread):
                     "ip": addr[0],
                     "port": addr[1]
                 })
-                self._callback_msgs.append(ConnClose(sock))
+                self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                 self.close_connection(self._conns, sock)
 
     """ Server Connection """
@@ -1216,7 +1216,7 @@ class SlskProtoThread(threading.Thread):
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
                             conn_obj.ibuf = bytearray()
-                            self._callback_msgs.append(ConnClose(conn_obj.sock))
+                            self._callback_msgs.append(ConnClose(conn_obj.sock, 'P'))
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
@@ -1252,7 +1252,7 @@ class SlskProtoThread(threading.Thread):
                              'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
 
                     conn_obj.ibuf = bytearray()
-                    self._callback_msgs.append(ConnClose(conn_obj.sock))
+                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'P'))
                     self.close_connection(self._conns, conn_obj.sock)
                     return
 
@@ -1394,7 +1394,7 @@ class SlskProtoThread(threading.Thread):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
-            self._callback_msgs.append(ConnClose(sock))
+            self._callback_msgs.append(ConnClose(sock, 'P'))
             self.close_connection(self._conns, sock)
 
     def process_peer_output(self, msg_obj):
@@ -1447,7 +1447,7 @@ class SlskProtoThread(threading.Thread):
 
                 except IOError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, strerror))
-                    self._callback_msgs.append(ConnClose(conn_obj.sock))
+                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                     self.close_connection(self._conns, conn_obj.sock)
 
                 except ValueError:
@@ -1465,7 +1465,7 @@ class SlskProtoThread(threading.Thread):
                 conn_obj.lastcallback = current_time
 
             if finished:
-                self._callback_msgs.append(ConnClose(conn_obj.sock))
+                self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                 self.close_connection(self._conns, conn_obj.sock)
 
             conn_obj.filereadbytes += addedbyteslen
@@ -1482,7 +1482,7 @@ class SlskProtoThread(threading.Thread):
 
                 except IOError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, strerror))
-                    self._callback_msgs.append(ConnClose(conn_obj.sock))
+                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                     self.close_connection(self._conns, conn_obj.sock)
 
                 except ValueError:
@@ -1566,7 +1566,7 @@ class SlskProtoThread(threading.Thread):
                         {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
 
                 conn_obj.ibuf = bytearray()
-                self._callback_msgs.append(ConnClose(conn_obj.sock))
+                self._callback_msgs.append(ConnClose(conn_obj.sock, 'D'))
                 self.close_connection(self._conns, conn_obj.sock)
                 return
 
@@ -1635,18 +1635,18 @@ class SlskProtoThread(threading.Thread):
 
             msg_class = msg_obj.__class__
 
-            if issubclass(msg_class, PeerInitMessage):
-                self.process_peer_init_output(msg_obj)
-
-            elif issubclass(msg_class, PeerMessage):
-                self.process_peer_output(msg_obj)
-
-            elif msg_class is InitPeerConn:
+            if msg_class is InitPeerConn:
                 if self._numsockets < MAXSOCKETS:
                     self.init_peer_conn(msg_obj)
                 else:
                     # Connection limit reached, re-queue
                     self._queue.append(msg_obj)
+
+            elif issubclass(msg_class, PeerInitMessage):
+                self.process_peer_init_output(msg_obj)
+
+            elif issubclass(msg_class, PeerMessage):
+                self.process_peer_output(msg_obj)
 
             elif issubclass(msg_class, DistribMessage):
                 self.process_distrib_output(msg_obj)
@@ -1660,7 +1660,7 @@ class SlskProtoThread(threading.Thread):
             elif msg_class is ConnClose and msg_obj.sock in self._conns:
                 sock = msg_obj.sock
 
-                self._callback_msgs.append(ConnClose(sock))
+                self._callback_msgs.append(ConnClose(sock, self._conns[sock].init.conn_type))
                 self.close_connection(self._conns, sock)
 
             elif msg_class is ConnCloseIP:
@@ -1774,7 +1774,7 @@ class SlskProtoThread(threading.Thread):
 
             except IOError as strerror:
                 self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, strerror))
-                self._callback_msgs.append(ConnClose(sock))
+                self._callback_msgs.append(ConnClose(sock, 'F'))
                 self.close_connection(self._conns, sock)
 
             except ValueError:
@@ -1977,7 +1977,7 @@ class SlskProtoThread(threading.Thread):
                         and (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
                     # No recent activity, peer connection is stale
 
-                    self._callback_msgs.append(ConnClose(sock))
+                    self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                     self.close_connection(self._conns, sock)
                     continue
 
@@ -1988,7 +1988,7 @@ class SlskProtoThread(threading.Thread):
                     try:
                         if not self.read_data(conn_obj):
                             # No data received, socket was likely closed remotely
-                            self._callback_msgs.append(ConnClose(sock))
+                            self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                             self.close_connection(self._conns, sock)
                             continue
 
@@ -1998,7 +1998,7 @@ class SlskProtoThread(threading.Thread):
                             "addr": conn_obj.addr,
                             "error": err
                         })
-                        self._callback_msgs.append(ConnClose(sock))
+                        self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                         self.close_connection(self._conns, sock)
                         continue
 
@@ -2017,7 +2017,7 @@ class SlskProtoThread(threading.Thread):
                             "addr": conn_obj.addr,
                             "error": err
                         })
-                        self._callback_msgs.append(ConnClose(sock))
+                        self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                         self.close_connection(self._conns, sock)
                         continue
 

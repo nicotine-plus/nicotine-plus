@@ -76,10 +76,11 @@ class InitPeerConn(InternalMessage):
 class ConnClose(InternalMessage):
     """ Sent by networking thread to indicate a connection has been closed."""
 
-    __slots__ = ("sock",)
+    __slots__ = ("sock", "conn_type")
 
-    def __init__(self, sock=None):
+    def __init__(self, sock=None, conn_type=None):
         self.sock = sock
+        self.conn_type = conn_type
 
 
 class ConnCloseIP(InternalMessage):
