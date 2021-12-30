@@ -26,6 +26,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
 
@@ -262,20 +263,14 @@ def get_icon(icon_name):
     return ICONS.get(icon_name)
 
 
-def get_flag_icon(country):
-
-    if not country:
-        return None
+def get_flag_icon_name(country):
 
     country = country.lower().replace("flag_", "")
 
-    if country not in ICONS:
-        path = os.path.join(GUI_DIR, "icons", "flags", country + ".svg")
+    if country not in GeoIP.COUNTRY_LIST:
+        return ""
 
-        if os.path.isfile(path):
-            ICONS[country] = Gio.Icon.new_for_string(path)
-
-    return get_icon(country)
+    return config.application_id + "-flag-" + country
 
 
 def get_status_icon(status):
@@ -353,15 +348,11 @@ def load_icons():
         "notify"
     )
 
-    """ Load custom icon theme if available """
-
-    if load_custom_icons(names):
-        return
-
     """ Load icons required by the application, such as status icons """
 
-    for name in names:
-        ICONS[name] = load_ui_icon(name)
+    if not load_custom_icons(names):
+        for name in names:
+            ICONS[name] = load_ui_icon(name)
 
     """ Load local app and tray icons, if available """
 

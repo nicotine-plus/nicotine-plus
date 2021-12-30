@@ -27,7 +27,6 @@ import sre_constants
 
 from collections import defaultdict
 
-from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -42,8 +41,7 @@ from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
-from pynicotine.gtkgui.widgets.theme import get_flag_icon
-from pynicotine.gtkgui.widgets.theme import get_icon
+from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
@@ -328,7 +326,7 @@ class Search(UserInterface):
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
             str,                  # (1)  user
-            Gio.Icon,             # (2)  flag
+            str,                  # (2)  flag
             str,                  # (3)  h_speed
             str,                  # (4)  h_queue
             str,                  # (5)  directory
@@ -593,7 +591,7 @@ class Search(UserInterface):
                 [
                     GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
                     user,
-                    get_flag_icon(country) or get_icon("empty"),
+                    get_flag_icon_name(country),
                     h_speed,
                     h_queue,
                     directory,

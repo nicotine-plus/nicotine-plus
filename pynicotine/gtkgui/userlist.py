@@ -30,7 +30,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.theme import get_flag_icon
+from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -58,7 +58,7 @@ class UserList(UserInterface):
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
             Gio.Icon,             # (0)  status icon
-            Gio.Icon,             # (1)  flag
+            str,                  # (1)  flag
             str,                  # (2)  username
             str,                  # (3)  hspeed
             str,                  # (4)  hfile count
@@ -193,7 +193,7 @@ class UserList(UserInterface):
 
         row = [
             get_status_icon(0),
-            get_flag_icon(country) or get_icon("empty"),
+            get_flag_icon_name(country),
             username,
             "",
             "",
@@ -417,7 +417,7 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        flag_icon = get_flag_icon(country_code)
+        flag_icon = get_flag_icon_name(country_code)
 
         if not flag_icon:
             return
