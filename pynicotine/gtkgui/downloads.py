@@ -36,6 +36,8 @@ class Downloads(TransferList):
 
     def __init__(self, frame):
 
+        self.path_separator = '/'
+        self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
         self.aborted_status = _("Paused")

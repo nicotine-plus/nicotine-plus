@@ -141,7 +141,7 @@ class TransferList(UserInterface):
         self.cols = cols = initialise_columns(
             frame, transfer_type, self.Transfers,
             ["user", _("User"), 200, "text", None],
-            ["path", _("Path"), 400, "text", None],
+            ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
             ["status", _("Status"), 140, "text", None],
             ["queue_position", _("Queue Position"), 50, "number", None],
@@ -580,11 +580,11 @@ class TransferList(UserInterface):
 
                 """ Paths can be empty if files are downloaded individually, make sure we
                 don't add files to the wrong user in the TreeView """
-                path = transfer.path
+                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
                 user_path = user + path
 
                 if config.sections["ui"]["reverse_file_paths"]:
-                    path = '/'.join(reversed(path.split('/')))
+                    path = self.path_separator.join(reversed(path.split(self.path_separator)))
 
                 if user_path not in self.paths:
                     self.paths[user_path] = self.transfersmodel.insert_with_values(
@@ -620,10 +620,10 @@ class TransferList(UserInterface):
             # Group by folder, path not visible
             path = ""
         else:
-            path = transfer.path
+            path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
 
             if config.sections["ui"]["reverse_file_paths"]:
-                path = '/'.join(reversed(path.split('/')))
+                path = self.path_separator.join(reversed(path.split(self.path_separator)))
 
         iterator = self.transfersmodel.insert_with_values(
             parent, -1, self.column_numbers,

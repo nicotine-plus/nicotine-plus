@@ -35,6 +35,8 @@ class Uploads(TransferList):
 
     def __init__(self, frame):
 
+        self.path_separator = '\\'
+        self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
         self.aborted_status = _("Aborted")
