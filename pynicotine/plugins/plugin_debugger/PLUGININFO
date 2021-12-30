@@ -1,4 +1,4 @@
-Version = "2021-07-19r00"
+Version = "2021-12-30r00"
 Authors = ['Nicotine+ Team']
 Name = "Plugin Debugger"
-Description = "Plugin to examine the flow of events of the plugin system. Not useful if you're not a programmer."
+Description = "Plugin to examine the flow of events in the plugin system. Useful if you're a programmer."
