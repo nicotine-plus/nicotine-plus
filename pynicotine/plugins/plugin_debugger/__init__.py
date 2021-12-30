@@ -119,13 +119,16 @@ class Plugin(BasePlugin):
         self.log('user_status_notification(user=%s, status=%s, privileged=%s)', (user, status, privileged))
 
     def upload_queued_notification(self, user, virtual_path, real_path):
-        self.log('upload_queued_notification(user=%s, virtual_path=%s, real_path=%s)', (user, virtual_path, real_path))
+        self.log('upload_queued_notification(user=%s, virtual_path=%s, real_path=%s)',
+                 (user, virtual_path, real_path))
 
     def upload_started_notification(self, user, virtual_path, real_path):
-        self.log('upload_started_notification(user=%s, virtual_path=%s, real_path=%s)', (user, virtual_path, real_path))
+        self.log('upload_started_notification(user=%s, virtual_path=%s, real_path=%s)',
+                 (user, virtual_path, real_path))
 
     def upload_finished_notification(self, user, virtual_path, real_path):
-        self.log('upload_finished_notification(user=%s, virtual_path=%s, real_path=%s)', (user, virtual_path, real_path))
+        self.log('upload_finished_notification(user=%s, virtual_path=%s, real_path=%s)',
+                 (user, virtual_path, real_path))
 
     def download_started_notification(self, user, virtual_path, real_path):
         self.log('download_started_notification(user=%s, virtual_path=%s, real_path=%s)',
