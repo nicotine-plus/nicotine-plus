@@ -23,7 +23,7 @@ from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 
 class FileProperties(UserInterface):
 
-    def __init__(self, frame, properties):
+    def __init__(self, frame, properties, download_button=True):
 
         super().__init__("ui/dialogs/fileproperties.ui")
 
@@ -37,6 +37,9 @@ class FileProperties(UserInterface):
             width=600,
             height=0
         )
+
+        if not download_button:
+            self.download.hide()
 
         self.current_index = 0
 

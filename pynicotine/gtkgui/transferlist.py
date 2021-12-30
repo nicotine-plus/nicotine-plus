@@ -905,7 +905,7 @@ class TransferList(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, data).show()
+            FileProperties(self.frame, data, download_button=False).show()
 
     def on_copy_file_path(self, *_args):
 
