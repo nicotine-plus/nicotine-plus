@@ -330,12 +330,11 @@ class Search:
         if search is None or search["ignore"]:
             return
 
-        conn = msg.conn
-        username = conn.init.target_user
-        addr = conn.addr
+        username = msg.init.target_user
+        ip_address = msg.init.addr[0]
 
-        if addr:
-            country = self.geoip.get_country_code(addr[0])
+        if ip_address:
+            country = self.geoip.get_country_code(ip_address)
         else:
             country = ""
 
