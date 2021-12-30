@@ -194,6 +194,36 @@ class GetCandidateTest(unittest.TestCase):
             round_robin=True,
         )
 
+    def test_round_robin_returning_user(self):
+        self.base_test(
+            queued=[
+                "user1",
+                "user1",
+                "user2",
+                "user2",
+                "user2",
+                "user3",
+                "user3",
+                "user3",
+                "user1",
+                "user1",
+            ],
+            in_progress=[],
+            expected=[
+                "user1",
+                "user2",
+                "user3",
+                "user1",
+                "user2",
+                "user3",
+                "user1",
+                "user2",
+                "user3",
+                "user1",
+            ],
+            round_robin=True,
+        )
+
     def test_round_robin_in_progress(self):
         self.base_test(
             queued=[
@@ -265,6 +295,35 @@ class GetCandidateTest(unittest.TestCase):
             expected=[
                 "user1",
                 None,
+                "user1",
+            ],
+        )
+
+    def test_fifo_returning_user(self):
+        self.base_test(
+            queued=[
+                "user1",
+                "user1",
+                "user2",
+                "user2",
+                "user2",
+                "user3",
+                "user3",
+                "user3",
+                "user1",
+                "user1",
+            ],
+            in_progress=[],
+            expected=[
+                "user1",
+                "user2",
+                "user1",
+                "user2",
+                "user3",
+                "user2",
+                "user3",
+                "user1",
+                "user3",
                 "user1",
             ],
         )
