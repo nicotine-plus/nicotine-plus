@@ -82,11 +82,16 @@ class FileProperties(UserInterface):
         self.filesize_value.set_text(str(properties["size"]))
         self.username_value.set_text(properties["user"])
 
-        bitrate = properties["bitrate"] or ""
-        length = properties["length"] or ""
-        queue = properties["queue"] or ""
-        speed = properties["speed"] or ""
-        country = properties["country"] or ""
+        path = properties.get("path") or ""
+        bitrate = properties.get("bitrate") or ""
+        length = properties.get("length") or ""
+        queue = properties.get("queue") or ""
+        speed = properties.get("speed") or ""
+        country = properties.get("country") or ""
+
+        self.path_value.set_text(path)
+        self.path_label.get_parent().set_visible(bool(path))
+        self.path_value.get_parent().set_visible(bool(path))
 
         self.bitrate_value.set_text(bitrate)
         self.bitrate_label.get_parent().set_visible(bool(bitrate))

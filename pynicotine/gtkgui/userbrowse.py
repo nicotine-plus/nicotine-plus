@@ -1072,10 +1072,7 @@ class UserBrowse(UserInterface):
                 "directory": self.selected_folder,
                 "size": size,
                 "bitrate": bitratestr,
-                "length": length,
-                "queue": None,
-                "speed": None,
-                "country": None
+                "length": length
             })
 
         if data:

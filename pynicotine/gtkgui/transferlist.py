@@ -878,6 +878,7 @@ class TransferList(UserInterface):
             user = transfer.user
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
+            path = transfer.path
             size = speed = length = num = bitrate = None
 
             size = str(human_size(transfer.size))
@@ -896,12 +897,11 @@ class TransferList(UserInterface):
                 "position": num,
                 "filename": filename,
                 "directory": directory,
+                "path": path,
                 "size": size,
                 "speed": speed,
-                "queue": None,
                 "bitrate": bitrate,
-                "length": length,
-                "country": None
+                "length": length
             })
 
         if data:
