@@ -29,6 +29,7 @@ from collections import OrderedDict
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
+from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
@@ -143,6 +144,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         if column_type == "text":
             renderer = Gtk.CellRendererText()
             renderer.set_padding(10, height_padding)
+            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
 
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
