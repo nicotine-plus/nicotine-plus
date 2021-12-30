@@ -799,15 +799,7 @@ class SlskProtoThread(threading.Thread):
         """ A connection is established with the peer, time to queue up our peer
         messages for delivery """
 
-        username = init.target_user
         msgs = init.outgoing_msgs
-
-        if msgs is None:
-            return
-
-        log.add_conn("List of outgoing messages for user %(user)s: %(messages)s", {
-                     'user': username,
-                     'messages': msgs})
 
         for j in msgs:
             j.init = init
@@ -903,9 +895,10 @@ class SlskProtoThread(threading.Thread):
 
         self._queue.append(InitPeerConn(addr, init))
 
-        log.add_conn("Initialising direct connection of type %(type)s to user %(user)s", {
+        log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
             'type': init.conn_type,
-            'user': user
+            'user': user,
+            'addr': addr
         })
 
     def connect_error(self, error, conn_obj):
@@ -1962,7 +1955,11 @@ class SlskProtoThread(threading.Thread):
                             else:
                                 self._queue.append(PierceFireWall(conn_obj.sock, conn_obj.init.token))
 
-                            log.add_conn("Connection established with user %s", conn_obj.init.target_user)
+                            log.add_conn(("Established connection with user %(user)s. List of outgoing "
+                                          "messages: %(messages)s"), {
+                                'user': conn_obj.init.target_user,
+                                'messages': conn_obj.init.outgoing_msgs
+                            })
                             self.process_conn_messages(conn_obj.init)
 
                         del self._connsinprogress[sock_in_progress]
