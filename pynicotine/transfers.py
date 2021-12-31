@@ -58,7 +58,7 @@ class Transfer:
                  "path", "req", "size", "file", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "bitrate", "length",
-                 "iterator", "_status", "last_status_change", "legacy_attempt")
+                 "iterator", "status", "legacy_attempt")
 
     def __init__(self, user=None, filename=None, path=None, status=None, req=None, size=None,
                  file=None, current_byte_offset=None, queue_position=0, bitrate=None, length=None):
@@ -68,6 +68,7 @@ class Transfer:
         self.req = req
         self.size = size
         self.file = file
+        self.status = status
         self.current_byte_offset = current_byte_offset
         self.queue_position = queue_position
         self.bitrate = bitrate
@@ -83,15 +84,6 @@ class Transfer:
         self.time_left = None
         self.iterator = None
         self.legacy_attempt = False
-        self.set_status(status)
-
-    def set_status(self, status):
-        self._status = status
-        self.last_status_change = time.time()
-
-    def get_status(self):
-        return self._status
-    status = property(get_status, set_status)
 
 
 class Transfers:
@@ -427,61 +419,76 @@ class Transfers:
 
     def queue_limit_reached(self, user):
 
-        uploadslimit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
+        queue_size_limit = self.config.sections["transfers"]["queuelimit"] * 1024 * 1024
 
-        if not uploadslimit:
+        if not queue_size_limit:
             return False
 
-        size = sum(i.size for i in self.uploads if i.user == user and i.status == "Queued")
+        queue_size = 0
 
-        return size >= uploadslimit
+        for i in self.uploads:
+            if i.user == user and i.status == "Queued":
+                queue_size += i.size
+
+                if queue_size >= queue_size_limit:
+                    return True
+
+        return False
 
     def file_limit_reached(self, user):
 
-        filelimit = self.config.sections["transfers"]["filelimit"]
+        file_limit = self.config.sections["transfers"]["filelimit"]
 
-        if not filelimit:
+        if not file_limit:
             return False
 
-        numfiles = sum(1 for i in self.uploads if i.user == user and i.status == "Queued")
+        num_files = 0
 
-        return numfiles >= filelimit
+        for i in self.uploads:
+            if i.user == user and i.status == "Queued":
+                num_files += 1
+
+                if num_files >= file_limit:
+                    return True
+
+        return False
 
     def slot_limit_reached(self):
 
-        maxupslots = self.config.sections["transfers"]["uploadslots"]
+        upload_slot_limit = self.config.sections["transfers"]["uploadslots"]
 
-        if maxupslots <= 0:
-            maxupslots = 1
+        if upload_slot_limit <= 0:
+            upload_slot_limit = 1
 
-        in_progress_count = 0
-        now = time.time()
+        num_in_progress = 0
+        active_statuses = ("Getting status", "Establishing connection", "Transferring")
 
         for i in self.uploads:
-            if i.conn is not None and i.speed is not None:
-                # Currently transferring
-                in_progress_count += 1
+            if i.status in active_statuses:
+                num_in_progress += 1
 
-            elif (now - i.last_status_change) < 30:
-                # Transfer initiating, changed within last 30 seconds
+                if num_in_progress >= upload_slot_limit:
+                    return True
 
-                if (i.req is not None
-                        or i.conn is not None and i.speed is None
-                        or i.status == "Getting status"):
-                    in_progress_count += 1
-
-        return in_progress_count >= maxupslots
+        return False
 
     def bandwidth_limit_reached(self):
 
-        bandwidthlimit = self.config.sections["transfers"]["uploadbandwidth"] * 1024
+        bandwidth_limit = self.config.sections["transfers"]["uploadbandwidth"] * 1024
 
-        if not bandwidthlimit:
+        if not bandwidth_limit:
             return False
 
-        bandwidth_sum = sum(i.speed for i in self.uploads if i.conn is not None and i.speed is not None)
+        bandwidth_sum = 0
 
-        return bandwidth_sum >= bandwidthlimit
+        for i in self.uploads:
+            if i.speed is not None and i.conn is not None:
+                bandwidth_sum += i.speed
+
+                if bandwidth_sum >= bandwidth_limit:
+                    return True
+
+        return False
 
     def allow_new_uploads(self):
 
@@ -860,13 +867,15 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
+        active_statuses = ("Getting status", "Establishing connection", "Transferring")
 
         for i in self.uploads:
             if i.user != user:
                 continue
 
-            if i.req is not None or i.conn is not None or i.status == "Getting status":
+            if i.status in active_statuses:
                 already_downloading = True
+                break
 
         if not self.allow_new_uploads() or already_downloading:
 
@@ -2086,6 +2095,7 @@ class Transfers:
         FIFO: Get the first queued item in the list """
 
         round_robin_queue = not self.config.sections["transfers"]["fifoqueue"]
+        active_statuses = ("Getting status", "Establishing connection", "Transferring")
         privileged_queue = False
 
         queued_transfers = OrderedDict()
@@ -2111,7 +2121,7 @@ class Transfers:
                 if privileged:
                     privileged_queue = True
 
-            elif i.req is not None or i.conn is not None or i.status == "Getting status":
+            elif i.status in active_statuses:
                 # We're currently uploading a file to the user
                 user = i.user
 
@@ -2241,7 +2251,9 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        if transfer.req is not None or transfer.conn is not None or transfer.status == "Finished":
+        active_statuses = ["Getting status", "Establishing connection", "Transferring"]
+
+        if transfer.status in active_statuses + ["Finished"]:
             # Don't retry active or finished uploads
             return
 
@@ -2251,7 +2263,7 @@ class Transfers:
             if i.user != user:
                 continue
 
-            if i.req is not None or i.conn is not None or i.status == "Getting status":
+            if i.status in active_statuses:
                 # User already has an active upload, queue the retry attempt
                 if transfer.status != "Queued":
                     transfer.status = "Queued"
