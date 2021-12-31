@@ -361,22 +361,11 @@ class TransferList(UserInterface):
     def update_parent_rows(self, only_remove=False):
 
         if self.tree_users != "ungrouped":
-            # Remove empty parent rows
             for path, pathiter in list(self.paths.items()):
-                if not self.transfersmodel.iter_has_child(pathiter):
-                    self.transfersmodel.remove(pathiter)
-                    del self.paths[path]
-
-                elif not only_remove:
-                    self.update_parent_row(pathiter)
+                self.update_parent_row(pathiter, path, only_remove=only_remove, folder=True)
 
             for username, useriter in list(self.users.items()):
-                if not self.transfersmodel.iter_has_child(useriter):
-                    self.transfersmodel.remove(useriter)
-                    del self.users[username]
-
-                elif not only_remove:
-                    self.update_parent_row(useriter)
+                self.update_parent_row(useriter, username, only_remove=only_remove)
 
         # Show tab description if necessary
         self.status_page.set_visible(not self.transfer_list)
@@ -419,7 +408,7 @@ class TransferList(UserInterface):
 
         return size
 
-    def update_parent_row(self, initer):
+    def update_parent_row(self, initer, key, only_remove=False, folder=False):
 
         speed = 0.0
         percent = totalsize = position = 0
@@ -427,6 +416,16 @@ class TransferList(UserInterface):
         salientstatus = ""
 
         iterator = self.transfersmodel.iter_children(initer)
+
+        if iterator is None:
+            # Remove parent row if no children are present anymore
+            dictionary = self.paths if folder else self.users
+            self.transfersmodel.remove(initer)
+            del dictionary[key]
+            return
+
+        if only_remove:
+            return
 
         while iterator is not None:
             transfer = self.transfersmodel.get_value(iterator, 14)
