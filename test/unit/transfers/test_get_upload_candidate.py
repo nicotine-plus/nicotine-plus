@@ -57,16 +57,6 @@ class GetCandidateTest(unittest.TestCase):
         }
         self.transfers.config.sections["transfers"]["fifoqueue"] = False
 
-    def set_in_progress(self, transfer):
-        # Not sure in what situation one, some or all of the
-        # following would be set. But the code checks for all of
-        # them.
-        transfer.status = "Getting status"
-        transfer.req = len(self.transfers.uploads)
-        # The upload_finished() code likes having a real connection here and I
-        # don't feel like mocking a real one
-        # transfer.conn = "dummy connection"
-
     def add_transfers(self, users, in_progress=False):
         new = []
         if isinstance(users, str):
@@ -79,7 +69,7 @@ class GetCandidateTest(unittest.TestCase):
                 status="Queued",
             )
             if in_progress is True:
-                self.set_in_progress(transfer)
+                transfer.status = "Getting status"
             new.append(transfer)
             self.transfers._append_upload(  # pylint: disable=protected-access
                 user,
@@ -153,7 +143,7 @@ class GetCandidateTest(unittest.TestCase):
 
             candidates.append(candidate)
             queued.remove(candidate)
-            self.set_in_progress(candidate)
+            candidate.status = "Getting status"
             in_progress.append(candidate)
 
         # strip pointless retry markers from the end if we never succeeded
