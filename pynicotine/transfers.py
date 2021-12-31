@@ -1445,7 +1445,6 @@ class Transfers:
             self.downloadsview.update(i)
 
         elif transfer_type == "upload":
-            self.user_update_times[i.user] = time.time()
 
             if auto_clear and self.auto_clear_upload(i):
                 # Upload cleared
@@ -2098,7 +2097,7 @@ class Transfers:
         active_statuses = ("Getting status", "Establishing connection", "Transferring")
         privileged_queue = False
 
-        queued_transfers = OrderedDict()
+        first_queued_transfers = OrderedDict()
         queued_users = {}
         uploading_users = set()
 
@@ -2106,11 +2105,8 @@ class Transfers:
             if i.status == "Queued":
                 user = i.user
 
-                if user not in uploading_users:
-                    if user not in queued_transfers:
-                        queued_transfers[user] = []
-
-                    queued_transfers[user].append(i)
+                if user not in first_queued_transfers and user not in uploading_users:
+                    first_queued_transfers[user] = i
 
                 if user in queued_users:
                     continue
@@ -2127,19 +2123,25 @@ class Transfers:
 
                 uploading_users.add(user)
 
-                if user in queued_transfers:
-                    del queued_transfers[user]
+                if user in first_queued_transfers:
+                    del first_queued_transfers[user]
 
         oldest_time = None
         target_user = None
 
         if not round_robin_queue:
-            for user in queued_transfers:
-                if not privileged_queue or (privileged_queue and queued_users[user]):
-                    target_user = user
-                    break
+            # skip the looping below (except the cleanup) and get the first
+            # user of the highest priority we saw above
+            for user in first_queued_transfers:
+                if privileged_queue and not queued_users[user]:
+                    continue
+
+                target_user = user
+                break
 
         for user, update_time in list(self.user_update_times.items()):
+            # some cleanup, should probably log a warning as this case is
+            # probably a logic bug
             if user not in queued_users:
                 del self.user_update_times[user]
                 continue
@@ -2147,23 +2149,20 @@ class Transfers:
             if not round_robin_queue or user in uploading_users:
                 continue
 
-            if not privileged_queue or (privileged_queue and queued_users[user]):
-                if not oldest_time:
-                    oldest_time = update_time + 1
+            if privileged_queue and not queued_users[user]:
+                continue
 
-                if update_time < oldest_time:
-                    target_user = user
-                    oldest_time = update_time
+            if not oldest_time:
+                oldest_time = update_time + 1
+
+            if update_time < oldest_time:
+                target_user = user
+                oldest_time = update_time
 
         if not target_user:
             return None
 
-        queued_transfers = queued_transfers[target_user]
-
-        if not queued_transfers:
-            return None
-
-        return queued_transfers[0]
+        return first_queued_transfers[target_user]
 
     def check_upload_queue(self):
         """ Find next file to upload """
@@ -2301,6 +2300,7 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
+                self.user_update_times[transfer.user] = time.time()
                 self.check_upload_queue()
                 log.add_upload(
                     _("Upload aborted, user %(user)s file %(file)s"), {
