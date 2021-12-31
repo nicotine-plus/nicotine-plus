@@ -539,6 +539,9 @@ class TransferList(UserInterface):
 
             return
 
+        expand_user = False
+        expand_folder = False
+
         filename = transfer.filename
         user = transfer.user
         shortfn = filename.split("\\")[-1]
@@ -572,6 +575,11 @@ class TransferList(UserInterface):
                         Transfer(user=user)
                     ]
                 )
+
+                if self.tree_users == "folder_grouping":
+                    expand_user = True
+                else:
+                    expand_user = self.expand_button.get_active()
 
             parent = self.users[user]
 
@@ -607,6 +615,7 @@ class TransferList(UserInterface):
                             Transfer(user=user)
                         ]
                     )
+                    expand_folder = self.expand_button.get_active()
 
                 parent = self.paths[user_path]
         else:
@@ -647,17 +656,11 @@ class TransferList(UserInterface):
         )
         transfer.iterator = iterator
 
-        # Expand path
-        if parent is not None:
-            transfer_path = self.transfersmodel.get_path(iterator)
+        if expand_user:
+            self.Transfers.expand_row(self.transfersmodel.get_path(self.users[user]), False)
 
-            if self.tree_users == "folder_grouping":
-                # Group by folder, we need the user path to expand it
-                user_path = self.transfersmodel.get_path(self.users[user])
-            else:
-                user_path = None
-
-            self.expand(transfer_path, user_path)
+        if expand_folder:
+            self.Transfers.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
     def retry_transfers(self):
         for transfer in self.selected_transfers:
@@ -742,16 +745,6 @@ class TransferList(UserInterface):
         # Single user, add items directly to "User(s)" submenu
         user = next(iter(self.selected_users), None)
         self.add_popup_menu_user(self.popup_menu_users, user)
-
-    def expand(self, transfer_path, user_path):
-
-        if self.expand_button.get_active():
-            self.Transfers.expand_to_path(transfer_path)
-
-        elif user_path and self.tree_users == "folder_grouping":
-            # Group by folder, show user folders in collapsed mode
-
-            self.Transfers.expand_to_path(user_path)
 
     def on_expand_tree(self, widget):
 
