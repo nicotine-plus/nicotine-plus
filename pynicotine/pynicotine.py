@@ -845,7 +845,7 @@ class NicotineCore:
 
         for i in conn.msgs:
             if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
-                self.transfers.get_cant_connect_request(i.req)
+                self.transfers.get_cant_connect_request(i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(conn.username, i.file)
@@ -1466,7 +1466,7 @@ class NicotineCore:
             peermsg = self.protothread.peerclasses[msg.code](None)
             peermsg.parse_network_message(msg.msg)
             peermsg.tunneleduser = msg.user
-            peermsg.tunneledreq = msg.req
+            peermsg.tunneledtoken = msg.token
             peermsg.tunneledaddr = msg.addr
             self.network_callback([peermsg])
         else:

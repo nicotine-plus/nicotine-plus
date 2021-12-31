@@ -1102,7 +1102,7 @@ class SlskProtoThread(threading.Thread):
             msgsize = 4
             msg = self.unpack_network_message(FileRequest, msg_buffer[:msgsize], msgsize, "file", conn.conn)
 
-            if msg is not None and msg.req is not None:
+            if msg is not None and msg.token is not None:
                 self._callback_msgs.append(msg)
                 conn.filereq = msg
 

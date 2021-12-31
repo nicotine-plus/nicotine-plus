@@ -1048,22 +1048,22 @@ class PlaceInLineResponse(ServerMessage):
     waiting for files from another peer. """
     """ OBSOLETE, use PlaceInQueue peer message """
 
-    def __init__(self, user=None, req=None, place=None):
-        self.req = req
+    def __init__(self, user=None, token=None, place=None):
+        self.token = token
         self.user = user
         self.place = place
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.place))
 
         return msg
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.place = self.get_object(message, int, pos)
 
 
@@ -1158,8 +1158,8 @@ class ExactFileSearch(ServerMessage):
     to find other sources. """
     """ OBSOLETE, no results even with official client """
 
-    def __init__(self, req=None, file=None, folder=None, size=None, checksum=None):
-        self.req = req
+    def __init__(self, token=None, file=None, folder=None, size=None, checksum=None):
+        self.token = token
         self.file = file
         self.folder = folder
         self.size = size
@@ -1168,7 +1168,7 @@ class ExactFileSearch(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.file))
         msg.extend(self.pack_object(self.folder))
         msg.extend(self.pack_object(self.size, unsignedlonglong=True))
@@ -1178,7 +1178,7 @@ class ExactFileSearch(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.file = self.get_object(message, str, pos)
         pos, self.folder = self.get_object(message, str, pos)
         pos, self.size = self.get_object(message, int, pos, getunsignedlonglong=True)
@@ -1246,9 +1246,9 @@ class TunneledMessage(ServerMessage):
     """ Server message for tunneling a chat message. """
     """ OBSOLETE, no longer used """
 
-    def __init__(self, user=None, req=None, code=None, msg=None):
+    def __init__(self, user=None, token=None, code=None, msg=None):
         self.user = user
-        self.req = req
+        self.token = token
         self.code = code
         self.msg = msg
         self.addr = None
@@ -1256,7 +1256,7 @@ class TunneledMessage(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.code))
         msg.extend(self.pack_object(self.msg))
 
@@ -1265,7 +1265,7 @@ class TunneledMessage(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.code = self.get_object(message, int, pos)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
 
         pos, ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
         pos, port = self.get_object(message, int, pos, 1)
@@ -2629,10 +2629,10 @@ class TransferRequest(PeerMessage):
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 
-    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None):
+    def __init__(self, conn, direction=None, token=None, file=None, filesize=None, realfile=None):
         self.conn = conn
         self.direction = direction
-        self.req = req
+        self.token = token
         self.file = file  # virtual file
         self.realfile = realfile
         self.filesize = filesize
@@ -2640,7 +2640,7 @@ class TransferRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.direction))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.file))
 
         if self.filesize is not None and self.direction == 1:
@@ -2650,7 +2650,7 @@ class TransferRequest(PeerMessage):
 
     def parse_network_message(self, message):
         pos, self.direction = self.get_object(message, int)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.file = self.get_object(message, str, pos)
 
         if self.direction == 1:
@@ -2662,16 +2662,16 @@ class TransferResponse(PeerMessage):
     """ Response to TransferRequest - either we (or the other peer) agrees,
     or tells the reason for rejecting the file transfer. """
 
-    def __init__(self, conn, allowed=None, reason=None, req=None, filesize=None):
+    def __init__(self, conn, allowed=None, reason=None, token=None, filesize=None):
         self.conn = conn
         self.allowed = allowed
-        self.req = req
+        self.token = token
         self.reason = reason
         self.filesize = filesize
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(bytes([self.allowed]))
 
         if self.reason is not None:
@@ -2683,7 +2683,7 @@ class TransferResponse(PeerMessage):
         return msg
 
     def parse_network_message(self, message):
-        pos, self.req = self.get_object(message, int)
+        pos, self.token = self.get_object(message, int)
         pos, self.allowed = pos + 1, message[pos]
 
         if message[pos:]:
@@ -2823,16 +2823,16 @@ class FileRequest(FileMessage):
     start uploading a file. The token is the same as the one previously included
     in the TransferRequest message. """
 
-    def __init__(self, conn, req=None):
+    def __init__(self, conn, token=None):
         self.conn = conn
-        self.req = req
+        self.token = token
 
     def make_network_message(self):
-        msg = self.pack_object(self.req)
+        msg = self.pack_object(self.token)
         return msg
 
     def parse_network_message(self, message):
-        _pos, self.req = self.get_object(message, int)
+        _pos, self.token = self.get_object(message, int)
 
 
 class FileOffset(FileMessage):
