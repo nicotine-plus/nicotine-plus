@@ -349,7 +349,7 @@ class Search(UserInterface):
         color_col = 17
         self.cols = cols = initialise_columns(
             self.frame, "file_search", self.ResultsList,
-            ["id", _("ID"), 50, "text", color_col],
+            ["id", _("ID"), 50, "number", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "icon", None],
             ["speed", _("Speed"), 100, "number", color_col],
