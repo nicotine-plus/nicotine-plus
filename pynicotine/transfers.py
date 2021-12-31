@@ -455,14 +455,14 @@ class Transfers:
             maxupslots = 1
 
         in_progress_count = 0
-        now = time.time()
+        current_time = time.time()
 
-        for i in self.uploads:
+        for i in reversed(self.uploads):
             if i.conn is not None and i.speed is not None:
                 # Currently transferring
                 in_progress_count += 1
 
-            elif (now - i.last_status_change) < 30:
+            elif (current_time - i.last_status_change) < 30:  # ToDo: performance bottleneck
                 # Transfer initiating, changed within last 30 seconds
 
                 if (i.req is not None
@@ -470,7 +470,11 @@ class Transfers:
                         or i.status == "Getting status"):
                     in_progress_count += 1
 
-        return in_progress_count >= maxupslots
+            if in_progress_count >= maxupslots:
+                # slot_limit_reached, so stop iterating
+                return True
+
+        return False
 
     def bandwidth_limit_reached(self):
 
