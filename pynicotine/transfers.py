@@ -1042,7 +1042,7 @@ class Transfers:
                 self._file_request_upload(msg, i)
                 return
 
-        self.queue.append(slskmessages.ConnClose(msg.sock))
+        self.queue.append(slskmessages.ConnClose(msg.init.sock))
 
     def _file_request_download(self, msg, i):
 

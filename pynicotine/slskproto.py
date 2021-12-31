@@ -823,22 +823,10 @@ class SlskProtoThread(threading.Thread):
         if conn_type != 'F':
             # Check if there's already a connection object for the specified username
 
-            for _, i in self._conns.items():
-                if i.init is not None and i.init.target_user == user and i.init.conn_type == conn_type:
-                    init = i.init
+            for _, i in self._init_msgs.items():
+                if i.target_user == user and i.conn_type == conn_type:
+                    init = i
                     break
-
-            if init is None:
-                for _, i in self._connsinprogress.items():
-                    if i.init is not None and i.init.target_user == user and i.init.conn_type == conn_type:
-                        init = i.init
-                        break
-
-            if init is None:
-                for _, i in self._init_msgs.items():
-                    if i.target_user == user and i.conn_type == conn_type:
-                        init = i
-                        break
 
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
@@ -893,6 +881,7 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer_direct(self, user, addr, init):
         """ Initiate a connection with a peer directly """
 
+        self._init_msgs[str(addr) + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
@@ -981,6 +970,8 @@ class SlskProtoThread(threading.Thread):
 
         if conn_obj.init is None:
             return
+
+        self._init_msgs.pop(str(conn_obj.addr) + conn_obj.init.conn_type, None)
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_obj.init.conn_type,
@@ -1220,6 +1211,7 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
+                        self._init_msgs[str(conn_obj.addr) + 'P'] = conn_obj.init
                         conn_obj.init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(conn_obj.init, None)
 
@@ -1235,6 +1227,7 @@ class SlskProtoThread(threading.Thread):
                     elif self.peerinitclasses[msgtype] is PeerInit:
                         conn_obj.init = msg
                         conn_obj.init.addr = conn_obj.addr
+                        self._init_msgs[str(conn_obj.addr) + msg.conn_type] = msg
 
                         log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s", {
                             'type': msg.conn_type,
