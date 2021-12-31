@@ -360,27 +360,23 @@ class TransferList(UserInterface):
 
     def update_parent_rows(self, only_remove=False):
 
-        # Remove empty parent rows
-        for path, pathiter in list(self.paths.items()):
-            if not self.transfersmodel.iter_has_child(pathiter):
-                self.transfersmodel.remove(pathiter)
-                del self.paths[path]
+        if self.tree_users != "ungrouped":
+            # Remove empty parent rows
+            for path, pathiter in list(self.paths.items()):
+                if not self.transfersmodel.iter_has_child(pathiter):
+                    self.transfersmodel.remove(pathiter)
+                    del self.paths[path]
 
-            elif not only_remove:
-                self.update_parent_row(pathiter)
+                elif not only_remove:
+                    self.update_parent_row(pathiter)
 
-        for username, useriter in list(self.users.items()):
-            if isinstance(useriter, Gtk.TreeIter):
+            for username, useriter in list(self.users.items()):
                 if not self.transfersmodel.iter_has_child(useriter):
                     self.transfersmodel.remove(useriter)
                     del self.users[username]
 
                 elif not only_remove:
                     self.update_parent_row(useriter)
-            else:
-                # No grouping
-                if not self.users[username]:
-                    del self.users[username]
 
         # Show tab description if necessary
         self.status_page.set_visible(not self.transfer_list)
@@ -683,9 +679,12 @@ class TransferList(UserInterface):
 
         user = transfer.user
 
-        if user in self.users and not isinstance(self.users[user], Gtk.TreeIter):
+        if self.tree_users == "ungrouped" and user in self.users:
             # No grouping
             self.users[user].discard(transfer)
+
+            if not self.users[user]:
+                del self.users[user]
 
         if transfer in self.frame.np.transfers.transfer_request_times:
             del self.frame.np.transfers.transfer_request_times[transfer]
