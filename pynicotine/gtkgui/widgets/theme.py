@@ -358,7 +358,7 @@ def load_icons():
 
     paths = (
         os.path.join(GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
-        os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")  # Support Python venv
+        os.path.join(sys.prefix, "share", "icons")  # Support Python venv
     )
 
     for path in paths:
