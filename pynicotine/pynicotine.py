@@ -102,7 +102,6 @@ class NicotineCore:
         self.logged_in = False
         self.user_ip_address = None
         self.privileges_left = None
-        self.manual_disconnect = False
 
         self.parent_socket = None
         self.potential_parents = {}
@@ -281,7 +280,6 @@ class NicotineCore:
 
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
-        self.manual_disconnect = True
 
         # Notify plugins
         self.pluginhandler.shutdown_notification()
@@ -291,7 +289,8 @@ class NicotineCore:
             self.pluginhandler.disable_plugin(plugin)
 
         # Shut down networking thread
-        if self.protothread.server_socket is not None:
+        if not self.protothread.server_disconnected:
+            self.protothread.manual_server_disconnect = True
             self.server_disconnect()
 
         self.protothread.abort()
@@ -356,7 +355,6 @@ class NicotineCore:
         return True
 
     def disconnect(self):
-        self.manual_disconnect = True
         self.queue.append(slskmessages.ServerDisconnect())
 
     def network_event(self, msgs):
@@ -447,7 +445,7 @@ class NicotineCore:
             elif i.__class__ is slskmessages.UserInfoRequest:
                 self.userinfo.show_connection_error(msg.user)
 
-    def server_disconnect(self, *_args):
+    def server_disconnect(self, msg=None):
 
         self.logged_in = False
 
@@ -455,8 +453,7 @@ class NicotineCore:
         self.user_statuses.clear()
         self.watched_users.clear()
 
-        self.pluginhandler.server_disconnect_notification(self.manual_disconnect)
-        self.manual_disconnect = False
+        self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
 
         self.transfers.server_disconnect()
         self.search.server_disconnect()

@@ -461,6 +461,7 @@ class SlskProtoThread(threading.Thread):
         self.listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.listen_socket.setblocking(0)
 
+        self.manual_server_disconnect = False
         self.server_socket = None
         self.server_address = None
         self.server_timer = None
@@ -578,7 +579,9 @@ class SlskProtoThread(threading.Thread):
 
     def server_connect(self):
         """ We've connected to the server """
+
         self.server_disconnected = False
+        self.manual_server_disconnect = False
 
         if self.server_timer is not None:
             self.server_timer.cancel()
@@ -591,10 +594,10 @@ class SlskProtoThread(threading.Thread):
         self.server_socket = None
 
         for sock in self._conns.copy():
-            self.close_connection(self._conns, sock)
+            self.close_connection(self._conns, sock, callback=False)
 
         for sock in self._connsinprogress.copy():
-            self.close_connection(self._connsinprogress, sock)
+            self.close_connection(self._connsinprogress, sock, callback=False)
 
         self._queue.clear()
         self._init_msgs.clear()
@@ -620,8 +623,11 @@ class SlskProtoThread(threading.Thread):
                 'port': port
             })
 
+        if not self.manual_server_disconnect:
+            self.set_server_timer()
+
         self.server_address = None
-        self._callback_msgs.append(ServerDisconnect())
+        self._callback_msgs.append(ServerDisconnect(self.manual_server_disconnect))
 
     def server_timeout(self):
         self._core_callback([ServerTimeout()])
@@ -940,13 +946,17 @@ class SlskProtoThread(threading.Thread):
             "error": error
         })
 
-    def close_connection(self, connection_list, sock):
+    def close_connection(self, connection_list, sock, callback=True):
 
         if sock not in connection_list:
             # Already removed
             return
 
         conn_obj = connection_list[sock]
+        conn_type = conn_obj.init.conn_type if conn_obj.init else 'S'
+
+        if callback:
+            self._callback_msgs.append(ConnClose(sock, conn_type))
 
         if self._is_download(conn_obj):
             self.total_downloads -= 1
@@ -994,7 +1004,6 @@ class SlskProtoThread(threading.Thread):
                     "ip": addr[0],
                     "port": addr[1]
                 })
-                self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                 self.close_connection(self._conns, sock)
 
     """ Server Connection """
@@ -1207,7 +1216,6 @@ class SlskProtoThread(threading.Thread):
                             log.add_conn(("Indirect connection attempt with token %s previously expired, "
                                           "closing connection"), msg.token)
                             conn_obj.ibuf = bytearray()
-                            self._callback_msgs.append(ConnClose(conn_obj.sock, 'P'))
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
@@ -1245,7 +1253,6 @@ class SlskProtoThread(threading.Thread):
                              'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
 
                     conn_obj.ibuf = bytearray()
-                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'P'))
                     self.close_connection(self._conns, conn_obj.sock)
                     return
 
@@ -1387,7 +1394,6 @@ class SlskProtoThread(threading.Thread):
             # Forcibly close peer connection. Only used after receiving a search result,
             # as we need to get rid of peer connections before they pile up.
 
-            self._callback_msgs.append(ConnClose(sock, 'P'))
             self.close_connection(self._conns, sock)
 
     def process_peer_output(self, msg_obj):
@@ -1440,7 +1446,6 @@ class SlskProtoThread(threading.Thread):
 
                 except IOError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, strerror))
-                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                     self.close_connection(self._conns, conn_obj.sock)
 
                 except ValueError:
@@ -1458,7 +1463,6 @@ class SlskProtoThread(threading.Thread):
                 conn_obj.lastcallback = current_time
 
             if finished:
-                self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                 self.close_connection(self._conns, conn_obj.sock)
 
             conn_obj.filereadbytes += addedbyteslen
@@ -1475,7 +1479,6 @@ class SlskProtoThread(threading.Thread):
 
                 except IOError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, strerror))
-                    self._callback_msgs.append(ConnClose(conn_obj.sock, 'F'))
                     self.close_connection(self._conns, conn_obj.sock)
 
                 except ValueError:
@@ -1559,7 +1562,6 @@ class SlskProtoThread(threading.Thread):
                         {'type': msgtype, 'size': msgsize - 1, 'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
 
                 conn_obj.ibuf = bytearray()
-                self._callback_msgs.append(ConnClose(conn_obj.sock, 'D'))
                 self.close_connection(self._conns, conn_obj.sock)
                 return
 
@@ -1652,8 +1654,6 @@ class SlskProtoThread(threading.Thread):
 
             elif msg_class is ConnClose and msg_obj.sock in self._conns:
                 sock = msg_obj.sock
-
-                self._callback_msgs.append(ConnClose(sock, self._conns[sock].init.conn_type))
                 self.close_connection(self._conns, sock)
 
             elif msg_class is ConnCloseIP:
@@ -1664,6 +1664,7 @@ class SlskProtoThread(threading.Thread):
                     self.init_server_conn(msg_obj)
 
             elif msg_class is ServerDisconnect:
+                self.manual_server_disconnect = True
                 self.close_connection(self._conns, self.server_socket)
 
             elif msg_class is DownloadFile and msg_obj.sock in self._conns:
@@ -1767,7 +1768,6 @@ class SlskProtoThread(threading.Thread):
 
             except IOError as strerror:
                 self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, strerror))
-                self._callback_msgs.append(ConnClose(sock, 'F'))
                 self.close_connection(self._conns, sock)
 
             except ValueError:
@@ -1877,7 +1877,7 @@ class SlskProtoThread(threading.Thread):
                     # Connection failed
 
                     self.connect_error("Timed out", conn_obj)
-                    self.close_connection(self._connsinprogress, sock_in_progress)
+                    self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
                     continue
 
                 try:
@@ -1887,7 +1887,7 @@ class SlskProtoThread(threading.Thread):
 
                 except socket.error as err:
                     self.connect_error(err, conn_obj)
-                    self.close_connection(self._connsinprogress, sock_in_progress)
+                    self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
                 else:
                     if sock_in_progress in output_list:
@@ -1969,8 +1969,6 @@ class SlskProtoThread(threading.Thread):
                 if (sock is not self.server_socket
                         and (current_time - conn_obj.lastactive) > self.CONNECTION_MAX_IDLE):
                     # No recent activity, peer connection is stale
-
-                    self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                     self.close_connection(self._conns, sock)
                     continue
 
@@ -1981,7 +1979,6 @@ class SlskProtoThread(threading.Thread):
                     try:
                         if not self.read_data(conn_obj):
                             # No data received, socket was likely closed remotely
-                            self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                             self.close_connection(self._conns, sock)
                             continue
 
@@ -1991,7 +1988,6 @@ class SlskProtoThread(threading.Thread):
                             "addr": conn_obj.addr,
                             "error": err
                         })
-                        self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                         self.close_connection(self._conns, sock)
                         continue
 
@@ -2010,7 +2006,6 @@ class SlskProtoThread(threading.Thread):
                             "addr": conn_obj.addr,
                             "error": err
                         })
-                        self._callback_msgs.append(ConnClose(sock, conn_obj.init.conn_type))
                         self.close_connection(self._conns, sock)
                         continue
 

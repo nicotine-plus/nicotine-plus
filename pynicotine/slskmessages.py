@@ -57,7 +57,9 @@ class ServerConnect(InternalMessage):
 
 
 class ServerDisconnect(InternalMessage):
-    pass
+
+    def __init__(self, manual_disconnect=False):
+        self.manual_disconnect = manual_disconnect
 
 
 class ServerTimeout(InternalMessage):
