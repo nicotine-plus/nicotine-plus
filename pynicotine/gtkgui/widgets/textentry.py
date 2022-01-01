@@ -276,7 +276,7 @@ class ChatCompletion:
 
     def __init__(self):
 
-        self.completion_list = None
+        self.completion_list = []
         self.completion_iters = {}
 
         self.midwaycompletion = False  # True if the user just used tab completion
