@@ -73,7 +73,7 @@ class TransferList(UserInterface):
             self.ClearTransfers.set_has_frame(False)
             self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
         else:
-            grouping_button.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            grouping_button.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
 
@@ -168,8 +168,8 @@ class TransferList(UserInterface):
         self.status_page = getattr(frame, "%ss_status_page" % transfer_type)
         self.expand_button = getattr(frame, "Expand%ss" % transfer_type.title())
 
-        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
-        action = Gio.SimpleAction.new_stateful("%sgrouping" % transfer_type, GLib.VariantType.new("s"), state)
+        state = GLib.Variant("s", verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
+        action = Gio.SimpleAction(name="%sgrouping" % transfer_type, parameter_type=GLib.VariantType("s"), state=state)
         action.connect("change-state", self.on_toggle_tree)
         frame.MainWindow.add_action(action)
         action.change_state(state)

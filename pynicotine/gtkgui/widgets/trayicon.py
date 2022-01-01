@@ -272,9 +272,9 @@ class TrayIcon:
         if self.tray_icon is None:
             if self.appindicator is not None:
                 tray_icon = self.appindicator.Indicator.new(
-                    config.application_name,
-                    "",
-                    self.appindicator.IndicatorCategory.APPLICATION_STATUS)
+                    id=config.application_name,
+                    icon_name="",
+                    category=self.appindicator.IndicatorCategory.APPLICATION_STATUS)
                 tray_icon.set_menu(self.tray_popup_menu)
 
                 # Action to hide/unhide main window when middle clicking the tray icon
@@ -288,8 +288,7 @@ class TrayIcon:
 
             else:
                 # GtkStatusIcon fallback
-                tray_icon = Gtk.StatusIcon()
-                tray_icon.set_tooltip_text(config.application_name)
+                tray_icon = Gtk.StatusIcon(tooltip_text=config.application_name)
                 tray_icon.connect("activate", self.frame.on_window_hide_unhide)
                 tray_icon.connect("popup-menu", self.on_status_icon_popup)
 

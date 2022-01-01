@@ -369,8 +369,8 @@ class ChatRoom(UserInterface):
             self.ChatPanedSecond.set_shrink_end_child(False)
 
         else:
-            self.ShowRoomWall.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
-            self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
+            self.ShowRoomWall.set_image(Gtk.Image(icon_name="view-list-symbolic"))
+            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
 
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)

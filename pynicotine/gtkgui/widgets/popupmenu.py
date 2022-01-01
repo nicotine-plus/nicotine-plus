@@ -96,10 +96,8 @@ class PopupMenu:
 
     def _create_action(self, action_id, stateful=False):
 
-        if not stateful:
-            action = Gio.SimpleAction.new(action_id, None)
-        else:
-            action = Gio.SimpleAction.new_stateful(action_id, None, GLib.Variant.new_boolean(False))
+        state = GLib.Variant("b", False) if stateful else None
+        action = Gio.SimpleAction(name=action_id, state=state)
 
         self.frame.MainWindow.add_action(action)
         return action
@@ -155,7 +153,7 @@ class PopupMenu:
             if Gtk.get_major_version() == 3:
                 # Ideally, we wouldn't hide disabled submenus, but a GTK limitation forces us to
                 # https://discourse.gnome.org/t/question-how-do-i-disable-a-menubar-menu-in-gtk-is-it-even-possible/906/9
-                menuitem.set_attribute_value("hidden-when", GLib.Variant.new_string("action-disabled"))
+                menuitem.set_attribute_value("hidden-when", GLib.Variant("s", "action-disabled"))
 
         elif action and item[1]:
             # Callback
@@ -272,23 +270,16 @@ class PopupMenu:
 
         if add_to_list in self.actions:
             self.actions[add_to_list].set_state(
-                GLib.Variant.new_boolean(
-                    self.user in (i[0] for i in config.sections["server"]["userlist"])
-                )
+                GLib.Variant("b", self.user in (i[0] for i in config.sections["server"]["userlist"]))
             )
 
-        self.actions[_("Ban User")].set_state(
-            GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_banned(self.user))
-        )
+        self.actions[_("Ban User")].set_state(GLib.Variant("b", self.frame.np.network_filter.is_user_banned(self.user)))
         self.actions[_("Ignore User")].set_state(
-            GLib.Variant.new_boolean(self.frame.np.network_filter.is_user_ignored(self.user))
-        )
+            GLib.Variant("b", self.frame.np.network_filter.is_user_ignored(self.user)))
         self.actions[_("Block User's IP Address")].set_state(
-            GLib.Variant.new_boolean(self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False)
-        )
+            GLib.Variant("b", self.frame.np.network_filter.get_cached_blocked_user_ip(self.user) or False))
         self.actions[_("Ignore User's IP Address")].set_state(
-            GLib.Variant.new_boolean(self.frame.np.network_filter.get_cached_ignored_user_ip(self.user) or False)
-        )
+            GLib.Variant("b", self.frame.np.network_filter.get_cached_ignored_user_ip(self.user) or False))
 
         self.editing = False
 
@@ -425,8 +416,8 @@ class PopupMenu:
             setup_accelerator("<Shift>F10", parent, self._callback_menu)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress.new(parent)
-            self.gesture_press = Gtk.GestureLongPress.new(parent)
+            self.gesture_click = Gtk.GestureMultiPress(widget=parent)
+            self.gesture_press = Gtk.GestureLongPress(widget=parent)
 
             # Shift+F10
             parent.connect("popup-menu", self._callback_menu)
@@ -441,7 +432,7 @@ class PopupMenu:
 
     def on_search_user(self, *_args):
 
-        self.frame.search_mode_action.change_state(GLib.Variant.new_string("user"))
+        self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
         self.frame.UserSearchEntry.set_text(self.user)
         self.frame.change_main_page("search")
 

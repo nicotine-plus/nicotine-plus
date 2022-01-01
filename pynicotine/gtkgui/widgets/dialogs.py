@@ -115,15 +115,15 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
 
     self = Gtk.MessageDialog(
         transient_for=parent,
+        default_width=500,
         message_type=Gtk.MessageType.OTHER,
         buttons=Gtk.ButtonsType.OK_CANCEL,
+        destroy_with_parent=True,
+        modal=True,
         text=title,
         secondary_text=message
     )
     self.connect("response", callback, callback_data)
-    self.set_size_request(500, -1)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
 
     if Gtk.get_major_version() == 4:
         label = self.get_message_area().get_last_child()
@@ -133,19 +133,16 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
     label.set_selectable(True)
 
     if droplist:
-        dropdown = Gtk.ComboBoxText.new_with_entry()
+        dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
         entry = dropdown.get_child()
 
         for i in droplist:
             dropdown.append_text(i)
 
         self.get_message_area().add(dropdown)
-        dropdown.show()
-
     else:
-        entry = Gtk.Entry()
+        entry = Gtk.Entry(visible=True)
         self.get_message_area().add(entry)
-        entry.show()
 
     self.get_response_value = entry.get_text
     entry.connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
@@ -154,13 +151,8 @@ def entry_dialog(parent, title, message, callback, callback_data=None, default="
     entry.set_visibility(visibility)
 
     if option:
-        self.option = Gtk.CheckButton()
-        self.option.set_active(optionvalue)
-        self.option.set_label(optionmessage)
-
+        self.option = Gtk.CheckButton(label=optionmessage, active=optionvalue, visible=True)
         self.get_message_area().add(self.option)
-        self.option.show()
-
         self.get_second_response_value = self.option.get_active
 
     self.present_with_time(Gdk.CURRENT_TIME)
@@ -172,6 +164,8 @@ def message_dialog(parent, title, message, callback=None):
         transient_for=parent,
         message_type=Gtk.MessageType.INFO,
         buttons=Gtk.ButtonsType.OK,
+        destroy_with_parent=True,
+        modal=True,
         text=title,
         secondary_text=message
     )
@@ -181,8 +175,6 @@ def message_dialog(parent, title, message, callback=None):
             dialog.destroy()
 
     self.connect("response", callback)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
 
     if Gtk.get_major_version() == 4:
         label = self.get_message_area().get_last_child()
@@ -200,12 +192,12 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
     self = Gtk.MessageDialog(
         transient_for=parent,
         message_type=Gtk.MessageType.QUESTION,
+        destroy_with_parent=True,
+        modal=True,
         text=title,
         secondary_text=message
     )
     self.connect("response", callback, callback_data)
-    self.set_destroy_with_parent(True)
-    self.set_modal(True)
 
     if Gtk.get_major_version() == 4:
         label = self.get_message_area().get_last_child()
@@ -214,14 +206,10 @@ def option_dialog(parent, title, message, callback, callback_data=None, checkbox
 
     label.set_selectable(True)
 
-    self.checkbox = Gtk.CheckButton()
+    self.checkbox = Gtk.CheckButton(label=checkbox_label, visible=bool(checkbox_label))
 
     if checkbox_label:
-        self.checkbox.set_label(checkbox_label)
-        self.checkbox.show()
         self.get_message_area().add(self.checkbox)
-    else:
-        self.checkbox.hide()
 
     if first_button:
         self.add_button(first_button, 1)

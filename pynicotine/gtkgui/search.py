@@ -269,7 +269,7 @@ class Search(UserInterface):
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")
         else:
-            self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            self.ResultGrouping.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
         setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
         setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)

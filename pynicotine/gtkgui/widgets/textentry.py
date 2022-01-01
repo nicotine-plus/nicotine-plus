@@ -285,9 +285,7 @@ class ChatCompletion:
         self.entry = None
         self.entry_changed_handler = None
         self.model = Gtk.ListStore(str)
-        self.completion = Gtk.EntryCompletion()
-        self.completion.set_model(self.model)
-        self.completion.set_text_column(0)
+        self.completion = Gtk.EntryCompletion(model=self.model, text_column=0)
         self.completion.set_match_func(self.entry_completion_find_match)
         self.completion.connect("match-selected", self.entry_completion_found_match)
 
@@ -504,14 +502,9 @@ class CompletionEntry:
         self.entry = entry
         self.model = model
 
-        completion = Gtk.EntryCompletion()
-        completion.set_inline_completion(True)
-        completion.set_inline_selection(True)
-        completion.set_popup_single_match(False)
-        completion.set_model(model)
-        completion.set_text_column(0)
+        completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True, popup_single_match=False,
+                                         model=model, text_column=0)
         completion.set_match_func(self.entry_completion_find_match)
-
         entry.set_completion(completion)
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):

@@ -184,7 +184,7 @@ class PrivateChat(UserInterface):
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
         else:
-            self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
+            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
 
         self.opened = False
         self.offlinemessage = False

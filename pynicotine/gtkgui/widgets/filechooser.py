@@ -73,14 +73,14 @@ def choose_dir(parent, callback, callback_data=None, initialdir="~", title=_("Se
 
     global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
-            parent=parent,
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
     except AttributeError:
         self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            parent=parent,
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.SELECT_FOLDER
         )
@@ -104,14 +104,14 @@ def choose_file(parent, callback, callback_data=None, initialdir="~", title=_("S
 
     global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
-            parent=parent,
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
         self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            parent=parent,
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
@@ -153,14 +153,14 @@ def choose_image(parent, callback, callback_data=None, initialdir="~", title=_("
 
     global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
-            parent=parent,
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
     except AttributeError:
         self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            parent=parent,
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.OPEN
         )
@@ -189,14 +189,14 @@ def save_file(parent, callback, callback_data=None, initialdir="~", initialfile=
 
     global ACTIVE_CHOOSER  # pylint:disable=global-statement
     try:
-        self = ACTIVE_CHOOSER = Gtk.FileChooserNative.new(
-            parent=parent,
+        self = ACTIVE_CHOOSER = Gtk.FileChooserNative(
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.SAVE
         )
     except AttributeError:
         self = ACTIVE_CHOOSER = Gtk.FileChooserDialog(
-            parent=parent,
+            transient_for=parent,
             title=title,
             action=Gtk.FileChooserAction.SAVE
         )
@@ -230,23 +230,19 @@ class FileChooserButton:
         self.selected_function = selected_function
         self.path = ""
 
-        box = Gtk.Box()
-        box.set_spacing(6)
-        self.icon = Gtk.Image.new()
-
         if chooser_type == "folder":
-            self.icon.set_property("icon-name", "folder-symbolic")
+            icon_name = "folder-symbolic"
 
         elif chooser_type == "image":
-            self.icon.set_property("icon-name", "image-x-generic-symbolic")
+            icon_name = "image-x-generic-symbolic"
 
         else:
-            self.icon.set_property("icon-name", "text-x-generic-symbolic")
+            icon_name = "text-x-generic-symbolic"
 
-        self.label = Gtk.Label.new(_("(None)"))
-        self.label.set_ellipsize(Pango.EllipsizeMode.END)
-        self.label.set_width_chars(6)
-        self.label.set_xalign(0)
+        self.icon = Gtk.Image(icon_name=icon_name)
+        self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6, xalign=0)
+
+        box = Gtk.Box(spacing=6)
         box.add(self.icon)
         box.add(self.label)
 

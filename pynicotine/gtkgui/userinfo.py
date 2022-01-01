@@ -128,14 +128,10 @@ class UserInfo(UserInterface):
         self.descr_textview = TextView(self.descr)
 
         if Gtk.get_major_version() == 4:
-            self.picture = Gtk.Picture()
-            self.picture.set_can_shrink(False)
-            self.picture.set_halign(Gtk.Align.CENTER)
-            self.picture.set_valign(Gtk.Align.CENTER)
-
+            self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
             self.picture_view.set_child(self.picture)
 
-            self.scroll_controller = Gtk.EventControllerScroll.new(Gtk.EventControllerScrollFlags.VERTICAL)
+            self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
             self.picture_view.add_controller(self.scroll_controller)
 
@@ -417,10 +413,10 @@ class UserInfo(UserInterface):
         menu.set_user(item)
 
         menu.actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
+            GLib.Variant("b", item in config.sections["interests"]["likes"])
         )
         menu.actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
+            GLib.Variant("b", item in config.sections["interests"]["dislikes"])
         )
 
     def on_like_recommendation(self, action, state, popup):

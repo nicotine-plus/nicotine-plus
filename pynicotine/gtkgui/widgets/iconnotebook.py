@@ -39,8 +39,7 @@ class TabLabel(Gtk.Box):
 
     def __init__(self, label="", full_text="", close_button_visible=False, close_callback=None):
 
-        Gtk.Box.__init__(self)
-        self.set_hexpand(False)
+        Gtk.Box.__init__(self, hexpand=False, visible=True)
 
         self.highlighted = False
         self.mentioned = False
@@ -50,16 +49,11 @@ class TabLabel(Gtk.Box):
         if Gtk.get_major_version() == 4:
             self.eventbox = Gtk.Box()
         else:
-            self.eventbox = Gtk.EventBox()
+            self.eventbox = Gtk.EventBox(visible=True)
 
-        self.box = Gtk.Box()
-        self.box.set_spacing(6)
+        self.box = Gtk.Box(spacing=6, visible=True)
 
-        self.label = Gtk.Label()
-        self.label.set_halign(Gtk.Align.START)
-        self.label.set_hexpand(True)
-        self.label.show()
-
+        self.label = Gtk.Label(halign=Gtk.Align.START, hexpand=True, visible=True)
         self.full_text = full_text
         self.set_text(label)
 
@@ -135,7 +129,6 @@ class TabLabel(Gtk.Box):
 
         self.add(self.eventbox)
         self.eventbox.add(self.box)
-        self.eventbox.show()
 
         if self.centered:
             self.set_halign(Gtk.Align.CENTER)
@@ -145,7 +138,6 @@ class TabLabel(Gtk.Box):
         self.box.add(self.start_icon)
         self.box.add(self.label)
         self.box.add(self.end_icon)
-        self.box.show()
 
         if sys.platform != "darwin":
             self._add_close_button()
@@ -260,7 +252,10 @@ class IconNotebook:
 
         self.frame = frame
         self.page_id = page_id
-        self.unread_button = Gtk.MenuButton.new()
+        self.unread_button = Gtk.MenuButton(
+            tooltip_text=_("Unread Tabs"),
+            halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER
+        )
         self.pages = {}
 
         if Gtk.get_major_version() == 4:
@@ -283,12 +278,9 @@ class IconNotebook:
         else:
             self.window = self.notebook.get_toplevel()
 
-            self.unread_button.set_image(Gtk.Image.new_from_icon_name("emblem-important-symbolic", Gtk.IconSize.BUTTON))
+            self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))
             self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
 
-        self.unread_button.set_tooltip_text(_("Unread Tabs"))
-        self.unread_button.set_halign(Gtk.Align.CENTER)
-        self.unread_button.set_valign(Gtk.Align.CENTER)
         self.unread_button.get_style_context().add_class("circular")
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
@@ -331,13 +323,12 @@ class IconNotebook:
 
         label_tab = TabLabel(text, full_text, config.sections["ui"]["tabclosers"], close_callback)
         label_tab.set_tooltip_text(full_text)
-        label_tab.show()
 
         if Gtk.get_major_version() == 4:
             label_tab.gesture_click = Gtk.GestureClick()
             label_tab.add_controller(label_tab.gesture_click)
         else:
-            label_tab.gesture_click = Gtk.GestureMultiPress.new(label_tab)
+            label_tab.gesture_click = Gtk.GestureMultiPress(widget=label_tab)
 
         label_tab.gesture_click.set_button(Gdk.BUTTON_MIDDLE)
         label_tab.gesture_click.connect("pressed", label_tab.close_callback, page)

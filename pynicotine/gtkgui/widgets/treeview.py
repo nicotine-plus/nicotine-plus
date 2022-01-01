@@ -63,7 +63,7 @@ def verify_grouping_mode(mode):
 def create_grouping_menu(window, active_mode, callback):
 
     action_id = "grouping" + ''.join(random.choice(string.digits) for _ in range(8))
-    menu = Gio.Menu.new()
+    menu = Gio.Menu()
 
     menuitem = Gio.MenuItem.new(_("Ungrouped"), "win." + action_id + "::ungrouped")
     menu.append_item(menuitem)
@@ -74,8 +74,8 @@ def create_grouping_menu(window, active_mode, callback):
     menuitem = Gio.MenuItem.new(_("Group by User"), "win." + action_id + "::user_grouping")
     menu.append_item(menuitem)
 
-    state = GLib.Variant.new_string(verify_grouping_mode(active_mode))
-    action = Gio.SimpleAction.new_stateful(action_id, GLib.VariantType.new("s"), state)
+    state = GLib.Variant("s", verify_grouping_mode(active_mode))
+    action = Gio.SimpleAction(name=action_id, parameter_type=GLib.VariantType("s"), state=state)
     action.connect("change-state", callback)
 
     window.add_action(action)
@@ -135,43 +135,24 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         if not isinstance(width, int):
             width = 0
 
-        if Gtk.get_major_version() == 4:
-            # GTK 4 rows need more padding to match GTK 3
-            height_padding = 4
-        else:
-            height_padding = 3
+        # GTK 4 rows need more padding to match GTK 3
+        height_padding = 4 if Gtk.get_major_version() == 4 else 3
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText()
-            renderer.set_padding(10, height_padding)
-            renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
-
+            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=10, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "center":
-            renderer = Gtk.CellRendererText()
-            renderer.set_property("xalign", 0.5)
-
+            renderer = Gtk.CellRendererText(xalign=0.5)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "number":
-            renderer = Gtk.CellRendererText()
-            renderer.set_property("xalign", 0.9)
-
+            renderer = Gtk.CellRendererText(xalign=0.9)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
             column.set_alignment(0.9)
 
         elif column_type == "edit":
-            renderer = Gtk.CellRendererText()
-            renderer.set_padding(10, height_padding)
-            renderer.set_property('editable', True)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-
-        elif column_type == "combo":
-            renderer = Gtk.CellRendererCombo()
-            renderer.set_padding(10, height_padding)
-            renderer.set_property('text-column', 0)
-            renderer.set_property('editable', True)
+            renderer = Gtk.CellRendererText(editable=True, xpad=10, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "progress":
@@ -179,22 +160,21 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column = Gtk.TreeViewColumn(column_id, renderer, value=i)
 
         elif column_type == "toggle":
-            renderer = Gtk.CellRendererToggle()
+            renderer = Gtk.CellRendererToggle(xalign=0.5)
             column = Gtk.TreeViewColumn(column_id, renderer, active=i)
-            renderer.set_property("xalign", 0.5)
 
         else:
             renderer = Gtk.CellRendererPixbuf()
 
             if column_id == "country":
-                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
-
                 if Gtk.get_major_version() == 4:
                     # Custom icon size defined in theme.py
                     renderer.set_property("icon-size", Gtk.IconSize.NORMAL)
                 else:
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)
+
+                column = Gtk.TreeViewColumn(column_id, renderer, icon_name=i)
             else:
                 column = Gtk.TreeViewColumn(column_id, renderer, gicon=i)
 
@@ -205,12 +185,13 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         else:
             column.set_resizable(True)
+            column.set_min_width(0)
+
             if width == 0:
                 column.set_sizing(Gtk.TreeViewColumnSizing.GROW_ONLY)
             else:
                 column.set_sizing(Gtk.TreeViewColumnSizing.FIXED)
                 column.set_fixed_width(width)
-            column.set_min_width(0)
 
         if isinstance(extra, int):
             column.add_attribute(renderer, "foreground", extra)
@@ -223,7 +204,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         column.set_reorderable(True)
         column.set_min_width(20)
 
-        column.set_widget(Gtk.Label.new(title))
+        column.set_widget(Gtk.Label(label=title))
         column.get_widget().set_margin_start(5)
         column.get_widget().show()
 
@@ -400,10 +381,7 @@ def press_header(menu, treeview):
             ("$" + title, None)
         )
         menu.update_model()
-
-        menu.actions[title].set_state(
-            GLib.Variant.new_boolean(column in visible_columns)
-        )
+        menu.actions[title].set_state(GLib.Variant("b", column in visible_columns))
 
         if column in visible_columns:
             menu.actions[title].set_enabled(len(visible_columns) > 1)
