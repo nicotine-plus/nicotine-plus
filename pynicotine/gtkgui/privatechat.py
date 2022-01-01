@@ -57,6 +57,11 @@ class PrivateChats(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
+        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+
+        if Gtk.get_major_version() == 4:
+            # Scroll to the focused widget
+            self.command_help.container.get_child().set_scroll_to_focus(True)
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -66,6 +71,9 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+
+                self.command_help.popover.unparent()
+                tab.ShowChatHelp.set_popover(self.command_help.popover)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
@@ -163,14 +171,8 @@ class PrivateChat(UserInterface):
         self.chats = chats
         self.frame = chats.frame
 
-        self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
-        self.ShowChatHelp.set_popover(self.command_help.popover)
-
         if Gtk.get_major_version() == 4:
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
-
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
 

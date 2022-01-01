@@ -73,9 +73,13 @@ class ChatRooms(IconNotebook):
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
         CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
+        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
         if Gtk.get_major_version() == 4:
             self.frame.ChatroomsPane.set_resize_start_child(True)
+
+            # Scroll to the focused widget
+            self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.frame.ChatroomsPane.child_set_property(self.frame.chatrooms_container, "resize", True)
 
@@ -118,6 +122,9 @@ class ChatRooms(IconNotebook):
         for room, tab in self.pages.items():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatEntry.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+
+                self.command_help.popover.unparent()
+                tab.ShowChatHelp.set_popover(self.command_help.popover)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
@@ -342,10 +349,6 @@ class ChatRoom(UserInterface):
         self.frame = chatrooms.frame
         self.room = room
 
-        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
-
-        self.ShowChatHelp.set_popover(self.command_help.popover)
-
         if Gtk.get_major_version() == 4:
             self.ShowRoomWall.set_icon_name("view-list-symbolic")
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
@@ -354,9 +357,6 @@ class ChatRoom(UserInterface):
             self.ChatPaned.set_shrink_start_child(False)
             self.ChatPaned.set_resize_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
-
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
 
         else:
             self.ShowRoomWall.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
