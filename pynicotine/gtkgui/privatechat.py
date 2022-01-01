@@ -36,6 +36,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -56,6 +57,7 @@ class PrivateChats(IconNotebook):
         IconNotebook.__init__(self, frame, frame.private_notebook, "private")
         self.notebook.connect("switch-page", self.on_switch_chat)
 
+        self.completion = ChatCompletion()
         CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
 
@@ -71,6 +73,9 @@ class PrivateChats(IconNotebook):
         for user, tab in self.pages.items():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+
+                self.completion.set_entry(tab.ChatLine)
+                tab.set_completion_list(list(self.frame.np.privatechats.completion_list))
 
                 self.command_help.popover.unparent()
                 tab.ShowChatHelp.set_popover(self.command_help.popover)
@@ -109,10 +114,6 @@ class PrivateChats(IconNotebook):
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
 
-    def set_completion_list(self, completion_list):
-        for page in self.pages.values():
-            page.set_completion_list(list(completion_list))
-
     def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
@@ -143,6 +144,15 @@ class PrivateChats(IconNotebook):
         page = self.pages.get(msg.user)
         if page is not None:
             page.message_user(msg)
+
+    def set_completion_list(self, completion_list):
+
+        page = self.get_nth_page(self.get_current_page())
+
+        for tab in self.pages.values():
+            if tab.Main == page:
+                tab.set_completion_list(list(completion_list))
+                break
 
     def update_visuals(self):
 
@@ -190,8 +200,8 @@ class PrivateChat(UserInterface):
         self.chat_textview = TextView(self.ChatScroll, font="chatfont")
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatLine, user, slskmessages.MessageUser,
-                               self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS)
+        ChatEntry(self.frame, self.ChatLine, chats.completion, user, slskmessages.MessageUser,
+                  self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
@@ -224,7 +234,6 @@ class PrivateChat(UserInterface):
 
         self.create_tags()
         self.update_visuals()
-        self.set_completion_list(list(self.frame.np.privatechats.completion_list))
 
         self.read_private_log()
 
@@ -479,4 +488,4 @@ class PrivateChat(UserInterface):
         completion_list = list(set(completion_list))
         completion_list.sort(key=lambda v: v.lower())
 
-        self.entry.set_completion_list(completion_list)
+        self.chats.completion.set_completion_list(completion_list)
