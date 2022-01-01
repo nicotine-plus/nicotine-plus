@@ -31,7 +31,6 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
-from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -417,7 +416,7 @@ class UserList(UserInterface):
         if iterator is None:
             return
 
-        flag_icon = get_flag_icon_name(country_code)
+        flag_icon = get_flag_icon_name(country_code or "")
 
         if not flag_icon:
             return
@@ -437,7 +436,7 @@ class UserList(UserInterface):
             -1, self.column_numbers,
             [
                 get_status_icon(0),
-                get_icon("empty"),
+                empty_str,
                 user,
                 empty_str,
                 empty_str,
