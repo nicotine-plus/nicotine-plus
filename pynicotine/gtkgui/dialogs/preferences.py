@@ -2399,18 +2399,12 @@ class PluginsFrame(UserInterface):
                     last_radio = None
                     group_radios = []
 
-                    for label in data["options"]:
-                        if Gtk.get_major_version() == 4:
-                            radio = Gtk.CheckButton(label=label)
-                        else:
-                            radio = Gtk.RadioButton.new_with_label_from_widget(last_radio, label)
-                            radio.show()
+                    for option_label in data["options"]:
+                        widget_class = Gtk.CheckButton if Gtk.get_major_version() == 4 else Gtk.RadioButton
+                        radio = widget_class(group=last_radio, label=option_label, visible=True)
 
                         if not last_radio:
                             self.option_widgets[name] = radio
-
-                        elif Gtk.get_major_version() == 4:
-                            radio.set_group(last_radio)
 
                         last_radio = radio
                         group_radios.append(radio)
