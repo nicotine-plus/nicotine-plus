@@ -78,7 +78,8 @@ def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
     namespace = parameters.get_child_value(0).get_string()
     name = parameters.get_child_value(1).get_string()
 
-    if namespace != "org.freedesktop.appearance" or name != "color-scheme":
+    if (config.sections["ui"]["dark_mode"]
+            or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
         return
 
     set_dark_mode()
