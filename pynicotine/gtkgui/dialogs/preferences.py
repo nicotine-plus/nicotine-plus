@@ -2245,6 +2245,7 @@ class PluginsFrame(UserInterface):
                 title=_("%s Settings") % name,
                 modal=True,
                 default_width=600,
+                default_height=425,
                 use_header_bar=config.sections["ui"]["header_bar"]
             )
             set_dialog_properties(self, self.settings.dialog)
@@ -2258,11 +2259,22 @@ class PluginsFrame(UserInterface):
             self.connect("response", self.on_response)
 
             self.primary_container = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL, visible=True,
+                orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
                 margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
             )
 
-            self.get_content_area().add(self.primary_container)
+            scrolled_window = Gtk.ScrolledWindow(
+                hexpand=True, vexpand=True, min_content_height=300,
+                hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
+            )
+
+            if Gtk.get_major_version() == 4:
+                scrolled_window.set_child(self.primary_container)
+                scrolled_window.get_child().set_scroll_to_focus(True)
+                self.get_content_area().append(scrolled_window)
+            else:
+                scrolled_window.add(self.primary_container)
+                self.get_content_area().add(scrolled_window)
 
             self.option_widgets = {}
             self.options = {}
@@ -2291,7 +2303,7 @@ class PluginsFrame(UserInterface):
             frame_container = Gtk.Frame(visible=True)
 
             scrolled_window = Gtk.ScrolledWindow(
-                hexpand=True, vexpand=True, min_content_height=200, min_content_width=350,
+                hexpand=True, vexpand=True, min_content_height=125,
                 hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
             )
 
@@ -2308,7 +2320,7 @@ class PluginsFrame(UserInterface):
 
             cols = initialise_columns(
                 self.settings.frame, None, self.option_widgets[name],
-                [description, description, 150, "edit", None]
+                [description, description, -1, "edit", None]
             )
 
             try:
@@ -2384,11 +2396,16 @@ class PluginsFrame(UserInterface):
                 elif data["type"] in ("bool",):
                     container = Gtk.Box(visible=True)
 
-                    self.option_widgets[name] = Gtk.CheckButton(label=data["description"], visible=True)
-                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
+                    self.option_widgets[name] = button = Gtk.CheckButton(label=data["description"], visible=True)
+                    self.settings.set_widget(button, config.sections["plugins"][config_name][name])
+
+                    if Gtk.get_major_version() == 4:
+                        button.get_last_child().set_wrap(True)
+                    else:
+                        button.get_child().set_line_wrap(True)
 
                     self.primary_container.add(container)
-                    container.add(self.option_widgets[name])
+                    container.add(button)
 
                 elif data["type"] in ("radio",):
                     container, label = self.generate_widget_container(data["description"])
@@ -2448,10 +2465,8 @@ class PluginsFrame(UserInterface):
                     self.settings.set_widget(textview, config.sections["plugins"][config_name][name])
 
                     frame_container = Gtk.Frame(visible=True)
-
                     scrolled_window = Gtk.ScrolledWindow(
-                        hexpand=True, vexpand=True, min_content_height=200, min_content_width=600, visible=True
-                    )
+                        hexpand=True, vexpand=True, min_content_height=125, visible=True)
 
                     if Gtk.get_major_version() == 4:
                         frame_container.set_child(scrolled_window)
