@@ -2440,7 +2440,8 @@ class PluginsFrame(UserInterface):
 
                     self.option_widgets[name] = textview = Gtk.TextView(
                         accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
-                        left_margin=8, right_margin=8, top_margin=5, bottom_margin=5, visible=True
+                        left_margin=8, right_margin=8, top_margin=5, bottom_margin=5,
+                        wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
                     )
 
                     label.set_mnemonic_widget(textview)
@@ -2453,14 +2454,14 @@ class PluginsFrame(UserInterface):
                     )
 
                     if Gtk.get_major_version() == 4:
-                        frame_container.set_child(textview)
-                        scrolled_window.set_child(frame_container)
-                        container.append(scrolled_window)
+                        frame_container.set_child(scrolled_window)
+                        scrolled_window.set_child(textview)
+                        container.append(frame_container)
 
                     else:
-                        frame_container.add(textview)
-                        scrolled_window.add(frame_container)
-                        container.add(scrolled_window)
+                        frame_container.add(scrolled_window)
+                        scrolled_window.add(textview)
+                        container.add(frame_container)
 
                 elif data["type"] in ("list string",):
                     self.generate_tree_view(name, data["description"], value)
