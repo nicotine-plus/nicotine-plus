@@ -290,7 +290,7 @@ class PluginHandler:
         if not enable:
             return
 
-        log.add("Loading plugin system")
+        log.add(_("Loading plugin system"))
 
         to_enable = self.config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))

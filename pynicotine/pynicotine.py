@@ -229,8 +229,8 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add("Loading Nicotine+ %(nic_version)s" % {"nic_version": config.version})
-        log.add("Using Python %(py_version)s" % {"py_version": config.python_version})
+        log.add(_("Loading Nicotine+ %(nic_version)s") % {"nic_version": config.version})
+        log.add(_("Using Python %(py_version)s") % {"py_version": config.python_version})
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
@@ -890,20 +890,16 @@ class NicotineCore:
         days = hours // 24
 
         if msg.seconds == 0:
-            log.add(
-                _("You have no privileges. Privileges are not required, but allow your downloads "
-                  "to be queued ahead of non-privileged users.")
-            )
+            log.add(_("You have no privileges. Privileges are not required, but allow your downloads "
+                      "to be queued ahead of non-privileged users."))
         else:
-            log.add(
-                _("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
-                  "download privileges left."), {
-                    'days': days,
-                    'hours': hours % 24,
-                    'minutes': mins % 60,
-                    'seconds': msg.seconds % 60
-                }
-            )
+            log.add(_("%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
+                      "download privileges left."), {
+                'days': days,
+                'hours': hours % 24,
+                'minutes': mins % 60,
+                'seconds': msg.seconds % 60
+            })
 
         self.privileges_left = msg.seconds
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3236,6 +3236,20 @@ msgid ""
 "Trace: %(trace)s"
 msgstr ""
 
+#: pynicotine/pluginsystem.py:293
+msgid "Loading plugin system"
+msgstr ""
+
+#: pynicotine/pynicotine.py:232
+#, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr ""
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3324,40 +3338,40 @@ msgstr ""
 msgid "%i privileged users"
 msgstr ""
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
