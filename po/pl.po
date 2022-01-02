@@ -293,7 +293,6 @@ msgid "Bolivia"
 msgstr "Boliwia"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius i Saba"
 
@@ -2107,11 +2106,11 @@ msgstr "_Konfiguruj udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:981
 msgid "_Browse Public Shares"
-msgstr "_Przeglądaj publiczne udostępnienia zasobów"
+msgstr "_Przeglądaj publiczne udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:982
 msgid "Bro_wse Buddy Shares"
-msgstr "Prze_glądaj udostępnienia zasobów znajomych"
+msgstr "Prze_glądaj udostępnione zasoby znajomych"
 
 #: pynicotine/gtkgui/frame.py:998
 msgid "_Keyboard Shortcuts"
@@ -2319,7 +2318,7 @@ msgstr "Nicotine+ działa w tle"
 
 #: pynicotine/gtkgui/interests.py:55 pynicotine/gtkgui/userinfo.py:156
 msgid "Likes"
-msgstr "Polubione"
+msgstr "Lubię"
 
 #: pynicotine/gtkgui/interests.py:68 pynicotine/gtkgui/userinfo.py:169
 msgid "Dislikes"
@@ -3304,17 +3303,16 @@ msgstr ""
 "Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
 msgstr "Ładowanie obsługi wtyczek"
 
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading Nicotine+ %(nic_version)s"
-msgstr "Zamykanie Nicotine+ %(version)s, %(status)s…"
+msgstr "Ładowanie Nicotine+ %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Using Python %(py_version)s"
 msgstr "Korzystanie z Pythona %(py_version)s"
 
@@ -5623,9 +5621,8 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibajty (2^20 bajtów)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:296
-#, fuzzy
 msgid "MiB"
-msgstr "MiBs"
+msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:334
 msgid "files"
