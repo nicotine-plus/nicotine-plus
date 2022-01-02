@@ -119,7 +119,7 @@ class NicotineFrame(UserInterface):
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
-            self.header_menu.set_image(Gtk.Image.new_from_icon_name("open-menu-symbolic", Gtk.IconSize.BUTTON))
+            self.header_menu.set_image(Gtk.Image(icon_name="open-menu-symbolic"))
 
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
@@ -157,7 +157,7 @@ class NicotineFrame(UserInterface):
             config.sections["ui"]["header_bar"] = False
 
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-        log.add("Loading GTK %s", config.gtk_version)
+        log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
         """ Icons """
 
@@ -320,8 +320,7 @@ class NicotineFrame(UserInterface):
             self.MainWindow.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress.new(self.MainWindow)
-
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.MainWindow)
             self.MainWindow.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
@@ -373,7 +372,7 @@ class NicotineFrame(UserInterface):
         try:
             gi.require_version('Gspell', '1')
             from gi.repository import Gspell
-            self.spell_checker = Gspell.Checker.new()
+            self.spell_checker = Gspell.Checker()
 
         except (ImportError, ValueError):
             self.spell_checker = False
@@ -503,7 +502,7 @@ class NicotineFrame(UserInterface):
 
         state = config.sections["ui"]["dark_mode"]
         set_dark_mode(not state)
-        action.set_state(GLib.Variant.new_boolean(not state))
+        action.set_state(GLib.Variant("b", not state))
 
         config.sections["ui"]["dark_mode"] = not state
 
@@ -523,23 +522,22 @@ class NicotineFrame(UserInterface):
 
         state = config.sections["ui"]["header_bar"]
         self.set_show_header_bar(not state)
-        action.set_state(GLib.Variant.new_boolean(not state))
+        action.set_state(GLib.Variant("b", not state))
 
         config.sections["ui"]["header_bar"] = not state
 
     def set_show_log(self, show):
 
+        self.DebugLog.set_visible(show)
+
         if show:
-            self.DebugLog.show()
             self.log_textview.scroll_bottom()
-        else:
-            self.DebugLog.hide()
 
     def on_show_log(self, action, *_args):
 
         state = config.sections["logging"]["logcollapsed"]
         self.set_show_log(state)
-        action.set_state(GLib.Variant.new_boolean(state))
+        action.set_state(GLib.Variant("b", state))
 
         config.sections["logging"]["logcollapsed"] = not state
 
@@ -701,60 +699,60 @@ class NicotineFrame(UserInterface):
 
         # Menu Button
 
-        action = Gio.SimpleAction.new("menu", None)
+        action = Gio.SimpleAction(name="menu")
         action.connect("activate", self.on_menu)
         self.application.add_action(action)
 
         # File
 
-        self.connect_action = Gio.SimpleAction.new("connect", None)
+        self.connect_action = Gio.SimpleAction(name="connect")
         self.connect_action.connect("activate", self.on_connect)
         self.application.add_action(self.connect_action)
         self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
 
-        self.disconnect_action = Gio.SimpleAction.new("disconnect", None)
+        self.disconnect_action = Gio.SimpleAction(name="disconnect")
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
         state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction.new_stateful("away", None, GLib.Variant.new_boolean(state))
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state))
         self.away_action.connect("change-state", self.on_away)
         self.MainWindow.add_action(self.away_action)
         self.application.set_accels_for_action("win.away", ["<Primary>h"])
 
-        self.get_privileges_action = Gio.SimpleAction.new("getprivileges", None)
+        self.get_privileges_action = Gio.SimpleAction(name="getprivileges")
         self.get_privileges_action.connect("activate", self.on_get_privileges)
         self.application.add_action(self.get_privileges_action)
 
-        action = Gio.SimpleAction.new("fastconfigure", None)
+        action = Gio.SimpleAction(name="fastconfigure")
         action.connect("activate", self.on_fast_configure)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("settings", None)
+        action = Gio.SimpleAction(name="settings")
         action.connect("activate", self.on_settings)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.settings", ["<Primary>comma", "<Primary>p"])
 
-        action = Gio.SimpleAction.new("quit", None)  # Menu 'Quit' always Quits
+        action = Gio.SimpleAction(name="quit")  # Menu 'Quit' always Quits
         action.connect("activate", self.on_quit)
         self.application.add_action(action)
 
         # View
 
         state = config.sections["ui"]["dark_mode"]
-        self.dark_mode_action = Gio.SimpleAction.new_stateful("preferdarkmode", None, GLib.Variant.new_boolean(state))
+        self.dark_mode_action = Gio.SimpleAction(name="preferdarkmode", state=GLib.Variant("b", state))
         self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
         self.MainWindow.add_action(self.dark_mode_action)
 
         state = config.sections["ui"]["header_bar"]
-        action = Gio.SimpleAction.new_stateful("showheaderbar", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="showheaderbar", state=GLib.Variant("b", state))
         action.set_enabled(sys.platform != "darwin")  # Disable header bar on macOS for now due to GTK 3 perf issues
         action.connect("change-state", self.on_show_header_bar)
         self.MainWindow.add_action(action)
 
         state = not config.sections["logging"]["logcollapsed"]
-        action = Gio.SimpleAction.new_stateful("showlog", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="showlog", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_show_log)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
@@ -765,90 +763,90 @@ class NicotineFrame(UserInterface):
         if state not in ("tab", "chatrooms", "always"):
             state = "tab"
 
-        self.toggle_buddy_list_action = Gio.SimpleAction.new_stateful(
-            "togglebuddylist", GLib.VariantType.new("s"), GLib.Variant.new_string(state))
+        self.toggle_buddy_list_action = Gio.SimpleAction(
+            name="togglebuddylist", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
         self.MainWindow.add_action(self.toggle_buddy_list_action)
         self.set_toggle_buddy_list(state, force_show=False)
 
         # Shares
 
-        action = Gio.SimpleAction.new("configureshares", None)
+        action = Gio.SimpleAction(name="configureshares")
         action.connect("activate", self.on_configure_shares)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("rescanshares", None)
+        action = Gio.SimpleAction(name="rescanshares")
         action.connect("activate", self.on_rescan_shares)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.rescanshares", ["<Shift><Primary>r"])
 
-        action = Gio.SimpleAction.new("browsepublicshares", None)
+        action = Gio.SimpleAction(name="browsepublicshares")
         action.connect("activate", self.on_browse_public_shares)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("browsebuddyshares", None)
+        action = Gio.SimpleAction(name="browsebuddyshares")
         action.connect("activate", self.on_browse_buddy_shares)
         self.application.add_action(action)
 
         # Help
 
-        action = Gio.SimpleAction.new("keyboardshortcuts", None)
+        action = Gio.SimpleAction(name="keyboardshortcuts")
         action.connect("activate", self.on_keyboard_shortcuts)
         action.set_enabled(hasattr(Gtk, "ShortcutsWindow"))  # Not supported in Gtk <3.20
         self.application.add_action(action)
         self.application.set_accels_for_action("app.keyboardshortcuts", ["<Primary>question", "F1"])
 
-        action = Gio.SimpleAction.new("transferstatistics", None)
+        action = Gio.SimpleAction(name="transferstatistics")
         action.connect("activate", self.on_transfer_statistics)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("reportbug", None)
+        action = Gio.SimpleAction(name="reportbug")
         action.connect("activate", self.on_report_bug)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("improvetranslations", None)
+        action = Gio.SimpleAction(name="improvetranslations")
         action.connect("activate", self.on_improve_translations)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("checklatest", None)
+        action = Gio.SimpleAction(name="checklatest")
         action.connect("activate", self.on_check_latest)
         self.application.add_action(action)
 
-        action = Gio.SimpleAction.new("about", None)
+        action = Gio.SimpleAction(name="about")
         action.connect("activate", self.on_about)
         self.application.add_action(action)
 
         # Search
 
-        self.search_mode_action = Gio.SimpleAction.new_stateful(
-            "searchmode", GLib.VariantType.new("s"), GLib.Variant.new_string("global"))
+        self.search_mode_action = Gio.SimpleAction(
+            name="searchmode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
         self.search_mode_action.connect("change-state", self.search.on_search_mode)
         self.MainWindow.add_action(self.search_mode_action)
 
-        action = Gio.SimpleAction.new("wishlist", None)
+        action = Gio.SimpleAction(name="wishlist")
         action.connect("activate", self.search.wish_list.show)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.wishlist", ["<Shift><Primary>w"])
 
         # Notebook Tabs
 
-        action = Gio.SimpleAction.new("tabclose", None)
+        action = Gio.SimpleAction(name="tabclose")
         action.connect("activate", self.on_tab_close)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.tabclose", ["<Primary>F4", "<Primary>w"])
 
-        action = Gio.SimpleAction.new("tabcycle", None)
+        action = Gio.SimpleAction(name="tabcycle")
         action.connect("activate", self.on_tab_cycle)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.tabcycle", ["<Primary>Tab"])
 
-        action = Gio.SimpleAction.new("reversetabcycle", None)
+        action = Gio.SimpleAction(name="reversetabcycle")
         action.connect("activate", self.on_tab_cycle, True)
         self.MainWindow.add_action(action)
         self.application.set_accels_for_action("win.reversetabcycle", ["<Primary><Shift>Tab"])
 
         for num in range(1, 10):
-            action = Gio.SimpleAction.new("primarytab" + str(num), None)
+            action = Gio.SimpleAction(name="primarytab" + str(num))
             action.connect("activate", self.on_change_primary_tab, num)
             self.MainWindow.add_action(action)
             self.application.set_accels_for_action("win.primarytab" + str(num),
@@ -857,61 +855,61 @@ class NicotineFrame(UserInterface):
         # Logging
 
         state = ("download" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logdownloads", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logdownloads", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_downloads)
         self.MainWindow.add_action(action)
 
         state = ("upload" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("loguploads", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="loguploads", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_uploads)
         self.MainWindow.add_action(action)
 
         state = ("search" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logsearches", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logsearches", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_searches)
         self.MainWindow.add_action(action)
 
         state = ("chat" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logchat", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logchat", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_chat)
         self.MainWindow.add_action(action)
 
         state = ("connection" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logconnections", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logconnections", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_connections)
         self.MainWindow.add_action(action)
 
         state = ("message" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logmessages", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logmessages", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_messages)
         self.MainWindow.add_action(action)
 
         state = ("transfer" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logtransfers", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logtransfers", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_transfers)
         self.MainWindow.add_action(action)
 
         state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
-        action = Gio.SimpleAction.new_stateful("logmiscellaneous", None, GLib.Variant.new_boolean(state))
+        action = Gio.SimpleAction(name="logmiscellaneous", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_miscellaneous)
         self.MainWindow.add_action(action)
 
         # Status Bar
 
         state = config.sections["transfers"]["usealtlimits"]
-        self.alt_speed_action = Gio.SimpleAction.new_stateful("altspeedlimit", None, GLib.Variant.new_boolean(state))
+        self.alt_speed_action = Gio.SimpleAction(name="altspeedlimit", state=GLib.Variant("b", state))
         self.alt_speed_action.connect("change-state", self.on_alternative_speed_limit)
         self.application.add_action(self.alt_speed_action)
         self.update_alternative_speed_icon(state)
 
         # Window (system menu and events)
 
-        action = Gio.SimpleAction.new("close", None)  # 'When closing Nicotine+'
+        action = Gio.SimpleAction(name="close")  # 'When closing Nicotine+'
         action.connect("activate", self.on_close_request)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.close", ["<Primary>q"])
 
-        action = Gio.SimpleAction.new("force_quit", None)
+        action = Gio.SimpleAction(name="force_quit")
         action.connect("activate", self.np.quit)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.force_quit", ["<Primary><Alt>q"])
@@ -1391,7 +1389,7 @@ class NicotineFrame(UserInterface):
     def show_tab(self, page_id):
 
         if page_id == self.userlist.page_id:
-            self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant.new_string("tab"))
+            self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant("s", "tab"))
 
         try:
             page = getattr(self, page_id + "vbox")
@@ -1617,7 +1615,7 @@ class NicotineFrame(UserInterface):
             self.set_user_status(_("Away"))
 
         self.tray_icon.set_away(is_away)
-        self.away_action.set_state(GLib.Variant.new_boolean(is_away))
+        self.away_action.set_state(GLib.Variant("b", is_away))
 
     def set_auto_away(self, active):
 
@@ -1852,12 +1850,12 @@ class NicotineFrame(UserInterface):
             self.AltSpeedButton.set_icon_name(icon_name)
             return
 
-        self.AltSpeedButton.set_image(Gtk.Image.new_from_icon_name(icon_name, Gtk.IconSize.BUTTON))
+        self.AltSpeedButton.set_image(Gtk.Image(icon_name=icon_name))
 
     def on_alternative_speed_limit(self, *_args):
 
         state = config.sections["transfers"]["usealtlimits"]
-        self.alt_speed_action.set_state(GLib.Variant.new_boolean(not state))
+        self.alt_speed_action.set_state(GLib.Variant("b", not state))
 
         config.sections["transfers"]["usealtlimits"] = not state
 

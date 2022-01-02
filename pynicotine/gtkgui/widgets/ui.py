@@ -28,6 +28,7 @@ from pynicotine.logfacility import log
 
 
 GUI_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+UI_DATA = {}
 
 
 class UserInterface:
@@ -35,24 +36,21 @@ class UserInterface:
     def __init__(self, filename):
 
         try:
-            filename = os.path.join(GUI_DIR, filename)
+            if filename not in UI_DATA:
+                with open(os.path.join(GUI_DIR, filename), "r", encoding="utf-8") as file_handle:
+                    if Gtk.get_major_version() == 4:
+                        UI_DATA[filename] = file_handle.read().replace(
+                            "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
+                    else:
+                        UI_DATA[filename] = file_handle.read()
 
-            with open(filename, "r", encoding="utf-8") as file_handle:
-                if Gtk.get_major_version() == 4:
-                    builder = Gtk.Builder(self)
-                    builder.add_from_string(
-                        file_handle.read()
-                        .replace("GtkRadioButton", "GtkCheckButton")
-                    )
-                    Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
-                else:
-                    builder = Gtk.Builder()
-                    builder.add_from_string(
-                        file_handle.read()
-                        .replace("<property name=\"focusable\">0</property>",
-                                 "<property name=\"can-focus\">0</property>")
-                    )
-                    builder.connect_signals(self)
+            if Gtk.get_major_version() == 4:
+                builder = Gtk.Builder(self)
+                builder.add_from_string(UI_DATA[filename])
+                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
+            else:
+                builder = Gtk.Builder.new_from_string(UI_DATA[filename], -1)
+                builder.connect_signals(self)
 
             for obj in builder.get_objects():
                 try:

@@ -26,7 +26,6 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
-from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
 
@@ -34,16 +33,20 @@ from pynicotine.logfacility import log
 """ Global Style """
 
 
-try:
-    SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
-                                                     Gio.DBusProxyFlags.NONE,
-                                                     None,
-                                                     "org.freedesktop.portal.Desktop",
-                                                     "/org/freedesktop/portal/desktop",
-                                                     "org.freedesktop.portal.Settings",
-                                                     None)
-except Exception:
-    SETTINGS_PORTAL = None
+SETTINGS_PORTAL = None
+
+if "gi.repository.Adw" not in sys.modules:
+    # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
+    try:
+        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
+                                                         Gio.DBusProxyFlags.NONE,
+                                                         None,
+                                                         "org.freedesktop.portal.Desktop",
+                                                         "/org/freedesktop/portal/desktop",
+                                                         "org.freedesktop.portal.Settings",
+                                                         None)
+    except Exception:
+        pass
 
 GTK_SETTINGS = Gtk.Settings.get_default()
 
@@ -74,13 +77,21 @@ def on_color_scheme_changed(_proxy, _sender_name, signal_name, parameters):
     namespace = parameters.get_child_value(0).get_string()
     name = parameters.get_child_value(1).get_string()
 
-    if namespace != "org.freedesktop.appearance" or name != "color-scheme":
+    if (config.sections["ui"]["dark_mode"]
+            or namespace != "org.freedesktop.appearance" or name != "color-scheme"):
         return
 
     set_dark_mode()
 
 
 def set_dark_mode(force=False):
+
+    if "gi.repository.Adw" in sys.modules:
+        from gi.repository import Adw  # pylint:disable=no-name-in-module
+
+        color_scheme = Adw.ColorScheme.FORCE_DARK if force else Adw.ColorScheme.DEFAULT
+        Adw.StyleManager.get_default().set_color_scheme(color_scheme)
+        return
 
     enabled = force
 
@@ -109,7 +120,6 @@ def set_use_header_bar(enabled):
 def set_visual_settings():
 
     if SETTINGS_PORTAL is not None:
-        # GNOME 42+ system-wide dark mode
         SETTINGS_PORTAL.connect("g-signal", on_color_scheme_changed)
 
     global_font = config.sections["ui"]["globalfont"]
@@ -267,10 +277,10 @@ def get_flag_icon_name(country):
 
     country = country.lower().replace("flag_", "")
 
-    if country not in GeoIP.COUNTRY_LIST:
+    if not country:
         return ""
 
-    return config.application_id + "-flag-" + country
+    return "nplus-flag-" + country
 
 
 def get_status_icon(status):
@@ -334,7 +344,6 @@ def load_icons():
     """ Load custom icons necessary for the application to function """
 
     names = (
-        "empty",
         "away",
         "online",
         "offline",
@@ -358,7 +367,7 @@ def load_icons():
 
     paths = (
         os.path.join(GUI_DIR, "icons"),  # Support running from folder, as well as macOS and Windows
-        os.path.join(sys.prefix, "share", "icons", "hicolor", "scalable", "apps")  # Support Python venv
+        os.path.join(sys.prefix, "share", "icons")  # Support Python venv
     )
 
     for path in paths:

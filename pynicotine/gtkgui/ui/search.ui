@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">0</property>
+        <property name="visible">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">6</property>
             <property name="margin-start">6</property>
             <property name="margin-end">6</property>
@@ -17,14 +18,14 @@
             <property name="margin-bottom">6</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
                 <property name="spacing">6</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Results</property>
                     <property name="mnemonic_widget">CounterButton</property>
                     <attributes>
@@ -34,11 +35,11 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="CounterButton">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_counter_button" swapped="no"/>
                     <child>
                       <object class="GtkLabel" id="Counter">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label">0</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
@@ -58,21 +59,21 @@
             </child>
             <child>
               <object class="GtkButton" id="AddWish">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <signal name="clicked" handler="on_add_wish" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage" id="AddWishIcon">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="AddWishLabel">
-                        <property name="visible">1</property>
-                        <property name="use-underline">1</property>
+                        <property name="visible">True</property>
+                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -84,23 +85,23 @@
             </child>
             <child>
               <object class="GtkToggleButton" id="ShowFilters">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <signal name="toggled" handler="on_toggle_filters" swapped="no"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">edit-find-replace-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel" id="FilterLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">_Result Filters</property>
-                        <property name="use-underline">1</property>
+                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -112,14 +113,14 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkToggleButton" id="ExpandButton">
                     <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                     <signal name="toggled" handler="on_toggle_expand_all" swapped="no"/>
                     <child>
                       <object class="GtkImage" id="expand">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">go-down-symbolic</property>
                       </object>
                     </child>
@@ -130,7 +131,7 @@
                 </child>
                 <child>
                   <object class="GtkMenuButton" id="ResultGrouping">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Result grouping mode</property>
                   </object>
                 </child>
@@ -143,30 +144,30 @@
         </child>
         <child>
           <object class="GtkRevealer" id="FiltersContainer">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="transition-type">slide-down</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="margin-bottom">6</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">6</property>
                 <child>
                   <object class="GtkFlowBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="column-spacing">12</property>
                     <property name="row-spacing">6</property>
                     <property name="max-children-per-line">6</property>
                     <property name="selection-mode">none</property>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterIn">
-                            <property name="visible">1</property>
-                            <property name="has-entry">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">14</property>
@@ -189,13 +190,13 @@
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterOut">
-                            <property name="visible">1</property>
-                            <property name="has-entry">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">14</property>
@@ -218,13 +219,13 @@
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterType">
-                            <property name="visible">1</property>
-                            <property name="has-entry">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">12</property>
@@ -247,13 +248,13 @@
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterSize">
-                            <property name="visible">1</property>
-                            <property name="has-entry">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
@@ -276,13 +277,13 @@
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkComboBoxText" id="FilterBitrate">
-                            <property name="visible">1</property>
-                            <property name="has-entry">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="entry">
                               <object class="GtkEntry">
                                 <property name="width-chars">10</property>
@@ -305,17 +306,17 @@
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="visible">1</property>
-                        <property name="focusable">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="spacing">12</property>
                             <child>
                               <object class="GtkComboBoxText" id="FilterCountry">
-                                <property name="visible">1</property>
-                                <property name="has-entry">1</property>
-                                <property name="hexpand">1</property>
+                                <property name="visible">True</property>
+                                <property name="has-entry">True</property>
+                                <property name="hexpand">True</property>
                                 <child internal-child="entry">
                                   <object class="GtkEntry">
                                     <property name="width-chars">12</property>
@@ -336,16 +337,16 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkToggleButton" id="FilterFreeSlot">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Free slot</property>
                                     <signal name="toggled" handler="on_refilter" swapped="no"/>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">document-open-recent-symbolic</property>
                                       </object>
                                     </child>
@@ -364,7 +365,7 @@
                 </child>
                 <child>
                   <object class="GtkSeparator">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="margin-start">12</property>
                     <property name="margin-end">6</property>
@@ -372,13 +373,13 @@
                 </child>
                 <child>
                   <object class="GtkButton">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Clear all active filters</property>
                     <property name="valign">start</property>
                     <signal name="clicked" handler="on_clear_filters" swapped="no"/>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">edit-clear-symbolic</property>
                       </object>
                     </child>
@@ -395,19 +396,19 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="vexpand">1</property>
+                <property name="visible">True</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkTreeView" id="ResultsList">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="has-tooltip">1</property>
-                    <property name="enable-search">0</property>
-                    <property name="enable-tree-lines">1</property>
-                    <property name="rubber-banding">1</property>
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="has-tooltip">True</property>
+                    <property name="enable-search">False</property>
+                    <property name="enable-tree-lines">True</property>
+                    <property name="rubber-banding">True</property>
                     <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
                     <signal name="row-activated" handler="on_row_activated"/>
                     <signal name="notify::has-focus" handler="on_refilter" swapped="no"/>

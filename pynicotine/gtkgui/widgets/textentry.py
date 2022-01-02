@@ -36,21 +36,18 @@ from pynicotine.utils import unalias
 class ChatEntry:
     """ Custom text entry with support for chat commands and completions """
 
-    def __init__(self, frame, entry, entity, message_class, send_message, command_list, is_chatroom=False):
+    def __init__(self, frame, entry, completion, entity, message_class, send_message, command_list, is_chatroom=False):
 
         self.frame = frame
         self.entry = entry
+        self.completion = completion
         self.entity = entity
         self.message_class = message_class
         self.send_message = send_message
         self.command_list = command_list
         self.is_chatroom = is_chatroom
 
-        self.completion_list = None
-        self.completion_iters = {}
-
         entry.connect("activate", self.on_enter)
-        self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
         setup_accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
         setup_accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
@@ -73,151 +70,6 @@ class ChatEntry:
                 spell_buffer.set_spell_checker(self.frame.spell_checker)
                 spell_view = Gspell.Entry.get_from_gtk_entry(entry)
                 spell_view.set_inline_spell_checking(True)
-
-        self.midwaycompletion = False  # True if the user just used tab completion
-        self.completions = {}  # Holds temp. information about tab completoin
-
-        completion = Gtk.EntryCompletion()
-        list_store = Gtk.ListStore(str)
-        completion.set_model(list_store)
-        completion.set_text_column(0)
-        completion.set_match_func(self.entry_completion_find_match)
-        completion.connect("match-selected", self.entry_completion_found_match)
-
-        entry.set_completion(completion)
-        self.column_numbers = list(range(list_store.get_n_columns()))
-
-    def add_completion(self, item):
-
-        if not config.sections["words"]["tab"]:
-            return
-
-        if item in self.completion_list:
-            return
-
-        self.completion_list.append(item)
-
-        if config.sections["words"]["dropdown"]:
-            model = self.entry.get_completion().get_model()
-            self.completion_iters[item] = model.insert_with_valuesv(-1, self.column_numbers, [item])
-
-    def get_completion(self, part, completion_list):
-
-        matches = self.get_completions(part, completion_list)
-
-        if not matches:
-            return None, 0
-
-        if len(matches) == 1:
-            return matches[0], 1
-
-        return commonprefix([x.lower() for x in matches]), 0
-
-    @staticmethod
-    def get_completions(part, completion_list):
-
-        lowerpart = part.lower()
-        matches = [x for x in completion_list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
-        return matches
-
-    def remove_completion(self, item):
-
-        if not config.sections["words"]["tab"]:
-            return
-
-        if item not in self.completion_list:
-            return
-
-        self.completion_list.remove(item)
-
-        if not config.sections["words"]["dropdown"]:
-            return
-
-        model = self.entry.get_completion().get_model()
-        iterator = self.completion_iters[item]
-        model.remove(iterator)
-        del self.completion_iters[item]
-
-    def set_completion_list(self, completion_list):
-
-        config_words = config.sections["words"]
-
-        completion = self.entry.get_completion()
-        completion.set_popup_single_match(not config_words["onematch"])
-        completion.set_minimum_key_length(config_words["characters"])
-        completion.set_inline_completion(False)
-
-        model = completion.get_model()
-        model.clear()
-        self.completion_iters.clear()
-
-        if not config_words["tab"]:
-            return
-
-        if completion_list is None:
-            completion_list = []
-
-        self.completion_list = completion_list
-
-        if not config_words["dropdown"]:
-            completion.set_popup_completion(False)
-            return
-
-        for word in completion_list:
-            word = str(word)
-            self.completion_iters[word] = model.insert_with_valuesv(-1, self.column_numbers, [word])
-
-        completion.set_popup_completion(True)
-
-    def entry_completion_find_match(self, completion, entry_text, iterator):
-
-        if not entry_text:
-            return False
-
-        # Get word to the left of current position
-        if " " in entry_text:
-            i = self.entry.get_position()
-            split_key = entry_text[:i].split(" ")[-1]
-        else:
-            split_key = entry_text
-
-        if not split_key or len(split_key) < config.sections["words"]["characters"]:
-            return False
-
-        # Case-insensitive matching
-        item_text = completion.get_model().get_value(iterator, 0).lower()
-
-        if item_text.startswith(split_key) and item_text != split_key:
-            return True
-
-        return False
-
-    def entry_completion_found_match(self, _completion, model, iterator):
-
-        current_text = self.entry.get_text()
-        completion_value = model.get_value(iterator, 0)
-
-        # if more than a word has been typed, we throw away the
-        # one to the left of our current position because we want
-        # to replace it with the matching word
-
-        if " " in current_text:
-            i = self.entry.get_position()
-            prefix = " ".join(current_text[:i].split(" ")[:-1])
-            suffix = " ".join(current_text[i:].split(" "))
-
-            # add the matching word
-            new_text = "%s %s%s" % (prefix, completion_value, suffix)
-            # set back the whole text
-            self.entry.set_text(new_text)
-            # move the cursor at the end
-            self.entry.set_position(len(prefix) + len(completion_value) + 1)
-        else:
-            self.entry.set_text(completion_value)
-            self.entry.set_position(-1)
-
-        # stop the event propagation
-        return True
 
     def on_enter(self, *_args):
 
@@ -415,6 +267,168 @@ class ChatEntry:
         elif not self.is_chatroom:
             self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
+    def on_tab_complete_accelerator(self, widget, state, backwards=False):
+        """ Tab and Shift+Tab: tab complete chat """
+        return self.completion.on_tab_complete_accelerator(widget, state, backwards)
+
+
+class ChatCompletion:
+
+    def __init__(self):
+
+        self.completion_list = []
+        self.completion_iters = {}
+
+        self.midwaycompletion = False  # True if the user just used tab completion
+        self.completions = {}  # Holds temp. information about tab completoin
+
+        self.entry = None
+        self.entry_changed_handler = None
+        self.model = Gtk.ListStore(str)
+        self.completion = Gtk.EntryCompletion(model=self.model)
+        self.completion.set_text_column(0)
+        self.completion.set_match_func(self.entry_completion_find_match)
+        self.completion.connect("match-selected", self.entry_completion_found_match)
+
+        self.column_numbers = list(range(self.model.get_n_columns()))
+
+    def set_entry(self, entry):
+
+        if self.entry_changed_handler:
+            self.entry.disconnect(self.entry_changed_handler)
+
+        self.entry = entry
+        entry.set_completion(self.completion)
+        self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
+
+    def add_completion(self, item):
+
+        if not config.sections["words"]["tab"]:
+            return
+
+        if item in self.completion_list:
+            return
+
+        self.completion_list.append(item)
+
+        if config.sections["words"]["dropdown"]:
+            self.completion_iters[item] = self.model.insert_with_valuesv(-1, self.column_numbers, [item])
+
+    def get_completion(self, part, completion_list):
+
+        matches = self.get_completions(part, completion_list)
+
+        if not matches:
+            return None, 0
+
+        if len(matches) == 1:
+            return matches[0], 1
+
+        return commonprefix([x.lower() for x in matches]), 0
+
+    @staticmethod
+    def get_completions(part, completion_list):
+
+        lowerpart = part.lower()
+        matches = [x for x in completion_list if x.lower().startswith(lowerpart) and len(x) >= len(part)]
+        return matches
+
+    def remove_completion(self, item):
+
+        if not config.sections["words"]["tab"]:
+            return
+
+        if item not in self.completion_list:
+            return
+
+        self.completion_list.remove(item)
+
+        if not config.sections["words"]["dropdown"]:
+            return
+
+        iterator = self.completion_iters[item]
+        self.model.remove(iterator)
+        del self.completion_iters[item]
+
+    def set_completion_list(self, completion_list):
+
+        config_words = config.sections["words"]
+
+        self.completion.set_popup_single_match(not config_words["onematch"])
+        self.completion.set_minimum_key_length(config_words["characters"])
+        self.completion.set_inline_completion(False)
+
+        self.model.clear()
+        self.completion_iters.clear()
+
+        if not config_words["tab"]:
+            return
+
+        if completion_list is None:
+            completion_list = []
+
+        self.completion_list = completion_list
+
+        if not config_words["dropdown"]:
+            self.completion.set_popup_completion(False)
+            return
+
+        for word in completion_list:
+            word = str(word)
+            self.completion_iters[word] = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
+
+        self.completion.set_popup_completion(True)
+
+    def entry_completion_find_match(self, _completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        # Get word to the left of current position
+        if " " in entry_text:
+            i = self.entry.get_position()
+            split_key = entry_text[:i].split(" ")[-1]
+        else:
+            split_key = entry_text
+
+        if not split_key or len(split_key) < config.sections["words"]["characters"]:
+            return False
+
+        # Case-insensitive matching
+        item_text = self.model.get_value(iterator, 0).lower()
+
+        if item_text.startswith(split_key) and item_text != split_key:
+            return True
+
+        return False
+
+    def entry_completion_found_match(self, _completion, model, iterator):
+
+        current_text = self.entry.get_text()
+        completion_value = model.get_value(iterator, 0)
+
+        # if more than a word has been typed, we throw away the
+        # one to the left of our current position because we want
+        # to replace it with the matching word
+
+        if " " in current_text:
+            i = self.entry.get_position()
+            prefix = " ".join(current_text[:i].split(" ")[:-1])
+            suffix = " ".join(current_text[i:].split(" "))
+
+            # add the matching word
+            new_text = "%s %s%s" % (prefix, completion_value, suffix)
+            # set back the whole text
+            self.entry.set_text(new_text)
+            # move the cursor at the end
+            self.entry.set_position(len(prefix) + len(completion_value) + 1)
+        else:
+            self.entry.set_text(completion_value)
+            self.entry.set_position(-1)
+
+        # stop the event propagation
+        return True
+
     def on_entry_changed(self, *_args):
         # If the entry was modified, and we don't block the handler, we're no longer completing
         self.midwaycompletion = False
@@ -480,6 +494,35 @@ class ChatEntry:
                 self.entry.set_position(preix + len(newnick))
 
         return True
+
+
+class CompletionEntry:
+
+    def __init__(self, entry, model):
+
+        self.entry = entry
+        self.model = model
+
+        completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
+                                         popup_single_match=False, model=model)
+        completion.set_text_column(0)
+        completion.set_match_func(self.entry_completion_find_match)
+        entry.set_completion(completion)
+
+    def entry_completion_find_match(self, _completion, entry_text, iterator):
+
+        if not entry_text:
+            return False
+
+        item_text = self.model.get_value(iterator, 0)
+
+        if not item_text:
+            return False
+
+        if item_text.lower().startswith(entry_text.lower()):
+            return True
+
+        return False
 
 
 class TextSearchBar:
@@ -578,36 +621,3 @@ class TextSearchBar:
     def hide_search_bar(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()
-
-
-class CompletionEntry:
-
-    def __init__(self, entry, model):
-
-        self.entry = entry
-
-        completion = Gtk.EntryCompletion()
-        completion.set_inline_completion(True)
-        completion.set_inline_selection(True)
-        completion.set_popup_single_match(False)
-        completion.set_model(model)
-        completion.set_text_column(0)
-        completion.set_match_func(self.entry_completion_find_match)
-
-        entry.set_completion(completion)
-
-    @staticmethod
-    def entry_completion_find_match(completion, entry_text, iterator):
-
-        if not entry_text:
-            return False
-
-        item_text = completion.get_model().get_value(iterator, 0)
-
-        if not item_text:
-            return False
-
-        if item_text.lower().startswith(entry_text.lower()):
-            return True
-
-        return False

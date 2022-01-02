@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">0</property>
+        <property name="visible">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkSearchBar" id="SearchBar">
-            <property name="visible">1</property>
-            <property name="show-close-button">1</property>
+            <property name="visible">True</property>
+            <property name="show-close-button">True</property>
             <child>
-              <object class="GtkBox">
-                <property name="visible">1</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkSearchEntry" id="SearchEntry">
-                    <property name="visible">1</property>
-                    <property name="max-width-chars">75</property>
-                  </object>
-                </child>
+              <object class="GtkSearchEntry" id="SearchEntry">
+                <property name="visible">True</property>
+                <property name="max-width-chars">75</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="vexpand">1</property>
+                <property name="visible">True</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkTextView" id="ChatScroll">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="editable">0</property>
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="editable">False</property>
                     <property name="wrap-mode">word-char</property>
-                    <property name="cursor-visible">0</property>
+                    <property name="cursor-visible">False</property>
                     <property name="pixels-above-lines">1</property>
                     <property name="pixels-below-lines">1</property>
                     <property name="left-margin">10</property>
@@ -52,7 +47,7 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="margin-start">8</property>
             <property name="margin-end">8</property>
             <property name="margin-top">8</property>
@@ -60,20 +55,20 @@
             <property name="spacing">6</property>
             <child>
               <object class="GtkEntry" id="ChatLine">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
               </object>
             </child>
             <child>
               <object class="GtkCheckButton" id="Log">
                 <property name="label" translatable="yes">_Log</property>
-                <property name="visible">1</property>
-                <property name="use-underline">1</property>
+                <property name="visible">True</property>
+                <property name="use-underline">True</property>
               </object>
             </child>
             <child>
               <object class="GtkMenuButton" id="ShowChatHelp">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Private chat command help</property>
               </object>
             </child>

@@ -73,7 +73,7 @@ class TransferList(UserInterface):
             self.ClearTransfers.set_has_frame(False)
             self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
         else:
-            grouping_button.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            grouping_button.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
             self.ClearTransfers.add(self.ClearTransfersLabel)
 
@@ -168,8 +168,8 @@ class TransferList(UserInterface):
         self.status_page = getattr(frame, "%ss_status_page" % transfer_type)
         self.expand_button = getattr(frame, "Expand%ss" % transfer_type.title())
 
-        state = GLib.Variant.new_string(verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
-        action = Gio.SimpleAction.new_stateful("%sgrouping" % transfer_type, GLib.VariantType.new("s"), state)
+        state = GLib.Variant("s", verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
+        action = Gio.SimpleAction(name="%sgrouping" % transfer_type, parameter_type=GLib.VariantType("s"), state=state)
         action.connect("change-state", self.on_toggle_tree)
         frame.MainWindow.add_action(action)
         action.change_state(state)
@@ -360,27 +360,12 @@ class TransferList(UserInterface):
 
     def update_parent_rows(self, only_remove=False):
 
-        # Remove empty parent rows
-        for path, pathiter in list(self.paths.items()):
-            if not self.transfersmodel.iter_has_child(pathiter):
-                self.transfersmodel.remove(pathiter)
-                del self.paths[path]
+        if self.tree_users != "ungrouped":
+            for path, pathiter in list(self.paths.items()):
+                self.update_parent_row(pathiter, path, only_remove=only_remove, folder=True)
 
-            elif not only_remove:
-                self.update_parent_row(pathiter)
-
-        for username, useriter in list(self.users.items()):
-            if isinstance(useriter, Gtk.TreeIter):
-                if not self.transfersmodel.iter_has_child(useriter):
-                    self.transfersmodel.remove(useriter)
-                    del self.users[username]
-
-                elif not only_remove:
-                    self.update_parent_row(useriter)
-            else:
-                # No grouping
-                if not self.users[username]:
-                    del self.users[username]
+            for username, useriter in list(self.users.items()):
+                self.update_parent_row(useriter, username, only_remove=only_remove)
 
         # Show tab description if necessary
         self.status_page.set_visible(not self.transfer_list)
@@ -423,7 +408,7 @@ class TransferList(UserInterface):
 
         return size
 
-    def update_parent_row(self, initer):
+    def update_parent_row(self, initer, key, only_remove=False, folder=False):
 
         speed = 0.0
         percent = totalsize = position = 0
@@ -431,6 +416,16 @@ class TransferList(UserInterface):
         salientstatus = ""
 
         iterator = self.transfersmodel.iter_children(initer)
+
+        if iterator is None:
+            # Remove parent row if no children are present anymore
+            dictionary = self.paths if folder else self.users
+            self.transfersmodel.remove(initer)
+            del dictionary[key]
+            return
+
+        if only_remove:
+            return
 
         while iterator is not None:
             transfer = self.transfersmodel.get_value(iterator, 14)
@@ -539,6 +534,9 @@ class TransferList(UserInterface):
 
             return
 
+        expand_user = False
+        expand_folder = False
+
         filename = transfer.filename
         user = transfer.user
         shortfn = filename.split("\\")[-1]
@@ -572,6 +570,11 @@ class TransferList(UserInterface):
                         Transfer(user=user)
                     ]
                 )
+
+                if self.tree_users == "folder_grouping":
+                    expand_user = True
+                else:
+                    expand_user = self.expand_button.get_active()
 
             parent = self.users[user]
 
@@ -607,6 +610,7 @@ class TransferList(UserInterface):
                             Transfer(user=user)
                         ]
                     )
+                    expand_folder = self.expand_button.get_active()
 
                 parent = self.paths[user_path]
         else:
@@ -647,17 +651,11 @@ class TransferList(UserInterface):
         )
         transfer.iterator = iterator
 
-        # Expand path
-        if parent is not None:
-            transfer_path = self.transfersmodel.get_path(iterator)
+        if expand_user:
+            self.Transfers.expand_row(self.transfersmodel.get_path(self.users[user]), False)
 
-            if self.tree_users == "folder_grouping":
-                # Group by folder, we need the user path to expand it
-                user_path = self.transfersmodel.get_path(self.users[user])
-            else:
-                user_path = None
-
-            self.expand(transfer_path, user_path)
+        if expand_folder:
+            self.Transfers.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
     def retry_transfers(self):
         for transfer in self.selected_transfers:
@@ -680,9 +678,12 @@ class TransferList(UserInterface):
 
         user = transfer.user
 
-        if user in self.users and not isinstance(self.users[user], Gtk.TreeIter):
+        if self.tree_users == "ungrouped" and user in self.users:
             # No grouping
             self.users[user].discard(transfer)
+
+            if not self.users[user]:
+                del self.users[user]
 
         if transfer in self.frame.np.transfers.transfer_request_times:
             del self.frame.np.transfers.transfer_request_times[transfer]
@@ -742,16 +743,6 @@ class TransferList(UserInterface):
         # Single user, add items directly to "User(s)" submenu
         user = next(iter(self.selected_users), None)
         self.add_popup_menu_user(self.popup_menu_users, user)
-
-    def expand(self, transfer_path, user_path):
-
-        if self.expand_button.get_active():
-            self.Transfers.expand_to_path(transfer_path)
-
-        elif user_path and self.tree_users == "folder_grouping":
-            # Group by folder, show user folders in collapsed mode
-
-            self.Transfers.expand_to_path(user_path)
 
     def on_expand_tree(self, widget):
 

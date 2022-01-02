@@ -290,7 +290,7 @@ class PluginHandler:
         if not enable:
             return
 
-        log.add("Loading plugin system")
+        log.add(_("Loading plugin system"))
 
         to_enable = self.config.sections["plugins"]["enabled"]
         log.add_debug("Enabled plugin(s): %s" % ', '.join(to_enable))
@@ -559,7 +559,7 @@ class ResponseThrottle:
 
         port = False
         try:
-            _ip_address, port = self.core.users[nick].addr
+            _ip_address, port = self.core.protothread.user_addresses[nick]
         except Exception:
             port = True
 

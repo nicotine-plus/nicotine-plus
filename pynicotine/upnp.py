@@ -94,7 +94,7 @@ class SSDP:
 
             response = http_request(url_scheme, base_url, root_url, timeout=2)
             log.add_debug("UPnP: Device description response from %s://%s%s: %s",
-                          (url_scheme, base_url, root_url, response))
+                          (url_scheme, base_url, root_url, response.encode('utf-8')))
 
             xml = ElementTree.fromstring(response)
 

@@ -40,6 +40,7 @@ from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -72,10 +73,15 @@ class ChatRooms(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
+        self.completion = ChatCompletion()
         CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
+        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
         if Gtk.get_major_version() == 4:
             self.frame.ChatroomsPane.set_resize_start_child(True)
+
+            # Scroll to the focused widget
+            self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
             self.frame.ChatroomsPane.child_set_property(self.frame.chatrooms_container, "resize", True)
 
@@ -118,6 +124,12 @@ class ChatRooms(IconNotebook):
         for room, tab in self.pages.items():
             if tab.Main == page:
                 GLib.idle_add(lambda: tab.ChatEntry.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+
+                self.completion.set_entry(tab.ChatEntry)
+                tab.set_completion_list(list(self.frame.np.chatrooms.completion_list))
+
+                self.command_help.popover.unparent()
+                tab.ShowChatHelp.set_popover(self.command_help.popover)
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
@@ -294,8 +306,13 @@ class ChatRooms(IconNotebook):
             page.toggle_chat_buttons()
 
     def set_completion_list(self, completion_list):
-        for page in self.pages.values():
-            page.set_completion_list(list(completion_list))
+
+        page = self.get_nth_page(self.get_current_page())
+
+        for tab in self.pages.values():
+            if tab.Main == page:
+                tab.set_completion_list(list(completion_list))
+                break
 
     def update_visuals(self):
 
@@ -342,10 +359,6 @@ class ChatRoom(UserInterface):
         self.frame = chatrooms.frame
         self.room = room
 
-        self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
-
-        self.ShowChatHelp.set_popover(self.command_help.popover)
-
         if Gtk.get_major_version() == 4:
             self.ShowRoomWall.set_icon_name("view-list-symbolic")
             self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
@@ -355,12 +368,9 @@ class ChatRoom(UserInterface):
             self.ChatPaned.set_resize_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
 
-            # Scroll to the focused widget
-            self.command_help.container.get_child().set_scroll_to_focus(True)
-
         else:
-            self.ShowRoomWall.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
-            self.ShowChatHelp.set_image(Gtk.Image.new_from_icon_name("dialog-question-symbolic", Gtk.IconSize.BUTTON))
+            self.ShowRoomWall.set_image(Gtk.Image(icon_name="view-list-symbolic"))
+            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
 
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
@@ -386,8 +396,8 @@ class ChatRoom(UserInterface):
         self.chat_textview = TextView(self.ChatScroll, font="chatfont")
 
         # Chat Entry
-        self.entry = ChatEntry(self.frame, self.ChatEntry, room, slskmessages.SayChatroom,
-                               self.frame.np.chatrooms.send_message, self.frame.np.chatrooms.CMDS, is_chatroom=True)
+        ChatEntry(self.frame, self.ChatEntry, chatrooms.completion, room, slskmessages.SayChatroom,
+                  self.frame.np.chatrooms.send_message, self.frame.np.chatrooms.CMDS, is_chatroom=True)
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
@@ -488,7 +498,6 @@ class ChatRoom(UserInterface):
         )
 
         self.ChatEntry.grab_focus()
-        self.set_completion_list(list(self.frame.np.chatrooms.completion_list))
 
         self.count_users()
         self.create_tags()
@@ -831,7 +840,7 @@ class ChatRoom(UserInterface):
             return
 
         # Add to completion list, and completion drop-down
-        self.entry.add_completion(username)
+        self.chatrooms.completion.add_completion(username)
 
         if not self.frame.np.network_filter.is_user_ignored(username) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(username):
@@ -849,7 +858,7 @@ class ChatRoom(UserInterface):
 
         # Remove from completion list, and completion drop-down
         if username not in (i[0] for i in config.sections["server"]["userlist"]):
-            self.entry.remove_completion(username)
+            self.chatrooms.completion.remove_completion(username)
 
         if not self.frame.np.network_filter.is_user_ignored(username) and \
                 not self.frame.np.network_filter.is_user_ip_ignored(username):
@@ -1119,4 +1128,4 @@ class ChatRoom(UserInterface):
         completion_list = list(set(completion_list))
         completion_list.sort(key=lambda v: v.lower())
 
-        self.entry.set_completion_list(completion_list)
+        self.chatrooms.completion.set_completion_list(completion_list)

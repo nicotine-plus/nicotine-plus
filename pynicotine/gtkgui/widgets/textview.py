@@ -54,8 +54,8 @@ class TextView:
             self.gesture_click_secondary = Gtk.GestureClick()
             self.scrollable.get_parent().add_controller(self.gesture_click_secondary)
         else:
-            self.gesture_click_primary = Gtk.GestureMultiPress.new(self.scrollable.get_parent())
-            self.gesture_click_secondary = Gtk.GestureMultiPress.new(self.scrollable.get_parent())
+            self.gesture_click_primary = Gtk.GestureMultiPress(widget=self.scrollable.get_parent())
+            self.gesture_click_secondary = Gtk.GestureMultiPress(widget=self.scrollable.get_parent())
 
         self.gesture_click_primary.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_click_primary.connect("pressed", self._callback_pressed_primary)

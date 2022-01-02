@@ -269,7 +269,7 @@ class Search(UserInterface):
         if Gtk.get_major_version() == 4:
             self.ResultGrouping.set_icon_name("view-list-symbolic")
         else:
-            self.ResultGrouping.set_image(Gtk.Image.new_from_icon_name("view-list-symbolic", Gtk.IconSize.BUTTON))
+            self.ResultGrouping.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
         setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
         setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
@@ -349,7 +349,7 @@ class Search(UserInterface):
         color_col = 17
         self.cols = cols = initialise_columns(
             self.frame, "file_search", self.ResultsList,
-            ["id", _("ID"), 50, "text", color_col],
+            ["id", _("ID"), 50, "number", color_col],
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "icon", None],
             ["speed", _("Speed"), 100, "number", color_col],
@@ -665,27 +665,15 @@ class Search(UserInterface):
         if not self.check_filter(row):
             return False
 
-        iterator = self.add_row_to_model(row)
-
-        if self.grouping_mode != "ungrouped":
-            # Group by folder or user
-
-            if self.ExpandButton.get_active():
-                path = None
-
-                if iterator is not None:
-                    path = self.resultsmodel.get_path(iterator)
-
-                if path is not None:
-                    self.ResultsList.expand_to_path(path)
-            else:
-                collapse_treeview(self.ResultsList, self.grouping_mode)
-
+        self.add_row_to_model(row)
         return True
 
     def add_row_to_model(self, row):
         (_counter, user, flag, h_speed, h_queue, directory, _filename, _h_size, _h_bitrate,
             _h_length, _bitrate, fullpath, country, _size, speed, queue, _length, color) = row
+
+        expand_user = False
+        expand_folder = False
 
         if self.grouping_mode != "ungrouped":
             # Group by folder or user
@@ -718,6 +706,11 @@ class Search(UserInterface):
                     ]
                 )
 
+                if self.grouping_mode == "folder_grouping":
+                    expand_user = True
+                else:
+                    expand_user = self.ExpandButton.get_active()
+
             parent = self.usersiters[user]
 
             if self.grouping_mode == "folder_grouping":
@@ -749,6 +742,7 @@ class Search(UserInterface):
                             color
                         ]
                     )
+                    expand_folder = self.ExpandButton.get_active()
 
                 row = row[:]
                 row[5] = ""  # Directory not visible for file row if "group by folder" is enabled
@@ -762,6 +756,12 @@ class Search(UserInterface):
             overhead by bypassing useless row conversion to GObject.Value in PyGObject. """
 
             iterator = self.resultsmodel.insert_with_values(parent, -1, self.column_numbers, row)
+
+            if expand_user:
+                self.ResultsList.expand_row(self.resultsmodel.get_path(self.usersiters[user]), False)
+
+            if expand_folder:
+                self.ResultsList.expand_row(self.resultsmodel.get_path(self.directoryiters[user_directory]), False)
 
             self.num_results_visible += 1
 

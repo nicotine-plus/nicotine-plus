@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="spacing">12</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkFlowBox">
-        <property name="visible">1</property>
-        <property name="homogeneous">1</property>
+        <property name="visible">True</property>
+        <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
         <property name="max-children-per-line">2</property>
         <property name="selection-mode">none</property>
         <child>
           <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Usernames</property>
                     <property name="mnemonic_widget">IgnoredUsers</property>
@@ -34,20 +35,20 @@
                 </child>
                 <child>
                   <object class="GtkFrame">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="hexpand">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="IgnoredUsers">
-                                <property name="visible">1</property>
-                                <property name="rubber-banding">1</property>
+                                <property name="visible">True</property>
+                                <property name="rubber-banding">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
                                     <property name="mode">multiple</property>
@@ -62,7 +63,7 @@
                         </child>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="margin-start">6</property>
                             <property name="margin-end">6</property>
                             <property name="margin-top">6</property>
@@ -70,23 +71,23 @@
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <signal name="clicked" handler="on_add_ignored" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">list-add-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Add…</property>
-                                        <property name="use-underline">1</property>
+                                        <property name="use-underline">True</property>
                                       </object>
                                     </child>
                                   </object>
@@ -98,23 +99,23 @@
                             </child>
                             <child>
                               <object class="GtkButton">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <signal name="clicked" handler="on_remove_ignored" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">list-remove-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Remove</property>
-                                        <property name="use-underline">1</property>
+                                        <property name="use-underline">True</property>
                                       </object>
                                     </child>
                                   </object>
@@ -136,16 +137,16 @@
         </child>
         <child>
           <object class="GtkFlowBoxChild">
-            <property name="visible">1</property>
-            <property name="focusable">0</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">IP Addresses</property>
                     <property name="mnemonic_widget">IgnoredIPs</property>
@@ -156,20 +157,20 @@
                 </child>
                 <child>
                   <object class="GtkFrame">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="hexpand">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="IgnoredIPs">
-                                <property name="visible">1</property>
-                                <property name="rubber-banding">1</property>
+                                <property name="visible">True</property>
+                                <property name="rubber-banding">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
                                     <property name="mode">multiple</property>
@@ -184,7 +185,7 @@
                         </child>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="margin-start">6</property>
                             <property name="margin-end">6</property>
                             <property name="margin-top">6</property>
@@ -192,23 +193,23 @@
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <signal name="clicked" handler="on_add_ignored_ip" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">list-add-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Add…</property>
-                                        <property name="use-underline">1</property>
+                                        <property name="use-underline">True</property>
                                       </object>
                                     </child>
                                   </object>
@@ -220,23 +221,23 @@
                             </child>
                             <child>
                               <object class="GtkButton">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <signal name="clicked" handler="on_remove_ignored_ip" swapped="no"/>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">list-remove-symbolic</property>
                                       </object>
                                     </child>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Remove</property>
-                                        <property name="use-underline">1</property>
+                                        <property name="use-underline">True</property>
                                       </object>
                                     </child>
                                   </object>

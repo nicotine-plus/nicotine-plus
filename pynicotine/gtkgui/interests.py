@@ -358,10 +358,10 @@ class Interests(UserInterface):
         menu.set_user(item)
 
         menu.actions[_("I _Like This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["likes"])
+            GLib.Variant("b", item in config.sections["interests"]["likes"])
         )
         menu.actions[_("I _Dislike This")].set_state(
-            GLib.Variant.new_boolean(item in config.sections["interests"]["dislikes"])
+            GLib.Variant("b", item in config.sections["interests"]["dislikes"])
         )
 
     def on_popup_ru_menu(self, menu, widget):

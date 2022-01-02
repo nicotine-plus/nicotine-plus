@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">0</property>
+    <property name="visible">False</property>
     <property name="orientation">vertical</property>
-    <property name="hexpand">1</property>
+    <property name="hexpand">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="visible">1</property>
-            <property name="vexpand">1</property>
+            <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkTreeView" id="Transfers">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="has-tooltip">1</property>
-                <property name="enable-tree-lines">1</property>
-                <property name="rubber-banding">1</property>
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="has-tooltip">True</property>
+                <property name="enable-tree-lines">True</property>
+                <property name="rubber-banding">True</property>
                 <property name="search-column">2</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
@@ -37,7 +38,7 @@
     </child>
     <child>
       <object class="GtkBox" id="TransferButtons">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
         <property name="margin-top">6</property>
@@ -45,27 +46,27 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkButton">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <signal name="clicked" handler="on_retry_transfer"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">edit-redo-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Resume</property>
-                        <property name="use-underline">1</property>
+                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -77,23 +78,23 @@
             </child>
             <child>
               <object class="GtkButton">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <signal name="clicked" handler="on_abort_transfer"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">media-playback-pause-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Pause</property>
-                        <property name="use-underline">1</property>
+                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -105,23 +106,23 @@
             </child>
             <child>
               <object class="GtkButton">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <signal name="clicked" handler="on_clear_transfer"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">edit-delete-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Clear</property>
-                        <property name="use-underline">1</property>
+                        <property name="use-underline">True</property>
                       </object>
                     </child>
                   </object>
@@ -135,28 +136,28 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">6</property>
             <property name="halign">end</property>
-            <property name="hexpand">1</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkButton">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="tooltip-text">Clear every download that has finished transferring or been caught by a filter.</property>
                 <signal name="clicked" handler="on_clear_finished_filtered"/>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="icon-name">edit-clear-symbolic</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Clear Finished</property>
                       </object>
                     </child>
@@ -169,7 +170,7 @@
             </child>
             <child>
               <object class="GtkMenuButton" id="ClearTransfers">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="direction">up</property>
                 <property name="tooltip-text">Clear every download marked with a specific status.</property>
                 <style>
@@ -183,18 +184,18 @@
     </child>
   </object>
   <object class="GtkBox" id="ClearTransfersLabel">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="spacing">6</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="label" translatable="yes">Clear _Downloads…</property>
-        <property name="use-underline">1</property>
+        <property name="use-underline">True</property>
       </object>
     </child>
     <child>
       <object class="GtkImage">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="icon-name">pan-up-symbolic</property>
       </object>
     </child>

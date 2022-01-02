@@ -75,8 +75,10 @@ class Plugin(BasePlugin):
 
     def resolve(self, user, announce):
 
-        if user in self.core.users and isinstance(self.core.users[user].addr, tuple):
-            ip_address, port = self.core.users[user].addr
+        user_address = self.core.protothread.user_addresses.get(user)
+
+        if user_address is not None:
+            ip_address, port = user_address
             threading.Thread(target=self.check_port, args=(user, ip_address, port, announce)).start()
         else:
             self.pending_user = user, announce

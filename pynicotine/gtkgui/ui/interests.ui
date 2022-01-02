@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="spacing">6</property>
     <child>
       <object class="GtkPaned" id="InterestsPaned">
-        <property name="visible">1</property>
-        <property name="hexpand">1</property>
+        <property name="visible">True</property>
+        <property name="hexpand">True</property>
         <child>
           <object class="GtkBox" id="LikesDislikes">
             <property name="width-request">240</property>
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
@@ -28,14 +29,14 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
-                <property name="vexpand">1</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkEntry" id="AddLikeEntry">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="margin-start">6</property>
                     <property name="margin-end">6</property>
                     <property name="width-chars">15</property>
@@ -47,15 +48,15 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="visible">1</property>
-                        <property name="vexpand">1</property>
+                        <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkTreeView" id="LikesList">
-                            <property name="visible">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -72,7 +73,7 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="margin-start">12</property>
                 <property name="margin-end">12</property>
@@ -86,14 +87,14 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <property name="spacing">12</property>
-                <property name="vexpand">1</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkEntry" id="AddDislikeEntry">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="margin-start">6</property>
                     <property name="margin-end">6</property>
                     <property name="width-chars">15</property>
@@ -105,15 +106,15 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="visible">1</property>
-                        <property name="vexpand">1</property>
+                        <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkTreeView" id="DislikesList">
-                            <property name="visible">1</property>
-                            <property name="hexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="hexpand">True</property>
                             <child internal-child="selection">
                               <object class="GtkTreeSelection"/>
                             </child>
@@ -129,23 +130,23 @@
         </child>
         <child>
           <object class="GtkFlowBox" id="RecommendationsVbox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="column-spacing">1</property>
             <property name="row-spacing">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="width-request">280</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
@@ -153,7 +154,7 @@
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
                             <property name="label" translatable="yes">Recommendations</property>
@@ -164,12 +165,12 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="RecommendationsButton">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="tooltip-text">Refresh list of recommendations</property>
                             <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                               </object>
                             </child>
@@ -183,15 +184,15 @@
                     </child>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="RecommendationsList">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
                                 <property name="search-column">1</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
@@ -211,16 +212,16 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox" id="SimilarUsers">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="width-request">280</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
@@ -228,7 +229,7 @@
                         <property name="spacing">12</property>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
                             <property name="label" translatable="yes">Similar Users</property>
@@ -239,12 +240,12 @@
                         </child>
                         <child>
                           <object class="GtkButton" id="SimilarUsersButton">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="tooltip-text">Show users with similar interests</property>
                             <signal name="clicked" handler="on_similar_users_clicked" swapped="no"/>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                               </object>
                             </child>
@@ -258,16 +259,16 @@
                     </child>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="RecommendationUsersList">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="has-tooltip">1</property>
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="has-tooltip">True</property>
                                 <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
                                 <signal name="row-activated" handler="on_ru_row_activated"/>
                                 <child internal-child="selection">

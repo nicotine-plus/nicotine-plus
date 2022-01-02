@@ -48,41 +48,41 @@ class InternalMessage:
     pass
 
 
-class Conn(InternalMessage):
+class ServerConnect(InternalMessage):
+    """ NicotineCore sends this to make networking thread establish a server connection. """
 
-    __slots__ = ("conn", "addr", "init")
+    def __init__(self, addr=None, login=None):
+        self.addr = addr
+        self.login = login
 
-    def __init__(self, conn=None, addr=None, init=None):
-        self.conn = conn
+
+class ServerDisconnect(InternalMessage):
+
+    def __init__(self, manual_disconnect=False):
+        self.manual_disconnect = manual_disconnect
+
+
+class ServerTimeout(InternalMessage):
+    pass
+
+
+class InitPeerConn(InternalMessage):
+
+    __slots__ = ("addr", "init")
+
+    def __init__(self, addr=None, init=None):
         self.addr = addr
         self.init = init
-
-
-class InitServerConn(Conn):
-    """ NicotineCore sends this to make networking thread establish a server connection.
-    When a connection is established, networking thread returns an object of this type
-    to NicotineCore. """
-
-
-class InitPeerConn(Conn):
-    """ NicotineCore sends this to make networking thread establish a peer connection.
-    When a connection is established, networking thread returns an object of this type
-    to NicotineCore. """
-
-
-class IncConn(Conn):
-    """ Sent by networking thread to indicate an incoming connection."""
 
 
 class ConnClose(InternalMessage):
     """ Sent by networking thread to indicate a connection has been closed."""
 
-    __slots__ = ("conn", "addr", "callback")
+    __slots__ = ("sock", "conn_type")
 
-    def __init__(self, conn=None, addr=None, callback=True):
-        self.conn = conn
-        self.addr = addr
-        self.callback = callback
+    def __init__(self, sock=None, conn_type=None):
+        self.sock = sock
+        self.conn_type = conn_type
 
 
 class ConnCloseIP(InternalMessage):
@@ -93,23 +93,20 @@ class ConnCloseIP(InternalMessage):
         self.addr = addr
 
 
-class ConnectError(InternalMessage):
-    """ Sent when a socket exception occurs. It's up to UI thread to
-    handle this."""
+class SendNetworkMessage(InternalMessage):
 
-    __slots__ = ("connobj", "err")
-
-    def __init__(self, connobj=None, err=None):
-        self.connobj = connobj
-        self.err = err
+    def __init__(self, user=None, message=None, login=None, addr=None):
+        self.user = user
+        self.message = message
+        self.login = login
+        self.addr = addr
 
 
-class ConnectToPeerTimeout:
+class ShowConnectionErrorMessage(InternalMessage):
 
-    __slots__ = ("conn",)
-
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, user=None, msgs=None):
+        self.user = user
+        self.msgs = msgs
 
 
 class MessageProgress(InternalMessage):
@@ -124,7 +121,7 @@ class MessageProgress(InternalMessage):
         self.total = total
 
 
-class TransferTimeout:
+class TransferTimeout(InternalMessage):
 
     __slots__ = ("transfer",)
 
@@ -146,19 +143,19 @@ class DownloadFile(InternalMessage):
     """ Sent by networking thread to indicate file transfer progress.
     Sent by UI to pass the file object to write. """
 
-    __slots__ = ("conn", "file")
+    __slots__ = ("sock", "file")
 
-    def __init__(self, conn=None, file=None):
-        self.conn = conn
+    def __init__(self, sock=None, file=None):
+        self.sock = sock
         self.file = file
 
 
 class UploadFile(InternalMessage):
 
-    __slots__ = ("conn", "file", "size", "sentbytes", "offset")
+    __slots__ = ("sock", "file", "size", "sentbytes", "offset")
 
-    def __init__(self, conn=None, file=None, size=None, sentbytes=0, offset=None):
-        self.conn = conn
+    def __init__(self, sock=None, file=None, size=None, sentbytes=0, offset=None):
+        self.sock = sock
         self.file = file
         self.size = size
         self.sentbytes = sentbytes
@@ -169,10 +166,10 @@ class FileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
 
-    __slots__ = ("conn", "file", "strerror")
+    __slots__ = ("sock", "file", "strerror")
 
-    def __init__(self, conn=None, file=None, strerror=None):
-        self.conn = conn
+    def __init__(self, sock=None, file=None, strerror=None):
+        self.sock = sock
         self.file = file
         self.strerror = strerror
 
@@ -1048,22 +1045,22 @@ class PlaceInLineResponse(ServerMessage):
     waiting for files from another peer. """
     """ OBSOLETE, use PlaceInQueue peer message """
 
-    def __init__(self, user=None, req=None, place=None):
-        self.req = req
+    def __init__(self, user=None, token=None, place=None):
+        self.token = token
         self.user = user
         self.place = place
 
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.place))
 
         return msg
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.place = self.get_object(message, int, pos)
 
 
@@ -1158,8 +1155,8 @@ class ExactFileSearch(ServerMessage):
     to find other sources. """
     """ OBSOLETE, no results even with official client """
 
-    def __init__(self, req=None, file=None, folder=None, size=None, checksum=None):
-        self.req = req
+    def __init__(self, token=None, file=None, folder=None, size=None, checksum=None):
+        self.token = token
         self.file = file
         self.folder = folder
         self.size = size
@@ -1168,7 +1165,7 @@ class ExactFileSearch(ServerMessage):
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.file))
         msg.extend(self.pack_object(self.folder))
         msg.extend(self.pack_object(self.size, unsignedlonglong=True))
@@ -1178,7 +1175,7 @@ class ExactFileSearch(ServerMessage):
 
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.file = self.get_object(message, str, pos)
         pos, self.folder = self.get_object(message, str, pos)
         pos, self.size = self.get_object(message, int, pos, getunsignedlonglong=True)
@@ -1246,9 +1243,9 @@ class TunneledMessage(ServerMessage):
     """ Server message for tunneling a chat message. """
     """ OBSOLETE, no longer used """
 
-    def __init__(self, user=None, req=None, code=None, msg=None):
+    def __init__(self, user=None, token=None, code=None, msg=None):
         self.user = user
-        self.req = req
+        self.token = token
         self.code = code
         self.msg = msg
         self.addr = None
@@ -1256,7 +1253,7 @@ class TunneledMessage(ServerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.code))
         msg.extend(self.pack_object(self.msg))
 
@@ -1265,7 +1262,7 @@ class TunneledMessage(ServerMessage):
     def parse_network_message(self, message):
         pos, self.user = self.get_object(message, str)
         pos, self.code = self.get_object(message, int, pos)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
 
         pos, ip_address = pos + 4, socket.inet_ntoa(bytes(message[pos:pos + 4][::-1]))
         pos, port = self.get_object(message, int, pos, 1)
@@ -2100,8 +2097,8 @@ class PierceFireWall(PeerInitMessage):
     connection, if it has been asked by the other peer to do so. The token
     is taken from the ConnectToPeer server message. """
 
-    def __init__(self, conn=None, token=None):
-        self.conn = conn
+    def __init__(self, sock=None, token=None):
+        self.sock = sock
         self.token = token
 
     def make_network_message(self):
@@ -2120,12 +2117,16 @@ class PeerInit(PeerInitMessage):
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
 
-    def __init__(self, conn=None, init_user=None, target_user=None, conn_type=None, token=None):
-        self.conn = conn
+    __slots__ = ("sock", "addr", "init_user", "target_user", "conn_type", "token")
+
+    def __init__(self, sock=None, addr=None, init_user=None, target_user=None, conn_type=None, token=0):
+        self.sock = sock
+        self.addr = addr
         self.init_user = init_user      # username of peer who initiated the message
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
         self.token = token
+        self.outgoing_msgs = []
 
     def make_network_message(self):
         msg = bytearray()
@@ -2138,10 +2139,6 @@ class PeerInit(PeerInitMessage):
     def parse_network_message(self, message):
         pos, self.init_user = self.get_object(message, str)
         pos, self.conn_type = self.get_object(message, str, pos)
-
-        if message[pos:]:
-            # A token is not guaranteed to be sent
-            pos, self.token = self.get_object(message, int, pos)
 
         if self.target_user is None:
             # The user we're connecting to initiated the connection. Set them as target user.
@@ -2177,8 +2174,8 @@ class GetSharedFileList(PeerMessage):
     """ Peer code: 4 """
     """ We send this to a peer to ask for a list of shared files. """
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
 
     def make_network_message(self):
         return b""
@@ -2193,8 +2190,8 @@ class SharedFileList(PeerMessage):
     """ A peer responds with a list of shared files when we've sent
     a GetSharedFileList. """
 
-    def __init__(self, conn, shares=None):
-        self.conn = conn
+    def __init__(self, init, shares=None):
+        self.init = init
         self.list = shares
         self.unknown = 0
         self.privatelist = []
@@ -2296,8 +2293,8 @@ class FileSearchRequest(PeerMessage):
     searching for a file. """
     """ OBSOLETE, use UserSearch server message """
 
-    def __init__(self, conn, requestid=None, text=None):
-        self.conn = conn
+    def __init__(self, init, requestid=None, text=None):
+        self.init = init
         self.requestid = requestid
         self.text = text
         self.searchid = None
@@ -2321,12 +2318,12 @@ class FileSearchResult(PeerMessage):
     token/ticket is taken from original FileSearch, UserSearch or
     RoomSearch message. """
 
-    __slots__ = ("conn", "user", "geoip", "token", "list", "privatelist", "freeulslots",
+    __slots__ = ("init", "user", "token", "list", "privatelist", "freeulslots",
                  "ulspeed", "inqueue", "fifoqueue")
 
-    def __init__(self, conn=None, user=None, token=None, shares=None, freeulslots=None,
+    def __init__(self, init=None, user=None, token=None, shares=None, freeulslots=None,
                  ulspeed=None, inqueue=None, fifoqueue=None):
-        self.conn = conn
+        self.init = init
         self.user = user
         self.token = token
         self.list = shares
@@ -2437,8 +2434,8 @@ class UserInfoRequest(PeerMessage):
     """ We ask the other peer to send us their user information, picture
     and all."""
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
 
     def make_network_message(self):
         return b""
@@ -2452,8 +2449,8 @@ class UserInfoReply(PeerMessage):
     """ Peer code: 16 """
     """ A peer responds with this when we've sent a UserInfoRequest. """
 
-    def __init__(self, conn, descr=None, pic=None, totalupl=None, queuesize=None, slotsavail=None, uploadallowed=None):
-        self.conn = conn
+    def __init__(self, init, descr=None, pic=None, totalupl=None, queuesize=None, slotsavail=None, uploadallowed=None):
+        self.init = init
         self.descr = descr
         self.pic = pic
         self.totalupl = totalupl
@@ -2502,8 +2499,8 @@ class PMessageUser(PeerMessage):
     This is a Nicotine+ extension to the Soulseek protocol. """
     """ DEPRECATED """
 
-    def __init__(self, conn=None, user=None, msg=None):
-        self.conn = conn
+    def __init__(self, init=None, user=None, msg=None):
+        self.init = init
         self.user = user
         self.msg = msg
         self.msgid = None
@@ -2529,8 +2526,8 @@ class FolderContentsRequest(PeerMessage):
     """ Peer code: 36 """
     """ We ask the peer to send us the contents of a single folder. """
 
-    def __init__(self, conn, directory=None):
-        self.conn = conn
+    def __init__(self, init, directory=None):
+        self.init = init
         self.dir = directory
         self.something = None
 
@@ -2551,8 +2548,8 @@ class FolderContentsResponse(PeerMessage):
     """ A peer responds with the contents of a particular folder
     (with all subfolders) when we've sent a FolderContentsRequest. """
 
-    def __init__(self, conn, directory=None, shares=None):
-        self.conn = conn
+    def __init__(self, init, directory=None, shares=None):
+        self.init = init
         self.dir = directory
         self.list = shares
 
@@ -2629,10 +2626,10 @@ class TransferRequest(PeerMessage):
     but Nicotine+, Museek+ and the official clients use the QueueUpload message for
     this purpose today. """
 
-    def __init__(self, conn, direction=None, req=None, file=None, filesize=None, realfile=None):
-        self.conn = conn
+    def __init__(self, init, direction=None, token=None, file=None, filesize=None, realfile=None):
+        self.init = init
         self.direction = direction
-        self.req = req
+        self.token = token
         self.file = file  # virtual file
         self.realfile = realfile
         self.filesize = filesize
@@ -2640,7 +2637,7 @@ class TransferRequest(PeerMessage):
     def make_network_message(self):
         msg = bytearray()
         msg.extend(self.pack_object(self.direction))
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.file))
 
         if self.filesize is not None and self.direction == 1:
@@ -2650,7 +2647,7 @@ class TransferRequest(PeerMessage):
 
     def parse_network_message(self, message):
         pos, self.direction = self.get_object(message, int)
-        pos, self.req = self.get_object(message, int, pos)
+        pos, self.token = self.get_object(message, int, pos)
         pos, self.file = self.get_object(message, str, pos)
 
         if self.direction == 1:
@@ -2662,16 +2659,16 @@ class TransferResponse(PeerMessage):
     """ Response to TransferRequest - either we (or the other peer) agrees,
     or tells the reason for rejecting the file transfer. """
 
-    def __init__(self, conn, allowed=None, reason=None, req=None, filesize=None):
-        self.conn = conn
+    def __init__(self, init, allowed=None, reason=None, token=None, filesize=None):
+        self.init = init
         self.allowed = allowed
-        self.req = req
+        self.token = token
         self.reason = reason
         self.filesize = filesize
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.req))
+        msg.extend(self.pack_object(self.token))
         msg.extend(bytes([self.allowed]))
 
         if self.reason is not None:
@@ -2683,7 +2680,7 @@ class TransferResponse(PeerMessage):
         return msg
 
     def parse_network_message(self, message):
-        pos, self.req = self.get_object(message, int)
+        pos, self.token = self.get_object(message, int)
         pos, self.allowed = pos + 1, message[pos]
 
         if message[pos:]:
@@ -2697,8 +2694,8 @@ class PlaceholdUpload(PeerMessage):
     """ Peer code: 42 """
     """ OBSOLETE, no longer used """
 
-    def __init__(self, conn, file=None):
-        self.conn = conn
+    def __init__(self, init, file=None):
+        self.init = init
         self.file = file
 
     def make_network_message(self):
@@ -2714,8 +2711,8 @@ class QueueUpload(PeerMessage):
     Once the recipient is ready to transfer the requested file, they will send an upload
     request. """
 
-    def __init__(self, conn, file=None, legacy_client=False):
-        self.conn = conn
+    def __init__(self, init, file=None, legacy_client=False):
+        self.init = init
         self.file = file
         self.legacy_client = legacy_client
 
@@ -2730,8 +2727,8 @@ class PlaceInQueue(PeerMessage):
     """ Peer code: 44 """
     """ The peer replies with the upload queue placement of the requested file. """
 
-    def __init__(self, conn, filename=None, place=None):
-        self.conn = conn
+    def __init__(self, init, filename=None, place=None):
+        self.init = init
         self.filename = filename
         self.place = place
 
@@ -2760,8 +2757,8 @@ class UploadDenied(PeerMessage):
     """ This message is sent to reject QueueUpload attempts and previously queued
     files. The reason for rejection will appear in the transfer list of the recipient. """
 
-    def __init__(self, conn, file=None, reason=None):
-        self.conn = conn
+    def __init__(self, init, file=None, reason=None):
+        self.init = init
         self.file = file
         self.reason = reason
 
@@ -2787,8 +2784,8 @@ class UploadQueueNotification(PeerMessage):
     """ This message is sent to inform a peer about an upload attempt initiated by us. """
     """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
 
     def make_network_message(self):
         return b""
@@ -2801,8 +2798,8 @@ class UnknownPeerMessage(PeerMessage):
     """ Peer code: 12547 """
     """ UNKNOWN """
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
 
     def parse_network_message(self, message):
         # Empty message
@@ -2823,16 +2820,16 @@ class FileRequest(FileMessage):
     start uploading a file. The token is the same as the one previously included
     in the TransferRequest message. """
 
-    def __init__(self, conn, req=None):
-        self.conn = conn
-        self.req = req
+    def __init__(self, init, token=None):
+        self.init = init
+        self.token = token
 
     def make_network_message(self):
-        msg = self.pack_object(self.req)
+        msg = self.pack_object(self.token)
         return msg
 
     def parse_network_message(self, message):
-        _pos, self.req = self.get_object(message, int)
+        _pos, self.token = self.get_object(message, int)
 
 
 class FileOffset(FileMessage):
@@ -2840,8 +2837,8 @@ class FileOffset(FileMessage):
     to tell them how many bytes of the file we've previously downloaded. If none,
     the offset is 0. """
 
-    def __init__(self, conn, filesize=None, offset=None):
-        self.conn = conn
+    def __init__(self, init, filesize=None, offset=None):
+        self.init = init
         self.filesize = filesize
         self.offset = offset
 
@@ -2869,8 +2866,8 @@ class DistribRequest(InternalMessage):
 class DistribAlive(DistribMessage):
     """ Distrib code: 0 """
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
 
     def make_network_message(self):
         return b""
@@ -2885,10 +2882,10 @@ class DistribSearch(DistribMessage):
     """ Search request that arrives through the distributed network.
     We transmit the search request to our child peers. """
 
-    __slots__ = ("unknown", "conn", "user", "searchid", "searchterm")
+    __slots__ = ("unknown", "init", "user", "searchid", "searchterm")
 
-    def __init__(self, conn):
-        self.conn = conn
+    def __init__(self, init):
+        self.init = init
         self.unknown = None
         self.user = None
         self.searchid = None
@@ -2914,8 +2911,8 @@ class DistribBranchLevel(DistribMessage):
     """ We tell our distributed children what our position is in our branch (xth
     generation) on the distributed network. """
 
-    def __init__(self, conn, value=None):
-        self.conn = conn
+    def __init__(self, init, value=None):
+        self.init = init
         self.value = value
 
     def make_network_message(self):
@@ -2933,8 +2930,8 @@ class DistribBranchRoot(DistribMessage):
     """ We tell our distributed children the username of the root of the branch
     we’re in on the distributed network. """
 
-    def __init__(self, conn, user=None):
-        self.conn = conn
+    def __init__(self, init, user=None):
+        self.init = init
         self.user = user
 
     def make_network_message(self):
@@ -2953,8 +2950,8 @@ class DistribChildDepth(DistribMessage):
     we have on the distributed network. """
     """ DEPRECATED, sent by Soulseek NS but not SoulseekQt """
 
-    def __init__(self, conn, value=None):
-        self.conn = conn
+    def __init__(self, init, value=None):
+        self.init = init
         self.value = value
 
     def make_network_message(self):
@@ -2973,10 +2970,10 @@ class DistribEmbeddedMessage(DistribMessage):
     of distributed message sent at present is DistribSearch (distributed code 3).
     We unpack the distributed message and distribute it to our child peers. """
 
-    __slots__ = ("conn", "distrib_code", "distrib_message")
+    __slots__ = ("init", "distrib_code", "distrib_message")
 
-    def __init__(self, conn, distrib_code=None, distrib_message=None):
-        self.conn = conn
+    def __init__(self, init, distrib_code=None, distrib_message=None):
+        self.init = init
         self.distrib_code = distrib_code
         self.distrib_message = distrib_message
 
