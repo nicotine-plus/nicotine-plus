@@ -6074,9 +6074,9 @@ msgid "Quitting %(program)s %(version)s, %(status)s…"
 msgstr "%(program)s %(version)s, %(status)s afsluiten…"
 
 #: pynicotine/pynicotine.py:307
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Nicotine+ afsluiten %(version)s, %(status)s!"
+msgstr "%(program)s afsluiten, %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Gebruiker:"
