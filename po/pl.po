@@ -1774,7 +1774,7 @@ msgstr "Interfejs użytkownika"
 #: pynicotine/gtkgui/dialogs/preferences.py:2735
 #: pynicotine/gtkgui/ui/settings/shares.ui:16
 msgid "Shares"
-msgstr "Zasoby udostępnione"
+msgstr "Udostępnione zasoby"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2736
 #: pynicotine/gtkgui/frame.py:1187 pynicotine/gtkgui/frame.py:1701
@@ -1797,7 +1797,7 @@ msgstr "Wysyłanie"
 #: pynicotine/gtkgui/dialogs/preferences.py:2738
 #: pynicotine/gtkgui/ui/settings/search.ui:41
 msgid "Searches"
-msgstr "Wyszukiwania"
+msgstr "Wyszukiwanie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2739
 #: pynicotine/gtkgui/frame.py:1190 pynicotine/gtkgui/ui/mainwindow.ui:1244
@@ -2224,7 +2224,7 @@ msgstr "Dostępny"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
-msgstr "Wyszukiwania"
+msgstr "Wyszukiwanie"
 
 #: pynicotine/gtkgui/frame.py:1704
 msgid "Chat"
@@ -2964,7 +2964,7 @@ msgstr "_Zapisz"
 #: pynicotine/gtkgui/widgets/filechooser.py:243
 #: pynicotine/gtkgui/widgets/filechooser.py:311
 msgid "(None)"
-msgstr "(Nic)"
+msgstr "(Brak)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:108
 msgid "Close tab"
@@ -5150,7 +5150,8 @@ msgstr "Zamienniki"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:34
 msgid "Autoclear finished/filtered downloads from transfer list"
 msgstr ""
-"Automatycznie czyszczenie zakończonych / filtrowanych z listy transferów"
+"Automatyczne czyszczenie zakończonych / filtrowanych pobrań z listy "
+"transferów"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:41
 msgid "Download folders in reverse alphanumerical order"
@@ -5403,7 +5404,7 @@ msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat."
 msgstr ""
-"Funkcja Teraz Odtwarzanie pozwana na wyświetlanie odtwarzanego utworu w "
+"Funkcja Teraz Odtwarzanie pozwala na wyświetlanie odtwarzanego utworu w "
 "pokoju rozmów przy pomocy komendy /now."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:61
@@ -5573,7 +5574,7 @@ msgstr "Ogranicz udostępnianie tylko dla znajomych do zaufanych znajomych"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:56
 msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr ""
-"Automatycznie czyszczenie zakończonych / wstrzymanych wysyłań z listy "
+"Automatyczne czyszczenie zakończonych / wstrzymanych wysyłań z listy "
 "transferów"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:73
@@ -5594,7 +5595,7 @@ msgstr "Alternatywne ograniczenie prędkości wysyłania do (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:193
 msgid "Limit upload speed:"
-msgstr "Ogranicz prędkość wysyłania do:"
+msgstr "Ogranicz prędkość wysyłania:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:211
 msgid "Per transfer"
