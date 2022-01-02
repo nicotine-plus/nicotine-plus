@@ -285,13 +285,16 @@ class Transfers:
                 # Only finished uploads are supposed to be restored
                 continue
 
-            transfer_list.appendleft(
-                Transfer(
-                    user=i[0], filename=i[1], path=i[2], status=status,
-                    size=size, current_byte_offset=current_byte_offset, bitrate=bitrate,
-                    length=length
-                )
-            )
+            transfer_list.appendleft(Transfer(
+                user=i[0], filename=i[1], path=i[2], status=status, size=size,
+                current_byte_offset=current_byte_offset, bitrate=bitrate, length=length
+            ))
+
+        log.add_transfer("Loaded %(item)i of %(total)i stored %(transfer)s", {
+            "item": len(transfer_list),
+            "total": len(transfers),
+            "transfer": transfer_type
+        })
 
     def watch_stored_downloads(self):
         """ When logging in, we request to watch the status of our downloads """
@@ -2291,19 +2294,18 @@ class Transfers:
             if transfer in self.uploads:
                 self.user_update_times[transfer.user] = time.time()
                 self.check_upload_queue()
-                log.add_upload(
-                    _("Upload aborted, user %(user)s file %(file)s"), {
-                        "user": transfer.user,
-                        "file": transfer.filename
-                    }
-                )
+                log.add_upload(_("Upload aborted (%(reason)s): user %(user)s, file %(file)s"), {
+                    "reason": reason,
+                    "user": transfer.user,
+                    "file": transfer.filename
+                })
             else:
-                log.add_download(
-                    _("Download aborted, user %(user)s file %(file)s"), {
-                        "user": transfer.user,
-                        "file": transfer.filename
-                    }
-                )
+                log.add_download(_("Download aborted (%(reason)s): user %(user)s, file %(file)s"), {
+                    "reason": reason,
+                    "user": transfer.user,
+                    "file": transfer.filename,
+                })
+                # ToDo: Bug when disconnecting or exiting, active downloads are still "Transferring"
 
         elif send_fail_message and transfer in self.uploads and transfer.status == "Queued":
             self.core.send_message_to_peer(
@@ -2366,23 +2368,34 @@ class Transfers:
 
     """ Exit """
 
-    def abort_transfers(self):
+    def abort_transfers(self, reason="User logged off"):
         """ Stop all transfers on disconnect/shutdown """
 
+        num_down = num_up = 0
+
         for i in self.downloads:
-            if i.status not in ("Finished", "Filtered", "Paused"):
-                self.abort_transfer(i)
-                i.status = "User logged off"
+            if i.status not in ("Finished", "Filtered", "Paused"):  # , "User logged off"):
+                self.abort_transfer(i)  # , reason=reason)
+                i.status = "User logged off"  # reason  # ToDo: Bug when exiting, status not set
+                num_down =+ 1
 
                 if self.downloadsview:
                     self.downloadsview.update(i)
 
         for i in self.uploads.copy():
             if i.status != "Finished":
-                self.uploads.remove(i)
+                self.uploads.remove(i)  # ToDo: why not use abort_transfer(i)?
+                num_up =+ 1
 
                 if self.uploadsview:
                     self.uploadsview.remove_specific(i, True)
+
+        if (num_down + num_up) > 0:
+            log.add_transfer("Paused %(num_down)i downloads, Aborted %(num_up)i uploads. %(reason)s", {
+                "num_down": num_down,
+                "num_up": num_up,
+                "reason": reason
+            })
 
         self.privileged_users.clear()
         self.requested_folders.clear()
@@ -2420,11 +2433,18 @@ class Transfers:
         if transfer_type == "uploads":
             transfers_file = self.uploads_file_name
             callback = self.save_uploads_callback
-        else:
+
+        elif transfer_type == "downloads":
             transfers_file = self.downloads_file_name
             callback = self.save_downloads_callback
 
         write_file_and_backup(transfers_file, callback)
+
+        log.add_transfer("Stored list of %(total)i %(type)s to %(file)s", {
+            "total": len(self.uploads),
+            "type": transfer_type,
+            "file": self.uploads_file_name
+        })
 
     def server_disconnect(self):
 
