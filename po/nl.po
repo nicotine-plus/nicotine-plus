@@ -6069,9 +6069,9 @@ msgid "Loading %(program)s %(version)s"
 msgstr "Bezig met laden %(program)s %(version)s"
 
 #: pynicotine/pynicotine.py:275
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Nicotine+ wordt afgesloten %(version)s, %(status)s…"
+msgstr "%(program)s %(version)s, %(status)s afsluiten…"
 
 #: pynicotine/pynicotine.py:307
 #, fuzzy, python-format
