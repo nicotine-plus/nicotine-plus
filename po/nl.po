@@ -3307,9 +3307,9 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Nicotine+ laden %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Using Python %(py_version)s"
-msgstr "Python gebruiken %(py_version)s"
+msgstr "Met Python %(py_version)s"
 
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
@@ -5634,9 +5634,8 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:296
-#, fuzzy
 msgid "MiB"
-msgstr "MiB's"
+msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:334
 msgid "files"
