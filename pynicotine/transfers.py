@@ -2377,7 +2377,7 @@ class Transfers:
             if i.status not in ("Finished", "Filtered", "Paused"):  # , "User logged off"):
                 self.abort_transfer(i)  # , reason=reason)
                 i.status = "User logged off"  # reason  # ToDo: Bug when exiting, status not set
-                num_down =+ 1
+                num_down += 1
 
                 if self.downloadsview:
                     self.downloadsview.update(i)
@@ -2385,7 +2385,7 @@ class Transfers:
         for i in self.uploads.copy():
             if i.status != "Finished":
                 self.uploads.remove(i)  # ToDo: why not use abort_transfer(i)?
-                num_up =+ 1
+                num_up += 1
 
                 if self.uploadsview:
                     self.uploadsview.remove_specific(i, True)
