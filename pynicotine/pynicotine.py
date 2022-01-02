@@ -83,8 +83,6 @@ class NicotineCore:
         self.geoip = None
         self.notifications = None
 
-        self.shutdown = False
-
         # Handle Ctrl+C and "kill" exit gracefully
         for signal_type in (signal.SIGINT, signal.SIGTERM):
             signal.signal(signal_type, self.quit)
@@ -98,6 +96,7 @@ class NicotineCore:
 
         self.queue = deque()
 
+        self.shutdown = False
         self.away = False
         self.logged_in = False
         self.user_ip_address = None
@@ -229,8 +228,8 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add(_("Loading Nicotine+ %(nic_version)s") % {"nic_version": config.version})
-        log.add(_("Using Python %(py_version)s") % {"py_version": config.python_version})
+        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
+        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
@@ -273,7 +272,8 @@ class NicotineCore:
 
     def quit(self, signal_type=None, _frame=None):
 
-        log.add(_("Quitting Nicotine+ %(version)s, %(status)s…"), {
+        log.add(_("Quitting %(program)s %(version)s, %(status)s…"), {
+            "program": config.application_name,
             "version": config.version,
             "status": _("terminating") if signal_type == signal.SIGTERM else _("application closing")
         })
@@ -304,7 +304,8 @@ class NicotineCore:
         if self.ui_callback:
             self.ui_callback.quit()
 
-        log.add(_("Quit Nicotine+ %(version)s, %(status)s!"), {
+        log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
+            "program": config.application_name,
             "version": config.version,
             "status": _("terminated") if signal_type == signal.SIGTERM else _("done")
         })

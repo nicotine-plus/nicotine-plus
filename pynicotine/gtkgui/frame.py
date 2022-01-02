@@ -157,7 +157,7 @@ class NicotineFrame(UserInterface):
             config.sections["ui"]["header_bar"] = False
 
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
-        log.add("Loading GTK %s", config.gtk_version)
+        log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
         """ Icons """
 

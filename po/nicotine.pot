@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 17:02+0200\n"
+"POT-Creation-Date: 2022-01-02 20:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1934,6 +1934,12 @@ msgid ""
 "%(folder)s?"
 msgstr ""
 
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr ""
+
 #: pynicotine/gtkgui/frame.py:221
 msgid "Your config file is corrupt"
 msgstr ""
@@ -3024,7 +3030,7 @@ msgstr ""
 msgid "Command %s is not recognized"
 msgstr ""
 
-#: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr ""
@@ -3240,23 +3246,13 @@ msgstr ""
 msgid "Loading plugin system"
 msgstr ""
 
-#: pynicotine/pynicotine.py:232
-#, python-format
-msgid "Loading Nicotine+ %(nic_version)s"
-msgstr ""
-
-#: pynicotine/pynicotine.py:233
-#, python-format
-msgid "Using Python %(py_version)s"
-msgstr ""
-
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:269
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
 
-#: pynicotine/pynicotine.py:276
+#: pynicotine/pynicotine.py:275
 #, python-format
-msgid "Quitting Nicotine+ %(version)s, %(status)s…"
+msgid "Quitting %(program)s %(version)s, %(status)s…"
 msgstr ""
 
 #: pynicotine/pynicotine.py:278
@@ -3269,109 +3265,109 @@ msgstr ""
 
 #: pynicotine/pynicotine.py:307
 #, python-format
-msgid "Quit Nicotine+ %(version)s, %(status)s!"
+msgid "Quit %(program)s %(version)s, %(status)s!"
 msgstr ""
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:310
 msgid "terminated"
 msgstr ""
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:310
 msgid "done"
 msgstr ""
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:322
 #, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
 "the specified network interface and restart Nicotine+."
 msgstr ""
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:332
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
 msgstr ""
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:339
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
 msgstr ""
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:423
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:426
 #, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:686
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:733
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:769
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:812
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr ""
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr ""
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:894
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
 msgstr ""
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:897
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
 "download privileges left."
 msgstr ""
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1040
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1097
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1153
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr ""
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1246
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
