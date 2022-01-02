@@ -292,9 +292,8 @@ msgid "Bolivia"
 msgstr "Bolivia"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr "Bonaire, Sint Eustatius en Saba"
+msgstr "Bonaire, Sint-Eustatius en Saba"
 
 #: pynicotine/geoip/geoip.py:52
 msgid "Brazil"
@@ -3299,14 +3298,13 @@ msgstr ""
 "Spoor: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
-msgstr "Plugin-handler laden"
+msgstr "Plug-in systeem laden"
 
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading Nicotine+ %(nic_version)s"
-msgstr "Nicotine+ wordt afgesloten %(version)s, %(status)s…"
+msgstr "Nicotine+ laden %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
 #, python-format
