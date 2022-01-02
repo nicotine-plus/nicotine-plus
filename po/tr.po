@@ -3299,14 +3299,13 @@ msgstr ""
 "Geri izleme: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
-msgstr "%s eklentisi yüklendi"
+msgstr "Eklenti sistemi yükleniyor"
 
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading Nicotine+ %(nic_version)s"
-msgstr "Çıkılıyor: Nicotine+ %(version)s, %(status)s…"
+msgstr "Nicotine+ %(nic_version)s yükleniyor"
 
 #: pynicotine/pynicotine.py:233
 #, fuzzy, python-format
