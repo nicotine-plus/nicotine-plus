@@ -3308,9 +3308,9 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Nicotine+ %(nic_version)s yükleniyor"
 
 #: pynicotine/pynicotine.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Using Python %(py_version)s"
-msgstr "Python'u Kullanma %(py_version)s"
+msgstr "Python %(py_version)s kullanılıyor"
 
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
