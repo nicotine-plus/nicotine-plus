@@ -1842,11 +1842,7 @@ class NicotineFrame(UserInterface):
         else:
             icon_name = "media-seek-backward-symbolic"
 
-        if Gtk.get_major_version() == 4:
-            self.AltSpeedButton.set_icon_name(icon_name)
-            return
-
-        self.AltSpeedButton.set_image(Gtk.Image(icon_name=icon_name))
+        self.AltSpeedIcon.set_property("icon-name", icon_name)
 
     def on_alternative_speed_limit(self, *_args):
 

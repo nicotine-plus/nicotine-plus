@@ -1805,7 +1805,7 @@
                     <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
                     <property name="action-name">app.altspeedlimit</property>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="AltSpeedIcon">
                         <property name="visible">True</property>
                         <property name="icon-name">media-seek-backward-symbolic</property>
                       </object>

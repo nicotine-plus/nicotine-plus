@@ -44,14 +44,7 @@ class RoomList(UserInterface):
 
         self.room_filter = self.room_model.filter_new()
         self.room_filter.set_visible_func(self.room_match_function)
-
-        try:
-            self.room_model_filtered = Gtk.TreeModelSort.new_with_model(self.room_filter)
-
-        except AttributeError:
-            # Older GTK versions
-            self.room_model_filtered = Gtk.TreeModelSort.sort_new_with_model(self.room_filter)
-
+        self.room_model_filtered = Gtk.TreeModelSort(model=self.room_filter)
         self.list_view.set_model(self.room_model_filtered)
 
         self.column_numbers = list(range(self.room_model.get_n_columns()))
