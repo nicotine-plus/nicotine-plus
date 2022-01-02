@@ -3920,9 +3920,9 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Sluta med nikotin+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:233
-#, python-format
+#, fuzzy, python-format
 msgid "Using Python %(py_version)s"
-msgstr ""
+msgstr "Använder Python %(py_version)s"
 
 #: pynicotine/pynicotine.py:270
 #, fuzzy
