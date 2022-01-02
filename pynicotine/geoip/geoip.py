@@ -48,7 +48,7 @@ class GeoIP:
         'bm': _('Bermuda'),
         'bn': _('Brunei Darussalam'),
         'bo': _('Bolivia'),
-        'bq': _('Bonaire), Sint Eustatius and Saba'),
+        'bq': _('Bonaire, Sint Eustatius and Saba'),
         'br': _('Brazil'),
         'bs': _('Bahamas'),
         'bt': _('Bhutan'),
