@@ -3642,6 +3642,7 @@ msgid "Command %s is not recognized"
 msgstr "%s komandoa ez da ezagutzen"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Errorea ikono pertsonalizatua %(path)s kargatzean: %(error)s"
@@ -3899,7 +3900,7 @@ msgstr "Nikotina + %(version)s, %(status)s uztea …"
 msgid "Using Python %(py_version)s"
 msgstr "Python erabiliz %(py_version)s"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3925,17 +3926,17 @@ msgstr "aplikazioaren itxiera"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Utzi Nikotina + %(version)s, %(status)s!"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "terminated"
 msgstr "amaitu"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "done"
 msgstr "egina"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, fuzzy, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3944,7 +3945,7 @@ msgstr ""
 "Zehaztu zenuen \"%s\" sareko interfazea ez da existitzen. Aldatu edo kendu "
 "zehaztutako sareko interfazea eta berrabiarazi Nicotine +."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 #, fuzzy
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
@@ -3953,7 +3954,7 @@ msgstr ""
 "Bezeroaren konexio portuetarako zehaztutako barrutia {} - {} zen, baina "
 "hauetako bat ere ez zen erabilgarria. Handitu eta / edo "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 #, fuzzy
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
@@ -3962,51 +3963,51 @@ msgstr ""
 "Kontuan izan zure barrutiaren zati bat 1024tik beherakoa dela, normalean ez "
 "da onartzen sistema eragile gehienetan Windows izan ezik."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "%(host)s:%(port)s-(e)ra konektatzen"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Ezin da %s erabiltzailearen IPa berreskuratu, erabiltzaile hau lineaz kanpo "
 "dagoelako"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, fuzzy, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr ""
 "%(user)s erabiltzailearen IP helbidea %(ip)s da, ataka %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Ezin da zerbitzarira konektatu. Arrazoia: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "\"%(user)s\" erabiltzailearen txat-mezua \"%(room)s\" gelan: %(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Mezu Pribatua %(user)s-(e)k bidalia"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Norbaitek beste nonbait saioa hasi du zure Soulseek kontuan"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i erabiltzaile pribilegiatu"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -4015,7 +4016,7 @@ msgstr ""
 "Ez duzu pribilegiorik. Pribilegioak ez dira beharrezkoak, baina baimendu "
 "zure deskargak pribilegiatu gabeko erabiltzaileen aurretik ilaran jartzea."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, fuzzy, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4024,29 +4025,29 @@ msgstr ""
 "%(days)i egunak, %(hours)i orduak, %(minutes)i minutuak, %(seconds)i segundo "
 "deskargatzeko pribilegioak geratzen dira."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Zure pasahitza aldatu da. Pasahitza %s da"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "%(user)s erabiltzailea partekatutako fitxategien zerrendan arakatzen ari da"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr ""
 "%(user)s erabiltzailea zure erabiltzailearen informazioa irakurtzen ari da"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Oharra: %(realuser)s %(fakeuser)s faltsutzen saiatzen ari da) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Ezin izan da %(folder)s partekatutako karpeta eskuratu: %(error)s"
@@ -7099,6 +7100,22 @@ msgstr "Gorde _Irudia"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Freskatu informazioa"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Nikotina + %(version)s, %(status)s uztea …"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Nikotina + %(version)s, %(status)s uztea …"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Utzi Nikotina + %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Erabiltzailea:"

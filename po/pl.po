@@ -3078,6 +3078,7 @@ msgid "Command %s is not recognized"
 msgstr "Komenda %s nie została rozpoznana"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Błąd ładowania niestandardowej ikony %(path)s: %(error)s"
@@ -3316,7 +3317,7 @@ msgstr "Ładowanie Nicotine+ %(nic_version)s"
 msgid "Using Python %(py_version)s"
 msgstr "Korzystanie z Pythona %(py_version)s"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 msgid "You need to specify a username and password before connecting…"
 msgstr "Musisz podać nazwę użytkownika i hasło przed połączeniem…"
 
@@ -3338,15 +3339,15 @@ msgstr "zamykanie aplikacji"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Zamknij Nicotine+ %(version)s, %(status)s!"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 msgid "terminated"
 msgstr "zakończono"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 msgid "done"
 msgstr "gotowe"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3355,7 +3356,7 @@ msgstr ""
 "Wybrany interfejs sieciowy, '%s', nie istnieje. Zmień lub usuń interfejs i "
 "zrestartuj Nicotine+."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
@@ -3363,7 +3364,7 @@ msgstr ""
 "Zakres portów jaki został wybrany to {}-{}, ale żaden z nich nie był do "
 "użytku. Zmień zakres "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
@@ -3371,48 +3372,48 @@ msgstr ""
 "Miej na uwadze, że ten zakres jest poniżej 1024. Jest to zakres, który jest "
 "niezalecany w większości systemów operacyjnych."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Łączenie z %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr "Adres IP użytkownika %s jest nieznany odkąd użytkownik jest rozłączony"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "Adres IP użytkownika %(user)s to %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Nie można połączyć się z serwerem. Powód: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Wiadomość na czacie od użytkownika '%(user)s' w pokoju '%(room)s': "
 "%(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Prywatna wiadomość od użytkownika '%(user)s': %(message)s"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Ktoś zalogował się na twoje konto Soulseek gdzieś indziej"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i uprzywilejowanych użytkowników"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3420,7 +3421,7 @@ msgstr ""
 "Nie masz już żadnych przywilejów. Nie są one konieczne, ale pozwalają "
 "ściągać pliki poza kolejką nieuprzywilejowanych użytkowników."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3429,27 +3430,27 @@ msgstr ""
 "Pozostało %(days)i dni, %(hours)i godzin, %(minutes)i minut, %(seconds)i "
 "sekund uprzywilejowanego pobierania."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Twoje hasło zostało zmienione. Hasło to %s"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Użytkownik %(user)s przegląda twoją listę udostępnionych zasobów"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Użytkownik %(user)s przegląda informacje o tobie"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Uwaga: %(realuser)s próbuje podszyć się pod %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Błąd podczas pobierania zawartości folderu %(folder)s: %(error)s"
@@ -6047,6 +6048,22 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:612
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Ładowanie Nicotine+ %(nic_version)s"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Zamykanie Nicotine+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Zamknij Nicotine+ %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Użytkownik:"

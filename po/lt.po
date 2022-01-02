@@ -3603,6 +3603,7 @@ msgid "Command %s is not recognized"
 msgstr "Komanda %s neatpažinta"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Įkeliant pasirinktinę piktogramą %(path)s: %(error)s"
@@ -3859,7 +3860,7 @@ msgstr "Nicotine+ versija %s"
 msgid "Using Python %(py_version)s"
 msgstr "Python %(py_version)s naudojimas"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr "Prieš prijungdami turite nurodyti vartotojo vardą ir slaptažodį…"
@@ -3884,17 +3885,17 @@ msgstr "programos uždarymas"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Nicotine+ versija %s"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "terminated"
 msgstr "Nutrauktas"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "done"
 msgstr "Padaryta"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, fuzzy, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3903,7 +3904,7 @@ msgstr ""
 "Jūsų nurodytos tinklo sąsajos %s nėra. Pakeiskite arba pašalinkite nurodytą "
 "tinklo sąsają ir iš naujo paleiskite Nikotiną+."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 #, fuzzy
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
@@ -3912,7 +3913,7 @@ msgstr ""
 "Jūsų nurodytas kliento ryšio prievadų diapazonas buvo {}-{}, tačiau nė "
 "vienas iš jų nebuvo naudotinas. Padidėjimas ir (arba) "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
@@ -3920,50 +3921,50 @@ msgstr ""
 "Pastaba: dalis nurodytojo rėžio yra žemiau 1024. Paprastai tai daugumoje "
 "operacinių sistemų, išskyrus Windows, neleidžiama."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Jungiamasi prie %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Neįmanoma nuskaityti vartotojo IP %s, nes šis vartotojas yra neprisijungęs"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, fuzzy, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr ""
 "Naudotojo %(user)s IP adresas yra %(ip)s, prievadas %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Neįmanoma prisijungti prie serverio. Priežastis: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Pokalbio pranešimas iš vartotojo „%(user)s“ kambaryje „%(room)s“: %(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Asmeninė žinutė nuo %(user)s"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Kažkas prisijungęs prie jūsų Soulseek paskyros kitur"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i privilegijuoti naudotojai"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -3972,7 +3973,7 @@ msgstr ""
 "Jūs neturite jokių privilegijų. Teisės nereikalingos, tačiau leidžia jūsų "
 "atsisiuntimus įtraukti į eilę prieš privilegijuotus vartotojus."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3981,27 +3982,27 @@ msgstr ""
 "Liko %(days)i dien., %(hours)i val., %(minutes)i min., %(seconds)i sek. "
 "atsisiuntimo privilegijų."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Jūsų slaptažodis buvo pakeistas"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Vartotojas %(user)s naršo jūsų bendrinamų failų sąrašą"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s daro UserInfo užklausą"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Dėmesio: %(realuser)s bando apsimesti naudotoju %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nepavyko iškviesti bendrai naudojamo aplanko %(folder)s: %(error)s"
@@ -7003,6 +7004,22 @@ msgstr "Įrašyti _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "_Refresh informacija"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Nicotine+ versija %s"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Nicotine+ versija %s"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Nicotine+ versija %s"
 
 #~ msgid "User:"
 #~ msgstr "Naudotojas:"
