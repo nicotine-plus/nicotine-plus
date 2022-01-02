@@ -133,6 +133,12 @@
                   <object class="GtkMenuButton" id="ResultGrouping">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Result grouping mode</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">view-list-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <style>

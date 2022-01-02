@@ -68,14 +68,7 @@ class TransferList(UserInterface):
         grouping_button = getattr(frame, "ToggleTree%ss" % transfer_type.title())
 
         if Gtk.get_major_version() == 4:
-            grouping_button.set_icon_name("view-list-symbolic")
-
             self.ClearTransfers.set_has_frame(False)
-            self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
-        else:
-            grouping_button.set_image(Gtk.Image(icon_name="view-list-symbolic"))
-
-            self.ClearTransfers.add(self.ClearTransfersLabel)
 
         setup_accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
         setup_accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)

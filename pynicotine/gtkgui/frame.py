@@ -108,8 +108,6 @@ class NicotineFrame(UserInterface):
         super().__init__("ui/mainwindow.ui")
 
         if Gtk.get_major_version() == 4:
-            self.header_menu.set_icon_name("open-menu-symbolic")
-
             self.MainPaned.set_resize_start_child(True)
             self.MainPaned.set_resize_end_child(False)
             self.ChatroomsPane.set_resize_end_child(False)
@@ -119,8 +117,6 @@ class NicotineFrame(UserInterface):
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
-            self.header_menu.set_image(Gtk.Image(icon_name="open-menu-symbolic"))
-
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
             self.ChatroomsPane.child_set_property(self.userlist_pane_chatrooms, "resize", False)

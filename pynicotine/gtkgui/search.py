@@ -82,13 +82,10 @@ class Searches(IconNotebook):
         )
         mode_menu.update_model()
         frame.SearchMode.set_menu_model(mode_menu.model)
+        frame.SearchModeLabel.set_label(self.modes["global"])
 
         if Gtk.get_major_version() == 4:
-            frame.SearchMode.set_use_underline(True)
-            frame.SearchMode.set_label(self.modes["global"])
-        else:
-            frame.SearchModeLabel.set_label(self.modes["global"])
-            frame.SearchMode.add(frame.SearchModeLabelBox)
+            frame.SearchMode.get_first_child().get_style_context().add_class("arrow-button")
 
         CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
         CompletionEntry(frame.UserSearchEntry, frame.UserSearchCombo.get_model())
@@ -114,10 +111,7 @@ class Searches(IconNotebook):
         action.set_state(state)
         search_mode = state.get_string()
 
-        if Gtk.get_major_version() == 4:
-            self.frame.SearchMode.set_label(self.modes[search_mode])
-        else:
-            self.frame.SearchModeLabel.set_label(self.modes[search_mode])
+        self.frame.SearchModeLabel.set_label(self.modes[search_mode])
 
         self.frame.UserSearchCombo.set_visible(search_mode == "user")
         self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")
@@ -263,13 +257,7 @@ class Search(UserInterface):
 
         self.searches = searches
         self.frame = searches.frame
-
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
-
-        if Gtk.get_major_version() == 4:
-            self.ResultGrouping.set_icon_name("view-list-symbolic")
-        else:
-            self.ResultGrouping.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
         setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
         setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)

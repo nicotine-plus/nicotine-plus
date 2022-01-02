@@ -22,7 +22,7 @@ import os
 def check_gui_dependencies():
 
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
-        gtk_version = (4, 4, 0)
+        gtk_version = (4, 6, 0)
         pygobject_version = (3, 40, 0)
     else:
         gtk_version = pygobject_version = (3, 18, 0)

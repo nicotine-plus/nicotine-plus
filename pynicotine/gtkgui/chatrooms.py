@@ -360,18 +360,11 @@ class ChatRoom(UserInterface):
         self.room = room
 
         if Gtk.get_major_version() == 4:
-            self.ShowRoomWall.set_icon_name("view-list-symbolic")
-            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
-
             self.ChatPaned.set_resize_start_child(True)
             self.ChatPaned.set_shrink_start_child(False)
             self.ChatPaned.set_resize_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
-
         else:
-            self.ShowRoomWall.set_image(Gtk.Image(icon_name="view-list-symbolic"))
-            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
-
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
             self.ChatPaned.child_set_property(self.UserView, "resize", False)

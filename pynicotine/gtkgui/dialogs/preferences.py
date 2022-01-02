@@ -1854,15 +1854,8 @@ class SearchesFrame(UserInterface):
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
-            button = self.ShowSearchHelp.get_first_child()
-            button.set_child(self.FilterHelpLabel)
-            button.get_style_context().remove_class("image-button")
-            button.get_style_context().add_class("image-text-button")
-
             # Scroll to the focused widget
             self.filter_help.container.get_child().set_scroll_to_focus(True)
-        else:
-            self.ShowSearchHelp.add(self.FilterHelpLabel)
 
         self.options = {
             "searches": {

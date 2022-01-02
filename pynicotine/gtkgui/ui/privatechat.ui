@@ -70,6 +70,15 @@
               <object class="GtkMenuButton" id="ShowChatHelp">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Private chat command help</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">dialog-question-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
               </object>
             </child>
           </object>
