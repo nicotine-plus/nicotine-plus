@@ -1,40 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">0</property>
+        <property name="visible">False</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkRevealer">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="transition-type">slide-down</property>
             <child>
               <object class="GtkInfoBar" id="InfoBar">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
               </object>
             </child>
           </object>
         </child>
         <child>
           <object class="GtkFlowBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="column-spacing">1</property>
             <property name="row-spacing">1</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox" id="FolderPane">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkFlowBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="column-spacing">12</property>
                         <property name="row-spacing">6</property>
                         <property name="margin-top">6</property>
@@ -45,20 +46,20 @@
                         <property name="selection-mode">none</property>
                         <child>
                           <object class="GtkFlowBoxChild">
-                            <property name="visible">1</property>
-                            <property name="focusable">0</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <property name="margin-start">6</property>
                                     <property name="margin-end">6</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Folders</property>
                                         <property name="mnemonic_widget">NumDirectoriesButton</property>
                                         <attributes>
@@ -68,10 +69,10 @@
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="NumDirectoriesButton">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="NumDirectories">
-                                            <property name="visible">1</property>
+                                            <property name="visible">True</property>
                                             <property name="label">0</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
@@ -91,13 +92,13 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="spacing">6</property>
                                     <property name="margin-start">6</property>
                                     <property name="margin-end">6</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="label" translatable="yes">Shared</property>
                                         <property name="mnemonic_widget">AmountSharedButton</property>
                                         <attributes>
@@ -107,10 +108,10 @@
                                     </child>
                                     <child>
                                       <object class="GtkButton" id="AmountSharedButton">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <child>
                                           <object class="GtkLabel" id="AmountShared">
-                                            <property name="visible">1</property>
+                                            <property name="visible">True</property>
                                             <property name="label">0.0 B</property>
                                             <attributes>
                                               <attribute name="weight" value="bold"/>
@@ -134,16 +135,16 @@
                         </child>
                         <child>
                           <object class="GtkFlowBoxChild">
-                            <property name="visible">1</property>
-                            <property name="focusable">0</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
                                   <object class="GtkSearchEntry" id="SearchEntry">
-                                    <property name="visible">1</property>
-                                    <property name="hexpand">1</property>
+                                    <property name="visible">True</property>
+                                    <property name="hexpand">True</property>
                                     <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
                                     <property name="width-chars">18</property>
                                     <signal name="activate" handler="on_search" swapped="no"/>
@@ -151,12 +152,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="SaveButton">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Save shares list to disk</property>
                                     <signal name="clicked" handler="on_save" swapped="no"/>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">media-floppy-symbolic</property>
                                       </object>
                                     </child>
@@ -167,12 +168,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="RefreshButton">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Refresh files</property>
                                     <signal name="clicked" handler="on_refresh" swapped="no"/>
                                     <child>
                                       <object class="GtkImage">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">view-refresh-symbolic</property>
                                       </object>
                                     </child>
@@ -183,12 +184,12 @@
                                 </child>
                                 <child>
                                   <object class="GtkToggleButton" id="ExpandButton">
-                                    <property name="visible">1</property>
+                                    <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                     <signal name="toggled" handler="on_expand" swapped="no"/>
                                     <child>
                                       <object class="GtkImage" id="expand">
-                                        <property name="visible">1</property>
+                                        <property name="visible">True</property>
                                         <property name="icon-name">go-down-symbolic</property>
                                       </object>
                                     </child>
@@ -205,18 +206,18 @@
                     </child>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
-                            <property name="visible">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="FolderTreeView">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="has-tooltip">1</property>
-                                <property name="enable-tree-lines">1</property>
-                                <property name="headers-visible">0</property>
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="enable-tree-lines">True</property>
+                                <property name="headers-visible">False</property>
                                 <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_folder_row_activated"/>
                                 <child internal-child="selection">
@@ -233,7 +234,7 @@
                     <child>
                       <object class="GtkProgressBar" id="progressbar1">
                         <property name="valign">center</property>
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="pulse-step">0.10000000149</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
@@ -250,26 +251,26 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox" id="FilePane">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <child>
                           <object class="GtkScrolledWindow" id="FileScrolledWindow">
                             <property name="width-request">450</property>
-                            <property name="visible">1</property>
-                            <property name="vexpand">1</property>
+                            <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkTreeView" id="FileTreeView">
-                                <property name="visible">1</property>
-                                <property name="hexpand">1</property>
-                                <property name="has-tooltip">1</property>
-                                <property name="rubber-banding">1</property>
+                                <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="rubber-banding">True</property>
                                 <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_file_row_activated"/>
                                 <child internal-child="selection">

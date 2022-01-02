@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="label" translatable="yes">Logging</property>
             <property name="xalign">0</property>
             <attributes>
@@ -22,48 +23,48 @@
         <child>
           <object class="GtkCheckButton" id="LogRooms">
             <property name="label" translatable="yes">Log chatrooms by default</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="LogPrivate">
             <property name="label" translatable="yes">Log private chat by default</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="LogTransfers">
             <property name="label" translatable="yes">Log transfers to file</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
           </object>
         </child>
         <child>
           <object class="GtkCheckButton" id="LogDebug">
             <property name="label" translatable="yes">Log debug messages to file</property>
-            <property name="visible">1</property>
-            <property name="use-underline">1</property>
+            <property name="visible">True</property>
+            <property name="use-underline">True</property>
           </object>
         </child>
         <child>
           <object class="GtkFlowBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Log file timestamp format:</property>
                     <property name="xalign">0</property>
-                    <property name="wrap">1</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic_widget">LogFileFormat</property>
                   </object>
                 </child>
@@ -71,38 +72,38 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <child>
                       <object class="GtkEntry" id="LogFileFormat">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
+                        <property name="visible">True</property>
+                        <property name="hexpand">True</property>
                         <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
                       </object>
                     </child>
                     <child>
                       <object class="GtkButton" id="DefaultTimestamp">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <signal name="clicked" handler="on_default_timestamp" swapped="no"/>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="icon-name">view-refresh-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="label" translatable="yes">Default</property>
-                                <property name="use-underline">1</property>
+                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>
@@ -119,12 +120,12 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="label" translatable="yes">Folder Locations</property>
             <property name="xalign">0</property>
             <attributes>
@@ -134,21 +135,21 @@
         </child>
         <child>
           <object class="GtkFlowBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="row-spacing">12</property>
             <property name="column-spacing">12</property>
             <property name="max-children-per-line">2</property>
             <property name="selection-mode">none</property>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <child>
                   <object class="GtkLabel" id="RoomLogDirLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Chatroom logs folder:</property>
                     <property name="xalign">0</property>
-                    <property name="wrap">1</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic_widget">RoomLogDir</property>
                   </object>
                 </child>
@@ -156,25 +157,25 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkButton" id="RoomLogDir">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <child>
                   <object class="GtkLabel" id="PrivateLogDirLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Private chat logs folder:</property>
                     <property name="xalign">0</property>
-                    <property name="wrap">1</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic_widget">PrivateLogDir</property>
                   </object>
                 </child>
@@ -182,25 +183,25 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkButton" id="PrivateLogDir">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <child>
                   <object class="GtkLabel" id="TransfersLogDirLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Transfer logs folder:</property>
                     <property name="xalign">0</property>
-                    <property name="wrap">1</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic_widget">TransfersLogDir</property>
                   </object>
                 </child>
@@ -208,25 +209,25 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkButton" id="TransfersLogDir">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="sensitive">0</property>
+                <property name="visible">True</property>
+                <property name="sensitive">False</property>
                 <child>
                   <object class="GtkLabel" id="DebugLogDirLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">Debug logs folder:</property>
                     <property name="xalign">0</property>
-                    <property name="wrap">1</property>
+                    <property name="wrap">True</property>
                     <property name="mnemonic_widget">DebugLogDir</property>
                   </object>
                 </child>
@@ -234,11 +235,11 @@
             </child>
             <child>
               <object class="GtkFlowBoxChild">
-                <property name="visible">1</property>
-                <property name="focusable">0</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkButton" id="DebugLogDir">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                   </object>
                 </child>
               </object>

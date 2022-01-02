@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="spacing">24</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="xalign">0</property>
             <property name="label" translatable="yes">Self Description</property>
             <property name="mnemonic_widget">Description</property>
@@ -22,20 +23,20 @@
         </child>
         <child>
           <object class="GtkFrame">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="visible">1</property>
-                    <property name="hexpand">1</property>
-                    <property name="vexpand">1</property>
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkTextView" id="Description">
-                        <property name="visible">1</property>
-                        <property name="accepts-tab">0</property>
+                        <property name="visible">True</property>
+                        <property name="accepts-tab">False</property>
                         <property name="pixels-above-lines">1</property>
                         <property name="pixels-below-lines">1</property>
                         <property name="left-margin">8</property>
@@ -52,7 +53,7 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="margin-start">6</property>
                     <property name="margin-end">6</property>
                     <property name="margin-top">6</property>
@@ -60,7 +61,7 @@
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="label" translatable="yes">Picture:</property>
                         <property name="margin-start">6</property>
@@ -72,8 +73,8 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="ImageChooser">
-                        <property name="visible">1</property>
-                        <property name="hexpand">1</property>
+                        <property name="visible">True</property>
+                        <property name="hexpand">True</property>
                         <style>
                           <class name="flat"/>
                         </style>
@@ -81,23 +82,23 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="DefaultImage">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <signal name="clicked" handler="on_default_image" swapped="no"/>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="icon-name">edit-clear-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="label" translatable="yes">Reset Picture</property>
-                                <property name="use-underline">1</property>
+                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>

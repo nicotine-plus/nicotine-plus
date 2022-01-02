@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
-    <property name="hexpand">1</property>
+    <property name="hexpand">True</property>
     <child>
       <object class="GtkBox" id="BuddiesToolbar">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
         <property name="margin-top">6</property>
@@ -14,7 +15,7 @@
         <property name="spacing">6</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="label" translatable="yes">Buddies</property>
             <property name="margin-start">6</property>
             <property name="margin-end">12</property>
@@ -25,8 +26,8 @@
         </child>
         <child>
           <object class="GtkEntry" id="AddUserEntry">
-            <property name="visible">1</property>
-            <property name="hexpand">1</property>
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
             <property name="height-request">0</property>
             <property name="width-chars">15</property>
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
@@ -40,16 +41,16 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="visible">1</property>
-            <property name="vexpand">1</property>
+            <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkTreeView" id="UserListTree">
-                <property name="visible">1</property>
-                <property name="hexpand">1</property>
-                <property name="has-tooltip">1</property>
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="has-tooltip">True</property>
                 <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
                 <signal name="row-activated" handler="on_row_activated"/>
               </object>

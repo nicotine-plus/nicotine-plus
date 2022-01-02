@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="height-request">300</property>
     <property name="margin-start">12</property>
@@ -11,18 +12,18 @@
     <property name="spacing">12</property>
     <child>
       <object class="GtkLabel">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="xalign">0</property>
         <property name="label" translatable="yes">Wishlist items are auto-searched at regular intervals, for discovering uncommon files.</property>
         <property name="max-width-chars">55</property>
-        <property name="wrap">1</property>
+        <property name="wrap">True</property>
         <property name="mnemonic_widget">list_view</property>
       </object>
     </child>
     <child>
       <object class="GtkEntry" id="wish_entry">
-        <property name="visible">1</property>
-        <property name="hexpand">1</property>
+        <property name="visible">True</property>
+        <property name="hexpand">True</property>
         <property name="placeholder-text" translatable="yes">Add Wish…</property>
         <property name="primary-icon-name">list-add-symbolic</property>
         <signal name="activate" handler="on_add_wish" swapped="no"/>
@@ -31,19 +32,19 @@
     </child>
     <child>
       <object class="GtkFrame">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkScrolledWindow">
-                <property name="visible">1</property>
-                <property name="vexpand">1</property>
+                <property name="visible">True</property>
+                <property name="vexpand">True</property>
                 <child>
                   <object class="GtkTreeView" id="list_view">
-                    <property name="visible">1</property>
-                    <property name="rubber-banding">1</property>
+                    <property name="visible">True</property>
+                    <property name="rubber-banding">True</property>
                     <signal name="row-activated" handler="on_edit_wish"/>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection">
@@ -59,7 +60,7 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
                 <property name="margin-top">6</property>
@@ -67,21 +68,21 @@
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkButton">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_edit_wish" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="icon-name">document-edit-symbolic</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Edit</property>
                           </object>
                         </child>
@@ -94,21 +95,21 @@
                 </child>
                 <child>
                   <object class="GtkButton">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <signal name="clicked" handler="on_remove_wish" swapped="no"/>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkImage">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="icon-name">list-remove-symbolic</property>
                           </object>
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="label" translatable="yes">Remove</property>
                           </object>
                         </child>
@@ -121,28 +122,28 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="halign">end</property>
-                    <property name="hexpand">1</property>
+                    <property name="hexpand">True</property>
                     <child>
                       <object class="GtkButton">
-                        <property name="visible">1</property>
+                        <property name="visible">True</property>
                         <signal name="clicked" handler="on_clear_wishlist" swapped="no"/>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">1</property>
+                            <property name="visible">True</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkImage">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="icon-name">edit-clear-symbolic</property>
                               </object>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="visible">1</property>
+                                <property name="visible">True</property>
                                 <property name="label" translatable="yes">Clear All…</property>
-                                <property name="use-underline">1</property>
+                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>

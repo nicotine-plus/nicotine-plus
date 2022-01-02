@@ -1,76 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkShortcutsWindow" id="dialog">
-    <property name="modal">1</property>
+    <property name="modal">True</property>
     <property name="title" translatable="yes">Keyboard Shortcuts</property>
     <child>
       <object class="GtkShortcutsSection">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="section-name">shortcuts</property>
         <property name="max-height">12</property>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">General</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;c</property>
                 <property name="title" translatable="yes">Connect</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;d</property>
                 <property name="title" translatable="yes">Disconnect</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;h</property>
                 <property name="title" translatable="yes">Away</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;r</property>
                 <property name="title" translatable="yes">Rescan Shares</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;l</property>
                 <property name="title" translatable="yes">Show Log Pane</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;&lt;Shift&gt;question</property>
                 <property name="title" translatable="yes">Keyboard Shortcuts</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;comma</property>
                 <property name="title" translatable="yes">Preferences</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;q</property>
                 <property name="title" translatable="yes">Quit / Run in Background</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;&lt;Alt&gt;q</property>
                 <property name="title" translatable="yes">Quit</property>
               </object>
@@ -79,18 +80,18 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">Menus</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">F10</property>
                 <property name="title" translatable="yes">Open Main Menu</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;F10</property>
                 <property name="title" translatable="yes">Open Context Menu</property>
               </object>
@@ -99,32 +100,32 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">Tabs</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Ctrl&gt;1...9</property>
                 <property name="title" translatable="yes">Change Main Tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Ctrl&gt;&lt;Shift&gt;Tab</property>
                 <property name="title" translatable="yes">Go to Previous Secondary Tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Ctrl&gt;Tab</property>
                 <property name="title" translatable="yes">Go to Next Secondary Tab</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;w</property>
                 <property name="title" translatable="yes">Close Secondary Tab</property>
               </object>
@@ -133,18 +134,18 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">Lists</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;c</property>
                 <property name="title" translatable="yes">Copy Selected Cell</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">Delete</property>
                 <property name="title" translatable="yes">Remove Selected Row</property>
               </object>
@@ -153,25 +154,25 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">File Search</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;f Escape</property>
                 <property name="title" translatable="yes">Result Filters</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Alt&gt;Return</property>
                 <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;w</property>
                 <property name="title" translatable="yes">Search Wishlist</property>
               </object>
@@ -180,18 +181,18 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">File Transfers</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">r</property>
                 <property name="title" translatable="yes">Resume / Retry Transfer</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">t</property>
                 <property name="title" translatable="yes">Pause / Abort Transfer</property>
               </object>
@@ -200,53 +201,53 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">Browse Shares</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;Return</property>
                 <property name="title" translatable="yes">Download / Upload To</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Alt&gt;Return</property>
                 <property name="title" translatable="yes">File Properties</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;S</property>
                 <property name="title" translatable="yes">Save List to Disk</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;G</property>
                 <property name="title" translatable="yes">Find Next Match</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;R</property>
                 <property name="title" translatable="yes">Refresh</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;backslash</property>
                 <property name="title" translatable="yes">Expand / Collapse All</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">BackSpace</property>
                 <property name="title" translatable="yes">Back to Parent Folder</property>
               </object>
@@ -255,60 +256,60 @@
         </child>
         <child>
           <object class="GtkShortcutsGroup">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="title" translatable="yes">Editing</property>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;x</property>
                 <property name="title" translatable="yes">Cut</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;c</property>
                 <property name="title" translatable="yes">Copy</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;v</property>
                 <property name="title" translatable="yes">Paste</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut" id="emoji">
-                <property name="visible">0</property>
+                <property name="visible">False</property>
                 <property name="accelerator">&lt;Primary&gt;period</property>
                 <property name="title" translatable="yes">Insert Emoji</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;a</property>
                 <property name="title" translatable="yes">Select All</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;f</property>
                 <property name="title" translatable="yes">Find</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Primary&gt;g</property>
                 <property name="title" translatable="yes">Find Next Match</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;g</property>
                 <property name="title" translatable="yes">Find Previous Match</property>
               </object>

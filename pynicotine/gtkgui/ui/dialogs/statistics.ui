@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
+  <requires lib="gtk+" version="3.0"/>
   <object class="GtkBox" id="Main">
-    <property name="visible">1</property>
+    <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="margin-start">18</property>
     <property name="margin-end">18</property>
@@ -9,15 +10,15 @@
     <property name="margin-bottom">18</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="spacing">12</property>
-        <property name="hexpand">1</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="label" translatable="yes">Current Session</property>
-            <property name="selectable">1</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -26,12 +27,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">started_downloads_session</property>
@@ -42,8 +43,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="started_downloads_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -53,12 +54,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">completed_downloads_session</property>
@@ -69,8 +70,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="completed_downloads_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -80,12 +81,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">downloaded_size_session</property>
@@ -96,8 +97,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="downloaded_size_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -107,17 +108,17 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">started_uploads_session</property>
@@ -128,8 +129,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="started_uploads_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -139,12 +140,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">completed_uploads_session</property>
@@ -155,8 +156,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="completed_uploads_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -166,12 +167,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">uploaded_size_session</property>
@@ -182,8 +183,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="uploaded_size_session">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -193,14 +194,14 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="label" translatable="yes">Total</property>
-            <property name="selectable">1</property>
+            <property name="selectable">True</property>
             <property name="xalign">0</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -209,12 +210,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">started_downloads_total</property>
@@ -225,8 +226,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="started_downloads_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -236,12 +237,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">completed_downloads_total</property>
@@ -252,8 +253,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="completed_downloads_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -263,12 +264,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">downloaded_size_total</property>
@@ -279,8 +280,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="downloaded_size_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -290,17 +291,17 @@
         </child>
         <child>
           <object class="GtkLabel">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
           </object>
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">started_uploads_total</property>
@@ -311,8 +312,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="started_uploads_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -322,12 +323,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">completed_uploads_total</property>
@@ -338,8 +339,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="completed_uploads_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -349,12 +350,12 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <property name="spacing">12</property>
-            <property name="homogeneous">1</property>
+            <property name="homogeneous">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
                 <property name="mnemonic_widget">uploaded_size_total</property>
@@ -365,8 +366,8 @@
             </child>
             <child>
               <object class="GtkLabel" id="uploaded_size_total">
-                <property name="visible">1</property>
-                <property name="selectable">1</property>
+                <property name="visible">True</property>
+                <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
@@ -378,27 +379,27 @@
     </child>
     <child>
       <object class="GtkBox">
-        <property name="visible">1</property>
+        <property name="visible">True</property>
         <property name="margin-top">26</property>
         <child>
           <object class="GtkButton">
-            <property name="visible">1</property>
+            <property name="visible">True</property>
             <signal name="clicked" handler="on_reset_statistics" swapped="no"/>
             <child>
               <object class="GtkBox">
-                <property name="visible">1</property>
+                <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="icon-name">edit-clear-symbolic</property>
                   </object>
                 </child>
                 <child>
                   <object class="GtkLabel">
-                    <property name="visible">1</property>
+                    <property name="visible">True</property>
                     <property name="label" translatable="yes">_Reset Statistics…</property>
-                    <property name="use-underline">1</property>
+                    <property name="use-underline">True</property>
                   </object>
                 </child>
               </object>

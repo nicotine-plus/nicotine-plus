@@ -39,10 +39,10 @@ class UserInterface:
             if filename not in UI_DATA:
                 with open(os.path.join(GUI_DIR, filename), "r", encoding="utf-8") as file_handle:
                     if Gtk.get_major_version() == 4:
-                        UI_DATA[filename] = file_handle.read().replace("GtkRadioButton", "GtkCheckButton")
+                        UI_DATA[filename] = file_handle.read().replace(
+                            "GtkRadioButton", "GtkCheckButton").replace("\"can-focus\"", "\"focusable\"")
                     else:
-                        UI_DATA[filename] = file_handle.read().replace("<property name=\"focusable\">0</property>",
-                                                                       "<property name=\"can-focus\">0</property>")
+                        UI_DATA[filename] = file_handle.read()
 
             if Gtk.get_major_version() == 4:
                 builder = Gtk.Builder(self)
