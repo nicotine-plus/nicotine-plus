@@ -2552,32 +2552,52 @@ class PluginsFrame(UserInterface):
 
         self.PluginTreeView.set_model(self.plugins_model)
 
-    @staticmethod
-    def on_add_plugins(*_args):
+    def set_settings(self):
 
-        try:
-            if not os.path.isdir(config.plugin_dir):
-                os.makedirs(config.plugin_dir)
+        self.preferences.set_widgets_data(self.options)
 
-            open_file_path(config.plugin_dir)
+        self.on_plugins_enable()
+        self.pluginsiters = {}
+        self.plugins_model.clear()
+        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
 
-        except Exception as error:
-            log.add("Failed to open folder containing user plugins: %s", error)
+        for plugin in plugins:
+            try:
+                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
+            except IOError:
+                continue
 
-    def on_plugin_properties(self, *_args):
+            enabled = (plugin in config.sections["plugins"]["enabled"])
+            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
+                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
+            )
 
-        if self.selected_plugin is None:
-            return
+        return {}
 
-        plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
-        dialog = self.PluginPreferencesDialog(self, plugin_info.get("Name", self.selected_plugin))
+    def get_enabled_plugins(self):
 
-        dialog.add_options(
-            self.selected_plugin,
-            self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
-        )
+        enabled_plugins = []
 
-        dialog_show(dialog)
+        for plugin in self.plugins_model:
+            enabled = self.plugins_model.get_value(plugin.iter, 0)
+
+            if enabled:
+                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
+                enabled_plugins.append(plugin_name)
+
+        return enabled_plugins
+
+    def get_settings(self):
+
+        return {
+            "plugins": {
+                "enable": self.PluginsEnable.get_active(),
+                "enabled": self.get_enabled_plugins()
+            }
+        }
+
+    def check_properties_button(self, plugin):
+        self.PluginProperties.set_sensitive(bool(self.frame.np.pluginhandler.get_plugin_settings(plugin)))
 
     def on_select_plugin(self, selection):
 
@@ -2615,53 +2635,11 @@ class PluginsFrame(UserInterface):
 
         self.check_properties_button(plugin)
 
-    def check_properties_button(self, plugin):
-        settings = self.frame.np.pluginhandler.get_plugin_settings(plugin)
-
-        if settings is not None:
-            self.PluginProperties.set_sensitive(True)
-        else:
-            self.PluginProperties.set_sensitive(False)
-
-    def set_settings(self):
-
-        self.preferences.set_widgets_data(self.options)
-        self.on_plugins_enable(None)
-        self.pluginsiters = {}
-        self.plugins_model.clear()
-        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
-
-        for plugin in plugins:
-            try:
-                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
-            except IOError:
-                continue
-
-            enabled = (plugin in config.sections["plugins"]["enabled"])
-            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
-                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
-            )
-
-        return {}
-
-    def get_enabled_plugins(self):
-
-        enabled_plugins = []
-
-        for plugin in self.plugins_model:
-            enabled = self.plugins_model.get_value(plugin.iter, 0)
-
-            if enabled:
-                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
-                enabled_plugins.append(plugin_name)
-
-        return enabled_plugins
-
     def on_plugins_enable(self, *_args):
 
         active = self.PluginsEnable.get_active()
 
-        for widget in (self.PluginTreeView, self.PluginInfo):
+        for widget in (self.PluginTreeView, self.PluginProperties):
             widget.set_sensitive(active)
 
         if active:
@@ -2669,20 +2647,39 @@ class PluginsFrame(UserInterface):
             for plugin in self.get_enabled_plugins():
                 self.frame.np.pluginhandler.enable_plugin(plugin)
 
+            self.check_properties_button(self.selected_plugin)
             return
 
         # Disable all plugins
         for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
             self.frame.np.pluginhandler.disable_plugin(plugin)
 
-    def get_settings(self):
+    @staticmethod
+    def on_add_plugins(*_args):
 
-        return {
-            "plugins": {
-                "enable": self.PluginsEnable.get_active(),
-                "enabled": self.get_enabled_plugins()
-            }
-        }
+        try:
+            if not os.path.isdir(config.plugin_dir):
+                os.makedirs(config.plugin_dir)
+
+            open_file_path(config.plugin_dir)
+
+        except Exception as error:
+            log.add("Failed to open folder containing user plugins: %s", error)
+
+    def on_plugin_properties(self, *_args):
+
+        if self.selected_plugin is None:
+            return
+
+        plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
+        dialog = self.PluginPreferencesDialog(self, plugin_info.get("Name", self.selected_plugin))
+
+        dialog.add_options(
+            self.selected_plugin,
+            self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
+        )
+
+        dialog_show(dialog)
 
 
 class Preferences(UserInterface):
