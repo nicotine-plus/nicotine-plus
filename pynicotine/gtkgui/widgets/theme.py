@@ -90,6 +90,11 @@ def set_dark_mode(force=False):
         if color_scheme is not None:
             enabled = bool(color_scheme)
 
+    if "gi.repository.Adw" in sys.modules:
+        from gi.repository import Adw
+        Adw.StyleManager.get_default().set_color_scheme(int(enabled))
+        return
+
     GTK_SETTINGS.set_property("gtk-application-prefer-dark-theme", enabled)
 
 
