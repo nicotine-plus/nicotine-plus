@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: 2021-12-06 18:56+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3312,6 +3312,21 @@ msgstr ""
 "Plugin %(module)s falló con error %(errortype)s: %(error)s.\n"
 "Rastro: %(trace)s"
 
+#: pynicotine/pluginsystem.py:293
+#, fuzzy
+msgid "Loading plugin system"
+msgstr "Complemento cargado %s"
+
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr "Cerrando Nicotine+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3412,7 +3427,7 @@ msgstr "Alguien ha iniciado sesión con su cuenta de Soulseek en otro lugar"
 msgid "%i privileged users"
 msgstr "%i usuarios privilegiados"
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3421,7 +3436,7 @@ msgstr ""
 "sus descargas se pongan en cola antes que las de los usuarios sin "
 "privilegios."
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3430,28 +3445,28 @@ msgstr ""
 "Quedan %(days)i días, %(hours)i horas, %(minutes)i minutos, %(seconds)i "
 "segundos de privilegios de descarga."
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Su contraseña ha sido cambiada. La contraseña es %s"
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "El usuario %(user)s está navegando por su lista de archivos compartidos"
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "El usuario %(user)s está leyendo su información de usuario"
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Advertencia: %(realuser)s está intentando suplantar a %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Fallo en la obtención de la carpeta compartida %(folder)s: %(error)s"

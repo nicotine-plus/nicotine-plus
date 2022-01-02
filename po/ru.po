@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: 2021-11-25 17:37+0000\n"
 "Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3311,6 +3311,21 @@ msgstr ""
 "Плагин %(module)s завершился с ошибкой %(errortype)s: %(error)s.\n"
 "Отчёт: %(trace)s"
 
+#: pynicotine/pluginsystem.py:293
+#, fuzzy
+msgid "Loading plugin system"
+msgstr "Плагин загружен %s"
+
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr "Выхожу из Nicotine+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
 msgstr "Перед подключением необходимо указать имя пользователя и пароль…"
@@ -3410,7 +3425,7 @@ msgstr "Вход в вашу учетную запись произведен в
 msgid "%i privileged users"
 msgstr "%i привилегированных пользователей"
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3418,7 +3433,7 @@ msgstr ""
 "У вас нет привилегий. Привилегии не обязательны, но позволяют помещать ваши "
 "загрузки в очередь раньше перед непривилегированными пользователями."
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3427,29 +3442,29 @@ msgstr ""
 "Осталось %(days)i дней, %(hours)i часов, %(minutes)i минут, %(seconds)i "
 "секунд."
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Пароль был изменен. Пароль %s"
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "%(user)s просматривает ваш список раздач"
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s читает вашу информацию о пользователе"
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
 "(Предупреждение: %(realuser)s пытается подделать личное сообщение "
 "%(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Не удалось получить список раздач %(folder)s: %(error)s"

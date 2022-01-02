@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: 2021-12-06 18:36+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3909,6 +3909,21 @@ msgstr ""
 "Plugin %(module)s misslyckades med fel %(errortype)s: %(error)s.\n"
 "Spårning: %(trace)s"
 
+#: pynicotine/pluginsystem.py:293
+#, fuzzy
+msgid "Loading plugin system"
+msgstr "Laddat insticksprogram %s"
+
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr "Sluta med nikotin+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
@@ -4014,7 +4029,7 @@ msgstr "Någon har loggat in på ditt Soulseek-konto någon annanstans."
 msgid "%i privileged users"
 msgstr "%i privilegierade användare"
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -4023,7 +4038,7 @@ msgstr ""
 "Du har inga privilegier. Privilegier krävs inte, men gör att dina "
 "nedladdningar kan köas före icke-priviligierade användare."
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, fuzzy, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4032,27 +4047,27 @@ msgstr ""
 "%(days)i dagar, %(hours)i timmar, %(minutes)i minuter, %(seconds)i sekunder "
 "av nedladdningsrättigheter kvar."
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Ditt lösenord har ändrats. Lösenordet är %s"
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Användaren %(user)s bläddrar i din lista över delade filer"
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Användaren %(user)s läser din användarinformation"
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, fuzzy, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Varning: %(realuser)s försöker förvränga %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Det gick inte att hämta den delade mappen %(folder)s: %(error)s"

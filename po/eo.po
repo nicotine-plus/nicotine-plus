@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: 2021-12-06 18:36+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3922,6 +3922,21 @@ msgstr ""
 "Kromaĵo %(module)s malsukcesis kun eraro %(errortype)s: %(error)s.\n"
 "Spuro: %(trace)s"
 
+#: pynicotine/pluginsystem.py:293
+#, fuzzy
+msgid "Loading plugin system"
+msgstr "Ŝargita kromaĵo %s"
+
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr "Forlasante Nikotino+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
@@ -4024,7 +4039,7 @@ msgstr "Iu ensalutinta al via Soulseek-konto aliloke"
 msgid "%i privileged users"
 msgstr "%i privilegiitaj uzantoj"
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -4033,7 +4048,7 @@ msgstr ""
 "Vi ne havas privilegiojn. Privilegioj ne estas bezonataj, sed permesas viajn "
 "elŝutojn esti vicigitaj antaŭ ne-privilegiaj uzantoj."
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, fuzzy, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4042,27 +4057,27 @@ msgstr ""
 "Restas %(days)i tagoj, %(hours)i horoj, %(minutes)i minutoj, %(seconds)i "
 "sekundoj da elŝutaj privilegioj."
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Via pasvorto estis ŝanĝita. Pasvorto estas %s"
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Uzanto %(user)s foliumas vian liston de komunaj dosieroj"
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Uzanto %(user)s legas viajn uzantinformojn"
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, fuzzy, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Averto: %(realuser)s provas falsi %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Malsukcesis preni la komunan dosierujon %(folder)s: %(error)s"

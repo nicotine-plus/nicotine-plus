@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-02 16:55+0200\n"
+"POT-Creation-Date: 2022-01-02 17:02+0200\n"
 "PO-Revision-Date: 2021-12-06 18:34+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3298,6 +3298,21 @@ msgstr ""
 "Plugin %(module)s mislukt met fout %(errortype)s: %(error)s.\n"
 "Spoor: %(trace)s"
 
+#: pynicotine/pluginsystem.py:293
+#, fuzzy
+msgid "Loading plugin system"
+msgstr "Plugin-handler laden"
+
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading Nicotine+ %(nic_version)s"
+msgstr "Nicotine+ wordt afgesloten %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:233
+#, python-format
+msgid "Using Python %(py_version)s"
+msgstr ""
+
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3396,7 +3411,7 @@ msgstr "Iemand heeft ergens anders ingelogd op je Soulseek-account"
 msgid "%i privileged users"
 msgstr "%i gebruikers met privileges"
 
-#: pynicotine/pynicotine.py:894
+#: pynicotine/pynicotine.py:893
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3404,7 +3419,7 @@ msgstr ""
 "Je hebt geen privileges. Ze zijn niet nodig, maar geven je voorrang in de "
 "download wachtrij."
 
-#: pynicotine/pynicotine.py:899
+#: pynicotine/pynicotine.py:896
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3413,27 +3428,27 @@ msgstr ""
 "%(days)i dagen, %(hours)i uren, %(minutes)i minuten, %(seconds)i seconden "
 "download privileges over."
 
-#: pynicotine/pynicotine.py:1043
+#: pynicotine/pynicotine.py:1039
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Uw wachtwoord is gewijzigd. Wachtwoord is %s"
 
-#: pynicotine/pynicotine.py:1100
+#: pynicotine/pynicotine.py:1096
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Gebruiker %(user)s doorzoekt je lijst met gedeelde bestanden"
 
-#: pynicotine/pynicotine.py:1156
+#: pynicotine/pynicotine.py:1152
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Gebruiker %(user)s leest je gebruikersinfo"
 
-#: pynicotine/pynicotine.py:1206
+#: pynicotine/pynicotine.py:1202
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Waarschuwing: %(realuser)s probeert %(fakeuser)s te spoofen) "
 
-#: pynicotine/pynicotine.py:1249
+#: pynicotine/pynicotine.py:1245
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Kan mapinhoud van gedeelde map %(folder)s niet ophalen: %(error)s"
@@ -6918,9 +6933,6 @@ msgstr "Info _vernieuwen"
 
 #~ msgid "ERROR: MPRIS: failed to load dbus module: %(error)s"
 #~ msgstr "FOUT: MPRIS: kon dbus-module niet laden: %(error)s"
-
-#~ msgid "Loading plugin handler"
-#~ msgstr "Plugin-handler laden"
 
 #~ msgid "Unable to enable plugin %s"
 #~ msgstr "Kan plug-in %s . niet inschakelen"
