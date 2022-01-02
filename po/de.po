@@ -3324,7 +3324,6 @@ msgstr ""
 "Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
 msgstr "Plugin-System laden"
 
@@ -3334,9 +3333,9 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Laden von Nicotine+ %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Using Python %(py_version)s"
-msgstr "Python verwenden %(py_version)s"
+msgstr "Python %(py_version)s in Verwendung"
 
 #: pynicotine/pynicotine.py:270
 msgid "You need to specify a username and password before connecting…"
@@ -5684,9 +5683,8 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 Bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:296
-#, fuzzy
 msgid "MiB"
-msgstr "MiBs"
+msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:334
 msgid "files"
