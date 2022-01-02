@@ -187,8 +187,10 @@ class PrivateChats:
             if self.core.network_filter.is_user_ignored(msg.user):
                 return
 
-            if msg.user in self.core.users and isinstance(self.core.users[msg.user].addr, tuple):
-                ip_address, _port = self.core.users[msg.user].addr
+            user_address = self.core.protothread.user_addresses.get(msg.user)
+
+            if user_address is not None:
+                ip_address, _port = user_address
                 if self.core.network_filter.is_ip_ignored(ip_address):
                     return
 

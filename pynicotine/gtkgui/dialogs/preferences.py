@@ -3088,7 +3088,7 @@ class Preferences(UserInterface):
             self.frame.connect_action.set_enabled(False)
             self.frame.on_fast_configure()
 
-        elif not self.frame.np.server_conn:
+        elif self.frame.np.protothread.server_disconnected:
             self.frame.connect_action.set_enabled(True)
 
         if not settings_closed:
