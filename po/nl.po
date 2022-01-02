@@ -6064,9 +6064,9 @@ msgstr "Info _vernieuwen"
 
 #: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Nicotine+ laden %(nic_version)s"
+msgstr "Bezig met laden %(program)s %(version)s"
 
 #: pynicotine/pynicotine.py:275
 #, fuzzy, python-format
