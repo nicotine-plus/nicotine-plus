@@ -26,7 +26,6 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
-from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
 
@@ -278,10 +277,10 @@ def get_flag_icon_name(country):
 
     country = country.lower().replace("flag_", "")
 
-    if country not in GeoIP.COUNTRY_LIST:
+    if not country:
         return ""
 
-    return config.application_id + "-flag-" + country
+    return "nplus-flag-" + country
 
 
 def get_status_icon(status):
