@@ -507,7 +507,7 @@ class Search:
 
         if numresults != len(fileinfos):
             log.add_debug(("Error: File index inconsistency while responding to search request \"%(query)s\". "
-                           "Expected %(expected_num)s results, but found %(total_num)s results in database."), {
+                           "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
                 "query": searchterm_old,
                 "expected_num": numresults,
                 "total_num": len(fileinfos)
