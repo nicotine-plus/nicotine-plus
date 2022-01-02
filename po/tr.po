@@ -6054,19 +6054,19 @@ msgstr "Bilgileri _Yenile"
 
 #: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Nicotine+ %(nic_version)s yükleniyor"
+msgstr "%(program)s %(version)s yükleniyor"
 
 #: pynicotine/pynicotine.py:275
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Çıkılıyor: Nicotine+ %(version)s, %(status)s…"
+msgstr "Çıkılıyor: %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:307
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Çıkış: Nicotine+ %(version)s, %(status)s!"
+msgstr "Çıkış: %(program)s %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Kullanıcı:"
