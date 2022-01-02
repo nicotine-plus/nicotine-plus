@@ -235,7 +235,6 @@
                       <object class="GtkProgressBar" id="progressbar1">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <property name="pulse-step">0.10000000149</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
