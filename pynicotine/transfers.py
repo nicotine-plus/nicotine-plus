@@ -788,7 +788,7 @@ class Transfers:
             if self.downloadsview:
                 self.downloadsview.update(transfer)
 
-        elif not accepted:
+        else:
             response = slskmessages.TransferResponse(None, 0, reason=cancel_reason, token=msg.token)
 
             log.add_transfer("Denied file request %(token)s: %(reason)s (user %(user)s, file %(file)s, %(msg)s)", {
