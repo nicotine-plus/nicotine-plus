@@ -3597,6 +3597,7 @@ msgid "Command %s is not recognized"
 msgstr "Príkaz %s nie je rozpoznaný"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Chyba načítania vlastnej ikony %(path)s: %(error)s"
@@ -3851,11 +3852,11 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Ukončenie nikotínu+ [X19x], %(status)s…"
 
 #: pynicotine/pynicotine.py:233
-#, python-format
+#, fuzzy, python-format
 msgid "Using Python %(py_version)s"
-msgstr ""
+msgstr "Používanie Pythonu %(py_version)s"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr "Pred pripojením musíte zadať používateľské meno a heslo…"
@@ -3880,17 +3881,17 @@ msgstr "uzavretie aplikácie"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Prestaňte nikotín+ %(version)s, %(status)s!"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "terminated"
 msgstr "Ukončené"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "done"
 msgstr "robené"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, fuzzy, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3899,7 +3900,7 @@ msgstr ""
 "Zadané sieťové rozhranie \"%s\" neexistuje. Zmeňte alebo odstráňte zadané "
 "sieťové rozhranie a reštartujte nikotín+."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 #, fuzzy
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
@@ -3908,7 +3909,7 @@ msgstr ""
 "Rozsah zadaný pre porty pripojenia klienta bol {}-{}, ale žiadny z nich "
 "nebol použiteľný. Zvýšiť a/alebo "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 #, fuzzy
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
@@ -3917,48 +3918,48 @@ msgstr ""
 "Všimnite si, že časť vášho sortimentu leží pod 1024, zvyčajne to nie je "
 "povolené vo väčšine operačných systémov s výnimkou systému Windows."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Pripájam sa k %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr "Ip používateľa %s, pretože tento používateľ je offline"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, fuzzy, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "IP adresa %(user)s je %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Nie je možné pripojiť k serveru. Dôvod: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Chatová správa od používateľa '%(user)s' v miestnosti '%(room)s': %(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Súkromná správa od %(user)s"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Niekto sa prihlásil do vášho účtu Soulseek inde"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i privilegovaných používateľov"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -3967,7 +3968,7 @@ msgstr ""
 "Nemáš žiadne privilégiá. Oprávnenia sa nevyžadujú, ale umožňujú, aby sa "
 "súbory na prevzatie predbehli pred nepriťažených používateľov."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3976,27 +3977,27 @@ msgstr ""
 "Privilégia pre download platné %(days)i dní, %(hours)i hodín, %(minutes)i "
 "minút, %(seconds)i sekúnd."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Vaše heslo bolo zmenené. Heslo je %s"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Používateľ %(user)s prehliada zoznam zdieľaných súborov"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s sa dotazuje na používateľské informácie"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Varovanie: %(realuser)s sa pokúša vydávať sa za %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nepodarilo sa načítať zdieľaný priečinok %(folder)s: %(error)s"
@@ -7000,6 +7001,22 @@ msgstr "Uložiť _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Obnoviť"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Ukončenie nikotínu+ [X19x], %(status)s…"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Ukončenie nikotínu+ [X19x], %(status)s…"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Prestaňte nikotín+ %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Používateľ:"
