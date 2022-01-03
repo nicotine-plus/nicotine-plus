@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -1206,14 +1206,14 @@ class Transfers:
             if msg.reason in ("File not shared.", "File not shared", "Remote file error") and not i.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode (Soulseek NS)
 
-                log.add_transfer("User %(user)s responded with '%(reason)s' for download request for file %(file)s, "
-                                 "attempting legacy transfer with file name encoded using non-unicode latin-1", {
+                log.add_transfer("User %(user)s responded with '%(reason)s' on download request for file %(file)s", {
                     "user": user,
                     "reason": msg.reason,
                     "file": i.filename
                 })
+                log.add_transfer("Attempting legacy transfer with file name encoded using non-unicode latin-1")
 
-                self.abort_transfer(i)  # , reason=msg.reason)
+                self.abort_transfer(i)  # , reason=msg.reason)  # ?
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
                 break
@@ -1248,7 +1248,7 @@ class Transfers:
             if not i.legacy_attempt:
                 # Attempt to request file name encoded as latin-1 once
 
-                self.abort_transfer(i)
+                self.abort_transfer(i)  # , reason=i.status)  # ?
                 i.legacy_attempt = True
                 self.get_file(i.user, i.filename, i.path, i)
                 break
@@ -1314,7 +1314,7 @@ class Transfers:
             except IOError as error:
                 log.add(_("Download I/O error: %s"), error)
 
-                self.abort_transfer(i)  # , reason=)
+                self.abort_transfer(i)  # , reason=)  # ?
                 i.status = "Local file error"
 
             if needupdate and self.downloadsview:
@@ -1597,9 +1597,9 @@ class Transfers:
 
         elif not locally_queued:
             self.token += 1
-            transfer.token = self.token
+            transfer.token = self.token  # YYMMDDHHMM0101  # ?
             transfer.status = "Getting status"
-            self.transfer_request_times[transfer] = time.time()
+            self.transfer_request_times[transfer] = time.time()  # + token  # ?
 
             log.add_transfer("Requesting to upload file %(file)s to user %(user)s with transfer request %(token)s", {
                 "file": filename,
