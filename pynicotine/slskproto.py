@@ -54,7 +54,6 @@ from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribMessage
-from pynicotine.slskmessages import DistribRequest
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
@@ -464,8 +463,15 @@ class SlskProtoThread(threading.Thread):
         self.manual_server_disconnect = False
         self.server_socket = None
         self.server_address = None
+        self.server_username = None
         self.server_timer = None
         self.server_timeout_value = -1
+
+        self.parent_socket = None
+        self.potential_parents = {}
+        self.distrib_parent_min_speed = 0
+        self.distrib_parent_speed_ratio = 1
+        self.max_distrib_children = 10
 
         self._numsockets = 1
 
@@ -627,6 +633,7 @@ class SlskProtoThread(threading.Thread):
             self.set_server_timer()
 
         self.server_address = None
+        self.server_username = None
         self._callback_msgs.append(ServerDisconnect(self.manual_server_disconnect))
 
     def server_timeout(self):
@@ -813,16 +820,12 @@ class SlskProtoThread(threading.Thread):
 
         msgs.clear()
 
-    def send_message_to_peer(self, user, message, login, address=None):
+    def send_message_to_peer(self, user, message, address=None):
 
         init = None
 
         if message.__class__ is FileRequest:
             conn_type = 'F'
-
-        elif message.__class__ is DistribRequest:
-            conn_type = 'D'
-
         else:
             conn_type = 'P'
 
@@ -848,21 +851,23 @@ class SlskProtoThread(threading.Thread):
 
         else:
             # This is a new peer, initiate a connection
-            self.initiate_connection_to_peer(user, conn_type, message, login, address)
+            self.initiate_connection_to_peer(user, conn_type, message, address)
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
             'type': message.__class__,
             'user': user
         })
 
-    def initiate_connection_to_peer(self, user, conn_type, message, login, address=None):
+    def initiate_connection_to_peer(self, user, conn_type, message=None, address=None):
         """ Prepare to initiate a connection with a peer """
 
-        init = PeerInit(init_user=login, target_user=user, conn_type=conn_type)
-        init.outgoing_msgs.append(message)
+        init = PeerInit(init_user=self.server_username, target_user=user, conn_type=conn_type)
         addr = None
 
-        if user == login:
+        if message is not None:
+            init.outgoing_msgs.append(message)
+
+        if user == self.server_username:
             # Bypass public IP address request if we connect to ourselves
             addr = (self.bindip or '127.0.0.1', self.listenport)
 
@@ -954,6 +959,9 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = connection_list[sock]
         conn_type = conn_obj.init.conn_type if conn_obj.init else 'S'
+
+        if sock == self.parent_socket:
+            self.send_have_no_parent()
 
         if callback:
             self._callback_msgs.append(ConnClose(sock, conn_type))
@@ -1096,55 +1104,108 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack server messages
             if msgtype in self.serverclasses:
+                msg_class = self.serverclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.serverclasses[msgtype], msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
-
-                if self.serverclasses[msgtype] is Login and msg.success:
-                    # Check for indirect connection timeouts
-                    self.exit.clear()
-
-                    thread = threading.Thread(target=self._check_indirect_connection_timeouts)
-                    thread.name = "IndirectConnectionTimeoutTimer"
-                    thread.daemon = True
-                    thread.start()
-
-                if self.serverclasses[msgtype] is ConnectToPeer:
-                    user = msg.user
-                    addr = (msg.ip_address, msg.port)
-                    conn_type = msg.conn_type
-                    token = msg.token
-
-                    init = PeerInit(addr=addr, init_user=user, target_user=user, conn_type=conn_type, token=token)
-                    self.connect_to_peer_direct(user, addr, init)
-
-                if self.serverclasses[msgtype] is GetUserStatus:
-                    if msg.status <= 0:
-                        # User went offline, reset stored IP address
-                        if msg.user in self.user_addresses:
-                            del self.user_addresses[msg.user]
-
-                if self.serverclasses[msgtype] is GetPeerAddress:
-                    init = self._init_msgs.pop(msg.user, None)
-
-                    if msg.port == 0:
-                        log.add_conn(
-                            "Server reported port 0 for user %(user)s, giving up", {
-                                'user': msg.user
-                            }
-                        )
-
-                    else:
-                        addr = (msg.ip_address, msg.port)
-
-                        if init is not None:
-                            # We now have the IP address for a user we previously didn't know,
-                            # attempt a direct connection to the peer/user
-                            init.addr = addr
-                            self.connect_to_peer_direct(msg.user, addr, init)
-
-                    self.user_addresses[msg.user] = (msg.ip_address, msg.port)
+                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
 
                 if msg is not None:
+                    if msg_class is Login:
+                        if msg.success:
+                            # Check for indirect connection timeouts
+                            self.exit.clear()
+
+                            thread = threading.Thread(target=self._check_indirect_connection_timeouts)
+                            thread.name = "IndirectConnectionTimeoutTimer"
+                            thread.daemon = True
+                            thread.start()
+
+                            msg.username = self.server_username
+                            self._queue.append(CheckPrivileges())
+
+                            # Ask for a list of parents to connect to (distributed network)
+                            self.send_have_no_parent()
+
+                            # TODO: We can currently receive search requests from a parent connection, but
+                            # redirecting results to children is not implemented yet. Tell the server we don't accept
+                            # children for now.
+                            self._queue.append(AcceptChildren(0))
+
+                            # Request a complete room list. A limited room list not including blacklisted rooms and
+                            # rooms with few users is automatically sent when logging in, but subsequent room list
+                            # requests contain all rooms.
+                            self._queue.append(RoomList())
+
+                        else:
+                            self._queue.append(ServerDisconnect())
+
+                    elif msg_class is ConnectToPeer:
+                        user = msg.user
+                        addr = (msg.ip_address, msg.port)
+                        conn_type = msg.conn_type
+                        token = msg.token
+
+                        init = PeerInit(addr=addr, init_user=user, target_user=user, conn_type=conn_type, token=token)
+                        self.connect_to_peer_direct(user, addr, init)
+
+                    elif msg_class is GetUserStatus:
+                        if msg.status <= 0:
+                            # User went offline, reset stored IP address
+                            if msg.user in self.user_addresses:
+                                del self.user_addresses[msg.user]
+
+                    elif msg_class is GetUserStats:
+                        if msg.user == self.server_username:
+                            self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
+
+                    elif msg_class is GetPeerAddress:
+                        init = self._init_msgs.pop(msg.user, None)
+
+                        if msg.port == 0:
+                            log.add_conn(
+                                "Server reported port 0 for user %(user)s, giving up", {
+                                    'user': msg.user
+                                }
+                            )
+
+                        else:
+                            addr = (msg.ip_address, msg.port)
+
+                            if init is not None:
+                                # We now have the IP address for a user we previously didn't know,
+                                # attempt a direct connection to the peer/user
+                                init.addr = addr
+                                self.connect_to_peer_direct(msg.user, addr, init)
+
+                        self.user_addresses[msg.user] = (msg.ip_address, msg.port)
+
+                    elif msg_class is PossibleParents:
+                        # Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
+                        # We attempt to connect to them all at once, since connection errors are fairly common.
+
+                        self.potential_parents = msg.list
+                        log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
+
+                        if self.parent_socket is None and self.potential_parents:
+                            for user in self.potential_parents:
+                                addr = self.potential_parents[user]
+
+                                log.add_conn("Attempting parent connection to user %s", user)
+                                self.initiate_connection_to_peer(user, 'D', address=addr)
+
+                    elif msg_class is ParentMinSpeed:
+                        self.distrib_parent_min_speed = msg.speed
+
+                    elif msg_class is ParentSpeedRatio:
+                        self.distrib_parent_speed_ratio = msg.ratio
+
+                    elif msg_class is ResetDistributed:
+                        log.add_conn("Received a reset request for distributed network")
+
+                        if self.parent_socket is not None:
+                            self.close_connection(self._conns, self.parent_socket)
+
+                        self.send_have_no_parent()
+
                     self._callback_msgs.append(msg)
 
             else:
@@ -1198,12 +1259,12 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer init messages
             if msgtype in self.peerinitclasses:
+                msg_class = self.peerinitclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.peerinitclasses[msgtype], msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1,
-                    "peer init", conn_obj.sock)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "peer init", conn_obj.sock)
 
                 if msg is not None:
-                    if self.peerinitclasses[msgtype] is PierceFireWall:
+                    if msg_class is PierceFireWall:
                         log.add_conn("Received indirect connection attempt (PierceFireWall) with token %s", msg.token)
                         conn_obj.piercefw = msg
 
@@ -1232,7 +1293,7 @@ class SlskProtoThread(threading.Thread):
                         self._queue.append(conn_obj.init)
                         self.process_conn_messages(conn_obj.init)
 
-                    elif self.peerinitclasses[msgtype] is PeerInit:
+                    elif msg_class is PeerInit:
                         conn_obj.init = msg
                         conn_obj.init.addr = conn_obj.addr
                         self._init_msgs[str(conn_obj.addr) + msg.conn_type] = msg
@@ -1367,11 +1428,11 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer messages
             if msgtype in self.peerclasses:
+                msg_class = self.peerclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.peerclasses[msgtype], msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4,
-                    "peer", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
 
-                if msg.__class__ is FileSearchResult:
+                if msg_class is FileSearchResult:
                     search_result_received = True
 
                 if msg is not None:
@@ -1379,7 +1440,6 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 host, port = conn_obj.addr
-
                 log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
                          "from user: %(user)s, %(host)s:%(port)s"),
                         {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total],
@@ -1527,6 +1587,17 @@ class SlskProtoThread(threading.Thread):
 
     """ Distributed Connection """
 
+    def send_have_no_parent(self):
+        """ Inform the server we have no parent. The server should either send
+        us a PossibleParents message, or start sending us search requests. """
+
+        self.parent_socket = None
+        log.add_conn("We have no parent, requesting a new one")
+
+        self._queue.append(HaveNoParent(1))
+        self._queue.append(BranchRoot(self.server_username))
+        self._queue.append(BranchLevel(0))
+
     def process_distrib_input(self, conn_obj, msg_buffer):
         """ We have a distributed network connection, parent has sent us
         something, this function retrieves messages
@@ -1550,11 +1621,55 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack distributed messages
             if msgtype in self.distribclasses:
+                msg_class = self.distribclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.distribclasses[msgtype], msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1,
-                    "distrib", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
+                    if msg_class is DistribBranchLevel:
+                        if msg.value < 0:
+                            # There are rare cases of parents sending a branch level value of -1,
+                            # presumably buggy clients
+                            log.add_conn(("Received an invalid branch level value %(level)s from user %(user)s. "
+                                          "Closing connection.") % {"level": msg.value, "user": msg.init.target_user})
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        if self.parent_socket is None and msg.init.target_user in self.potential_parents:
+                            # We have a successful connection with a potential parent. Tell the server who
+                            # our parent is, and stop requesting new potential parents.
+                            self.parent_socket = conn_obj.sock
+
+                            self._queue.append(HaveNoParent(0))
+                            self._queue.append(BranchLevel(msg.value + 1))
+
+                            log.add_conn("Adopting user %s as parent", msg.init.target_user)
+                            log.add_conn("Our branch level is %s", msg.value + 1)
+
+                        elif conn_obj.sock != self.parent_socket:
+                            # Unwanted connection, close it
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        else:
+                            # Inform the server of our new branch level
+                            self._queue.append(BranchLevel(msg.value + 1))
+                            log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
+                                         msg.value + 1)
+
+                    elif msg_class is DistribBranchRoot:
+                        if conn_obj.sock != self.parent_socket:
+                            # Unwanted connection, close it
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        # Inform the server of our branch root
+                        self._queue.append(BranchRoot(msg.user))
+                        log.add_conn("Our branch root is user %s", msg.user)
+
                     self._callback_msgs.append(msg)
 
             else:
@@ -1695,7 +1810,7 @@ class SlskProtoThread(threading.Thread):
                 self._calc_upload_limit_function()
 
             elif msg_obj.__class__ is SendNetworkMessage:
-                self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.login, msg_obj.addr)
+                self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
 
     def read_data(self, conn_obj):
 
@@ -1907,10 +2022,12 @@ class SlskProtoThread(threading.Thread):
                                 }
                             )
 
-                            self.server_address = addr
-                            self.server_timeout_value = -1
                             login, password = conn_obj.login
                             conn_obj.login = True
+
+                            self.server_address = addr
+                            self.server_username = login
+                            self.server_timeout_value = -1
 
                             self._queue.append(
                                 Login(

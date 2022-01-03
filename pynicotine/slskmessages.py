@@ -95,10 +95,9 @@ class ConnCloseIP(InternalMessage):
 
 class SendNetworkMessage(InternalMessage):
 
-    def __init__(self, user=None, message=None, login=None, addr=None):
+    def __init__(self, user=None, message=None, addr=None):
         self.user = user
         self.message = message
-        self.login = login
         self.addr = addr
 
 
@@ -2857,10 +2856,6 @@ Distributed Messages
 
 class DistribMessage(SlskMessage):
     pass
-
-
-class DistribRequest(InternalMessage):
-    """ Used to identify a connection attempt to a distributed parent. """
 
 
 class DistribAlive(DistribMessage):

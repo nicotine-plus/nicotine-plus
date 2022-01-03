@@ -109,21 +109,15 @@ class ChatRooms:
         return private_room
 
     def is_private_room_owned(self, room):
-
-        my_username = self.config.sections["server"]["login"]
         private_room = self.private_rooms.get(room)
-
-        return private_room is not None and private_room["owner"] == my_username
+        return private_room is not None and private_room["owner"] == self.core.login_username
 
     def is_private_room_member(self, room):
         return room in self.private_rooms
 
     def is_private_room_operator(self, room):
-
-        my_username = self.config.sections["server"]["login"]
         private_room = self.private_rooms.get(room)
-
-        return private_room is not None and my_username in private_room["operators"]
+        return private_room is not None and self.core.login_username in private_room["operators"]
 
     def request_room_list(self):
         self.queue.append(slskmessages.RoomList())
@@ -225,10 +219,9 @@ class ChatRooms:
 
     def private_room_disown(self, msg):
 
-        my_username = self.config.sections["server"]["login"]
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and private_room["owner"] == my_username:
+        if private_room is not None and private_room["owner"] == self.core.login_username:
             private_room["owner"] = None
 
         if self.ui_callback:
@@ -276,22 +269,20 @@ class ChatRooms:
 
     def private_room_operator_added(self, msg):
 
-        my_username = self.config.sections["server"]["login"]
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and my_username not in private_room["operators"]:
-            private_room["operators"].append(my_username)
+        if private_room is not None and self.core.login_username not in private_room["operators"]:
+            private_room["operators"].append(self.core.login_username)
 
         if self.ui_callback:
             self.ui_callback.private_room_operator_added(msg)
 
     def private_room_operator_removed(self, msg):
 
-        my_username = self.config.sections["server"]["login"]
         private_room = self.private_rooms.get(msg.room)
 
-        if private_room is not None and my_username in private_room["operators"]:
-            private_room["operators"].remove(my_username)
+        if private_room is not None and self.core.login_username in private_room["operators"]:
+            private_room["operators"].remove(self.core.login_username)
 
         if self.ui_callback:
             self.ui_callback.private_room_operator_removed(msg)
@@ -317,7 +308,7 @@ class ChatRooms:
 
     def room_list(self, msg):
 
-        my_username = self.config.sections["server"]["login"]
+        login_username = self.core.login_username
 
         for room in msg.rooms:
             self.server_rooms.add(room[0])
@@ -326,11 +317,11 @@ class ChatRooms:
             room_data = self.private_rooms.get(room[0])
 
             if room_data is None:
-                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": my_username}
+                self.private_rooms[room[0]] = {"users": [], "joined": room[1], "operators": [], "owner": login_username}
                 continue
 
             room_data['joined'] = room[1]
-            room_data['owner'] = my_username
+            room_data['owner'] = login_username
 
         for room in msg.otherprivaterooms:
             room_data = self.private_rooms.get(room[0])
@@ -341,7 +332,7 @@ class ChatRooms:
 
             room_data['joined'] = room[1]
 
-            if room_data['owner'] == my_username:
+            if room_data['owner'] == login_username:
                 room_data['owner'] = None
 
         if self.ui_callback:

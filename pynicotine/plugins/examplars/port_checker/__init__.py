@@ -52,9 +52,7 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        my_username = self.config.sections["server"]["login"]
-
-        if room != self.checkroom or not self.settings['keyword_enabled'] or my_username == user:
+        if room != self.checkroom or not self.settings['keyword_enabled'] or self.core.login_username == user:
             return
 
         if not self.throttle.ok_to_respond(room, user, line, 10):

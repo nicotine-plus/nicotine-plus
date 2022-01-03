@@ -615,15 +615,14 @@ class ChatRoom(UserInterface):
             if lines:
                 self.chat_textview.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False)
 
-    @staticmethod
-    def populate_user_menu(user, menu, menu_private_rooms):
+    def populate_user_menu(self, user, menu, menu_private_rooms):
 
         menu.set_user(user)
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
         private_rooms_enabled = (menu_private_rooms.items
-                                 and menu.user != config.sections["server"]["login"])
+                                 and menu.user != self.frame.np.login_username)
 
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
@@ -676,11 +675,11 @@ class ChatRoom(UserInterface):
     def ticker_set(self, msg):
 
         self.tickers.clear_tickers()
-        login = config.sections["server"]["login"]
+        login_username = self.frame.np.login_username
         has_own_ticker = False
 
         for user, message in msg.msgs:
-            if user == login:
+            if user == login_username:
                 has_own_ticker = True
 
             if self.frame.np.network_filter.is_user_ignored(user) or \
@@ -695,9 +694,8 @@ class ChatRoom(UserInterface):
     def ticker_add(self, msg):
 
         user = msg.user
-        login = config.sections["server"]["login"]
 
-        if user == login:
+        if user == self.frame.np.login_username:
             self.update_room_wall_tooltip(True)
 
         if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
@@ -708,9 +706,7 @@ class ChatRoom(UserInterface):
 
     def ticker_remove(self, msg):
 
-        login = config.sections["server"]["login"]
-
-        if msg.user == login:
+        if msg.user == self.frame.np.login_username:
             self.update_room_wall_tooltip(False)
 
         self.tickers.remove_ticker(msg.user)
@@ -758,16 +754,16 @@ class ChatRoom(UserInterface):
         if self.frame.np.network_filter.is_user_ip_ignored(user):
             return
 
-        login = config.sections["server"]["login"]
+        login_username = self.frame.np.login_username
 
-        if user == login:
+        if user == login_username:
             tag = self.tag_local
-        elif text.upper().find(login.upper()) > -1:
+        elif text.upper().find(login_username.upper()) > -1:
             tag = self.tag_hilite
         else:
             tag = self.tag_remote
 
-        self.show_notification(login, user, text, tag)
+        self.show_notification(login_username, user, text, tag)
 
         if text.startswith("/me "):
             if public:
@@ -794,7 +790,7 @@ class ChatRoom(UserInterface):
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
-        if user != login:
+        if user != login_username:
             self.chat_textview.append_line(
                 self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format

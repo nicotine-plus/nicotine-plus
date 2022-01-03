@@ -343,7 +343,7 @@ class UserList(UserInterface):
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
         private_rooms_enabled = (self.popup_menu_private_rooms.items
-                                 and status > 0 and menu.user != config.sections["server"]["login"])
+                                 and status > 0 and menu.user != self.frame.np.login_username)
 
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 

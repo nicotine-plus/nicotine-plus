@@ -435,7 +435,7 @@ class Search:
             # Don't return _any_ results when this option is disabled
             return
 
-        if not direct and user == self.config.sections["server"]["login"]:
+        if not direct and user == self.core.login_username:
             # We shouldn't send a search response if we initiated the search request,
             # unless we're specifically searching our own username
             return
@@ -526,7 +526,7 @@ class Search:
         fifoqueue = self.config.sections["transfers"]["fifoqueue"]
 
         message = slskmessages.FileSearchResult(
-            None, self.config.sections["server"]["login"],
+            None, self.core.login_username,
             searchid, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
         self.core.send_message_to_peer(user, message)

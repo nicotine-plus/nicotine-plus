@@ -109,7 +109,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.Main, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
-        if msg.user == config.sections["server"]["login"]:
+        if msg.user == self.frame.np.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
@@ -391,7 +391,7 @@ class PrivateChat(UserInterface):
 
     def send_message(self, text):
 
-        my_username = config.sections["server"]["login"]
+        my_username = self.frame.np.login_username
 
         if text[:4] == "/me ":
             line = "* %s %s" % (my_username, text[4:])
