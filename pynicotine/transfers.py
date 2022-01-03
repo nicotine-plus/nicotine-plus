@@ -650,10 +650,11 @@ class Transfers:
         if self.file_is_upload_queued(user, msg.file):
             return
 
+        limits = True
+
         if self.config.sections["transfers"]["friendsnolimits"]:
-            queue_limits = not user in (i[0] for i in self.config.sections["server"]["userlist"])
-        else:
-            queue_limits = True
+            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
+            limits = False if friend else True
 
         real_path = self.core.shares.virtual2real(msg.file)
         checkuser, reason = self.core.network_filter.check_user(user, msg.init.addr)
@@ -662,11 +663,11 @@ class Transfers:
             # reason = "Banned"
             self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, reason))
 
-        elif queue_limits and self.queue_limit_reached(user):
+        elif limits and self.queue_limit_reached(user):
             reason = "Too many megabytes"
             self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, reason))
 
-        elif queue_limits and self.file_limit_reached(user):
+        elif limits and self.file_limit_reached(user):
             reason = "Too many files"
             self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, reason))
 
