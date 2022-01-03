@@ -654,7 +654,7 @@ class Transfers:
 
         if self.config.sections["transfers"]["friendsnolimits"]:
             friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
-            limits = False if friend else True
+            limits = not friend
 
         real_path = self.core.shares.virtual2real(msg.file)
         checkuser, reason = self.core.network_filter.check_user(user, msg.init.addr)
