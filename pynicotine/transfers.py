@@ -2404,7 +2404,7 @@ class Transfers:
         write_file_and_backup(transfers_file, callback)
 
         log.add_transfer("Stored list of %(count)i %(transfers)s to %(file)s", {
-            "count": len(self.uploads),
+            "count": len(self.uploads if transfer_type == "uploads" else self.downloads),
             "transfers": transfer_type,
             "file": self.uploads_file_name
         })
