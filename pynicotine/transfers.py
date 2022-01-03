@@ -1805,8 +1805,8 @@ class Transfers:
         if config["notifications"]["notification_popup_file"]:
             self.core.notifications.new_text_notification(
                 _("%(file)s downloaded from %(user)s") % {
-                    "user": user,
-                    "file": filepath.rsplit(os.sep, 1)[1]
+                    'user': user,
+                    'file': filepath.rsplit(os.sep, 1)[1]
                 },
                 title=_("File downloaded")
             )
@@ -1832,8 +1832,8 @@ class Transfers:
         if config["notifications"]["notification_popup_folder"]:
             self.core.notifications.new_text_notification(
                 _("%(folder)s downloaded from %(user)s") % {
-                    "user": user,
-                    "folder": folderpath
+                    'user': user,
+                    'folder': folderpath
                 },
                 title=_("Folder downloaded")
             )
