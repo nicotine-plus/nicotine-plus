@@ -116,7 +116,7 @@ class NowPlaying:
         title = title.replace("$p", "%(program)s")
 
         title = title % self.title
-        title = ' '.join((x for x in title.replace('\r', '\n').split('\n') if x))
+        title = ' '.join(x for x in title.replace('\r', '\n').split('\n') if x)
 
         if title:
             if callback:

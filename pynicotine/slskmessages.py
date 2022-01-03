@@ -742,7 +742,7 @@ class FileSearch(ServerMessage):
         self.user = None
 
         if text:
-            self.searchterm = ' '.join((x for x in text.split() if x != '-'))
+            self.searchterm = ' '.join(x for x in text.split() if x != '-')
 
     def make_network_message(self):
         msg = bytearray()

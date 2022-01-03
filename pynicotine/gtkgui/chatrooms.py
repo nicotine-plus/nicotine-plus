@@ -394,9 +394,9 @@ class ChatRoom(UserInterface):
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
-            self.Log.set_active((self.room in config.sections["logging"]["rooms"]))
+            self.Log.set_active(self.room in config.sections["logging"]["rooms"])
 
-        self.AutoJoin.set_active((room in config.sections["server"]["autojoin"]))
+        self.AutoJoin.set_active(room in config.sections["server"]["autojoin"])
 
         self.toggle_chat_buttons()
 
@@ -562,7 +562,7 @@ class ChatRoom(UserInterface):
         try:
             get_path(config.sections["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
 
-        except IOError:
+        except OSError:
             pass
 
     def append_log_lines(self, path, numlines):
@@ -575,7 +575,7 @@ class ChatRoom(UserInterface):
 
     def _append_log_lines(self, path, numlines, encoding="utf-8"):
 
-        with open(path, 'r', encoding=encoding) as lines:
+        with open(path, encoding=encoding) as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
             login = config.sections["server"]["login"]

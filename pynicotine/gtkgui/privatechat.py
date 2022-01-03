@@ -241,7 +241,7 @@ class PrivateChat(UserInterface):
         try:
             get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
 
-        except IOError:
+        except OSError:
             pass
 
     def append_log_lines(self, path, numlines):
@@ -254,7 +254,7 @@ class PrivateChat(UserInterface):
 
     def _append_log_lines(self, path, numlines, encoding="utf-8"):
 
-        with open(path, 'r', encoding=encoding) as lines:
+        with open(path, encoding=encoding) as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
 
