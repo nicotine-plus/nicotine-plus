@@ -386,7 +386,7 @@ class Transfers:
             file_handle.close()
 
         except Exception as error:
-            log.add_transfer("Disk I/O Error: Failed to close file %(filename)s: %(error)s", {
+            log.add_transfer("I/O error: Failed to close file %(filename)s: %(error)s", {
                 "filename": file_handle.name,
                 "error": error
             })
@@ -1078,11 +1078,10 @@ class Transfers:
                                 fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
                             except OSError as error:
-                                log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
+                                log.add(_("I/O error: Failed to get exclusive lock on file %s, %s"), (base_name, error))
 
                         except ImportError:
                             log.add_debug("OS warning: Exclusive lock not possible while opening file %s", i.filename)
-                            pass
 
                     file_handle.seek(0, 2)
                     offset = file_handle.tell()
@@ -1868,7 +1867,7 @@ class Transfers:
             shutil.move(file.name, newname)
 
         except OSError as inst:
-            log.add(_("Disk I/O Error: Failed to move '%(tempfile)s' to '%(file)s': %(error)s"), {
+            log.add(_("I/O error: Failed to move '%(tempfile)s' to '%(file)s': %(error)s"), {
                 "tempfile": "%s" % file.name,
                 "file": newname,
                 "error": inst
