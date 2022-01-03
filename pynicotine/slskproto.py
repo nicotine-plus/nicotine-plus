@@ -802,6 +802,18 @@ class SlskProtoThread(threading.Thread):
 
         return None
 
+    def unpack_embedded_message(self, msg):
+        """ This message embeds a distributed message. We unpack the distributed message and process it. """
+
+        if msg.distrib_code not in self.distribclasses:
+            return None
+
+        distrib_class = self.distribclasses[msg.distrib_code]
+        distrib_msg = distrib_class(None)
+        distrib_msg.parse_network_message(msg.distrib_message)
+
+        return distrib_msg
+
     def modify_connection_events(self, conn_obj, events):
 
         if conn_obj.events != events:
@@ -1109,7 +1121,10 @@ class SlskProtoThread(threading.Thread):
                     msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
 
                 if msg is not None:
-                    if msg_class is Login:
+                    if msg_class is EmbeddedMessage:
+                        msg = self.unpack_embedded_message(msg)
+
+                    elif msg_class is Login:
                         if msg.success:
                             # Check for indirect connection timeouts
                             self.exit.clear()
@@ -1206,7 +1221,8 @@ class SlskProtoThread(threading.Thread):
 
                         self.send_have_no_parent()
 
-                    self._callback_msgs.append(msg)
+                    if msg is not None:
+                        self._callback_msgs.append(msg)
 
             else:
                 log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
@@ -1626,7 +1642,10 @@ class SlskProtoThread(threading.Thread):
                     msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
-                    if msg_class is DistribBranchLevel:
+                    if msg_class is DistribEmbeddedMessage:
+                        msg = self.unpack_embedded_message(msg)
+
+                    elif msg_class is DistribBranchLevel:
                         if msg.value < 0:
                             # There are rare cases of parents sending a branch level value of -1,
                             # presumably buggy clients
@@ -1670,7 +1689,8 @@ class SlskProtoThread(threading.Thread):
                         self._queue.append(BranchRoot(msg.user))
                         log.add_conn("Our branch root is user %s", msg.user)
 
-                    self._callback_msgs.append(msg)
+                    if msg is not None:
+                        self._callback_msgs.append(msg)
 
             else:
                 log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",

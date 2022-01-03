@@ -174,11 +174,11 @@ class NicotineCore:
             slskmessages.DistribBranchLevel: self.dummy_message,
             slskmessages.DistribBranchRoot: self.dummy_message,
             slskmessages.AdminMessage: self.admin_message,
-            slskmessages.TunneledMessage: self.tunneled_message,
+            slskmessages.TunneledMessage: self.dummy_message,
             slskmessages.PlaceholdUpload: self.dummy_message,
             slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
             slskmessages.UploadQueueNotification: self.dummy_message,
-            slskmessages.EmbeddedMessage: self.embedded_message,
+            slskmessages.EmbeddedMessage: self.ignore,
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.search_request,
             slskmessages.UserSearch: self.search_request,
@@ -186,7 +186,7 @@ class NicotineCore:
             slskmessages.PossibleParents: self.dummy_message,
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
-            slskmessages.DistribEmbeddedMessage: self.embedded_message,
+            slskmessages.DistribEmbeddedMessage: self.ignore,
             slskmessages.ResetDistributed: self.dummy_message,
             slskmessages.ServerTimeout: self.server_timeout,
             slskmessages.TransferTimeout: self.transfer_timeout,
@@ -816,20 +816,6 @@ class NicotineCore:
 
         log.add_important_info(msg.msg)
 
-    def tunneled_message(self, msg):
-        """ Server code: 68 """
-        """ DEPRECATED """
-
-        if msg.code in self.protothread.peerclasses:
-            peermsg = self.protothread.peerclasses[msg.code](None)
-            peermsg.parse_network_message(msg.msg)
-            peermsg.tunneleduser = msg.user
-            peermsg.tunneledtoken = msg.token
-            peermsg.tunneledaddr = msg.addr
-            self.network_callback([peermsg])
-        else:
-            log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
-
     def privileged_users(self, msg):
         """ Server code: 69 """
 
@@ -866,21 +852,6 @@ class NicotineCore:
             })
 
         self.privileges_left = msg.seconds
-
-    def embedded_message(self, msg):
-        """ Server/distrib code: 93 """
-        """ This message embeds a distributed message. We unpack the distributed message and
-        process it. """
-
-        # Verbose: log.add_msg_contents(msg)
-
-        if msg.distrib_code in self.protothread.distribclasses:
-            distrib_class = self.protothread.distribclasses[msg.distrib_code]
-            distrib_msg = distrib_class(None)
-            distrib_msg.parse_network_message(msg.distrib_message)
-
-            # Process the distributed message
-            self.events[distrib_class](distrib_msg)
 
     def wishlist_interval(self, msg):
         """ Server code: 104 """
