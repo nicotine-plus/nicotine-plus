@@ -44,7 +44,7 @@ def _parse_accelerator(accelerator):
     return keycodes, mods
 
 
-if Gtk.get_major_version() == 4:
+if Gtk.get_major_version() != 4:
     ALL_MODIFIERS = (_parse_accelerator("<Primary>")[1] | _parse_accelerator("<Shift>")[1]
                      | _parse_accelerator("<Alt>")[1])
 
