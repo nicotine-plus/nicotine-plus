@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-02 17:02+0200\n"
-"PO-Revision-Date: 2021-12-06 18:56+0000\n"
+"PO-Revision-Date: 2022-01-03 16:55+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -295,7 +295,6 @@ msgid "Bolivia"
 msgstr "Bolivia"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Caribe Neerlandés"
 
@@ -3314,17 +3313,16 @@ msgstr ""
 "Rastro: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
-msgstr "Complemento cargado %s"
+msgstr "Cargando sistema de plugins"
 
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading Nicotine+ %(nic_version)s"
-msgstr "Cerrando Nicotine+ %(version)s, %(status)s…"
+msgstr "Cargando Nicotine+ %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
-#, fuzzy, python-format
+#, python-format
 msgid "Using Python %(py_version)s"
 msgstr "Usando Python %(py_version)s"
 
@@ -5677,7 +5675,6 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibytes (2^20 bytes)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:296
-#, fuzzy
 msgid "MiB"
 msgstr "MiB"
 
@@ -6113,19 +6110,19 @@ msgstr "_Actualizar información"
 
 #: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Cerrando Nicotine+ %(version)s, %(status)s…"
+msgstr "Cargando %(program)s %(version)s"
 
 #: pynicotine/pynicotine.py:275
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Cerrando Nicotine+ %(version)s, %(status)s…"
+msgstr "Cerrando %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:307
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "¡Cerrar Nicotine+ %(version)s, %(status)s!"
+msgstr "¡Cerrar %(program)s %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Usuario:"
