@@ -710,7 +710,7 @@ class UserBrowse(UserInterface):
 
         try:
             self.download_directory(self.selected_folder, prefix=os.path.join(selected, ""), recurse=recurse)
-        except IOError:  # failed to open
+        except OSError:  # failed to open
             log.add('Failed to open %r for reading', selected)  # notify user
 
     def on_download_directory_to(self, *_args, recurse=False):
@@ -967,7 +967,7 @@ class UserBrowse(UserInterface):
 
         try:
             self.on_download_files(prefix=selected)
-        except IOError:  # failed to open
+        except OSError:  # failed to open
             log.add('failed to open %r for reading', selected)  # notify user
 
     def on_download_files_to(self, *_args):

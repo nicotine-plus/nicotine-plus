@@ -2579,7 +2579,7 @@ class PluginsFrame(UserInterface):
         for plugin in plugins:
             try:
                 info = self.frame.np.pluginhandler.get_plugin_info(plugin)
-            except IOError:
+            except OSError:
                 continue
 
             enabled = (plugin in config.sections["plugins"]["enabled"])

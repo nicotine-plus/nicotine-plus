@@ -257,7 +257,7 @@ class PluginHandler:
 
         info_path = os.path.join(self.findplugin(plugin_name), 'PLUGININFO')
 
-        with open(info_path, 'r', encoding="utf-8") as file_handle:
+        with open(info_path, encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
                     key, val = line.split("=", 1)

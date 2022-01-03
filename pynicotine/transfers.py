@@ -1095,7 +1095,7 @@ class Transfers:
                             import fcntl
                             try:
                                 fcntl.lockf(file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                            except IOError as error:
+                            except OSError as error:
                                 log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
                         except ImportError:
                             pass
@@ -1103,7 +1103,7 @@ class Transfers:
                     file_handle.seek(0, 2)
                     offset = file_handle.tell()
 
-                except IOError as error:
+                except OSError as error:
                     log.add(_("Download I/O error: %s"), error)
 
                     self.abort_transfer(i)
@@ -1171,7 +1171,7 @@ class Transfers:
                 file_handle = open(real_path, "rb")
                 offset = file_handle.tell()
 
-            except IOError as error:
+            except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
 
                 self.abort_transfer(i)
@@ -1333,7 +1333,7 @@ class Transfers:
                 i.last_byte_offset = i.current_byte_offset
                 i.last_update = current_time
 
-            except IOError as error:
+            except OSError as error:
                 log.add(_("Download I/O error: %s"), error)
 
                 self.abort_transfer(i)
@@ -1891,7 +1891,7 @@ class Transfers:
             import shutil
             shutil.move(file.name, newname)
 
-        except (IOError, OSError) as inst:
+        except OSError as inst:
             log.add(
                 _("Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"), {
                     'tempfile': "%s" % file.name,

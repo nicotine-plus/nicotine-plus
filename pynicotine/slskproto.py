@@ -579,7 +579,7 @@ class SlskProtoThread(threading.Thread):
                 log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
                 break
 
-            except socket.error as error:
+            except OSError as error:
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
@@ -1091,7 +1091,7 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[server_socket] = conn_obj
             self._numsockets += 1
 
-        except socket.error as err:
+        except OSError as err:
             self.connect_error(err, conn_obj)
             server_socket.close()
             self.server_disconnect()
@@ -1406,7 +1406,7 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[sock] = conn_obj
             self._numsockets += 1
 
-        except socket.error as err:
+        except OSError as err:
             self.connect_error(err, conn_obj)
             sock.close()
 
@@ -1520,7 +1520,7 @@ class SlskProtoThread(threading.Thread):
                 try:
                     conn_obj.filedown.file.write(addedbytes)
 
-                except IOError as strerror:
+                except OSError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, strerror))
                     self.close_connection(self._conns, conn_obj.sock)
 
@@ -1553,7 +1553,7 @@ class SlskProtoThread(threading.Thread):
                     conn_obj.fileupl.file.seek(msg.offset)
                     self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-                except IOError as strerror:
+                except OSError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, strerror))
                     self.close_connection(self._conns, conn_obj.sock)
 
@@ -1901,7 +1901,7 @@ class SlskProtoThread(threading.Thread):
 
                         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-            except IOError as strerror:
+            except OSError as strerror:
                 self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, strerror))
                 self.close_connection(self._conns, sock)
 
@@ -1955,8 +1955,8 @@ class SlskProtoThread(threading.Thread):
             # Check which connections are ready to send/receive data
             try:
                 key_events = self.selector.select(timeout=-1)
-                input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
-                output_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
+                input_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_READ}
+                output_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE}
 
             except OSError as error:
                 # Error recieved; terminate networking loop
@@ -2020,7 +2020,7 @@ class SlskProtoThread(threading.Thread):
                         # Check if the socket has any data for us
                         sock_in_progress.recv(1, socket.MSG_PEEK)
 
-                except socket.error as err:
+                except OSError as err:
                     self.connect_error(err, conn_obj)
                     self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
@@ -2119,7 +2119,7 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, sock)
                             continue
 
-                    except socket.error as err:
+                    except OSError as err:
                         log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
                                       "Error: %(error)s"), {
                             "addr": conn_obj.addr,

@@ -40,7 +40,7 @@ def _parse_accelerator(accelerator):
     keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
     _valid, keys = keymap.get_entries_for_keyval(key)
 
-    keycodes = set(key.keycode for key in keys)
+    keycodes = {key.keycode for key in keys}
     return keycodes, mods
 
 

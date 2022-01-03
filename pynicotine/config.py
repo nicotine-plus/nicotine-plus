@@ -610,8 +610,8 @@ class Config:
         except ImportError:
             from pynicotine.logfacility import log
 
-            log.add(("Failed to convert config file to UTF-8. Please install python3-chardet and start "
-                     "the application again."))
+            log.add("Failed to convert config file to UTF-8. Please install python3-chardet and start "
+                    "the application again.")
             sys.exit()
 
         os.rename(self.filename, self.filename + ".conv")
@@ -621,7 +621,7 @@ class Config:
 
         from_encoding = detect(rawdata)['encoding']
 
-        with open(self.filename + ".conv", 'r', encoding=from_encoding) as file_read:
+        with open(self.filename + ".conv", encoding=from_encoding) as file_read:
             with open(self.filename, 'w', encoding="utf-8") as file_write:
                 for line in file_read:
                     file_write.write(line[:-1] + '\r\n')

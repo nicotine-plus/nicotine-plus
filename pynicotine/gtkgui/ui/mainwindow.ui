@@ -20,6 +20,7 @@
     <child type="title">
       <object class="GtkBox" id="search_title">
         <property name="visible">True</property>
+        <property name="hexpand">False</property>
         <property name="spacing">4</property>
         <property name="valign">center</property>
         <child>
@@ -94,6 +95,7 @@
         <child>
           <object class="GtkComboBoxText" id="SearchCombo">
             <property name="visible">True</property>
+            <property name="hexpand">True</property>
             <property name="height-request">0</property>
             <property name="has-entry">True</property>
             <child internal-child="entry">
