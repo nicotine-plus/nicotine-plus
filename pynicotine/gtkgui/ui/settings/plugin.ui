@@ -158,7 +158,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkBox" id="PluginInfo">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">18</property>
                 <property name="orientation">vertical</property>

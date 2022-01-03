@@ -171,6 +171,25 @@
                 <property name="visible">True</property>
                 <property name="direction">up</property>
                 <property name="tooltip-text">Clear every upload marked with a specific status.</property>
+                <child>
+                  <object class="GtkBox" id="ClearTransfersLabel">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Clear Uploa_ds…</property>
+                        <property name="use-underline">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">pan-up-symbolic</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
                 <style>
                   <class name="flat"/>
                 </style>
@@ -178,23 +197,6 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkBox" id="ClearTransfersLabel">
-    <property name="visible">True</property>
-    <property name="spacing">6</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Clear Uploa_ds…</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">True</property>
-        <property name="icon-name">pan-up-symbolic</property>
       </object>
     </child>
   </object>

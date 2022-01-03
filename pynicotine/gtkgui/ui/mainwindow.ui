@@ -4,6 +4,15 @@
   <object class="GtkMenuButton" id="header_menu">
     <property name="visible">True</property>
     <property name="tooltip-text" translatable="yes">Menu</property>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">True</property>
+        <property name="icon-name">open-menu-symbolic</property>
+      </object>
+    </child>
+    <style>
+      <class name="image-button"/>
+    </style>
   </object>
   <object class="GtkHeaderBar" id="header_search">
     <property name="visible">True</property>
@@ -18,6 +27,24 @@
             <property name="visible">True</property>
             <property name="height-request">0</property>
             <property name="tooltip-text" translatable="yes">Search scope</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel" id="SearchModeLabel">
+                    <property name="visible">True</property>
+                    <property name="use-underline">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">pan-down-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -260,6 +287,12 @@
               <object class="GtkMenuButton" id="ToggleTreeDownloads">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">view-list-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
@@ -404,6 +437,12 @@
               <object class="GtkMenuButton" id="ToggleTreeUploads">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">view-list-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <style>
@@ -673,39 +712,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="SearchModeLabelBox">
-    <property name="visible">True</property>
-    <property name="spacing">6</property>
-    <child>
-      <object class="GtkLabel" id="SearchModeLabel">
-        <property name="visible">True</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">True</property>
-        <property name="icon-name">pan-down-symbolic</property>
-      </object>
-    </child>
-  </object>
-  <object class="GtkBox" id="RoomListLabel">
-    <property name="visible">True</property>
-    <property name="spacing">6</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">_Room List</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">True</property>
-        <property name="icon-name">pan-down-symbolic</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkHeaderBar" id="header_chatrooms">
     <property name="visible">True</property>
     <property name="height-request">42</property>
@@ -731,6 +737,25 @@
           <object class="GtkMenuButton" id="RoomList">
             <property name="visible">True</property>
             <property name="height-request">0</property>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">_Room List</property>
+                    <property name="use-underline">True</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage" id="RoomListArrow">
+                    <property name="visible">True</property>
+                    <property name="icon-name">pan-down-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
       </object>
@@ -1780,7 +1805,7 @@
                     <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
                     <property name="action-name">app.altspeedlimit</property>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="AltSpeedIcon">
                         <property name="visible">True</property>
                         <property name="icon-name">media-seek-backward-symbolic</property>
                       </object>

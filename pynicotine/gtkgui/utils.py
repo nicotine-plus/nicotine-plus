@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
@@ -37,17 +37,16 @@ def _parse_accelerator(accelerator):
     if not key:
         return keycodes, mods
 
-    if Gtk.get_major_version() == 4:
-        _valid, keys = Gdk.Display.get_default().map_keyval(key)
-    else:
-        keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
-        _valid, keys = keymap.get_entries_for_keyval(key)
+    keymap = Gdk.Keymap.get_for_display(Gdk.Display.get_default())
+    _valid, keys = keymap.get_entries_for_keyval(key)
 
     keycodes = set(key.keycode for key in keys)
     return keycodes, mods
 
 
-ALL_MODIFIERS = (_parse_accelerator("<Primary>")[1] | _parse_accelerator("<Shift>")[1] | _parse_accelerator("<Alt>")[1])
+if Gtk.get_major_version() != 4:
+    ALL_MODIFIERS = (_parse_accelerator("<Primary>")[1] | _parse_accelerator("<Shift>")[1]
+                     | _parse_accelerator("<Alt>")[1])
 
 
 def _activate_accelerator(widget, event, keycodes, required_mods, callback, user_data=None):

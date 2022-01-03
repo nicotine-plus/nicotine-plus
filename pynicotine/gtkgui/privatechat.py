@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -109,7 +109,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.Main, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
-        if msg.user == config.sections["server"]["login"]:
+        if msg.user == self.frame.np.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
@@ -180,11 +180,6 @@ class PrivateChat(UserInterface):
         self.user = user
         self.chats = chats
         self.frame = chats.frame
-
-        if Gtk.get_major_version() == 4:
-            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
-        else:
-            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
 
         self.opened = False
         self.offlinemessage = False
@@ -396,7 +391,7 @@ class PrivateChat(UserInterface):
 
     def send_message(self, text):
 
-        my_username = config.sections["server"]["login"]
+        my_username = self.frame.np.login_username
 
         if text[:4] == "/me ":
             line = "* %s %s" % (my_username, text[4:])

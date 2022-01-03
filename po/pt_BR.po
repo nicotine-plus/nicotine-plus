@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2021 Nicotine+ Translators
+# Copyright (C) 2006-2022 Nicotine+ Translators
 # This file is distributed under the same license as the Nicotine+ package.
 #
 msgid ""

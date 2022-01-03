@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -95,10 +95,9 @@ class ConnCloseIP(InternalMessage):
 
 class SendNetworkMessage(InternalMessage):
 
-    def __init__(self, user=None, message=None, login=None, addr=None):
+    def __init__(self, user=None, message=None, addr=None):
         self.user = user
         self.message = message
-        self.login = login
         self.addr = addr
 
 
@@ -2857,10 +2856,6 @@ Distributed Messages
 
 class DistribMessage(SlskMessage):
     pass
-
-
-class DistribRequest(InternalMessage):
-    """ Used to identify a connection attempt to a distributed parent. """
 
 
 class DistribAlive(DistribMessage):

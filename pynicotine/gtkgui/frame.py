@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -108,8 +108,6 @@ class NicotineFrame(UserInterface):
         super().__init__("ui/mainwindow.ui")
 
         if Gtk.get_major_version() == 4:
-            self.header_menu.set_icon_name("open-menu-symbolic")
-
             self.MainPaned.set_resize_start_child(True)
             self.MainPaned.set_resize_end_child(False)
             self.ChatroomsPane.set_resize_end_child(False)
@@ -119,8 +117,6 @@ class NicotineFrame(UserInterface):
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
-            self.header_menu.set_image(Gtk.Image(icon_name="open-menu-symbolic"))
-
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
             self.ChatroomsPane.child_set_property(self.userlist_pane_chatrooms, "resize", False)
@@ -471,7 +467,7 @@ class NicotineFrame(UserInterface):
 
         import urllib.parse
 
-        login = urllib.parse.quote(config.sections["server"]["login"])
+        login = urllib.parse.quote(self.frame.np.login_username)
         open_uri(config.privileges_url % login)
         self.np.request_check_privileges()
 
@@ -1846,11 +1842,7 @@ class NicotineFrame(UserInterface):
         else:
             icon_name = "media-seek-backward-symbolic"
 
-        if Gtk.get_major_version() == 4:
-            self.AltSpeedButton.set_icon_name(icon_name)
-            return
-
-        self.AltSpeedButton.set_image(Gtk.Image(icon_name=icon_name))
+        self.AltSpeedIcon.set_property("icon-name", icon_name)
 
     def on_alternative_speed_limit(self, *_args):
 

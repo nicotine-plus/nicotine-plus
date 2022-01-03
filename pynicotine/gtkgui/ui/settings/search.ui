@@ -388,6 +388,24 @@
             <child>
               <object class="GtkMenuButton" id="ShowSearchHelp">
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkBox" id="FilterHelpLabel">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="icon-name">dialog-question-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Result Filter Help</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -520,22 +538,6 @@
             </child>
           </object>
         </child>
-      </object>
-    </child>
-  </object>
-  <object class="GtkBox" id="FilterHelpLabel">
-    <property name="visible">True</property>
-    <property name="spacing">6</property>
-    <child>
-      <object class="GtkImage">
-        <property name="visible">True</property>
-        <property name="icon-name">dialog-question-symbolic</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Result Filter Help</property>
       </object>
     </child>
   </object>

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -44,7 +44,6 @@ class PluginHandler:
         self.core = core
         self.config = config
 
-        self.my_username = self.config.sections["server"]["login"]
         self.plugindirs = []
         self.enabled_plugins = {}
         self.command_source = None
@@ -424,7 +423,7 @@ class PluginHandler:
         self.trigger_event("public_room_message_notification", (room, user, line))
 
     def incoming_private_chat_event(self, user, line):
-        if user != self.my_username:
+        if user != self.core.login_username:
             # dont trigger the scripts on our own talking - we've got "Outgoing" for that
             return self.trigger_event("incoming_private_chat_event", (user, line))
 

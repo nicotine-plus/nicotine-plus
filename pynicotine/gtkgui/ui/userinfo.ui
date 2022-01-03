@@ -62,13 +62,13 @@
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
                                     <property name="editable">false</property>
-                                    <property name="wrap-mode">word</property>
                                     <property name="cursor-visible">false</property>
                                     <property name="pixels-above-lines">1</property>
                                     <property name="pixels-below-lines">1</property>
                                     <property name="left-margin">12</property>
                                     <property name="right-margin">12</property>
                                     <property name="bottom-margin">6</property>
+                                    <property name="wrap-mode">word-char</property>
                                   </object>
                                 </child>
                               </object>
@@ -294,7 +294,6 @@
                         <child>
                           <object class="GtkProgressBar" id="progressbar">
                             <property name="visible">True</property>
-                            <property name="pulse-step">0.10000000149</property>
                           </object>
                         </child>
                       </object>

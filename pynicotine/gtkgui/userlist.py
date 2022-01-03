@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
@@ -343,7 +343,7 @@ class UserList(UserInterface):
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
         private_rooms_enabled = (self.popup_menu_private_rooms.items
-                                 and status > 0 and menu.user != config.sections["server"]["login"])
+                                 and status > 0 and menu.user != self.frame.np.login_username)
 
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
