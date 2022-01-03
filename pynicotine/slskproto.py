@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>

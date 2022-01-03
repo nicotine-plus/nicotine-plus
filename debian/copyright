@@ -6,7 +6,7 @@ Source: https://github.com/nicotine-plus/nicotine-plus/
 Files: *
 Copyright: 2001-2003 PySoulSeek Contributors
            2003-2004 Nicotine Team
-           2004-2021 Nicotine+ Team
+           2004-2022 Nicotine+ Team
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py

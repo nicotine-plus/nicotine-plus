@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
 #
 # This program is free software: you can redistribute it and/or modify
