@@ -3630,6 +3630,7 @@ msgid "Command %s is not recognized"
 msgstr "Comando %s não é reconhecido"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Ícone personalizado de carregamento de erros %(path)s: %(error)s"
@@ -3885,11 +3886,11 @@ msgid "Loading Nicotine+ %(nic_version)s"
 msgstr "Nicotine+ versão %s"
 
 #: pynicotine/pynicotine.py:233
-#, python-format
+#, fuzzy, python-format
 msgid "Using Python %(py_version)s"
-msgstr ""
+msgstr "Usando Python %(py_version)s"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr ""
@@ -3915,17 +3916,17 @@ msgstr "fechamento de aplicativos"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Nicotine+ versão %s"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "terminated"
 msgstr "Terminada"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 #, fuzzy
 msgid "done"
 msgstr "terminado"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, fuzzy, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3934,7 +3935,7 @@ msgstr ""
 "A interface de rede especificada, '%s', não existe. Altere ou remova a "
 "interface de rede especificada e reinicie nicotina+."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 #, fuzzy
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
@@ -3943,7 +3944,7 @@ msgstr ""
 "O intervalo especificado para portas de conexão do cliente era {}-{}, mas "
 "nenhum deles era utilizável. Aumentar e/ou "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 #, fuzzy
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
@@ -3952,49 +3953,49 @@ msgstr ""
 "Observe que parte do seu alcance está abaixo de 1024, isso geralmente não é "
 "permitido na maioria dos sistemas operacionais, com exceção do Windows."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Conectando em %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Não é possível recuperar o IP do usuário %s, já que este usuário está offline"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, fuzzy, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "Endereço IP do %(user)s é %(ip)s, porta %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Não é possível conectar-se ao servidor. Motivo: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Mensagem de bate-papo do usuário '%(user)s' na sala '%(room)s': %(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Mensagem Privada de %(user)s"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Alguém entrou em sua conta soulseek em outro lugar"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i usuários privilegiados"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -4003,7 +4004,7 @@ msgstr ""
 "Você não tem privilégios. Privilégios não são necessários, mas permitem que "
 "seus downloads sejam enfileidos antes de usuários não privilegiados."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, fuzzy, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -4012,28 +4013,28 @@ msgstr ""
 "%(days)i dias, %(hours)i horas, %(minutes)i minutos, %(seconds)i segundos de "
 "privilégios de download restantes."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Sua senha foi alterada. A senha é %s"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr ""
 "O usuário %(user)s está navegando na sua lista de arquivos compartilhados"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s está fazendo uma requisição de InformaçõesUsuário"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, fuzzy, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Atenção: %(realuser)s está tentando falsificar %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Falha ao buscar a pasta compartilhada %(folder)s: %(error)s"
@@ -7088,6 +7089,22 @@ msgstr "Salve _Picture"
 #, fuzzy
 msgid "_Refresh Info"
 msgstr "Atualizar"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Nicotine+ versão %s"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Nicotine+ versão %s"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Nicotine+ versão %s"
 
 #~ msgid "User:"
 #~ msgstr "Usuário:"

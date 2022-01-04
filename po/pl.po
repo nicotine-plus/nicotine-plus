@@ -293,7 +293,6 @@ msgid "Bolivia"
 msgstr "Boliwia"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius i Saba"
 
@@ -1775,7 +1774,7 @@ msgstr "Interfejs użytkownika"
 #: pynicotine/gtkgui/dialogs/preferences.py:2735
 #: pynicotine/gtkgui/ui/settings/shares.ui:16
 msgid "Shares"
-msgstr "Zasoby udostępnione"
+msgstr "Udostępnione zasoby"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2736
 #: pynicotine/gtkgui/frame.py:1187 pynicotine/gtkgui/frame.py:1701
@@ -1798,7 +1797,7 @@ msgstr "Wysyłanie"
 #: pynicotine/gtkgui/dialogs/preferences.py:2738
 #: pynicotine/gtkgui/ui/settings/search.ui:41
 msgid "Searches"
-msgstr "Wyszukiwania"
+msgstr "Wyszukiwanie"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2739
 #: pynicotine/gtkgui/frame.py:1190 pynicotine/gtkgui/ui/mainwindow.ui:1244
@@ -2107,11 +2106,11 @@ msgstr "_Konfiguruj udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:981
 msgid "_Browse Public Shares"
-msgstr "_Przeglądaj publiczne udostępnienia zasobów"
+msgstr "_Przeglądaj publiczne udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:982
 msgid "Bro_wse Buddy Shares"
-msgstr "Prze_glądaj udostępnienia zasobów znajomych"
+msgstr "Prze_glądaj udostępnione zasoby znajomych"
 
 #: pynicotine/gtkgui/frame.py:998
 msgid "_Keyboard Shortcuts"
@@ -2225,7 +2224,7 @@ msgstr "Dostępny"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:578
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:546
 msgid "Search"
-msgstr "Wyszukiwania"
+msgstr "Wyszukiwanie"
 
 #: pynicotine/gtkgui/frame.py:1704
 msgid "Chat"
@@ -2319,7 +2318,7 @@ msgstr "Nicotine+ działa w tle"
 
 #: pynicotine/gtkgui/interests.py:55 pynicotine/gtkgui/userinfo.py:156
 msgid "Likes"
-msgstr "Polubione"
+msgstr "Lubię"
 
 #: pynicotine/gtkgui/interests.py:68 pynicotine/gtkgui/userinfo.py:169
 msgid "Dislikes"
@@ -2965,7 +2964,7 @@ msgstr "_Zapisz"
 #: pynicotine/gtkgui/widgets/filechooser.py:243
 #: pynicotine/gtkgui/widgets/filechooser.py:311
 msgid "(None)"
-msgstr "(Nic)"
+msgstr "(Brak)"
 
 #: pynicotine/gtkgui/widgets/iconnotebook.py:108
 msgid "Close tab"
@@ -3079,6 +3078,7 @@ msgid "Command %s is not recognized"
 msgstr "Komenda %s nie została rozpoznana"
 
 #: pynicotine/gtkgui/widgets/theme.py:333
+#: pynicotine/gtkgui/widgets/theme.py:332
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Błąd ładowania niestandardowej ikony %(path)s: %(error)s"
@@ -3304,21 +3304,20 @@ msgstr ""
 "Trace: %(trace)s"
 
 #: pynicotine/pluginsystem.py:293
-#, fuzzy
 msgid "Loading plugin system"
 msgstr "Ładowanie obsługi wtyczek"
 
 #: pynicotine/pynicotine.py:232
-#, fuzzy, python-format
+#, python-format
 msgid "Loading Nicotine+ %(nic_version)s"
-msgstr "Zamykanie Nicotine+ %(version)s, %(status)s…"
+msgstr "Ładowanie Nicotine+ %(nic_version)s"
 
 #: pynicotine/pynicotine.py:233
 #, python-format
 msgid "Using Python %(py_version)s"
-msgstr ""
+msgstr "Korzystanie z Pythona %(py_version)s"
 
-#: pynicotine/pynicotine.py:270
+#: pynicotine/pynicotine.py:270 pynicotine/pynicotine.py:269
 msgid "You need to specify a username and password before connecting…"
 msgstr "Musisz podać nazwę użytkownika i hasło przed połączeniem…"
 
@@ -3340,15 +3339,15 @@ msgstr "zamykanie aplikacji"
 msgid "Quit Nicotine+ %(version)s, %(status)s!"
 msgstr "Zamknij Nicotine+ %(version)s, %(status)s!"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 msgid "terminated"
 msgstr "zakończono"
 
-#: pynicotine/pynicotine.py:309
+#: pynicotine/pynicotine.py:309 pynicotine/pynicotine.py:310
 msgid "done"
 msgstr "gotowe"
 
-#: pynicotine/pynicotine.py:321
+#: pynicotine/pynicotine.py:321 pynicotine/pynicotine.py:322
 #, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3357,7 +3356,7 @@ msgstr ""
 "Wybrany interfejs sieciowy, '%s', nie istnieje. Zmień lub usuń interfejs i "
 "zrestartuj Nicotine+."
 
-#: pynicotine/pynicotine.py:331
+#: pynicotine/pynicotine.py:331 pynicotine/pynicotine.py:332
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
 "these were usable. Increase and/or "
@@ -3365,7 +3364,7 @@ msgstr ""
 "Zakres portów jaki został wybrany to {}-{}, ale żaden z nich nie był do "
 "użytku. Zmień zakres "
 
-#: pynicotine/pynicotine.py:338
+#: pynicotine/pynicotine.py:338 pynicotine/pynicotine.py:339
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
@@ -3373,48 +3372,48 @@ msgstr ""
 "Miej na uwadze, że ten zakres jest poniżej 1024. Jest to zakres, który jest "
 "niezalecany w większości systemów operacyjnych."
 
-#: pynicotine/pynicotine.py:353
+#: pynicotine/pynicotine.py:353 pynicotine/pynicotine.py:354
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Łączenie z %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:422
+#: pynicotine/pynicotine.py:422 pynicotine/pynicotine.py:423
 #, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr "Adres IP użytkownika %s jest nieznany odkąd użytkownik jest rozłączony"
 
-#: pynicotine/pynicotine.py:425
+#: pynicotine/pynicotine.py:425 pynicotine/pynicotine.py:426
 #, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "Adres IP użytkownika %(user)s to %(ip)s, port %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:685
+#: pynicotine/pynicotine.py:685 pynicotine/pynicotine.py:686
 #, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Nie można połączyć się z serwerem. Powód: %s"
 
-#: pynicotine/pynicotine.py:732
+#: pynicotine/pynicotine.py:732 pynicotine/pynicotine.py:733
 #, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Wiadomość na czacie od użytkownika '%(user)s' w pokoju '%(room)s': "
 "%(message)s"
 
-#: pynicotine/pynicotine.py:768
+#: pynicotine/pynicotine.py:768 pynicotine/pynicotine.py:769
 #, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Prywatna wiadomość od użytkownika '%(user)s': %(message)s"
 
-#: pynicotine/pynicotine.py:811
+#: pynicotine/pynicotine.py:811 pynicotine/pynicotine.py:812
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Ktoś zalogował się na twoje konto Soulseek gdzieś indziej"
 
-#: pynicotine/pynicotine.py:862
+#: pynicotine/pynicotine.py:862 pynicotine/pynicotine.py:863
 #, python-format
 msgid "%i privileged users"
 msgstr "%i uprzywilejowanych użytkowników"
 
-#: pynicotine/pynicotine.py:893
+#: pynicotine/pynicotine.py:893 pynicotine/pynicotine.py:894
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
 "downloads to be queued ahead of non-privileged users."
@@ -3422,7 +3421,7 @@ msgstr ""
 "Nie masz już żadnych przywilejów. Nie są one konieczne, ale pozwalają "
 "ściągać pliki poza kolejką nieuprzywilejowanych użytkowników."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:896 pynicotine/pynicotine.py:897
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3431,27 +3430,27 @@ msgstr ""
 "Pozostało %(days)i dni, %(hours)i godzin, %(minutes)i minut, %(seconds)i "
 "sekund uprzywilejowanego pobierania."
 
-#: pynicotine/pynicotine.py:1039
+#: pynicotine/pynicotine.py:1039 pynicotine/pynicotine.py:1040
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Twoje hasło zostało zmienione. Hasło to %s"
 
-#: pynicotine/pynicotine.py:1096
+#: pynicotine/pynicotine.py:1096 pynicotine/pynicotine.py:1097
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Użytkownik %(user)s przegląda twoją listę udostępnionych zasobów"
 
-#: pynicotine/pynicotine.py:1152
+#: pynicotine/pynicotine.py:1152 pynicotine/pynicotine.py:1153
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Użytkownik %(user)s przegląda informacje o tobie"
 
-#: pynicotine/pynicotine.py:1202
+#: pynicotine/pynicotine.py:1202 pynicotine/pynicotine.py:1203
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Uwaga: %(realuser)s próbuje podszyć się pod %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1245
+#: pynicotine/pynicotine.py:1245 pynicotine/pynicotine.py:1246
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Błąd podczas pobierania zawartości folderu %(folder)s: %(error)s"
@@ -5152,7 +5151,8 @@ msgstr "Zamienniki"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:34
 msgid "Autoclear finished/filtered downloads from transfer list"
 msgstr ""
-"Automatycznie czyszczenie zakończonych / filtrowanych z listy transferów"
+"Automatyczne czyszczenie zakończonych / filtrowanych pobrań z listy "
+"transferów"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:41
 msgid "Download folders in reverse alphanumerical order"
@@ -5405,7 +5405,7 @@ msgid ""
 "Now Playing allows you to display what your media player is playing by using "
 "the /now command in chat."
 msgstr ""
-"Funkcja Teraz Odtwarzanie pozwana na wyświetlanie odtwarzanego utworu w "
+"Funkcja Teraz Odtwarzanie pozwala na wyświetlanie odtwarzanego utworu w "
 "pokoju rozmów przy pomocy komendy /now."
 
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:61
@@ -5575,7 +5575,7 @@ msgstr "Ogranicz udostępnianie tylko dla znajomych do zaufanych znajomych"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:56
 msgid "Autoclear finished/cancelled uploads from transfer list"
 msgstr ""
-"Automatycznie czyszczenie zakończonych / wstrzymanych wysyłań z listy "
+"Automatyczne czyszczenie zakończonych / wstrzymanych wysyłań z listy "
 "transferów"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:73
@@ -5596,7 +5596,7 @@ msgstr "Alternatywne ograniczenie prędkości wysyłania do (KiB/s):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:193
 msgid "Limit upload speed:"
-msgstr "Ogranicz prędkość wysyłania do:"
+msgstr "Ogranicz prędkość wysyłania:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:211
 msgid "Per transfer"
@@ -5623,9 +5623,8 @@ msgid "Mebibytes (2^20 bytes)."
 msgstr "Mebibajty (2^20 bajtów)."
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:296
-#, fuzzy
 msgid "MiB"
-msgstr "MiBs"
+msgstr "MiB"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:334
 msgid "files"
@@ -6049,6 +6048,22 @@ msgstr "Zapisz _zdjęcie"
 #: pynicotine/gtkgui/ui/userinfo.ui:612
 msgid "_Refresh Info"
 msgstr "Odśwież informacje"
+
+#: pynicotine/gtkgui/frame.py:160 pynicotine/pynicotine.py:231
+#: pynicotine/pynicotine.py:232
+#, fuzzy, python-format
+msgid "Loading %(program)s %(version)s"
+msgstr "Ładowanie Nicotine+ %(nic_version)s"
+
+#: pynicotine/pynicotine.py:275
+#, fuzzy, python-format
+msgid "Quitting %(program)s %(version)s, %(status)s…"
+msgstr "Zamykanie Nicotine+ %(version)s, %(status)s…"
+
+#: pynicotine/pynicotine.py:307
+#, fuzzy, python-format
+msgid "Quit %(program)s %(version)s, %(status)s!"
+msgstr "Zamknij Nicotine+ %(version)s, %(status)s!"
 
 #~ msgid "User:"
 #~ msgstr "Użytkownik:"
