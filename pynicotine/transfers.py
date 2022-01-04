@@ -660,7 +660,7 @@ class Transfers:
         checkuser, reason = self.core.network_filter.check_user(user, msg.init.addr)
 
         if not checkuser:
-            # reason = "Banned"
+            # "Banned" is the only reason returned by check_user
             self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, reason))
 
         elif limits and self.queue_limit_reached(user):
@@ -686,12 +686,13 @@ class Transfers:
             self.check_upload_queue()
 
         else:
-            self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, "File not shared."))
+            reason = "File not shared."
+            self.queue.append(slskmessages.UploadDenied(msg.init, msg.file, reason))
 
         log.add_transfer("Queued upload request for user %(user)s (%(reason)s), %(msg)s", {
             "user": user,
             "reason": reason,
-            "msg": str(vars(msg))  # To be removed
+            "msg": str(vars(msg))
         })
 
     def transfer_request(self, msg):
