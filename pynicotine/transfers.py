@@ -2407,7 +2407,7 @@ class Transfers:
         log.add_transfer("Stored list of %(count)i %(transfers)s to %(file)s", {
             "count": len(self.uploads if transfer_type == "uploads" else self.downloads),
             "transfers": transfer_type,
-            "file": self.uploads_file_name
+            "file": self.uploads_file_name if transfer_type == "uploads" else self.downloads_file_name
         })
 
     def server_disconnect(self):
