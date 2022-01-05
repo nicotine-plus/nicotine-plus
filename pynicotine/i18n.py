@@ -41,30 +41,49 @@ def apply_translations():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
-    # Load library for translating non-Python content, e.g. GTK ui files
-    if hasattr(locale, 'bindtextdomain') and hasattr(locale, 'textdomain'):
-        libintl = locale
+    language = None
+    libintl = None
 
-    elif sys.platform == "win32":
-        import ctypes
-        libintl = ctypes.cdll.LoadLibrary('libintl-8.dll')
-
-        if os.getenv("LANGUAGE") is None:
+    if os.getenv("LANGUAGE") is None:
+        if sys.platform == "win32":
             # Windows doesn't set the environment variable automatically
+            import ctypes
             windll = ctypes.windll.kernel32
-            os.environ["LANGUAGE"] = locale.windows_locale[windll.GetUserDefaultUILanguage()]
+            language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
 
-    else:
-        libintl = None
+        elif sys.platform == "darwin":
+            # TODO: get the current system language, somehow
+            pass
+
+    if language is not None:
+        os.environ["LANGUAGE"] = language
 
     # Local path where to find translation (mo) files
-    local_mo_path = 'mo'
+    local_mo_path = "mo"
+    use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
 
-    if gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path):
-        if libintl:
-            # Tell GtkBuilder where to find our translations (ui files)
-            libintl.bindtextdomain(TRANSLATION_DOMAIN, local_mo_path)
+    # Load library for translating non-Python content, e.g. GTK ui files
+    if sys.platform == "win32":
+        import ctypes
+        libintl = ctypes.cdll.LoadLibrary("libintl-8.dll")
 
+    elif sys.platform == "darwin":
+        import ctypes
+        libintl = ctypes.cdll.LoadLibrary("libintl.8.dylib")
+
+    if libintl:
+        # Arguments need to be encoded, otherwise translations fail
+        mo_path = local_mo_path if use_local_path else "share/locale"
+
+        libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
+        libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
+
+    elif hasattr(locale, "bindtextdomain") and hasattr(locale, "textdomain"):
+        if use_local_path:
+            locale.bindtextdomain(TRANSLATION_DOMAIN, local_mo_path)
+
+    # Install translations for Python
+    if use_local_path:
         # Locales are in the current dir, use them
         gettext.install(TRANSLATION_DOMAIN, local_mo_path)
         return
