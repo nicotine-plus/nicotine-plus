@@ -20,8 +20,6 @@ import time
 import select
 import socket
 
-from gettext import gettext as _
-
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
 
