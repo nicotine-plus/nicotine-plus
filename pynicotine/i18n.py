@@ -47,8 +47,7 @@ def _set_default_system_language():
                     language = languages[0][:2]
 
             except Exception as error:
-                from pynicotine.logfacility import log
-                log.add("Cannot load translations for default system language: %s", error)
+                print("Cannot load translations for default system language: %s", error)
 
     if language is not None:
         os.environ["LANGUAGE"] = language
