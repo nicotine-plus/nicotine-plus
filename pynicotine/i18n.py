@@ -22,6 +22,8 @@ import locale
 import os
 import sys
 
+TRANSLATION_DOMAIN = "nicotine"
+
 
 def apply_translations():
     """Function dealing with translations and locales.
@@ -50,29 +52,22 @@ def apply_translations():
     else:
         libintl = None
 
-    # Package name for gettext
-    package = 'nicotine'
-
     # Local path where to find translation (mo) files
     local_mo_path = 'mo'
 
-    if libintl:
-        # Enable translation support in GtkBuilder (ui files)
-        libintl.textdomain(package)
-
-    if gettext.find(package, localedir=local_mo_path):
+    if gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path):
         if libintl:
             # Tell GtkBuilder where to find our translations (ui files)
-            libintl.bindtextdomain(package, local_mo_path)
+            libintl.bindtextdomain(TRANSLATION_DOMAIN, local_mo_path)
 
         # Locales are in the current dir, use them
-        gettext.install(package, local_mo_path)
+        gettext.install(TRANSLATION_DOMAIN, local_mo_path)
         return
 
     # Locales are not in the current dir
     # We let gettext handle the situation: if found them in the system dir
     # the app will be translated, if not, it will be untranslated
-    gettext.install(package)
+    gettext.install(TRANSLATION_DOMAIN)
 
 
 def generate_translations():

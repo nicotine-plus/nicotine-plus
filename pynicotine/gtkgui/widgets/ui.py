@@ -21,6 +21,7 @@ import sys
 
 from gi.repository import Gtk
 
+from pynicotine.i18n import TRANSLATION_DOMAIN
 from pynicotine.logfacility import log
 
 
@@ -46,10 +47,13 @@ class UserInterface:
 
             if Gtk.get_major_version() == 4:
                 builder = Gtk.Builder(self)
+                builder.set_translation_domain(TRANSLATION_DOMAIN)
                 builder.add_from_string(UI_DATA[filename])
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
-                builder = Gtk.Builder.new_from_string(UI_DATA[filename], -1)
+                builder = Gtk.Builder()
+                builder.set_translation_domain(TRANSLATION_DOMAIN)
+                builder.add_from_string(UI_DATA[filename])
                 builder.connect_signals(self)
 
             for obj in builder.get_objects():
