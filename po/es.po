@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-02 17:02+0200\n"
-"PO-Revision-Date: 2022-01-03 16:55+0000\n"
-"Last-Translator: Tagomago <tagomago@disroot.org>\n"
+"PO-Revision-Date: 2022-01-05 03:14+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es\n"
@@ -1893,7 +1893,7 @@ msgstr "Ruta"
 
 #: pynicotine/gtkgui/downloads.py:41
 msgid "_Resume"
-msgstr "_Resumir"
+msgstr "_Reanudar"
 
 #: pynicotine/gtkgui/downloads.py:42
 msgid "P_ause"

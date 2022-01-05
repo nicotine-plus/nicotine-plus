@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-02 17:02+0200\n"
-"PO-Revision-Date: 2021-11-23 16:45+0000\n"
+"PO-Revision-Date: 2022-01-05 03:14+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -2310,7 +2310,7 @@ msgstr "Nicotine+ beenden"
 
 #: pynicotine/gtkgui/frame.py:1969
 msgid "Do you really want to exit?"
-msgstr "Möchten Sie Nikotin+ wirklich beenden?"
+msgstr "Möchten Sie Nicotine+ wirklich beenden?"
 
 #: pynicotine/gtkgui/frame.py:1971
 msgid "_Run in Background"
@@ -3095,7 +3095,7 @@ msgstr ""
 #: pynicotine/gtkgui/widgets/trayicon.py:84
 #: pynicotine/gtkgui/widgets/trayicon.py:352
 msgid "Show Nicotine+"
-msgstr "Nikotin+ anzeigen"
+msgstr "Nicotine+ anzeigen"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 msgid "Alternative Speed Limits"
