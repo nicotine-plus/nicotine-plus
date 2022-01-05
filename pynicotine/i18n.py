@@ -25,6 +25,35 @@ import sys
 TRANSLATION_DOMAIN = "nicotine"
 
 
+def _set_default_system_language():
+    """ Extracts the default system language and applies it on systems that don't
+    set the 'LANGUAGE' environment variable by default (Windows, macOS) """
+
+    language = None
+
+    if os.getenv("LANGUAGE") is None:
+        if sys.platform == "win32":
+            import ctypes
+            windll = ctypes.windll.kernel32
+            language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
+
+        elif sys.platform == "darwin":
+            try:
+                import subprocess
+                language_output = subprocess.check_output(("defaults", "read", "-g", "AppleLanguages"))
+                languages = language_output.decode("utf-8").strip('()\n" ').split(",")
+
+                if languages:
+                    language = languages[0][:2]
+
+            except Exception as error:
+                from pynicotine.logfacility import log
+                log.add("Cannot load translations for default system language: %s", error)
+
+    if language is not None:
+        os.environ["LANGUAGE"] = language
+
+
 def apply_translations():
     """Function dealing with translations and locales.
 
@@ -41,22 +70,8 @@ def apply_translations():
     Note: To the best of my knowledge when we are in a python venv
     falling back to the system path does not work."""
 
-    language = None
     libintl = None
-
-    if os.getenv("LANGUAGE") is None:
-        if sys.platform == "win32":
-            # Windows doesn't set the environment variable automatically
-            import ctypes
-            windll = ctypes.windll.kernel32
-            language = locale.windows_locale.get(windll.GetUserDefaultUILanguage())
-
-        elif sys.platform == "darwin":
-            # TODO: get the current system language, somehow
-            pass
-
-    if language is not None:
-        os.environ["LANGUAGE"] = language
+    _set_default_system_language()
 
     # Local path where to find translation (mo) files
     local_mo_path = "mo"
