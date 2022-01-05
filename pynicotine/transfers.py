@@ -483,7 +483,7 @@ class Transfers:
         bandwidth_sum = 0
 
         for i in self.uploads:
-            if i.speed is not None and i.conn is not None:
+            if i.speed is not None and i.sock is not None:
                 bandwidth_sum += i.speed
 
                 if bandwidth_sum >= bandwidth_limit:
