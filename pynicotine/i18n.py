@@ -49,6 +49,11 @@ def apply_translations():
         import ctypes
         libintl = ctypes.cdll.LoadLibrary('libintl-8.dll')
 
+        if os.getenv("LANGUAGE") is None:
+            # Windows doesn't set the environment variable automatically
+            windll = ctypes.windll.kernel32
+            os.environ["LANGUAGE"] = locale.windows_locale[windll.GetUserDefaultUILanguage()]
+
     else:
         libintl = None
 
