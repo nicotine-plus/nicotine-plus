@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 16:09+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"PO-Revision-Date: 2022-01-06 16:18+0000\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -4276,7 +4276,7 @@ msgstr "Введите имя пользователя, которому вы х
 #: pynicotine/gtkgui/ui/mainwindow.ui:515
 #: pynicotine/gtkgui/ui/mainwindow.ui:773
 msgid "Configure chats"
-msgstr "Настроить чаты"
+msgstr "Настройка чатов"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:549
 msgid "Enter the username of the person whose information you want to see"
@@ -5949,7 +5949,7 @@ msgstr "Обычный цвет метки вкладки:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1754
 #, fuzzy
 msgid "Changed tab label color:"
-msgstr "Изменен цвет метки вкладки:"
+msgstr "Изменённый цвет метки вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1828
 #, fuzzy
@@ -5993,10 +5993,12 @@ msgid "Icon theme folder (requires restart):"
 msgstr "Каталог темы значков (требуется перезапуск):"
 
 #: pynicotine/gtkgui/ui/uploads.ui:68
+#, fuzzy
 msgid "Abort"
 msgstr "Прервать"
 
 #: pynicotine/gtkgui/ui/uploads.ui:96
+#, fuzzy
 msgid "Abort User(s)"
 msgstr "Прервать пользователя(ей)"
 
