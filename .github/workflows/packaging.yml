@@ -119,6 +119,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set system language
+        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
+
       - name: Install build dependencies
         run: |
           brew update
@@ -131,8 +134,7 @@ jobs:
           rm -rf dist/Nicotine+/
 
       - name: Generate .dmg
-        run: |
-          python3 packaging/macos/create_dmg.py
+        run: python3 packaging/macos/create_dmg.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2

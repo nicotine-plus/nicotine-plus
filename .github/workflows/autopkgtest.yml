@@ -21,5 +21,4 @@ jobs:
           sudo apt -y install autopkgtest
 
       - name: Run autopkgtest
-        run: |
-          sudo autopkgtest . -- null
+        run: sudo autopkgtest . -- null
