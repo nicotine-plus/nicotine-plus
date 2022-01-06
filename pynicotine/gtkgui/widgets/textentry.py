@@ -498,14 +498,15 @@ class ChatCompletion:
 
 class CompletionEntry:
 
-    def __init__(self, entry, model):
+    def __init__(self, entry, model, column=0):
 
         self.entry = entry
         self.model = model
+        self.column = column
 
         completion = Gtk.EntryCompletion(inline_completion=True, inline_selection=True,
                                          popup_single_match=False, model=model)
-        completion.set_text_column(0)
+        completion.set_text_column(column)
         completion.set_match_func(self.entry_completion_find_match)
         entry.set_completion(completion)
 
@@ -514,7 +515,7 @@ class CompletionEntry:
         if not entry_text:
             return False
 
-        item_text = self.model.get_value(iterator, 0)
+        item_text = self.model.get_value(iterator, self.column)
 
         if not item_text:
             return False

@@ -33,7 +33,6 @@ from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -49,8 +48,6 @@ class UserInfos(IconNotebook):
 
         IconNotebook.__init__(self, frame, frame.userinfo_notebook, "userinfo")
         self.notebook.connect("switch-page", self.on_switch_info_page)
-
-        CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())
 
     def on_switch_info_page(self, _notebook, page, _page_num):
 

@@ -88,7 +88,6 @@ class Searches(IconNotebook):
             frame.SearchMode.get_first_child().get_style_context().add_class("arrow-button")
 
         CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
-        CompletionEntry(frame.UserSearchEntry, frame.UserSearchCombo.get_model())
         CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
 
         self.wish_list = WishList(frame, self)

@@ -37,7 +37,6 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -55,8 +54,6 @@ class UserBrowses(IconNotebook):
 
         IconNotebook.__init__(self, frame, frame.userbrowse_notebook, "userbrowse")
         self.notebook.connect("switch-page", self.on_switch_browse_page)
-
-        CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
