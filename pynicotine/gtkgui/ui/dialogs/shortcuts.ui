@@ -174,7 +174,7 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="accelerator">&lt;Shift&gt;&lt;Primary&gt;w</property>
-                <property name="title" translatable="yes">Search Wishlist</property>
+                <property name="title" translatable="yes">Wishlist</property>
               </object>
             </child>
           </object>
