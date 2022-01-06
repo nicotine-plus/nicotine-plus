@@ -181,7 +181,9 @@ class ChatRooms(IconNotebook):
             page_num = self.page_num(tab.Main)
             self.set_current_page(page_num)
 
-        if msg.room != "Public ":
+        if msg.room == "Public ":
+            self.roomlist.toggle_feed_check(True)
+        else:
             self.frame.RoomSearchCombo.append_text(msg.room)
 
         if self.get_n_pages() > 0:
@@ -197,7 +199,9 @@ class ChatRooms(IconNotebook):
         self.remove_page(page.Main)
         del self.pages[msg.room]
 
-        if msg.room != "Public ":
+        if msg.room == "Public ":
+            self.roomlist.toggle_feed_check(False)
+        else:
             self.frame.RoomSearchCombo.remove_all()
             self.frame.RoomSearchCombo.append_text("Joined Rooms ")
 
@@ -334,10 +338,7 @@ class ChatRooms(IconNotebook):
     def server_login(self):
 
         for room in config.sections["server"]["autojoin"]:
-            if room == 'Public ':
-                self.roomlist.feed_check.set_active(True)
-
-            elif isinstance(room, str):
+            if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
     def server_disconnect(self):
