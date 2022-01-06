@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
 "PO-Revision-Date: 2023-05-17 14:53+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -579,8 +579,7 @@ msgstr "Удалить журнал сообщений?"
 #: pynicotine/gtkgui/chatrooms.py:1222
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
-msgstr ""
-"Вы действительно хотите навсегда удалить все сообщения из этой комнаты?"
+msgstr "Вы действительно хотите навсегда удалить все сообщения из этой комнаты?"
 
 #: pynicotine/gtkgui/dialogs/about.py:348
 msgid "About"
