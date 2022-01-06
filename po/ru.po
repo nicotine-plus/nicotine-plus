@@ -7,7 +7,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
 "PO-Revision-Date: 2022-01-06 15:54+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -175,7 +175,7 @@ msgstr "Ошибка резервного копирования конфигу�
 #: pynicotine/config.py:775
 #, python-format
 msgid "Config backed up to: %s"
-msgstr "Файл конфигурации сохранен в: %s"
+msgstr "Файл конфигурации сохранён в: %s"
 
 #: pynicotine/geoip/geoip.py:22
 msgid "Andorra"
@@ -2085,7 +2085,7 @@ msgstr "_Выйти"
 
 #: pynicotine/gtkgui/frame.py:953
 msgid "Prefer Dark _Mode"
-msgstr "Использовать Тёмную Тему"
+msgstr "Использовать тёмную тему"
 
 #: pynicotine/gtkgui/frame.py:954
 msgid "Use _Header Bar"
@@ -2209,9 +2209,8 @@ msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Не удается создать каталог '%(folder)s', ошибка: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1546
-#, fuzzy
 msgid "Select a Saved Shares List File"
-msgstr "Выберите файл списка сохраненных общих ресурсов"
+msgstr "Выберите файл списка сохранённых общих ресурсов"
 
 #: pynicotine/gtkgui/frame.py:1586
 msgid "Create New Room?"
@@ -2457,19 +2456,19 @@ msgstr ""
 
 #: pynicotine/gtkgui/search.py:70
 msgid "_Global"
-msgstr "Глобальный"
+msgstr "_Глобальный"
 
 #: pynicotine/gtkgui/search.py:71
 msgid "_Buddies"
-msgstr "Друзья"
+msgstr "_Друзья"
 
 #: pynicotine/gtkgui/search.py:72
 msgid "_Rooms"
-msgstr "Комнаты"
+msgstr "_Комнаты"
 
 #: pynicotine/gtkgui/search.py:73
 msgid "_User"
-msgstr "Пользователь"
+msgstr "_Пользователь"
 
 #: pynicotine/gtkgui/search.py:340
 msgid "ID"
@@ -3756,7 +3755,7 @@ msgstr "Ошибка загрузки раздач с диска: %(error)s"
 #: pynicotine/userbrowse.py:180
 #, python-format
 msgid "Saved list of shared files for user '%(user)s' to %(dir)s"
-msgstr "Список раздач пользователя \"%(user)s\" сохранен в %(dir)s"
+msgstr "Список раздач пользователя \"%(user)s\" сохранён в %(dir)s"
 
 #: pynicotine/userbrowse.py:184
 #, python-format
@@ -3836,7 +3835,7 @@ msgstr "Переключить преобразование текста в ре
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:152
 msgid "Chat room command help"
-msgstr "Справка по командам комнаты чата"
+msgstr "Справка по командам комнаты"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:185
 msgid "User List"
@@ -4482,7 +4481,7 @@ msgstr "/unban 'пользователь'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:366
 msgid "Remove user 'user' from your ban list"
-msgstr "Уберёт пользователя 'user' из вашего запретного списка"
+msgstr "Удалит пользователя 'user' из вашего запретного списка"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:381
 msgid "/ignore 'user'"
@@ -4498,7 +4497,7 @@ msgstr "/unignore 'пользователь'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:418
 msgid "Remove user 'user' from your ignore list"
-msgstr "Уберёт пользователя 'user' из вашего списка игнорирования"
+msgstr "Удалит пользователя 'user' из вашего списка игнорирования"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:433
 msgid "/browse /b 'user'"
@@ -4547,7 +4546,7 @@ msgstr "/unalias /un 'команда'"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:564
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:532
 msgid "Remove an alias"
-msgstr "Уберёт псевдоним"
+msgstr "Удалит псевдоним"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:595
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:563
@@ -5589,7 +5588,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:47
 msgid "Limit buddy-only shares to trusted buddies"
-msgstr "Разрешить доступ только доверенным приятелям"
+msgstr "Разрешить доступ только доверенным друзьям"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:57
 msgid "Autoclear finished/cancelled uploads from transfer list"
@@ -5629,7 +5628,7 @@ msgstr "Лимиты очереди"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:252
 msgid "Queue limits do not apply to buddies"
-msgstr "Лимиты на очередь не распространяются на приятелей"
+msgstr "Лимиты на очередь не распространяются на друзей"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:269
 msgid "Each user may queue a maximum of either:"
@@ -5653,7 +5652,7 @@ msgstr "Поведение очереди"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:366
 msgid "Prioritize all buddies"
-msgstr "Приоритет для всех приятелей"
+msgstr "Приоритет для всех друзей"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
 msgid "Upload queue type:"
@@ -5729,7 +5728,7 @@ msgstr "Сбросить изображение"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:35
 msgid "Prefer dark mode"
-msgstr "Предпочитать Тёмный Режим"
+msgstr "Предпочитать тёмный режим"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:37
 msgid "Note that the operating system's theme may take precedence."
