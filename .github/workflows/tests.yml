@@ -67,7 +67,7 @@ jobs:
         run: python3 -m flake8
 
       - name: Pylint linter
-        run: # python3 -m pylint pynicotine test
+        run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
         run: python3 -m unittest
