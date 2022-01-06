@@ -38,7 +38,7 @@
                     <property name="label" translatable="yes">Enable plugins</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
+                    <signal name="toggled" handler="on_plugins_enable"/>
                   </object>
                 </child>
                 <child>
@@ -60,7 +60,7 @@
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
                                     <property name="mode">browse</property>
-                                    <signal name="changed" handler="on_select_plugin" swapped="no"/>
+                                    <signal name="changed" handler="on_select_plugin"/>
                                   </object>
                                 </child>
                               </object>
@@ -81,7 +81,7 @@
                             <child>
                               <object class="GtkButton" id="PluginFolder">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_plugins" swapped="no"/>
+                                <signal name="clicked" handler="on_add_plugins"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -116,7 +116,7 @@
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
+                                    <signal name="clicked" handler="on_plugin_properties"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>

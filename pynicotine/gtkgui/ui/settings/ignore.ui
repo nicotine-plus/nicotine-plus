@@ -72,7 +72,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_ignored" swapped="no"/>
+                                <signal name="clicked" handler="on_add_ignored"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -100,7 +100,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_remove_ignored" swapped="no"/>
+                                <signal name="clicked" handler="on_remove_ignored"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -194,7 +194,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_ignored_ip" swapped="no"/>
+                                <signal name="clicked" handler="on_add_ignored_ip"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -222,7 +222,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_remove_ignored_ip" swapped="no"/>
+                                <signal name="clicked" handler="on_remove_ignored_ip"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>

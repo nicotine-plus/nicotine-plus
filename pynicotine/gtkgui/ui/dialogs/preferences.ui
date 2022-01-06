@@ -15,7 +15,7 @@
           <object class="GtkListBox" id="preferences_list">
             <property name="visible">True</property>
             <property name="selection-mode">browse</property>
-            <signal name="row-selected" handler="on_switch_page" swapped="no"/>
+            <signal name="row-selected" handler="on_switch_page"/>
             <style>
               <class name="border-right"/>
               <class name="navigation-sidebar"/>

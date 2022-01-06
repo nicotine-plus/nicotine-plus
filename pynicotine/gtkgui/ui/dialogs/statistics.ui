@@ -384,7 +384,7 @@
         <child>
           <object class="GtkButton">
             <property name="visible">True</property>
-            <signal name="clicked" handler="on_reset_statistics" swapped="no"/>
+            <signal name="clicked" handler="on_reset_statistics"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>

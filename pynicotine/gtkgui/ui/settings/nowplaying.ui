@@ -38,7 +38,7 @@
               <object class="GtkRadioButton" id="NP_lastfm">
                 <property name="label">Last.fm</property>
                 <property name="visible">True</property>
-                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
@@ -46,7 +46,7 @@
                 <property name="label">ListenBrainz</property>
                 <property name="visible">True</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
@@ -54,7 +54,7 @@
                 <property name="label">MPRIS (v2)</property>
                 <property name="visible">True</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
             <child>
@@ -62,7 +62,7 @@
                 <property name="label" translatable="yes">Other</property>
                 <property name="visible">True</property>
                 <property name="group">NP_lastfm</property>
-                <signal name="toggled" handler="update_now_playing_info" swapped="no"/>
+                <signal name="toggled" handler="update_now_playing_info"/>
               </object>
             </child>
           </object>

@@ -62,12 +62,12 @@
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Room…</property>
-                <signal name="activate" handler="on_search" swapped="no"/>
+                <signal name="activate" handler="on_search"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -82,12 +82,12 @@
                 <property name="max-width-chars">20</property>
                 <property name="width-chars">5</property>
                 <property name="placeholder-text" translatable="yes">Username…</property>
-                <signal name="activate" handler="on_search" swapped="no"/>
+                <signal name="activate" handler="on_search"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -105,13 +105,13 @@
                 <property name="placeholder-text" translatable="yes">Search term…</property>
                 <property name="tooltip-text" translatable="yes">Search patterns: with a word = term, without a word = -term, partial word = *erm</property>
                 <property name="primary-icon-name">system-search-symbolic</property>
-                <signal name="activate" handler="on_search" swapped="no"/>
-                <signal name="icon-press" handler="on_search" swapped="no"/>
+                <signal name="activate" handler="on_search"/>
+                <signal name="icon-press" handler="on_search"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -156,7 +156,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure searches</property>
-            <signal name="clicked" handler="on_settings_searches" swapped="no"/>
+            <signal name="clicked" handler="on_settings_searches"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -306,7 +306,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure downloads</property>
-            <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
+            <signal name="clicked" handler="on_settings_downloads"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -456,7 +456,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure uploads</property>
-            <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
+            <signal name="clicked" handler="on_settings_uploads"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -491,13 +491,13 @@
                 <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
-                <signal name="activate" handler="on_get_private_chat" swapped="no"/>
-                <signal name="icon-press" handler="on_get_private_chat" swapped="no"/>
+                <signal name="activate" handler="on_get_private_chat"/>
+                <signal name="icon-press" handler="on_get_private_chat"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -513,7 +513,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure chats</property>
-            <signal name="clicked" handler="on_settings_chat" swapped="no"/>
+            <signal name="clicked" handler="on_settings_chat"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -548,13 +548,13 @@
                 <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose information you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
-                <signal name="activate" handler="on_get_user_info" swapped="no"/>
-                <signal name="icon-press" handler="on_get_user_info" swapped="no"/>
+                <signal name="activate" handler="on_get_user_info"/>
+                <signal name="icon-press" handler="on_get_user_info"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -569,7 +569,7 @@
         <child>
           <object class="GtkButton">
             <property name="visible">True</property>
-            <signal name="clicked" handler="on_settings_userinfo" swapped="no"/>
+            <signal name="clicked" handler="on_settings_userinfo"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -618,13 +618,13 @@
                 <property name="placeholder-text" translatable="yes">Username…</property>
                 <property name="tooltip-text" translatable="yes">Enter the username of the person whose files you want to see</property>
                 <property name="primary-icon-name">avatar-default-symbolic</property>
-                <signal name="activate" handler="on_get_shares" swapped="no"/>
-                <signal name="icon-press" handler="on_get_shares" swapped="no"/>
+                <signal name="activate" handler="on_get_shares"/>
+                <signal name="icon-press" handler="on_get_shares"/>
               </object>
             </child>
             <child internal-child="button">
               <object class="GtkButton">
-                <signal name="clicked" handler="focus_combobox" swapped="no"/>
+                <signal name="clicked" handler="focus_combobox"/>
               </object>
             </child>
           </object>
@@ -639,7 +639,7 @@
         <child>
           <object class="GtkButton" id="LoadFromDisk">
             <property name="visible">True</property>
-            <signal name="clicked" handler="on_load_from_disk" swapped="no"/>
+            <signal name="clicked" handler="on_load_from_disk"/>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -670,7 +670,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure shares</property>
-            <signal name="clicked" handler="on_configure_shares" swapped="no"/>
+            <signal name="clicked" handler="on_configure_shares"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -701,8 +701,8 @@
             <property name="placeholder-text" translatable="yes">Add buddy…</property>
             <property name="tooltip-text" translatable="yes">Enter the username of the person you want to add to your buddy list</property>
             <property name="primary-icon-name">avatar-default-symbolic</property>
-            <signal name="activate" handler="on_add_user" swapped="no"/>
-            <signal name="icon-press" handler="on_add_user" swapped="no"/>
+            <signal name="activate" handler="on_add_user"/>
+            <signal name="icon-press" handler="on_add_user"/>
           </object>
         </child>
       </object>
@@ -731,8 +731,8 @@
             <property name="placeholder-text" translatable="yes">Create or join room…</property>
             <property name="tooltip-text" translatable="yes">Enter the name of a room you want to join. If the room doesn't exist, it will be created.</property>
             <property name="primary-icon-name">user-available-symbolic</property>
-            <signal name="activate" handler="on_create_room" swapped="no"/>
-            <signal name="icon-press" handler="on_create_room" swapped="no"/>
+            <signal name="activate" handler="on_create_room"/>
+            <signal name="icon-press" handler="on_create_room"/>
           </object>
         </child>
         <child>
@@ -771,7 +771,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="tooltip-text" translatable="yes">Configure chats</property>
-            <signal name="clicked" handler="on_settings_chat" swapped="no"/>
+            <signal name="clicked" handler="on_settings_chat"/>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -824,7 +824,7 @@
                     <property name="visible">True</property>
                     <property name="show-border">False</property>
                     <property name="scrollable">True</property>
-                    <signal name="switch-page" handler="on_switch_page" swapped="no"/>
+                    <signal name="switch-page" handler="on_switch_page"/>
                     <!-- Search -->
                     <child>
                       <object class="GtkBox" id="searchvbox">
@@ -1731,7 +1731,7 @@
                   <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Downloading (speed / active users)</property>
-                    <signal name="clicked" handler="on_settings_downloads" swapped="no"/>
+                    <signal name="clicked" handler="on_settings_downloads"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -1759,7 +1759,7 @@
                   <object class="GtkButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Uploading (speed / active users)</property>
-                    <signal name="clicked" handler="on_settings_uploads" swapped="no"/>
+                    <signal name="clicked" handler="on_settings_uploads"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

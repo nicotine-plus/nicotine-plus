@@ -50,7 +50,7 @@
                       <object class="GtkCheckButton" id="GeoBlock">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Country codes to block (comma separated):</property>
-                        <signal name="toggled" handler="on_country_codes_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_country_codes_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -77,7 +77,7 @@
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_use_custom_geo_block_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_use_custom_geo_block_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -105,7 +105,7 @@
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_use_custom_ban_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_use_custom_ban_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -197,7 +197,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_banned" swapped="no"/>
+                                <signal name="clicked" handler="on_add_banned"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -225,7 +225,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_remove_banned" swapped="no"/>
+                                <signal name="clicked" handler="on_remove_banned"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -320,7 +320,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_blocked" swapped="no"/>
+                                <signal name="clicked" handler="on_add_blocked"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -348,7 +348,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_remove_blocked" swapped="no"/>
+                                <signal name="clicked" handler="on_remove_blocked"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
