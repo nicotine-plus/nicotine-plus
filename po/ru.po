@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 01:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-06 14:01+0000\n"
+"Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -294,7 +294,6 @@ msgid "Bolivia"
 msgstr "Боливия"
 
 #: pynicotine/geoip/geoip.py:51
-#, fuzzy
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Бонайре, Синт-Эстатиус и Саба"
 
@@ -1791,7 +1790,7 @@ msgstr "Общие файлы"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:27
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:146
 msgid "Downloads"
-msgstr "Раздачи"
+msgstr "Загрузки"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2736
 #: pynicotine/gtkgui/frame.py:1184 pynicotine/gtkgui/frame.py:1698
@@ -1800,7 +1799,7 @@ msgstr "Раздачи"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:48
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:158
 msgid "Uploads"
-msgstr "Загрузки"
+msgstr "Раздачи"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2737
 #: pynicotine/gtkgui/ui/settings/search.ui:42
@@ -2744,7 +2743,7 @@ msgstr "Очистить очередь раздач"
 
 #: pynicotine/gtkgui/uploads.py:65
 msgid "Do you really want to clear all queued uploads?"
-msgstr "Вы действительно хотите удалить все загрузки из очереди?"
+msgstr "Вы действительно хотите очистить очередь раздач?"
 
 #: pynicotine/gtkgui/uploads.py:74
 msgid "Clear All Uploads"
@@ -2752,7 +2751,7 @@ msgstr "Очистить все раздачи"
 
 #: pynicotine/gtkgui/uploads.py:75
 msgid "Do you really want to clear all uploads?"
-msgstr "Вы действительно хотите удалить все раздачи?"
+msgstr "Вы действительно хотите очистить все раздачи?"
 
 #: pynicotine/gtkgui/userbrowse.py:174
 msgid "_Save Shares List to Disk"
@@ -4407,7 +4406,7 @@ msgstr "Отдача (скорость / активные пользовател
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1807
 msgid "Enable alternative download and upload speed limits"
-msgstr "Включить особые ограничения скорости"
+msgstr "Активировать особые ограничения скорости раздачи"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1825
 msgid "Show log history"
@@ -6054,7 +6053,7 @@ msgstr "Свободные слоты для отдачи"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:165
 msgid "Queued Uploads"
-msgstr "В очереди"
+msgstr "Раздач в очереди"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:192
 msgid "Upload Speed"
