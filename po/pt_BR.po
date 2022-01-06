@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
 "PO-Revision-Date: 2021-12-12 15:53+0000\n"
 "Last-Translator: Nicolas Abril <nicolas.abril@protonmail.ch>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -4301,6 +4301,16 @@ msgstr "Erro: %(num)d Os filtros de download falharam! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Erro: Download Filter falhou! Verifique seus filtros. Motivo: %s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "Meta-url inválida do SoulSeek: %s"
+
+#: pynicotine/upnp.py:281
+#, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr ""
+
 #: pynicotine/upnp.py:345
 #, fuzzy, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -4314,6 +4324,10 @@ msgid ""
 msgstr ""
 "UPnP: Porta externa %(external_port)s encaminhada com sucesso para a porta "
 "local de endereço IP %(ip_address)s %(local_port)s"
+
+#: pynicotine/upnp.py:370
+msgid "UPnP is not available on this network"
+msgstr ""
 
 #: pynicotine/upnp.py:392
 #, fuzzy, python-format

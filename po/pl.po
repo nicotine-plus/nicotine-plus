@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
 "PO-Revision-Date: 2022-01-05 03:14+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3709,6 +3709,16 @@ msgstr ""
 "Błąd: Pobieranie filtrów nie powiodło się! Zweryfikuj filtry. Uzasadnienie: "
 "%s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "Niepoprawny URL Soulseek: %s"
+
+#: pynicotine/upnp.py:281
+#, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr ""
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3723,6 +3733,10 @@ msgid ""
 msgstr ""
 "UPnP: Port zewnętrzny %(external_port)s pomyślnie przekierowany na lokalny "
 "adres IP %(ip_address)s port %(local_port)s"
+
+#: pynicotine/upnp.py:370
+msgid "UPnP is not available on this network"
+msgstr ""
 
 #: pynicotine/upnp.py:392
 #, python-format

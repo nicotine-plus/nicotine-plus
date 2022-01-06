@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
 "PO-Revision-Date: 2021-12-06 18:34+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -3709,6 +3709,16 @@ msgstr "Fout: %(num)d Downloadfilters gefaald! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "Ongeldige Soulseek URL: %s"
+
+#: pynicotine/upnp.py:281
+#, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr ""
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3722,6 +3732,10 @@ msgid ""
 msgstr ""
 "UPnP: Externe poort %(external_port)s succesvol doorgestuurd naar lokaal IP-"
 "adres %(ip_address)s poort %(local_port)s"
+
+#: pynicotine/upnp.py:370
+msgid "UPnP is not available on this network"
+msgstr ""
 
 #: pynicotine/upnp.py:392
 #, python-format
