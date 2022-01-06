@@ -1193,6 +1193,9 @@ class SlskProtoThread(threading.Thread):
 
                         self.user_addresses[msg.user] = (msg.ip_address, msg.port)
 
+                    elif msg_class is Relogged:
+                        self.manual_server_disconnect = True
+
                     elif msg_class is PossibleParents:
                         # Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
                         # We attempt to connect to them all at once, since connection errors are fairly common.
