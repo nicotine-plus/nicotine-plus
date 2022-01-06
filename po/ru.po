@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2021-11-25 17:37+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"PO-Revision-Date: 2022-01-06 01:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3729,9 +3729,9 @@ msgid "Invalid response: %s"
 msgstr "Неправильная схема URL Soulseek: %s"
 
 #: pynicotine/upnp.py:281
-#, python-format
+#, fuzzy, python-format
 msgid "Error code %(code)s: %(description)s"
-msgstr ""
+msgstr "Код ошибки %(code)s: %(description)s"
 
 #: pynicotine/upnp.py:345
 #, python-format
@@ -3748,8 +3748,9 @@ msgstr ""
 "адрес %(ip_address)s порт %(local_port)s"
 
 #: pynicotine/upnp.py:370
+#, fuzzy
 msgid "UPnP is not available on this network"
-msgstr ""
+msgstr "UPnP недоступен в этой сети"
 
 #: pynicotine/upnp.py:392
 #, python-format
