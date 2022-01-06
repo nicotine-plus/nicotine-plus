@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 01:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-06 07:04+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -3742,12 +3742,12 @@ msgstr ""
 "Fehler: Downloadfilter fehlgeschlagen! Überprüfe deine Filter. Grund: %s"
 
 #: pynicotine/upnp.py:273
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid response: %s"
-msgstr "Ungültige Soulseek-URL: %s"
+msgstr "Ungültige Antwort: %s"
 
 #: pynicotine/upnp.py:281
-#, fuzzy, python-format
+#, python-format
 msgid "Error code %(code)s: %(description)s"
 msgstr "Fehlercode %(code)s: %(description)s"
 
@@ -3768,7 +3768,6 @@ msgstr ""
 "Adresse %(ip_address)s und Port %(local_port)s weitergeleitet"
 
 #: pynicotine/upnp.py:370
-#, fuzzy
 msgid "UPnP is not available on this network"
 msgstr "UPnP ist in diesem Netzwerk nicht verfügbar"
 

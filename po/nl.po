@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 01:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-06 07:04+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
 "Language: nl\n"
@@ -3710,12 +3710,12 @@ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
 #: pynicotine/upnp.py:273
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid response: %s"
-msgstr "Ongeldige Soulseek URL: %s"
+msgstr "Ongeldig antwoord: %s"
 
 #: pynicotine/upnp.py:281
-#, fuzzy, python-format
+#, python-format
 msgid "Error code %(code)s: %(description)s"
 msgstr "Foutcode %(code)s: %(description)s"
 
@@ -3734,7 +3734,6 @@ msgstr ""
 "adres %(ip_address)s poort %(local_port)s"
 
 #: pynicotine/upnp.py:370
-#, fuzzy
 msgid "UPnP is not available on this network"
 msgstr "UPnP is niet beschikbaar op dit netwerk"
 
