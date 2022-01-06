@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 15:54+0000\n"
+"PO-Revision-Date: 2022-01-06 16:09+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -1800,7 +1800,7 @@ msgstr "Раздачи"
 #: pynicotine/gtkgui/dialogs/preferences.py:2737
 #: pynicotine/gtkgui/ui/settings/search.ui:42
 msgid "Searches"
-msgstr "Поиск"
+msgstr "Поиск файлов"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2738
 #: pynicotine/gtkgui/frame.py:1186 pynicotine/gtkgui/ui/mainwindow.ui:1269
@@ -2210,7 +2210,7 @@ msgstr "Не удается создать каталог '%(folder)s', ошиб
 
 #: pynicotine/gtkgui/frame.py:1546
 msgid "Select a Saved Shares List File"
-msgstr "Выберите файл списка сохранённых общих ресурсов"
+msgstr "Выберите сохранённый файл списка раздач"
 
 #: pynicotine/gtkgui/frame.py:1586
 msgid "Create New Room?"
@@ -2815,7 +2815,7 @@ msgstr "Раздать каталог пользователю"
 
 #: pynicotine/gtkgui/userbrowse.py:773 pynicotine/gtkgui/userbrowse.py:1029
 msgid "Enter the name of the user you want to upload to:"
-msgstr "Введите имя пользователя, которому вы хотите раздать:"
+msgstr "Введите имя пользователя, которому вы хотите раздать файлы:"
 
 #: pynicotine/gtkgui/userbrowse.py:1028
 msgid "Upload File(s) To User"
@@ -4248,7 +4248,7 @@ msgstr "_Список желаемого"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:158
 msgid "Configure searches"
-msgstr "Настроить поиски"
+msgstr "Настроить поиск файлов"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:276
 #: pynicotine/gtkgui/ui/mainwindow.ui:426 pynicotine/gtkgui/ui/search.ui:119
@@ -4288,8 +4288,7 @@ msgstr "Обновить и_нформацию"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:619
 msgid "Enter the username of the person whose files you want to see"
-msgstr ""
-"Введите имя пользователя человека, файлы которого вы хотите просмотреть"
+msgstr "Введите имя пользователя, файлы которого вы хотите просмотреть"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:657
 msgid "Opens a local list of shared files that was previously saved to disk"
@@ -4361,7 +4360,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1377
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
-msgstr "Введите имя пользователя, чтобы начать с ним приватный диалог"
+msgstr "Введите имя пользователя, чтобы начать с ним приватный чат"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1473
 msgid ""
@@ -5539,7 +5538,7 @@ msgstr "Очистить историю фильтров"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:453
 msgid "Network Searches"
-msgstr "Поиски по сети"
+msgstr "Поиск файлов в сети"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:467
 msgid "Respond to search requests from other users"
@@ -5870,6 +5869,7 @@ msgid "Colored and clickable usernames"
 msgstr "Цветные и интерактивные имена пользователей"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:827
+#, fuzzy
 msgid "Chat username appearance:"
 msgstr "Внешний вид имени пользователя в чате:"
 
@@ -5883,7 +5883,7 @@ msgstr "курсив"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:846
 msgid "underline"
-msgstr "подчеркивать"
+msgstr "подчёркивать"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:847
 msgid "normal"
