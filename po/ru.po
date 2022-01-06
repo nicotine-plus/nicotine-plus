@@ -1800,7 +1800,7 @@ msgstr "Раздачи"
 #: pynicotine/gtkgui/dialogs/preferences.py:2737
 #: pynicotine/gtkgui/ui/settings/search.ui:42
 msgid "Searches"
-msgstr "Поиски"
+msgstr "Поиск"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2738
 #: pynicotine/gtkgui/frame.py:1186 pynicotine/gtkgui/ui/mainwindow.ui:1269
