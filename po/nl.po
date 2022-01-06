@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
-"PO-Revision-Date: 2021-12-06 18:34+0000\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
+"PO-Revision-Date: 2022-01-06 07:04+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"X-Generator: Weblate 4.10.1\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -3709,6 +3709,16 @@ msgstr "Fout: %(num)d Downloadfilters gefaald! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Fout: downloadfilter faalde! Kijk de filters na. Oorzaak: %s"
 
+#: pynicotine/upnp.py:273
+#, python-format
+msgid "Invalid response: %s"
+msgstr "Ongeldig antwoord: %s"
+
+#: pynicotine/upnp.py:281
+#, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr "Foutcode %(code)s: %(description)s"
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3722,6 +3732,10 @@ msgid ""
 msgstr ""
 "UPnP: Externe poort %(external_port)s succesvol doorgestuurd naar lokaal IP-"
 "adres %(ip_address)s poort %(local_port)s"
+
+#: pynicotine/upnp.py:370
+msgid "UPnP is not available on this network"
+msgstr "UPnP is niet beschikbaar op dit netwerk"
 
 #: pynicotine/upnp.py:392
 #, python-format

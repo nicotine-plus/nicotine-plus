@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
-"PO-Revision-Date: 2022-01-02 15:07+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
+"PO-Revision-Date: 2022-01-06 01:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -3710,6 +3710,16 @@ msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr ""
 "Hata: İndirme filtresi başarısız oldu! Filtrelerinizi doğrulayın. Neden: %s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "Geçersiz Soulseek URL'si: %s"
+
+#: pynicotine/upnp.py:281
+#, fuzzy, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr "Hata kodu %(code)s: %(description)s"
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3723,6 +3733,11 @@ msgid ""
 msgstr ""
 "UPnP: %(external_port)s dış bağlantı noktası, %(ip_address)s yerel IP adresi "
 "%(local_port)s bağlantı noktasına başarıyla iletildi"
+
+#: pynicotine/upnp.py:370
+#, fuzzy
+msgid "UPnP is not available on this network"
+msgstr "UPnP bu ağda kullanılamıyor"
 
 #: pynicotine/upnp.py:392
 #, python-format

@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
-"PO-Revision-Date: 2022-01-03 16:55+0000\n"
-"Last-Translator: Mohamed El Morabity <pikachu.2014@gmail.com>\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
+"PO-Revision-Date: 2022-01-06 01:01+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -1971,9 +1971,9 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:156 pynicotine/pynicotine.py:224
 #: pynicotine/pynicotine.py:225
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Arrêter Nicotine+ %(version)s, %(status)s…"
+msgstr "Chargement de %(program)s %(version)s"
 
 #: pynicotine/gtkgui/frame.py:217
 msgid "Your config file is corrupt"
@@ -3330,9 +3330,8 @@ msgstr ""
 "Trace : %(trace)s"
 
 #: pynicotine/pluginsystem.py:292
-#, fuzzy
 msgid "Loading plugin system"
-msgstr "Plugin chargé %s"
+msgstr "Chargement du greffon système"
 
 #: pynicotine/pynicotine.py:262
 msgid "You need to specify a username and password before connecting…"
@@ -3341,9 +3340,9 @@ msgstr ""
 "connecter…"
 
 #: pynicotine/pynicotine.py:268
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Arrêter Nicotine+ %(version)s, %(status)s…"
+msgstr "Arrêt de %(program)s %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:271
 msgid "terminating"
@@ -3354,9 +3353,9 @@ msgid "application closing"
 msgstr "fermeture du logiciel"
 
 #: pynicotine/pynicotine.py:300
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Arrêter Nicotine+ %(version)s, %(status)s !"
+msgstr "Arrêter %(program)s %(version)s, %(status)s !"
 
 #: pynicotine/pynicotine.py:303
 msgid "terminated"
@@ -3746,6 +3745,16 @@ msgstr ""
 "Erreur  : Échec des filtres de téléchargement  ! Vérifier vos filtres. "
 "Raison  : %s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "URL Soulseek non valide : %s"
+
+#: pynicotine/upnp.py:281
+#, fuzzy, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr "Code d'erreur %(code)s : %(description)s"
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3760,6 +3769,11 @@ msgid ""
 msgstr ""
 "UPnP : Le port externe %(external_port)s a été redirigé avec succès vers "
 "l'adresse IP locale %(ip_address)s du port %(local_port)s"
+
+#: pynicotine/upnp.py:370
+#, fuzzy
+msgid "UPnP is not available on this network"
+msgstr "UPnP n'est pas disponible sur ce réseau"
 
 #: pynicotine/upnp.py:392
 #, python-format

@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
-"PO-Revision-Date: 2022-01-05 03:14+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
+"PO-Revision-Date: 2022-01-06 14:01+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es\n"
@@ -3729,6 +3729,16 @@ msgstr "Error: ¡%(num)d filtros de descarga fallaron! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Error: ¡Falló filtro de descarga! Verifique sus filtros. Razón: %s"
 
+#: pynicotine/upnp.py:273
+#, python-format
+msgid "Invalid response: %s"
+msgstr "Respuesta no válida: %s"
+
+#: pynicotine/upnp.py:281
+#, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr "Código de error %(code)s: %(description)s"
+
 #: pynicotine/upnp.py:345
 #, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -3743,6 +3753,10 @@ msgid ""
 msgstr ""
 "UPnP: Puerto externo %(external_port)s reenviado con éxito a la dirección IP "
 "local %(ip_address)s puerto %(local_port)s"
+
+#: pynicotine/upnp.py:370
+msgid "UPnP is not available on this network"
+msgstr "UPnP no está disponible en esta red"
 
 #: pynicotine/upnp.py:392
 #, python-format

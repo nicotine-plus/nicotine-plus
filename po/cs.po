@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-05 05:13+0200\n"
-"PO-Revision-Date: 2021-12-27 14:53+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"POT-Creation-Date: 2022-01-06 02:10+0200\n"
+"PO-Revision-Date: 2022-01-06 01:02+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -4347,6 +4347,16 @@ msgstr "Chyba: %(num)d Filtry stahování se nezdařily! %(error)s "
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Chyba: Filtr stahování se nezdařil! Ověřte filtry. Důvod: %s"
 
+#: pynicotine/upnp.py:273
+#, fuzzy, python-format
+msgid "Invalid response: %s"
+msgstr "Neplatná adresa URL Soulseek: %s"
+
+#: pynicotine/upnp.py:281
+#, fuzzy, python-format
+msgid "Error code %(code)s: %(description)s"
+msgstr "Kód chyby %(code)s: %(description)s"
+
 #: pynicotine/upnp.py:345
 #, fuzzy, python-format
 msgid "UPnP: Failed to forward external port %(external_port)s: %(error)s"
@@ -4361,6 +4371,11 @@ msgid ""
 msgstr ""
 "UPnP: Externí port %(external_port)s úspěšně předán na místní IP adresu "
 "%(ip_address)s port %(local_port)s"
+
+#: pynicotine/upnp.py:370
+#, fuzzy
+msgid "UPnP is not available on this network"
+msgstr "UPnP není v této síti k dispozici"
 
 #: pynicotine/upnp.py:392
 #, fuzzy, python-format
