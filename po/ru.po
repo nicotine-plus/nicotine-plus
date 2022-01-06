@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 16:18+0000\n"
+"PO-Revision-Date: 2022-01-06 16:41+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -118,12 +118,11 @@ msgstr "пересканировать общие файлы"
 
 #: pynicotine/__init__.py:72
 msgid "start the program in headless mode (no GUI)"
-msgstr ""
-"запустить программу демон в фоновом режиме (без графического интерфейса)"
+msgstr "запустить программу в фоновом режиме (без графического интерфейса)"
 
 #: pynicotine/__init__.py:76
 msgid "display version and exit"
-msgstr "выдать версию программы на стандартный вывод и успешно завершиться"
+msgstr "отобразить версию программы и выйти"
 
 #: pynicotine/__init__.py:117
 #, python-format
@@ -137,7 +136,7 @@ msgstr ""
 #: pynicotine/__init__.py:127 pynicotine/shares.py:57
 #, python-format
 msgid "Cannot find %(option1)s or %(option2)s, please install either one."
-msgstr "Не удается найти %(option1)s или %(option2)s, установите любой из них."
+msgstr "Не удаётся найти %(option1)s или %(option2)s, установите любой из них."
 
 #: pynicotine/__init__.py:150
 msgid ""
@@ -154,7 +153,7 @@ msgstr "Вы были добавлены в приватную комнату: %
 #: pynicotine/config.py:131 pynicotine/config.py:148
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "Не удается создать каталог '%(path)s', ошибка: %(error)s"
+msgstr "Не удаётся создать каталог '%(path)s', ошибка: %(error)s"
 
 #: pynicotine/config.py:649
 #, python-format
@@ -170,7 +169,7 @@ msgstr ""
 #: pynicotine/config.py:772
 #, python-format
 msgid "Error backing up config: %s"
-msgstr "Ошибка резервного копирования конфигурации: %s"
+msgstr "Ошибка резервного копирования файла конфигурации: %s"
 
 #: pynicotine/config.py:775
 #, python-format
@@ -1184,7 +1183,7 @@ msgstr "Зимбабве"
 #: pynicotine/gtkgui/__init__.py:35 pynicotine/gtkgui/__init__.py:42
 #, python-format
 msgid "Cannot find %s, please install it."
-msgstr "Не удается найти %s, установите его."
+msgstr "Не удаётся найти %s, установите его."
 
 #: pynicotine/gtkgui/__init__.py:48
 msgid "Cannot import the Gtk module. Bad install of the python-gobject module?"
@@ -1336,11 +1335,11 @@ msgstr "%s вернулся"
 
 #: pynicotine/gtkgui/chatrooms.py:994 pynicotine/gtkgui/privatechat.py:272
 msgid "--- disconnected ---"
-msgstr "--- отключен ---"
+msgstr "--- соединение потеряно ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1021 pynicotine/gtkgui/privatechat.py:267
 msgid "--- reconnected ---"
-msgstr "--- переподключено ---"
+msgstr "--- соединение восстановлено ---"
 
 #: pynicotine/gtkgui/chatrooms.py:1102 pynicotine/gtkgui/privatechat.py:312
 msgid "Delete Logged Messages?"
@@ -1472,7 +1471,7 @@ msgstr "Фильтры успешно применены"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:555
 msgid "Buddy-only"
-msgstr "Только для приятелей"
+msgstr "Только для друзей"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:730
 msgid "Edit Shared Folder"
@@ -1549,7 +1548,7 @@ msgstr "Замена"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1348
 msgid "Censor Pattern"
-msgstr "Цензорный шаблон"
+msgstr "Шаблон цензуры"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1349
 msgid ""
@@ -1579,11 +1578,11 @@ msgstr "от правого края"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1501
 msgid "Connected"
-msgstr "Соединен"
+msgstr "Соединён"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1502
 msgid "Disconnected"
-msgstr "Отключен"
+msgstr "Отключён"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1503
 #: pynicotine/gtkgui/frame.py:1611
@@ -1609,11 +1608,11 @@ msgstr "Уведомление"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1511
 msgid "Connected (Tray)"
-msgstr "Соединен (Иконка)"
+msgstr "Соединён (Иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1512
 msgid "Disconnected (Tray)"
-msgstr "Отключен (Иконка)"
+msgstr "Отключён (Иконка)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1513
 msgid "Away (Tray)"
@@ -1717,7 +1716,7 @@ msgstr "Отмена"
 #: pynicotine/gtkgui/dialogs/preferences.py:2255
 #: pynicotine/gtkgui/dialogs/preferences.py:2720
 msgid "OK"
-msgstr "Хорошо"
+msgstr "ОК"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2331
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:140
@@ -1869,16 +1868,16 @@ msgstr "Желание"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:121
 msgid "Edit Wish"
-msgstr "Изменить желаемое"
+msgstr "Изменить список желаемого"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:122
 #, python-format
 msgid "Enter new value for wish '%s':"
-msgstr "Введите новое значение для желаемого \"%s\":"
+msgstr "Введите новое значение для списка желаемого \"%s\":"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:155
 msgid "Clear Wishlist?"
-msgstr "Очистить список жилаемого?"
+msgstr "Очистить список желаемого?"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:156
 msgid "Do you really want to clear your wishlist?"
@@ -2206,7 +2205,7 @@ msgstr "Интересы"
 #: pynicotine/gtkgui/frame.py:1541 pynicotine/userbrowse.py:174
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "Не удается создать каталог '%(folder)s', ошибка: %(error)s"
+msgstr "Не удаётся создать каталог '%(folder)s', ошибка: %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1546
 msgid "Select a Saved Shares List File"
@@ -3587,7 +3586,7 @@ msgstr ""
 #: pynicotine/slskproto.py:922
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
-msgstr "Не удается подключиться к серверу %(host)s:%(port)s: %(error)s"
+msgstr "Не удаётся подключиться к серверу %(host)s:%(port)s: %(error)s"
 
 #: pynicotine/slskproto.py:2039
 #, python-format
@@ -3760,7 +3759,7 @@ msgstr "Список раздач пользователя \"%(user)s\" сохр
 #: pynicotine/userbrowse.py:184
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "Не удается сохранить раздачи, \"%(user)s\", ошибка: %(error)s"
+msgstr "Не удаётся сохранить раздачи, \"%(user)s\", ошибка: %(error)s"
 
 #: pynicotine/userbrowse.py:197
 #, python-format
