@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-07 19:15+0000\n"
-"Last-Translator: Mehavoid <tontole@riseup.net>\n"
+"PO-Revision-Date: 2022-01-07 21:35+0000\n"
+"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -1992,7 +1992,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:225
 #, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Выхожу из Nicotine+ %(program)s %(version)s"
+msgstr "Загружаю %(program)s %(version)s"
 
 #: pynicotine/gtkgui/frame.py:217
 msgid "Your config file is corrupt"
@@ -2070,11 +2070,11 @@ msgstr "Устаревшая"
 
 #: pynicotine/gtkgui/frame.py:665 pynicotine/gtkgui/frame.py:673
 msgid "Up to date"
-msgstr "Свежая"
+msgstr "Новых версий нет"
 
 #: pynicotine/gtkgui/frame.py:666
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Похоже, вы используете разрабатываемую версию программы Nicotine+."
+msgstr "Похоже, вы используете версию программы Nicotine+ для разработчиков."
 
 #: pynicotine/gtkgui/frame.py:674
 msgid "You are using the latest version of Nicotine+."
@@ -2114,11 +2114,11 @@ msgstr "Использовать тёмную тему"
 
 #: pynicotine/gtkgui/frame.py:954
 msgid "Use _Header Bar"
-msgstr "Использовать панель заголовка"
+msgstr "Показать панель заголовка"
 
 #: pynicotine/gtkgui/frame.py:955
 msgid "Show _Log History Pane"
-msgstr "Показать журнал активности"
+msgstr "Показать журнал событий"
 
 #: pynicotine/gtkgui/frame.py:957
 msgid "Buddy List in Separate Tab"
@@ -2671,7 +2671,7 @@ msgstr "Невозможно соединиться"
 
 #: pynicotine/gtkgui/transferlist.py:95
 msgid "Pending shutdown"
-msgstr "Ожидающий завершения работы"
+msgstr "Ожидает завершения работы"
 
 #: pynicotine/gtkgui/transferlist.py:96
 msgid "User logged off"
@@ -2998,7 +2998,7 @@ msgstr "%s не в сети"
 
 #: pynicotine/gtkgui/userlist.py:559 pynicotine/gtkgui/userlist.py:547
 msgid "Add User Note"
-msgstr "Добавить заметку"
+msgstr "Заметка"
 
 #: pynicotine/gtkgui/userlist.py:560 pynicotine/gtkgui/userlist.py:548
 #, python-format
@@ -3549,7 +3549,7 @@ msgstr "%(user)s ищет \"%(query)s\", возвращает %(num)i резул
 
 #: pynicotine/shares.py:100
 msgid "Rescanning shares…"
-msgstr "Пересканировать список раздач…"
+msgstr "Пересканирование списка раздач…"
 
 #: pynicotine/shares.py:101
 #, python-format
@@ -4050,7 +4050,7 @@ msgstr "Пересканировать раздачи"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:48
 msgid "Show Log Pane"
-msgstr "Показать панель журнала"
+msgstr "Показать журнал событий"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:69
 msgid "Quit / Run in Background"
@@ -4425,7 +4425,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/mainwindow.ui:1377
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
-msgstr "Введите имя пользователя, чтобы начать с ним приватный чат"
+msgstr "Введите имя пользователя, чтобы начать с ним диалог"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1473
 msgid ""
@@ -4465,7 +4465,7 @@ msgstr "Активировать особые ограничения скоро�
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1825
 msgid "Show log history"
-msgstr "Показать историю журнала"
+msgstr "Показать журнал событий"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:32
 msgid "Chat Room Commands"
@@ -5234,7 +5234,7 @@ msgstr "Замены"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:35
 msgid "Autoclear finished/filtered downloads from transfer list"
-msgstr "Автоочистка завершённых / отфильтрованных загрузок из списка передачи"
+msgstr "Автоочистка завершённых/отфильтрованных загрузок из списка передачи"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:42
 msgid "Download folders in reverse alphanumerical order"
@@ -5254,7 +5254,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:73
 msgid "Allow these users to send you files:"
-msgstr "Разрешать этим пользователям отправлять вам файлы:"
+msgstr "Кто может отправлять вам файлы:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:89
 msgid "No one"
@@ -5542,7 +5542,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/search.ui:66
 msgid "Show privately shared files in search results"
-msgstr "Показывать личные файлы в результатах поиска"
+msgstr "Показывать частные файлы в результатах поиска"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
 msgid ""
@@ -5627,7 +5627,7 @@ msgstr ""
 #: pynicotine/gtkgui/ui/settings/search.ui:516
 msgid "Maximum search results to send per search request:"
 msgstr ""
-"Максимальное количество результатов поиска, для отправки за один поисковый "
+"Максимальное количество результатов поиска для отправки за один поисковый "
 "запрос:"
 
 #: pynicotine/gtkgui/ui/settings/shares.ui:27
@@ -5737,7 +5737,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:401
 msgid "Round Robin"
-msgstr "циклический"
+msgstr "Циклический"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:402
 msgid "First In, First Out"
@@ -5793,7 +5793,7 @@ msgstr "Сбросить изображение"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:35
 msgid "Prefer dark mode"
-msgstr "Предпочитать тёмный режим"
+msgstr "Использовать тёмный режим"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:37
 msgid "Note that the operating system's theme may take precedence."
@@ -5821,9 +5821,8 @@ msgid "Tab bar position:"
 msgstr "Положение панели вкладок:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:114
-#, fuzzy
 msgid "Visible main tabs:"
-msgstr "Видимые основные вкладки:"
+msgstr "Показывать вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 msgid "When closing Nicotine+:"
@@ -5860,24 +5859,23 @@ msgstr "Показать уведомления для:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:350
 msgid "Finished file downloads"
-msgstr "Завершённые загрузки файлов"
+msgstr "Завершённых загрузок файлов"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:362
-#, fuzzy
 msgid "Finished folder downloads"
-msgstr "Завершённые загрузки"
+msgstr "Завершённых загрузок каталогов"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:374
 msgid "Private messages"
-msgstr "Приватные сообщения"
+msgstr "Приватных сообщений"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:386
 msgid "Chat room messages"
-msgstr "Сообщения в чате"
+msgstr "Сообщений в чате"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:398
 msgid "Chat room mentions"
-msgstr "Упоминания в чате"
+msgstr "Упоминаний в чате"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:425
 msgid "Secondary Tabs"
@@ -6138,9 +6136,8 @@ msgstr "_Обновить информацию"
 
 #: pynicotine/gtkgui/dialogs/wishlist.py:46
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:177
-#, fuzzy
 msgid "Wishlist"
-msgstr "_Список желаемого"
+msgstr "Список желаемого"
 
 #, fuzzy, python-format
 #~ msgid "Loading Nicotine+ %(nic_version)s"
