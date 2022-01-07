@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-06 18:21+0000\n"
-"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
+"PO-Revision-Date: 2022-01-07 15:54+0000\n"
+"Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -2672,7 +2672,6 @@ msgid "Cannot connect"
 msgstr "Невозможно соединиться"
 
 #: pynicotine/gtkgui/transferlist.py:95
-#, fuzzy
 msgid "Pending shutdown"
 msgstr "Ожидающий завершения работы"
 
@@ -3508,9 +3507,9 @@ msgid "User %(user)s is browsing your list of shared files"
 msgstr "%(user)s просматривает ваш список раздач"
 
 #: pynicotine/pynicotine.py:1055
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is reading your user info"
-msgstr "%(user)s читает вашу информацию о пользователе"
+msgstr "Пользователь %(user)s читает информацию о вас"
 
 #: pynicotine/pynicotine.py:1105
 #, python-format
@@ -4056,7 +4055,6 @@ msgid "Show Log Pane"
 msgstr "Показать панель журнала"
 
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:69
-#, fuzzy
 msgid "Quit / Run in Background"
 msgstr "Выйти / В фоновый режим"
 
@@ -4221,7 +4219,6 @@ msgid "_Reset Statistics…"
 msgstr "_Сбросить статистику…"
 
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:17
-#, fuzzy
 msgid ""
 "Wishlist items are auto-searched at regular intervals, for discovering "
 "uncommon files."
@@ -4267,7 +4264,6 @@ msgid "Add something you like…"
 msgstr "Добавьте то, что вам нравится…"
 
 #: pynicotine/gtkgui/ui/interests.ui:82
-#, fuzzy
 msgid "Personal Dislikes"
 msgstr "Личная неприязнь"
 
@@ -4691,7 +4687,6 @@ msgid "Remove user from your buddy-list"
 msgstr "Удалить пользователя из списка друзей"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:308
-#, fuzzy
 msgid "Add user to your ban list"
 msgstr "Добавить пользователя в список блокировки"
 
@@ -5373,7 +5368,6 @@ msgid "Verify Filters"
 msgstr "Проверить фильтры"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:613
-#, fuzzy
 msgid "Unverified"
 msgstr "Сомнительный"
 
@@ -5518,7 +5512,6 @@ msgid "Enable plugins"
 msgstr "Включить плагины"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:98
-#, fuzzy
 msgid "_Add Plugins"
 msgstr "_Добавить"
 
@@ -5753,7 +5746,6 @@ msgid "First In, First Out"
 msgstr "Первым пришёл — первым ушёл"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:415
-#, fuzzy
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr "Раздача в очередь, если общая скорость передачи достигает (КиБ/сек):"
 
@@ -5762,7 +5754,6 @@ msgid "Limit number of upload slots to:"
 msgstr "Лимит слотов для раздачи:"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:446
-#, fuzzy
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "
 "limitations."
@@ -5821,7 +5812,6 @@ msgid "Minimize to tray on startup"
 msgstr "Сворачивать Nicotine+ в область уведомлений при запуске"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:64
-#, fuzzy
 msgid "Restore the previously active main tab at startup"
 msgstr "Восстановить ранее активную главную вкладку при запуске"
 
@@ -5869,7 +5859,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:330
 msgid "Show notifications for:"
-msgstr "Показывать уведомления для:"
+msgstr "Показать уведомления для:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:350
 msgid "Finished file downloads"
@@ -5938,22 +5928,18 @@ msgstr ""
 "(требуется перезапуск)"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:643
-#, fuzzy
 msgid "List text color:"
 msgstr "Цвет списка текста:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:717
-#, fuzzy
 msgid "Queued search result text color:"
 msgstr "Цвет текста результата поиска в очереди:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:808
-#, fuzzy
 msgid "Colored and clickable usernames"
 msgstr "Цветные и интерактивные имена пользователей"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:827
-#, fuzzy
 msgid "Chat username appearance:"
 msgstr "Внешний вид имени пользователя в чате:"
 
@@ -6026,17 +6012,14 @@ msgid "Notification changes the tab's text color"
 msgstr "Менять цвет текста вкладки при уведомлениях"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1680
-#, fuzzy
 msgid "Regular tab label color:"
 msgstr "Обычный цвет метки вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1754
-#, fuzzy
 msgid "Changed tab label color:"
 msgstr "Изменённый цвет метки вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1828
-#, fuzzy
 msgid "Highlighted tab label color:"
 msgstr "Цвет выделенной метки вкладки:"
 
@@ -6077,12 +6060,10 @@ msgid "Icon theme folder (requires restart):"
 msgstr "Каталог темы значков (требуется перезапуск):"
 
 #: pynicotine/gtkgui/ui/uploads.ui:68
-#, fuzzy
 msgid "Abort"
 msgstr "Прервать"
 
 #: pynicotine/gtkgui/ui/uploads.ui:96
-#, fuzzy
 msgid "Abort User(s)"
 msgstr "Прервать пользователя(ей)"
 
@@ -6139,7 +6120,6 @@ msgid "Shared Files"
 msgstr "Общие файлы"
 
 #: pynicotine/gtkgui/ui/userinfo.ui:246
-#, fuzzy
 msgid "Shared Folders"
 msgstr "Общие каталоги"
 
