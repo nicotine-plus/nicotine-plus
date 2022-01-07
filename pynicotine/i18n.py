@@ -96,6 +96,7 @@ def apply_translations():
         else:
             mo_path = os.path.join(sys.prefix, "share", "locale")
 
+        # Arguments need to be encoded, otherwise translations fail
         libintl.bindtextdomain(TRANSLATION_DOMAIN.encode(), mo_path.encode(sys.getfilesystemencoding()))
         libintl.bind_textdomain_codeset(TRANSLATION_DOMAIN.encode(), b"UTF-8")
 
