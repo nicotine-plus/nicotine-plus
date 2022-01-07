@@ -38,6 +38,7 @@ class TransfersTest(unittest.TestCase):
         self.transfers = Transfers(Mock(), config, deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
+        self.transfers.allow_saving_transfers = False
 
     def test_load_downloads(self):
         """ Test loading a downloads.json file """
@@ -66,11 +67,10 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.length, "4:12")
 
     def test_save_downloads(self):
-        """ Verify that the order of the download list at the end of the sesson
+        """ Verify that the order of the download list at the end of the session
         is identical to the one we loaded. Ignore transfer 13, since its missing
         properties will be added at the end of the session. """
 
-        self.transfers.initialized = False
         self.transfers.abort_transfers()
 
         old_transfers = self.transfers.load_transfers_file(self.transfers.downloads_file_name)[:12]
