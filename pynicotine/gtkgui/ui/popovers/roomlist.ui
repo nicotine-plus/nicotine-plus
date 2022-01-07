@@ -20,14 +20,14 @@
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="width-chars">15</property>
-                <signal name="changed" handler="on_search_room" swapped="no"/>
+                <signal name="changed" handler="on_search_room"/>
               </object>
             </child>
             <child>
               <object class="GtkButton" id="refresh_button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Refresh room list</property>
-                <signal name="clicked" handler="on_refresh" swapped="no"/>
+                <signal name="clicked" handler="on_refresh"/>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
@@ -80,7 +80,7 @@
                     <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_show_chat_feed" swapped="no"/>
+                    <signal name="toggled" handler="on_show_chat_feed"/>
                   </object>
                 </child>
               </object>

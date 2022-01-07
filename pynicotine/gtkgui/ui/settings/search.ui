@@ -50,7 +50,7 @@
           <object class="GtkCheckButton" id="EnableSearchHistory">
             <property name="label" translatable="yes">Enable search history</property>
             <property name="visible">True</property>
-            <signal name="toggled" handler="on_toggle_search_history" swapped="no"/>
+            <signal name="toggled" handler="on_toggle_search_history"/>
           </object>
         </child>
         <child>
@@ -114,7 +114,7 @@
             <child>
               <object class="GtkButton" id="ClearSearchHistory">
                 <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_search_history" swapped="no"/>
+                <signal name="clicked" handler="on_clear_search_history"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
@@ -411,7 +411,7 @@
             <child>
               <object class="GtkButton" id="ClearFilterHistory">
                 <property name="visible">True</property>
-                <signal name="clicked" handler="on_clear_filter_history" swapped="no"/>
+                <signal name="clicked" handler="on_clear_filter_history"/>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>

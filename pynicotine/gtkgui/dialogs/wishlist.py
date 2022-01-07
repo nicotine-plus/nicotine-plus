@@ -43,7 +43,7 @@ class WishList(UserInterface):
             modal=False,
             content_box=self.main,
             quit_callback=self.hide,
-            title=_("Search Wishlist"),
+            title=_("Wishlist"),
             width=600,
             height=600
         )

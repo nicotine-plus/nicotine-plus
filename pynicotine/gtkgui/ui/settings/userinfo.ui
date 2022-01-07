@@ -83,7 +83,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultImage">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_default_image" swapped="no"/>
+                        <signal name="clicked" handler="on_default_image"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

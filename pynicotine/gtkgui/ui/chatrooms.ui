@@ -192,7 +192,7 @@
                     <child>
                       <object class="GtkButton" id="PeopleButton">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_ignore_users_settings" swapped="no"/>
+                        <signal name="clicked" handler="on_ignore_users_settings"/>
                         <child>
                           <object class="GtkLabel" id="LabelPeople">
                             <property name="visible">True</property>
@@ -226,7 +226,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="has-tooltip">True</property>
-                            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                            <signal name="query-tooltip" handler="on_tooltip"/>
                             <signal name="row-activated" handler="on_row_activated"/>
                           </object>
                         </child>
@@ -248,7 +248,7 @@
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_autojoin" swapped="no"/>
+                        <signal name="toggled" handler="on_autojoin"/>
                       </object>
                     </child>
                     <child>
@@ -256,7 +256,7 @@
                         <property name="label" translatable="yes">_Log Conversation</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_log_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_log_toggled"/>
                       </object>
                     </child>
                   </object>

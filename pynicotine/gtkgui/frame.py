@@ -467,7 +467,7 @@ class NicotineFrame(UserInterface):
 
         import urllib.parse
 
-        login = urllib.parse.quote(self.frame.np.login_username)
+        login = urllib.parse.quote(self.np.login_username)
         open_uri(config.privileges_url % login)
         self.np.request_check_privileges()
 

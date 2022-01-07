@@ -69,8 +69,6 @@ class RoomList(UserInterface):
 
         self.list_view.set_headers_clickable(True)
 
-        self.query = ""
-
         self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
@@ -141,6 +139,12 @@ class RoomList(UserInterface):
         self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
         self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
+
+    def toggle_feed_check(self, active):
+
+        self.feed_check.handler_block_by_func(self.on_show_chat_feed)
+        self.feed_check.set_active(active)
+        self.feed_check.handler_unblock_by_func(self.on_show_chat_feed)
 
     def update_room(self, room, user_count, private=False, owned=False):
 

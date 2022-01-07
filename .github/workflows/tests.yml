@@ -26,14 +26,14 @@ jobs:
           sudo apt install gettext gir1.2-gtk-3.0 libgirepository1.0-dev
           python -m pip install flake8 pygobject pylint
 
-      - name: Linter
-        run: |
-          python -m flake8
-          python -m pylint pynicotine test
+      - name: Flake8 linter
+        run: python -m flake8
+
+      - name: Pylint linter
+        run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: |
-          xvfb-run python -m unittest
+        run: xvfb-run python -m unittest
 
   windows:
     runs-on: windows-latest
@@ -63,14 +63,14 @@ jobs:
           pacman --noconfirm -S --needed mingw-w64-x86_64-python
           python3 packaging/windows/dependencies_core.py
 
-      - name: Linter
-        run: |
-          python3 -m flake8
-          # python3 -m pylint pynicotine test
+      - name: Flake8 linter
+        run: python3 -m flake8
+
+      - name: Pylint linter
+        run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: |
-          python3 -m unittest
+        run: python3 -m unittest
 
   macos:
     runs-on: macos-latest
@@ -85,15 +85,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install dependencies
-        run: |
-          python3 packaging/macos/dependencies_core.py
+      - name: Set system language
+        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
-      - name: Linter
-        run: |
-          python3 -m flake8
-          python3 -m pylint pynicotine test
+      - name: Install dependencies
+        run: python3 packaging/macos/dependencies_core.py
+
+      - name: Flake8 linter
+        run: python3 -m flake8
+
+      - name: Pylint linter
+        run: python3 -m pylint pynicotine test
 
       - name: Integration and unit tests
-        run: |
-          python3 -m unittest
+        run: python3 -m unittest

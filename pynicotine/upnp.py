@@ -20,8 +20,6 @@ import time
 import select
 import socket
 
-from gettext import gettext as _
-
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
 
@@ -272,7 +270,7 @@ class UPnPPortMapping:
         xml = ElementTree.fromstring(response)
 
         if not xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body"):
-            raise Exception("Invalid port mapping response: %s" % response.encode('utf-8'))
+            raise Exception(_("Invalid response: %s") % response.encode('utf-8'))
 
         log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
 
@@ -280,7 +278,7 @@ class UPnPPortMapping:
         error_description = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorDescription")
 
         if error_code or error_description:
-            raise Exception("Error code %(code)s: %(description)s" %
+            raise Exception(_("Error code %(code)s: %(description)s") %
                             {"code": error_code, "description": error_description})
 
     @staticmethod
@@ -369,7 +367,7 @@ class UPnPPortMapping:
         router = self.find_router(local_ip_address)
 
         if not router:
-            raise RuntimeError("UPnP is not available on this network")
+            raise RuntimeError(_("UPnP is not available on this network"))
 
         # Perform the port mapping
         log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (

@@ -54,7 +54,10 @@ class ChatRooms:
             join_list = self.config.sections["server"]["autojoin"]
 
         for room in join_list:
-            if isinstance(room, str):
+            if room == "Public ":
+                self.request_join_public_room()
+
+            elif isinstance(room, str):
                 self.queue.append(slskmessages.JoinRoom(room))
 
         if self.ui_callback:

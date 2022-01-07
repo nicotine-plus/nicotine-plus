@@ -35,7 +35,7 @@
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">True</property>
                     <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
-                    <signal name="toggled" handler="on_theme_changed" swapped="no"/>
+                    <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
                 <child>
@@ -47,7 +47,7 @@
                         <property name="label" translatable="yes">Display tray icon</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_toggle_tray" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_tray"/>
                       </object>
                     </child>
                     <child>
@@ -2338,7 +2338,7 @@
                         <child>
                           <object class="GtkButton" id="DefaultTheme">
                             <property name="visible">True</property>
-                            <signal name="clicked" handler="on_default_theme" swapped="no"/>
+                            <signal name="clicked" handler="on_default_theme"/>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>

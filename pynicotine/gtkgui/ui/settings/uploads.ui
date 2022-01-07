@@ -134,7 +134,7 @@
                     <property name="label" translatable="yes">Limit upload speed to (KiB/s):</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
+                    <signal name="toggled" handler="on_limit_toggled"/>
                   </object>
                 </child>
               </object>
@@ -444,7 +444,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Limit number of upload slots to:</property>
                     <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                    <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
+                    <signal name="toggled" handler="on_queue_use_slots_toggled"/>
                   </object>
                 </child>
               </object>

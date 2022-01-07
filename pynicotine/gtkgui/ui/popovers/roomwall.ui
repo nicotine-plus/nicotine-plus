@@ -2,6 +2,7 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkPopover" id="popover">
+    <signal name="notify::visible" handler="on_show"/>
     <child>
       <object class="GtkBox" id="Main">
         <property name="visible">True</property>
@@ -64,8 +65,8 @@
                 <property name="placeholder-text" translatable="yes">Set wall message…</property>
                 <property name="primary-icon-name">user-available-symbolic</property>
                 <property name="secondary-icon-name">edit-clear-symbolic</property>
-                <signal name="activate" handler="on_set_room_wall_message" swapped="no"/>
-                <signal name="icon-press" handler="on_icon_pressed" swapped="no"/>
+                <signal name="activate" handler="on_set_room_wall_message"/>
+                <signal name="icon-press" handler="on_icon_pressed"/>
               </object>
             </child>
           </object>
