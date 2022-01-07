@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-07 21:36+0000\n"
+"PO-Revision-Date: 2022-01-07 22:35+0000\n"
 "Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -5859,11 +5859,11 @@ msgstr "Показать уведомления для:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:350
 msgid "Finished file downloads"
-msgstr "Завершённых загрузок файлов"
+msgstr "Загрузка файла завершена"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:362
 msgid "Finished folder downloads"
-msgstr "Завершённых загрузок каталогов"
+msgstr "Загрузка каталога завершена"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:374
 msgid "Private messages"
@@ -5976,15 +5976,15 @@ msgstr "Цвет ссылок:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1247
 msgid "Online text color:"
-msgstr "Цвет текста в сети:"
+msgstr "Цвет текста «В сети»:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1321
 msgid "Offline text color:"
-msgstr "Цвет автономного текста:"
+msgstr "Цвет текста «Не в сети» :"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1395
 msgid "Away text color:"
-msgstr "Цвет текста «Нет на месте»:"
+msgstr "Цвет текста «Отсутствую»:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1471
 msgid "Text Entries"
