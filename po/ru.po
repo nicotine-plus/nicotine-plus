@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-07 21:35+0000\n"
-"Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
+"PO-Revision-Date: 2022-01-07 21:36+0000\n"
+"Last-Translator: Mehavoid <tontole@riseup.net>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -5822,7 +5822,7 @@ msgstr "Положение панели вкладок:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:114
 msgid "Visible main tabs:"
-msgstr "Показывать вкладки:"
+msgstr "Отображать вкладки:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 msgid "When closing Nicotine+:"
