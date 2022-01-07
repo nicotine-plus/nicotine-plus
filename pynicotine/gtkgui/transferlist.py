@@ -76,7 +76,6 @@ class TransferList(UserInterface):
         setup_accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
 
         self.last_ui_update = 0
-        self.last_save = {"downloads": 0, "uploads": 0}
         self.transfer_list = []
         self.users = {}
         self.paths = {}
@@ -317,16 +316,6 @@ class TransferList(UserInterface):
 
         current_time = time()
         last_ui_update = self.last_ui_update
-
-        if (current_time - self.last_save[self.page_id]) > 15:
-
-            """ Save list of transfers to file every 15 seconds """
-
-            if self.frame.np.transfers is not None:
-                self.frame.np.transfers.save_transfers(self.page_id)
-
-            self.last_save[self.page_id] = current_time
-
         finished = (transfer is not None and transfer.status == "Finished")
 
         if forceupdate or finished or (current_time - last_ui_update) > 1:
