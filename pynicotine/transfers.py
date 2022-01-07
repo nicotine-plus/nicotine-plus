@@ -1927,7 +1927,6 @@ class Transfers:
                 self.downloadsview.update(i)
 
         self.core.pluginhandler.download_finished_notification(i.user, i.filename, newname)
-        self.save_transfers("downloads")
 
         log.add_download(
             _("Download finished: user %(user)s, file %(file)s"), {
@@ -1978,7 +1977,6 @@ class Transfers:
         real_path = self.core.shares.virtual2real(i.filename)
         self.core.pluginhandler.upload_finished_notification(i.user, i.filename, real_path)
 
-        self.save_transfers("uploads")
         self.check_upload_queue()
 
     def auto_clear_download(self, transfer):
@@ -2389,9 +2387,6 @@ class Transfers:
         self.transfer_request_times.clear()
         self.user_update_times.clear()
 
-        self.save_transfers("downloads")
-        self.save_transfers("uploads")
-
     def get_downloads(self):
         """ Get a list of downloads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
@@ -2400,7 +2395,7 @@ class Transfers:
     def get_uploads(self):
         """ Get a list of finished uploads """
         return [[i.user, i.filename, i.path, i.status, i.size, i.current_byte_offset, i.bitrate, i.length]
-                for i in reversed(self.uploads)]
+                for i in reversed(self.uploads) if i.status == "Finished"]
 
     def save_downloads_callback(self, filename):
         json.dump(self.get_downloads(), filename, ensure_ascii=False)
@@ -2435,6 +2430,11 @@ class Transfers:
 
         if self.uploadsview:
             self.uploadsview.server_disconnect()
+
+    def quit(self):
+
+        self.save_transfers("downloads")
+        self.save_transfers("uploads")
 
 
 class Statistics:

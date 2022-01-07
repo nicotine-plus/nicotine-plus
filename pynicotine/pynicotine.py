@@ -289,7 +289,7 @@ class NicotineCore:
         self.protothread.abort()
 
         # Save download/upload list to file
-        self.transfers.abort_transfers()
+        self.transfers.quit()
 
         # Closing up all shelves db
         self.shares.quit()
