@@ -39,7 +39,7 @@ class Interests(UserInterface):
     def __init__(self, frame):
 
         super().__init__("ui/interests.ui")
-        frame.interestsvbox.add(self.Main)
+        frame.interests_container.add(self.Main)
 
         self.frame = frame
         self.page_id = "interests"

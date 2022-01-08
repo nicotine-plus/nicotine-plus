@@ -88,7 +88,6 @@ class NicotineFrame(UserInterface):
         self.np = network_processor
         self.ci_mode = ci_mode
         self.current_page_id = ""
-        self.hamburger_menu = None
         self.checking_update = False
         self.auto_away = False
         self.away_timer = None
@@ -106,8 +105,11 @@ class NicotineFrame(UserInterface):
         """ Load UI """
 
         super().__init__("ui/mainwindow.ui")
+        self.header_bar.pack_end(self.header_end)
 
         if Gtk.get_major_version() == 4:
+            self.header_bar.set_show_title_buttons(True)
+
             self.MainPaned.set_resize_start_child(True)
             self.MainPaned.set_resize_end_child(False)
             self.ChatroomsPane.set_resize_end_child(False)
@@ -117,6 +119,9 @@ class NicotineFrame(UserInterface):
             self.NotebooksPane.set_resize_end_child(False)
             self.NotebooksPane.set_shrink_end_child(False)
         else:
+            self.header_bar.set_has_subtitle(False)
+            self.header_bar.set_show_close_button(True)
+
             self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
             self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
             self.ChatroomsPane.child_set_property(self.userlist_pane_chatrooms, "resize", False)
@@ -477,12 +482,12 @@ class NicotineFrame(UserInterface):
     def set_show_header_bar(self, show):
 
         if show:
-            self.remove_toolbar()
-            self.set_header_bar(self.current_page_id)
+            self.hide_current_toolbar()
+            self.show_header_bar(self.current_page_id)
 
         else:
-            self.remove_header_bar()
-            self.set_toolbar(self.current_page_id)
+            self.hide_current_header_bar()
+            self.show_toolbar(self.current_page_id)
 
         set_use_header_bar(show)
 
@@ -1013,10 +1018,11 @@ class NicotineFrame(UserInterface):
 
     def set_up_menu(self):
 
-        menu = self.create_menu_bar()
-        self.application.set_menubar(menu.model)
+        menu_bar = self.create_menu_bar()
+        self.application.set_menubar(menu_bar.model)
 
-        self.hamburger_menu = self.create_hamburger_menu()
+        hamburger_menu = self.create_hamburger_menu()
+        self.header_menu.set_menu_model(hamburger_menu.model)
 
     def on_menu(self, *_args):
 
@@ -1027,109 +1033,67 @@ class NicotineFrame(UserInterface):
 
     """ Headerbar/toolbar """
 
-    def set_header_bar(self, page_id):
-        """ Set a 'normal' headerbar for the main window (client side decorations
-        enabled) """
+    def show_header_bar(self, page_id):
+        """ Set a headerbar for the main window (client side decorations enabled) """
 
-        if not self.MainWindow.get_titlebar():
+        if self.MainWindow.get_titlebar() != self.header_bar:
+            self.MainWindow.set_titlebar(self.header_bar)
+
             self.application.set_accels_for_action("app.menu", ["F10"])
             self.MainWindow.set_show_menubar(False)
 
-        header_bar = getattr(self, "header_" + page_id)
-
-        if Gtk.get_major_version() == 4:
-            header_bar.set_show_title_buttons(True)
-        else:
-            # Avoid "Untitled window" in certain desktop environments
-            header_bar.set_title(self.MainWindow.get_title())
-
-            header_bar.set_has_subtitle(False)
-            header_bar.set_show_close_button(True)
-
-        # Move menu button to current header bar
-        end_widget = getattr(self, page_id + "_end")
-
-        header_bar.remove(end_widget)
-        header_bar.pack_end(end_widget)
-        end_widget.add(self.header_menu)
-
-        # Reset menu model after moving menu button to avoid GTK warnings in old GTK versions
-        self.header_menu.set_menu_model(self.hamburger_menu.model)
-        self.MainWindow.set_titlebar(header_bar)
-
-    def set_toolbar(self, page_id):
-        """ Move the headerbar widgets to a GtkBox "toolbar", and show the regular
-        title bar (client side decorations disabled) """
-
-        self.MainWindow.set_show_menubar(True)
-
-        if not hasattr(self, page_id + "_toolbar"):
-            # No toolbar needed for this page
-            return
-
-        header_bar = getattr(self, "header_" + page_id)
-        toolbar = getattr(self, page_id + "_toolbar")
-        toolbar_contents = getattr(self, page_id + "_toolbar_contents")
+            if Gtk.get_major_version() == 3:
+                # Avoid "Untitled window" in certain desktop environments
+                self.header_bar.set_title(self.MainWindow.get_title())
 
         title_widget = getattr(self, page_id + "_title")
-        title_widget.set_hexpand(True)
+        title_widget.get_parent().remove(title_widget)
+        self.header_title.add(title_widget)
 
         end_widget = getattr(self, page_id + "_end")
-        header_bar.remove(end_widget)
+        end_widget.get_parent().remove(end_widget)
+        self.header_end_container.add(end_widget)
 
-        if Gtk.get_major_version() == 4:
-            header_bar.set_title_widget(None)
-        else:
-            header_bar.set_custom_title(None)
+    def hide_current_header_bar(self):
+        """ Hide the current CSD headerbar """
 
-        toolbar_contents.add(title_widget)
-        toolbar_contents.add(end_widget)
-
-        toolbar.show()
-
-    def remove_header_bar(self, enable_ssd=True):
-        """ Remove the current CSD headerbar, and show the regular titlebar """
-
-        parent = self.header_menu.get_parent()
-        if parent is not None:
-            parent.remove(self.header_menu)
-
-        if not enable_ssd:
+        if not self.current_page_id:
             return
-
-        # Don't override builtin accelerator for menu bar
-        self.application.set_accels_for_action("app.menu", [])
-        self.header_menu.set_menu_model(None)
-
-        self.MainWindow.unrealize()
-        self.MainWindow.set_titlebar(None)
-        self.MainWindow.map()
-
-    def remove_toolbar(self):
-        """ Move the GtkBox toolbar widgets back to the headerbar, and hide
-        the toolbar """
-
-        if not hasattr(self, self.current_page_id + "_toolbar"):
-            # No toolbar on this page
-            return
-
-        header_bar = getattr(self, "header_" + self.current_page_id)
-        toolbar = getattr(self, self.current_page_id + "_toolbar")
-        toolbar_contents = getattr(self, self.current_page_id + "_toolbar_contents")
 
         title_widget = getattr(self, self.current_page_id + "_title")
-        title_widget.set_hexpand(False)
-        toolbar_contents.remove(title_widget)
-
-        if Gtk.get_major_version() == 4:
-            header_bar.set_title_widget(title_widget)
-        else:
-            header_bar.set_custom_title(title_widget)
-
         end_widget = getattr(self, self.current_page_id + "_end")
-        toolbar_contents.remove(end_widget)
-        header_bar.pack_end(end_widget)
+        self.header_title.remove(title_widget)
+        self.header_end_container.remove(end_widget)
 
+        toolbar = getattr(self, self.current_page_id + "_toolbar_contents")
+        toolbar.add(title_widget)
+        toolbar.add(end_widget)
+
+    def show_toolbar(self, page_id):
+        """ Show the non-CSD toolbar """
+
+        if not self.MainWindow.get_show_menubar():
+            self.MainWindow.set_show_menubar(True)
+
+            # Don't override builtin accelerator for menu bar
+            self.application.set_accels_for_action("app.menu", [])
+            self.header_menu.get_popover().hide()
+
+            if self.MainWindow.get_titlebar():
+                self.MainWindow.unrealize()
+                self.MainWindow.set_titlebar(None)
+                self.MainWindow.map()
+
+        toolbar = getattr(self, page_id + "_toolbar")
+        toolbar.show()
+
+    def hide_current_toolbar(self):
+        """ Hide the current toolbar """
+
+        if not self.current_page_id:
+            return
+
+        toolbar = getattr(self, self.current_page_id + "_toolbar")
         toolbar.hide()
 
     def set_active_header_bar(self, page_id):
@@ -1137,11 +1101,11 @@ class NicotineFrame(UserInterface):
         changing the active notebook tab. """
 
         if config.sections["ui"]["header_bar"] and sys.platform != "darwin":
-            self.remove_header_bar(enable_ssd=False)
-            self.set_header_bar(page_id)
+            self.hide_current_header_bar()
+            self.show_header_bar(page_id)
         else:
-            self.remove_toolbar()
-            self.set_toolbar(page_id)
+            self.hide_current_toolbar()
+            self.show_toolbar(page_id)
 
         self.current_page_id = page_id
 
