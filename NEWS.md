@@ -8,29 +8,24 @@ Version 3.2.1 (Development 1)
 
 Changes
 
- * Optimized overall performance related to Soulseek server connections and filesystem sockets
- * Close redundant peer connections and don't attempt to reconnect to server if logged in elsewhere
+ * Optimized overall performance related to Soulseek server and peer connections
  * Optimized performance and improve robustness of the round robin queue system (thank you @toofar)
  * Optimized scrolling performance and avoid FPS drops when scrolling large lists containing country flags
  * Optimized parent row expansions when adding new search results and transfers into tree views
  * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
  * Optimized text entry auto-completion performance and reduce the memory usage of open chat tabs
- * Display real folder path for transfers in the Uploads tab and local items in the File Properties dialog
- * Improved consistency of translated startup and shutdown logging messages
- * Added support for toggling dark mode on newer systems using the Adwaita theme
- * Added support for Python 3.10.1+ (minimum Python 3 version requirement is still 3.5.0)
- * Improved support for PyGObject GTK 4.4.0+ (minimum GTK 3 version requirement is still 3.18.0)
+ * Display virtual folder paths for items in the Uploads tab instead of real paths
+ * Added display of real folder paths for local items in the File Properties dialog
  * 
 
 Corrections
 
- * IMPORTANT (Windows and macOS): Fixed an issue where the system language was not automatically detected
- * IMPORTANT (Windows and macOS): Fixed an issue where translations were not applied to UI elements
- * Russian language: "Downloads" and "Uploads" tabs were the wrong way around (thank you @SnIPeRSnIPeR)
+ * CRITICAL: Avoid crash when handling invalid file paths in file download requests containing malformed data
+ * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
+ * Fixed an issue where uploads can become stuck in the transfer queue forever
  * Avoid broken scrollbar when changing active preference page
- * Avoid rare crash when handling invalid file paths in file download requests
- * Fixed an issue where uploads can be stuck in the queue forever
- * 
+ * Fixed labels of UI elements in the translation for Russian language (thank you @SnIPeRSnIPeR)
+ *  
 
 Issues closed on GitHub
 
