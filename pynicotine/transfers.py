@@ -1019,7 +1019,7 @@ class Transfers:
                 self._file_request_upload(msg, i)
                 return
 
-        self.queue.append(slskmessages.ConnClose(msg.init.sock))
+        self.queue.append(slskmessages.FileConnClose(msg.init.sock))
 
     def _file_request_download(self, msg, i):
 
@@ -1123,7 +1123,7 @@ class Transfers:
                 'file': i.filename
             })
 
-            self.queue.append(slskmessages.ConnClose(msg.init.sock))
+            self.queue.append(slskmessages.FileConnClose(msg.init.sock))
 
     def _file_request_upload(self, msg, i):
 
@@ -1191,7 +1191,7 @@ class Transfers:
                 'file': i.filename
             })
 
-            self.queue.append(slskmessages.ConnClose(msg.init.sock))
+            self.queue.append(slskmessages.FileConnClose(msg.init.sock))
 
     def upload_denied(self, msg):
 
@@ -1367,22 +1367,22 @@ class Transfers:
 
             break
 
-    def conn_close(self, sock):
+    def file_conn_close(self, sock):
         """ The remote user has closed the connection either because they logged off, or
         because there's a network problem """
 
         for i in self.downloads:
             if i.sock == sock:
-                self._conn_close(i, "download")
+                self._file_conn_close(i, "download")
                 return
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in self.uploads.copy():
             if i.sock == sock:
-                self._conn_close(i, "upload")
+                self._file_conn_close(i, "upload")
                 return
 
-    def _conn_close(self, i, transfer_type):
+    def _file_conn_close(self, i, transfer_type):
 
         self.abort_transfer(i)
         auto_clear = False
@@ -2253,7 +2253,7 @@ class Transfers:
         transfer.time_left = ""
 
         if transfer.sock is not None:
-            self.queue.append(slskmessages.ConnClose(transfer.sock))
+            self.queue.append(slskmessages.FileConnClose(transfer.sock))
             transfer.sock = None
 
         if transfer in self.transfer_request_times:

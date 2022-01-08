@@ -1784,8 +1784,8 @@ class NicotineFrame(UserInterface):
     def set_user_status(self, status):
         self.UserStatus.set_text(status)
 
-    def set_socket_status(self, status):
-        self.SocketStatus.set_text(str(status))
+    def set_current_connection_count(self, num_conns):
+        self.SocketStatus.set_text(repr(num_conns))
 
     def show_scan_progress(self):
         self.scan_progress_indeterminate = True
