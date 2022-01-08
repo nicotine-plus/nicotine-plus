@@ -3013,7 +3013,7 @@ class Preferences(UserInterface):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.frame.np.add_upnp_portmapping()
+            self.frame.np.upnp.add_port_mapping()
 
         if theme_required:
             # Dark mode
@@ -3046,8 +3046,8 @@ class Preferences(UserInterface):
             self.frame.search.populate_search_history()
 
         # UPnP
-        if not config.sections["server"]["upnp"] and self.frame.np.upnp_timer:
-            self.frame.np.upnp_timer.cancel()
+        if not config.sections["server"]["upnp"]:
+            self.frame.np.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()

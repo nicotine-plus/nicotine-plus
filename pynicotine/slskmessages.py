@@ -75,16 +75,6 @@ class InitPeerConn(InternalMessage):
         self.init = init
 
 
-class ConnClose(InternalMessage):
-    """ Sent by networking thread to indicate a connection has been closed."""
-
-    __slots__ = ("sock", "conn_type")
-
-    def __init__(self, sock=None, conn_type=None):
-        self.sock = sock
-        self.conn_type = conn_type
-
-
 class ConnCloseIP(InternalMessage):
     """ Sent by the main thread to the networking thread in order to close any connections
     using a certain IP address. """
@@ -171,6 +161,15 @@ class FileError(InternalMessage):
         self.sock = sock
         self.file = file
         self.strerror = strerror
+
+
+class FileConnClose(InternalMessage):
+    """ Sent by networking thread to indicate a file transfer connection has been closed """
+
+    __slots__ = ("sock",)
+
+    def __init__(self, sock=None):
+        self.sock = sock
 
 
 class SetUploadLimit(InternalMessage):

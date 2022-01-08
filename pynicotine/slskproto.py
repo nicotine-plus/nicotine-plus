@@ -44,7 +44,6 @@ from pynicotine.slskmessages import CantCreateRoom
 from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import ChildDepth
-from pynicotine.slskmessages import ConnClose
 from pynicotine.slskmessages import ConnCloseIP
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribAlive
@@ -58,6 +57,7 @@ from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
+from pynicotine.slskmessages import FileConnClose
 from pynicotine.slskmessages import FileError
 from pynicotine.slskmessages import FileMessage
 from pynicotine.slskmessages import FileOffset
@@ -409,7 +409,7 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
-    CONNCOUNT_CALLBACK_INTERVAL = 0.5
+    NUMSOCKETS_CALLBACK_INTERVAL = 0.5
 
     def __init__(self, core_callback, queue, bindip, interface, port, port_range, network_filter, eventprocessor):
         """ core_callback is a NicotineCore callback function to be called with messages
@@ -474,6 +474,8 @@ class SlskProtoThread(threading.Thread):
         self.max_distrib_children = 10
 
         self._numsockets = 1
+        self._last_numsockets = 0
+        self._last_numsockets_time = 0
 
         self._conns = {}
         self._connsinprogress = {}
@@ -491,7 +493,6 @@ class SlskProtoThread(threading.Thread):
         self._dlimits = {}
         self.total_uploads = 0
         self.total_downloads = 0
-        self.last_conncount_callback = time.time()
         self.last_cycle_time = time.time()
         self.current_cycle_loop_count = 0
         self.last_cycle_loop_count = 0
@@ -849,6 +850,11 @@ class SlskProtoThread(threading.Thread):
                     init = i
                     break
 
+        log.add_conn("Sending message of type %(type)s to user %(user)s", {
+            'type': message.__class__,
+            'user': user
+        })
+
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
                 'type': conn_type,
@@ -864,11 +870,6 @@ class SlskProtoThread(threading.Thread):
         else:
             # This is a new peer, initiate a connection
             self.initiate_connection_to_peer(user, conn_type, message, address)
-
-        log.add_conn("Sending message of type %(type)s to user %(user)s", {
-            'type': message.__class__,
-            'user': user
-        })
 
     def initiate_connection_to_peer(self, user, conn_type, message=None, address=None):
         """ Prepare to initiate a connection with a peer """
@@ -975,9 +976,6 @@ class SlskProtoThread(threading.Thread):
         if sock == self.parent_socket:
             self.send_have_no_parent()
 
-        if callback:
-            self._callback_msgs.append(ConnClose(sock, conn_type))
-
         if self._is_download(conn_obj):
             self.total_downloads -= 1
             self._calc_download_limit()
@@ -1002,6 +1000,9 @@ class SlskProtoThread(threading.Thread):
             return
 
         self._init_msgs.pop(str(conn_obj.addr) + conn_obj.init.conn_type, None)
+
+        if callback and conn_type == 'F':
+            self._callback_msgs.append(FileConnClose(sock))
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_obj.init.conn_type,
@@ -1393,7 +1394,6 @@ class SlskProtoThread(threading.Thread):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn_obj = ConnectionInProgress(sock, msg_obj.addr, msg_obj.init)
-            msg_obj.init.sock = sock
 
             sock.setblocking(0)
 
@@ -1790,7 +1790,7 @@ class SlskProtoThread(threading.Thread):
             elif issubclass(msg_class, ServerMessage):
                 self.process_server_output(msg_obj)
 
-            elif msg_class is ConnClose and msg_obj.sock in self._conns:
+            elif msg_class is FileConnClose and msg_obj.sock in self._conns:
                 sock = msg_obj.sock
                 self.close_connection(self._conns, sock)
 
@@ -1947,9 +1947,11 @@ class SlskProtoThread(threading.Thread):
 
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once, if there are a lot of connections.
-            if (current_time - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
+            if (self._last_numsockets != self._numsockets
+                    and (current_time - self._last_numsockets_time) > self.NUMSOCKETS_CALLBACK_INTERVAL):
                 self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
-                self.last_conncount_callback = current_time
+                self._last_numsockets_time = current_time
+                self._last_numsockets = self._numsockets
 
             # Process outgoing messages
             if self._queue:
@@ -2082,8 +2084,9 @@ class SlskProtoThread(threading.Thread):
                             self._conns[sock_in_progress] = conn_obj = PeerConnection(
                                 sock=sock_in_progress, addr=addr, events=events, init=conn_obj.init)
 
+                            conn_obj.init.sock = sock_in_progress
+
                             if not conn_obj.init.token:
-                                conn_obj.init.sock = sock_in_progress
                                 self._queue.append(conn_obj.init)
                             else:
                                 self._queue.append(PierceFireWall(conn_obj.sock, conn_obj.init.token))

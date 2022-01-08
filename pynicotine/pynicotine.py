@@ -31,7 +31,6 @@ This is the actual client code. Actual GUI classes are in the separate modules
 
 import os
 import signal
-import threading
 import time
 
 from collections import deque
@@ -52,6 +51,7 @@ from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
+from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -80,6 +80,7 @@ class NicotineCore:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
+        self.upnp = None
         self.geoip = None
         self.notifications = None
 
@@ -90,28 +91,23 @@ class NicotineCore:
         self.bindip = bindip
         self.port = port
 
-        self.user_statuses = {}
-        self.watched_users = set()
-        self.ip_requested = set()
-
-        self.queue = deque()
-
         self.shutdown = False
         self.away = False
         self.logged_in = False
         self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
-
-        self.upnp_timer = None
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
+        self.queue = deque()
+        self.user_statuses = {}
+        self.watched_users = set()
+        self.ip_requested = set()
         self.requested_info_times = {}
         self.requested_share_times = {}
 
         # Callback handlers for messages
         self.events = {
-            slskmessages.ConnClose: self.conn_close,
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -153,6 +149,7 @@ class NicotineCore:
             slskmessages.UploadFailed: self.upload_failed,
             slskmessages.PlaceInQueue: self.place_in_queue,
             slskmessages.FileError: self.file_error,
+            slskmessages.FileConnClose: self.file_conn_close,
             slskmessages.FolderContentsResponse: self.folder_contents_response,
             slskmessages.FolderContentsRequest: self.folder_contents_request,
             slskmessages.RoomList: self.room_list,
@@ -252,8 +249,7 @@ class NicotineCore:
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
             self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
-
-        self.add_upnp_portmapping()
+        self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
         connect_ready = not config.need_config()
@@ -351,93 +347,6 @@ class NicotineCore:
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
 
-    def network_event(self, msgs):
-
-        for i in msgs:
-            if self.shutdown:
-                return
-
-            if i.__class__ in self.events:
-                self.events[i.__class__](i)
-
-            else:
-                log.add("No handler for class %s %s", (i.__class__, dir(i)))
-
-    def send_message_to_peer(self, user, message, address=None):
-        """ Sends message to a peer. Used when we know the username of a peer,
-        but don't have/know an active connection. """
-
-        self.queue.append(slskmessages.SendNetworkMessage(user, message, address))
-
-    def get_peer_address(self, msg):
-        """ Server responds with the IP address and port of the user we requested """
-
-        log.add_msg_contents(msg)
-
-        user = msg.user
-
-        # User seems to be offline, don't update IP
-        if msg.ip_address != "0.0.0.0":
-
-            # If the IP address changed, make sure our IP block/ignore list reflects this
-            self.network_filter.update_saved_user_ip_filters(user)
-
-            if self.network_filter.block_unblock_user_ip_callback(user):
-                return
-
-            if self.network_filter.ignore_unignore_user_ip_callback(user):
-                return
-
-        country_code = self.geoip.get_country_code(msg.ip_address)
-
-        self.chatrooms.set_user_country(user, country_code)
-        self.userinfo.set_user_country(user, country_code)
-        self.userlist.set_user_country(user, country_code)
-
-        # From this point on all paths should call
-        # self.pluginhandler.user_resolve_notification precisely once
-        self.privatechats.private_message_queue_process(user)
-
-        if user not in self.ip_requested:
-            self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
-            return
-
-        self.ip_requested.remove(user)
-        self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
-
-        if country_code:
-            country = " (%(cc)s / %(country)s)" % {
-                'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
-        else:
-            country = ""
-
-        if msg.ip_address == "0.0.0.0":
-            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
-            return
-
-        log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
-            'user': user,
-            'ip': msg.ip_address,
-            'port': msg.port,
-            'country': country
-        })
-
-    def show_connection_error_message(self, msg):
-        """ Request UI to show error messages related to connectivity """
-
-        for i in msg.msgs:
-            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
-                self.transfers.get_cant_connect_request(i.token)
-
-            elif i.__class__ is slskmessages.QueueUpload:
-                self.transfers.get_cant_connect_queue_file(msg.user, i.file)
-
-            elif i.__class__ is slskmessages.GetSharedFileList:
-                self.userbrowse.show_connection_error(msg.user)
-
-            elif i.__class__ is slskmessages.UserInfoRequest:
-                self.userinfo.show_connection_error(msg.user)
-
     def server_disconnect(self, msg=None):
 
         self.logged_in = False
@@ -461,52 +370,11 @@ class NicotineCore:
 
         self.login_username = None
 
-    def conn_close(self, msg):
+    def send_message_to_peer(self, user, message, address=None):
+        """ Sends message to a peer. Used when we know the username of a peer,
+        but don't have/know an active connection. """
 
-        log.add_msg_contents(msg)
-
-        if msg.conn_type == 'F':
-            self.transfers.conn_close(msg.sock)
-
-    def start_upnp_timer(self):
-        """ Port mapping entries last 24 hours, we need to regularly renew them.
-        The default interval is 4 hours. """
-
-        if self.upnp_timer:
-            self.upnp_timer.cancel()
-
-        upnp_interval = config.sections["server"]["upnp_interval"]
-
-        if upnp_interval < 1:
-            return
-
-        upnp_interval_seconds = upnp_interval * 60 * 60
-
-        self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
-        self.upnp_timer.name = "UPnPTimer"
-        self.upnp_timer.daemon = True
-        self.upnp_timer.start()
-
-    def add_upnp_portmapping(self):
-
-        # Test if we want to do a port mapping
-        if not config.sections["server"]["upnp"]:
-            return
-
-        # Do the port mapping
-        thread = threading.Thread(target=self._add_upnp_portmapping)
-        thread.name = "UPnPAddPortmapping"
-        thread.daemon = True
-        thread.start()
-
-        # Repeat
-        self.start_upnp_timer()
-
-    def _add_upnp_portmapping(self):
-
-        from pynicotine.upnp import UPnPPortMapping
-        upnp = UPnPPortMapping()
-        upnp.update_port_mapping(self.protothread.listenport)
+        self.queue.append(slskmessages.SendNetworkMessage(user, message, address))
 
     def set_away_mode(self, is_away, save_state=False):
 
@@ -518,14 +386,6 @@ class NicotineCore:
 
         if self.ui_callback:
             self.ui_callback.set_away_mode(is_away)
-
-    def server_timeout(self, *_args):
-        if not config.need_config():
-            self.connect()
-
-    def transfer_timeout(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.transfer_timeout(msg)
 
     def request_change_password(self, password):
         self.queue.append(slskmessages.ChangePassword(password))
@@ -583,6 +443,34 @@ class NicotineCore:
         # Ignore received message
         pass
 
+    def network_event(self, msgs):
+
+        for i in msgs:
+            if self.shutdown:
+                return
+
+            if i.__class__ in self.events:
+                self.events[i.__class__](i)
+
+            else:
+                log.add("No handler for class %s %s", (i.__class__, dir(i)))
+
+    def show_connection_error_message(self, msg):
+        """ Request UI to show error messages related to connectivity """
+
+        for i in msg.msgs:
+            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
+                self.transfers.get_cant_connect_request(i.token)
+
+            elif i.__class__ is slskmessages.QueueUpload:
+                self.transfers.get_cant_connect_queue_file(msg.user, i.file)
+
+            elif i.__class__ is slskmessages.GetSharedFileList:
+                self.userbrowse.show_connection_error(msg.user)
+
+            elif i.__class__ is slskmessages.UserInfoRequest:
+                self.userinfo.show_connection_error(msg.user)
+
     def message_progress(self, msg):
 
         if msg.msg_type is slskmessages.SharedFileList:
@@ -591,8 +479,11 @@ class NicotineCore:
         elif msg.msg_type is slskmessages.UserInfoReply:
             self.userinfo.message_progress(msg)
 
-    def check_download_queue(self, msg):
-        log.add_msg_contents(msg)
+    def server_timeout(self, *_args):
+        if not config.need_config():
+            self.connect()
+
+    def check_download_queue(self, _msg):
         self.transfers.check_download_queue()
 
     def check_upload_queue(self, _msg):
@@ -610,9 +501,16 @@ class NicotineCore:
         log.add_msg_contents(msg)
         self.transfers.file_error(msg)
 
+    def file_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_conn_close(msg.sock)
+
+    def transfer_timeout(self, msg):
+        self.transfers.transfer_timeout(msg)
+
     def set_current_connection_count(self, msg):
         if self.ui_callback:
-            self.ui_callback.set_socket_status(msg.msg)
+            self.ui_callback.set_current_connection_count(msg.msg)
 
     """
     Incoming Server Messages
@@ -658,6 +556,59 @@ class NicotineCore:
                 return
 
             log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
+
+    def get_peer_address(self, msg):
+        """ Server code: 3 """
+
+        log.add_msg_contents(msg)
+
+        user = msg.user
+
+        # User seems to be offline, don't update IP
+        if msg.ip_address != "0.0.0.0":
+
+            # If the IP address changed, make sure our IP block/ignore list reflects this
+            self.network_filter.update_saved_user_ip_filters(user)
+
+            if self.network_filter.block_unblock_user_ip_callback(user):
+                return
+
+            if self.network_filter.ignore_unignore_user_ip_callback(user):
+                return
+
+        country_code = self.geoip.get_country_code(msg.ip_address)
+
+        self.chatrooms.set_user_country(user, country_code)
+        self.userinfo.set_user_country(user, country_code)
+        self.userlist.set_user_country(user, country_code)
+
+        # From this point on all paths should call
+        # self.pluginhandler.user_resolve_notification precisely once
+        self.privatechats.private_message_queue_process(user)
+
+        if user not in self.ip_requested:
+            self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port)
+            return
+
+        self.ip_requested.remove(user)
+        self.pluginhandler.user_resolve_notification(user, msg.ip_address, msg.port, country_code)
+
+        if country_code:
+            country = " (%(cc)s / %(country)s)" % {
+                'cc': country_code, 'country': self.geoip.country_code_to_name(country_code)}
+        else:
+            country = ""
+
+        if msg.ip_address == "0.0.0.0":
+            log.add(_("Cannot retrieve the IP of user %s, since this user is offline"), user)
+            return
+
+        log.add(_("IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"), {
+            'user': user,
+            'ip': msg.ip_address,
+            'port': msg.port,
+            'country': country
+        })
 
     def add_user(self, msg):
         """ Server code: 5 """
@@ -999,7 +950,7 @@ class NicotineCore:
 
         log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
 
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
@@ -1041,7 +992,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         user = msg.init.target_user
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         request_time = time.time()
 
         if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
@@ -1114,7 +1065,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         init = msg.init
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         username = msg.init.target_user
         checkuser, reason = self.network_filter.check_user(username, ip_address)
 
