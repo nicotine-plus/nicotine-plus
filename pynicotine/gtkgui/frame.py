@@ -136,22 +136,7 @@ class NicotineFrame(UserInterface):
 
         """ Configuration """
 
-        try:
-            corruptfile = None
-            config.load_config()
-
-        except Exception:
-            corruptfile = ".".join([config.filename, time.strftime("%Y-%m-%d_%H_%M_%S"), "corrupt"])
-
-            import shutil
-            shutil.move(config.filename, corruptfile)
-
-            config.load_config()
-
-        if sys.platform == "darwin":
-            # Disable header bar in macOS for now due to GTK 3 performance issues
-            config.sections["ui"]["header_bar"] = False
-
+        config.load_config()
         config.gtk_version = "%s.%s.%s" % (Gtk.get_major_version(), Gtk.get_minor_version(), Gtk.get_micro_version())
         log.add(_("Loading %(program)s %(version)s"), {"program": "GTK", "version": config.gtk_version})
 
@@ -212,19 +197,6 @@ class NicotineFrame(UserInterface):
         # Check command line option and config option
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-
-        if corruptfile:
-            short_message = _("Your config file is corrupt")
-            long_message = _("We're sorry, but it seems your configuration file is corrupt. Please reconfigure "
-                             "Nicotine+.\n\nWe renamed your old configuration file to\n%(corrupt)s\nIf you open "
-                             "this file with a text editor you might be able to rescue some of your settings.") % {
-                                 'corrupt': corruptfile}
-
-            message_dialog(
-                parent=self.MainWindow,
-                title=short_message,
-                message=long_message
-            )
 
         """ Connect """
 

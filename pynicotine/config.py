@@ -568,6 +568,10 @@ class Config:
         # Update config values from file
         self.set_config()
 
+        if sys.platform == "darwin":
+            # Disable header bar in macOS for now due to GTK 3 performance issues
+            self.sections["ui"]["header_bar"] = False
+
         # Convert special download folder share to regular share
         if self.sections["transfers"].get("sharedownloaddir", False):
             shares = self.sections["transfers"]["shared"]
