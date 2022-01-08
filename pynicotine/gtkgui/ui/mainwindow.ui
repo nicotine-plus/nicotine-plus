@@ -31,9 +31,6 @@
             <property name="icon-name">open-menu-symbolic</property>
           </object>
         </child>
-        <style>
-          <class name="image-button"/>
-        </style>
       </object>
     </child>
   </object>
@@ -218,9 +215,6 @@
                                                 <property name="icon-name">emblem-system-symbolic</property>
                                               </object>
                                             </child>
-                                            <style>
-                                              <class name="image-button"/>
-                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -427,9 +421,6 @@
                                                     <property name="icon-name">go-down-symbolic</property>
                                                   </object>
                                                 </child>
-                                                <style>
-                                                  <class name="image-button"/>
-                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -460,9 +451,6 @@
                                                 <property name="icon-name">emblem-system-symbolic</property>
                                               </object>
                                             </child>
-                                            <style>
-                                              <class name="image-button"/>
-                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -667,9 +655,6 @@
                                                     <property name="icon-name">go-down-symbolic</property>
                                                   </object>
                                                 </child>
-                                                <style>
-                                                  <class name="image-button"/>
-                                                </style>
                                               </object>
                                             </child>
                                             <child>
@@ -700,9 +685,6 @@
                                                 <property name="icon-name">emblem-system-symbolic</property>
                                               </object>
                                             </child>
-                                            <style>
-                                              <class name="image-button"/>
-                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -876,9 +858,6 @@
                                                 <property name="icon-name">emblem-system-symbolic</property>
                                               </object>
                                             </child>
-                                            <style>
-                                              <class name="image-button"/>
-                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -1186,9 +1165,6 @@
                                                 <property name="icon-name">emblem-system-symbolic</property>
                                               </object>
                                             </child>
-                                            <style>
-                                              <class name="image-button"/>
-                                            </style>
                                           </object>
                                         </child>
                                       </object>
@@ -1471,9 +1447,6 @@
                                                     <property name="icon-name">emblem-system-symbolic</property>
                                                   </object>
                                                 </child>
-                                                <style>
-                                                  <class name="image-button"/>
-                                                </style>
                                               </object>
                                             </child>
                                           </object>
