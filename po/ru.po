@@ -4787,8 +4787,8 @@ msgid ""
 "Case is insensitive, but word order is important: 'Spears Brittany' will not "
 "show any 'Brittany Spears'"
 msgstr ""
-"Буквы не чувствительны к регистру, но порядок слов важен: \"Spears Brittany\""
-" не будет показывать \"Brittany Spears\""
+"Буквы не чувствительны к регистру, но порядок слов важен: \"Spears Brittany"
+"\" не будет показывать \"Brittany Spears\""
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:110
 msgid ""
