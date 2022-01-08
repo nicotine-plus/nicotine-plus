@@ -3,6 +3,51 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.2.1 (Development 1)
+-----------------------------
+
+Changes
+
+ * Optimized overall performance related to Soulseek server connections and filesystem sockets
+ * Close redundant peer connections and don't attempt to reconnect to server if logged in elsewhere
+ * Optimized performance and improve robustness of the round robin queue system (thank you @toofar)
+ * Optimized scrolling performance and avoid FPS drops when scrolling large lists containing country flags
+ * Optimized parent row expansions when adding new search results and transfers into tree views
+ * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
+ * Optimized text entry auto-completion performance and reduce the memory usage of open chat tabs
+ * Display real folder path for transfers in the Uploads tab and local items in the File Properties dialog
+ * Improved consistency of translated startup and shutdown logging messages
+ * Added support for toggling dark mode on newer systems using the Adwaita theme
+ * Added support for Python 3.10.1+ (minimum Python 3 version requirement is still 3.5.0)
+ * Improved support for PyGObject GTK 4.4.0+ (minimum GTK 3 version requirement is still 3.18.0)
+ * 
+
+Corrections
+
+ * IMPORTANT (Windows and macOS): Fixed an issue where the system language was not automatically detected
+ * IMPORTANT (Windows and macOS): Fixed an issue where translations were not applied to UI elements
+ * Russian language: "Downloads" and "Uploads" tabs were the wrong way around (thank you @SnIPeRSnIPeR)
+ * Avoid broken scrollbar when changing active preference page
+ * Avoid rare crash when handling invalid file paths in file download requests
+ * Fixed an issue where uploads can be stuck in the queue forever
+ * 
+
+Issues closed on GitHub
+
+ * After using Clear on an uploaded item, it gets removed, but then returns ([#1745](https://github.com/nicotine-plus/nicotine-plus/issues/1745))
+ * Direct Connection Fails ([#1748](https://github.com/nicotine-plus/nicotine-plus/issues/1748))
+ * I cannot see my profile info and picture like I am able to on other user's profiles ([#1751](https://github.com/nicotine-plus/nicotine-plus/issues/1751))
+ * All file paths are reversed (e.g. /home/foo/Downloads -> /Downloads/foo/home/) ([#1759](https://github.com/nicotine-plus/nicotine-plus/issues/1759))
+ * Logs mention "privileged" users not "prioritized" users ([#1764](https://github.com/nicotine-plus/nicotine-plus/issues/1764))
+ * Add an option to print full paths relatively to their share ([#1775](https://github.com/nicotine-plus/nicotine-plus/issues/1775))
+ * Can't connect to soulseek network - specified ports unusable (Windows 11) ([#1778](https://github.com/nicotine-plus/nicotine-plus/issues/1778))
+ * \[3.1.1\] Just crashed on Win 11 insider ring (Windows 11) ([#1777](https://github.com/nicotine-plus/nicotine-plus/issues/1777))
+ * \[3.2.0.dev1\] Unknown config option 'show_private_results' ([#1779](https://github.com/nicotine-plus/nicotine-plus/issues/1779))
+ * \[3.2.1.dev1\] Crash on adding user to buddy list ([#1792](https://github.com/nicotine-plus/nicotine-plus/issues/1792))
+ * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
+ * Can't change language in app (Windows/macOS) ([#1796](https://github.com/nicotine-plus/nicotine-plus/issues/1796))
+ * 
+
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
 
