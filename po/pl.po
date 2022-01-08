@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-07 15:54+0000\n"
+"PO-Revision-Date: 2022-01-08 12:15+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
@@ -2108,7 +2108,7 @@ msgstr "Przeskanuj udostępnione zasoby"
 
 #: pynicotine/gtkgui/frame.py:969
 msgid "_Configure Shares"
-msgstr "_Konfiguruj udostępnione zasoby"
+msgstr "_Konfiguracja udostępnionych zasobów"
 
 #: pynicotine/gtkgui/frame.py:977
 msgid "_Browse Public Shares"
@@ -4246,7 +4246,7 @@ msgstr "_Lista życzeń"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:158
 msgid "Configure searches"
-msgstr "Konfiguruj wyszukiwania"
+msgstr "Konfiguracja wyszukiwania"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:276
 #: pynicotine/gtkgui/ui/mainwindow.ui:426 pynicotine/gtkgui/ui/search.ui:119
@@ -4257,15 +4257,15 @@ msgstr "Rozwiń / Zwiń wszystko"
 #: pynicotine/gtkgui/ui/mainwindow.ui:291
 #: pynicotine/gtkgui/ui/mainwindow.ui:441
 msgid "File grouping mode"
-msgstr "Tryb grupowania pliku"
+msgstr "Tryb grupowania plików"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:308
 msgid "Configure downloads"
-msgstr "Konfiguruj pobierania"
+msgstr "Konfiguracja pobierania"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:458
 msgid "Configure uploads"
-msgstr "Konfiguruj wysyłania"
+msgstr "Konfiguracja wysyłania"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:492
 msgid "Enter the username of the person you want to send a message to"
@@ -4300,7 +4300,7 @@ msgstr "_Otwórz listę"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:672
 msgid "Configure shares"
-msgstr "Konfiguruj udostępnione zasoby"
+msgstr "Konfiguracja udostępnionych zasobów"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:731
 msgid "Create or join room…"
