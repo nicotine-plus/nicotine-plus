@@ -2727,7 +2727,7 @@ msgstr "Ошибка удаленного файла"
 
 #: pynicotine/gtkgui/transferlist.py:140
 msgid "Queue Position"
-msgstr "Позиция в очереди"
+msgstr "#"
 
 #: pynicotine/gtkgui/transferlist.py:141
 msgid "Percent"
