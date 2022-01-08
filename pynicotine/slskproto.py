@@ -849,6 +849,11 @@ class SlskProtoThread(threading.Thread):
                     init = i
                     break
 
+        log.add_conn("Sending message of type %(type)s to user %(user)s", {
+            'type': message.__class__,
+            'user': user
+        })
+
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
                 'type': conn_type,
@@ -864,11 +869,6 @@ class SlskProtoThread(threading.Thread):
         else:
             # This is a new peer, initiate a connection
             self.initiate_connection_to_peer(user, conn_type, message, address)
-
-        log.add_conn("Sending message of type %(type)s to user %(user)s", {
-            'type': message.__class__,
-            'user': user
-        })
 
     def initiate_connection_to_peer(self, user, conn_type, message=None, address=None):
         """ Prepare to initiate a connection with a peer """
@@ -1393,7 +1393,6 @@ class SlskProtoThread(threading.Thread):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn_obj = ConnectionInProgress(sock, msg_obj.addr, msg_obj.init)
-            msg_obj.init.sock = sock
 
             sock.setblocking(0)
 
@@ -2082,8 +2081,9 @@ class SlskProtoThread(threading.Thread):
                             self._conns[sock_in_progress] = conn_obj = PeerConnection(
                                 sock=sock_in_progress, addr=addr, events=events, init=conn_obj.init)
 
+                            conn_obj.init.sock = sock_in_progress
+
                             if not conn_obj.init.token:
-                                conn_obj.init.sock = sock_in_progress
                                 self._queue.append(conn_obj.init)
                             else:
                                 self._queue.append(PierceFireWall(conn_obj.sock, conn_obj.init.token))
