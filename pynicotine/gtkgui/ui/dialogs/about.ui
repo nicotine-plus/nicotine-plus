@@ -202,7 +202,8 @@ Attributions
   Copyright (c) 2014-2018 Tom Wallroth
   https://github.com/devsnd/tinytag/
 </property>
-    <property name="translator-credits">English
+<property name="translator-credits">
+English
  - mathiascode (2020-2022)
  - Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
  - hyriand
@@ -280,6 +281,7 @@ Euskara
    [librezale(at)librezale(dot)org]
 
 Turkish
- - Oğuz Ersen (2021-2022)</property>
-  </object>
+- Oğuz Ersen (2021-2022)
+</property>
+</object>
 </interface>
