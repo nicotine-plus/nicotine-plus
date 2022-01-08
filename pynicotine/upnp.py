@@ -228,15 +228,21 @@ class SSDP:
 class UPnPPortMapping:
     """ Class that handles UPnP Port Mapping """
 
-    request_body = (
-        '<?xml version="1.0"?>\r\n'
-        '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-        's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping '
-        'xmlns:u="%s"><NewRemoteHost></NewRemoteHost>'
-        '<NewExternalPort>%s</NewExternalPort><NewProtocol>%s</NewProtocol><NewInternalPort>%s</NewInternalPort>'
-        '<NewInternalClient>%s</NewInternalClient><NewEnabled>1</NewEnabled>'
-        '<NewPortMappingDescription>%s</NewPortMappingDescription><NewLeaseDuration>%s</NewLeaseDuration>'
-        '</u:AddPortMapping></s:Body></s:Envelope>\r\n')
+    request_body = ('<?xml version="1.0"?>\r\n'
+                    + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
+                    + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
+                    + '<s:Body>'
+                    + '<u:AddPortMapping xmlns:u="%s">'
+                    + '<NewRemoteHost></NewRemoteHost>'
+                    + '<NewExternalPort>%s</NewExternalPort><NewProtocol>%s</NewProtocol>'
+                    + '<NewInternalPort>%s</NewInternalPort>'
+                    + '<NewInternalClient>%s</NewInternalClient>'
+                    + '<NewEnabled>1</NewEnabled>'
+                    + '<NewPortMappingDescription>%s</NewPortMappingDescription>'
+                    + '<NewLeaseDuration>%s</NewLeaseDuration>'
+                    + '</u:AddPortMapping>'
+                    + '</s:Body>'
+                    + '</s:Envelope>\r\n')
 
     def add_port_mapping(self, router, protocol, public_port, private_ip, private_port,
                          mapping_description, lease_duration):
