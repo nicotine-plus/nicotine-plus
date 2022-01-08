@@ -2,7 +2,8 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAboutDialog" id="dialog">
-    <property name="authors">Nicotine+ Contributors [active]
+    <property name="authors">
+Nicotine+ Contributors [active]
 
 &gt; Mat (mathiascode)
    - Maintainer
@@ -23,7 +24,7 @@
    - Tester
    - Documentation
    - Bug hunting
-   - Translations
+   - Translation management
 
 &gt; alekksander
    - Tester
@@ -201,33 +202,36 @@ Attributions
 - tinytag licensed under the MIT License.
   Copyright (c) 2014-2018 Tom Wallroth
   https://github.com/devsnd/tinytag/
-</property>
-    <property name="translator-credits">English
- - mathiascode (2020)
+    </property>
+    <property name="translator-credits">
+English
+ - mathiascode (2020-2022)
  - Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
  - hyriand
  - daelstorm
 
 Dutch
- - hboetes (2021)
+ - hboetes (2021-2022)
  - nince78 (2007)
  - hyriand
 
 German
- - hboetes (2021)
+ - hboetes (2021-2022)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)
  - hyriand (2003)
 
 Spanish
- - tagomago (2021)
+ - tagomago (2021-2021)
  - Strange (2021)
  - Silvio Orta (2007)
  - Dreslo
 
 French
- - zniavre (2007-2021)
+ - Lisapple (2021-2022)
+ - melmorabity (2022)
+ - zniavre (2007-2022)
  - melmorabity (2021)
  - m-balthazar (2020)
  - Michael Labouebe (2016-2017)
@@ -237,14 +241,19 @@ French
  - systr
 
 Italian
- - Gianluca Boiano
+ - Gianluca Boiano (2021-2022)
  - Nicola (2007) [info(at)nicoladimaria(dot)info]
  - dbazza
 
 Polish
+ - mariachini (2021-2022)
  - Amun-Ra (2007)
  - thine (2007)
  - owczi
+
+Russian
+ - Mehavoid (2021-2022)
+ - SnIPeRSnIPeR (2022)
 
 Swedish
  - mitramai (2021)
@@ -273,6 +282,7 @@ Euskara
    [librezale(at)librezale(dot)org]
 
 Turkish
- - Oğuz Ersen (2021)</property>
+- Oğuz Ersen (2021-2022)
+    </property>
   </object>
 </interface>
