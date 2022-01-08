@@ -28,7 +28,9 @@ from pynicotine.utils import open_uri
 
 class About:
 
-    AUTHORS = """Nicotine+ Contributors [active]
+    AUTHORS = """Nicotine+ Team
+
+Nicotine+ Contributors [active]
 
 &gt; Mat (mathiascode)
    - Maintainer
@@ -58,6 +60,7 @@ class About:
 &gt; slook
    - Tester
    - Accessibility improvements
+
 
 Nicotine+ Contributors [retired]
 
@@ -215,22 +218,25 @@ PySoulSeek Contributors [retired]
 
 Attributions
 
-- This product includes IP2Location LITE data
+- This program includes IP2Location LITE data
   available from:
   https://lite.ip2location.com
 
 - Country flags licensed under the MIT License.
   Copyright (c) 2016 Bowtie AB
-  Copyright (c) 2018 Jack Marsh
+  Copyright (c) 2018-2020 Jack Marsh
   https://github.com/jackiboy/flagpack
 
 - tinytag licensed under the MIT License.
-  Copyright (c) 2014-2018 Tom Wallroth
+  Copyright (c) 2014-2021 Tom Wallroth
   https://github.com/devsnd/tinytag/
+
 
 """
 
-    TRANSLATORS = """Dutch
+    TRANSLATORS = """Nicotine+ Translators
+
+Dutch
  - hboetes (2021-2022)
  - nince78 (2007)
  - hyriand
@@ -304,7 +310,8 @@ Swedish
  - alimony
 
 Turkish
- - Oğuz Ersen (2021-2022)"""
+ - Oğuz Ersen (2021-2022)
+"""
 
     def __init__(self, frame):
 
