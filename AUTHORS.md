@@ -23,7 +23,7 @@ Han Boetes
 - Tester
 - Documentation
 - Bug hunting
-- Translations
+- Translation management
 
 alekksander
 - Tester

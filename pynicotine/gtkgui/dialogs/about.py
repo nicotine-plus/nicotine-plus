@@ -23,22 +23,302 @@ from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import ICON_THEME
-from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
-class About(UserInterface):
+class About:
+
+    AUTHORS = """Nicotine+ Contributors [active]
+
+&gt; Mat (mathiascode)
+   - Maintainer
+   - Developer
+
+&gt; eLvErDe
+   - Provided Nicotine+ Trac instance
+   - Migrated source code from SVN to Github
+   - python3-miniupnpc bindings
+   - Developer
+
+&gt; Kip Warner
+   - Developer
+   - Debianization
+   - [kip(at)thevertigo(dot)com]
+
+&gt; Han Boetes
+   - Tester
+   - Documentation
+   - Bug hunting
+   - Translation management
+
+&gt; alekksander
+   - Tester
+   - Redesign of some graphics
+
+&gt; slook
+   - Tester
+   - Accessibility improvements
+
+Nicotine+ Contributors [retired]
+
+&gt; daelstorm
+   - Developer
+   - [daelstorm(at)gmail(dot)com]
+
+&gt; gallows (aka &apos;burp O&apos;)
+   - Developer, Packager
+   - Submitted Slack.Build file
+   - [g4ll0ws(at)gmail(dot)com]
+
+&gt; QuinoX
+   - Developer
+
+&gt; hedonist (formerly known as alexbk)
+   - OS X nicotine.app maintainer / developer
+   - Author of original pyslsk, which is used for
+     nicotine core
+   - [ak(at)sensi(dot)org]
+
+&gt; lee8oi
+   - Bash Commander
+   - New and updated /alias
+   - [winslaya(at)gmail(dot)com]
+
+&gt; INMCM
+   - Nicotine+ topic maintainer on ubuntuforums.org
+     https://ubuntuforums.org/showthread.php?t=196835
+
+&gt; suser-guru
+   - Suse Linux packager
+     https://dev-loki.blogspot.fr/
+   - Nicotine+ RPM&apos;s for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+
+&gt; osiris
+   - handy-man
+   - documentation
+   - some GNU/Linux packaging
+   - Nicotine+ on win32
+   - Author of Nicotine+ Guide
+   - [osiris.contact(at)gmail(dot)com]
+
+&gt; Michael Labouebe (aka gfarmerfr)
+   - Developer
+   - [gfarmerfr(at)free(dot)fr]
+
+&gt; Mutnick
+   - Created Nicotine+ GitHub Organization
+   - Developer
+   - [muhing(at)yahoo(dot)com]
+
+&gt; Lene Preuss
+   - Python3 migration
+   - Unit and DEP-8 continuous integration testing
+   - [lene.preuss(at)here(dot)com]
+
+
+Nicotine Contributors [retired]
+
+&gt; Hyriand
+   - Founder
+   - [hyriand(at)thegraveyard(dot)org]
+
+&gt; osiris
+   - handy-man
+   - [osiris.contact(at)gmail(dot)com]
+
+&gt; SmackleFunky
+   - Beta tester
+
+&gt; Wretched
+   - Beta tester
+   - Bringer of great ideas
+
+&gt; (va)\\*10^3
+   - Beta tester
+   - Designer of the old nicotine homepage and
+     artwork (logos)
+
+&gt; sierracat
+   - MacOSX tester
+   - Developed soulseeX
+
+&gt; Gustavo
+   - Made the exception dialog
+   - [gjc(at)inescporto(dot)pt]
+
+&gt; SeeSchloss
+   - Developer
+   - Made 1.0.8 win32 installer
+   - Created Soulfind,
+     opensource Soulseek Server written in D
+     https://github.com/seeschloss/soulfind
+
+&gt; vasi
+   - Mac developer
+   - Packaged nicotine on OSX PowerPc
+   - [djvasi(at)gmail(dot)com]
+
+
+PySoulSeek Contributors [retired]
+
+&gt; Alexander Kanavin
+   - Created PySoulSeek
+   - [ak(at)sensi(dot)org]
+
+&gt; Nir Arbel
+   - Helped with many protocol questions I had, and
+     of course he designed and impemented the whole
+     system.
+   - [nir(at)slsk(dot)org]
+
+&gt; Zip (Brett W. Thompson)
+   - I used his client code to get an initial
+     impression of how the system works.
+   - Supplied the patch for logging chat conversations.
+   - [brettt(at)tfn(dot)net]
+
+&gt; Josselin Mouette
+   - official Debian package maintainer
+   - [joss(at)debian(dot)org]
+
+&gt; blueboy
+   - former unofficial Debian package maintainer
+   - [bluegeek(at)eresmas(dot)com]
+
+&gt; Christian Swinehart
+   - Fink package maintainer
+   - [cswinehart(at)users(dot)sourceforge(dot)net]
+
+&gt; Hyriand
+   - Patches for upload bandwidth management,
+     banning, various UI improvements and more
+   - [hyriand(at)thegraveyard(dot)org]
+
+&gt; Geert Kloosterman
+   - a script for importing windows soulseek
+     configuration
+   - [geertk(at)ai(dot)rug(dot)nl]
+
+&gt; Joe Halliwell
+   - Submitted a patch for optionally discarding search
+     results after closing a search tab
+   - [s9900164(at)sms(dot)ed(dot)ac(dot)uk]
+
+&gt; Alexey Vyskubov
+   - Code cleanups
+   - [alexey(dot)vyskubov(at)nokia(dot)com]
+
+&gt; Jason Green
+   - Ignore list and auto-join checkbox, wishlists
+   - [smacklefunky(at)optusnet(dot)com(dot)au]
+
+
+Attributions
+
+- This product includes IP2Location LITE data
+  available from:
+  https://lite.ip2location.com
+
+- Country flags licensed under the MIT License.
+  Copyright (c) 2016 Bowtie AB
+  Copyright (c) 2018 Jack Marsh
+  https://github.com/jackiboy/flagpack
+
+- tinytag licensed under the MIT License.
+  Copyright (c) 2014-2018 Tom Wallroth
+  https://github.com/devsnd/tinytag/
+
+"""
+
+    TRANSLATORS = """Dutch
+ - hboetes (2021-2022)
+ - nince78 (2007)
+ - hyriand
+
+English
+ - mathiascode (2020-2022)
+ - Michael Labouebe (2016)
+ - hyriand
+ - daelstorm
+
+Euskara
+ - The Librezale.org Team
+
+Finnish
+ - Kalevi
+
+French
+ - Lisapple (2021-2022)
+ - zniavre (2007-2022)
+ - melmorabity (2021-2022)
+ - m-balthazar (2020)
+ - Michael Labouebe (2016-2017)
+ - ManWell (2007)
+ - flashfr
+ - systr
+
+German
+ - hboetes (2021-2022)
+ - Meokater (2007)
+ - (._.) (2007)
+ - lippel (2004)
+ - hyriand (2003)
+
+Hungarian
+ - djbaloo
+
+Italian
+ - Gianluca Boiano (2020-2022)
+ - Nicola (2007)
+ - dbazza
+
+Lithuanian
+ - mantas (2020)
+ - Žygimantas Beručka (2006)
+
+Polish
+ - mariachini (2021-2022)
+ - Amun-Ra (2007)
+ - thine (2007)
+ - owczi
+
+Portuguese Brazilian
+ - yyyyyyyan (2020)
+ - Suicide|Solution (2006)
+
+Russian
+ - SnIPeRSnIPeR (2022)
+ - Mehavoid (2021-2022)
+
+Slovak
+ - Josef Riha (2006)
+
+Spanish
+ - tagomago (2021-2022)
+ - Strange (2021)
+ - Silvio Orta (2007)
+ - Dreslo
+
+Swedish
+ - mitramai (2021)
+ - alimony
+
+Turkish
+ - Oğuz Ersen (2021-2022)"""
 
     def __init__(self, frame):
 
-        super().__init__("ui/dialogs/about.ui")
-
         self.frame = frame
+        self.dialog = Gtk.AboutDialog(
+            comments=config.summary,
+            copyright=config.copyright,
+            license_type=Gtk.License.GPL_3_0,
+            version=config.version + "  •  GTK " + config.gtk_version,
+            website=config.website_url,
+            authors=self.AUTHORS.splitlines(),
+            translator_credits=self.TRANSLATORS
+        )
         set_dialog_properties(self.dialog, frame.MainWindow)
-
-        # Override link handler with our own
-        self.dialog.connect("activate-link", lambda x, url: open_uri(url))
-
         main_icon = get_icon("n")
 
         if not main_icon:
@@ -53,11 +333,8 @@ class About(UserInterface):
         else:
             self.dialog.connect("response", lambda x, _y: x.destroy())
 
-        self.dialog.set_comments(config.summary)
-        self.dialog.set_copyright(config.copyright)
-        self.dialog.set_license_type(Gtk.License.GPL_3_0)
-        self.dialog.set_version(config.version + "  •  GTK " + config.gtk_version)
-        self.dialog.set_website(config.website_url)
+        # Override link handler with our own
+        self.dialog.connect("activate-link", lambda x, url: open_uri(url))
 
     def show(self):
         dialog_show(self.dialog)
