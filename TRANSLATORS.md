@@ -1,31 +1,32 @@
 # Nicotine+ Translators
 
 ## English
-- mathiascode (2020)
+- mathiascode (2020-2022)
 - Michael Labouebe (2016) [gfarmerfr(at)free(dot)fr]
 - hyriand
 - daelstorm
 
 ## Dutch
-- hboetes (2021)
+- hboetes (2021-2022)
 - nince78 (2007)
 - hyriand
 
 ## German
-- hboetes (2021)
+- hboetes (2021-2022)
 - Meokater (2007)
 - (.\_.) (2007)
 - lippel (2004)
 - hyriand (2003)
 
 ## Spanish
-- tagomago (2021)
+- tagomago (2021-2022)
 - Strange (2021)
 - Silvio Orta (2007)
 - Dreslo
 
 ## French
-- melmorabity (2021)
+- Lisapple (2021-2022)
+- melmorabity (2021-2022)
 - m-balthazar (2020)
 - Michael Labouebe (2016-2017) [gfarmerfr(at)free(dot)fr]
 - ManWell (2007)
@@ -34,11 +35,12 @@
 - systr
 
 ## Italian
-- Gianluca Boiano
+- Gianluca Boiano (2021-2022)
 - Nicola (2007) [info(at)nicoladimaria(dot)info]
 - dbazza
 
 ## Polish
+- mariachini (2021-2022)
 - Amun-Ra (2007)
 - thine (2007)
 - owczi
@@ -49,6 +51,10 @@
 
 ## Hungarian
 - djbaloo [dj_baloo(at)freemail(dot)hu]
+
+## Russian
+- SnIPeRSnIPeR (2022)
+- Mehavoid (2021-2022)
 
 ## Slovak
 - Josef Riha (2006) [jose1711(at)gmail(dot)com]
@@ -67,4 +73,4 @@
 - The Librezale.org Team [librezale(at)librezale(dot)org]
 
 ## Turkish
-- Oğuz Ersen (2021)
+- Oğuz Ersen (2021-2022)
