@@ -176,10 +176,10 @@ class NetworkFilter:
 
         country_code = self.geoip.get_country_code(ip_address)
 
-        """ Please note that all country codes are stored in the same string at the first index
-        of an array, separated by commas (no idea why...) """
+        # Please note that all country codes are stored in the same string at the first index
+        # of an array, separated by commas (no idea why this decision was made...)
 
-        if self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
+        if country_code and self.config.sections["transfers"]["geoblockcc"][0].find(country_code) >= 0:
             if self.config.sections["transfers"]["usecustomgeoblock"]:
                 return 0, "Banned (%s)" % self.config.sections["transfers"]["customgeoblock"]
 

@@ -999,7 +999,7 @@ class NicotineCore:
 
         log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
 
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
@@ -1041,7 +1041,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         user = msg.init.target_user
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         request_time = time.time()
 
         if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
@@ -1114,7 +1114,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         init = msg.init
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         username = msg.init.target_user
         checkuser, reason = self.network_filter.check_user(username, ip_address)
 

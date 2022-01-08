@@ -653,7 +653,8 @@ class Transfers:
                 if friend:
                     limits = False
 
-            checkuser, reason = self.core.network_filter.check_user(user, msg.init.addr)
+            ip_address, _port = msg.init.addr
+            checkuser, reason = self.core.network_filter.check_user(user, ip_address)
 
             if not checkuser:
                 self.queue.append(
@@ -822,7 +823,8 @@ class Transfers:
 
         # Is user allowed to download?
         user = msg.init.target_user
-        checkuser, reason = self.core.network_filter.check_user(user, msg.init.addr)
+        ip_address, _port = msg.init.addr
+        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
 
         if not checkuser:
             return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
