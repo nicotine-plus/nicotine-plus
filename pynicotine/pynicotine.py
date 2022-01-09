@@ -1010,7 +1010,7 @@ class NicotineCore:
         if not status:
             pic = None
             descr = self.ban_message % reason
-            descr += "\n\n--------------------------------------------------------\n\n"
+            descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 
         else:

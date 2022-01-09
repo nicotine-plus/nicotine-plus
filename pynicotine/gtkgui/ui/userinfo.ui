@@ -30,23 +30,25 @@
                   <object class="GtkBox" id="InfoVbox">
                     <property name="visible">True</property>
                     <property name="spacing">18</property>
-                    <property name="width-request">300</property>
+                    <property name="width-request">320</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="spacing">18</property>
+                        <property name="spacing">12</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkLabel" id="UserLabel">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>
-                            <property name="label" translatable="yes">User Description</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="wrap">True</property>
                             <attributes>
-                              <attribute name="weight" value="bold"/>
+                              <attribute name="weight" value="ultrabold"/>
+                              <attribute name="size" value="15360"/>
                             </attributes>
                           </object>
                         </child>
@@ -63,10 +65,10 @@
                                     <property name="hexpand">True</property>
                                     <property name="editable">false</property>
                                     <property name="cursor-visible">false</property>
-                                    <property name="pixels-above-lines">1</property>
-                                    <property name="pixels-below-lines">1</property>
+                                    <property name="pixels-below-lines">6</property>
                                     <property name="left-margin">12</property>
                                     <property name="right-margin">12</property>
+                                    <property name="top-margin">6</property>
                                     <property name="bottom-margin">6</property>
                                     <property name="wrap-mode">word-char</property>
                                   </object>
@@ -83,18 +85,8 @@
                         <property name="margin-start">12</property>
                         <property name="margin-end">12</property>
                         <property name="margin-bottom">12</property>
-                        <property name="spacing">18</property>
+                        <property name="spacing">24</property>
                         <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">User Information</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
-                          </object>
-                        </child>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -317,7 +309,7 @@
                             <property name="margin-end">12</property>
                             <property name="margin-top">12</property>
                             <property name="margin-bottom">12</property>
-                            <property name="label" translatable="yes">User Interests</property>
+                            <property name="label" translatable="yes">Interests</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
                             </attributes>
@@ -389,8 +381,20 @@
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <child>
-                              <object class="GtkScrolledWindow" id="picture_view">
+                              <object class="GtkImage" id="placeholder_picture">
                                 <property name="visible">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="icon-name">avatar-default-symbolic</property>
+                                <property name="pixel-size">256</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow" id="picture_view">
+                                <property name="visible">False</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                               </object>
@@ -406,11 +410,11 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <property name="margin-top">12</property>
-                <property name="margin-bottom">12</property>
-                <property name="spacing">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-top">6</property>
+                <property name="margin-bottom">6</property>
+                <property name="spacing">4</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkButton">
@@ -435,6 +439,10 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -460,31 +468,10 @@
                         </child>
                       </object>
                     </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton">
-                    <property name="visible">True</property>
-                    <signal name="clicked" handler="on_show_ip_address"/>
-                    <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="icon-name">network-wired-symbolic</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="label" translatable="yes">Show IP A_ddress</property>
-                            <property name="use-underline">True</property>
-                          </object>
-                        </child>
-                      </object>
-                    </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -510,6 +497,10 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -534,6 +525,10 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -558,6 +553,39 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton">
+                    <property name="visible">True</property>
+                    <signal name="clicked" handler="on_show_ip_address"/>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">network-wired-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Show IP A_ddress</property>
+                            <property name="use-underline">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
@@ -584,10 +612,14 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="Filler">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="vexpand">True</property>
                   </object>
@@ -615,6 +647,10 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="body"/>
+                      <class name="flat"/>
+                    </style>
                   </object>
                 </child>
               </object>
