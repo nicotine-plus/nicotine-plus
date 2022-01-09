@@ -2,203 +2,208 @@
 
 Have you done something for Nicotine+, and your name is missing? Please [let us know](README.md#getting-involved).
 
-### Active
+## Active
 
-Mat (mathiascode)
-- Maintainer
-- Developer
+### Mat (mathiascode)
+ - Maintainer (2020-present)
+ - Developer
 
-eLvErDe
-- Provided Nicotine+ Trac instance
-- Migrated source code from SVN to Github
-- python3-miniupnpc bindings
-- Developer
+### Kip Warner
+ - Maintainer (2018-2020)
+ - Developer
+ - Debianization
+ - [kip(at)thevertigo(dot)com]
 
-Kip Warner
-- Developer
-- Debianization
-- [kip(at)thevertigo(dot)com]
+### eLvErDe
+ - Maintainer (2013-2016)
+ - Domain name administrator
+ - Source code migration from SVN to GitHub
+ - Developer
 
-Han Boetes
-- Tester
-- Documentation
-- Bug hunting
-- Translation management
+### Han Boetes
+ - Tester
+ - Documentation
+ - Bug hunting
+ - Translation management
 
-alekksander
-- Tester
-- Redesign of some graphics
+### alekksander
+ - Tester
+ - Redesign of some graphics
 
-slook
-- Tester
-- Accessibility improvements
+### slook
+ - Tester
+ - Accessibility improvements
 
 ### Retired
 
-daelstorm
-- Developer
-- [daelstorm(at)gmail(dot)com]
+### daelstorm
+ - Maintainer (2004-2009)
+ - Developer
+ - [daelstorm(at)gmail(dot)com]
 
-gallows (aka 'burp O')
-- Developer, Packager
-- Submitted Slack.Build file
-- [g4ll0ws(at)gmail(dot)com]
+### QuinoX
+ - Maintainer (2009-2012)
+ - Developer
 
-QuinoX
-- Developer
+### Michael Labouebe (aka gfarmerfr)
+ - Maintainer (2016-2017)
+ - Developer
+ - [gfarmerfr(at)free(dot)fr]
 
-hedonist (formerly known as alexbk)
-- OS X nicotine.app maintainer / developer
-- Author of original pyslsk, which is used for nicotine core
-- [ak(at)sensi(dot)org]
+### gallows (aka 'burp O')
+ - Developer
+ - Packager
+ - Submitted Slack.Build file
+ - [g4ll0ws(at)gmail(dot)com]
 
-lee8oi
-- Bash Commander
-- New and updated /alias
-- [winslaya(at)gmail(dot)com]
+### hedonist (formerly known as alexbk)
+ - OS X Nicotine.app maintainer / developer
+ - Author of PySoulSeek, used for Nicotine core
+ - [ak(at)sensi(dot)org]
 
-INMCM
-- Nicotine+ topic maintainer on ubuntuforums.org
-- https://ubuntuforums.org/showthread.php?t=196835
+### lee8oi
+ - Bash commander
+ - New and updated /alias
+ - [winslaya(at)gmail(dot)com]
 
-suser-guru
-- Suse Linux packager
-- https://dev-loki.blogspot.fr/
-- Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
+### INMCM
+ - Nicotine+ topic maintainer on ubuntuforums.org
+ - https://ubuntuforums.org/showthread.php?t=196835
 
-osiris
-- handy-man
-- documentation
-- some GNU/Linux packaging
-- Nicotine+ on win32
-- Author of Nicotine+ Guide
-- [osiris.contact(at)gmail(dot)com]
+### suser-guru
+ - Suse Linux packager
+ - https://dev-loki.blogspot.fr/
+ - Nicotine+ RPM's for Suse 9.1, 9.2, 9.3, 10.0, 10.1
 
-Michael Labouebe (aka gfarmerfr)
-- Developer
-- [gfarmerfr(at)free(dot)fr]
+### osiris
+ - Handy-man
+ - Documentation
+ - Some GNU/Linux packaging
+ - Nicotine+ on Win32
+ - Author of Nicotine+ guide
+ - [osiris.contact(at)gmail(dot)com]
 
-Mutnick
-- Created Nicotine+ GitHub Organization
-- Developer
-- [muhing(at)yahoo(dot)com]
+### Mutnick
+ - Created Nicotine+ GitHub organization
+ - Developer
+ - [muhing(at)yahoo(dot)com]
 
-Lene Preuss
-- Python3 migration
-- Unit and DEP-8 continuous integration testing
-- [lene.preuss(at)here(dot)com]
+### Lene Preuss
+ - Python 3 migration
+ - Unit and DEP-8 continuous integration testing
+ - [lene.preuss(at)here(dot)com]
 
 ---
 
 # Nicotine Contributors
 
-### Retired
+## Retired
 
-Hyriand
-- Founder
-- [hyriand(at)thegraveyard(dot)org]
+### Hyriand
+ - Maintainer (2003-2004)
+ - [hyriand(at)thegraveyard(dot)org]
 
-osiris
-- handy-man
-- [osiris.contact(at)gmail(dot)com]
+### osiris
+ - Handy-man
+ - [osiris.contact(at)gmail(dot)com]
 
-SmackleFunky
-- Beta tester
+### SmackleFunky
+ - Beta tester
 
-Wretched
-- Beta tester
-- Bringer of great ideas
+### Wretched
+ - Beta tester
+ - Bringer of great ideas
 
-(va)\*10^3
-- Beta tester
-- Designer of the old nicotine homepage and artwork (logos)
+### (va)\*10^3
+ - Beta tester
+ - Designer of Nicotine homepage and artwork (logos)
 
-sierracat
-- MacOSX tester
-- Developed soulseeX
+### sierracat
+ - MacOSX tester
+ - soulseeX developer
 
-Gustavo
-- Made the exception dialog
-- [gjc(at)inescporto(dot)pt]
+### Gustavo
+ - Created the exception dialog
+ - [gjc(at)inescporto(dot)pt]
 
-SeeSchloss
-- Developer
-- Made 1.0.8 win32 installer
-- Created [Soulfind](https://github.com/seeschloss/soulfind), opensource Soulseek Server written in D
+### SeeSchloss
+ - Developer
+ - Created 1.0.8 Win32 installer
+ - Created [Soulfind](https://github.com/seeschloss/soulfind), open source Soulseek server written in D
 
-vasi
-- Mac developer
-- Packaged nicotine on OSX PowerPc
-- [djvasi(at)gmail(dot)com]
+### vasi
+ - Mac developer
+ - Packaged Nicotine on OSX PowerPC
+ - [djvasi(at)gmail(dot)com]
 
 ---
 
 # PySoulSeek Contributors
 
-### Retired
+## Retired
 
-Alexander Kanavin
-- Created PySoulSeek
-- [ak(at)sensi(dot)org]
+### Alexander Kanavin
+ - Maintainer (2001-2005)
+ - [ak(at)sensi(dot)org]
 
-Nir Arbel
-- Helped with many protocol questions I had, and of
-  course he designed and impemented the whole
-  system.
-- [nir(at)slsk(dot)org]
+### Nir Arbel
+ - Helped with many protocol questions I had, and of
+   course he designed and implemented the whole
+   system.
+ - [nir(at)slsk(dot)org]
 
-Zip (Brett W. Thompson)
-- I used his client code to get an initial impression
-  of how the system works.
-- Supplied the patch for logging chat conversations.
-- [brettt(at)tfn(dot)net]
+### Zip (Brett W. Thompson)
+ - I used his client code to get an initial impression
+   of how the system works.
+ - Supplied the patch for logging chat conversations.
+ - [brettt(at)tfn(dot)net]
 
-Josselin Mouette
-- official Debian package maintainer
-- [joss(at)debian(dot)org]
+### Josselin Mouette
+ - Official Debian package maintainer
+ - [joss(at)debian(dot)org]
 
-blueboy
-- former unofficial Debian package maintainer
-- [bluegeek(at)eresmas(dot)com]
+### blueboy
+ - Former unofficial Debian package maintainer
+ - [bluegeek(at)eresmas(dot)com]
 
-Christian Swinehart
-- Fink package maintainer
-- [cswinehart(at)users(dot)sourceforge(dot)net]
+### Christian Swinehart
+ - Fink package maintainer
+ - [cswinehart(at)users(dot)sourceforge(dot)net]
 
-Hyriand
-- Patches for upload bandwidth management, banning,
-  various UI improvements and more
-- [hyriand(at)thegraveyard(dot)org]
+### Hyriand
+ - Patches for upload bandwidth management, banning,
+   various UI improvements and more
+ - [hyriand(at)thegraveyard(dot)org]
 
-Geert Kloosterman
-- a script for importing windows soulseek configuration
-- [geertk(at)ai(dot)rug(dot)nl]
+### Geert Kloosterman
+ - A script for importing Windows Soulseek configuration
+ - [geertk(at)ai(dot)rug(dot)nl]
 
-Joe Halliwell
-- Submitted a patch for optionally discarding search
-  results after closing a search tab
-- [s9900164(at)sms(dot)ed(dot)ac(dot)uk]
+### Joe Halliwell
+ - Submitted a patch for optionally discarding search
+   results after closing a search tab
+ - [s9900164(at)sms(dot)ed(dot)ac(dot)uk]
 
-Alexey Vyskubov
-- Code cleanups
-- [alexey(dot)vyskubov(at)nokia(dot)com]
+### Alexey Vyskubov
+ - Code cleanups
+ - [alexey(dot)vyskubov(at)nokia(dot)com]
 
-Jason Green
-- Ignore list and auto-join checkbox, wishlists
-- [smacklefunky(at)optusnet(dot)com(dot)au]
+### Jason Green
+ - Ignore list and auto-join checkbox, wishlists
+ - [smacklefunky(at)optusnet(dot)com(dot)au]
 
 ---
 
 # Attributions
 
-- This product includes IP2Location LITE data available from:  
-  https://lite.ip2location.com
+ - This product includes IP2Location LITE data available from:  
+   https://lite.ip2location.com
 
-- Country flags licensed under the MIT License.  
-  Copyright (c) 2016 Bowtie AB  
-  Copyright (c) 2018 Jack Marsh  
-  https://github.com/jackiboy/flagpack
+ - Country flags licensed under the MIT License.  
+   Copyright (c) 2016-2017 Bowtie AB  
+   Copyright (c) 2018-2020 Jack Marsh  
+   https://github.com/jackiboy/flagpack
 
-- tinytag licensed under the MIT License.  
-  Copyright (c) 2014-2018 Tom Wallroth  
-  https://github.com/devsnd/tinytag/
+ - tinytag licensed under the MIT License.  
+   Copyright (c) 2014-2021 Tom Wallroth  
+   https://github.com/devsnd/tinytag/
