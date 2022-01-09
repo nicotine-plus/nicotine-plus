@@ -32,7 +32,7 @@
  - Tester
  - Accessibility improvements
 
-### Retired
+## Retired
 
 ### daelstorm
  - Maintainer (2004–2009)
