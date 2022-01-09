@@ -425,8 +425,8 @@ class ChatRoom(UserInterface):
             self.frame, ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
-            ["user", _("User"), 140, "text", attribute_columns],
-            ["speed", _("Speed"), 100, "number", None],
+            ["user", _("User"), 135, "text", attribute_columns],
+            ["speed", _("Speed"), 60, "number", None],
             ["files", _("Files"), -1, "number", None]
         )
 
