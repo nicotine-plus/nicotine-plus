@@ -98,19 +98,19 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">24</property>
                                 <child>
-                                  <object class="GtkLabel" id="uploads_label">
+                                  <object class="GtkLabel" id="filesshared_label">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
-                                    <property name="label" translatable="yes">Upload Slots</property>
+                                    <property name="label" translatable="yes">Shared Files</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">uploads</property>
+                                    <property name="mnemonic_widget">filesshared</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="uploads">
+                                  <object class="GtkLabel" id="filesshared">
                                     <property name="visible">True</property>
                                     <property name="label" translatable="yes">Unknown</property>
                                     <property name="selectable">True</property>
@@ -125,19 +125,46 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">24</property>
                                 <child>
-                                  <object class="GtkLabel" id="slotsavail_label">
+                                  <object class="GtkLabel" id="dirsshared_label">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
-                                    <property name="label" translatable="yes">Free Upload Slots</property>
+                                    <property name="label" translatable="yes">Shared Folders</property>
                                     <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">slotsavail</property>
+                                    <property name="mnemonic_widget">dirsshared</property>
                                     <style>
                                       <class name="dim-label"/>
                                     </style>
                                   </object>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel" id="slotsavail">
+                                  <object class="GtkLabel" id="dirsshared">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Unknown</property>
+                                    <property name="selectable">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="xalign">0</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="spacing">24</property>
+                                <child>
+                                  <object class="GtkLabel" id="uploads_label">
+                                    <property name="visible">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Upload Slots</property>
+                                    <property name="xalign">0</property>
+                                    <property name="mnemonic_widget">uploads</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="uploads">
                                     <property name="visible">True</property>
                                     <property name="label" translatable="yes">Unknown</property>
                                     <property name="selectable">True</property>
@@ -179,6 +206,33 @@
                                 <property name="visible">True</property>
                                 <property name="spacing">24</property>
                                 <child>
+                                  <object class="GtkLabel" id="slotsavail_label">
+                                    <property name="visible">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="label" translatable="yes">Free Upload Slots</property>
+                                    <property name="xalign">0</property>
+                                    <property name="mnemonic_widget">slotsavail</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="slotsavail">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Unknown</property>
+                                    <property name="selectable">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="xalign">0</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="spacing">24</property>
+                                <child>
                                   <object class="GtkLabel" id="speed_label">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
@@ -192,60 +246,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkLabel" id="speed">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Unknown</property>
-                                    <property name="selectable">True</property>
-                                    <property name="wrap">True</property>
-                                    <property name="xalign">0</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="spacing">24</property>
-                                <child>
-                                  <object class="GtkLabel" id="filesshared_label">
-                                    <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label" translatable="yes">Shared Files</property>
-                                    <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">filesshared</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="filesshared">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">Unknown</property>
-                                    <property name="selectable">True</property>
-                                    <property name="wrap">True</property>
-                                    <property name="xalign">0</property>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="spacing">24</property>
-                                <child>
-                                  <object class="GtkLabel" id="dirsshared_label">
-                                    <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="label" translatable="yes">Shared Folders</property>
-                                    <property name="xalign">0</property>
-                                    <property name="mnemonic_widget">dirsshared</property>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel" id="dirsshared">
                                     <property name="visible">True</property>
                                     <property name="label" translatable="yes">Unknown</property>
                                     <property name="selectable">True</property>
@@ -364,20 +364,6 @@
                         <property name="orientation">vertical</property>
                         <property name="hexpand">True</property>
                         <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="margin-top">12</property>
-                            <property name="margin-bottom">12</property>
-                            <property name="label" translatable="yes">User Picture</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                            </attributes>
-                          </object>
-                        </child>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
