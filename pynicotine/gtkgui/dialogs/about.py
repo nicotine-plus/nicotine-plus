@@ -31,17 +31,17 @@ class About:
     AUTHORS = """Nicotine+ Contributors [active]
 
 > Mat (mathiascode)
-   - Maintainer (2020-present)
+   - Maintainer (2020–present)
    - Developer
 
 > Kip Warner
-   - Maintainer (2018-2020)
+   - Maintainer (2018–2020)
    - Developer
    - Debianization
    - [kip(at)thevertigo(dot)com]
 
 > eLvErDe
-   - Maintainer (2013-2016)
+   - Maintainer (2013–2016)
    - Domain name administrator
    - Source code migration from SVN to GitHub
    - Developer
@@ -63,16 +63,16 @@ class About:
 Nicotine+ Contributors [retired]
 
 > daelstorm
-   - Maintainer (2004-2009)
+   - Maintainer (2004–2009)
    - Developer
    - [daelstorm(at)gmail(dot)com]
 
 > QuinoX
-   - Maintainer (2009-2012)
+   - Maintainer (2009–2012)
    - Developer
 
 > Michael Labouebe (aka gfarmerfr)
-   - Maintainer (2016-2017)
+   - Maintainer (2016–2017)
    - Developer
    - [gfarmerfr(at)free(dot)fr]
 
@@ -123,7 +123,7 @@ Nicotine+ Contributors [retired]
 Nicotine Contributors [retired]
 
 > Hyriand
-   - Maintainer (2003-2004)
+   - Maintainer (2003–2004)
    - [hyriand(at)thegraveyard(dot)org]
 
 > osiris
@@ -165,7 +165,7 @@ Nicotine Contributors [retired]
 PySoulSeek Contributors [retired]
 
 > Alexander Kanavin
-   - Maintainer (2001-2005)
+   - Maintainer (2001–2005)
    - [ak(at)sensi(dot)org]
 
 > Nir Arbel
@@ -223,23 +223,23 @@ Attributions
   https://lite.ip2location.com
 
 - Country flags licensed under the MIT License.
-  Copyright (c) 2016 Bowtie AB
-  Copyright (c) 2018 Jack Marsh
+  Copyright (c) 2016-2017 Bowtie AB
+  Copyright (c) 2018–2020 Jack Marsh
   https://github.com/jackiboy/flagpack
 
 - tinytag licensed under the MIT License.
-  Copyright (c) 2014-2018 Tom Wallroth
+  Copyright (c) 2014–2021 Tom Wallroth
   https://github.com/devsnd/tinytag/
 
 """
 
     TRANSLATORS = """Dutch
- - hboetes (2021-2022)
+ - hboetes (2021–2022)
  - nince78 (2007)
  - hyriand
 
 English
- - mathiascode (2020-2022)
+ - mathiascode (2020–2022)
  - Michael Labouebe (2016)
  - hyriand
  - daelstorm
@@ -251,17 +251,17 @@ Finnish
  - Kalevi
 
 French
- - Lisapple (2021-2022)
- - zniavre (2007-2022)
- - melmorabity (2021-2022)
+ - Lisapple (2021–2022)
+ - zniavre (2007–2022)
+ - melmorabity (2021–2022)
  - m-balthazar (2020)
- - Michael Labouebe (2016-2017)
+ - Michael Labouebe (2016–2017)
  - ManWell (2007)
  - flashfr
  - systr
 
 German
- - hboetes (2021-2022)
+ - hboetes (2021–2022)
  - Meokater (2007)
  - (._.) (2007)
  - lippel (2004)
@@ -271,7 +271,7 @@ Hungarian
  - djbaloo
 
 Italian
- - Gianluca Boiano (2020-2022)
+ - Gianluca Boiano (2020–2022)
  - Nicola (2007)
  - dbazza
 
@@ -280,7 +280,7 @@ Lithuanian
  - Žygimantas Beručka (2006)
 
 Polish
- - mariachini (2021-2022)
+ - mariachini (2021–2022)
  - Amun-Ra (2007)
  - thine (2007)
  - owczi
@@ -291,13 +291,13 @@ Portuguese Brazilian
 
 Russian
  - SnIPeRSnIPeR (2022)
- - Mehavoid (2021-2022)
+ - Mehavoid (2021–2022)
 
 Slovak
  - Josef Riha (2006)
 
 Spanish
- - tagomago (2021-2022)
+ - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)
  - Dreslo
@@ -307,7 +307,7 @@ Swedish
  - alimony
 
 Turkish
- - Oğuz Ersen (2021-2022)"""
+ - Oğuz Ersen (2021–2022)"""
 
     def __init__(self, frame):
 
