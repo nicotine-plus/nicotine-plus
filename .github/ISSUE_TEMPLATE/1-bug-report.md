@@ -5,7 +5,7 @@ labels: bug
 
 ---
 
-Nicotine+ version:  
+Nicotine+ version:
 Operating System/Distribution:
 
 

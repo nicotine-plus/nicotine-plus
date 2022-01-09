@@ -19,7 +19,7 @@ autoaway = 15
 away = False
 private_chatrooms = False
 command_aliases = {}
-interface = 
+interface =
 
 [transfers]
 incompletedir = /home/default/.local/share/nicotine/incomplete
@@ -34,8 +34,8 @@ downloadlimit = 0
 preferfriends = False
 useupslots = False
 uploadslots = 2
-afterfinish = 
-afterfolder = 
+afterfinish =
+afterfolder =
 lock = True
 reverseorder = False
 fifoqueue = False
@@ -76,7 +76,7 @@ downloadlimitalt = 100
 
 [userinfo]
 descr = ''
-pic = 
+pic =
 
 [words]
 censored = []
@@ -154,10 +154,10 @@ private_search_results = True
 [ui]
 dark_mode = False
 header_bar = True
-icontheme = 
+icontheme =
 chatme = #908e8b
-chatremote = 
-chatlocal = 
+chatremote =
+chatlocal =
 chathilite = #5288ce
 urlcolor = #5288ce
 useronline = #16bb5c
@@ -165,14 +165,14 @@ useraway = #c9ae13
 useroffline = #e04f5e
 usernamehotspots = True
 usernamestyle = bold
-textbg = 
-search = 
+textbg =
+search =
 searchq = GREY
-inputcolor = 
+inputcolor =
 spellcheck = True
 exitdialog = 1
 notexists = True
-tab_default = 
+tab_default =
 tab_hilite = #497ec2
 tab_changed = #497ec2
 tab_select_previous = True
@@ -190,14 +190,14 @@ labelinfo = 0
 labelbrowse = 0
 labelsearch = 0
 decimalsep = ,
-globalfont = 
-chatfont = 
+globalfont =
+chatfont =
 roomlistcollapsed = False
 tabclosers = True
-searchfont = 
-listfont = 
-browserfont = 
-transfersfont = 
+searchfont =
+listfont =
+browserfont =
+transfersfont =
 last_tab_id = 0
 modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True}
 modes_order = ['search', 'downloads', 'uploads', 'userbrowse', 'userinfo', 'private', 'userlist', 'chatrooms', 'interests']
@@ -205,7 +205,7 @@ showaway = False
 buddylistinchatrooms = tab
 trayicon = True
 startup_hidden = False
-filemanager = 
+filemanager =
 speechenabled = False
 speechprivate = %(user)s told you.. %(message)s
 speechrooms = In %(room)s, %(user)s said %(message)s
@@ -232,11 +232,11 @@ likes = []
 dislikes = []
 
 [players]
-default = 
-npothercommand = 
+default =
+npothercommand =
 npplayer = mpris
 npformatlist = []
-npformat = 
+npformat =
 
 [notifications]
 notification_window_title = True

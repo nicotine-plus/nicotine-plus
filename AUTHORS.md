@@ -196,14 +196,14 @@ Have you done something for Nicotine+, and your name is missing? Please [let us 
 
 # Attributions
 
- - This product includes IP2Location LITE data available from:  
+ - This product includes IP2Location LITE data available from:
    https://lite.ip2location.com
 
- - Country flags licensed under the MIT License.  
-   Copyright (c) 2016-2017 Bowtie AB  
-   Copyright (c) 2018-2020 Jack Marsh  
+ - Country flags licensed under the MIT License.
+   Copyright (c) 2016-2017 Bowtie AB
+   Copyright (c) 2018-2020 Jack Marsh
    https://github.com/jackiboy/flagpack
 
- - tinytag licensed under the MIT License.  
-   Copyright (c) 2014-2021 Tom Wallroth  
+ - tinytag licensed under the MIT License.
+   Copyright (c) 2014-2021 Tom Wallroth
    https://github.com/devsnd/tinytag/
