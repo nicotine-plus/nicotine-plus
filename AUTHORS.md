@@ -1,6 +1,4 @@
-# Nicotine+ Contributors
-
-Have you done something for Nicotine+, and your name is missing? Please [let us know](README.md#getting-involved).
+# Nicotine+ Team
 
 ## Active
 
@@ -95,7 +93,7 @@ Have you done something for Nicotine+, and your name is missing? Please [let us 
 
 ---
 
-# Nicotine Contributors
+# Nicotine Team
 
 ## Retired
 
@@ -194,9 +192,9 @@ Have you done something for Nicotine+, and your name is missing? Please [let us 
 
 ---
 
-# Attributions
+# Third-Party Attributions
 
- - This product includes IP2Location LITE data available from:  
+ - This program includes IP2Location LITE data available from:  
    https://lite.ip2location.com
 
  - Country flags licensed under the MIT License.  

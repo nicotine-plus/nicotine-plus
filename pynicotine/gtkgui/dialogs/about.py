@@ -28,7 +28,8 @@ from pynicotine.utils import open_uri
 
 class About:
 
-    AUTHORS = """Nicotine+ Contributors [active]
+    AUTHORS = """Nicotine+ Team
+–––––––––––––––––––––––––––––––––––––––>
 
 > Mat (mathiascode)
    - Maintainer (2020–present)
@@ -60,7 +61,8 @@ class About:
    - Tester
    - Accessibility improvements
 
-Nicotine+ Contributors [retired]
+
+Retired Contributors
 
 > daelstorm
    - Maintainer (2004–2009)
@@ -120,7 +122,8 @@ Nicotine+ Contributors [retired]
    - [lene.preuss(at)here(dot)com]
 
 
-Nicotine Contributors [retired]
+Nicotine Team
+–––––––––––––––––––––––––––––––––––––––>
 
 > Hyriand
    - Maintainer (2003–2004)
@@ -162,7 +165,8 @@ Nicotine Contributors [retired]
    - [djvasi(at)gmail(dot)com]
 
 
-PySoulSeek Contributors [retired]
+PySoulSeek Contributors
+–––––––––––––––––––––––––––––––––––––––>
 
 > Alexander Kanavin
    - Maintainer (2001–2005)
@@ -216,9 +220,10 @@ PySoulSeek Contributors [retired]
    - [smacklefunky(at)optusnet(dot)com(dot)au]
 
 
-Attributions
+Third-Party Attributions
+–––––––––––––––––––––––––––––––––––––––>
 
-- This product includes IP2Location LITE data
+- This program includes IP2Location LITE data
   available from:
   https://lite.ip2location.com
 
@@ -231,9 +236,13 @@ Attributions
   Copyright (c) 2014–2021 Tom Wallroth
   https://github.com/devsnd/tinytag/
 
+
 """
 
-    TRANSLATORS = """Dutch
+    TRANSLATORS = """Nicotine+ Translators
+–––––––––––––––––––––––––––––––––––––––>
+
+Dutch
  - hboetes (2021–2022)
  - nince78 (2007)
  - hyriand
@@ -307,7 +316,9 @@ Swedish
  - alimony
 
 Turkish
- - Oğuz Ersen (2021–2022)"""
+ - Oğuz Ersen (2021–2022)
+
+"""
 
     def __init__(self, frame):
 
@@ -319,7 +330,7 @@ Turkish
             version=config.version + "  •  GTK " + config.gtk_version,
             website=config.website_url,
             authors=self.AUTHORS.splitlines(),
-            translator_credits=self.TRANSLATORS
+            translator_credits=self.TRANSLATORS + config.translations_url
         )
         set_dialog_properties(self.dialog, frame.MainWindow)
         main_icon = get_icon("n")

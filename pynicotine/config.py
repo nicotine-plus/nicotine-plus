@@ -62,9 +62,9 @@ class Config:
         self.application_name = "Nicotine+"
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
-        self.copyright = """© 2001-2003 PySoulSeek Contributors
+        self.copyright = """© 2004-2022 Nicotine+ Team
 © 2003-2004 Nicotine Team
-© 2004-2022 Nicotine+ Team"""
+© 2001-2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org/"
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
