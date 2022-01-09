@@ -46,7 +46,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
@@ -90,7 +90,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>

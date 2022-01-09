@@ -65,11 +65,12 @@
                                     <property name="hexpand">True</property>
                                     <property name="editable">false</property>
                                     <property name="cursor-visible">false</property>
-                                    <property name="pixels-below-lines">6</property>
+                                    <property name="pixels-above-lines">3</property>
+                                    <property name="pixels-below-lines">3</property>
                                     <property name="left-margin">12</property>
                                     <property name="right-margin">12</property>
-                                    <property name="top-margin">6</property>
-                                    <property name="bottom-margin">6</property>
+                                    <property name="top-margin">3</property>
+                                    <property name="bottom-margin">3</property>
                                     <property name="wrap-mode">word-char</property>
                                   </object>
                                 </child>
