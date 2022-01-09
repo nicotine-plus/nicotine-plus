@@ -235,8 +235,8 @@ class UserInfo(UserInterface):
                 picture_height = self.picture_data.get_height()
 
                 allocation = self.placeholder_picture.get_allocation()
-                max_width = allocation.width - 24
-                max_height = allocation.height - 24
+                max_width = allocation.width - 72
+                max_height = allocation.height - 72
 
                 # Resize picture to fit container
                 ratio = min(max_width / picture_width, max_height / picture_height)
