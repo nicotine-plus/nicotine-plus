@@ -140,7 +140,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -215,7 +215,7 @@
                   <object class="GtkBox" id="SimilarUsers">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>

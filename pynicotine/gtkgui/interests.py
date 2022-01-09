@@ -105,8 +105,8 @@ class Interests(UserInterface):
         cols = initialise_columns(
             frame, None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "icon", None],
-            ["user", _("User"), 140, "text", None],
-            ["speed", _("Speed"), 100, "number", None],
+            ["user", _("User"), 135, "text", None],
+            ["speed", _("Speed"), 60, "number", None],
             ["files", _("Files"), -1, "number", None],
         )
 
