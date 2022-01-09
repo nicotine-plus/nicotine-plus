@@ -228,7 +228,7 @@ Third-Party Attributions
   https://lite.ip2location.com
 
 - Country flags licensed under the MIT License.
-  Copyright (c) 2016-2017 Bowtie AB
+  Copyright (c) 2016–2017 Bowtie AB
   Copyright (c) 2018–2020 Jack Marsh
   https://github.com/jackiboy/flagpack
 

@@ -3,17 +3,17 @@
 ## Active
 
 ### Mat (mathiascode)
- - Maintainer (2020-present)
+ - Maintainer (2020–present)
  - Developer
 
 ### Kip Warner
- - Maintainer (2018-2020)
+ - Maintainer (2018–2020)
  - Developer
  - Debianization
  - [kip(at)thevertigo(dot)com]
 
 ### eLvErDe
- - Maintainer (2013-2016)
+ - Maintainer (2013–2016)
  - Domain name administrator
  - Source code migration from SVN to GitHub
  - Developer
@@ -35,16 +35,16 @@
 ### Retired
 
 ### daelstorm
- - Maintainer (2004-2009)
+ - Maintainer (2004–2009)
  - Developer
  - [daelstorm(at)gmail(dot)com]
 
 ### QuinoX
- - Maintainer (2009-2012)
+ - Maintainer (2009–2012)
  - Developer
 
 ### Michael Labouebe (aka gfarmerfr)
- - Maintainer (2016-2017)
+ - Maintainer (2016–2017)
  - Developer
  - [gfarmerfr(at)free(dot)fr]
 
@@ -98,7 +98,7 @@
 ## Retired
 
 ### Hyriand
- - Maintainer (2003-2004)
+ - Maintainer (2003–2004)
  - [hyriand(at)thegraveyard(dot)org]
 
 ### osiris
@@ -141,7 +141,7 @@
 ## Retired
 
 ### Alexander Kanavin
- - Maintainer (2001-2005)
+ - Maintainer (2001–2005)
  - [ak(at)sensi(dot)org]
 
 ### Nir Arbel
@@ -198,10 +198,10 @@
    https://lite.ip2location.com
 
  - Country flags licensed under the MIT License.  
-   Copyright (c) 2016-2017 Bowtie AB  
-   Copyright (c) 2018-2020 Jack Marsh  
+   Copyright (c) 2016–2017 Bowtie AB  
+   Copyright (c) 2018–2020 Jack Marsh  
    https://github.com/jackiboy/flagpack
 
  - tinytag licensed under the MIT License.  
-   Copyright (c) 2014-2021 Tom Wallroth  
+   Copyright (c) 2014–2021 Tom Wallroth  
    https://github.com/devsnd/tinytag/
