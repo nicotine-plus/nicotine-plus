@@ -64,9 +64,6 @@
                         </child>
                       </object>
                     </child>
-                    <style>
-                      <class name="border-bottom"/>
-                    </style>
                   </object>
                 </child>
               </object>
@@ -206,7 +203,7 @@
                   </object>
                 </child>
                 <style>
-                  <class name="border-right"/>
+                  <class name="border-end"/>
                 </style>
               </object>
             </child>
