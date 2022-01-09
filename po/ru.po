@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 02:10+0200\n"
-"PO-Revision-Date: 2022-01-07 22:35+0000\n"
+"PO-Revision-Date: 2022-01-08 23:38+0000\n"
 "Last-Translator: Kirill Feoktistov <feoktistovk@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
@@ -3706,7 +3706,7 @@ msgstr ""
 #: pynicotine/transfers.py:1832
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
-msgstr "%(file)s загружен с %(user)s"
+msgstr "%(file)s загружен у %(user)s"
 
 #: pynicotine/transfers.py:1836
 msgid "File downloaded"
@@ -3725,7 +3725,7 @@ msgstr "Выполнено: %s"
 #: pynicotine/transfers.py:1859
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
-msgstr "%(folder)s загружен с %(user)s"
+msgstr "%(folder)s загружен у %(user)s"
 
 #: pynicotine/transfers.py:1863
 msgid "Folder downloaded"
@@ -5955,7 +5955,7 @@ msgstr "обычный"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:877
 msgid "Remote text color:"
-msgstr "Цвет удаленного текста:"
+msgstr "Цвет удалённого текста:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:951
 msgid "Local text color:"
@@ -5979,7 +5979,7 @@ msgstr "Цвет текста «В сети»:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1321
 msgid "Offline text color:"
-msgstr "Цвет текста «Не в сети» :"
+msgstr "Цвет текста «Не в сети»:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:1395
 msgid "Away text color:"
