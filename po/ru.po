@@ -1316,7 +1316,7 @@ msgstr "--- старые сообщения выше ---"
 
 #: pynicotine/gtkgui/chatrooms.py:670 pynicotine/gtkgui/chatrooms.py:671
 msgid "Room wall (personal message set)"
-msgstr "Стена комнаты (набор личных сообщений)"
+msgstr "Стена комнаты"
 
 #: pynicotine/gtkgui/chatrooms.py:673 pynicotine/gtkgui/chatrooms.py:674
 msgid "Room wall"
@@ -2727,7 +2727,7 @@ msgstr "Ошибка удаленного файла"
 
 #: pynicotine/gtkgui/transferlist.py:140
 msgid "Queue Position"
-msgstr "Позиция в очереди"
+msgstr "№"
 
 #: pynicotine/gtkgui/transferlist.py:141
 msgid "Percent"
