@@ -123,9 +123,7 @@ class UserInfo(UserInterface):
 
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.descr_textview = TextView(self.descr)
-
         self.UserLabel.set_text(user)
-        self.descr_textview.append_line("No user description provided", showstamp=False, scroll=False)
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
