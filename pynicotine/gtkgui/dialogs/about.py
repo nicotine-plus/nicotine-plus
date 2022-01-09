@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -311,19 +311,24 @@ Swedish
 
 Turkish
  - Oğuz Ersen (2021-2022)
+
 """
+
+    COPYRIGHT = """© 2004-2022 Nicotine+ Team
+© 2003-2004 Nicotine Team
+© 2001-2003 PySoulSeek Contributors"""
 
     def __init__(self, frame):
 
         self.frame = frame
         self.dialog = Gtk.AboutDialog(
             comments=config.summary,
-            copyright=config.copyright,
+            copyright=self.COPYRIGHT,
             license_type=Gtk.License.GPL_3_0,
             version=config.version + "  •  GTK " + config.gtk_version,
             website=config.website_url,
             authors=self.AUTHORS.splitlines(),
-            translator_credits=self.TRANSLATORS
+            translator_credits=self.TRANSLATORS + config.translations_url
         )
         set_dialog_properties(self.dialog, frame.MainWindow)
         main_icon = get_icon("n")
