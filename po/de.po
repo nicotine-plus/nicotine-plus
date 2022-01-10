@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:13+0000\n"
+"PO-Revision-Date: 2022-01-10 20:11+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -5955,7 +5955,7 @@ msgstr "normal"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:877
 msgid "Remote text color:"
-msgstr "Entfernt Textfarbe:"
+msgstr "Entfernte Textfarbe:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:951
 msgid "Local text color:"
