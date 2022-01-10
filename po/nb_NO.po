@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:24+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-01-10 21:08+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -3811,15 +3811,14 @@ msgstr ""
 "Vennligst skann aksjene dine på nytt."
 
 #: pynicotine/shares.py:607
-#, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
 "issues, or another issue in Nicotine+."
 msgstr ""
 "Får ikke tilgang til filindeks for delte filer. Dette kan skje på grunn av "
-"at flere tilfeller av nikotin+ er aktive samtidig, filtillatelsesproblemer "
-"eller et annet problem i Nikotin +."
+"at flere tilfeller av Nicotine+ er aktive samtidig, filtillatelsesproblemer "
+"eller et annet problem i Nicotine+."
 
 #: pynicotine/shares.py:724
 #, python-format
