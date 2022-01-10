@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-10 17:47+0000\n"
-"Last-Translator: Guilherme Santos <gui.srodrigues@hotmail.com>\n"
+"PO-Revision-Date: 2022-01-10 17:49+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2348,7 +2348,7 @@ msgid ""
 "your settings."
 msgstr ""
 "Sentimos muito, mas parece que seu arquivo de configuração está corrompido. "
-"Por favor, reconfigure a nicotina+.\n"
+"Por favor, reconfigure a Nicotine+.\n"
 "\n"
 "Renomeamos seu antigo arquivo de configuração para\n"
 "%(corrupt)s\n"
@@ -2716,7 +2716,7 @@ msgstr ""
 #: pynicotine/gtkgui/frame.py:1915
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Desista da nicotina+"
+msgstr "Desista da Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1916
 #, fuzzy
@@ -2728,7 +2728,7 @@ msgstr "Copiar e relatar bug"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Desista da nicotina+"
+msgstr "Desista da Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1961
 #, fuzzy
@@ -3643,7 +3643,7 @@ msgstr "Ícone personalizado de carregamento de erros %(path)s: %(error)s"
 #: pynicotine/gtkgui/widgets/trayicon.py:352
 #, fuzzy
 msgid "Show Nicotine+"
-msgstr "Mostrar nicotina+"
+msgstr "Mostrar Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #, fuzzy
@@ -3713,7 +3713,7 @@ msgstr "Digite o nome do usuário cujos compartilhamentos você deseja ver:"
 #: pynicotine/gtkgui/widgets/trayicon.py:350
 #, fuzzy
 msgid "Hide Nicotine+"
-msgstr "Esconder nicotina+"
+msgstr "Esconder Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:68
 #, fuzzy
@@ -3927,7 +3927,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "A interface de rede especificada, '%s', não existe. Altere ou remova a "
-"interface de rede especificada e reinicie nicotina+."
+"interface de rede especificada e reinicie Nicotine+."
 
 #: pynicotine/pynicotine.py:325
 #, fuzzy
@@ -4535,7 +4535,7 @@ msgstr "_Add…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Você está pronto para usar nicotina+!"
+msgstr "Você está pronto para usar Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
@@ -6718,7 +6718,7 @@ msgstr "Guias primárias visíveis:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 #, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Ao fechar nicotina+:"
+msgstr "Ao fechar Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
 #, fuzzy

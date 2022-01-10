@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 18:52+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
 "Language: fi\n"
@@ -2345,9 +2345,9 @@ msgstr ""
 
 #: pynicotine/gtkgui/frame.py:156 pynicotine/pynicotine.py:224
 #: pynicotine/pynicotine.py:225
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Lopetamme nikotiinin+ %(version)s, %(status)s…"
+msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/gtkgui/frame.py:217
 #, fuzzy
@@ -2435,7 +2435,7 @@ msgstr "Ajan tasalla"
 #: pynicotine/gtkgui/frame.py:666
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Näytät käyttävän nikotiini+:n kehitysversiota."
+msgstr "Näytät käyttävän Nicotine+:n kehitysversiota."
 
 #: pynicotine/gtkgui/frame.py:674
 #, fuzzy
@@ -2733,7 +2733,7 @@ msgstr ""
 #: pynicotine/gtkgui/frame.py:1915
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Lopeta nikotiini+"
+msgstr "Lopeta Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1916
 #, fuzzy
@@ -2745,7 +2745,7 @@ msgstr "Kopioi & raportoi virhe"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Lopeta nikotiini+"
+msgstr "Lopeta Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1961
 #, fuzzy
@@ -3899,9 +3899,9 @@ msgstr ""
 "Sinun on määritettävä käyttäjänimi ja salasana ennen yhteyden muodostamista…"
 
 #: pynicotine/pynicotine.py:268
-#, fuzzy, python-format
+#, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Lopetamme nikotiinin+ %(version)s, %(status)s…"
+msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:271
 #, fuzzy

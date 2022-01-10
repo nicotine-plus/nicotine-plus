@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 18:53+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -151,12 +151,11 @@ msgstr ""
 "Nelze najít %(option1)s nebo %(option2)s, nainstalujte si ani jeden z nich."
 
 #: pynicotine/__init__.py:150
-#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Nepodařilo se skenovat sdílené složky. Zavřete prosím další případy Nikotin+ "
-"a zkuste to znovu."
+"Nepodařilo se skenovat sdílené složky. Zavřete prosím další případy Nicotine+"
+" a zkuste to znovu."
 
 #: pynicotine/chatrooms.py:237
 #, fuzzy, python-format
@@ -2360,7 +2359,7 @@ msgstr "Opravdu chcete stahovat soubory %(num)i ze složky %(user)s%(folder)s?"
 #: pynicotine/pynicotine.py:225
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Ukončení nikotinu+ %(version)s, %(status)s…"
+msgstr "Ukončení Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/gtkgui/frame.py:217
 #, fuzzy
@@ -2368,7 +2367,7 @@ msgid "Your config file is corrupt"
 msgstr "Konfigurační soubor je poškozený."
 
 #: pynicotine/gtkgui/frame.py:218
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "We're sorry, but it seems your configuration file is corrupt. Please "
 "reconfigure Nicotine+.\n"
@@ -2379,7 +2378,7 @@ msgid ""
 "your settings."
 msgstr ""
 "Je nám líto, ale zdá se, že váš konfigurační soubor je poškozený. "
-"Překonfigurujte prosím Nikotin+.\n"
+"Překonfigurujte prosím Nicotine+.\n"
 "\n"
 "Přejmenovali jsme váš starý konfigurační soubor na\n"
 "%(corrupt)s\n"
@@ -2449,12 +2448,12 @@ msgstr "Aktuální"
 #: pynicotine/gtkgui/frame.py:666
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Zdá se, že používáte vývojovou verzi nikotinu+."
+msgstr "Zdá se, že používáte vývojovou verzi Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:674
 #, fuzzy
 msgid "You are using the latest version of Nicotine+."
-msgstr "Používáte nejnovější verzi nikotinu+."
+msgstr "Používáte nejnovější verzi Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:919
 #, fuzzy
@@ -2743,18 +2742,17 @@ msgid "Critical Error"
 msgstr "Kritická chyba"
 
 #: pynicotine/gtkgui/frame.py:1913
-#, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotin + narazil na kritickou chybu a musí ukončit. Zkopírujte prosím "
+"Nicotine+ narazil na kritickou chybu a musí ukončit. Zkopírujte prosím "
 "následující zprávu a zahrňte ji do zprávy o chybě:"
 
 #: pynicotine/gtkgui/frame.py:1915
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Ukončit nikotin+"
+msgstr "Ukončit Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1916
 #, fuzzy
@@ -2766,12 +2764,11 @@ msgstr "Chyba kopírování a hlášení"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Ukončit nikotin+"
+msgstr "Ukončit Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1961
-#, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Opravdu chcete opustit Nikotin+?"
+msgstr "Opravdu chcete opustit Nicotine+?"
 
 #: pynicotine/gtkgui/frame.py:1963
 #, fuzzy
@@ -3698,7 +3695,7 @@ msgstr "Chyba načítání vlastní ikony %(path)s: %(error)s"
 #: pynicotine/gtkgui/widgets/trayicon.py:352
 #, fuzzy
 msgid "Show Nicotine+"
-msgstr "Zobrazit nikotin+"
+msgstr "Zobrazit Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #, fuzzy
@@ -3771,7 +3768,7 @@ msgstr "Zadejte jméno uživatele, jehož sdílené složky chcete zobrazit:"
 #: pynicotine/gtkgui/widgets/trayicon.py:350
 #, fuzzy
 msgid "Hide Nicotine+"
-msgstr "Skrýt nikotin+"
+msgstr "Skrýt Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:68
 #, fuzzy
@@ -3947,7 +3944,7 @@ msgstr "Před připojením musíte zadat uživatelské jméno a heslo…"
 #: pynicotine/pynicotine.py:268
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Ukončení nikotinu+ %(version)s, %(status)s…"
+msgstr "Ukončení Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:271
 #, fuzzy
@@ -3960,9 +3957,9 @@ msgid "application closing"
 msgstr "uzávěrka aplikace"
 
 #: pynicotine/pynicotine.py:300
-#, fuzzy, python-format
+#, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Přestaňte s nikotinem+ %(version)s, %(status)s!"
+msgstr "Přestaňte s Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:303
 #, fuzzy
@@ -3981,7 +3978,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Zadané síťové rozhraní \"%s\" neexistuje. Změňte nebo odeberte zadané síťové "
-"rozhraní a restartujte nikotin+."
+"rozhraní a restartujte Nicotine+."
 
 #: pynicotine/pynicotine.py:325
 #, fuzzy
@@ -4173,15 +4170,14 @@ msgstr ""
 "prozývejte své akcie."
 
 #: pynicotine/shares.py:607
-#, fuzzy
 msgid ""
 "File index of shared files could not be accessed. This could occur due to "
 "several instances of Nicotine+ being active simultaneously, file permission "
 "issues, or another issue in Nicotine+."
 msgstr ""
 "K indexu souborů sdílených souborů nebylo možné získat přístup. K tomu může "
-"dojít v důsledku několika případů, kdy je Nikotin + aktivní současně, "
-"problémy s oprávněním k souborům nebo jiný problém v nikotinu +."
+"dojít v důsledku několika případů, kdy je Nicotine+ aktivní současně, "
+"problémy s oprávněním k souborům nebo jiný problém v Nicotine+."
 
 #: pynicotine/shares.py:724
 #, fuzzy, python-format
@@ -4494,9 +4490,8 @@ msgid "_Log Conversation"
 msgstr "konverzace _Log"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:36
-#, fuzzy
 msgid "Welcome to Nicotine+"
-msgstr "Vítejte v Nikotin+"
+msgstr "Vítejte v Nicotine+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:91
 #, fuzzy
@@ -4526,13 +4521,12 @@ msgid "Password"
 msgstr "Heslo"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:226
-#, fuzzy
 msgid ""
 "Nicotine+ uses peer-to-peer networking to connect to other users. In order "
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"Nikotin+ používá peer-to-peer sítě pro připojení k ostatním uživatelům. Aby "
+"Nicotine+ používá peer-to-peer sítě pro připojení k ostatním uživatelům. Aby "
 "se k vám uživatelé mohli bez problémů připojit, je zásadní otevřený "
 "odposlouchávací port."
 
@@ -4579,9 +4573,8 @@ msgid "_Add…"
 msgstr "_Add…"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
-#, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Jste připraveni používat Nikotin +!"
+msgstr "Jste připraveni používat Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
@@ -6781,7 +6774,7 @@ msgstr "Viditelné primární karty:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 #, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Při zavírání nikotinu+:"
+msgstr "Při zavírání Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
 #, fuzzy
