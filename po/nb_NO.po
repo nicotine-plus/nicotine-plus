@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 20:24+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -38,7 +38,7 @@ msgstr "Soulseek;Nicotine;deling;musikk;P2P;likemannsnettverk;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotine+ er en grafisk klient for Soulseek-likemannsnettverket"
+msgstr "Nicotine+ er en grafisk klient for Soulseek-likemannsnettverket."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 msgid ""
@@ -2813,15 +2813,15 @@ msgstr "Privilegert"
 
 #: pynicotine/gtkgui/transferlist.py:89
 msgid "Getting status"
-msgstr "Henter status …"
+msgstr "Henter status"
 
 #: pynicotine/gtkgui/transferlist.py:90
 msgid "Establishing connection"
-msgstr "Kobler til …"
+msgstr "Kobler til"
 
 #: pynicotine/gtkgui/transferlist.py:91
 msgid "Transferring"
-msgstr "Overfører …"
+msgstr "Overfører"
 
 #: pynicotine/gtkgui/transferlist.py:92
 msgid "Cannot connect"
@@ -3638,7 +3638,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:344
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
-msgstr "Kobler til %(host)s:%(port)s …"
+msgstr "Kobler til %(host)s:%(port)s"
 
 #: pynicotine/pynicotine.py:559
 #, fuzzy, python-format
