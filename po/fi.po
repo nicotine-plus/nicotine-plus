@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:24+0000\n"
+"PO-Revision-Date: 2022-01-10 20:27+0000\n"
 "Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
@@ -179,7 +179,7 @@ msgstr "Sinut on lisätty yksityiseen huoneeseen: %(room)s"
 #: pynicotine/config.py:131 pynicotine/config.py:148
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa '%(path)s', virheilmoitus %(error)s"
+msgstr "Ei voi luoda hakemistoa '%(path)s', virheilmoitus %(error)s"
 
 #: pynicotine/config.py:642
 #, fuzzy, python-format
@@ -2584,7 +2584,7 @@ msgstr "Kiinnostuksen kohteet"
 #: pynicotine/gtkgui/frame.py:1474 pynicotine/userbrowse.py:174
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa '%(folder)s', virheilmoitus %(error)s"
+msgstr "Ei voi luoda hakemistoa '%(folder)s', virheilmoitus %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1479
 #, fuzzy
@@ -4317,7 +4317,7 @@ msgstr "Tallennettu luettelo käyttäjän %(user)s jaetuista tiedostoista %(dir)
 #: pynicotine/userbrowse.py:184
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa '%(user)s', virheilmoitus %(error)s"
+msgstr "Ei voi luoda hakemistoa '%(user)s', virheilmoitus %(error)s"
 
 #: pynicotine/userbrowse.py:197
 #, fuzzy, python-format
