@@ -1452,12 +1452,16 @@ class NicotineFrame(UserInterface):
 
     def on_get_shares(self, widget, *_args):
 
-        username = widget.get_text()
+        entry_text = widget.get_text()
 
-        if not username:
+        if not entry_text:
             return
 
-        self.np.userbrowse.browse_user(username)
+        if entry_text.startswith("slsk://"):
+            self.np.userbrowse.open_soulseek_url(entry_text)
+        else:
+            self.np.userbrowse.browse_user(entry_text)
+
         widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, _data):
