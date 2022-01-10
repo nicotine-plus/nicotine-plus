@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 21:24+0000\n"
+"PO-Revision-Date: 2022-01-10 21:36+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
@@ -3693,7 +3693,7 @@ msgstr "Sartu ikusi nahi dituzun erabiltzailearen izena:"
 #: pynicotine/gtkgui/widgets/trayicon.py:350
 #, fuzzy
 msgid "Hide Nicotine+"
-msgstr "Ezkutatu nikotina+"
+msgstr "Ezkutatu Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:68
 #, fuzzy
