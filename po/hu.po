@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:24+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-01-10 21:44+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/hu/>\n"
 "Language: hu\n"
@@ -35,9 +35,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafikus kliens a Soulseek peer-to-peer hálózathoz"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nikotin;megosztás;zene;P2P;peer-to-peer;GTK;"
+msgstr "Soulseek;Nicotine;megosztás;zene;P2P;peer-to-peer;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
