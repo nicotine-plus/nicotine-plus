@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 21:26+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eo/>\n"
 "Language: eo\n"
@@ -37,7 +37,7 @@ msgstr "Grafika kliento por la kunul-al-kunula reto Soulseek"
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 #, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek;Nikotino;dividado;muziko;P2P;kunulo-al-kunulo;GTK;"
+msgstr "Soulseek;Nicotine;dividado;muziko;P2P;kunulo-al-kunulo;GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
@@ -2334,7 +2334,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:222
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Forlasante Nikotino+ %(version)s, %(status)s…"
+msgstr "Forlasante Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/gtkgui/frame.py:370 pynicotine/gtkgui/widgets/iconnotebook.py:476
 #: pynicotine/gtkgui/widgets/treeview.py:486
@@ -2524,7 +2524,7 @@ msgstr "Kontrolu _Lastan Version"
 #: pynicotine/gtkgui/frame.py:976
 #, fuzzy
 msgid "_About Nicotine+"
-msgstr "_Pri Nikotino+"
+msgstr "_Pri Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:988 pynicotine/gtkgui/frame.py:1008
 #, fuzzy
@@ -2711,13 +2711,13 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotino+ renkontis kritikan eraron kaj devas eliri. Bonvolu kopii la sekvan "
+"Nicotine+ renkontis kritikan eraron kaj devas eliri. Bonvolu kopii la sekvan "
 "mesaĝon kaj inkluzivi ĝin en cimraporton:"
 
 #: pynicotine/gtkgui/frame.py:1860
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Forlasu Nikotinon+"
+msgstr "Forlasu Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1861
 #, fuzzy
@@ -2729,12 +2729,12 @@ msgstr "Kopiu & Raporti Cimon"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Forlasu Nikotinon+"
+msgstr "Forlasu Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1906
 #, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Ĉu vi vere volas eliri Nikotino+?"
+msgstr "Ĉu vi vere volas eliri Nicotine+?"
 
 #: pynicotine/gtkgui/frame.py:1908
 #, fuzzy
@@ -3733,7 +3733,7 @@ msgstr "Enigu la nomon de la uzanto, kies akciojn vi volas vidi:"
 #: pynicotine/gtkgui/widgets/trayicon.py:350
 #, fuzzy
 msgid "Hide Nicotine+"
-msgstr "Kaŝi Nikotinon+"
+msgstr "Kaŝi Nicotine+"
 
 #: pynicotine/gtkgui/widgets/treeview.py:68
 #, fuzzy
@@ -3910,7 +3910,7 @@ msgstr "Vi devas specifi uzantnomon kaj pasvorton antaŭ ol konekti…"
 #: pynicotine/pynicotine.py:265
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Forlasante Nikotino+ %(version)s, %(status)s…"
+msgstr "Forlasante Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:268
 #, fuzzy
@@ -3925,7 +3925,7 @@ msgstr "aplikaĵo fermo"
 #: pynicotine/pynicotine.py:297
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Forlasu Nikotino+ %(version)s, %(status)s!"
+msgstr "Forlasu Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:300
 #, fuzzy
@@ -4142,7 +4142,7 @@ msgid ""
 "issues, or another issue in Nicotine+."
 msgstr ""
 "Dosiera indekso de komunaj dosieroj ne estis alirebla. Ĉi tio povus okazi "
-"pro pluraj okazoj de Nikotino+ aktivado samtempe, problemoj pri "
+"pro pluraj okazoj de Nicotine+ aktivado samtempe, problemoj pri "
 "dosierpermeso aŭ alia problemo en Nicotine+."
 
 #: pynicotine/shares.py:724
