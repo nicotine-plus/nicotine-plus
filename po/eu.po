@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 21:24+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/eu/>\n"
 "Language: eu\n"
@@ -37,12 +37,12 @@ msgstr "Bezero grafikoa Soulseek peer-to-peer sarerako"
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 #, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
-msgstr "Soulseek; Nikotina; partekatzea; musika; P2P; parekidea; GTK;"
+msgstr "Soulseek; Nicotine; partekatzea; musika; P2P; parekidea; GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nicotine + Soulseek peer-to-peer sareko bezero grafikoa da."
+msgstr "Nicotine+ Soulseek peer-to-peer sareko bezero grafikoa da."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 #, fuzzy
@@ -51,19 +51,19 @@ msgid ""
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
-"Nikotina + Soulseek bezero ofizialaren iturri irekiko (doako eta irekia) "
+"Nicotine+ Soulseek bezero ofizialaren iturri irekiko (doako eta irekia) "
 "(FOSS) alternatiba izan nahi du, funtzionalitate osagarria eskainiz Soulseek "
 "protokoloarekin gaurkotasuna mantenduz."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:57
 #, fuzzy
 msgid "Nicotine+ Team"
-msgstr "Nikotina+ Taldea"
+msgstr "Nicotine+ Taldea"
 
 #: pynicotine/__init__.py:27
 #, fuzzy
 msgid "Nicotine+ is a Soulseek client"
-msgstr "Nicotine + Soulseek bezeroa da"
+msgstr "Nicotine+ Soulseek bezeroa da"
 
 #: pynicotine/__init__.py:32
 #, fuzzy
@@ -166,8 +166,8 @@ msgstr "Ezin da aurkitu %(option1)s edo %(option2)s, mesedez instalatu bata."
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Ezin izan dira akzioak eskaneatu. Itxi Nikotina + beste instantzia batzuk "
-"eta saiatu berriro."
+"Ezin izan dira akzioak eskaneatu. Itxi Nicotine+ beste instantzia batzuk eta "
+"saiatu berriro."
 
 #: pynicotine/chatrooms.py:237
 #, fuzzy, python-format
@@ -2333,7 +2333,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:222
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Nikotina + %(version)s, %(status)s uztea …"
+msgstr "Nicotine+ %(version)s, %(status)s uztea …"
 
 #: pynicotine/gtkgui/frame.py:370 pynicotine/gtkgui/widgets/iconnotebook.py:476
 #: pynicotine/gtkgui/widgets/treeview.py:486
@@ -2398,8 +2398,7 @@ msgstr "Eguneratuta"
 #: pynicotine/gtkgui/frame.py:640
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr ""
-"Badirudi Nicotine + bertsioaren garapen bertsioa erabiltzen ari zarela."
+msgstr "Badirudi Nicotine+ bertsioaren garapen bertsioa erabiltzen ari zarela."
 
 #: pynicotine/gtkgui/frame.py:648
 msgid "You are using the latest version of Nicotine+."
@@ -2520,7 +2519,7 @@ msgstr "Egiaztatu _azken bertsioa"
 #: pynicotine/gtkgui/frame.py:976
 #, fuzzy
 msgid "_About Nicotine+"
-msgstr "_Nikotina+ buruz"
+msgstr "_Nicotine+ buruz"
 
 #: pynicotine/gtkgui/frame.py:988 pynicotine/gtkgui/frame.py:1008
 #, fuzzy
@@ -2703,13 +2702,13 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotina + -k errore larria izan du eta irten behar du. Mesedez, kopiatu "
-"mezu hau eta sartu akatsen txosten batean:"
+"Nicotine+ -k errore larria izan du eta irten behar du. Mesedez, kopiatu mezu "
+"hau eta sartu akatsen txosten batean:"
 
 #: pynicotine/gtkgui/frame.py:1860
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Utzi Nikotina +"
+msgstr "Utzi Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1861
 #, fuzzy
@@ -2721,12 +2720,12 @@ msgstr "Kopiatu eta jakinarazi akatsa"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Utzi Nikotina +"
+msgstr "Utzi Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1906
 #, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Ziur Nicotine + -tik irten nahi duzula?"
+msgstr "Ziur Nicotine+ -tik irten nahi duzula?"
 
 #: pynicotine/gtkgui/frame.py:1908
 #, fuzzy
@@ -3625,7 +3624,7 @@ msgstr "Errorea ikono pertsonalizatua %(path)s kargatzean: %(error)s"
 #: pynicotine/gtkgui/widgets/trayicon.py:352
 #, fuzzy
 msgid "Show Nicotine+"
-msgstr "Erakutsi Nikotina+"
+msgstr "Erakutsi Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #, fuzzy
@@ -3873,7 +3872,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:265
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Nikotina + %(version)s, %(status)s uztea …"
+msgstr "Nicotine+ %(version)s, %(status)s uztea …"
 
 #: pynicotine/pynicotine.py:268
 #, fuzzy
@@ -3888,7 +3887,7 @@ msgstr "aplikazioaren itxiera"
 #: pynicotine/pynicotine.py:297
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Utzi Nikotina + %(version)s, %(status)s!"
+msgstr "Utzi Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:300
 #, fuzzy
@@ -3907,7 +3906,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Zehaztu zenuen \"%s\" sareko interfazea ez da existitzen. Aldatu edo kendu "
-"zehaztutako sareko interfazea eta berrabiarazi Nicotine +."
+"zehaztutako sareko interfazea eta berrabiarazi Nicotine+."
 
 #: pynicotine/pynicotine.py:322
 #, fuzzy
@@ -4115,8 +4114,8 @@ msgid ""
 "issues, or another issue in Nicotine+."
 msgstr ""
 "Ezin izan da partekatutako fitxategien fitxategien aurkibidea ikusi. Hori "
-"gerta liteke Nikotina + aldi berean aktibo egoteagatik, fitxategien baimen "
-"arazoak edo Nikotina + bertsioaren beste arazo batengatik."
+"gerta liteke Nicotine+ aldi berean aktibo egoteagatik, fitxategien baimen "
+"arazoak edo Nicotine+ bertsioaren beste arazo batengatik."
 
 #: pynicotine/shares.py:724
 #, fuzzy, python-format
@@ -4482,7 +4481,7 @@ msgid ""
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"Nicotine + -ek parez pare sareko sare bat erabiltzen du beste erabiltzaile "
+"Nicotine+ -ek parez pare sareko sare bat erabiltzen du beste erabiltzaile "
 "batzuekin konektatzeko. Erabiltzaileek arazorik gabe zurekin konektatu ahal "
 "izateko, entzuteko ataka irekia funtsezkoa da."
 
@@ -4533,7 +4532,7 @@ msgstr "_Gehitu …"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Nikotina + erabiltzeko prest zaude!"
+msgstr "Nicotine+ erabiltzeko prest zaude!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
@@ -6743,7 +6742,7 @@ msgstr "Ikusgai dauden fitxa nagusiak:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 #, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Nikotina + ixterakoan:"
+msgstr "Nicotine+ ixterakoan:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
 #, fuzzy
