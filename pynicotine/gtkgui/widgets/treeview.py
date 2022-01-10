@@ -119,6 +119,16 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     cols = OrderedDict()
     column_config = None
 
+    # GTK 4 rows need more padding to match GTK 3
+    if Gtk.get_major_version() == 4:
+        progress_padding = 1
+        height_padding = 4
+    else:
+        progress_padding = 0
+        height_padding = 3
+
+    width_padding = 10
+
     for column_id, title, width, column_type, extra in args:
         if treeview_name:
             try:
@@ -135,35 +145,32 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         if not isinstance(width, int):
             width = 0
 
-        # GTK 4 rows need more padding to match GTK 3
-        height_padding = 4 if Gtk.get_major_version() == 4 else 3
+        xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=10, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-
-        elif column_type == "center":
-            renderer = Gtk.CellRendererText(xalign=0.5)
+            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "number":
-            renderer = Gtk.CellRendererText(xalign=0.9)
+            xalign = 1
+            renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-            column.set_alignment(0.9)
+            column.set_alignment(xalign)
 
         elif column_type == "edit":
-            renderer = Gtk.CellRendererText(editable=True, xpad=10, ypad=height_padding)
+            renderer = Gtk.CellRendererText(editable=True, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "progress":
-            renderer = Gtk.CellRendererProgress()
+            renderer = Gtk.CellRendererProgress(ypad=progress_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, value=i)
 
         elif column_type == "toggle":
-            renderer = Gtk.CellRendererToggle(xalign=0.5)
+            xalign = 0.5
+            renderer = Gtk.CellRendererToggle(xalign=xalign)
             column = Gtk.TreeViewColumn(column_id, renderer, active=i)
 
-        else:
+        elif column_type == "icon":
             renderer = Gtk.CellRendererPixbuf()
 
             if column_id == "country":
@@ -204,9 +211,11 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         column.set_reorderable(True)
         column.set_min_width(20)
 
-        column.set_widget(Gtk.Label(label=title))
-        column.get_widget().set_margin_start(5)
-        column.get_widget().show()
+        label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
+        column.set_widget(label)
+
+        if xalign == 1:
+            label.get_parent().set_halign(Gtk.Align.END)
 
         cols[column_id] = column
 
