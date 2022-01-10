@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:24+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-01-10 21:51+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2378,12 +2378,12 @@ msgstr "Atualizado"
 #: pynicotine/gtkgui/frame.py:640
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Você parece estar usando uma versão de desenvolvimento de Nicotina+."
+msgstr "Você parece estar usando uma versão de desenvolvimento de Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:648
 #, fuzzy
 msgid "You are using the latest version of Nicotine+."
-msgstr "Você está usando a versão mais recente de Nicotina+."
+msgstr "Você está usando a versão mais recente de Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:893
 msgid "_Connect"
@@ -2684,7 +2684,7 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nicotina+ encontrou um erro crítico e precisa sair. Copie a seguinte "
+"Nicotine+ encontrou um erro crítico e precisa sair. Copie a seguinte "
 "mensagem e inclua-a em um relatório de bugs:"
 
 #: pynicotine/gtkgui/frame.py:1860
@@ -2707,7 +2707,7 @@ msgstr "Desista da Nicotine+"
 #: pynicotine/gtkgui/frame.py:1906
 #, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Você realmente quer sair da Nicotina+?"
+msgstr "Você realmente quer sair da Nicotine+?"
 
 #: pynicotine/gtkgui/frame.py:1908
 #, fuzzy
@@ -4102,9 +4102,9 @@ msgid ""
 "issues, or another issue in Nicotine+."
 msgstr ""
 "O índice de arquivos de arquivos compartilhados não pôde ser acessado. Isso "
-"pode ocorrer devido a várias instâncias de Nicotina+ estarem ativas "
+"pode ocorrer devido a várias instâncias de Nicotine+ estarem ativas "
 "simultaneamente, problemas de permissão de arquivo ou outro problema em "
-"Nicotina+."
+"Nicotine+."
 
 #: pynicotine/shares.py:724
 #, fuzzy, python-format
@@ -4422,7 +4422,7 @@ msgstr "conversa _Log"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:36
 #, fuzzy
 msgid "Welcome to Nicotine+"
-msgstr "Bem-vindo à Nicotina+"
+msgstr "Bem-vindo à Nicotine+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:91
 #, fuzzy
@@ -4459,7 +4459,7 @@ msgid ""
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"A Nicotina+ usa rede ponto a ponto para se conectar a outros usuários. Para "
+"A Nicotine+ usa rede ponto a ponto para se conectar a outros usuários. Para "
 "permitir que os usuários se conectem a você sem problemas, uma porta de "
 "escuta aberta é crucial."
 
