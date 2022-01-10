@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 20:24+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
 "Language: da\n"
@@ -2060,7 +2060,7 @@ msgstr "OK"
 #: pynicotine/gtkgui/dialogs/preferences.py:2331
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:140
 msgid "Add"
-msgstr "Tilføj:"
+msgstr "Tilføj"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2332
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:113
@@ -2140,6 +2140,7 @@ msgstr "Downloads"
 #: pynicotine/gtkgui/ui/mainwindow.ui:751
 #: pynicotine/gtkgui/ui/settings/uploads.ui:48
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:158
+#, fuzzy
 msgid "Uploads"
 msgstr "Uploads"
 
@@ -5749,7 +5750,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:52
 msgid "Country codes to block (comma separated):"
-msgstr "Landekoder at blokera (afgræns med komma)"
+msgstr "Landekoder at blokera (afgræns med komma):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:65
 #, fuzzy
