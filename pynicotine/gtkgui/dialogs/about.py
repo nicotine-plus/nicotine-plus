@@ -295,6 +295,7 @@ Polish
  - owczi
 
 Portuguese Brazilian
+ - b1llso (2022)
  - yyyyyyyan (2020)
  - Suicide|Solution (2006)
 
