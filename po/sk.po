@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:23+0000\n"
+"PO-Revision-Date: 2022-01-10 20:34+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
@@ -2302,7 +2302,7 @@ msgstr "Naozaj chcete sťahovať súbory %(num)i z priečinka %(user)s%(folder)s
 
 #: pynicotine/gtkgui/frame.py:147 pynicotine/pynicotine.py:221
 #: pynicotine/pynicotine.py:222
-#, python-format
+#, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Načítavam %(program)s %(version)s"
 
