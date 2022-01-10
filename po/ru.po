@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-09 01:49+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2022-01-10 19:01+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/ru/>\n"
 "Language: ru\n"
@@ -5183,8 +5183,9 @@ msgstr "Двойной щелчок для загрузок:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:120
 #: pynicotine/gtkgui/ui/settings/uploads.ui:89
+#, fuzzy
 msgid "Nothing"
-msgstr ""
+msgstr "Ничего такого"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:121
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
