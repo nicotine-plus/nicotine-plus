@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:10+0000\n"
+"PO-Revision-Date: 2022-01-10 20:24+0000\n"
 "Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
@@ -179,7 +179,7 @@ msgstr "Sinut on lisätty yksityiseen huoneeseen: %(room)s"
 #: pynicotine/config.py:131 pynicotine/config.py:148
 #, python-format
 msgid "Can't create directory '%(path)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa  '%(path)s', virheilmoitus %(error)s"
+msgstr "EI voi luoda hakemistoa '%(path)s', virheilmoitus %(error)s"
 
 #: pynicotine/config.py:642
 #, fuzzy, python-format
@@ -1787,7 +1787,7 @@ msgstr "Kirjoita %(dir)s-niminen uusi näennäisnimi:"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:156
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:232
 msgid "Username"
-msgstr "Käyttäjänimi:"
+msgstr "Käyttäjänimi"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:912
 #: pynicotine/gtkgui/dialogs/preferences.py:1071
@@ -2584,7 +2584,7 @@ msgstr "Kiinnostuksen kohteet"
 #: pynicotine/gtkgui/frame.py:1474 pynicotine/userbrowse.py:174
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa  '%(folder)s', virheilmoitus %(error)s"
+msgstr "EI voi luoda hakemistoa '%(folder)s', virheilmoitus %(error)s"
 
 #: pynicotine/gtkgui/frame.py:1479
 #, fuzzy
@@ -4317,7 +4317,7 @@ msgstr "Tallennettu luettelo käyttäjän %(user)s jaetuista tiedostoista %(dir)
 #: pynicotine/userbrowse.py:184
 #, python-format
 msgid "Can't save shares, '%(user)s', reported error: %(error)s"
-msgstr "EI voi luoda hakemistoa  '%(user)s', virheilmoitus %(error)s"
+msgstr "EI voi luoda hakemistoa '%(user)s', virheilmoitus %(error)s"
 
 #: pynicotine/userbrowse.py:197
 #, fuzzy, python-format
@@ -5168,7 +5168,7 @@ msgstr "/ban 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:340
 msgid "Add user 'user' to your ban list"
-msgstr "Lisää käyttäjä  'käyttäjä' estolistallesi"
+msgstr "Lisää käyttäjä 'käyttäjä' estolistallesi"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:355
 #, fuzzy
@@ -5195,7 +5195,7 @@ msgstr "/unignore 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:418
 msgid "Remove user 'user' from your ignore list"
-msgstr "Poista käyttäjä  'käyttäjä' jätä huomiotta-listaltasi"
+msgstr "Poista käyttäjä 'käyttäjä' jätä huomiotta-listaltasi"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:433
 #, fuzzy
@@ -5204,7 +5204,7 @@ msgstr "/selaa /b 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:444
 msgid "Browse files of user 'user'"
-msgstr "Selaa käyttäjän  'käyttäjä' tiedostoja"
+msgstr "Selaa käyttäjän 'käyttäjä' tiedostoja"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:459
 #, fuzzy
@@ -5273,7 +5273,7 @@ msgstr "/rsearch /rs 'kysely'"
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:632
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:600
 msgid "Search the joined rooms for 'query'"
-msgstr "Etsi  'kysely' huoneista joissa olet"
+msgstr "Etsi 'kysely' huoneista joissa olet"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:647
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:615
@@ -5304,7 +5304,7 @@ msgstr "/msg 'käyttäjä' 'viesti'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:726
 msgid "Send message 'message' to user 'user'"
-msgstr "Lähetä viesti  'viesti' käyttäjälle  'käyttäjä'"
+msgstr "Lähetä viesti 'viesti' käyttäjälle 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:741
 #, fuzzy
@@ -5313,7 +5313,7 @@ msgstr "/pm 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:752
 msgid "Open private chat window for user 'user'"
-msgstr "Avaa yksityiskeskustelu käyttäjälle  'käyttäjä'"
+msgstr "Avaa yksityiskeskustelu käyttäjälle 'käyttäjä'"
 
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:32
 #, fuzzy
@@ -5732,7 +5732,7 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:52
 msgid "Country codes to block (comma separated):"
-msgstr "Maakoodit jotka estetään (erotetaan pilkulla)"
+msgstr "Maakoodit jotka estetään (erotetaan pilkulla):"
 
 #: pynicotine/gtkgui/ui/settings/ban.ui:65
 #, fuzzy
