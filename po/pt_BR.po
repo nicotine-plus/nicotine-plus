@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 17:47+0000\n"
+"Last-Translator: Guilherme Santos <gui.srodrigues@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -146,12 +146,11 @@ msgstr ""
 "qualquer um."
 
 #: pynicotine/__init__.py:150
-#, fuzzy
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Falhou em digitalizar as ações. Por favor, feche outras instâncias de "
-"Nicotina+ e tente novamente."
+"Falha na leitura dos compartilhamentos. Por favor, feche outras instâncias "
+"do Nicotine+ e tente novamente."
 
 #: pynicotine/chatrooms.py:237
 #, fuzzy, python-format
@@ -174,9 +173,9 @@ msgid "Unknown config option '%(option)s' in section '%(section)s'"
 msgstr "Opção de config desconhecida '%(option)s' na seção '%(section)s'"
 
 #: pynicotine/config.py:772
-#, fuzzy, python-format
+#, python-format
 msgid "Error backing up config: %s"
-msgstr "Backup de erro de backup: %s"
+msgstr "Erro de backup das configurações: %s"
 
 #: pynicotine/config.py:775
 #, fuzzy, python-format
