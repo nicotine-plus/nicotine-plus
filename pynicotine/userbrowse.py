@@ -62,12 +62,12 @@ class UserBrowse:
     def remove_user(self, user):
         self.users.remove(user)
 
-    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         self.add_user(user)
 
         if self.ui_callback:
-            self.ui_callback.show_user(user, folder, local_shares_type, indeterminate_progress, switch_page)
+            self.ui_callback.show_user(user, path, local_shares_type, indeterminate_progress, switch_page)
 
     def parse_local_shares(self, username, msg):
         """ Parse a local shares list and show it in the UI """
@@ -77,7 +77,7 @@ class UserBrowse:
 
         self.shared_file_list(username, msg)
 
-    def browse_local_public_shares(self, folder=None, new_request=None):
+    def browse_local_public_shares(self, path=None, new_request=None):
         """ Browse your own public shares """
 
         username = self.config.sections["server"]["login"] or "Default"
@@ -89,9 +89,9 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, folder=folder, local_shares_type="normal", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="normal", indeterminate_progress=True)
 
-    def browse_local_buddy_shares(self, folder=None, new_request=False):
+    def browse_local_buddy_shares(self, path=None, new_request=False):
         """ Browse your own buddy shares """
 
         username = self.config.sections["server"]["login"] or "Default"
@@ -103,9 +103,9 @@ class UserBrowse:
             thread.daemon = True
             thread.start()
 
-        self.show_user(username, folder=folder, local_shares_type="buddy", indeterminate_progress=True)
+        self.show_user(username, path=path, local_shares_type="buddy", indeterminate_progress=True)
 
-    def browse_user(self, username, folder=None, local_shares_type=None, new_request=False, switch_page=True):
+    def browse_user(self, username, path=None, local_shares_type=None, new_request=False, switch_page=True):
         """ Browse a user's shares """
 
         if not username:
@@ -113,16 +113,16 @@ class UserBrowse:
 
         if username == (self.config.sections["server"]["login"] or "Default"):
             if local_shares_type == "normal":
-                self.browse_local_public_shares(folder, new_request)
+                self.browse_local_public_shares(path, new_request)
                 return
 
-            self.browse_local_buddy_shares(folder, new_request)
+            self.browse_local_buddy_shares(path, new_request)
             return
 
         if username not in self.users or new_request:
             self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
-        self.show_user(username, folder=folder, switch_page=switch_page)
+        self.show_user(username, path=path, switch_page=switch_page)
 
     def load_shares_list_from_disk(self, filename):
 
@@ -189,9 +189,7 @@ class UserBrowse:
 
         try:
             user, file_path = urllib.parse.unquote(url[7:]).split("/", 1)
-            folder_path = file_path.rsplit("/", 1)[0]
-
-            self.browse_user(user, folder=folder_path.replace("/", "\\"))
+            self.browse_user(user, path=file_path.replace("/", "\\"))
 
         except Exception:
             log.add(_("Invalid Soulseek URL: %s"), url)

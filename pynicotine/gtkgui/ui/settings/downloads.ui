@@ -117,14 +117,14 @@
                   <object class="GtkComboBoxText" id="DownloadDoubleClick">
                     <property name="visible">True</property>
                     <items>
-                      <item>Nothing</item>
-                      <item>Send to Player</item>
-                      <item>Open in File Manager</item>
-                      <item>Search</item>
-                      <item>Pause</item>
-                      <item>Clear</item>
-                      <item>Resume</item>
-                      <item>Browse Folder</item>
+                      <item translatable="yes">Nothing</item>
+                      <item translatable="yes">Send to Player</item>
+                      <item translatable="yes">Open in File Manager</item>
+                      <item translatable="yes">Search</item>
+                      <item translatable="yes">Pause</item>
+                      <item translatable="yes">Clear</item>
+                      <item translatable="yes">Resume</item>
+                      <item translatable="yes">Browse Folder</item>
                     </items>
                   </object>
                 </child>

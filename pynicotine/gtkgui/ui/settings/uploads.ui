@@ -86,14 +86,14 @@
                   <object class="GtkComboBoxText" id="UploadDoubleClick">
                     <property name="visible">True</property>
                     <items>
-                      <item>Nothing</item>
-                      <item>Send to Player</item>
-                      <item>Open in File Manager</item>
-                      <item>Search</item>
-                      <item>Abort</item>
-                      <item>Clear</item>
-                      <item>Retry</item>
-                      <item>Browse Folder</item>
+                      <item translatable="yes">Nothing</item>
+                      <item translatable="yes">Send to Player</item>
+                      <item translatable="yes">Open in File Manager</item>
+                      <item translatable="yes">Search</item>
+                      <item translatable="yes">Abort</item>
+                      <item translatable="yes">Clear</item>
+                      <item translatable="yes">Retry</item>
+                      <item translatable="yes">Browse Folder</item>
                     </items>
                   </object>
                 </child>
