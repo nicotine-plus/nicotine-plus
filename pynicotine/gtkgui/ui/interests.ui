@@ -200,11 +200,11 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="border-end"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="border-end"/>
-                </style>
               </object>
             </child>
             <child>
