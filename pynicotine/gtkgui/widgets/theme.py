@@ -159,7 +159,8 @@ def set_global_css():
 
     /* Borders */
 
-    .border-top {
+    .border-top,
+    .preferences-border .dialog-action-box {
         border-top: 1px solid @borders;
     }
 
@@ -169,16 +170,13 @@ def set_global_css():
 
     .border-start:dir(ltr),
     .border-end:dir(rtl) {
-        border-left: 1px solid @borders;
+        /* Use box-shadow to avoid double window border in narrow flowbox */
+        box-shadow: -1px 0 0 0 @borders;
     }
 
     .border-end:dir(ltr),
     .border-start:dir(rtl) {
-        border-right: 1px solid @borders;
-    }
-
-    .preferences-border .dialog-action-box {
-        border-top: 1px solid @borders;
+        box-shadow: 1px 0 0 0 @borders;
     }
 
     /* Buttons */
