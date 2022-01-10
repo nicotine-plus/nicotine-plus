@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 18:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 20:22+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
 "Language: sk\n"
@@ -1827,6 +1827,7 @@ msgid "Enter the name of the user you want to ban:"
 msgstr "Zadajte názov súkromnej miestnosti, ktorú chcete vytvoriť"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1198
+#, fuzzy
 msgid "Block IP Address"
 msgstr "Blokovať IP _adresu..."
 
@@ -2301,7 +2302,7 @@ msgstr "Naozaj chcete sťahovať súbory %(num)i z priečinka %(user)s%(folder)s
 
 #: pynicotine/gtkgui/frame.py:147 pynicotine/pynicotine.py:221
 #: pynicotine/pynicotine.py:222
-#, python-format
+#, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Ukončenie Nicotine+ [X19x], %(status)s…"
 
@@ -5762,7 +5763,7 @@ msgstr "Doplňovanie"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:158
 msgid "Enable spell checker (requires a restart)"
-msgstr "Aktivovať kontrolu pravopisu (vyžaduje reštart programu):"
+msgstr "Aktivovať kontrolu pravopisu (vyžaduje reštart programu)"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:164
 msgid "Enable tab-key completion"
