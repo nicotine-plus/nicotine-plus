@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 21:28+0000\n"
+"PO-Revision-Date: 2022-01-10 21:30+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
@@ -35,11 +35,8 @@ msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Soulseekin vertaisverkon graafinen asiakasohjelma"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
-#, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
-msgstr ""
-"Soulseek, mitäs nyt? Nikotiini;jakaminen;musiikki; P2P;vertaisverkko; GTK: "
-"lla;"
+msgstr "Soulseek;Nicotine;jakaminen;musiikki;P2P;vertaisverkko; GTK;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
@@ -168,7 +165,7 @@ msgstr "%(option1)s tai %(option2)s ei löydä, asenna jompikumpi."
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Jakojen tarkistaminen epäonnistui. Sulje muut Nikotine+-esiintymät ja yritä "
+"Jakojen tarkistaminen epäonnistui. Sulje muut Nicotine+ -esiintymät ja yritä "
 "uudelleen."
 
 #: pynicotine/chatrooms.py:237
@@ -4106,8 +4103,8 @@ msgid ""
 "issues, or another issue in Nicotine+."
 msgstr ""
 "Jaettujen tiedostojen tiedostoindeksiä ei voitu käyttää. Tämä voi johtua "
-"useista Nikotine+ -tapauksista, jotka ovat aktiivisia samanaikaisesti, "
-"tiedostojen käyttöoikeusongelmista tai toisesta Nikotine+-ongelmasta."
+"useista Nicotine+  -tapauksista, jotka ovat aktiivisia samanaikaisesti, "
+"tiedostojen käyttöoikeusongelmista tai toisesta Nicotine+ -ongelmasta."
 
 #: pynicotine/shares.py:724
 #, fuzzy, python-format
