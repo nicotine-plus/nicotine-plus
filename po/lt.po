@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 20:24+0000\n"
+"Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/lt/>\n"
 "Language: lt\n"
@@ -4101,7 +4101,7 @@ msgstr "Atsijungta nuo serverio %(host)s:%(port)s"
 #: pynicotine/slskproto.py:657
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
-msgstr "Arba serveris neveikia, arba neatsako, kitas bandymas po %i sek."
+msgstr "Arba serveris neveikia, arba neatsako, kitas bandymas po %i sek"
 
 #: pynicotine/slskproto.py:924
 #, fuzzy, python-format
