@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-08 12:15+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
 "Language: da\n"
@@ -42,7 +42,7 @@ msgstr "Soulseek; Nikotin;deling;musik; P2P;peer-to-peer; GTK;"
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
-msgstr "Nikotin+ er en grafisk kunde til Soulseek peer-to-peer-netværket."
+msgstr "Nicotine+ er en grafisk klient til Soulseek peer-to-peer-netværket."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:15
 #, fuzzy
@@ -51,7 +51,7 @@ msgid ""
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
-"Nikotin+ har til formål at være et behageligt, gratis og open source (FOSS) "
+"Nicotine+ har til formål at være et behageligt, gratis og open source (FOSS) "
 "alternativ til den officielle Soulseek-klient, hvilket giver yderligere "
 "funktionalitet, samtidig med at den holder sig opdateret med Soulseek-"
 "protokollen."
@@ -64,7 +64,7 @@ msgstr "Nicotine+"
 #: pynicotine/__init__.py:27
 #, fuzzy
 msgid "Nicotine+ is a Soulseek client"
-msgstr "Nikotin+ er en Soulseek-klient"
+msgstr "Nicotine+ er en Soulseek-klient"
 
 #: pynicotine/__init__.py:32
 #, fuzzy
@@ -165,7 +165,7 @@ msgstr "%(option1)s eller %(option2)s blev ikke fundet."
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Aktierne kunne ikke scannes. Luk andre Nikotin+-forekomster, og prøv igen."
+"Aktierne kunne ikke scannes. Luk andre Nicotine+-forekomster, og prøv igen."
 
 #: pynicotine/chatrooms.py:237
 #, fuzzy, python-format
@@ -2349,7 +2349,7 @@ msgstr "Vil du virkelig hente %(num)i filer fra %(user)ss mappe %(folder)s?"
 #: pynicotine/pynicotine.py:225
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Afslutter Nikotin+ %(version)s, %(status)s…"
+msgstr "Afslutter Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/gtkgui/frame.py:217
 #, fuzzy
@@ -2437,12 +2437,12 @@ msgstr "Opdateret"
 #: pynicotine/gtkgui/frame.py:666
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
-msgstr "Du ser ud til at bruge en udviklingsversion af Nikotin+."
+msgstr "Du ser ud til at bruge en udviklingsversion af Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:674
 #, fuzzy
 msgid "You are using the latest version of Nicotine+."
-msgstr "Du bruger den nyeste version af Nikotin+."
+msgstr "Du bruger den nyeste version af Nicotine+."
 
 #: pynicotine/gtkgui/frame.py:919
 msgid "_Connect"
@@ -2729,13 +2729,13 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotin+ er stødt på en kritisk fejl og skal afsluttes. Kopier følgende "
+"Nicotine+ er stødt på en kritisk fejl og skal afsluttes. Kopier følgende "
 "meddelelse, og medtag den i en fejlrapport:"
 
 #: pynicotine/gtkgui/frame.py:1915
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Afslut Nikotin+"
+msgstr "Afslut Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1916
 #, fuzzy
@@ -2747,7 +2747,7 @@ msgstr "Fejl i kopiering og rapport"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Afslut Nikotin+"
+msgstr "Afslut Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1961
 #, fuzzy
@@ -3915,7 +3915,7 @@ msgstr ""
 #: pynicotine/pynicotine.py:268
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
-msgstr "Afslutter Nikotin+ %(version)s, %(status)s…"
+msgstr "Afslutter Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/pynicotine.py:271
 #, fuzzy
@@ -3930,7 +3930,7 @@ msgstr "lukning af program"
 #: pynicotine/pynicotine.py:300
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Afslut Nikotin+ %(version)s, %(status)s!"
+msgstr "Afslut Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:303
 #, fuzzy
@@ -3949,7 +3949,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Den netværksgrænseflade, du har angivet , '%s', findes ikke. Rediger eller "
-"fjern den angivne netværksgrænseflade, og genstart Nikotin+."
+"fjern den angivne netværksgrænseflade, og genstart Nicotine+."
 
 #: pynicotine/pynicotine.py:325
 #, fuzzy
@@ -4502,7 +4502,7 @@ msgid ""
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"Nikotin+ bruger peer-to-peer-netværk til at oprette forbindelse til andre "
+"Nicotine+ bruger peer-to-peer-netværk til at oprette forbindelse til andre "
 "brugere. For at give brugerne mulighed for at oprette forbindelse til dig "
 "uden problemer, er en åben lytteport afgørende."
 
@@ -4552,7 +4552,7 @@ msgstr "_Add…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Du er klar til at bruge Nikotin+!"
+msgstr "Du er klar til at bruge Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
@@ -6713,7 +6713,7 @@ msgstr "Synlige primære faner:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 #, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Ved lukning af Nikotin+:"
+msgstr "Ved lukning af Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
 #, fuzzy

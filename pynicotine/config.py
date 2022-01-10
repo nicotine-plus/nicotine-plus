@@ -62,9 +62,9 @@ class Config:
         self.application_name = "Nicotine+"
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
-        self.copyright = """© 2001-2003 PySoulSeek Contributors
-© 2003-2004 Nicotine Team
-© 2004-2022 Nicotine+ Team"""
+        self.copyright = """© 2004–2022 Nicotine+ Team
+© 2003–2004 Nicotine Team
+© 2001–2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org/"
         self.privileges_url = "https://www.slsknet.org/userlogin.php?username=%s"
@@ -155,10 +155,10 @@ class Config:
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
             "server": {
-                "server": ('server.slsknet.org', 2242),
-                "login": '',
-                "passw": '',
-                "interface": '',
+                "server": ("server.slsknet.org", 2242),
+                "login": "",
+                "passw": "",
+                "interface": "",
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
@@ -177,7 +177,6 @@ class Config:
                 "private_chatrooms": False,
                 "command_aliases": {}
             },
-
             "transfers": {
                 "incompletedir": os.path.join(self.data_dir, 'incomplete'),
                 "downloaddir": os.path.join(self.data_dir, 'downloads'),
@@ -215,7 +214,6 @@ class Config:
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
                 "geoblock": False,
-                "geopanic": False,
                 "geoblockcc": [""],
                 "remotedownloads": True,
                 "uploadallowed": 2,
@@ -237,12 +235,10 @@ class Config:
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
             },
-
             "userinfo": {
                 "descr": "''",
                 "pic": ""
             },
-
             "words": {
                 "censored": [],
                 "autoreplaced": {
@@ -268,7 +264,6 @@ class Config:
                 "aliases": True,
                 "onematch": False
             },
-
             "logging": {
                 "debug": False,
                 "debugmodes": [],
@@ -290,27 +285,22 @@ class Config:
                 "readprivatelines": 15,
                 "rooms": []
             },
-
             "privatechat": {
                 "store": True,
                 "users": []
             },
-
             "columns": {
                 "file_search": {},
                 "download": {},
                 "upload": {},
                 "user_browse": {},
                 "buddy_list": {},
-                "chat_room": {},
-                "hideflags": False
+                "chat_room": {}
             },
-
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
                 "maxresults": 50,
-                "re_filter": False,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -328,7 +318,6 @@ class Config:
                 "remove_special_chars": True,
                 "private_search_results": True
             },
-
             "ui": {
                 "dark_mode": False,
                 "header_bar": True,
@@ -349,7 +338,6 @@ class Config:
                 "inputcolor": "",
                 "spellcheck": True,
                 "exitdialog": 1,
-                "notexists": True,
                 "tab_default": "",
                 "tab_hilite": "#497ec2",
                 "tab_changed": "#497ec2",
@@ -361,16 +349,8 @@ class Config:
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
                 "tab_status_icons": True,
-                "labelmain": 0,
-                "labelrooms": 0,
-                "labelprivate": 0,
-                "labelinfo": 0,
-                "labelbrowse": 0,
-                "labelsearch": 0,
-                "decimalsep": ",",
                 "globalfont": "",
                 "chatfont": "",
-                "roomlistcollapsed": False,
                 "tabclosers": True,
                 "searchfont": "",
                 "listfont": "",
@@ -398,7 +378,6 @@ class Config:
                     "chatrooms",
                     "interests"
                 ],
-                "showaway": False,
                 "buddylistinchatrooms": "tab",
                 "trayicon": True,
                 "startup_hidden": False,
@@ -416,22 +395,16 @@ class Config:
                 "file_path_tooltips": True,
                 "reverse_file_paths": True
             },
-
             "private_rooms": {
                 "rooms": {}
             },
-
             "urls": {
-                "urlcatching": True,
-                "protocols": {},
-                "humanizeurls": True
+                "protocols": {}
             },
-
             "interests": {
                 "likes": [],
                 "dislikes": []
             },
-
             "players": {
                 "default": "",
                 "npothercommand": "",
@@ -439,11 +412,9 @@ class Config:
                 "npformatlist": [],
                 "npformat": ""
             },
-
             "notifications": {
                 "notification_window_title": True,
                 "notification_tab_colors": False,
-                "notification_tab_icons": True,
                 "notification_popup_sound": False,
                 "notification_popup_file": True,
                 "notification_popup_folder": True,
@@ -451,12 +422,10 @@ class Config:
                 "notification_popup_chatroom": False,
                 "notification_popup_chatroom_mention": True
             },
-
             "plugins": {
                 "enable": True,
                 "enabled": []
             },
-
             "statistics": {
                 "started_downloads": 0,
                 "completed_downloads": 0,
@@ -474,7 +443,8 @@ class Config:
                 "shownotification",
                 "shownotificationperfolder",
                 "prioritize",
-                "sharedownloaddir"
+                "sharedownloaddir",
+                "geopanic"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -502,7 +472,17 @@ class Config:
                 "chat_hidebuttons",
                 "tab_reorderable",
                 "private_search_results",
-                "private_shares"
+                "private_shares",
+                "labelmain",
+                "labelrooms",
+                "labelprivate",
+                "labelinfo",
+                "labelbrowse",
+                "labelsearch",
+                "notexists",
+                "roomlistcollapsed",
+                "showaway",
+                "decimalsep"
             ),
             "columns": (
                 "downloads",
@@ -524,13 +504,15 @@ class Config:
                 "upload_columns",
                 "upload_widths",
                 "filesearch_columns",
-                "filesearch_widths"
+                "filesearch_widths",
+                "hideflags"
             ),
             "searches": (
                 "distrib_timer",
                 "distrib_ignore",
                 "reopen_tabs",
-                "max_stored_results"
+                "max_stored_results",
+                "re_filter"
             ),
             "userinfo": (
                 "descrutf8"
@@ -549,6 +531,13 @@ class Config:
             "language": (
                 "language",
                 "setlanguage"
+            ),
+            "urls": (
+                "urlcatching",
+                "humanizeurls"
+            ),
+            "notifications": (
+                "notification_tab_icons"
             )
         }
 

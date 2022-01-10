@@ -40,7 +40,6 @@ class Uploads(TransferList):
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
         self.aborted_status = _("Aborted")
-        self.tray_template = _("Uploads: %(speed)s")
 
         TransferList.__init__(self, frame, transfer_type="upload")
 

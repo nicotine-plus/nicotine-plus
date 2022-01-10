@@ -149,7 +149,7 @@ from pynicotine.slskmessages import ServerDisconnect
 from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import ServerTimeout
-from pynicotine.slskmessages import SetCurrentConnectionCount
+from pynicotine.slskmessages import SetConnectionStats
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetUploadLimit
@@ -409,7 +409,6 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
-    NUMSOCKETS_CALLBACK_INTERVAL = 0.5
 
     def __init__(self, core_callback, queue, bindip, interface, port, port_range, network_filter, eventprocessor):
         """ core_callback is a NicotineCore callback function to be called with messages
@@ -474,8 +473,7 @@ class SlskProtoThread(threading.Thread):
         self.max_distrib_children = 10
 
         self._numsockets = 1
-        self._last_numsockets = 0
-        self._last_numsockets_time = 0
+        self._last_conn_stat_time = 0
 
         self._conns = {}
         self._connsinprogress = {}
@@ -493,6 +491,8 @@ class SlskProtoThread(threading.Thread):
         self._dlimits = {}
         self.total_uploads = 0
         self.total_downloads = 0
+        self.total_download_bandwidth = 0
+        self.total_upload_bandwidth = 0
         self.last_cycle_time = time.time()
         self.current_cycle_loop_count = 0
         self.last_cycle_loop_count = 0
@@ -616,7 +616,8 @@ class SlskProtoThread(threading.Thread):
         if self._want_abort:
             return
 
-        self._callback_msgs.append(SetCurrentConnectionCount(0))
+        # Reset connection stats
+        self._callback_msgs.append(SetConnectionStats())
 
         if not self.server_address:
             # We didn't successfully establish a connection to the server
@@ -978,10 +979,18 @@ class SlskProtoThread(threading.Thread):
 
         if self._is_download(conn_obj):
             self.total_downloads -= 1
+
+            if not self.total_downloads:
+                self.total_download_bandwidth = 0
+
             self._calc_download_limit()
 
         elif self._is_upload(conn_obj):
             self.total_uploads -= 1
+
+            if not self.total_uploads:
+                self.total_upload_bandwidth = 0
+
             self._calc_upload_limit_function()
 
         # If we're shutting down, we've already closed the selector in abort()
@@ -1861,6 +1870,9 @@ class SlskProtoThread(threading.Thread):
         if not data:
             return False
 
+        if sock is not self.server_socket and conn_obj.filedown:
+            self.total_download_bandwidth += len(data)
+
         return True
 
     def write_data(self, conn_obj):
@@ -1914,6 +1926,7 @@ class SlskProtoThread(threading.Thread):
             if bytes_send <= 0:
                 return
 
+            self.total_upload_bandwidth += bytes_send
             current_time = time.time()
             finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
 
@@ -1947,11 +1960,14 @@ class SlskProtoThread(threading.Thread):
 
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once, if there are a lot of connections.
-            if (self._last_numsockets != self._numsockets
-                    and (current_time - self._last_numsockets_time) > self.NUMSOCKETS_CALLBACK_INTERVAL):
-                self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
-                self._last_numsockets_time = current_time
-                self._last_numsockets = self._numsockets
+            if (current_time - self._last_conn_stat_time) >= 1:
+                self._callback_msgs.append(
+                    SetConnectionStats(self._numsockets, self.total_downloads, self.total_download_bandwidth,
+                                       self.total_uploads, self.total_upload_bandwidth))
+
+                self.total_download_bandwidth = 0
+                self.total_upload_bandwidth = 0
+                self._last_conn_stat_time = current_time
 
             # Process outgoing messages
             if self._queue:

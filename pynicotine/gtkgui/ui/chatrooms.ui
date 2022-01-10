@@ -46,7 +46,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
@@ -90,7 +90,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
@@ -135,6 +135,7 @@
                         <child>
                           <object class="GtkMenuButton" id="ShowRoomWall">
                             <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Room wall</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -218,7 +219,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="width-request">350</property>
+                        <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>

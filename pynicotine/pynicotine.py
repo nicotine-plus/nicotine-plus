@@ -185,7 +185,7 @@ class NicotineCore:
             slskmessages.ResetDistributed: self.dummy_message,
             slskmessages.ServerTimeout: self.server_timeout,
             slskmessages.TransferTimeout: self.transfer_timeout,
-            slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
+            slskmessages.SetConnectionStats: self.set_connection_stats,
             slskmessages.GlobalRecommendations: self.global_recommendations,
             slskmessages.Recommendations: self.recommendations,
             slskmessages.ItemRecommendations: self.item_recommendations,
@@ -252,6 +252,7 @@ class NicotineCore:
         self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
+        self.set_connection_stats(slskmessages.SetConnectionStats())
         connect_ready = not config.need_config()
 
         if not connect_ready:
@@ -508,9 +509,9 @@ class NicotineCore:
     def transfer_timeout(self, msg):
         self.transfers.transfer_timeout(msg)
 
-    def set_current_connection_count(self, msg):
+    def set_connection_stats(self, msg):
         if self.ui_callback:
-            self.ui_callback.set_current_connection_count(msg.msg)
+            self.ui_callback.set_connection_stats(msg)
 
     """
     Incoming Server Messages
@@ -1010,7 +1011,7 @@ class NicotineCore:
         if not status:
             pic = None
             descr = self.ban_message % reason
-            descr += "\n\n--------------------------------------------------------\n\n"
+            descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 
         else:

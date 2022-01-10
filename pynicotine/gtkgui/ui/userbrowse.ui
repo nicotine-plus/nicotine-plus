@@ -242,7 +242,7 @@
                       </object>
                     </child>
                     <style>
-                      <class name="border-right"/>
+                      <class name="border-end"/>
                     </style>
                   </object>
                 </child>

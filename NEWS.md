@@ -593,7 +593,7 @@ Changes
  * Improved UI responsiveness when browsing your own shares
  * Added option to minimize Nicotine+ to tray on startup
  * Added "Now Playing Search" plugin for searching files based on data from songs playing in your media player
- * Added "Now Playing Sender" plugin for automatically sending names of songs playing to select chat rooms 
+ * Added "Now Playing Sender" plugin for automatically sending names of songs playing to select chat rooms
  * Builtin plugins load properly on Windows again
  * Modified config backup behavior to not back up the config if "Cancel" is pressed in the file chooser
  * Shares lists saved in older versions of Nicotine+ can now be loaded again

@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-08 12:15+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sv/>\n"
 "Language: sv\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
 #, fuzzy
 msgid "Nicotine+"
-msgstr "Nikotin+"
+msgstr "Nicotine+"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:6
 #, fuzzy
@@ -3674,7 +3674,7 @@ msgstr "Fel vid laddning av anpassad ikon %(path)s: %(error)s"
 #: pynicotine/gtkgui/widgets/trayicon.py:352
 #, fuzzy
 msgid "Show Nicotine+"
-msgstr "Visa Nikotin+"
+msgstr "Visa Nicotine+"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:86
 #, fuzzy

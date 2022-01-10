@@ -1340,9 +1340,14 @@ class Transfers:
 
                 if oldelapsed == i.time_elapsed:
                     needupdate = False
-            else:
-                self.upload_finished(i, file_handle=msg.file)
-                needupdate = False
+
+            elif i.speed is not None:
+                # Inform the server about the last upload speed for this transfer
+                self.upload_speed = i.speed
+                self.queue.append(slskmessages.SendUploadSpeed(i.speed))
+
+                i.speed = None
+                i.time_left = ""
 
             i.last_byte_offset = i.current_byte_offset
             i.last_update = current_time
@@ -1353,8 +1358,7 @@ class Transfers:
             break
 
     def file_conn_close(self, sock):
-        """ The remote user has closed the connection either because they logged off, or
-        because there's a network problem """
+        """ The remote peer has closed a file transfer connection """
 
         for i in self.downloads:
             if i.sock == sock:
@@ -1369,36 +1373,39 @@ class Transfers:
 
     def _file_conn_close(self, i, transfer_type):
 
-        self.abort_transfer(i)
-        auto_clear = False
+        if transfer_type == "download":
+            self.abort_transfer(i)
 
-        if i.status != "Finished":
-            if transfer_type == "download":
+            if i.status != "Finished":
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
                     i.status = "Connection closed by peer"
 
-            elif transfer_type == "upload":
-                if self.user_logged_out(i.user):
-                    i.status = "User logged off"
-                else:
-                    i.status = "Cancelled"
-
-                    # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
-                    # intentionally cancelled, the peer should ignore this message.
-                    self.core.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename))
-
-                auto_clear = True
-
-        if transfer_type == "download":
             self.update_download(i)
 
         elif transfer_type == "upload":
-            if auto_clear and self.auto_clear_upload(i):
-                # Upload cleared
-                pass
+            if i.current_byte_offset >= i.size:
+                # We finish the upload here in case the downloading peer has a slow/limited download
+                # speed and finishes later than us
+                self.upload_finished(i, file_handle=i.file)
+                return
+
+            if i.status == "Finished":
+                return
+
+            self.abort_transfer(i)
+
+            if self.user_logged_out(i.user):
+                i.status = "User logged off"
             else:
+                i.status = "Cancelled"
+
+                # Transfer ended abruptly. Tell the peer to re-queue the file. If the transfer was
+                # intentionally cancelled, the peer should ignore this message.
+                self.core.send_message_to_peer(i.user, slskmessages.UploadFailed(None, i.filename))
+
+            if not self.auto_clear_upload(i):
                 self.update_upload(i)
 
             self.check_upload_queue()
@@ -1878,11 +1885,6 @@ class Transfers:
         })
 
     def upload_finished(self, i, file_handle=None):
-
-        if i.speed is not None:
-            # Inform the server about the last upload speed for this transfer
-            self.upload_speed = i.speed
-            self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
         self.close_file(file_handle, i)
 

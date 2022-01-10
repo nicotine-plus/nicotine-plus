@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-06 18:53+0200\n"
-"PO-Revision-Date: 2022-01-06 01:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-08 12:15+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/"
 "nicotine-plus/nicotine-plus/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -144,8 +144,8 @@ msgstr "Finner ikke %(option1)s eller %(option2)s. Installer én av delene."
 msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
-"Kan ikke skanne delte ressurser. Lukk andre Nikotin+-forekomster, og prøv på "
-"nytt."
+"Kan ikke skanne delte ressurser. Lukk andre Nicotine+-forekomster, og prøv "
+"på nytt."
 
 #: pynicotine/chatrooms.py:237
 #, python-format
@@ -2507,7 +2507,7 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotin+ har støtt på en kritisk feil og må avsluttes. Kopier følgende "
+"Nicotine+ har støtt på en kritisk feil og må avsluttes. Kopier følgende "
 "melding og inkluder den i en feilrapport:"
 
 #: pynicotine/gtkgui/frame.py:1915
@@ -3643,7 +3643,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Nettverksgrensesnittet du angav, %s, finnes ikke. Endre eller fjern det "
-"angitte nettverksgrensesnittet og start Nikotin+ på nytt."
+"angitte nettverksgrensesnittet og start Nicotine+ på nytt."
 
 #: pynicotine/pynicotine.py:325
 #, fuzzy
@@ -4155,7 +4155,7 @@ msgstr "_Log samtale"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:36
 #, fuzzy
 msgid "Welcome to Nicotine+"
-msgstr "Velkommen til Nikotin+"
+msgstr "Velkommen til Nicotine+"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:91
 msgid "_Set Up…"
@@ -4190,7 +4190,7 @@ msgid ""
 "to allow users to connect to you without trouble, an open listening port is "
 "crucial."
 msgstr ""
-"Nikotin+ bruker node-til-node-nettverk for å koble til andre brukere. For å "
+"Nicotine+ bruker node-til-node-nettverk for å koble til andre brukere. For å "
 "tillate brukere å koble til deg uten problemer, er en åpen lytteport "
 "avgjørende."
 
@@ -4239,7 +4239,7 @@ msgstr "_Add…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Du er klar til å bruke Nikotin+!"
+msgstr "Du er klar til å bruke Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy

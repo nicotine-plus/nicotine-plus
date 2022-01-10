@@ -340,7 +340,7 @@ class Search(UserInterface):
             ["user", _("User"), 200, "text", color_col],
             ["country", _("Country"), 25, "icon", None],
             ["speed", _("Speed"), 100, "number", color_col],
-            ["in_queue", _("In Queue"), 90, "center", color_col],
+            ["in_queue", _("In Queue"), 90, "number", color_col],
             ["folder", _("Folder"), 400, "text", color_col],
             ["filename", _("Filename"), 400, "text", color_col],
             ["size", _("Size"), 100, "number", color_col],

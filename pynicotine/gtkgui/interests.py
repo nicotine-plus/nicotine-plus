@@ -39,7 +39,7 @@ class Interests(UserInterface):
     def __init__(self, frame):
 
         super().__init__("ui/interests.ui")
-        frame.interestsvbox.add(self.Main)
+        frame.interests_container.add(self.Main)
 
         self.frame = frame
         self.page_id = "interests"
@@ -105,15 +105,19 @@ class Interests(UserInterface):
         cols = initialise_columns(
             frame, None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "icon", None],
-            ["user", _("User"), 100, "text", None],
-            ["speed", _("Speed"), 100, "text", None],
-            ["files", _("Files"), 100, "text", None],
+            ["user", _("User"), 135, "text", None],
+            ["speed", _("Speed"), 60, "number", None],
+            ["files", _("Files"), -1, "number", None],
         )
 
         cols["status"].set_sort_column_id(4)
         cols["user"].set_sort_column_id(1)
         cols["speed"].set_sort_column_id(5)
         cols["files"].set_sort_column_id(6)
+
+        cols["user"].set_expand(True)
+        cols["speed"].set_expand(True)
+        cols["files"].set_expand(True)
 
         cols["status"].get_widget().hide()
 

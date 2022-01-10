@@ -17,12 +17,14 @@
             <property name="selection-mode">browse</property>
             <signal name="row-selected" handler="on_switch_page"/>
             <style>
-              <class name="border-right"/>
               <class name="navigation-sidebar"/>
               <class name="view"/>
             </style>
           </object>
         </child>
+        <style>
+          <class name="border-end"/>
+        </style>
       </object>
     </child>
     <child>
