@@ -135,6 +135,7 @@
                         <child>
                           <object class="GtkMenuButton" id="ShowRoomWall">
                             <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Room wall</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>

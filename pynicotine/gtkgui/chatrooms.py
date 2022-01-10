@@ -669,24 +669,11 @@ class ChatRoom(UserInterface):
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])
 
-    def update_room_wall_tooltip(self, active):
-
-        if active:
-            self.ShowRoomWall.set_tooltip_text(_("Room wall (personal message set)"))
-            return
-
-        self.ShowRoomWall.set_tooltip_text(_("Room wall"))
-
     def ticker_set(self, msg):
 
         self.tickers.clear_tickers()
-        login_username = self.frame.np.login_username
-        has_own_ticker = False
 
         for user, message in msg.msgs:
-            if user == login_username:
-                has_own_ticker = True
-
             if self.frame.np.network_filter.is_user_ignored(user) or \
                     self.frame.np.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
@@ -694,14 +681,9 @@ class ChatRoom(UserInterface):
 
             self.tickers.add_ticker(user, message)
 
-        self.update_room_wall_tooltip(has_own_ticker)
-
     def ticker_add(self, msg):
 
         user = msg.user
-
-        if user == self.frame.np.login_username:
-            self.update_room_wall_tooltip(True)
 
         if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
             # User ignored, ignore Ticker messages
@@ -710,10 +692,6 @@ class ChatRoom(UserInterface):
         self.tickers.add_ticker(msg.user, msg.msg)
 
     def ticker_remove(self, msg):
-
-        if msg.user == self.frame.np.login_username:
-            self.update_room_wall_tooltip(False)
-
         self.tickers.remove_ticker(msg.user)
 
     def show_notification(self, login, user, text, tag):
