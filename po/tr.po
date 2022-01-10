@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-01-10 19:39+0000\n"
+"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -5184,27 +5184,23 @@ msgstr "İndirmeler için çift tıklama eylemi:"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:120
 #: pynicotine/gtkgui/ui/settings/uploads.ui:89
-#, fuzzy
 msgid "Nothing"
-msgstr "Hiçbir şey değil"
+msgstr "Hiçbir Şey Yapma"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:121
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
-#, fuzzy
 msgid "Send to Player"
-msgstr "_Oynatıcıya Gönder"
+msgstr "Oynatıcıya Gönder"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:122
 #: pynicotine/gtkgui/ui/settings/uploads.ui:91
-#, fuzzy
 msgid "Open in File Manager"
-msgstr "_Dosya Yöneticisinde Aç"
+msgstr "Dosya Yöneticisinde Aç"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:127
 #: pynicotine/gtkgui/ui/settings/uploads.ui:96
-#, fuzzy
 msgid "Browse Folder"
-msgstr "Klasör(ler)e _Göz At"
+msgstr "Klasöre Göz At"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:146
 msgid "Download Speed Limits"
@@ -5606,9 +5602,8 @@ msgid "Abort"
 msgstr "İptal"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:95
-#, fuzzy
 msgid "Retry"
-msgstr "_Yeniden Dene"
+msgstr "Yeniden Dene"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:115
 msgid "Upload Speed Limits"
