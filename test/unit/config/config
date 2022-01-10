@@ -53,7 +53,6 @@ enabletransferbuttons = True
 groupdownloads = 1
 groupuploads = 1
 geoblock = False
-geopanic = False
 geoblockcc = ['']
 remotedownloads = True
 uploadallowed = 2
@@ -127,13 +126,11 @@ upload = {'user': {'visible': True, 'width': 200}, 'path': {'visible': True, 'wi
 user_browse = {}
 buddy_list = {'status': {'visible': True, 'width': 25}, 'country': {'visible': True, 'width': 25}, 'user': {'visible': True, 'width': 250}, 'speed': {'visible': True, 'width': 150}, 'files': {'visible': True, 'width': 150}, 'trusted': {'visible': True, 'width': 72}, 'notify': {'visible': True, 'width': 61}, 'privileged': {'visible': True, 'width': 87}, 'last_seen': {'visible': True, 'width': 160}, 'comments': {'visible': True, 'width': 940}}
 chat_room = {}
-hideflags = False
 
 [searches]
 expand_searches = True
 group_searches = 1
 maxresults = 50
-re_filter = False
 history = []
 enablefilters = False
 filters_visible = False
@@ -171,7 +168,6 @@ searchq = GREY
 inputcolor = 
 spellcheck = True
 exitdialog = 1
-notexists = True
 tab_default = 
 tab_hilite = #497ec2
 tab_changed = #497ec2
@@ -183,16 +179,8 @@ tabinfo = Top
 tabbrowse = Top
 tabsearch = Top
 tab_status_icons = True
-labelmain = 0
-labelrooms = 0
-labelprivate = 0
-labelinfo = 0
-labelbrowse = 0
-labelsearch = 0
-decimalsep = ,
 globalfont = 
 chatfont = 
-roomlistcollapsed = False
 tabclosers = True
 searchfont = 
 listfont = 
@@ -201,7 +189,6 @@ transfersfont =
 last_tab_id = 0
 modes_visible = {'search': True, 'downloads': True, 'uploads': True, 'userbrowse': True, 'userinfo': True, 'private': True, 'chatrooms': True, 'interests': True}
 modes_order = ['search', 'downloads', 'uploads', 'userbrowse', 'userinfo', 'private', 'userlist', 'chatrooms', 'interests']
-showaway = False
 buddylistinchatrooms = tab
 trayicon = True
 startup_hidden = False
@@ -223,9 +210,7 @@ reverse_file_paths = True
 rooms = {}
 
 [urls]
-urlcatching = True
 protocols = {}
-humanizeurls = True
 
 [interests]
 likes = []
