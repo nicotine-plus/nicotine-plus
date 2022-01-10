@@ -61,20 +61,20 @@ class Transfer:
                  "iterator", "status", "legacy_attempt")
 
     def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=None,
-                 file=None, current_byte_offset=None, queue_position=0, bitrate=None, length=None):
+                 current_byte_offset=None, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
         self.size = size
-        self.file = file
         self.status = status
         self.token = token
         self.current_byte_offset = current_byte_offset
-        self.queue_position = queue_position
         self.bitrate = bitrate
         self.length = length
 
         self.sock = None
+        self.file = None
+        self.queue_position = 0
         self.modifier = None
         self.start_time = None
         self.last_update = None
