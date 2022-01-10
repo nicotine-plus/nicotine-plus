@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:22+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-01-10 20:23+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
 "Language: sk\n"
@@ -2302,9 +2302,9 @@ msgstr "Naozaj chcete sťahovať súbory %(num)i z priečinka %(user)s%(folder)s
 
 #: pynicotine/gtkgui/frame.py:147 pynicotine/pynicotine.py:221
 #: pynicotine/pynicotine.py:222
-#, fuzzy, python-format
+#, python-format
 msgid "Loading %(program)s %(version)s"
-msgstr "Ukončenie Nicotine+ [X19x], %(status)s…"
+msgstr "Načítavam %(program)s %(version)s"
 
 #: pynicotine/gtkgui/frame.py:370 pynicotine/gtkgui/widgets/iconnotebook.py:476
 #: pynicotine/gtkgui/widgets/treeview.py:486
@@ -3818,7 +3818,7 @@ msgstr ""
 #: pynicotine/pluginsystem.py:292
 #, fuzzy
 msgid "Loading plugin system"
-msgstr "Načítaný plugin %s"
+msgstr "Načítava sa systém pluginov"
 
 #: pynicotine/pynicotine.py:259
 #, fuzzy
