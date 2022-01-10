@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-06 07:04+0000\n"
+"PO-Revision-Date: 2022-01-10 19:08+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -5199,15 +5199,13 @@ msgstr "Niks"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:121
 #: pynicotine/gtkgui/ui/settings/uploads.ui:90
-#, fuzzy
 msgid "Send to Player"
-msgstr "Verstuur naar s_peler"
+msgstr "Stuur naar mediaspeler"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:122
 #: pynicotine/gtkgui/ui/settings/uploads.ui:91
-#, fuzzy
 msgid "Open in File Manager"
-msgstr "_Open in Bestandsbeheer"
+msgstr "Open in Bestandsbeheer"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:127
 #: pynicotine/gtkgui/ui/settings/uploads.ui:96
