@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:13+0000\n"
+"PO-Revision-Date: 2022-01-10 21:53+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/it/>\n"
@@ -142,7 +142,7 @@ msgid ""
 "Failed to scan shares. Please close other Nicotine+ instances and try again."
 msgstr ""
 "Impossibile eseguire la scansione dei condivisi. Chiudi altre istanze di "
-"Nicotina+ e riprova."
+"Nicotine+ e riprova."
 
 #: pynicotine/chatrooms.py:237
 #, python-format
