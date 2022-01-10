@@ -1109,10 +1109,10 @@ class Search(UserInterface):
 
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
-            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0]
+            folder = self.resultsmodel.get_value(iterator, 11).rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, folder=folder)
+                self.frame.np.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)

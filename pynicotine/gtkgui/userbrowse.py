@@ -71,7 +71,7 @@ class UserBrowses(IconNotebook):
 
                 break
 
-    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
@@ -87,8 +87,8 @@ class UserBrowses(IconNotebook):
 
         page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
-        page.queued_folder = folder
-        page.browse_queued_folder()
+        page.queued_path = path
+        page.browse_queued_path()
 
         if switch_page:
             self.set_current_page(self.page_num(page.Main))
@@ -135,7 +135,7 @@ class UserBrowse(UserInterface):
         self.frame = userbrowses.frame
         self.user = user
         self.local_shares_type = None
-        self.queued_folder = None
+        self.queued_path = None
 
         self.shares = {}
         self.dir_iters = {}
@@ -422,20 +422,38 @@ class UserBrowse(UserInterface):
 
         return total_size, len(shares)
 
-    def browse_queued_folder(self):
+    def browse_queued_path(self):
 
-        iterator = self.dir_iters.get(self.queued_folder)
+        if self.queued_path is None:
+            return
+
+        folder, filename = self.queued_path.rsplit("\\", 1)
+        iterator = self.dir_iters.get(folder)
 
         if not iterator:
             return
 
-        self.queued_folder = None
-        sel = self.FolderTreeView.get_selection()
+        self.queued_path = None
+        selection = self.FolderTreeView.get_selection()
         path = self.dir_store.get_path(iterator)
 
+        # Scroll to the requested folder
         self.FolderTreeView.expand_to_path(path)
-        sel.select_path(path)
+        selection.select_path(path)
         self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+
+        iterator = self.file_iters.get(filename)
+
+        if not iterator:
+            return
+
+        selection = self.FileTreeView.get_selection()
+        path = self.file_store.get_path(iterator)
+
+        # Scroll to the requested file
+        selection.unselect_all()
+        selection.select_path(path)
+        self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 
     def shared_file_list(self, msg):
 
@@ -443,7 +461,7 @@ class UserBrowse(UserInterface):
         self.info_bar.set_visible(False)
 
         if msg.list or msg.privatelist:
-            self.browse_queued_folder()
+            self.browse_queued_path()
 
         else:
             self.info_bar.show_message(
@@ -492,7 +510,7 @@ class UserBrowse(UserInterface):
 
         directory = self.dir_user_data.get(iter_user_data)
 
-        if directory is None:
+        if directory is None or self.selected_folder == directory:
             return
 
         self.selected_folder = directory

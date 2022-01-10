@@ -164,10 +164,10 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             user = transfer.user
-            folder = transfer.filename.rsplit('\\', 1)[0]
+            folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, folder=folder)
+                self.frame.np.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)

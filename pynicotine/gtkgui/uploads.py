@@ -121,9 +121,9 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder = transfer.filename.rsplit('\\', 1)[0]
+        folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
-        self.frame.np.userbrowse.browse_user(user, folder=folder)
+        self.frame.np.userbrowse.browse_user(user, path=folder)
 
     def on_abort_user(self, *_args):
 
