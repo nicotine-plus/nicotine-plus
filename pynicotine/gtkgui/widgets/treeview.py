@@ -214,7 +214,9 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
         column.set_widget(label)
 
-        if xalign == 1:
+        if xalign == 1 and Gtk.get_major_version() == 4:
+            # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
+            # Actually align the label to the right here instead
             label.get_parent().set_halign(Gtk.Align.END)
 
         cols[column_id] = column
