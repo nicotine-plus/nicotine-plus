@@ -63,8 +63,6 @@ class TransferList(UserInterface):
 
         self.user_counter = getattr(frame, "%sUsers" % transfer_type.title())
         self.file_counter = getattr(frame, "%sFiles" % transfer_type.title())
-        self.bandwidth_status = getattr(frame, "%s_status" % transfer_type)
-        self.tray_callback = getattr(frame.tray_icon, "set_%s_status" % transfer_type)
         grouping_button = getattr(frame, "ToggleTree%ss" % transfer_type.title())
 
         if Gtk.get_major_version() == 4:
@@ -291,23 +289,6 @@ class TransferList(UserInterface):
 
         return status
 
-    def update_bandwidth(self):
-
-        bandwidth = 0
-        num_active_users = 0
-
-        for i in self.transfer_list:
-            speed = i.speed
-
-            if speed is not None:
-                bandwidth = bandwidth + speed
-                num_active_users += 1
-
-        bandwidth = human_speed(bandwidth)
-
-        self.bandwidth_status.set_text("%(speed)s (%(num)i)" % {'num': num_active_users, 'speed': bandwidth})
-        self.tray_callback(self.tray_template % {'speed': bandwidth})
-
     def update_num_users_files(self):
         self.user_counter.set_text(str(len(self.users)))
         self.file_counter.set_text(str(len(self.transfer_list)))
@@ -318,12 +299,8 @@ class TransferList(UserInterface):
         last_ui_update = self.last_ui_update
         finished = (transfer is not None and transfer.status == "Finished")
 
-        if forceupdate or finished or (current_time - last_ui_update) > 1:
-            self.update_bandwidth()
-            self.last_ui_update = current_time
-
         if not forceupdate and self.frame.current_page_id != self.page_id:
-            """ No need to do unnecessary work if transfers are not visible """
+            # No need to do unnecessary work if transfers are not visible
             return
 
         if transfer is not None:
@@ -334,10 +311,7 @@ class TransferList(UserInterface):
                 self.update_specific(transfer_i)
 
         if forceupdate or finished or (current_time - last_ui_update) > 1:
-
-            """ Unless a transfer finishes, use a cooldown to avoid updating
-            too often """
-
+            # Unless a transfer finishes, use a cooldown to avoid updating too often
             self.update_parent_rows()
 
     def update_parent_rows(self, only_remove=False):

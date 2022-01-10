@@ -69,6 +69,7 @@ from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
+from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_log
@@ -370,10 +371,6 @@ class NicotineFrame(UserInterface):
 
         self.set_widget_online_status(False)
         self.tray_icon.set_connected(False)
-
-        # Reset transfer stats (speed, total files/users)
-        self.downloads.update_bandwidth()
-        self.uploads.update_bandwidth()
 
     def invalid_password_response(self, dialog, response_id, _data):
 
@@ -1748,8 +1745,20 @@ class NicotineFrame(UserInterface):
     def set_user_status(self, status):
         self.UserStatus.set_text(status)
 
-    def set_current_connection_count(self, num_conns):
-        self.SocketStatus.set_text(repr(num_conns))
+    def set_connection_stats(self, msg):
+
+        total_conns = repr(msg.total_conns)
+
+        if self.SocketStatus.get_text() != total_conns:
+            self.SocketStatus.set_text(repr(msg.total_conns))
+
+        download_bandwidth = human_speed(msg.download_bandwidth)
+        self.download_status.set_text("%(speed)s (%(num)i)" % {'num': msg.download_conns, 'speed': download_bandwidth})
+        self.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
+
+        upload_bandwidth = human_speed(msg.upload_bandwidth)
+        self.upload_status.set_text("%(speed)s (%(num)i)" % {'num': msg.upload_conns, 'speed': upload_bandwidth})
+        self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
         self.scan_progress_indeterminate = True

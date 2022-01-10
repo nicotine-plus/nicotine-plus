@@ -188,14 +188,18 @@ class SetDownloadLimit(InternalMessage):
         self.limit = limit
 
 
-class SetCurrentConnectionCount(InternalMessage):
+class SetConnectionStats(InternalMessage):
     """ Sent by networking thread to update the number of current
     connections shown in the GUI. """
 
-    __slots__ = ("msg",)
+    __slots__ = ("total_conns", "download_conns", "download_bandwidth", "upload_conns", "upload_bandwidth")
 
-    def __init__(self, msg):
-        self.msg = msg
+    def __init__(self, total_conns=0, download_conns=0, download_bandwidth=0, upload_conns=0, upload_bandwidth=0):
+        self.total_conns = total_conns
+        self.download_conns = download_conns
+        self.download_bandwidth = download_bandwidth
+        self.upload_conns = upload_conns
+        self.upload_bandwidth = upload_bandwidth
 
 
 class SlskMessage:
