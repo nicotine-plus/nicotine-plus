@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:27+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-01-10 21:28+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fi/>\n"
 "Language: fi\n"
@@ -2701,7 +2701,7 @@ msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
 msgstr ""
-"Nikotiini+ on kohdannut kriittisen virheen ja sen on poistuttava. Kopioi "
+"Nicotine+ on kohdannut kriittisen virheen ja sen on poistuttava. Kopioi "
 "seuraava viesti ja sisällytä se vikaraporttiin:"
 
 #: pynicotine/gtkgui/frame.py:1860
@@ -2724,7 +2724,7 @@ msgstr "Lopeta Nicotine+"
 #: pynicotine/gtkgui/frame.py:1906
 #, fuzzy
 msgid "Do you really want to exit?"
-msgstr "Haluatko todella poistua Nikotiini+:sta?"
+msgstr "Haluatko todella poistua Nicotine+:sta?"
 
 #: pynicotine/gtkgui/frame.py:1908
 #, fuzzy
@@ -3885,7 +3885,7 @@ msgstr "sovelluksen sulkeminen"
 #: pynicotine/pynicotine.py:297
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Lopeta Nikotiini+ %(version)s, %(status)s!"
+msgstr "Lopeta Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:300
 #, fuzzy
@@ -3904,7 +3904,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Määrittämääsi verkkoliittymää %sei ole. Muuta tai poista määritetty "
-"verkkoliittymä ja käynnistä Nikotiini+uudelleen."
+"verkkoliittymä ja käynnistä Nicotine+uudelleen."
 
 #: pynicotine/pynicotine.py:322
 #, fuzzy
@@ -4506,7 +4506,7 @@ msgstr "_Add…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Olet valmis käyttämään Nikotiini+!"
+msgstr "Olet valmis käyttämään Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
@@ -6707,7 +6707,7 @@ msgstr "Näkyvät ensisijaiset välilehdet:"
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:254
 #, fuzzy
 msgid "When closing Nicotine+:"
-msgstr "Suljet Nikotiini+:"
+msgstr "Suljet Nicotine+:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:269
 #, fuzzy
