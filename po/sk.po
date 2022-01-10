@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 20:34+0000\n"
+"PO-Revision-Date: 2022-01-10 20:49+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/sk/>\n"
@@ -2675,7 +2675,7 @@ msgstr ""
 #: pynicotine/gtkgui/frame.py:1860
 #, fuzzy
 msgid "_Quit Nicotine+"
-msgstr "Prestaňte nikotín+"
+msgstr "Prestaňte Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1861
 #, fuzzy
@@ -2687,7 +2687,7 @@ msgstr "Kopírovať &nahlásiť chybu"
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 #, fuzzy
 msgid "Quit Nicotine+"
-msgstr "Prestaňte nikotín+"
+msgstr "Prestaňte Nicotine+"
 
 #: pynicotine/gtkgui/frame.py:1906
 #, fuzzy
@@ -3843,7 +3843,7 @@ msgstr "uzavretie aplikácie"
 #: pynicotine/pynicotine.py:297
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
-msgstr "Prestaňte nikotín+ %(version)s, %(status)s!"
+msgstr "Prestaňte Nicotine+ %(version)s, %(status)s!"
 
 #: pynicotine/pynicotine.py:300
 #, fuzzy
@@ -3862,7 +3862,7 @@ msgid ""
 "the specified network interface and restart Nicotine+."
 msgstr ""
 "Zadané sieťové rozhranie \"%s\" neexistuje. Zmeňte alebo odstráňte zadané "
-"sieťové rozhranie a reštartujte nikotín+."
+"sieťové rozhranie a reštartujte Nicotine+."
 
 #: pynicotine/pynicotine.py:322
 #, fuzzy
@@ -4065,7 +4065,7 @@ msgid ""
 msgstr ""
 "Index súborov zdieľaných súborov sa nepodarilo získať prístup. To sa môže "
 "vyskytnúť v dôsledku niekoľkých prípadov, keď nikotín + je aktívny súčasne, "
-"problémy s povolením súborov alebo iný problém v nikotíne +."
+"problémy s povolením súborov alebo iný problém v Nicotine+."
 
 #: pynicotine/shares.py:724
 #, fuzzy, python-format
@@ -4469,7 +4469,7 @@ msgstr "_Add…"
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:383
 #, fuzzy
 msgid "You are ready to use Nicotine+!"
-msgstr "Ste pripravení používať nikotín+!"
+msgstr "Ste pripravení používať Nicotine+!"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:400
 #, fuzzy
