@@ -34,7 +34,7 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -228,7 +228,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
-    setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
+    Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
     if Gtk.get_major_version() == 4:

@@ -42,7 +42,6 @@ from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
 from pynicotine.gtkgui.dialogs.statistics import Statistics
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
-from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
@@ -55,6 +54,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView

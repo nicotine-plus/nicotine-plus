@@ -33,7 +33,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -68,10 +68,10 @@ class TransferList(UserInterface):
         if Gtk.get_major_version() == 4:
             self.ClearTransfers.set_has_frame(False)
 
-        setup_accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
-        setup_accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
-        setup_accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
-        setup_accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
+        Accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
+        Accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
+        Accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
+        Accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
 
         self.last_ui_update = 0
         self.transfer_list = []

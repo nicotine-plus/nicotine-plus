@@ -30,7 +30,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
@@ -265,45 +265,45 @@ class UserBrowse(UserInterface):
             )
 
         # Key Bindings (FolderTreeView)
-        setup_accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
-        setup_accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
-        setup_accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
-        setup_accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
-        setup_accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
+        Accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
+        Accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
+        Accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
+        Accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
+        Accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
 
-        setup_accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
-        setup_accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
-        setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
-        setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
+        Accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
+        Accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
+        Accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
+        Accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         # Key Bindings (FileTreeView)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
-            setup_accelerator(accelerator, self.FileTreeView, self.on_focus_folder_accelerator)
+            Accelerator(accelerator, self.FileTreeView, self.on_focus_folder_accelerator)
 
-        setup_accelerator("Left", self.FileTreeView, self.on_focus_folder_left_accelerator)
+        Accelerator("Left", self.FileTreeView, self.on_focus_folder_left_accelerator)
 
-        setup_accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
-        setup_accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
-        setup_accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
-        setup_accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
-        setup_accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
+        Accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
+        Accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
+        Accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
+        Accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
+        Accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
 
         # Key Bindings (General)
         for widget in (self.Main, self.FolderTreeView, self.FileTreeView):
-            setup_accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
+            Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
         for widget in (self.Main, self.SearchEntry):
-            setup_accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
-            setup_accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
+            Accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
+            Accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
 
-        setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
-        setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
-        setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
+        Accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
+        Accelerator("F3", self.Main, self.on_search_next_accelerator)
+        Accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
 
-        setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
-        setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
-        setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
-        setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
+        Accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
+        Accelerator("F5", self.Main, self.on_refresh_accelerator)
+        Accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
+        Accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
 
         self.ExpandButton.set_active(True)
         self.update_visuals()
@@ -823,7 +823,7 @@ class UserBrowse(UserInterface):
             # This is the deepest level, so move focus over to Files if there are any
             self.FileTreeView.grab_focus()
 
-        # Note: Other Folder actions are handled by setup_accelerator functions [Shift/Ctrl/Alt+Return]
+        # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
         # ToDo: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
