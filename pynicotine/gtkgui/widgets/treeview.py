@@ -85,16 +85,15 @@ def create_grouping_menu(window, active_mode, callback):
 
 
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
+
     while iterator is not None:
         user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iterator),)
+            sel.select_path(fmodel.get_path(iterator))
 
         child = fmodel.iter_children(iterator)
-
         select_user_row_iter(fmodel, sel, user_index, selected_user, child)
-
         iterator = fmodel.iter_next(iterator)
 
 

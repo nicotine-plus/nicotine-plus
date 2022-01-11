@@ -368,12 +368,10 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.collapse_all()
 
         iterator = self.dir_store.get_iter_first()
-        sel = self.FolderTreeView.get_selection()
-        sel.unselect_all()
 
         if iterator:
             path = self.dir_store.get_path(iterator)
-            sel.select_path(path)
+            self.FolderTreeView.set_cursor(path)
 
         self.set_finished()
 
@@ -434,12 +432,11 @@ class UserBrowse(UserInterface):
             return
 
         self.queued_path = None
-        selection = self.FolderTreeView.get_selection()
-        path = self.dir_store.get_path(iterator)
 
         # Scroll to the requested folder
+        path = self.dir_store.get_path(iterator)
         self.FolderTreeView.expand_to_path(path)
-        selection.select_path(path)
+        self.FolderTreeView.set_cursor(path)
         self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 
         iterator = self.file_iters.get(filename)
@@ -447,12 +444,9 @@ class UserBrowse(UserInterface):
         if not iterator:
             return
 
-        selection = self.FileTreeView.get_selection()
-        path = self.file_store.get_path(iterator)
-
         # Scroll to the requested file
-        selection.unselect_all()
-        selection.select_path(path)
+        path = self.file_store.get_path(iterator)
+        self.FileTreeView.set_cursor(path)
         self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 
     def shared_file_list(self, msg):
