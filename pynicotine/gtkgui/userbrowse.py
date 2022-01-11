@@ -62,13 +62,7 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-
-                # Remember folder or file selection
-                if tab.num_selected_files >= 1:
-                    GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
-                else:
-                    GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
-
+                GLib.idle_add(tab.grab_view_focus)
                 break
 
     def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
@@ -548,6 +542,14 @@ class UserBrowse(UserInterface):
             filesize = model.get_value(iterator, 4)
 
             self.selected_files[rawfilename] = filesize
+
+    def grab_view_focus(self):
+
+        if self.num_selected_files >= 1:
+            self.FileTreeView.grab_focus()
+            return
+
+        self.FolderTreeView.grab_focus()
 
     """ Download/Upload """
 
