@@ -78,11 +78,12 @@ class UserBrowses(IconNotebook):
                 self.frame.userbrowse_status_page.hide()
 
         page = self.pages[user]
-
         page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
         page.queued_path = path
+
         page.browse_queued_path()
+        page.grab_view_focus()
 
         if switch_page:
             self.set_current_page(self.page_num(page.Main))
