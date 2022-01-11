@@ -16,12 +16,14 @@ Changes
  * Optimized text entry auto-completion performance and reduce the memory usage of open chat tabs
  * Display virtual folder paths for items in the Uploads tab instead of real paths
  * Added display of real folder paths for local items in the File Properties dialog
+ * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
 
 Corrections
 
  * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
  * Fixed an issue where uploads can become stuck in the transfer queue forever
+ * Fixed an issue where the bandwidth status widget failed to update during background transfers
  * Avoid broken scrollbar when changing active preference page
  * Fixed labels of UI elements in the translation for Russian language (thank you @SnIPeRSnIPeR)
 
@@ -40,6 +42,7 @@ Issues closed on GitHub
  * Can't change language in app (Windows/macOS) ([#1796](https://github.com/nicotine-plus/nicotine-plus/issues/1796))
  * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
  * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
+ * Increase network speed update time [#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
