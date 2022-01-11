@@ -30,7 +30,7 @@ from pynicotine.utils import is_alias
 from pynicotine.utils import unalias
 
 
-""" Text Entry/View-related """
+""" Text Entry-related """
 
 
 class ChatEntry:

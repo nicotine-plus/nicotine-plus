@@ -101,12 +101,3 @@ def copy_text(text):
 
     clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
     clipboard.set_text(text, -1)
-
-
-def copy_all_text(textview):
-
-    textbuffer = textview.get_buffer()
-    start, end = textbuffer.get_bounds()
-    text = textbuffer.get_text(start, end, True)
-
-    copy_text(text)
