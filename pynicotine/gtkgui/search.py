@@ -34,7 +34,6 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
-from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -1239,7 +1238,8 @@ class Search(UserInterface):
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            copy_file_url(user, filepath)
+            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath)
+            copy_text(url)
             return
 
     def on_copy_dir_url(self, *_args):
@@ -1247,7 +1247,8 @@ class Search(UserInterface):
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            copy_file_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            copy_text(url)
             return
 
     def on_counter_button(self, *_args):

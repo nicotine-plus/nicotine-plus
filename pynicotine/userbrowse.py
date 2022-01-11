@@ -183,6 +183,11 @@ class UserBrowse:
         except Exception as msg:
             log.add(_("Can't save shares, '%(user)s', reported error: %(error)s"), {'user': user, 'error': msg})
 
+    @staticmethod
+    def get_soulseek_url(user, path):
+        import urllib.parse
+        return "slsk://" + urllib.parse.quote("%s/%s" % (user, path.replace("\\", "/")))
+
     def open_soulseek_url(self, url):
 
         import urllib.parse

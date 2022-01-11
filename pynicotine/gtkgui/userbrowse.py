@@ -29,7 +29,6 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.utils import setup_accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
@@ -804,7 +803,8 @@ class UserBrowse(UserInterface):
             return
 
         path = self.selected_folder + '\\'
-        copy_file_url(self.user, path)
+        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        copy_text(url)
 
     """ Key Bindings (FolderTreeView) """
 
@@ -1104,7 +1104,8 @@ class UserBrowse(UserInterface):
             return
 
         path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        copy_file_url(self.user, path)
+        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        copy_text(url)
 
     """ Key Bindings (FileTreeView) """
 

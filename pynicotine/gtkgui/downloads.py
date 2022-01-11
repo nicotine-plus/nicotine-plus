@@ -27,7 +27,7 @@ import os
 
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.utils import open_file_path
 
@@ -103,14 +103,17 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename)
+            url = self.frame.np.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            copy_text(url)
 
     def on_copy_dir_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = self.frame.np.userbrowse.get_soulseek_url(
+                transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            copy_text(url)
 
     def on_open_file_manager(self, *_args):
 

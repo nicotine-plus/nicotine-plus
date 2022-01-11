@@ -110,13 +110,3 @@ def copy_all_text(textview):
     text = textbuffer.get_text(start, end, True)
 
     copy_text(text)
-
-
-def copy_file_url(user, path):
-
-    import urllib.parse
-    url = "slsk://" + urllib.parse.quote(
-        "%s/%s" % (user, path.replace("\\", "/"))
-    )
-
-    copy_text(url)
