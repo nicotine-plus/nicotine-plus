@@ -61,7 +61,7 @@ class Transfer:
                  "iterator", "status", "legacy_attempt")
 
     def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
-                 current_byte_offset=0, bitrate=None, length=None):
+                 current_byte_offset=None, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
@@ -243,8 +243,8 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            loaded_status = bitrate = length = None
-            size = current_byte_offset = 0
+            loaded_status = current_byte_offset = bitrate = length = None
+            size = 0
 
             try:
                 loaded_status = i[3]
@@ -277,7 +277,7 @@ class Transfers:
             elif loaded_status in ("Filtered", "Finished"):
                 status = loaded_status
 
-            elif current_byte_offset >= size:
+            elif current_byte_offset is not None and current_byte_offset >= size:
                 status = "Finished"
 
             else:
@@ -1401,7 +1401,7 @@ class Transfers:
             self.update_download(i)
 
         elif transfer_type == "upload":
-            if i.current_byte_offset >= i.size:
+            if i.current_byte_offset is not None and i.current_byte_offset >= i.size:
                 # We finish the upload here in case the downloading peer has a slow/limited download
                 # speed and finishes later than us
                 self.upload_finished(i, file_handle=i.file)
