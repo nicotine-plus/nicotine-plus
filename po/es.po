@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-12 09:00+0000\n"
-"Last-Translator: MELERIX <melerix@outlook.com>\n"
+"PO-Revision-Date: 2022-01-12 16:41+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es\n"
@@ -5647,7 +5647,7 @@ msgstr "Acción de doble clic para las subidas:"
 #: pynicotine/gtkgui/ui/settings/uploads.ui:93
 #: pynicotine/gtkgui/ui/uploads.ui:68
 msgid "Abort"
-msgstr "Abortar"
+msgstr "Cancelar"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:95
 msgid "Retry"
@@ -5707,7 +5707,7 @@ msgstr "Comportamiento de la Cola"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:366
 msgid "Prioritize all buddies"
-msgstr "Priorizar a todos los amigos"
+msgstr "Dar prioridad a todos los amigos"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:383
 msgid "Upload queue type:"
