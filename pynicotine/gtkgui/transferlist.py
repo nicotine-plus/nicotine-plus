@@ -137,7 +137,7 @@ class TransferList(UserInterface):
             ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
             ["status", _("Status"), 140, "text", None],
-            ["queue_position", _("Queue"), 50, "number", None],
+            ["queue_position", _("Queue Position"), 50, "number", None],
             ["percent", _("Percent"), 70, "progress", None],
             ["size", _("Size"), 170, "number", None],
             ["speed", _("Speed"), 90, "number", None],
