@@ -51,12 +51,12 @@ We love suggestions! If a string in the original English version seems odd or ca
 
 If you simply edit a string to your liking, we may never notice and then a good idea is lost, or you may create confusion because of a problem you have never thought about.
 
-So please, translate all strings as literal as possible, and discus your thoughts in an issue.
+So please, translate all strings as literal as possible, and discuss your thoughts in an issue.
 
 
 ## Conflicts with other translators
 
-If you notice another translator is undoing your translations, please don't revert it back, but add a comment to the string, and discus with the other translator about the best translation.
+If you notice another translator is undoing your translations, please don't revert it back, but add a comment to the string, and discuss with the other translator about the best translation.
 
 
 ## Testing Updated Translations
