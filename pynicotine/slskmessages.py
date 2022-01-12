@@ -2642,7 +2642,7 @@ class TransferRequest(PeerMessage):
         msg.extend(self.pack_object(self.token))
         msg.extend(self.pack_object(self.file))
 
-        if self.filesize is not None and self.direction == 1:
+        if self.direction == 1:
             msg.extend(self.pack_object(self.filesize, unsignedlonglong=True))
 
         return msg

@@ -60,8 +60,8 @@ class Transfer:
                  "time_left", "modifier", "queue_position", "bitrate", "length",
                  "iterator", "status", "legacy_attempt")
 
-    def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=None,
-                 current_byte_offset=None, bitrate=None, length=None):
+    def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
+                 current_byte_offset=0, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
@@ -243,7 +243,8 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            loaded_status = size = current_byte_offset = bitrate = length = None
+            loaded_status = bitrate = length = None
+            size = current_byte_offset = 0
 
             try:
                 loaded_status = i[3]
@@ -276,7 +277,7 @@ class Transfers:
             elif loaded_status in ("Filtered", "Finished"):
                 status = loaded_status
 
-            elif current_byte_offset is not None and size is not None and current_byte_offset >= size:
+            elif current_byte_offset >= size:
                 status = "Finished"
 
             else:
@@ -1032,7 +1033,7 @@ class Transfers:
         incompletedir = self.config.sections["transfers"]["incompletedir"]
         needupdate = True
 
-        if i.sock is None and i.size is not None:
+        if i.sock is None:
             i.sock = msg.init.sock
             i.token = None
 
@@ -1491,7 +1492,7 @@ class Transfers:
     def get_folder(self, user, folder):
         self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
-    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
+    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None):
 
         path = clean_path(path, absolute=True)
 
