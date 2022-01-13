@@ -2146,18 +2146,34 @@ class SlskProtoThread(threading.Thread):
                             self._conns[sock_in_progress] = conn_obj = PeerConnection(
                                 sock=sock_in_progress, addr=addr, events=events, init=conn_obj.init)
 
+                            user = conn_obj.init.target_user
+                            conn_type = conn_obj.init.conn_type
+                            token = conn_obj.init.token
                             conn_obj.init.sock = sock_in_progress
 
-                            if not conn_obj.init.token:
-                                self._queue.append(conn_obj.init)
-                            else:
-                                self._queue.append(PierceFireWall(conn_obj.sock, conn_obj.init.token))
-
-                            log.add_conn(("Established connection with user %(user)s. List of outgoing "
-                                          "messages: %(messages)s"), {
-                                'user': conn_obj.init.target_user,
+                            log.add_conn(("Established connection of type %(type)s with user %(user)s. List of "
+                                          "outgoing messages: %(messages)s"), {
+                                'type': conn_type,
+                                'user': user,
                                 'messages': conn_obj.init.outgoing_msgs
                             })
+
+                            if not token:
+                                log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
+                                    'type': conn_type,
+                                    'user': user
+                                })
+                                self._queue.append(conn_obj.init)
+
+                            else:
+                                log.add_conn(("Responding to indirect connection request of type %(type)s from "
+                                              "user %(user)s, token %(token)s"), {
+                                    'type': conn_type,
+                                    'user': user,
+                                    'token': token
+                                })
+                                self._queue.append(PierceFireWall(conn_obj.sock, token))
+
                             self.process_conn_messages(conn_obj.init)
 
                         del self._connsinprogress[sock_in_progress]
