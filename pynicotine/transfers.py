@@ -1064,8 +1064,12 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    base_name = clean_file(i.filename.replace('/', '\\').split('\\')[-1])
-                    incomplete_name = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + base_name)
+                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
+                    prefix = "INCOMPLETE" + md5sum.hexdigest()
+
+                    # Ensure file name doesn't exceed 255 characters in length
+                    incomplete_name = os.path.join(
+                        incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
                     file_handle = open(incomplete_name, 'ab+')
 
                     if self.config.sections["transfers"]["lock"]:
