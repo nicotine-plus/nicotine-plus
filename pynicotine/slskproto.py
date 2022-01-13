@@ -847,15 +847,20 @@ class SlskProtoThread(threading.Thread):
     def send_message_to_peer(self, user, message, address=None):
 
         init = None
-
-        if message.__class__ is FileRequest:
-            conn_type = 'F'
-        else:
-            conn_type = 'P'
+        conn_type = 'F' if message.__class__ is FileRequest else 'P'
 
         if conn_type != 'F':
-            # Check if there's already a connection object for the specified username
+            # Check if there's already a connection for the specified username
             init = self._init_msgs.get(user + conn_type)
+
+            if init is None:
+                # Check if we have a pending PeerInit message (currently requesting user IP address)
+                pending_init_msgs = self._init_msgs.get(user, [])
+
+                for msg in pending_init_msgs:
+                    if msg.conn_type == conn_type:
+                        init = msg
+                        break
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
             'type': message.__class__,
@@ -898,7 +903,10 @@ class SlskProtoThread(threading.Thread):
             self.user_addresses[user] = addr = address
 
         if addr is None:
-            self._init_msgs[user] = init
+            if self._init_msgs.get(user) is None:
+                self._init_msgs[user] = []
+
+            self._init_msgs[user].append(init)
             self._queue.append(GetPeerAddress(user))
 
             log.add_conn("Requesting address for user %(user)s", {
@@ -1210,7 +1218,7 @@ class SlskProtoThread(threading.Thread):
                             self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
 
                     elif msg_class is GetPeerAddress:
-                        init = self._init_msgs.pop(msg.user, None)
+                        pending_init_msgs = self._init_msgs.pop(msg.user, [])
 
                         if msg.port == 0:
                             log.add_conn(
@@ -1222,7 +1230,7 @@ class SlskProtoThread(threading.Thread):
                         else:
                             addr = (msg.ip_address, msg.port)
 
-                            if init is not None:
+                            for init in pending_init_msgs:
                                 # We now have the IP address for a user we previously didn't know,
                                 # attempt a direct connection to the peer/user
                                 init.addr = addr
