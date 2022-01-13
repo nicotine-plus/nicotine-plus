@@ -1023,7 +1023,12 @@ class SlskProtoThread(threading.Thread):
         if conn_obj.init is None:
             return
 
-        self._init_msgs.pop(conn_obj.init.target_user + conn_obj.init.conn_type, None)
+        init_key = conn_obj.init.target_user + conn_obj.init.conn_type
+        init = self._init_msgs.get(init_key)
+
+        if conn_obj.init == init:
+            # Don't remove init message if connection has been superseded
+            del self._init_msgs[init_key]
 
         if callback and conn_type == 'F':
             self._callback_msgs.append(FileConnClose(sock))
