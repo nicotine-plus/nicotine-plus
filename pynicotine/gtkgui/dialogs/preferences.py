@@ -353,7 +353,6 @@ class DownloadsFrame(UserInterface):
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            option=True,
             optionvalue=True,
             optionmessage="Escape this filter?",
             droplist=list(self.filtersiters.keys())
@@ -416,7 +415,6 @@ class DownloadsFrame(UserInterface):
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
             default=dfilter,
-            option=True,
             optionvalue=escapedvalue,
             optionmessage="Escape this filter?",
             droplist=list(self.filtersiters.keys())
@@ -730,7 +728,6 @@ class SharesFrame(UserInterface):
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
-                option=True,
                 optionvalue=buddy_only,
                 optionmessage="Share with buddies only?",
                 callback=self.on_edit_shared_dir_response,

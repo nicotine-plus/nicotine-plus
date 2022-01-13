@@ -22,7 +22,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import get_alias
@@ -30,7 +30,7 @@ from pynicotine.utils import is_alias
 from pynicotine.utils import unalias
 
 
-""" Text Entry/View-related """
+""" Text Entry-related """
 
 
 class ChatEntry:
@@ -48,8 +48,8 @@ class ChatEntry:
         self.is_chatroom = is_chatroom
 
         entry.connect("activate", self.on_enter)
-        setup_accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
-        setup_accelerator("Tab", entry, self.on_tab_complete_accelerator)
+        Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
         # Emoji Picker
         try:
@@ -546,10 +546,10 @@ class TextSearchBar:
         if not controller_widget:
             controller_widget = textview
 
-        setup_accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
+        Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
 
         for widget in (controller_widget, entry):
-            setup_accelerator("Escape", widget, self.on_hide_search_accelerator)
+            Accelerator("Escape", widget, self.on_hide_search_accelerator)
 
     def on_search_match(self, search_type, restarted=False):
 

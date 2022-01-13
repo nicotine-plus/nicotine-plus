@@ -34,7 +34,7 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -85,16 +85,15 @@ def create_grouping_menu(window, active_mode, callback):
 
 
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
+
     while iterator is not None:
         user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iterator),)
+            sel.select_path(fmodel.get_path(iterator))
 
         child = fmodel.iter_children(iterator)
-
         select_user_row_iter(fmodel, sel, user_index, selected_user, child)
-
         iterator = fmodel.iter_next(iterator)
 
 
@@ -229,7 +228,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
-    setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
+    Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
     if Gtk.get_major_version() == 4:

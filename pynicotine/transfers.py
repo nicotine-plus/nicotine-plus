@@ -60,21 +60,21 @@ class Transfer:
                  "time_left", "modifier", "queue_position", "bitrate", "length",
                  "iterator", "status", "legacy_attempt")
 
-    def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=None,
-                 file=None, current_byte_offset=None, queue_position=0, bitrate=None, length=None):
+    def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
+                 current_byte_offset=None, bitrate=None, length=None):
         self.user = user
         self.filename = filename
         self.path = path
         self.size = size
-        self.file = file
         self.status = status
         self.token = token
         self.current_byte_offset = current_byte_offset
-        self.queue_position = queue_position
         self.bitrate = bitrate
         self.length = length
 
         self.sock = None
+        self.file = None
+        self.queue_position = 0
         self.modifier = None
         self.start_time = None
         self.last_update = None
@@ -243,7 +243,8 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            loaded_status = size = current_byte_offset = bitrate = length = None
+            loaded_status = current_byte_offset = bitrate = length = None
+            size = 0
 
             try:
                 loaded_status = i[3]
@@ -276,7 +277,7 @@ class Transfers:
             elif loaded_status in ("Filtered", "Finished"):
                 status = loaded_status
 
-            elif current_byte_offset is not None and size is not None and current_byte_offset >= size:
+            elif current_byte_offset is not None and current_byte_offset >= size:
                 status = "Finished"
 
             else:
@@ -1015,7 +1016,7 @@ class Transfers:
         incompletedir = self.config.sections["transfers"]["incompletedir"]
         needupdate = True
 
-        if i.sock is None and i.size is not None:
+        if i.sock is None:
             i.sock = msg.init.sock
             i.token = None
 
@@ -1048,7 +1049,12 @@ class Transfers:
                     md5sum = md5()
                     md5sum.update((i.filename + i.user).encode('utf-8'))
 
-                    incomplete_name = os.path.join(incompletedir, "INCOMPLETE" + md5sum.hexdigest() + base_name)
+                    base_name, extension = os.path.splitext(clean_file(i.filename.replace('/', '\\').split('\\')[-1]))
+                    prefix = "INCOMPLETE" + md5sum.hexdigest()
+
+                    # Ensure file name doesn't exceed 255 characters in length
+                    incomplete_name = os.path.join(
+                        incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
                     file_handle = open(incomplete_name, 'ab+')
 
                     if self.config.sections["transfers"]["lock"]:
@@ -1385,7 +1391,7 @@ class Transfers:
             self.update_download(i)
 
         elif transfer_type == "upload":
-            if i.current_byte_offset >= i.size:
+            if i.current_byte_offset is not None and i.current_byte_offset >= i.size:
                 # We finish the upload here in case the downloading peer has a slow/limited download
                 # speed and finishes later than us
                 self.upload_finished(i, file_handle=i.file)
@@ -1476,7 +1482,7 @@ class Transfers:
     def get_folder(self, user, folder):
         self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
-    def get_file(self, user, filename, path="", transfer=None, size=None, bitrate=None, length=None):
+    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None):
 
         path = clean_path(path, absolute=True)
 

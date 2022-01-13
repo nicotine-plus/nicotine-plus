@@ -34,9 +34,8 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
-from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -258,9 +257,9 @@ class Search(UserInterface):
         self.frame = searches.frame
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
 
-        setup_accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
-        setup_accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
-        setup_accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
+        Accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
+        Accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
+        Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
 
         self.text = text
         self.searchterm_words_include = []
@@ -1239,7 +1238,8 @@ class Search(UserInterface):
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            copy_file_url(user, filepath)
+            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath)
+            copy_text(url)
             return
 
     def on_copy_dir_url(self, *_args):
@@ -1247,7 +1247,8 @@ class Search(UserInterface):
         for iterator in self.selected_results:
             user = self.resultsmodel.get_value(iterator, 1)
             filepath = self.resultsmodel.get_value(iterator, 11)
-            copy_file_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            url = self.frame.np.userbrowse.get_soulseek_url(user, filepath.rsplit('\\', 1)[0] + '\\')
+            copy_text(url)
             return
 
     def on_counter_button(self, *_args):

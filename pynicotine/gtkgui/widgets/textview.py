@@ -24,7 +24,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.utils import open_uri
@@ -262,7 +261,12 @@ class TextView:
         copy_text(self.get_url_for_selected_pos())
 
     def on_copy_all_text(self, *_args):
-        copy_all_text(self.textview)
+
+        textbuffer = self.textview.get_buffer()
+        start, end = textbuffer.get_bounds()
+        text = textbuffer.get_text(start, end, True)
+
+        copy_text(text)
 
     def on_clear_all_text(self, *_args):
         self.clear()
