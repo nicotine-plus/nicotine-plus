@@ -1372,6 +1372,7 @@ class SlskProtoThread(threading.Thread):
                             prev_init = self._init_msgs.get(user + conn_type)
                             msg.outgoing_msgs = prev_init.outgoing_msgs
                             prev_init.outgoing_msgs.clear()
+                            self.close_connection(self._conns, prev_init.sock)
 
                         conn_obj.init = msg
                         conn_obj.init.addr = addr
