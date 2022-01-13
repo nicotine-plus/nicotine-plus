@@ -1189,6 +1189,12 @@ class SlskProtoThread(threading.Thread):
                         conn_type = msg.conn_type
                         token = msg.token
 
+                        log.add_conn(("Received indirect connection request of type %(type)s from user %(user)s "
+                                      "with token %(token)s"), {
+                            "type": conn_type,
+                            "user": user,
+                            "token": token
+                        })
                         init = PeerInit(addr=addr, init_user=user, target_user=user, conn_type=conn_type, token=token)
                         self.connect_to_peer_direct(user, addr, init)
 
@@ -1349,6 +1355,7 @@ class SlskProtoThread(threading.Thread):
                         if self.has_existing_user_socket(user, conn_type):
                             prev_init = self._init_msgs.get(user + conn_type)
                             msg.outgoing_msgs = prev_init.outgoing_msgs
+                            prev_init.outgoing_msgs.clear()
 
                         conn_obj.init = msg
                         conn_obj.init.addr = conn_obj.addr
