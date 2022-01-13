@@ -771,6 +771,16 @@ class SlskProtoThread(threading.Thread):
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
+    def has_existing_user_socket(self, user, conn_type):
+
+        if conn_type != 'F':
+            prev_init = self._init_msgs.get(user + conn_type)
+
+            if prev_init is not None and prev_init.sock is not None:
+                return True
+
+        return False
+
     @staticmethod
     def pack_network_message(msg_obj):
 
@@ -845,11 +855,7 @@ class SlskProtoThread(threading.Thread):
 
         if conn_type != 'F':
             # Check if there's already a connection object for the specified username
-
-            for _, i in self._init_msgs.items():
-                if i.target_user == user and i.conn_type == conn_type:
-                    init = i
-                    break
+            init = self._init_msgs.get(user + conn_type)
 
         log.add_conn("Sending message of type %(type)s to user %(user)s", {
             'type': message.__class__,
@@ -906,7 +912,16 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer_direct(self, user, addr, init):
         """ Initiate a connection with a peer directly """
 
-        self._init_msgs[str(addr) + init.conn_type] = init
+        if self.has_existing_user_socket(user, init.conn_type):
+            log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
+                          "but existing connection already exists"), {
+                'type': init.conn_type,
+                'user': user,
+                'addr': addr
+            })
+            return
+
+        self._init_msgs[user + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
@@ -1008,13 +1023,7 @@ class SlskProtoThread(threading.Thread):
         if conn_obj.init is None:
             return
 
-        init_key = str(conn_obj.addr) + conn_obj.init.conn_type
-        init = self._init_msgs.get(init_key)
-
-        if conn_obj.init == init:
-            # Don't remove init message if a direct connection was already established, and we're
-            # closing a failed indirect connection attempt
-            self._init_msgs.pop(init_key)
+        self._init_msgs.pop(conn_obj.init.target_user + conn_obj.init.conn_type, None)
 
         if callback and conn_type == 'F':
             self._callback_msgs.append(FileConnClose(sock))
@@ -1315,7 +1324,7 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
-                        self._init_msgs[str(conn_obj.addr) + 'P'] = conn_obj.init
+                        self._init_msgs[conn_obj.init.target_user + conn_obj.init.conn_type] = conn_obj.init
                         conn_obj.init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(conn_obj.init, None)
 
@@ -1329,13 +1338,20 @@ class SlskProtoThread(threading.Thread):
                         self.process_conn_messages(conn_obj.init)
 
                     elif msg_class is PeerInit:
+                        user = msg.target_user
+                        conn_type = msg.conn_type
+
+                        if self.has_existing_user_socket(user, conn_type):
+                            prev_init = self._init_msgs.get(user + conn_type)
+                            msg.outgoing_msgs = prev_init.outgoing_msgs
+
                         conn_obj.init = msg
                         conn_obj.init.addr = conn_obj.addr
-                        self._init_msgs[str(conn_obj.addr) + msg.conn_type] = msg
+                        self._init_msgs[user + conn_type] = msg
 
                         log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s", {
-                            'type': msg.conn_type,
-                            'user': msg.target_user
+                            'type': conn_type,
+                            'user': user
                         })
 
                         self.process_conn_messages(msg)
