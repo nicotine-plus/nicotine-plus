@@ -1268,6 +1268,7 @@ class Transfers:
                 "user": user,
                 "reason": "Remote file error"
             })
+            break
 
     def file_download(self, msg):
         """ A file download is in progress """
