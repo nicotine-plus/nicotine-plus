@@ -1372,7 +1372,7 @@ class SlskProtoThread(threading.Thread):
                             'addr': addr
                         })
 
-                        if self.has_existing_user_socket(user, conn_type):
+                        if user != self.server_username and self.has_existing_user_socket(user, conn_type):
                             log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
                                 "type": conn_type,
                                 "user": user
