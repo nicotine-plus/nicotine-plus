@@ -1121,7 +1121,9 @@ class UserBrowse(UserInterface):
     def on_focus_folder_left_accelerator(self, *_args):
         """ Left: focus back parent folder (left arrow) """
 
-        if self.FileScrolledWindow.get_hadjustment().get_value() > 0.0:
+        _path, column = self.FileTreeView.get_cursor()
+
+        if column.get_title() != "filename":
             return False  # allow horizontal scrolling
 
         self.FolderTreeView.grab_focus()
