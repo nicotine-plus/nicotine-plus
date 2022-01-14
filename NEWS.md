@@ -8,7 +8,7 @@ Version 3.2.1 (Release Candidate 1)
 
 Changes
 
- * Optimized overall performance related to Soulseek server and peer connections
+ * Optimized overall performance and stability related to Soulseek server and peer connections
  * Optimized performance and improve robustness of the round robin queue system (thank you @toofar)
  * Optimized scrolling performance and avoid FPS drops when scrolling large lists containing country flags
  * Optimized parent row expansions when adding new search results and transfers into tree views
@@ -23,6 +23,7 @@ Corrections
  * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
  * Fixed an issue where uploads can become stuck in the transfer queue forever
+ * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
  * Fixed an issue where the bandwidth status widget failed to update during background transfers
  * Avoid broken scrollbar when changing active preference page
  * Fixed labels of UI elements in the translation for Russian language (thank you @SnIPeRSnIPeR)
@@ -43,6 +44,7 @@ Issues closed on GitHub
  * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
  * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
  * Increase network speed update time [#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
+ * When a filename is 255 characters long [#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
