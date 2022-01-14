@@ -116,6 +116,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     i = 0
     cols = OrderedDict()
+    num_cols = len(args)
     column_config = None
 
     # GTK 4 rows need more padding to match GTK 3
@@ -206,6 +207,10 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             weight, underline = extra
             column.add_attribute(renderer, "weight", weight)
             column.add_attribute(renderer, "underline", underline)
+
+        # Allow individual cells to receive visual focus
+        if num_cols > 1:
+            renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
         column.set_min_width(20)
