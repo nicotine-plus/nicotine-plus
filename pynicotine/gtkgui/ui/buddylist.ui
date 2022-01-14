@@ -51,6 +51,7 @@
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>
+                <property name="search-column">2</property>
                 <signal name="query-tooltip" handler="on_tooltip"/>
                 <signal name="row-activated" handler="on_row_activated"/>
               </object>

@@ -266,6 +266,7 @@
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="has-tooltip">True</property>
+                                <property name="search-column">1</property>
                                 <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_ru_row_activated"/>
                                 <child internal-child="selection">
