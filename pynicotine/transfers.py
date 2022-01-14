@@ -1206,7 +1206,7 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status == "Finished":
+            if i.status in ("Finished", "Paused"):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
                 break
 
@@ -1226,19 +1226,18 @@ class Transfers:
                 self.get_file(i.user, i.filename, i.path, i)
                 break
 
-            if i.status != "Paused":
-                if i.status == "Transferring":
-                    self.abort_transfer(i, reason=msg.reason)
+            if i.status == "Transferring":
+                self.abort_transfer(i, reason=msg.reason)
 
-                i.status = msg.reason
-                self.update_download(i)
+            i.status = msg.reason
+            self.update_download(i)
 
-                log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
-                    "user": user,
-                    "filename": i.filename,
-                    "reason": msg.reason
-                })
-                break
+            log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
+                "user": user,
+                "filename": i.filename,
+                "reason": msg.reason
+            })
+            break
 
     def upload_failed(self, msg):
 
@@ -1248,8 +1247,8 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
-            if i.status in ("Paused", "Download folder error", "Local file error", "User logged off"):
-                continue
+            if i.status in ("Finished", "Paused", "Download folder error", "Local file error", "User logged off"):
+                break
 
             if not i.legacy_attempt:
                 # Attempt to request file name encoded as latin-1 once
