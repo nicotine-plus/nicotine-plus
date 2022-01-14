@@ -1208,7 +1208,7 @@ class Transfers:
 
             if i.status in ("Finished", "Paused"):
                 # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
-                break
+                continue
 
             if msg.reason in ("File not shared.", "File not shared", "Remote file error") and not i.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
@@ -1248,7 +1248,8 @@ class Transfers:
                 continue
 
             if i.status in ("Finished", "Paused", "Download folder error", "Local file error", "User logged off"):
-                break
+                # Check if there are more transfers with the same virtual path
+                continue
 
             if not i.legacy_attempt:
                 # Attempt to request file name encoded as latin-1 once
