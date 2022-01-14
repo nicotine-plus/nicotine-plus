@@ -1206,6 +1206,10 @@ class Transfers:
             if i.user != user or i.filename != msg.file:
                 continue
 
+            if i.status == "Finished":
+                # SoulseekQt also sends this message for finished downloads when unsharing files, ignore
+                break
+
             if msg.reason in ("File not shared.", "File not shared", "Remote file error") and not i.legacy_attempt:
                 # The peer is possibly using an old client that doesn't support Unicode
                 # (Soulseek NS). Attempt to request file name encoded as latin-1 once.
