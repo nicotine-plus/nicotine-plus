@@ -17,7 +17,7 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can download one [here](http://ppa.launchpad.net/nicotine-team/unstable/ubuntu/pool/main/n/nicotine/). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a .deb package each time a new release is available.
+If you prefer to install a .deb package directly, you can download one [here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a .deb package each time a new release is available.
 
 ### Flatpak
 
