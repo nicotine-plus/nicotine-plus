@@ -1261,6 +1261,8 @@ class UserBrowse(UserInterface):
 
     def on_close(self, *_args):
 
+        self.clear_model()
+
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
