@@ -1123,7 +1123,7 @@ class UserBrowse(UserInterface):
 
         _path, column = self.FileTreeView.get_cursor()
 
-        if column.get_title() != "filename":
+        if self.FileTreeView.get_column(0) != column:
             return False  # allow horizontal scrolling
 
         self.FolderTreeView.grab_focus()
