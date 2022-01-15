@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from collections import deque
 
 from gi.repository import Gio
@@ -55,6 +53,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
@@ -561,7 +560,7 @@ class ChatRoom(UserInterface):
         if not config.sections["logging"]["readroomlogs"]:
             return
 
-        filename = self.room.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.room) + ".log"
         numlines = config.sections["logging"]["readroomlines"]
 
         try:

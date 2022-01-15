@@ -21,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from collections import deque
 from time import altzone
 from time import daylight
@@ -44,6 +42,7 @@ from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import open_log
@@ -233,7 +232,7 @@ class PrivateChat(UserInterface):
     def read_private_log(self):
 
         # Read log file
-        filename = self.user.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.user) + ".log"
         numlines = config.sections["logging"]["readprivatelines"]
 
         try:

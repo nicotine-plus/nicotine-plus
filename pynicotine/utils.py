@@ -193,7 +193,7 @@ def _handle_log(folder, filename, callback):
         if not os.path.isdir(folder):
             os.makedirs(folder)
 
-        filename = filename.replace(os.sep, "-") + ".log"
+        filename = clean_file(filename) + ".log"
         get_path(folder, filename, callback)
 
     except Exception as error:

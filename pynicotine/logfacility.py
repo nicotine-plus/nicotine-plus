@@ -159,7 +159,8 @@ class Logger:
     def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
         try:
-            filename = filename.replace(os.sep, "-") + ".log"
+            from pynicotine.utils import clean_file
+            filename = clean_file(filename) + ".log"
             oldumask = os.umask(0o077)
 
             if not os.path.exists(logsdir):
