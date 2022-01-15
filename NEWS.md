@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.2.1 (Release Candidate 1)
+Version 3.2.1 (Release Candidate 2)
 -----------------------------------
 
 Changes
@@ -17,6 +17,7 @@ Changes
  * Display virtual folder paths for items in the Uploads tab instead of real paths
  * Added display of real folder paths for local items in the File Properties dialog
  * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
+ * Changed the chat log file replacement character from - to _ in room names containing a forward slash
 
 Corrections
 
@@ -45,6 +46,8 @@ Issues closed on GitHub
  * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
  * Increase network speed update time [#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
  * When a filename is 255 characters long [#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
+ * Excessive memory usage when browsing large shares [#1826](https://github.com/nicotine-plus/nicotine-plus/issues/1826))
+ * Couldn't write to log file "/mu/.log" (Windows) [#1828](https://github.com/nicotine-plus/nicotine-plus/issues/1828))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
