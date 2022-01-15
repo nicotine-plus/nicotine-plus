@@ -92,7 +92,6 @@ class TabLabel(Gtk.Box):
 
         if Gtk.get_major_version() == 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
-            self.close_button.set_has_frame(False)
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             gesture_click = Gtk.GestureClick()
@@ -103,8 +102,8 @@ class TabLabel(Gtk.Box):
 
         else:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
-            self.close_button.set_relief(Gtk.ReliefStyle.NONE)
 
+        self.close_button.get_style_context().add_class("flat")
         self.close_button.set_tooltip_text(_("Close tab"))
         self.close_button.show()
         self.add(self.close_button)
@@ -254,16 +253,13 @@ class IconNotebook:
         self.page_id = page_id
         self.unread_button = Gtk.MenuButton(
             tooltip_text=_("Unread Tabs"),
-            halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER
+            halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=False
         )
         self.pages = {}
 
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
-
             self.unread_button.set_icon_name("emblem-important-symbolic")
-            self.unread_button.set_has_frame(False)
-            self.unread_button.hide()
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             controllers = self.notebook.observe_controllers()
@@ -277,11 +273,11 @@ class IconNotebook:
 
         else:
             self.window = self.notebook.get_toplevel()
-
             self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))
-            self.unread_button.set_relief(Gtk.ReliefStyle.NONE)
 
-        self.unread_button.get_style_context().add_class("circular")
+        style_context = self.unread_button.get_style_context()
+        for style_class in ("circular", "flat"):
+            style_context.add_class(style_class)
 
         self.notebook.set_action_widget(self.unread_button, Gtk.PackType.END)
 
