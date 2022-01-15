@@ -206,11 +206,8 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "friendsonly": False,
                 "buddysharestrustedonly": False,
                 "friendsnolimits": False,
-                "enablebuddyshares": False,
-                "enabletransferbuttons": True,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
                 "geoblock": False,
@@ -444,7 +441,10 @@ class Config:
                 "shownotificationperfolder",
                 "prioritize",
                 "sharedownloaddir",
-                "geopanic"
+                "geopanic",
+                "enablebuddyshares",
+                "friendsonly",
+                "enabletransferbuttons"
             ),
             "server": (
                 "lastportstatuscheck",
