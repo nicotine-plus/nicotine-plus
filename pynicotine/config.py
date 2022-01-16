@@ -692,9 +692,9 @@ class Config:
                         self.sections[i][j] = default_val
 
                         log.add("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
-                            (i[:120] + '..') if len(i) > 120 else i,
-                            (j[:120] + '..') if len(j) > 120 else j,
-                            (val[:120] + '..') if len(val) > 120 else val
+                            (i[:120] + '…') if len(i) > 120 else i,
+                            (j[:120] + '…') if len(j) > 120 else j,
+                            (val[:120] + '…') if len(val) > 120 else val
                         ))
 
         server = self.sections["server"]
