@@ -18,6 +18,7 @@ Changes
  * Added display of real folder paths for local items in the File Properties dialog
  * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
  * Changed the chat log file replacement character from - to _ in room names containing a forward slash
+ * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 Corrections
 
