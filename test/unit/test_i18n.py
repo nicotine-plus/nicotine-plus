@@ -20,7 +20,7 @@ import unittest
 
 from pynicotine.i18n import generate_translations
 
-LANGUAGES = ("cs", "da", "de", "es", "eu", "fi", "fr", "hu", "it", "lt", "nb_NO", "nl", "pl", "pt_BR", "sk", "sv", "tr")
+LANGUAGES = ("cs", "da", "de", "es_CL", "es_ES", "eu", "fi", "fr", "hu", "it", "lt", "nb_NO", "nl", "pl", "pt_BR", "sk", "sv", "tr")
 
 
 class I18nTest(unittest.TestCase):
