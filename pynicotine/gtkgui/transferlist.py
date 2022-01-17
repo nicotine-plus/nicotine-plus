@@ -822,33 +822,21 @@ class TransferList(UserInterface):
         data = []
 
         for transfer in self.selected_transfers:
-            user = transfer.user
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
-            path = transfer.path
-            size = speed = length = num = bitrate = None
-
-            size = str(human_size(transfer.size))
-
-            if transfer.speed:
-                speed = str(human_speed(transfer.speed))
-
-            bitrate = str(transfer.bitrate)
-            length = str(transfer.length)
-
             directory = fullname.rsplit("\\", 1)[0]
 
             data.append({
-                "user": user,
+                "user": transfer.user,
                 "fn": fullname,
-                "position": num,
                 "filename": filename,
                 "directory": directory,
-                "path": path,
-                "size": size,
-                "speed": speed,
-                "bitrate": bitrate,
-                "length": length
+                "path": transfer.path,
+                "queue_position": transfer.queue_position,
+                "speed": transfer.speed,
+                "size": transfer.size,
+                "bitrate": transfer.bitrate,
+                "length": transfer.length
             })
 
         if data:

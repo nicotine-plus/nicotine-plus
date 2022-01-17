@@ -1073,18 +1073,15 @@ class UserBrowse(UserInterface):
             iterator = model.get_iter(path)
             filename = model.get_value(iterator, 0)
             virtual_path = "\\".join([self.selected_folder, filename])
-            size = model.get_value(iterator, 1)
-            bitratestr = model.get_value(iterator, 2)
-            length = model.get_value(iterator, 3)
 
             data.append({
                 "user": self.user,
                 "fn": virtual_path,
                 "filename": filename,
                 "directory": self.selected_folder,
-                "size": size,
-                "bitrate": bitratestr,
-                "length": length
+                "size": model.get_value(iterator, 4),
+                "bitrate": model.get_value(iterator, 2),
+                "length": model.get_value(iterator, 3)
             })
 
         if data:

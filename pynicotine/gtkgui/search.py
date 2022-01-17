@@ -1121,30 +1121,21 @@ class Search(UserInterface):
         data = []
 
         for iterator in self.selected_results:
-            num = self.resultsmodel.get_value(iterator, 0)
-            user = self.resultsmodel.get_value(iterator, 1)
-            speed = self.resultsmodel.get_value(iterator, 3)
-            queue = self.resultsmodel.get_value(iterator, 4)
-            filename = self.resultsmodel.get_value(iterator, 6)
-            size = self.resultsmodel.get_value(iterator, 7)
-            bitratestr = self.resultsmodel.get_value(iterator, 8)
-            length = self.resultsmodel.get_value(iterator, 9)
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
             country_code = self.resultsmodel.get_value(iterator, 12)
             country = "%s / %s" % (country_code, self.frame.np.geoip.country_code_to_name(country_code))
 
             data.append({
-                "user": user,
+                "user": self.resultsmodel.get_value(iterator, 1),
                 "fn": virtual_path,
-                "position": num,
                 "filename": filename,
                 "directory": directory,
-                "size": size,
-                "speed": speed,
-                "queue": queue,
-                "bitrate": bitratestr,
-                "length": length,
+                "size": self.resultsmodel.get_value(iterator, 13),
+                "speed": self.resultsmodel.get_value(iterator, 14),
+                "queue_position": self.resultsmodel.get_value(iterator, 15),
+                "bitrate": self.resultsmodel.get_value(iterator, 8),
+                "length": self.resultsmodel.get_value(iterator, 9),
                 "country": country
             })
 
