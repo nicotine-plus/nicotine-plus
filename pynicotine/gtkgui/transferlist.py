@@ -413,7 +413,7 @@ class TransferList(UserInterface):
         transfer = self.transfersmodel.get_value(initer, 14)
 
         if self.transfersmodel.get_value(initer, 3) != translated_status:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
+            self.transfersmodel.set_value(initer, 3, translated_status)
             transfer.status = salientstatus
 
         if self.transfersmodel.get_value(initer, 7) != hspeed:

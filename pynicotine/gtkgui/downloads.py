@@ -40,7 +40,7 @@ class Downloads(TransferList):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.aborted_status = _("Paused")
+        self.aborted_status = "Paused"
 
         TransferList.__init__(self, frame, transfer_type="download")
 
