@@ -262,12 +262,18 @@ class Transfers:
                 pass
 
             try:
-                bitrate = str(i[6])
+                loaded_bitrate = i[6]
+
+                if loaded_bitrate is not None:
+                    bitrate = str(loaded_bitrate)
             except Exception:
                 pass
 
             try:
-                length = str(i[7])
+                loaded_length = i[7]
+
+                if loaded_length is not None:
+                    length = str(loaded_length)
             except Exception:
                 pass
 
