@@ -98,8 +98,8 @@ def clean_path(path, absolute=False):
 
     path = ''.join([drive, path])
 
-    # Path can never end with a period on Windows machines
-    path = path.rstrip('.')
+    # Path can never end with a period or space on Windows machines
+    path = path.rstrip('. ')
 
     return path
 
