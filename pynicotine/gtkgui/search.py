@@ -1197,10 +1197,10 @@ class Search(UserInterface):
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
-                    _h_size, _h_bitrate, _h_length, bitrate, fullpath, _country, size, _speed,
-                    _queue, length, _color) = row
+                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
+                    _queue, _length, _color) = row
                 visible_files.append(
-                    (user, fullpath, destination, size.get_uint64(), bitrate.get_uint64(), length.get_uint64()))
+                    (user, fullpath, destination, size.get_uint64(), h_bitrate, h_length))
 
             self.frame.np.search.request_folder_download(user, folder, visible_files)
 

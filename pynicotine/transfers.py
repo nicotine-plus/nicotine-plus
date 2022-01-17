@@ -247,7 +247,7 @@ class Transfers:
             size = 0
 
             try:
-                loaded_status = i[3]
+                loaded_status = str(i[3])
             except Exception:
                 pass
 
@@ -262,12 +262,12 @@ class Transfers:
                 pass
 
             try:
-                bitrate = i[6]
+                bitrate = str(i[6])
             except Exception:
                 pass
 
             try:
-                length = i[7]
+                length = str(i[7])
             except Exception:
                 pass
 
