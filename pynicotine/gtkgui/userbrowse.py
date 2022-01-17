@@ -824,7 +824,7 @@ class UserBrowse(UserInterface):
             self.FileTreeView.grab_focus()
 
         # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
-        # ToDo: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
+        # TODO: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
         """ Left: collapse row
