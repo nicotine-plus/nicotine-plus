@@ -56,7 +56,7 @@ jobs:
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
       with:
         bundle: flatpak-package.flatpak
-        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.yaml
+        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
         run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}
 
