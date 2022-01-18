@@ -1546,6 +1546,7 @@ class NicotineFrame(UserInterface):
             self.set_auto_away(False)
         else:
             self.set_user_status(_("Away"))
+            self.remove_away_timer()
 
         self.tray_icon.set_away(is_away)
         self.away_action.set_state(GLib.Variant("b", is_away))
