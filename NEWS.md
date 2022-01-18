@@ -24,9 +24,10 @@ Corrections
 
  * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
- * Fixed an issue where uploads can become stuck in the transfer queue forever
+ * IMPORTANT: Fixed a regression where pausing a download while translations are used doesn't actually pause it
  * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
- * Fixed an issue where the bandwidth status widget failed to update during background transfers
+ * Fixed an issue where uploads can become stuck in the transfer queue forever
+ * Fixed a regression where the bandwidth status indicator failed to update if the transfers tab was inactive
  * Avoid broken scrollbar when changing active preference page
  * Fixed labels of UI elements in the translation for Russian language (thank you @SnIPeRSnIPeR)
 
@@ -39,16 +40,18 @@ Issues closed on GitHub
  * Logs mention "privileged" users not "prioritized" users ([#1764](https://github.com/nicotine-plus/nicotine-plus/issues/1764))
  * Add an option to print full paths relatively to their share ([#1775](https://github.com/nicotine-plus/nicotine-plus/issues/1775))
  * Can't connect to soulseek network - specified ports unusable (Windows 11) ([#1778](https://github.com/nicotine-plus/nicotine-plus/issues/1778))
- * \[3.1.1\] Just crashed on Win 11 insider ring (Windows 11) ([#1777](https://github.com/nicotine-plus/nicotine-plus/issues/1777))
+ * \[3.1.1\] (Windows 11) Just crashed on Win 11 insider ring ([#1777](https://github.com/nicotine-plus/nicotine-plus/issues/1777))
  * \[3.2.0.dev1\] Unknown config option 'show_private_results' ([#1779](https://github.com/nicotine-plus/nicotine-plus/issues/1779))
  * \[3.2.1.dev1\] Crash on adding user to buddy list ([#1792](https://github.com/nicotine-plus/nicotine-plus/issues/1792))
- * Can't change language in app (Windows/macOS) ([#1796](https://github.com/nicotine-plus/nicotine-plus/issues/1796))
+ * (Windows/macOS) Can't change language in app ([#1796](https://github.com/nicotine-plus/nicotine-plus/issues/1796))
  * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
  * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
- * Increase network speed update time [#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
- * When a filename is 255 characters long [#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
- * Excessive memory usage when browsing large shares [#1826](https://github.com/nicotine-plus/nicotine-plus/issues/1826))
- * Couldn't write to log file "/mu/.log" (Windows) [#1828](https://github.com/nicotine-plus/nicotine-plus/issues/1828))
+ * Increase network speed update time ([#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
+ * When a filename is 255 characters long ([#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
+ * Excessive memory usage when browsing large shares ([#1826](https://github.com/nicotine-plus/nicotine-plus/issues/1826))
+ * (Windows) Couldn't write to log file "/mu/.log" ([#1828](https://github.com/nicotine-plus/nicotine-plus/issues/1828))
+ * (Windows) "String too long" crash on notification popup ([#1829](https://github.com/nicotine-plus/nicotine-plus/issues/1829))
+ * (Windows) Spaces at the end of directories are trimmed when creating ([#1835](https://github.com/nicotine-plus/nicotine-plus/issues/1835))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
