@@ -426,7 +426,7 @@ def human_speed(speed):
                 if speed > carry:
                     template = "%.2g %s"
                     speed /= step_unit
-                    suffix = str(speed_suffixes[index+1])
+                    suffix = str(speed_suffixes[index + 1])
 
                 return template % (speed, suffix)
 
