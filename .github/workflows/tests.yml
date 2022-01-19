@@ -89,7 +89,9 @@ jobs:
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
       - name: Install dependencies
-        run: python3 packaging/macos/dependencies_core.py
+        run: |
+          brew update
+          python3 packaging/macos/dependencies_core.py
 
       - name: Flake8 linter
         run: python3 -m flake8
