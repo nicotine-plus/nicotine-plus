@@ -76,7 +76,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        gtk: [3]
+        gtk: [3, 4]
     env:
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
