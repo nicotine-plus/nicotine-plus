@@ -415,25 +415,27 @@ def human_size(filesize):
 speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
 
 
-def human_speed(filesize):
+def human_speed(speed):
     try:
         step_unit = 1024
+        carry = 999
         template = "%.3g %s"
 
         for index, suffix in enumerate(speed_suffixes):
-            if filesize < step_unit:
-                if index <= 1:
-                    # Don't show decimals for KiB/s and B/s
-                    template = "%i %s"
+            if speed < step_unit:
+                if speed > carry:
+                    template = "%.2g %s"
+                    speed /= step_unit
+                    suffix = str(speed_suffixes[index+1])
 
-                return template % (filesize, suffix)
+                return template % (speed, suffix)
 
-            filesize /= step_unit
+            speed /= step_unit
 
     except TypeError:
         pass
 
-    return filesize
+    return speed
 
 
 def humanize(number):
