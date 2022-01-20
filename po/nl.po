@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-10 19:13+0000\n"
+"PO-Revision-Date: 2022-01-17 20:57+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -30,7 +30,7 @@ msgstr "Soulseek cliënt"
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
 msgid "Graphical client for the Soulseek peer-to-peer network"
-msgstr "Grafische client voor het Soulseek peer-to-peer-netwerk"
+msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
@@ -47,9 +47,9 @@ msgid ""
 "the official Soulseek client, providing additional functionality while "
 "keeping current with the Soulseek protocol."
 msgstr ""
-"Nicotine+ wil een aangenaam, Free and Open Source (FOSS) alternatief zijn "
-"voor de officiële Soulseek-client, met extra functionaliteit, met de laatste "
-"stand van het Soulseek protocol."
+"Nicotine + wil een aangenaam, gratis en open source (FOSS) alternatief zijn "
+"voor de officiële Soulseek-client, die extra functionaliteit biedt terwijl "
+"het up-to-date blijft met het Soulseek-protocol."
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:57
 msgid "Nicotine+ Team"
@@ -61,7 +61,7 @@ msgstr "Nicotine+ is een Soulseek cliënt"
 
 #: pynicotine/__init__.py:32
 msgid "show this help message and exit"
-msgstr "dit helpbericht tonen en afsluiten"
+msgstr "dit hulpbericht tonen en afsluiten"
 
 #: pynicotine/__init__.py:35
 msgid "file"
@@ -90,7 +90,7 @@ msgstr "schakel het pictogram in het systeemvak in"
 
 #: pynicotine/__init__.py:52
 msgid "disable the tray icon"
-msgstr "Pictogram in systeemvak uitschakelen"
+msgstr "schakel het pictogram in het systeemvak uit"
 
 #: pynicotine/__init__.py:56
 msgid "start the program without showing window"
