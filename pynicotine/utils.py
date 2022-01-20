@@ -398,11 +398,16 @@ size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 
 def human_size(filesize):
     try:
-        step_unit = 1024.0
+        step_unit = 1024
+        carry = 999
+        template = "%.3g %s"
 
-        for i in size_suffixes:
+        for suffix in size_suffixes:
             if filesize < step_unit:
-                return "%3.1f %s" % (filesize, i)
+                if filesize > carry:
+                    template = "%.4g %s"
+
+                return template % (filesize, suffix)
 
             filesize /= step_unit
 
@@ -421,7 +426,7 @@ def human_speed(speed):
         carry = 999
         template = "%.3g %s"
 
-        for index, suffix in enumerate(speed_suffixes):
+        for suffix in speed_suffixes:
             if speed < step_unit:
                 if speed > carry:
                     template = "%.4g %s"
