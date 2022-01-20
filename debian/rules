@@ -6,7 +6,7 @@
 #
 
 # Output every command that modifies files on the build system...
-DH_VERBOSE = 1
+export DH_VERBOSE=1
 export DH_OPTIONS=-v
 
 %:
