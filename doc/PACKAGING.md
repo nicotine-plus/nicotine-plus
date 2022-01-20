@@ -36,16 +36,10 @@ python3 setup.py sdist
 mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 
-Build the Debian source package:
+Build the Debian package:
 
 ```console
-debuild -S -sa
-```
-
-Build the binary from the source package and upstream tarball via `sbuild`:
-
-```console
-sbuild ../nicotine_*.dsc
+debuild -sa -us -uc
 ```
 
 

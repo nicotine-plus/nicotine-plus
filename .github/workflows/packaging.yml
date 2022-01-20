@@ -25,15 +25,9 @@ jobs:
 
       - name: Build Debian package
         run: |
-          # Generate tarball
           python setup.py sdist
           mk-origtargz dist/nicotine-plus-*.tar.gz
-
-          # Build source package
-          debuild -S -sa -us -uc
-
-          # Build binary
-          debuild -b -sa -us -uc
+          debuild -sa -us -uc
 
       - name: Prepare artifacts
         run: |
