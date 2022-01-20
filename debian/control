@@ -15,7 +15,8 @@ Build-Depends:
     python3-gdbm,
     python3-gi (>= 3.18),
     python3-setuptools,
-    xvfb
+    xvfb,
+    python3-pytest-xvfb
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
 Vcs-browser: https://github.com/nicotine-plus/nicotine-plus
 X-Python-Version: >= 3.5
@@ -41,4 +42,3 @@ Description: graphical client for Soulseek peer-to-peer network
  Nicotine+ aims to be a pleasant, free and open source (FOSS)
  alternative to the official Soulseek client, providing additional
  functionality while keeping current with the Soulseek protocol.
-
