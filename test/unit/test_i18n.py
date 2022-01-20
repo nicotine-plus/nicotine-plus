@@ -18,7 +18,8 @@
 
 import unittest
 
-from pynicotine.i18n import generate_translations
+from pynicotine.i18n import build_translations
+from pynicotine.i18n import get_translation_paths
 
 LANGUAGES = ("cs", "da", "de", "es_CL", "es_ES", "eu", "fi", "fr", "hu",
              "it", "lt", "nb_NO", "nl", "pl", "pt_BR", "sk", "sv", "tr")
@@ -27,9 +28,10 @@ LANGUAGES = ("cs", "da", "de", "es_CL", "es_ES", "eu", "fi", "fr", "hu",
 class I18nTest(unittest.TestCase):
 
     @staticmethod
-    def test_generate_translations():
+    def test_build_translations():
 
-        mo_files, languages = generate_translations()
+        languages = build_translations()
+        mo_files = get_translation_paths()
 
         for lang in LANGUAGES:
             assert lang in languages

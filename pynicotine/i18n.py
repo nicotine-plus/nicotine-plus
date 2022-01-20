@@ -22,6 +22,8 @@ import locale
 import os
 import sys
 
+CURRENT_FOLDER = os.path.dirname(os.path.realpath(__file__))
+BASE_FOLDER = os.path.normpath(os.path.join(CURRENT_FOLDER, ".."))
 TRANSLATION_DOMAIN = "nicotine"
 
 
@@ -73,7 +75,7 @@ def apply_translations():
     _set_default_system_language()
 
     # Local path where to find translation (mo) files
-    local_mo_path = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "mo"))
+    local_mo_path = os.path.join(BASE_FOLDER, "mo")
     use_local_path = gettext.find(TRANSLATION_DOMAIN, localedir=local_mo_path)
 
     # Load library for translating non-Python content, e.g. GTK ui files
@@ -116,15 +118,12 @@ def apply_translations():
     gettext.install(TRANSLATION_DOMAIN)
 
 
-def generate_translations():
+def build_translations():
+    """ Builds .mo translation files in the 'mo' folder of the project repository """
 
-    current_folder = os.path.dirname(os.path.realpath(__file__))
-    base_folder = os.path.normpath(os.path.join(current_folder, ".."))
-
-    mo_entries = []
     languages = []
 
-    for po_file in glob.glob(os.path.join(base_folder, "po", "*.po")):
+    for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
         lang = os.path.basename(po_file[:-3])
         languages.append(lang)
 
@@ -139,14 +138,28 @@ def generate_translations():
         if exit_code > 0:
             sys.exit(exit_code)
 
+    # Merge translations into .desktop and metainfo files
+    for desktop_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.desktop.in")):
+        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
+
+    for metainfo_file in glob.glob(os.path.join(BASE_FOLDER, "data", "*.metainfo.xml.in")):
+        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
+
+    return languages
+
+
+def get_translation_paths():
+    """ Returns the target path and current path of built .mo translation files """
+
+    mo_entries = []
+
+    for po_file in glob.glob(os.path.join(BASE_FOLDER, "po", "*.po")):
+        lang = os.path.basename(po_file[:-3])
+
+        mo_dir = os.path.join("mo", lang, "LC_MESSAGES")
+        mo_file = os.path.join(mo_dir, "nicotine.mo")
+
         targetpath = os.path.join("share", "locale", lang, "LC_MESSAGES")
         mo_entries.append((targetpath, [mo_file]))
 
-    # Merge translations into .desktop and metainfo files
-    for desktop_file in glob.glob(os.path.join(base_folder, "data", "*.desktop.in")):
-        os.system("msgfmt --desktop --template=" + desktop_file + " -d po -o " + desktop_file[:-3])
-
-    for metainfo_file in glob.glob(os.path.join(base_folder, "data", "*.metainfo.xml.in")):
-        os.system("msgfmt --xml --template=" + metainfo_file + " -d po -o " + metainfo_file[:-3])
-
-    return mo_entries, languages
+    return mo_entries
