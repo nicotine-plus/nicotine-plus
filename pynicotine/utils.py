@@ -424,9 +424,7 @@ def human_speed(speed):
         for index, suffix in enumerate(speed_suffixes):
             if speed < step_unit:
                 if speed > carry:
-                    template = "%.2g %s"
-                    speed /= step_unit
-                    suffix = str(speed_suffixes[index + 1])
+                    template = "%.4g %s"
 
                 return template % (speed, suffix)
 
