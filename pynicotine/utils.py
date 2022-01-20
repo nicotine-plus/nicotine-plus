@@ -394,21 +394,19 @@ def get_result_bitrate_length(filesize, attributes):
 
 
 suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-step_unit = 1024
-carry = 999
 
 
 def _human_speed_or_size(unit):
     template = "%.3g %s"
     try:
         for suffix in suffixes:
-            if unit < step_unit:
-                if unit > carry:
+            if unit < 1024:
+                if unit > 999:
                     template = "%.4g %s"
 
                 return template % (unit, suffix)
 
-            unit /= step_unit
+            unit /= 1024
 
     except TypeError:
         pass
