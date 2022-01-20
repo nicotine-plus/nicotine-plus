@@ -220,8 +220,6 @@ class NicotineFrame(UserInterface):
         elif config.sections["server"]["auto_connect_startup"]:
             self.np.connect()
 
-        self.update_completions()
-
     """ Window State """
 
     def on_window_hide_unhide(self, *_args):

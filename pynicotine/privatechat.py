@@ -99,6 +99,8 @@ class PrivateChats:
             if isinstance(user, str) and user not in self.users:
                 self.show_user(user, switch_page=False)
 
+        self.update_completions()
+
     def auto_replace(self, message):
 
         if self.config.sections["words"]["replacewords"]:
