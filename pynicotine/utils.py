@@ -393,52 +393,35 @@ def get_result_bitrate_length(filesize, attributes):
     return h_bitrate, bitrate, h_length, length
 
 
-size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+step_unit = 1024
+carry = 999
 
 
-def human_size(filesize):
+def _human_speed_or_size(unit):
+    template = "%.3g %s"
     try:
-        step_unit = 1024
-        carry = 999
-        template = "%.3g %s"
-
-        for suffix in size_suffixes:
-            if filesize < step_unit:
-                if filesize > carry:
+        for suffix in suffixes:
+            if unit < step_unit:
+                if unit > carry:
                     template = "%.4g %s"
 
-                return template % (filesize, suffix)
+                return template % (unit, suffix)
 
-            filesize /= step_unit
+            unit /= step_unit
 
     except TypeError:
         pass
 
-    return filesize
-
-
-speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
+    return unit
 
 
 def human_speed(speed):
-    try:
-        step_unit = 1024
-        carry = 999
-        template = "%.3g %s"
+    return _human_speed_or_size(speed) + "/s"
 
-        for suffix in speed_suffixes:
-            if speed < step_unit:
-                if speed > carry:
-                    template = "%.4g %s"
 
-                return template % (speed, suffix)
-
-            speed /= step_unit
-
-    except TypeError:
-        pass
-
-    return speed
+def human_size(filesize):
+    return _human_speed_or_size(filesize)
 
 
 def humanize(number):
