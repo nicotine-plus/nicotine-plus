@@ -35,6 +35,7 @@ import webbrowser
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
+FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
                '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
@@ -393,13 +394,11 @@ def get_result_bitrate_length(filesize, attributes):
     return h_bitrate, bitrate, h_length, length
 
 
-suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
-
-
 def _human_speed_or_size(unit):
+
     template = "%.3g %s"
     try:
-        for suffix in suffixes:
+        for suffix in FILE_SIZE_SUFFIXES:
             if unit < 1024:
                 if unit > 999:
                     template = "%.4g %s"
