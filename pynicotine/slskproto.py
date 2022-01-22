@@ -661,6 +661,7 @@ class SlskProtoThread(threading.Thread):
         """ Call this to abort the thread """
         self._want_abort = True
 
+        self.listen_socket.close()
         self.selector.close()
         self.server_disconnect()
 
