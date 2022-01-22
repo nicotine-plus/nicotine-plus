@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-06 20:32+0000\n"
+"PO-Revision-Date: 2023-05-17 14:53+0000\n"
 "Last-Translator: Vladyslav Anisimov <uniss@ua.fm>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/uk/>\n"
@@ -4195,8 +4195,7 @@ msgstr "Додати друга…"
 
 #: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1273
 msgid "Enter the username of the person you want to add to your buddy list"
-msgstr ""
-"Введіть ім’я користувача, якого ви хочете додати до свого списку друзів"
+msgstr "Введіть ім’я користувача, якого ви хочете додати до свого списку друзів"
 
 #: pynicotine/gtkgui/ui/chatrooms.ui:97 pynicotine/gtkgui/ui/privatechat.ui:51
 #, fuzzy
@@ -6006,8 +6005,7 @@ msgstr "Першим зайшов, першим вийшов"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:362
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
-msgstr ""
-"Вивантаження в черзі, якщо загальна швидкість передачі досягає (КіБ/с):"
+msgstr "Вивантаження в черзі, якщо загальна швидкість передачі досягає (КіБ/с):"
 
 #: pynicotine/gtkgui/ui/settings/uploads.ui:387
 msgid "Limit number of upload slots to:"
