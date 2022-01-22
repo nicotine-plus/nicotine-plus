@@ -2037,7 +2037,8 @@ class SlskProtoThread(threading.Thread):
                 # Error recieved; terminate networking loop
 
                 log.add("Major Socket Error: Networking terminated! %s", error)
-                self._want_abort = True
+                self.abort()
+                break
 
             except ValueError as error:
                 # Possibly opened too many sockets
