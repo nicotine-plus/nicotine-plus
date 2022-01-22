@@ -22,9 +22,9 @@ command_aliases = {}
 interface = 
 
 [transfers]
-incompletedir =
-downloaddir =
-uploaddir =
+incompletedir = 
+downloaddir = 
+uploaddir = 
 shared = []
 buddyshared = []
 uploadbandwidth = 10
@@ -94,9 +94,9 @@ onematch = False
 [logging]
 debug = False
 debugmodes = []
-debuglogsdir =
+debuglogsdir = 
 logcollapsed = True
-transferslogsdir =
+transferslogsdir = 
 rooms_timestamp = %H:%M:%S
 private_timestamp = %Y-%m-%d %H:%M:%S
 log_timestamp = %Y-%m-%d %H:%M:%S
@@ -105,8 +105,8 @@ privatechat = True
 chatrooms = True
 transfers = False
 debug_file_output = False
-roomlogsdir =
-privatelogsdir =
+roomlogsdir = 
+privatelogsdir = 
 readroomlogs = True
 readroomlines = 15
 readprivatelines = 15
