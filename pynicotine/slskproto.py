@@ -1222,21 +1222,20 @@ class SlskProtoThread(threading.Thread):
 
                         if msg.port == 0:
                             log.add_conn(
-                                "Server reported port 0 for user %(user)s, giving up", {
+                                "Server reported port 0 for user %(user)s", {
                                     'user': msg.user
                                 }
                             )
 
-                        else:
-                            addr = (msg.ip_address, msg.port)
+                        addr = (msg.ip_address, msg.port)
 
-                            for init in pending_init_msgs:
-                                # We now have the IP address for a user we previously didn't know,
-                                # attempt a direct connection to the peer/user
-                                init.addr = addr
-                                self.connect_to_peer_direct(msg.user, addr, init)
+                        for init in pending_init_msgs:
+                            # We now have the IP address for a user we previously didn't know,
+                            # attempt a direct connection to the peer/user
+                            init.addr = addr
+                            self.connect_to_peer_direct(msg.user, addr, init)
 
-                        self.user_addresses[msg.user] = (msg.ip_address, msg.port)
+                        self.user_addresses[msg.user] = addr
 
                     elif msg_class is Relogged:
                         self.manual_server_disconnect = True
