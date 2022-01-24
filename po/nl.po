@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 20:49+0200\n"
-"PO-Revision-Date: 2022-01-17 20:57+0000\n"
+"PO-Revision-Date: 2022-01-23 16:02+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -3885,16 +3885,16 @@ msgstr "Bestanden downloaden naar map"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:306
 msgid "Share Folders"
-msgstr "Mappen delen"
+msgstr "Deel mappen"
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:315
 msgid ""
 "Users on the Soulseek network will be able to download files from folders "
 "you share. Sharing files is crucial for the health of the Soulseek network."
 msgstr ""
-"Gebruikers op het Soulseek-netwerk kunnen bestanden downloaden uit mappen "
-"die je deelt. Het delen van bestanden is van cruciaal belang voor de "
-"gezondheid van het Soulseek-netwerk."
+"Gebruikers op het Soulseek-netwerk kunnen bestanden downloaden uit de mappen "
+"die je deelt. Het delen van bestanden is van cruciaal belang voor het "
+"Soulseek-netwerk."
 
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:352
 msgid "_Add…"
