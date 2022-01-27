@@ -174,6 +174,7 @@ from pynicotine.slskmessages import UserPrivileged
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
+from pynicotine.slskmessages import increment_token
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -478,7 +479,7 @@ class SlskProtoThread(threading.Thread):
         self._conns = {}
         self._connsinprogress = {}
         self._out_indirect_conn_request_times = {}
-        self._token = 100
+        self._token = 0
         self.exit = threading.Event()
         self.user_addresses = {}
 
@@ -971,7 +972,7 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer_indirect(self, conn, error):
         """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
 
-        self._token += 1
+        self._token = increment_token(self._token)
 
         username = conn.init.target_user
         conn_type = conn.init.conn_type

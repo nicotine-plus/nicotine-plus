@@ -42,6 +42,7 @@ from collections import OrderedDict
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import increment_token
 from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
@@ -102,7 +103,7 @@ class Transfers:
         self.last_save_times = {"downloads": 0, "uploads": 0}
         self.transfer_request_times = {}
         self.upload_speed = 0
-        self.token = 100
+        self.token = 0
 
         self.user_update_counter = 0
         self.user_update_counters = {}
@@ -1611,7 +1612,7 @@ class Transfers:
             transfer.status = "User logged off"
 
         elif not locally_queued:
-            self.token += 1
+            self.token = increment_token(self.token)
             transfer.token = self.token
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()

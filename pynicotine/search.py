@@ -27,6 +27,7 @@ from itertools import islice
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import increment_token
 from pynicotine.utils import PUNCTUATION
 
 
@@ -39,7 +40,7 @@ class Search:
         self.queue = queue
         self.ui_callback = None
         self.searches = {}
-        self.searchid = int(random.random() * (2 ** 31 - 1))
+        self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
         self.share_dbs = share_dbs
         self.geoip = geoip
@@ -47,8 +48,8 @@ class Search:
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
-            search_id = self.increment_search_id()
-            self.searches[search_id] = {"id": search_id, "term": term, "mode": "wishlist", "ignore": True}
+            self.token = increment_token(self.token)
+            self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         if hasattr(ui_callback, "search"):
             self.ui_callback = ui_callback.search
@@ -158,8 +159,8 @@ class Search:
 
         text, room, users = processed_search
 
-        # Get a new search ID
-        self.increment_search_id()
+        # Get a new search token
+        self.token = increment_token(self.token)
 
         # Get excluded words (starting with "-")
         searchterm_words = text.split()
@@ -199,23 +200,23 @@ class Search:
             self.config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(self.searchid, searchterm)
+            self.do_global_search(self.token, searchterm)
 
         elif mode == "rooms":
-            self.do_rooms_search(self.searchid, searchterm, room)
+            self.do_rooms_search(self.token, searchterm, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(self.searchid, searchterm)
+            self.do_buddies_search(self.token, searchterm)
 
         elif mode == "user":
-            self.do_peer_search(self.searchid, searchterm, users)
+            self.do_peer_search(self.token, searchterm, users)
 
-        self.add_search(self.searchid, searchterm, mode, ignore=False)
+        self.add_search(self.token, searchterm, mode, ignore=False)
 
         if self.ui_callback:
-            self.ui_callback.do_search(self.searchid, searchterm, mode, room, user)
+            self.ui_callback.do_search(self.token, searchterm, mode, room, user)
 
-        return (self.searchid, searchterm, searchterm_without_special)
+        return (self.token, searchterm, searchterm_without_special)
 
     def do_global_search(self, search_id, text):
         self.queue.append(slskmessages.FileSearch(search_id, text))
@@ -272,25 +273,18 @@ class Search:
 
         return True
 
-    def get_current_search_id(self):
-        return self.searchid
-
-    def increment_search_id(self):
-        self.searchid += 1
-        return self.searchid
-
     def add_wish(self, wish):
 
         if not wish:
             return
 
-        # Get a new search ID
-        self.increment_search_id()
+        # Get a new search token
+        self.token = increment_token(self.token)
 
         if wish not in self.config.sections["server"]["autosearch"]:
             self.config.sections["server"]["autosearch"].append(wish)
 
-        self.add_search(self.searchid, wish, "wishlist", ignore=True)
+        self.add_search(self.token, wish, "wishlist", ignore=True)
 
         if self.ui_callback:
             self.ui_callback.add_wish(wish)
@@ -423,7 +417,7 @@ class Search:
             # DB is closed, perhaps due to rescanning shares or closing the application
             return None
 
-    def process_search_request(self, searchterm, user, searchid, direct=False):
+    def process_search_request(self, searchterm, user, token, direct=False):
         """ Note: since this section is accessed every time a search request arrives,
         several times a second, please keep it as optimized and memory
         sparse as possible! """
@@ -527,7 +521,7 @@ class Search:
 
         message = slskmessages.FileSearchResult(
             None, self.core.login_username,
-            searchid, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
+            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
         self.core.send_message_to_peer(user, message)
 

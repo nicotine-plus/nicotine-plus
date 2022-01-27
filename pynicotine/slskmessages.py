@@ -32,6 +32,7 @@ server messages and p2p messages (between clients). """
 
 INT_SIZE = struct.calcsize("<i")
 INT64_SIZE = struct.calcsize("<q")
+UINT_LIMIT = 4294967295
 
 INT_UNPACK = struct.Struct("<i").unpack
 UINT_UNPACK = struct.Struct("<I").unpack
@@ -42,6 +43,17 @@ UINT_PACK = struct.Struct("<I").pack
 UINT64_PACK = struct.Struct("<Q").pack
 
 SEARCH_TOKENS_ALLOWED = set()
+
+
+def increment_token(token):
+    """ Increment a token used by file search, transfer and connection requests """
+
+    if token < 0 or token >= UINT_LIMIT:
+        # Protocol messages use unsigned integers for tokens
+        token = 0
+
+    token += 1
+    return token
 
 
 class InternalMessage:
