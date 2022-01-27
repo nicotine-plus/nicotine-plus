@@ -72,16 +72,6 @@ class MockSocket(Mock):
 
 class SlskProtoTest(unittest.TestCase):
 
-    try:
-        import pytest
-        pytest_skip = pytest.mark.skip(reason="currently non-functional under pytest")
-
-    except ImportError:
-        # Not using pytest, don't skip test
-        pytest_skip = unittest.skipIf(None, None)
-
-    # TODO: This test works fine in PyUnit, but shows selector permission errors in pytest. Figure out why.
-    @pytest_skip
     def test_server_conn(self):
 
         queue = deque()
