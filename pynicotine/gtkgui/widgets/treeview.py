@@ -503,7 +503,7 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
     function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("folder", "filename"), function)
+                        ("folder", "filename", "path"), function)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

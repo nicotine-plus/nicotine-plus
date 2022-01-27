@@ -539,7 +539,7 @@ class TransferList(UserInterface):
 
                 """ Paths can be empty if files are downloaded individually, make sure we
                 don't add files to the wrong user in the TreeView """
-                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                full_path = path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
                 user_path = user + path
 
                 if config.sections["ui"]["reverse_file_paths"]:
@@ -563,7 +563,7 @@ class TransferList(UserInterface):
                             empty_int,
                             empty_int,
                             empty_int,
-                            Transfer(user=user)
+                            Transfer(user=user, filename=full_path)
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
