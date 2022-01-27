@@ -65,12 +65,6 @@ class GetUploadCandidateTest(unittest.TestCase):
 
         return transfer_list
 
-    def add_queued(self, users):
-        return self.add_transfers(users, "Queued")
-
-    def add_in_progress(self, users):
-        return self.add_transfers(users, "Getting status")
-
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
@@ -133,8 +127,9 @@ class GetUploadCandidateTest(unittest.TestCase):
     def base_test(self, queued, in_progress, expected, round_robin=False, clear_first=False):
 
         config.sections["transfers"]["fifoqueue"] = not round_robin
-        queued_transfers = self.add_queued(queued)
-        in_progress_transfers = self.add_in_progress(in_progress)
+
+        queued_transfers = self.add_transfers(queued, status="Queued")
+        in_progress_transfers = self.add_transfers(in_progress, status="Getting status")
 
         candidates = self.consume_transfers(queued_transfers, in_progress_transfers, clear_first=clear_first)
         users = [transfer.user if transfer else None for transfer in candidates]
