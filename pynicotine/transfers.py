@@ -684,7 +684,7 @@ class Transfers:
                     path=os.path.dirname(real_path), status="Queued",
                     size=self.get_file_size(real_path)
                 )
-                self._append_upload(user, msg.file, newupload)
+                self.append_upload(user, msg.file, newupload)
                 self.update_upload(newupload)
 
                 self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
@@ -884,7 +884,7 @@ class Transfers:
                 path=os.path.dirname(real_path), status="Queued",
                 size=self.get_file_size(real_path)
             )
-            self._append_upload(user, msg.file, newupload)
+            self.append_upload(user, msg.file, newupload)
             self.update_upload(newupload)
             return response
 
@@ -899,7 +899,7 @@ class Transfers:
         )
 
         self.transfer_request_times[transferobj] = time.time()
-        self._append_upload(user, msg.file, transferobj)
+        self.append_upload(user, msg.file, transferobj)
         self.update_upload(transferobj)
         return response
 
@@ -1590,7 +1590,7 @@ class Transfers:
                 status="Queued", size=size, bitrate=bitrate,
                 length=length
             )
-            self._append_upload(user, filename, transfer)
+            self.append_upload(user, filename, transfer)
         else:
             transfer.filename = filename
             transfer.size = size
@@ -1626,7 +1626,7 @@ class Transfers:
 
         self.update_upload(transfer)
 
-    def _append_upload(self, user, filename, transferobj):
+    def append_upload(self, user, filename, transferobj):
 
         previously_queued = False
         old_index = 0

@@ -40,7 +40,7 @@ def _time_counter():
 
 
 @patch("pynicotine.transfers.time.time", new=_time_counter)
-class GetCandidateTest(unittest.TestCase):
+class GetUploadCandidateTest(unittest.TestCase):
 
     def setUp(self):
 
@@ -50,48 +50,34 @@ class GetCandidateTest(unittest.TestCase):
         config.load_config()
 
         self.transfers = Transfers(Mock(), config, deque(), Mock())
+        self.transfers.privileged_users = {"puser1", "puser2"}
 
-        self.transfers.privileged_users = {
-            "puser1",
-            "puser2",
-        }
-        self.transfers.config.sections["transfers"]["fifoqueue"] = False
+    def add_transfers(self, users, status):
 
-    def add_transfers(self, users, in_progress=False):
-        new = []
-        if isinstance(users, str):
-            users = [users]
+        transfer_list = []
+
         for user in users:
-            fname = "{}/{}".format(user, len(self.transfers.uploads))
-            transfer = Transfer(
-                user=user,
-                path=fname,
-                status="Queued",
-            )
-            if in_progress is True:
-                transfer.status = "Getting status"
-            new.append(transfer)
-            self.transfers._append_upload(  # pylint: disable=protected-access
-                user,
-                fname,
-                new[-1],
-            )
-        return new
+            filename = "%s/%i" % (user, len(self.transfers.uploads))
+            transfer = Transfer(user=user, path=filename, status=status)
+
+            transfer_list.append(transfer)
+            self.transfers.append_upload(user, filename, transfer)
+
+        return transfer_list
 
     def add_queued(self, users):
-        return self.add_transfers(users, in_progress=False)
+        return self.add_transfers(users, "Queued")
 
     def add_in_progress(self, users):
-        return self.add_transfers(users, in_progress=True)
+        return self.add_transfers(users, "Getting status")
 
     def set_finished(self, transfer):
-        # this might work too but maybe too much to mock?
-        # self.transfers.upload_finished(finished)
+
         transfer.status = "Finished"
         self.transfers.user_update_times[transfer.user] = time.time()
         self.transfers.uploads.remove(transfer)
 
-    def consume_transfers(self, queued, in_progress, clear_first=False, debug=False):
+    def consume_transfers(self, queued, in_progress, clear_first=False):
         """Call self.transfers.get_upload_candidate until no uploads are left.
 
         Transfers should be added to self.transfers in the desired starting
@@ -100,23 +86,18 @@ class GetCandidateTest(unittest.TestCase):
         One in progress upload will be removed each time get_upload_candidate
         is called.
 
-        `queued` and `in_progress` should contain the transfers in those
-        states. (They could be inferred from iterating over
-        self.transfers.uploads in this method but I don't want to have yet
-        another place where the state of a transfer is inferred based on
-        several pieces of information. Possibly those checks should be pulled
-        into methods on the transfer object itself. There is a Transferring
-        status but it isn't asserted on everywhere, in particular
-        get_upload_candidate doesn't look at it.)
+        `queued` and `in_progress` should contain the transfers in those states.
 
         `clear_first` indicates whether the upload candidate should be
         generated after the in progress upload is marked finished or before.
 
         All candidates received are returned in a list.
         """
+
         candidates = []
         none_count = 0  # prevent infinite loop in case of bug or bad test setup
         num_allowed_nones = 2
+
         while len(self.transfers.uploads) > 0 and none_count < num_allowed_nones:
 
             # "finish" one in progress transfer, if any
@@ -130,47 +111,40 @@ class GetCandidateTest(unittest.TestCase):
 
             if not candidate:
                 none_count += 1
-                if debug:
-                    print("none_count: {}".format(none_count))
-                    if queued:
-                        print("found no candidates out of {} queued uploads".format(len(queued)))
+                print("none_count: %i" % none_count)
+
+                if queued:
+                    print("Found no transfer candidates out of %i queued uploads" % len(queued))
+
                 candidates.append(None)
                 continue
 
             none_count = 0
-            if debug:
-                print("candidate: {}".format(candidate.user))
+            print("Transfer candidate: %s" % candidate.user)
 
             candidates.append(candidate)
             queued.remove(candidate)
-            candidate.status = "Getting status"
             in_progress.append(candidate)
 
-        # strip pointless retry markers from the end if we never succeeded
-        while candidates[-1] is None:
-            candidates.pop()
+            candidate.status = "Getting status"
+
         return candidates
 
-    def base_test(
-        self, queued, in_progress, expected, round_robin=False, clear_first=False, debug=False,
-    ):
-        self.transfers.config.sections["transfers"]["fifoqueue"] = not round_robin
+    def base_test(self, queued, in_progress, expected, round_robin=False, clear_first=False):
+
+        config.sections["transfers"]["fifoqueue"] = not round_robin
         queued_transfers = self.add_queued(queued)
         in_progress_transfers = self.add_in_progress(in_progress)
 
-        candidates = self.consume_transfers(
-            queued_transfers, in_progress_transfers, clear_first=clear_first, debug=debug,
-        )
-
+        candidates = self.consume_transfers(queued_transfers, in_progress_transfers, clear_first=clear_first)
         users = [transfer.user if transfer else None for transfer in candidates]
+
         # `expected` should contain `None` in cases where there aren't
         # expected to be any queued users without existing in progress uploads
-        self.assertEqual(
-            users,
-            expected,
-        )
+        self.assertEqual(users, expected)
 
     def test_round_robin_basic(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -178,7 +152,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user2",
                 "user3",
-                "user3",
+                "user3"
             ],
             in_progress=[],
             expected=[
@@ -188,11 +162,13 @@ class GetCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "user3",
+                None
             ],
-            round_robin=True,
+            round_robin=True
         )
 
     def test_round_robin_no_contention(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -200,7 +176,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user2",
                 "user3",
-                "user3",
+                "user3"
             ],
             in_progress=[],
             expected=[
@@ -210,27 +186,31 @@ class GetCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "user3",
+                None
             ],
             round_robin=True,
-            clear_first=True,
+            clear_first=True
         )
 
     def test_round_robin_one_user(self):
+
         self.base_test(
             queued=[
                 "user1",
-                "user1",
+                "user1"
             ],
             in_progress=[],
             expected=[
                 "user1",
                 None,
                 "user1",
+                None
             ],
-            round_robin=True,
+            round_robin=True
         )
 
     def test_round_robin_returning_user(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -242,7 +222,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user3",
                 "user3",
                 "user1",
-                "user1",
+                "user1"
             ],
             in_progress=[],
             expected=[
@@ -256,37 +236,41 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user3",
                 "user1",
+                None
             ],
-            round_robin=True,
+            round_robin=True
         )
 
     def test_round_robin_in_progress(self):
+
         self.base_test(
             queued=[
                 "user1",
                 "user1",
                 "user2",
-                "user2",
+                "user2"
             ],
             in_progress=[
-                "user1",
+                "user1"
             ],
             expected=[
                 "user2",
                 "user1",
                 "user2",
                 "user1",
+                None
             ],
-            round_robin=True,
+            round_robin=True
         )
 
     def test_round_robin_privileged(self):
+
         self.base_test(
             queued=[
                 "user1",
                 "user2",
                 "puser1",
-                "puser1",
+                "puser1"
             ],
             in_progress=[],
             expected=[
@@ -295,11 +279,13 @@ class GetCandidateTest(unittest.TestCase):
                 "puser1",
                 "user1",
                 "user2",
+                None
             ],
-            round_robin=True,
+            round_robin=True
         )
 
     def test_fifo_basic(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -307,7 +293,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user2",
                 "user3",
-                "user3",
+                "user3"
             ],
             in_progress=[],
             expected=[
@@ -318,10 +304,12 @@ class GetCandidateTest(unittest.TestCase):
                 "user3",
                 None,
                 "user3",
-            ],
+                None
+            ]
         )
 
     def test_fifo_robin_no_contention(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -329,7 +317,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user2",
                 "user3",
-                "user3",
+                "user3"
             ],
             in_progress=[],
             expected=[
@@ -339,25 +327,29 @@ class GetCandidateTest(unittest.TestCase):
                 "user2",
                 "user3",
                 "user3",
+                None
             ],
-            clear_first=True,
+            clear_first=True
         )
 
     def test_fifo_one_user(self):
+
         self.base_test(
             queued=[
                 "user1",
-                "user1",
+                "user1"
             ],
             in_progress=[],
             expected=[
                 "user1",
                 None,
                 "user1",
-            ],
+                None
+            ]
         )
 
     def test_fifo_returning_user(self):
+
         self.base_test(
             queued=[
                 "user1",
@@ -369,7 +361,7 @@ class GetCandidateTest(unittest.TestCase):
                 "user3",
                 "user3",
                 "user1",
-                "user1",
+                "user1"
             ],
             in_progress=[],
             expected=[
@@ -383,35 +375,39 @@ class GetCandidateTest(unittest.TestCase):
                 "user1",
                 "user3",
                 "user1",
-            ],
+                None
+            ]
         )
 
     def test_fifo_in_progress(self):
+
         self.base_test(
             queued=[
                 "user1",
                 "user1",
                 "user2",
-                "user2",
+                "user2"
             ],
             in_progress=[
-                "user1",
+                "user1"
             ],
             expected=[
                 "user2",
                 "user1",
                 "user2",
                 "user1",
-            ],
+                None
+            ]
         )
 
     def test_fifo_privileged(self):
+
         self.base_test(
             queued=[
                 "user1",
                 "user2",
                 "puser1",
-                "puser1",
+                "puser1"
             ],
             in_progress=[],
             expected=[
@@ -420,5 +416,6 @@ class GetCandidateTest(unittest.TestCase):
                 "puser1",
                 "user1",
                 "user2",
-            ],
+                None
+            ]
         )
