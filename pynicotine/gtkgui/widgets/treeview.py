@@ -476,7 +476,7 @@ def get_file_path_tooltip_text(column_value, _strip_prefix):
 
 
 def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
-    return column_value.filename
+    return column_value.filename or column_value.path
 
 
 def get_user_status_tooltip_text(column_value, _strip_prefix):

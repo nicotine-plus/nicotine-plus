@@ -563,7 +563,7 @@ class TransferList(UserInterface):
                             empty_int,
                             empty_int,
                             empty_int,
-                            Transfer(user=user, filename=full_path)
+                            Transfer(user=user, path=full_path)
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
