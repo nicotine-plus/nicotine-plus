@@ -1,4 +1,4 @@
 Version = "2021-10-04r00"
-Authors = ['Nicotine+ Team']
+Authors = ["Nicotine+"]
 Name = "Auto-Browse Shares"
 Description = "Automatically browses shared files of a Soulseek user when they log in."
