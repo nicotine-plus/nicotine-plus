@@ -763,7 +763,8 @@ class ChatRoom(UserInterface):
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
