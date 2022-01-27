@@ -269,10 +269,19 @@ class PluginHandler:
         with open(info_path, encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
-                    key, val = line.split("=", 1)
-                    infodict[key.strip()] = literal_eval(val.strip())
-                except ValueError:
-                    pass  # this happens on blank lines
+                    key, value = line.split("=", 1)
+                    key = key.strip()
+                    value = value.strip()
+
+                    # Translatable string
+                    if value.startswith("_(") and value.endswith(")"):
+                        infodict[key] = _(literal_eval(value[2:-1]))
+                        continue
+
+                    infodict[key] = literal_eval(value)
+
+                except Exception:
+                    pass  # this can happen on blank lines
 
         return infodict
 
