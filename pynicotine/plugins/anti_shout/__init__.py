@@ -32,11 +32,11 @@ class Plugin(BasePlugin):
         }
         self.metasettings = {
             'maxscore': {
-                'description': 'The maximum ratio capitals/noncapitals before fixing capitalization',
+                'description': 'The maximum ratio of capitals before converting',
                 'type': 'float', 'minimum': 0, 'maximum': 1, 'stepsize': 0.1
             },
             'minlength': {
-                'description': 'Lines shorter than this never not be altered', 'type': 'integer',
+                'description': 'Lines shorter than this will be ignored', 'type': 'integer',
                 'minimum': 0
             }
         }
