@@ -705,8 +705,8 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
-        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
+        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def get_user_stats(self, msg, log_contents=True):
         """ Server code: 36 """
@@ -1182,5 +1182,5 @@ class NicotineCore:
 
         # Verbose: log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
+        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)

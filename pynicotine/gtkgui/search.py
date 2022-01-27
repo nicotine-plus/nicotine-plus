@@ -140,7 +140,7 @@ class Searches(IconNotebook):
         for term in config.sections["searches"]["history"]:
             self.frame.SearchCombo.append_text(str(term))
 
-    def do_search(self, search_id, search_term, mode, room=None, user=None):
+    def do_search(self, token, search_term, mode, room=None, user=None):
 
         mode_label = None
 
@@ -153,7 +153,7 @@ class Searches(IconNotebook):
         elif mode == "buddies":
             mode_label = _("Buddies")
 
-        tab = self.create_tab(search_id, search_term, mode, mode_label)
+        tab = self.create_tab(token, search_term, mode, mode_label)
         self.set_current_page(self.page_num(tab.Main))
 
         # Repopulate the combo list
@@ -183,9 +183,9 @@ class Searches(IconNotebook):
         for page in self.pages.values():
             page.update_filter_comboboxes()
 
-    def create_tab(self, search_id, text, mode, mode_label, showtab=True):
+    def create_tab(self, token, text, mode, mode_label, showtab=True):
 
-        self.pages[search_id] = tab = Search(self, text, search_id, mode, mode_label, showtab)
+        self.pages[token] = tab = Search(self, text, token, mode, mode_label, showtab)
 
         if showtab:
             self.show_tab(tab, text)
@@ -220,7 +220,7 @@ class Searches(IconNotebook):
 
         # No more things to add because we've reached the result limit
         if tab.num_results_found >= tab.max_limit:
-            self.frame.np.search.remove_allowed_search_id(msg.token)
+            self.frame.np.search.remove_allowed_token(msg.token)
             tab.max_limited = True
             tab.update_result_counter()
             return
@@ -249,7 +249,7 @@ class Searches(IconNotebook):
 
 class Search(UserInterface):
 
-    def __init__(self, searches, text, search_id, mode, mode_label, showtab):
+    def __init__(self, searches, text, token, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
 
@@ -277,7 +277,7 @@ class Search(UserInterface):
             else:
                 self.searchterm_words_include.append(word)
 
-        self.search_id = search_id
+        self.token = token
         self.mode = mode
         self.mode_label = mode_label
         self.showtab = showtab
@@ -1410,15 +1410,15 @@ class Search(UserInterface):
         self.max_limit = config.sections["searches"]["max_displayed_results"]
 
         # Allow parsing search result messages again
-        self.frame.np.search.add_allowed_search_id(self.search_id)
+        self.frame.np.search.add_allowed_token(self.token)
 
         # Update number of results widget
         self.update_result_counter()
 
     def on_close(self, *_args):
 
-        del self.searches.pages[self.search_id]
-        self.frame.np.search.remove_search(self.search_id)
+        del self.searches.pages[self.token]
+        self.frame.np.search.remove_search(self.token)
         self.searches.remove_page(self.Main)
 
         if self.searches.get_n_pages() == 0:

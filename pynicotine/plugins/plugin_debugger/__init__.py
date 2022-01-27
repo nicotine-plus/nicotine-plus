@@ -46,12 +46,12 @@ class Plugin(BasePlugin):
     def public_room_message_notification(self, room, user, line):
         self.log('public_room_message_notification(room=%s, user=%s, line=%s)', (room, user, line))
 
-    def search_request_notification(self, searchterm, user, searchid):
-        self.log('search_request_notification(searchterm=%s, user=%s, searchid=%s)', (searchterm, user, searchid))
+    def search_request_notification(self, searchterm, user, token):
+        self.log('search_request_notification(searchterm=%s, user=%s, token=%s)', (searchterm, user, token))
 
-    def distrib_search_notification(self, searchterm, user, searchid):
+    def distrib_search_notification(self, searchterm, user, token):
         # Verbose:
-        # self.log('distrib_search_notification(searchterm=%s, user=%s, searchid=%s)', (searchterm, user, searchid))
+        # self.log('distrib_search_notification(searchterm=%s, user=%s, token=%s)', (searchterm, user, token))
         pass
 
     def incoming_private_chat_event(self, user, line):
