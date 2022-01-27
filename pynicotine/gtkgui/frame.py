@@ -195,15 +195,6 @@ class NicotineFrame(UserInterface):
         set_global_style()
         self.update_visuals()
 
-        """ Show Window """
-
-        self.update_window_properties()
-        self.application.add_window(self.MainWindow)
-
-        # Check command line option and config option
-        if not start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
-
         """ Connect """
 
         # Disable a few elements until we're logged in (search field, download buttons etc.)
@@ -214,11 +205,21 @@ class NicotineFrame(UserInterface):
         if not connect_ready:
             self.connect_action.set_enabled(False)
 
-            # Set up fast configure dialog
-            self.on_fast_configure()
-
         elif config.sections["server"]["auto_connect_startup"]:
             self.np.connect()
+
+        """ Show Window """
+
+        self.update_window_properties()
+        self.application.add_window(self.MainWindow)
+
+        # Check command line option and config option
+        if not start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+
+        if not connect_ready:
+            # Set up fast configure dialog
+            self.on_fast_configure()
 
     """ Window State """
 
@@ -1816,13 +1817,7 @@ class NicotineFrame(UserInterface):
 
         dialog.destroy()
         loop.quit()
-
-        try:
-            self.np.quit()
-        except Exception:
-            """ We attempt a clean shut down, but this may not be possible if
-            the program didn't initialize fully. Ignore any additional errors
-            in that case. """
+        self.np.quit()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -1955,7 +1950,6 @@ class NicotineFrame(UserInterface):
         # Save window state (window size, position, columns)
         self.save_window_state()
 
-        config.write_configuration()
         log.remove_listener(self.log_callback)
 
         # Terminate GtkApplication

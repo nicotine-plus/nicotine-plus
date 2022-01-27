@@ -72,6 +72,7 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
+        self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
@@ -581,6 +582,8 @@ class Config:
         except Exception:
             return
 
+        self.config_loaded = True
+
     def parse_config(self, filename):
         """ Parses the config file """
 
@@ -720,6 +723,9 @@ class Config:
         self.parser.write(filename)
 
     def write_configuration(self):
+
+        if not self.config_loaded:
+            return
 
         # Write new config options to file
         for section, options in self.sections.items():

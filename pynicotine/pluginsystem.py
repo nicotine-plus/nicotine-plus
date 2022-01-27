@@ -67,6 +67,15 @@ class PluginHandler:
 
         self.load_enabled()
 
+    def quit(self):
+
+        # Notify plugins
+        self.shutdown_notification()
+
+        # Disable plugins
+        for plugin in self.list_installed_plugins():
+            self.disable_plugin(plugin)
+
     def update_completions(self, plugin):
 
         if not self.config.sections["words"]["commands"]:

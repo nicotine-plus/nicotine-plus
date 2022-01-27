@@ -1,5 +1,5 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Team
-# COPYRIGHT (C) 2020 Mathias <mail@mathias.is>
+# COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -271,28 +271,29 @@ class NicotineCore:
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
 
-        # Notify plugins
-        self.pluginhandler.shutdown_notification()
-
-        # Disable plugins
-        for plugin in self.pluginhandler.list_installed_plugins():
-            self.pluginhandler.disable_plugin(plugin)
+        if self.pluginhandler:
+            self.pluginhandler.quit()
 
         # Shut down networking thread
-        if not self.protothread.server_disconnected:
-            self.protothread.manual_server_disconnect = True
-            self.server_disconnect()
+        if self.protothread:
+            if not self.protothread.server_disconnected:
+                self.protothread.manual_server_disconnect = True
+                self.server_disconnect()
 
-        self.protothread.abort()
+            self.protothread.abort()
 
         # Save download/upload list to file
-        self.transfers.quit()
+        if self.transfers:
+            self.transfers.quit()
 
         # Closing up all shelves db
-        self.shares.quit()
+        if self.shares:
+            self.shares.quit()
 
         if self.ui_callback:
             self.ui_callback.quit()
+
+        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
