@@ -17,29 +17,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import time
 import unittest
 
 from collections import deque
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from pynicotine.config import config
 from pynicotine.transfers import Transfers, Transfer
 
 
-# Make sure time.time() always monotonically increases between calls.
-# In MSYS2/Ming64 time.time() in python seems to return the same value if you
-# call it quickly.
-_TIME = 0
-
-
-def _time_counter():
-    global _TIME  # pylint: disable=global-statement
-    _TIME += 1
-    return _TIME
-
-
-@patch("pynicotine.transfers.time.time", new=_time_counter)
 class GetUploadCandidateTest(unittest.TestCase):
 
     def setUp(self):
@@ -68,7 +54,7 @@ class GetUploadCandidateTest(unittest.TestCase):
     def set_finished(self, transfer):
 
         transfer.status = "Finished"
-        self.transfers.user_update_times[transfer.user] = time.time()
+        self.transfers.update_user_counter(transfer.user)
         self.transfers.uploads.remove(transfer)
 
     def consume_transfers(self, queued, in_progress, clear_first=False):

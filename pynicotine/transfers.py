@@ -101,9 +101,11 @@ class Transfers:
         self.requested_folders = defaultdict(dict)
         self.last_save_times = {"downloads": 0, "uploads": 0}
         self.transfer_request_times = {}
-        self.user_update_times = {}
         self.upload_speed = 0
         self.token = 100
+
+        self.user_update_counter = 0
+        self.user_update_counters = {}
 
         self.downloads_file_name = os.path.join(self.config.data_dir, 'downloads.json')
         self.uploads_file_name = os.path.join(self.config.data_dir, 'uploads.json')
@@ -595,7 +597,7 @@ class Transfers:
         i.token = None
         i.queue_position = 0
 
-        self.user_update_times[i.user] = time.time()
+        self.update_user_counter(i.user)
         self.update_upload(i)
 
         self.core.watch_user(i.user)
@@ -929,7 +931,7 @@ class Transfers:
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
 
-                self.user_update_times[i.user] = time.time()
+                self.update_user_counter(i.user)
 
                 if msg.reason == "Complete":
                     # A complete download of this file already exists on the user's end
@@ -978,7 +980,7 @@ class Transfers:
 
         elif transfer in self.uploads:
             transfer.queue_position = 0
-            self.user_update_times[transfer.user] = time.time()
+            self.update_user_counter(transfer.user)
             self.update_upload(transfer)
 
         if transfer in self.transfer_request_times:
@@ -1463,7 +1465,7 @@ class Transfers:
                     break
 
         else:
-            num_queued_users = len(self.user_update_times)
+            num_queued_users = len(self.user_update_counters)
 
             for i in reversed(self.uploads):
                 if i.user != user:
@@ -1658,8 +1660,8 @@ class Transfers:
             self.uploads.insert(old_index, transferobj)
             return
 
-        if user not in self.user_update_times:
-            self.user_update_times[user] = time.time()
+        if user not in self.user_update_counters:
+            self.update_user_counter(user)
 
         self.uploads.appendleft(transferobj)
 
@@ -1939,7 +1941,7 @@ class Transfers:
         i.time_left = ""
         i.sock = None
 
-        self.user_update_times[i.user] = time.time()
+        self.update_user_counter(i.user)
 
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
@@ -2127,11 +2129,9 @@ class Transfers:
                 target_user = user
                 break
 
-        for user, update_time in list(self.user_update_times.items()):
-            # some cleanup, should probably log a warning as this case is
-            # probably a logic bug
+        for user, update_time in list(self.user_update_counters.items()):
             if user not in queued_users:
-                del self.user_update_times[user]
+                del self.user_update_counters[user]
                 continue
 
             if not round_robin_queue or user in uploading_users:
@@ -2191,6 +2191,14 @@ class Transfers:
                 user=user, filename=upload_candidate.filename, size=upload_candidate.size, transfer=upload_candidate
             )
             return
+
+    def update_user_counter(self, user):
+        """ Called when an upload associated with a user has changed. The user update counter
+        is used by the Round Robin queue system to determine which user has waited the longest
+        since their last download. """
+
+        self.user_update_counter += 1
+        self.user_update_counters[user] = self.user_update_counter
 
     def ban_user(self, user, ban_message=None):
         """ Ban a user, cancel all the user's uploads, send a 'Banned'
@@ -2281,7 +2289,7 @@ class Transfers:
             self.close_file(transfer.file, transfer)
 
             if transfer in self.uploads:
-                self.user_update_times[transfer.user] = time.time()
+                self.update_user_counter(transfer.user)
                 self.check_upload_queue()
                 log.add_upload(
                     _("Upload aborted, user %(user)s file %(file)s"), {
@@ -2377,7 +2385,7 @@ class Transfers:
         self.privileged_users.clear()
         self.requested_folders.clear()
         self.transfer_request_times.clear()
-        self.user_update_times.clear()
+        self.user_update_counters.clear()
 
     def get_downloads(self):
         """ Get a list of downloads """
