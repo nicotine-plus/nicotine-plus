@@ -24,6 +24,7 @@ import unittest
 
 from collections import deque
 from time import sleep
+from unittest.mock import MagicMock
 from unittest.mock import Mock
 from unittest.mock import patch
 
@@ -90,6 +91,9 @@ class SlskProtoTest(unittest.TestCase):
             eventprocessor=Mock()
         )
 
+        # Windows doesn't accept mock_socket in select() calls
+        proto.selector = MagicMock()
+
         with patch('socket.socket') as mock_socket:
             mock_socket.set_data(LOGIN_DATAFILE)
             proto.server_connect()
@@ -111,7 +115,6 @@ class SlskProtoTest(unittest.TestCase):
             self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
 
             proto.abort()
-
             self.assertIsNone(proto.server_socket)
 
     @staticmethod
