@@ -319,7 +319,7 @@ Swedish
 Turkish
  - Oğuz Ersen (2021–2022)
 
-Ukranian
+Ukrainian
  - uniss2209 (2022)
 """
 
