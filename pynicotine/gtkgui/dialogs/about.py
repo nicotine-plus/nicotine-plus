@@ -319,6 +319,8 @@ Swedish
 Turkish
  - Oğuz Ersen (2021–2022)
 
+Ukranian
+ - uniss2209 (2022)
 """
 
     def __init__(self, frame):
