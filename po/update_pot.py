@@ -32,7 +32,7 @@ def update_pot():
     os.system("xgettext -o po/nicotine.pot " + " ".join(files))
 
     # PLUGININFO files
-    files = sorted(glob.glob("pynicotine/**/PLUGININFO", recursive=True))
+    files = sorted(glob.glob("pynicotine/plugins/**/PLUGININFO", recursive=True))
     os.system("xgettext --join-existing -L Python -o po/nicotine.pot " + " ".join(files))
 
 
