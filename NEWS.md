@@ -3,7 +3,7 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.2.1 (Release Candidate 2)
+Version 3.2.1 (Release Candidate 3)
 -----------------------------------
 
 Changes
@@ -13,23 +13,24 @@ Changes
  * Optimized scrolling performance and avoid FPS drops when scrolling large lists containing country flags
  * Optimized parent row expansions when adding new search results and transfers into tree views
  * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
- * Optimized text entry auto-completion performance and reduce the memory usage of open chat tabs
- * Display virtual folder paths for items in the Uploads tab instead of real paths
- * Added display of real folder paths for local items in the File Properties dialog
+ * Optimized loading performance and reduce memory usage of open chat tabs
+ * Changed the chat log filename replacement character from - to _ in room names containing an illegal character
+ * Changed display of items in the Uploads transfer list to virtual folder paths instead of local folder paths
+ * Added display of local folder paths for local items in the File Properties dialog
  * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
- * Changed the chat log file replacement character from - to _ in room names containing a forward slash
+ * Added new Ukrainian translation (thank you @uniss2209)
  * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
 
 Corrections
 
  * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
- * IMPORTANT: Fixed a regression where pausing a download while translations are used doesn't actually pause it
+ * IMPORTANT: Fixed a regression where pausing a download doesn't actually pause it if translations are used
  * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
  * Fixed an issue where uploads can become stuck in the transfer queue forever
  * Fixed a regression where the bandwidth status indicator failed to update if the transfers tab was inactive
- * Avoid broken scrollbar when changing active preference page
- * Fixed labels of UI elements in the translation for Russian language (thank you @SnIPeRSnIPeR)
+ * Fixed broken scrollbar when changing active page in the Preferences dialog
+ * Fixed labels of UI elements in the Russian translation (thank you @SnIPeRSnIPeR)
 
 Issues closed on GitHub
 
@@ -47,11 +48,15 @@ Issues closed on GitHub
  * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
  * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
  * Increase network speed update time ([#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
+ * \[3.2.1.dev1\] GTK 4: Closing private chat tab can crash Nicotine+ ([#1821](https://github.com/nicotine-plus/nicotine-plus/issues/1821)
  * When a filename is 255 characters long ([#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
  * Excessive memory usage when browsing large shares ([#1826](https://github.com/nicotine-plus/nicotine-plus/issues/1826))
  * Windows: Couldn't write to log file "/mu/.log" ([#1828](https://github.com/nicotine-plus/nicotine-plus/issues/1828))
  * Windows: "String too long" crash on notification popup ([#1829](https://github.com/nicotine-plus/nicotine-plus/issues/1829))
  * Windows: Spaces at the end of directories are trimmed when creating ([#1835](https://github.com/nicotine-plus/nicotine-plus/issues/1835))
+ * Connect to remote host? ([#1839](https://github.com/nicotine-plus/nicotine-plus/issues/1839))
+ * Error message appeard while trying to exit the client ([#1850](https://github.com/nicotine-plus/nicotine-plus/issues/1850))
+ * \[3.2.1.rc2\] Crash when resuming transfers ([#1853](https://github.com/nicotine-plus/nicotine-plus/issues/1853))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
