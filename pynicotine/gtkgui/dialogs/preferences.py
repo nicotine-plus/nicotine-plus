@@ -2550,17 +2550,18 @@ class PluginsFrame(UserInterface):
         cols = initialise_columns(
             self.frame, None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugin", _("Plugin"), 380, "text", None]
+            ["plugin", _("Plugin"), -1, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)
         cols["plugin"].set_sort_column_id(1)
 
+        cols["enabled"].get_widget().hide()
+
         renderers = cols["enabled"].get_cells()
-        column_pos = 0
 
         for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
+            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView)
 
         self.PluginTreeView.set_model(self.plugins_model)
 
@@ -2633,12 +2634,12 @@ class PluginsFrame(UserInterface):
 
         self.check_properties_button(self.selected_plugin)
 
-    def cell_toggle_callback(self, _widget, index, _treeview, pos):
+    def cell_toggle_callback(self, _widget, index, _treeview):
 
         iterator = self.plugins_model.get_iter(index)
         plugin = self.plugins_model.get_value(iterator, 2)
         value = self.plugins_model.get_value(iterator, 0)
-        self.plugins_model.set(iterator, pos, not value)
+        self.plugins_model.set(iterator, 0, not value)
 
         if not value:
             self.frame.np.pluginhandler.enable_plugin(plugin)

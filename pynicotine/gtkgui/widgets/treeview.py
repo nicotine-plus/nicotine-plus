@@ -122,7 +122,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     # GTK 4 rows need more padding to match GTK 3
     if Gtk.get_major_version() == 4:
         progress_padding = 1
-        height_padding = 4
+        height_padding = 5
     else:
         progress_padding = 0
         height_padding = 3
@@ -167,7 +167,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         elif column_type == "toggle":
             xalign = 0.5
-            renderer = Gtk.CellRendererToggle(xalign=xalign)
+            renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
             column = Gtk.TreeViewColumn(column_id, renderer, active=i)
 
         elif column_type == "icon":
