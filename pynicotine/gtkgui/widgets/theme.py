@@ -176,10 +176,6 @@ def set_global_css():
 
     /* Buttons */
 
-    .circular {
-        border-radius: 9999px;
-    }
-
     .count {
         padding-left: 10px;
         padding-right: 10px;
