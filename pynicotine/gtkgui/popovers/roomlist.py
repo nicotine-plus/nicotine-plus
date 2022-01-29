@@ -20,6 +20,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -71,6 +72,8 @@ class RoomList(UserInterface):
 
         self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
+
+        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
 
         if Gtk.get_major_version() == 4:
             frame.RoomList.get_first_child().get_style_context().add_class("arrow-button")
@@ -213,6 +216,12 @@ class RoomList(UserInterface):
 
     def on_toggle_accept_private_room(self, *_args):
         self.frame.np.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
+
+    def on_search_accelerator(self, *_args):
+        """ Ctrl+F: Search rooms """
+
+        self.search_entry.grab_focus()
+        return True
 
     def update_visuals(self):
         for widget in list(self.__dict__.values()):
