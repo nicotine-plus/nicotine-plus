@@ -2412,7 +2412,7 @@ class FileSearchResult(PeerMessage):
             msg.extend(self.pack_object("mp3"))
             msg.extend(self.pack_object(3))
 
-            # Length
+            # Bitrate
             msg.extend(self.pack_object(0))
             msg.extend(self.pack_object(fileinfo[2][0] or 0))
 
