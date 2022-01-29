@@ -1184,7 +1184,7 @@ class Transfers:
                     log.add_upload(
                         _("Upload started: user %(user)s, IP address %(ip)s, file %(file)s"), {
                             "user": i.user,
-                            "ip": msg.init.addr[0],
+                            "ip": self.core.protothread.user_addresses.get(i.user),
                             "file": i.filename
                         }
                     )
@@ -1928,14 +1928,6 @@ class Transfers:
 
         self.close_file(file_handle, i)
 
-        ip_address = None
-        if i.sock is not None:
-            try:
-                ip_address = i.sock.getpeername()
-            except OSError:
-                # Connection already closed
-                pass
-
         i.status = "Finished"
         i.current_byte_offset = i.size
         i.speed = None
@@ -1947,7 +1939,7 @@ class Transfers:
         log.add_upload(
             _("Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"), {
                 'user': i.user,
-                'ip': ip_address,
+                'ip': self.core.protothread.user_addresses.get(i.user),
                 'file': i.filename
             }
         )
