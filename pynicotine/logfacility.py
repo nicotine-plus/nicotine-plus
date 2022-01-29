@@ -177,12 +177,11 @@ class Logger:
     def write_log_callback(path, data):
 
         oldumask, timestamp, timestamp_format, msg = data
-        timestamp_local = time.localtime(timestamp) if timestamp else time
 
         with open(path, 'ab', 0) as logfile:
             os.umask(oldumask)
 
-            text = "%s %s\n" % (timestamp_local.strftime(timestamp_format), msg)
+            text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)
             logfile.write(text.encode('utf-8', 'replace'))
 
 
