@@ -156,11 +156,11 @@ def set_global_css():
 
     .border-top,
     .preferences-border .dialog-action-box {
-        border-top: 1px solid @borders;
+        box-shadow: 0 -1px 0 0 @borders;
     }
 
     .border-bottom {
-        border-bottom: 1px solid @borders;
+        box-shadow: 0 1px 0 0 @borders;
     }
 
     .border-start:dir(ltr),
