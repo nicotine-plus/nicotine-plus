@@ -894,11 +894,7 @@ class SlskProtoThread(threading.Thread):
         if message is not None:
             init.outgoing_msgs.append(message)
 
-        if user == self.server_username:
-            # Bypass public IP address request if we connect to ourselves
-            addr = (self.bindip or '127.0.0.1', self.listenport)
-
-        elif user in self.user_addresses:
+        if user in self.user_addresses:
             addr = self.user_addresses[user]
 
         elif address is not None:
@@ -1237,7 +1233,9 @@ class SlskProtoThread(threading.Thread):
                             init.addr = addr
                             self.connect_to_peer_direct(msg.user, addr, init)
 
-                        self.user_addresses[msg.user] = addr
+                        # We already store a local IP address for our username
+                        if msg.user != self.server_username:
+                            self.user_addresses[msg.user] = addr
 
                     elif msg_class is Relogged:
                         self.manual_server_disconnect = True
@@ -2120,6 +2118,7 @@ class SlskProtoThread(threading.Thread):
                             )
 
                             login, password = conn_obj.login
+                            self.user_addresses[login] = (self.bindip or '127.0.0.1', self.listenport)
                             conn_obj.login = True
 
                             self.server_address = addr

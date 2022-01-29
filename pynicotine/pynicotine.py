@@ -411,7 +411,7 @@ class NicotineCore:
 
         user_address = self.protothread.user_addresses.get(user)
 
-        if user_address:
+        if user_address and user != self.protothread.server_username:
             ip_address, _port = user_address
             country_code = self.geoip.get_country_code(ip_address)
             return country_code
