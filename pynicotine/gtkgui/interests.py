@@ -45,6 +45,7 @@ class Interests(UserInterface):
         self.page_id = "interests"
         self.populated_recommends = False
 
+        # Columns
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
         self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -133,8 +134,7 @@ class Interests(UserInterface):
                 self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(
                     -1, self.dislikes_column_numbers, [thing])
 
-        """ Popup """
-
+        # Popup menus
         self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),

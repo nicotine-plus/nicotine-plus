@@ -257,10 +257,6 @@ class Search(UserInterface):
         self.frame = searches.frame
         self.filter_help = UserInterface("ui/popovers/searchfilters.ui")
 
-        Accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
-        Accelerator("<Primary>f", self.ResultsList, self.on_show_filter_bar_accelerator)
-        Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
-
         self.text = text
         self.searchterm_words_include = []
         self.searchterm_words_ignore = []
@@ -306,8 +302,7 @@ class Search(UserInterface):
             '>': operator.gt
         }
 
-        """ Columns """
-
+        # Columns
         self.treeview_name = "file_search"
         self.resultsmodel = Gtk.TreeStore(
             GObject.TYPE_UINT64,  # (0)  num
@@ -368,8 +363,7 @@ class Search(UserInterface):
 
         self.update_visuals()
 
-        """ Popup """
-
+        # Popup menus
         self.popup_menu_users = PopupMenu(self.frame)
 
         self.popup_menu_copy = PopupMenu(self.frame)
@@ -404,15 +398,20 @@ class Search(UserInterface):
             ("#" + _("_Close Tab"), self.on_close)
         )
 
-        """ Grouping """
+        # Key bindings
+        for widget in (self.Main, self.ResultsList):
+            Accelerator("<Primary>f", widget, self.on_show_filter_bar_accelerator)
 
+        Accelerator("Escape", self.FiltersContainer, self.on_close_filter_bar_accelerator)
+        Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
+
+        # Grouping
         menu = create_grouping_menu(self.frame.MainWindow, config.sections["searches"]["group_searches"], self.on_group)
         self.ResultGrouping.set_menu_model(menu)
 
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
 
-        """ Filters """
-
+        # Filters
         self.filter_comboboxes = {
             "filterin": self.FilterIn,
             "filterout": self.FilterOut,
@@ -425,8 +424,7 @@ class Search(UserInterface):
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
         self.populate_filters()
 
-        """ Wishlist """
-
+        # Wishlist
         self.update_wish_button()
 
     def set_label(self, label):
