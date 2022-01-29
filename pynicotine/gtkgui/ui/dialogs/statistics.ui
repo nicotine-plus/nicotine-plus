@@ -46,7 +46,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -73,7 +72,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -100,7 +98,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -132,7 +129,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -159,7 +155,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -186,7 +181,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -229,7 +223,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -256,7 +249,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -283,7 +275,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -315,7 +306,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -342,7 +332,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
@@ -369,7 +358,6 @@
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
-                <property name="max-width-chars">48</property>
                 <property name="xalign">0</property>
               </object>
             </child>
