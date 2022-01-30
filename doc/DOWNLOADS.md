@@ -130,3 +130,7 @@ Once Homebrew is set up, run the following:
 ```sh
 brew install nicotine-plus
 ```
+
+## Testing Nicotine+
+
+If you want to download unstable builds and help test Nicotine+, see [TESTING.md](TESTING.md).
