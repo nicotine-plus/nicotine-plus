@@ -80,3 +80,7 @@ Portable packages are also available. They can be run from your home directory, 
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
 
 - [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
+
+## Stable builds
+
+If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
