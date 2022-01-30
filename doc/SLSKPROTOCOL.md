@@ -2819,7 +2819,6 @@ A peer sends this message when it has a file search match. The token is taken fr
         5.  Iterate for <ins>number of attributes</ins>
             1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
             2.  **uint** <ins>attribute</ins>
-                - *Either bitrate or sample rate*
     6.  **bool** <ins>slotfree</ins>
     7.  **uint** <ins>avgspeed</ins>
     8.  **uint64** <ins>queue length</ins>
@@ -2832,7 +2831,6 @@ A peer sends this message when it has a file search match. The token is taken fr
          5.  Iterate for <ins>number of attributes</ins>
              1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
              2.  **uint** <ins>attribute</ins>
-                 - *Either bitrate or sample rate*
 
 ### Peer Code 15
 
