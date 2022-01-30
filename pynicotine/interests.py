@@ -44,6 +44,10 @@ class Interests:
         if self.ui_callback:
             self.ui_callback.server_login()
 
+    def server_disconnect(self):
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
     def add_thing_i_like(self, item):
 
         if not item and not isinstance(item, str):

@@ -247,6 +247,7 @@ class IconNotebook:
 
         self.notebook = notebook
         self.notebook.set_show_tabs(False)
+        self.notebook.connect("page-removed", self.on_remove_page)
         self.notebook.connect("switch-page", self.on_switch_page)
 
         self.frame = frame
@@ -419,10 +420,17 @@ class IconNotebook:
     def remove_tab_hilite(self, page):
 
         tab_label, menu_label = self.get_labels(page)
-        tab_label.remove_hilite()
-        menu_label.remove_hilite()
+
+        if tab_label:
+            tab_label.remove_hilite()
+
+        if menu_label:
+            menu_label.remove_hilite()
 
         self.remove_unread_page(page)
+
+        if not self.unread_pages:
+            self.frame.remove_tab_hilite(self.page_id)
 
     def append_unread_page(self, page):
 
@@ -488,6 +496,9 @@ class IconNotebook:
 
     """ Signals """
 
+    def on_remove_page(self, _notebook, new_page, _page_num):
+        self.remove_tab_hilite(new_page)
+
     def on_switch_page(self, _notebook, new_page, _page_num):
 
         # Hide container widget on previous page for a performance boost
@@ -502,9 +513,6 @@ class IconNotebook:
 
         # Dismiss tab highlight
         self.remove_tab_hilite(new_page)
-
-        if not self.unread_pages:
-            self.frame.remove_tab_hilite(self.page_id)
 
     def on_tab_popup(self, widget, page):
         # Dummy implementation

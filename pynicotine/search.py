@@ -54,6 +54,10 @@ class Search:
         if hasattr(ui_callback, "search"):
             self.ui_callback = ui_callback.search
 
+    def server_login(self):
+        if self.ui_callback:
+            self.ui_callback.server_login()
+
     def server_disconnect(self):
 
         self.wishlist_interval = 0

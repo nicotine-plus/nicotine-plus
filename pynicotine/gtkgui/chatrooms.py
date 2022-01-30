@@ -185,9 +185,6 @@ class ChatRooms(IconNotebook):
         else:
             self.frame.RoomSearchCombo.append_text(msg.room)
 
-        if self.get_n_pages() > 0:
-            self.frame.chatrooms_status_page.hide()
-
     def leave_room(self, msg):
 
         page = self.pages.get(msg.room)
@@ -206,9 +203,6 @@ class ChatRooms(IconNotebook):
 
             for room in self.pages:
                 self.frame.RoomSearchCombo.append_text(room)
-
-        if self.get_n_pages() == 0:
-            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass
@@ -971,7 +965,6 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
-        self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
             self.update_user_tag(username)
@@ -989,8 +982,6 @@ class ChatRoom(UserInterface):
                 self.usersmodel.remove(self.users[username])
 
             self.add_user_row(userdata)
-
-        self.UserList.set_sensitive(True)
 
         # Reinitialize sorting after loop is complet
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)

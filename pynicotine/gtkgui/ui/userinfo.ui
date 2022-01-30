@@ -369,7 +369,7 @@
                             <property name="visible">True</property>
                             <child>
                               <object class="GtkImage" id="placeholder_picture">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="picture_view" bind-property="visible" bind-flags="invert-boolean|sync-create"/>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="icon-name">avatar-default-symbolic</property>
@@ -578,7 +578,7 @@
                 <child>
                   <object class="GtkButton" id="SavePicture">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
+                    <property name="sensitive" bind-source="picture_view" bind-property="visible" bind-flags="sync-create"/>
                     <signal name="clicked" handler="on_save_picture"/>
                     <child>
                       <object class="GtkBox">

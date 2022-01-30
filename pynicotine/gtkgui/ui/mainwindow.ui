@@ -152,6 +152,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="SearchCombo">
                                             <property name="visible">True</property>
+                                            <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
@@ -234,7 +235,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="search_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="search_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -809,6 +810,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="UserBrowseCombo">
                                             <property name="visible">True</property>
+                                            <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="halign">start</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
@@ -892,7 +894,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="userbrowse_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="userbrowse_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -987,6 +989,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="UserInfoCombo">
                                             <property name="visible">True</property>
+                                            <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="halign">start</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
@@ -1053,7 +1056,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="userinfo_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="userinfo_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1202,7 +1205,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="private_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="private_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1420,6 +1423,7 @@
                                             <child>
                                               <object class="GtkEntry" id="ChatroomsEntry">
                                                 <property name="visible">True</property>
+                                                <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                                 <property name="max-width-chars">40</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Create or join room…</property>
@@ -1432,6 +1436,7 @@
                                             <child>
                                               <object class="GtkMenuButton" id="RoomList">
                                                 <property name="visible">True</property>
+                                                <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                                 <child>
                                                   <object class="GtkBox">
                                                     <property name="visible">True</property>
@@ -1487,7 +1492,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="chatrooms_status_page">
-                                    <property name="visible">True</property>
+                                    <property name="visible" bind-source="chatrooms_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -1780,7 +1785,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton">
+                  <object class="GtkButton" id="UserStatusButton">
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
                     <child>

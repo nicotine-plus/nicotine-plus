@@ -166,11 +166,18 @@ class Interests(UserInterface):
 
     def server_login(self):
 
+        self.RecommendationsButton.set_sensitive(True)
+        self.SimilarUsersButton.set_sensitive(True)
+
         if self.frame.current_page_id != self.page_id:
             # Only populate recommendations if the tab is open on login
             return
 
         self.populate_recommendations()
+
+    def server_disconnect(self):
+        self.RecommendationsButton.set_sensitive(False)
+        self.SimilarUsersButton.set_sensitive(False)
 
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """

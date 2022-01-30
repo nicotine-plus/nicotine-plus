@@ -364,6 +364,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="sensitive" bind-source="UseUPnP" bind-property="active" bind-flags="sync-create"/>
                     <child>
                       <object class="GtkSpinButton" id="UPnPInterval">
                         <property name="visible">True</property>

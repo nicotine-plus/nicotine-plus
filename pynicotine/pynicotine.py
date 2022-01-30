@@ -366,6 +366,7 @@ class NicotineCore:
         self.privatechats.server_disconnect()
         self.userinfo.server_disconnect()
         self.userbrowse.server_disconnect()
+        self.interests.server_disconnect()
 
         if self.ui_callback:
             self.ui_callback.server_disconnect()
@@ -534,6 +535,7 @@ class NicotineCore:
                 self.user_ip_address = msg.ip_address
 
             self.transfers.server_login()
+            self.search.server_login()
             self.userbrowse.server_login()
             self.userinfo.server_login()
             self.userlist.server_login()

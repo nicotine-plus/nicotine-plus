@@ -73,7 +73,6 @@
                     <property name="label" translatable="yes">Allow these users to send you files:</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_remote_downloads"/>
                   </object>
                 </child>
               </object>
@@ -82,6 +81,7 @@
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="sensitive" bind-source="RemoteDownloads" bind-property="active" bind-flags="sync-create"/>
                 <child>
                   <object class="GtkComboBoxText" id="UploadsAllowed">
                     <property name="visible">True</property>

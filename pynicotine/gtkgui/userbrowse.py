@@ -73,9 +73,6 @@ class UserBrowses(IconNotebook):
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-            if self.get_n_pages() > 0:
-                self.frame.userbrowse_status_page.hide()
-
         page = self.pages[user]
         page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
@@ -1265,9 +1262,6 @@ class UserBrowse(UserInterface):
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
-
-        if self.userbrowses.get_n_pages() == 0:
-            self.frame.userbrowse_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()

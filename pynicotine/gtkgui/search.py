@@ -205,9 +205,6 @@ class Searches(IconNotebook):
         self.append_page(tab.Main, label, tab.on_close, full_text=full_text)
         tab.set_label(self.get_tab_label_inner(tab.Main))
 
-        if self.get_n_pages() > 0:
-            self.frame.search_status_page.hide()
-
     def show_search_result(self, msg, username, country):
 
         tab = self.pages.get(msg.token)
@@ -242,6 +239,9 @@ class Searches(IconNotebook):
             page.update_visuals()
 
         self.wish_list.update_visuals()
+
+    def server_login(self):
+        pass
 
     def server_disconnect(self):
         self.wish_list.server_disconnect()
@@ -1418,9 +1418,6 @@ class Search(UserInterface):
         del self.searches.pages[self.token]
         self.frame.np.search.remove_search(self.token)
         self.searches.remove_page(self.Main)
-
-        if self.searches.get_n_pages() == 0:
-            self.frame.search_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.searches.remove_all_pages()
