@@ -142,7 +142,7 @@
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="sensitive" bind-source="Limit" bind-property="active" bind-flags="sync-create"/>
+                <property name="sensitive" bind-source="Limit" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="LimitSpeed">
                     <property name="visible">True</property>
@@ -424,7 +424,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="invert-boolean|sync-create"/>
+                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="QueueBandwidth">
                     <property name="visible">True</property>
@@ -453,7 +453,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="sync-create"/>
+                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="QueueSlots">
                     <property name="visible">True</property>

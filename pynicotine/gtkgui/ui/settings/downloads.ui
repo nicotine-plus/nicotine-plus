@@ -81,7 +81,7 @@
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="sensitive" bind-source="RemoteDownloads" bind-property="active" bind-flags="sync-create"/>
+                <property name="sensitive" bind-source="RemoteDownloads" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkComboBoxText" id="UploadsAllowed">
                     <property name="visible">True</property>

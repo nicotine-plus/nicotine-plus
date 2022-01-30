@@ -51,7 +51,7 @@
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="StartupHidden">
-                        <property name="sensitive" bind-source="TrayiconCheck" bind-property="active" bind-flags="sync-create"/>
+                        <property name="sensitive" bind-source="TrayiconCheck" bind-property="active" bind-flags="bidirectional|sync-create"/>
                         <property name="label" translatable="yes">Minimize to tray on startup</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>

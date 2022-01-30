@@ -58,7 +58,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="sync-create"/>
+                    <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="GeoBlockCC">
                         <property name="visible">True</property>
@@ -85,7 +85,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="sync-create"/>
+                    <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="CustomGeoBlock">
                         <property name="visible">True</property>
@@ -113,7 +113,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="sync-create"/>
+                    <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="CustomBan">
                         <property name="visible">True</property>

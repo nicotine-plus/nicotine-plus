@@ -235,7 +235,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="search_status_page">
-                                <property name="visible" bind-source="search_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
+                                <property name="visible" bind-source="search_notebook" bind-property="show-tabs" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -894,7 +894,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="userbrowse_status_page">
-                                <property name="visible" bind-source="userbrowse_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
+                                <property name="visible" bind-source="userbrowse_notebook" bind-property="show-tabs" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1056,7 +1056,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="userinfo_status_page">
-                                <property name="visible" bind-source="userinfo_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
+                                <property name="visible" bind-source="userinfo_notebook" bind-property="show-tabs" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1205,7 +1205,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="private_status_page">
-                                <property name="visible" bind-source="private_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
+                                <property name="visible" bind-source="private_notebook" bind-property="show-tabs" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1492,7 +1492,7 @@
                                 </child>
                                 <child>
                                   <object class="GtkBox" id="chatrooms_status_page">
-                                    <property name="visible" bind-source="chatrooms_notebook" bind-property="show-tabs" bind-flags="invert-boolean|sync-create"/>
+                                    <property name="visible" bind-source="chatrooms_notebook" bind-property="show-tabs" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
