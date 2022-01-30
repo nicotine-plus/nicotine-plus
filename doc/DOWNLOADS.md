@@ -4,7 +4,7 @@ Download stable builds of Nicotine+ for your operating system.
 
 ## GNU/Linux, *BSD, Solaris
 
-If you have no need to modify the Nicotine+ source, you are strongly recommended to use packages for your distribution/operating system. This will save you time.
+If packages are available for your distribution/operating system, this will save you time.
 
 ### Ubuntu/Debian
 
