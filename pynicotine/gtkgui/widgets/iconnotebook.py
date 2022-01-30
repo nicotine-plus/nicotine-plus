@@ -420,17 +420,10 @@ class IconNotebook:
     def remove_tab_hilite(self, page):
 
         tab_label, menu_label = self.get_labels(page)
-
-        if tab_label:
-            tab_label.remove_hilite()
-
-        if menu_label:
-            menu_label.remove_hilite()
+        tab_label.remove_hilite()
+        menu_label.remove_hilite()
 
         self.remove_unread_page(page)
-
-        if not self.unread_pages:
-            self.frame.remove_tab_hilite(self.page_id)
 
     def append_unread_page(self, page):
 
@@ -449,6 +442,7 @@ class IconNotebook:
 
         if not self.unread_pages:
             self.unread_button.hide()
+            self.frame.remove_tab_hilite(self.page_id)
 
     def set_unread_page(self, _action, _state, page):
         self.notebook.set_current_page(self.page_num(page))
@@ -497,7 +491,7 @@ class IconNotebook:
     """ Signals """
 
     def on_remove_page(self, _notebook, new_page, _page_num):
-        self.remove_tab_hilite(new_page)
+        self.remove_unread_page(new_page)
 
     def on_switch_page(self, _notebook, new_page, _page_num):
 
