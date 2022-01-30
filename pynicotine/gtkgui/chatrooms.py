@@ -971,8 +971,9 @@ class ChatRoom(UserInterface):
 
     def rejoined(self, users):
 
-        # Update user list with an inexpensive sorting function
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.usersmodel.get_sort_column_id()
+        self.usersmodel.set_default_sort_func(lambda *args: 0)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for userdata in users:
@@ -983,9 +984,8 @@ class ChatRoom(UserInterface):
 
             self.add_user_row(userdata)
 
-        # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        if sort_column is not None and sort_type is not None:
+            self.usersmodel.set_sort_column_id(sort_column, sort_type)
 
         # Spit this line into chat log
         self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite)

@@ -124,7 +124,7 @@ class RoomList(UserInterface):
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         # Temporarily disable sorting for improved performance
-        self.room_model.set_sort_func(1, lambda *_args: 0)
+        sort_column, sort_type = self.room_model.get_sort_column_id()
         self.room_model.set_default_sort_func(lambda *_args: 0)
         self.room_model.set_sort_column_id(-1, Gtk.SortType.DESCENDING)
 
@@ -139,9 +139,10 @@ class RoomList(UserInterface):
         for room, users in rooms:
             self.update_room(room, users)
 
-        self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
-        self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
+
+        if sort_column is not None and sort_type is not None:
+            self.room_model.set_sort_column_id(sort_column, sort_type)
 
     def toggle_feed_check(self, active):
 
