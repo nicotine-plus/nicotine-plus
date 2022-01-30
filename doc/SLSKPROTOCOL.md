@@ -2782,7 +2782,7 @@ A peer sends this message when it has a file search match. The token is taken fr
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins>
+        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
         5.  **uint** <ins>number of attributes</ins> 0 *or* 3
         6.  Iterate for <ins>number of attributes</ins>
             1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
@@ -2798,7 +2798,7 @@ A peer sends this message when it has a file search match. The token is taken fr
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins>
+        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
         5.  **uint** <ins>number of attributes</ins> 0 *or* 3
         6.  Iterate for <ins>number of attributes</ins>
             1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
@@ -2814,11 +2814,12 @@ A peer sends this message when it has a file search match. The token is taken fr
     5.  Iterate for <ins>number of results</ins>
         1.  **string** <ins>filename</ins>
         2.  **uint64** <ins>size</ins>
-        3.  **string** <ins>ext</ins>
-        4.  **uint** <ins>number of attributes</ins> 2 *or* 3 *(depending on <ins>ext</ins>)*;  0 *(no metadata)*
+        3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
+        4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
         5.  Iterate for <ins>number of attributes</ins>
-            1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and <ins>ext</ins>)*
+            1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
             2.  **uint** <ins>attribute</ins>
+                - *Either bitrate or sample rate*
     6.  **bool** <ins>slotfree</ins>
     7.  **uint** <ins>avgspeed</ins>
     8.  **uint64** <ins>queue length</ins>
@@ -2826,11 +2827,12 @@ A peer sends this message when it has a file search match. The token is taken fr
     10.  Iterate for <ins>number of privately shared results</ins>
          1.  **string** <ins>filename</ins>
          2.  **uint64** <ins>size</ins>
-         3.  **string** <ins>ext</ins>
-         4.  **uint** <ins>number of attributes</ins> 2 *or* 3 *(depending on <ins>ext</ins>)*;  0 *(no metadata)*
+         3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
+         4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
          5.  Iterate for <ins>number of attributes</ins>
-             1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and <ins>ext</ins>)*
+             1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
              2.  **uint** <ins>attribute</ins>
+                 - *Either bitrate or sample rate*
 
 ### Peer Code 15
 
