@@ -5,6 +5,8 @@ This is not particularly difficult, but may come with some additional required s
 
 ## GNU/Linux, *BSD, Solaris
 
+If you have no need to modify the Nicotine+ source, you should use packages for your distribution/operating system.
+
 ### Ubuntu/Debian
 
 The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
@@ -48,7 +50,7 @@ pip uninstall nicotine-plus
 
 ### Git
 
-To run Nicotine+ directly from a folder, run the following:
+To run Nicotine+ directly from a local Git folder, run the following:
 
 ```console
 git clone https://github.com/nicotine-plus/nicotine-plus.git
