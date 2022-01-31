@@ -21,7 +21,7 @@ Stable builds are available for:
 - [Windows](doc/DOWNLOADS.md#windows)
 - [macOS](doc/DOWNLOADS.md#macos)
 
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md) and [DEPENDENCIES.md](doc/DEPENDENCIES.md).
+If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md).
 
 # Getting Involved
 
