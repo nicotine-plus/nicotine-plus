@@ -1,12 +1,10 @@
 # Testing Nicotine+
 
-For those who like living on the bleeding edge and want to help testing the latest changes and bug fixes, you can run unstable builds of Nicotine+.
+For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ and test the latest changes and bug fixes.
 
 If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
 
 ## GNU/Linux, *BSD, Solaris
-
-If you have no need to modify the Nicotine+ source, you should use packages for your distribution/operating system.
 
 ### Ubuntu/Debian
 
@@ -49,6 +47,25 @@ To uninstall Nicotine+, run:
 pip uninstall nicotine-plus
 ```
 
+### Git
+
+This is not particularly difficult, but may require some [dependancies](DEPENDENCIES.md) to be installed manually.
+
+To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, run the following:
+
+```console
+git clone https://github.com/nicotine-plus/nicotine-plus.git
+cd nicotine-plus
+./nicotine
+```
+
+To update to newer versions of Nicotine+, run the following:
+
+```console
+cd nicotine-plus
+git pull
+```
+
 ## Windows
 
 Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing.
@@ -66,22 +83,3 @@ Portable packages are also available. They can be run from your home directory, 
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
 
 - [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
-
-## Git
-
-This is not particularly difficult, but may require some dependancies to be installed manually, see [DEPENDENCIES.md](DEPENDENCIES.md).
-
-To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, run the following:
-
-```console
-git clone https://github.com/nicotine-plus/nicotine-plus.git
-cd nicotine-plus
-./nicotine
-```
-
-To update to newer versions of Nicotine+, run the following:
-
-```console
-cd nicotine-plus
-git pull
-```
