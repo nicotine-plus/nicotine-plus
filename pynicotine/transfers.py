@@ -2220,7 +2220,7 @@ class Transfers:
 
     def retry_download(self, transfer):
 
-        if transfer.status == "Finished":
+        if transfer.status in ("Transferring", "Finished"):
             return
 
         user = transfer.user
