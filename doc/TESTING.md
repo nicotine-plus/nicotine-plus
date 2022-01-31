@@ -52,7 +52,7 @@ pip uninstall nicotine-plus
 
 ### Git
 
-To run Nicotine+ directly from a local Git folder, run the following:
+To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, run the following:
 
 ```console
 git clone https://github.com/nicotine-plus/nicotine-plus.git
