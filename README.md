@@ -15,7 +15,7 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 The current stable version of Nicotine+ is 3.2.0, released on December 18, 2021. See the [release notes](NEWS.md).
 
-Stable builds are available for:
+Downloads are available for:
 
 - [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
 - [Windows](doc/DOWNLOADS.md#windows)
@@ -25,10 +25,10 @@ Stable builds are available for:
 
 If you feel like contributing to Nicotine+, there are several ways to help:
 
-* Install the latest unstable builds and test Nicotine+, see [TESTING.md](doc/TESTING.md).
 * Report a problem or suggest improvements by
   * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
   * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
+* Install the latest unstable build and test Nicotine+, see [TESTING.md](doc/TESTING.md).
 * Translate Nicotine+ into another language with [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus), see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
 * Package Nicotine+ for a distribution or operating system, see [PACKAGING.md](doc/PACKAGING.md).
 * Implement bug fixes and features, see [DEVELOPING.md](doc/DEVELOPING.md).
