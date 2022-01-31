@@ -1,10 +1,10 @@
 # Soulseek Protocol Documentation
 
-Last updated on January 27, 2022
+Last updated on January 30, 2022
 
-Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify the protocol in ways that negatively impact the network.
+Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
-If you find any inconsistencies or errors in the documentation, please report them.
+If you find any inconsistencies, errors or omissions in the documentation, please report them.
 
 ## Sections
 
@@ -2777,57 +2777,59 @@ A peer sends this message when it has a file search match. The token is taken fr
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint** <ins>token</ins>
-    3.  **uint** <ins>results size</ins> *number of results*
-    4.  Iterate for number of results
+    3.  **uint** <ins>number of results</ins>
+    4.  Iterate for <ins>number of results</ins>
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins>
-        5.  **uint** <ins>attribute size</ins>
-        6.  Iterate <ins>number of attributes</ins>
-            1.  **uint** <ins>place in
-                attributes</ins>
+        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
+        5.  **uint** <ins>number of attributes</ins> 0 *or* 3
+        6.  Iterate for <ins>number of attributes</ins>
+            1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
             2.  **uint** <ins>attribute</ins>
+                - <ins>bitrate</ins> *Kbps*
+                - <ins>duration</ins> *Seconds*
+                - <ins>vbr</ins> 0 *or* 1 *(is Variable Bit Rate)*
     5.  **bool** <ins>slotfree</ins>
     6.  **uint** <ins>avgspeed</ins>
     7.  **uint64** <ins>queue length</ins>
-    8.  **uint** <ins>private results size</ins> *number of privately shared results*
-    9.  Iterate for number of privately shared results
+    8.  **uint** <ins>number of privately shared results</ins>
+    9.  Iterate for <ins>number of privately shared results</ins>
         1.  **uchar** 1
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins>
-        5.  **uint** <ins>attribute size</ins>
-        6.  Iterate <ins>number of attributes</ins>
-            1.  **uint** <ins>place in
-                attributes</ins>
+        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
+        5.  **uint** <ins>number of attributes</ins> 0 *or* 3
+        6.  Iterate for <ins>number of attributes</ins>
+            1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
             2.  **uint** <ins>attribute</ins>
+                - <ins>bitrate</ins> *Kbps*
+                - <ins>duration</ins> *Seconds*
+                - <ins>vbr</ins> 0 *or* 1 *(is Variable Bit Rate)*
   - Receive
     1.  decompress
     2.  **string** <ins>username</ins>
     3.  **uint** <ins>token</ins>
-    4.  **uint** <ins>results size</ins> *number of results*
+    4.  **uint** <ins>number of results</ins>
     5.  Iterate for <ins>number of results</ins>
         1.  **string** <ins>filename</ins>
         2.  **uint64** <ins>size</ins>
-        3.  **string** <ins>ext</ins>
-        4.  **uint** <ins>number of attributes</ins>
-        5.  Iterate <ins>number of attributes</ins>
-            1.  **uint** <ins>place in
-                attributes</ins>
+        3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
+        4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
+        5.  Iterate for <ins>number of attributes</ins>
+            1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
             2.  **uint** <ins>attribute</ins>
     6.  **bool** <ins>slotfree</ins>
     7.  **uint** <ins>avgspeed</ins>
     8.  **uint64** <ins>queue length</ins>
-    9.  **uint** <ins>private results size</ins> *number of privately shared results*
+    9.  **uint** <ins>number of privately shared results</ins>
     10.  Iterate for <ins>number of privately shared results</ins>
          1.  **string** <ins>filename</ins>
          2.  **uint64** <ins>size</ins>
-         3.  **string** <ins>ext</ins>
-         4.  **uint** <ins>number of attributes</ins>
-         5.  Iterate <ins>number of attributes</ins>
-             1.  **uint** <ins>place in
-                 attributes</ins>
+         3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
+         4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
+         5.  Iterate for <ins>number of attributes</ins>
+             1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
              2.  **uint** <ins>attribute</ins>
 
 ### Peer Code 15
