@@ -31,6 +31,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 
 import os
 import signal
+import sys
 import time
 
 from collections import deque
@@ -220,6 +221,7 @@ class NicotineCore:
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+        log.add_debug("Using Python executable: %s", str(sys.executable))
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
