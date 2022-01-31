@@ -6,8 +6,6 @@ If you want to download unstable builds and help test Nicotine+, see [TESTING.md
 
 ## GNU/Linux, *BSD, Solaris
 
-If packages are available for your distribution/operating system, this will save you time.
-
 ### Ubuntu/Debian
 
 To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the stable Nicotine+ apt repository (PPA) by running the following:
