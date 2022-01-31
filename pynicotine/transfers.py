@@ -519,8 +519,10 @@ class Transfers:
 
     def file_is_upload_queued(self, user, filename):
 
+        statuses = ("Queued", "Getting status", "Establishing connection", "Transferring")
+
         for i in self.uploads:
-            if i.user == user and i.filename == filename and i.status in ("Queued", "Transferring"):
+            if i.user == user and i.filename == filename and i.status in statuses:
                 return True
 
         return False
