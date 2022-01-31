@@ -21,12 +21,11 @@ Stable builds are available for:
 - [Windows](doc/DOWNLOADS.md#windows)
 - [macOS](doc/DOWNLOADS.md#macos)
 
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md).
-
 # Getting Involved
 
-If you feel like contributing to Nicotine+, several options are available:
+If you feel like contributing to Nicotine+, there are several ways to help:
 
+* Install the latest unstable builds and test Nicotine+, see [TESTING.md](doc/TESTING.md).
 * Report a problem or suggest improvements by
   * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
   * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
