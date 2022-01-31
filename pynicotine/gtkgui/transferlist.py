@@ -77,8 +77,8 @@ class TransferList(UserInterface):
         self.transfer_list = []
         self.users = {}
         self.paths = {}
-        self.selected_users = set()
-        self.selected_transfers = set()
+        self.selected_users = []
+        self.selected_transfers = []
         self.tree_users = None
 
         # Status list
@@ -229,8 +229,8 @@ class TransferList(UserInterface):
 
     def select_transfers(self):
 
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
 
         model, paths = self.Transfers.get_selection().get_selected_rows()
 
@@ -254,10 +254,10 @@ class TransferList(UserInterface):
         transfer = model.get_value(iterator, 14)
 
         if transfer.filename is not None:
-            self.selected_transfers.add(transfer)
+            self.selected_transfers.append(transfer)
 
         if select_user:
-            self.selected_users.add(transfer.user)
+            self.selected_users.append(transfer.user)
 
     def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.page_id:
@@ -663,8 +663,8 @@ class TransferList(UserInterface):
 
         self.users.clear()
         self.paths.clear()
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
         self.transfersmodel.clear()
 
         for transfer in self.transfer_list:

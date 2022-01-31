@@ -134,7 +134,7 @@ class Uploads(TransferList):
         for user in self.selected_users:
             for transfer in self.transfer_list:
                 if transfer.user == user:
-                    self.selected_transfers.add(transfer)
+                    self.selected_transfers.append(transfer)
 
         self.abort_transfers()
 
