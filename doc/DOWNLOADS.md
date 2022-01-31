@@ -1,6 +1,6 @@
 # Download Nicotine+
 
-Download stable builds of Nicotine+ for your operating system from here.
+Download stable builds of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
 
 If you want to download unstable builds and help test Nicotine+, see [TESTING.md](TESTING.md).
 
@@ -32,7 +32,7 @@ sudo dnf install nicotine+
 
 ### Flatpak
 
-If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
+If your distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install Nicotine+ from Flathub.
 
 - [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
@@ -62,7 +62,7 @@ pkg install py-nicotine-plus
 
 ### pip
 
-If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
