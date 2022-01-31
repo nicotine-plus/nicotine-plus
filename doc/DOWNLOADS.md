@@ -1,6 +1,8 @@
 # Download Nicotine+
 
-Download stable builds of Nicotine+ for your operating system.
+Download stable builds of Nicotine+ for your operating system from here.
+
+If you want to download unstable builds and help test Nicotine+, see [TESTING.md](TESTING.md).
 
 ## GNU/Linux, *BSD, Solaris
 
@@ -130,7 +132,3 @@ Once Homebrew is set up, run the following:
 ```sh
 brew install nicotine-plus
 ```
-
-## Testing Nicotine+
-
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](TESTING.md).
