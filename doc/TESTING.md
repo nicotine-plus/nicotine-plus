@@ -1,7 +1,9 @@
 # Testing Nicotine+
 
 For those who like living on the bleeding edge and want to help testing the latest changes and bug fixes, you can run unstable builds of Nicotine+.
-This is not particularly difficult, but may come with some additional required skills, like managing changes in the database and the config files.
+This is not particularly difficult, but may require some dependancies to be installed manually, see [DEPENDENCIES.md](DEPENDENCIES.md).
+
+If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
 
 ## GNU/Linux, *BSD, Solaris
 
@@ -82,7 +84,3 @@ Portable packages are also available. They can be run from your home directory, 
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
 
 - [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
-
-## Stable builds
-
-If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
