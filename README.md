@@ -21,7 +21,7 @@ Stable builds are available for:
 - [Windows](doc/DOWNLOADS.md#windows)
 - [macOS](doc/DOWNLOADS.md#macos)
 
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md).
+If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md) and [DEPENDENCIES.md](doc/DEPENDENCIES.md).
 
 # Getting Involved
 
@@ -31,7 +31,7 @@ If you feel like contributing to Nicotine+, several options are available:
   * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
   * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
 * Translate Nicotine+ into another language with [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus), see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
-* Package Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md).
+* Package Nicotine+ for a distribution or operating system, see [PACKAGING.md](doc/PACKAGING.md).
 * Implement bug fixes and features, see [DEVELOPING.md](doc/DEVELOPING.md).
   * For a list of tasks, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
   * For documentation on the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
