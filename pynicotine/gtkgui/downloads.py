@@ -120,16 +120,14 @@ class Downloads(TransferList):
         downloaddir = config.sections["transfers"]["downloaddir"]
         incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
 
-        transfer = next(iter(self.selected_transfers), None)
+        for transfer in self.selected_transfers:
+            if transfer.status == "Finished":
+                if os.path.exists(transfer.path):
+                    final_path = transfer.path
+                else:
+                    final_path = downloaddir
+                break
 
-        if not transfer:
-            return
-
-        if transfer.status == "Finished":
-            if os.path.exists(transfer.path):
-                final_path = transfer.path
-            else:
-                final_path = downloaddir
         else:
             final_path = incompletedir
 
