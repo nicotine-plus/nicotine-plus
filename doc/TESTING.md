@@ -31,7 +31,7 @@ Unstable [Flatpak](https://www.flatpak.org/setup/) packages are generated after 
 
 ### pip
 
-To install the latest unstable build of Nicotine+ locally (no root required) with [pip](https://pip.pypa.io/en/stable/getting-started/), run the following:
+To install the latest unstable build of Nicotine+ locally (no root required) using [pip](https://pip.pypa.io/), run the following:
 
 ```console
 pip install git+https://github.com/nicotine-plus/nicotine-plus.git
