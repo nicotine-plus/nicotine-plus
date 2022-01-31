@@ -253,10 +253,10 @@ class TransferList(UserInterface):
 
         transfer = model.get_value(iterator, 14)
 
-        if transfer.filename is not None:
+        if transfer.filename is not None and transfer not in self.selected_transfers:
             self.selected_transfers.append(transfer)
 
-        if select_user:
+        if select_user and transfer.user not in self.selected_users:
             self.selected_users.append(transfer.user)
 
     def new_transfer_notification(self, finished=False):
