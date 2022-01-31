@@ -25,13 +25,13 @@ If you prefer to install a .deb package directly, you can download one [here](ht
 
 ### Flatpak
 
-Unstable Flatpak packages are generated after every commit to the master branch, and should only be used for testing.
+Unstable [Flatpak](https://www.flatpak.org/setup/) packages are generated after every commit to the master branch, and should only be used for testing.
 
 - [Download Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
 ### pip
 
-To install the latest unstable build of Nicotine+ locally (no root required), run the following:
+To install the latest unstable build of Nicotine+ locally (no root required) with [pip](https://pip.pypa.io/en/stable/getting-started/), run the following:
 
 ```console
 pip install git+https://github.com/nicotine-plus/nicotine-plus.git
