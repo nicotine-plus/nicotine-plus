@@ -1,8 +1,8 @@
 # Download Nicotine+
 
-Download stable builds of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
+Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
 
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](TESTING.md).
+If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
 ## GNU/Linux, *BSD, Solaris
 
