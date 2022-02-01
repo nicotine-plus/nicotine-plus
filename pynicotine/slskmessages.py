@@ -2131,14 +2131,15 @@ class PeerInit(PeerInitMessage):
     can be anything. Type is 'P' if it's anything but filetransfer,
     'F' otherwise. """
 
-    __slots__ = ("sock", "addr", "init_user", "target_user", "conn_type", "token")
+    __slots__ = ("sock", "addr", "init_user", "target_user", "conn_type", "indirect", "token")
 
-    def __init__(self, sock=None, addr=None, init_user=None, target_user=None, conn_type=None, token=0):
+    def __init__(self, sock=None, addr=None, init_user=None, target_user=None, conn_type=None, indirect=False, token=0):
         self.sock = sock
         self.addr = addr
         self.init_user = init_user      # username of peer who initiated the message
         self.target_user = target_user  # username of peer we're connected to
         self.conn_type = conn_type
+        self.indirect = indirect
         self.token = token
         self.outgoing_msgs = []
 

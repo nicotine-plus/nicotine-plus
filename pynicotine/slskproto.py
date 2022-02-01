@@ -250,17 +250,17 @@ class Connection:
 
 class PeerConnection(Connection):
 
-    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw", "lastcallback")
+    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "indirect", "lastcallback")
 
-    def __init__(self, sock=None, addr=None, events=None, init=None):
+    def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
         Connection.__init__(self, sock, addr, events)
         self.init = init
+        self.indirect = indirect
         self.filereq = None
         self.filedown = None
         self.fileupl = None
         self.filereadbytes = 0
         self.bytestoread = 0
-        self.piercefw = None
         self.lastcallback = time.time()
 
 
@@ -913,10 +913,10 @@ class SlskProtoThread(threading.Thread):
 
         else:
             init.addr = addr
-            self.connect_to_peer_direct(user, addr, init)
+            self.connect_to_peer(user, addr, init)
 
-    def connect_to_peer_direct(self, user, addr, init):
-        """ Initiate a connection with a peer directly """
+    def connect_to_peer(self, user, addr, init):
+        """ Initiate a connection with a peer """
 
         if self.has_existing_user_socket(user, init.conn_type):
             log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
@@ -936,6 +936,10 @@ class SlskProtoThread(threading.Thread):
             'addr': addr
         })
 
+        if not init.token:
+            # Also request indirect connection in case the user's port is closed
+            self.connect_to_peer_indirect(init)
+
     def connect_error(self, error, conn_obj):
 
         if conn_obj.login:
@@ -951,9 +955,12 @@ class SlskProtoThread(threading.Thread):
             self.set_server_timer()
             return
 
-        if not conn_obj.init.token:
-            # We can't correct to peer directly, request indirect connection
-            self.connect_to_peer_indirect(conn_obj, error)
+        if not conn_obj.init.indirect:
+            log.add_conn(("Direct connection of type %(type)s to user %(user)s failed. Error: %(error)s"), {
+                "type": conn_obj.init.conn_type,
+                "user": conn_obj.init.target_user,
+                "error": error
+            })
             return
 
         if conn_obj.init in self._out_indirect_conn_request_times:
@@ -965,26 +972,68 @@ class SlskProtoThread(threading.Thread):
                 'error': error
             })
 
-    def connect_to_peer_indirect(self, conn, error):
-        """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
+    def connect_to_peer_indirect(self, init):
+        """ Send a message to the server to ask the peer to connect to us (indirect connection) """
 
         self._token = increment_token(self._token)
 
-        username = conn.init.target_user
-        conn_type = conn.init.conn_type
-        conn.init.token = self._token
+        username = init.target_user
+        conn_type = init.conn_type
+        init.token = self._token
 
-        self._init_msgs[self._token] = conn.init
-        self._out_indirect_conn_request_times[conn.init] = time.time()
+        self._init_msgs[self._token] = init
+        self._out_indirect_conn_request_times[init] = time.time()
         self._queue.append(ConnectToPeer(self._token, username, conn_type))
 
-        log.add_conn(("Direct connection of type %(type)s to user %(user)s failed, attempting indirect "
-                      "connection with token %(token)s. Error: %(error)s"), {
-            "type": conn_type,
+        log.add_conn(("Attempting indirect connection to user %(user)s with token %(token)s"), {
             "user": username,
-            "token": self._token,
-            "error": error
+            "token": self._token
         })
+
+    def establish_outgoing_connection(self, sock, addr, events, init):
+
+        self._conns[sock] = PeerConnection(sock=sock, addr=addr, events=events, init=init, indirect=init.indirect)
+
+        user = init.target_user
+        conn_type = init.conn_type
+        token = init.token
+        init.sock = sock
+
+        log.add_conn(("Established outgoing connection of type %(type)s with user %(user)s. List of "
+                      "outgoing messages: %(messages)s"), {
+            'type': conn_type,
+            'user': user,
+            'messages': init.outgoing_msgs
+        })
+
+        if init.indirect:
+            log.add_conn(("Responding to indirect connection request of type %(type)s from "
+                          "user %(user)s, token %(token)s"), {
+                'type': conn_type,
+                'user': user,
+                'token': token
+            })
+            self._queue.append(PierceFireWall(sock, token))
+
+        else:
+            # Direct connection established
+            log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
+                'type': conn_type,
+                'user': user
+            })
+            self._queue.append(init)
+
+            # Direct and indirect connections are attempted at the same time, clean up
+            self._init_msgs.pop(init.token, None)
+
+            if self._out_indirect_conn_request_times.pop(init, None):
+                log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
+                              "%(user)s"), {
+                    'type': conn_type,
+                    'user': user
+                })
+
+        self.process_conn_messages(init)
 
     def close_connection(self, connection_list, sock, callback=True):
 
@@ -995,7 +1044,7 @@ class SlskProtoThread(threading.Thread):
         conn_obj = connection_list[sock]
         conn_type = conn_obj.init.conn_type if conn_obj.init else 'S'
 
-        if sock == self.parent_socket:
+        if sock == self.parent_socket and not self.server_disconnected:
             self.send_have_no_parent()
 
         if self._is_download(conn_obj):
@@ -1202,8 +1251,9 @@ class SlskProtoThread(threading.Thread):
                             "token": token,
                             "addr": addr
                         })
-                        init = PeerInit(addr=addr, init_user=user, target_user=user, conn_type=conn_type, token=token)
-                        self.connect_to_peer_direct(user, addr, init)
+                        init = PeerInit(addr=addr, init_user=user, target_user=user,
+                                        conn_type=conn_type, indirect=True, token=token)
+                        self.connect_to_peer(user, addr, init)
 
                     elif msg_class is GetUserStatus:
                         if msg.status <= 0:
@@ -1231,7 +1281,7 @@ class SlskProtoThread(threading.Thread):
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
                             init.addr = addr
-                            self.connect_to_peer_direct(msg.user, addr, init)
+                            self.connect_to_peer(msg.user, addr, init)
 
                         # We already store a local IP address for our username
                         if msg.user != self.server_username:
@@ -1333,7 +1383,6 @@ class SlskProtoThread(threading.Thread):
                             "token": msg.token,
                             "addr": conn_obj.addr
                         })
-                        conn_obj.piercefw = msg
 
                         log.add_conn("List of stored PeerInit messages: %s", str(self._init_msgs))
                         log.add_conn("Attempting to fetch PeerInit message for token %s", msg.token)
@@ -1356,7 +1405,7 @@ class SlskProtoThread(threading.Thread):
                             "token": msg.token
                         })
 
-                        self._queue.append(conn_obj.init)
+                        conn_obj.indirect = True
                         self.process_conn_messages(conn_obj.init)
 
                     elif msg_class is PeerInit:
@@ -1390,7 +1439,7 @@ class SlskProtoThread(threading.Thread):
                     self._callback_msgs.append(msg)
 
             else:
-                if conn_obj.piercefw is None:
+                if not conn_obj.indirect:
                     log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
                             {'type': msgtype, 'size': msgsize - 1,
                              'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
@@ -1423,8 +1472,6 @@ class SlskProtoThread(threading.Thread):
             if msg is None:
                 return
 
-            conn_obj.piercefw = msg_obj
-
             conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
             conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
             conn_obj.obuf.extend(msg)
@@ -1436,9 +1483,7 @@ class SlskProtoThread(threading.Thread):
             if msg is None:
                 return
 
-            conn_obj.init = msg_obj
-
-            if conn_obj.piercefw is not None:
+            if conn_obj.indirect:
                 return
 
             conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
@@ -2152,38 +2197,7 @@ class SlskProtoThread(threading.Thread):
                                 self.close_connection(self._connsinprogress, sock_in_progress)
                                 continue
 
-                            self._conns[sock_in_progress] = conn_obj = PeerConnection(
-                                sock=sock_in_progress, addr=addr, events=events, init=conn_obj.init)
-
-                            user = conn_obj.init.target_user
-                            conn_type = conn_obj.init.conn_type
-                            token = conn_obj.init.token
-                            conn_obj.init.sock = sock_in_progress
-
-                            log.add_conn(("Established connection of type %(type)s with user %(user)s. List of "
-                                          "outgoing messages: %(messages)s"), {
-                                'type': conn_type,
-                                'user': user,
-                                'messages': conn_obj.init.outgoing_msgs
-                            })
-
-                            if not token:
-                                log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
-                                    'type': conn_type,
-                                    'user': user
-                                })
-                                self._queue.append(conn_obj.init)
-
-                            else:
-                                log.add_conn(("Responding to indirect connection request of type %(type)s from "
-                                              "user %(user)s, token %(token)s"), {
-                                    'type': conn_type,
-                                    'user': user,
-                                    'token': token
-                                })
-                                self._queue.append(PierceFireWall(conn_obj.sock, token))
-
-                            self.process_conn_messages(conn_obj.init)
+                            self.establish_outgoing_connection(sock_in_progress, addr, events, conn_obj.init)
 
                         del self._connsinprogress[sock_in_progress]
 
