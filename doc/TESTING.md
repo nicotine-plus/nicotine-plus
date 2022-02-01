@@ -1,6 +1,6 @@
 # Testing Nicotine+
 
-For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ and test recent changes and bug fixes.
+For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ to test recent changes and bug fixes.
 
 If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
 
@@ -8,7 +8,7 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ### Ubuntu/Debian
 
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
+The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To use it, run the following:
 
 ```sh
 sudo apt install software-properties-common
@@ -18,13 +18,15 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can download one [here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a .deb package each time a new release is available.
+If you prefer to install a .deb package directly, you can download one [here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+
+Unlike the repository installation method, Nicotine+ will not update automatically unless you download and install it again.
 
 ### Flatpak
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are generated after every commit to the master branch, and should only be used for testing.
 
-- [Download Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+- [Download Nicotine+ Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
 ### pip
 
@@ -70,16 +72,16 @@ git pull
 
 Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing.
 
-- [64-bit Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
-- [32-bit Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
+- [Download Nicotine+ 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
+- [Download Nicotine+ 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
 
 Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
 
-- [64-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
-- [32-bit Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
+- [Download Nicotine+ 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
+- [Download Nicotine+ 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
 
 ## macOS (Catalina/10.15 and newer)
 
 Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
 
-- [Download Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
+- [Download Nicotine+ macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
