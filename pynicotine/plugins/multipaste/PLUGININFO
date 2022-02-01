@@ -1,4 +1,4 @@
 Version = "2008-07-03r00"
-Authors = ['Nicotine+ Team']
+Authors = ["Nicotine+"]
 Name = "Multi Paste"
 Description = "This plugin intercepts messages you send with newlines in them, and splits them up in separate messages. This is useful on the official Soulseek servers since they block messages with newlines."

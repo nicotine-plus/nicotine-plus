@@ -1,4 +1,4 @@
 Version = "2021-07-25r00"
-Authors = ['Nicotine+ Team']
+Authors = ["Nicotine+"]
 Name = "Reddit"
 Description = "Displays topics and links for a subreddit in response to '!reddit <subreddit>' chat messages.\n\nExample uses:\n!reddit soulseek\n!reddit news/new\n!reddit news/top"

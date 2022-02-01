@@ -72,8 +72,7 @@ class WishList(UserInterface):
 
         CompletionEntry(self.wish_entry, self.store)
 
-        Accelerator("Delete", self.main, self.on_remove_wish)
-        Accelerator("Delete", self.wish_entry, self.on_remove_wish)
+        Accelerator("Delete", self.list_view, self.on_remove_wish)
         Accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
     def on_list_focus_entry_accelerator(self, *_args):

@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from collections import deque
 
 from gi.repository import Gio
@@ -55,6 +53,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
@@ -186,9 +185,6 @@ class ChatRooms(IconNotebook):
         else:
             self.frame.RoomSearchCombo.append_text(msg.room)
 
-        if self.get_n_pages() > 0:
-            self.frame.chatrooms_status_page.hide()
-
     def leave_room(self, msg):
 
         page = self.pages.get(msg.room)
@@ -207,9 +203,6 @@ class ChatRooms(IconNotebook):
 
             for room in self.pages:
                 self.frame.RoomSearchCombo.append_text(room)
-
-        if self.get_n_pages() == 0:
-            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass
@@ -425,8 +418,8 @@ class ChatRoom(UserInterface):
             self.frame, ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
-            ["user", _("User"), 135, "text", attribute_columns],
-            ["speed", _("Speed"), 60, "number", None],
+            ["user", _("User"), 155, "text", attribute_columns],
+            ["speed", _("Speed"), 100, "number", None],
             ["files", _("Files"), -1, "number", None]
         )
 
@@ -435,10 +428,6 @@ class ChatRoom(UserInterface):
         cols["user"].set_sort_column_id(2)
         cols["speed"].set_sort_column_id(6)
         cols["files"].set_sort_column_id(7)
-
-        cols["user"].set_expand(True)
-        cols["speed"].set_expand(True)
-        cols["files"].set_expand(True)
 
         cols["status"].get_widget().hide()
         cols["country"].get_widget().hide()
@@ -561,7 +550,7 @@ class ChatRoom(UserInterface):
         if not config.sections["logging"]["readroomlogs"]:
             return
 
-        filename = self.room.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.room) + ".log"
         numlines = config.sections["logging"]["readroomlines"]
 
         try:
@@ -768,7 +757,8 @@ class ChatRoom(UserInterface):
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
@@ -975,15 +965,15 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
-        self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
             self.update_user_tag(username)
 
     def rejoined(self, users):
 
-        # Update user list with an inexpensive sorting function
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.usersmodel.get_sort_column_id()
+        self.usersmodel.set_default_sort_func(lambda *args: 0)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for userdata in users:
@@ -994,11 +984,8 @@ class ChatRoom(UserInterface):
 
             self.add_user_row(userdata)
 
-        self.UserList.set_sensitive(True)
-
-        # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        if sort_column is not None and sort_type is not None:
+            self.usersmodel.set_sort_column_id(sort_column, sort_type)
 
         # Spit this line into chat log
         self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite)

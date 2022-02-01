@@ -20,6 +20,7 @@ from gi.repository import Gtk
 from gi.repository import Pango
 
 from pynicotine.config import config
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -72,6 +73,8 @@ class RoomList(UserInterface):
         self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
+        Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
+
         if Gtk.get_major_version() == 4:
             frame.RoomList.get_first_child().get_style_context().add_class("arrow-button")
 
@@ -121,7 +124,7 @@ class RoomList(UserInterface):
     def set_room_list(self, rooms, owned_rooms, other_private_rooms):
 
         # Temporarily disable sorting for improved performance
-        self.room_model.set_sort_func(1, lambda *_args: 0)
+        sort_column, sort_type = self.room_model.get_sort_column_id()
         self.room_model.set_default_sort_func(lambda *_args: 0)
         self.room_model.set_sort_column_id(-1, Gtk.SortType.DESCENDING)
 
@@ -136,9 +139,10 @@ class RoomList(UserInterface):
         for room, users in rooms:
             self.update_room(room, users)
 
-        self.room_model.set_sort_func(1, self.private_rooms_sort, 1)
-        self.room_model.set_sort_column_id(1, Gtk.SortType.DESCENDING)
         self.room_model.set_default_sort_func(self.private_rooms_sort)
+
+        if sort_column is not None and sort_type is not None:
+            self.room_model.set_sort_column_id(sort_column, sort_type)
 
     def toggle_feed_check(self, active):
 
@@ -213,6 +217,12 @@ class RoomList(UserInterface):
 
     def on_toggle_accept_private_room(self, *_args):
         self.frame.np.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
+
+    def on_search_accelerator(self, *_args):
+        """ Ctrl+F: Search rooms """
+
+        self.search_entry.grab_focus()
+        return True
 
     def update_visuals(self):
         for widget in list(self.__dict__.values()):

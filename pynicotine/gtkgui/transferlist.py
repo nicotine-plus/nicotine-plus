@@ -77,8 +77,8 @@ class TransferList(UserInterface):
         self.transfer_list = []
         self.users = {}
         self.paths = {}
-        self.selected_users = set()
-        self.selected_transfers = set()
+        self.selected_users = []
+        self.selected_transfers = []
         self.tree_users = None
 
         # Status list
@@ -229,8 +229,8 @@ class TransferList(UserInterface):
 
     def select_transfers(self):
 
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
 
         model, paths = self.Transfers.get_selection().get_selected_rows()
 
@@ -253,11 +253,11 @@ class TransferList(UserInterface):
 
         transfer = model.get_value(iterator, 14)
 
-        if transfer.filename is not None:
-            self.selected_transfers.add(transfer)
+        if transfer.filename is not None and transfer not in self.selected_transfers:
+            self.selected_transfers.append(transfer)
 
-        if select_user:
-            self.selected_users.add(transfer.user)
+        if select_user and transfer.user not in self.selected_users:
+            self.selected_users.append(transfer.user)
 
     def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.page_id:
@@ -413,7 +413,7 @@ class TransferList(UserInterface):
         transfer = self.transfersmodel.get_value(initer, 14)
 
         if self.transfersmodel.get_value(initer, 3) != translated_status:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
+            self.transfersmodel.set_value(initer, 3, translated_status)
             transfer.status = salientstatus
 
         if self.transfersmodel.get_value(initer, 7) != hspeed:
@@ -539,7 +539,7 @@ class TransferList(UserInterface):
 
                 """ Paths can be empty if files are downloaded individually, make sure we
                 don't add files to the wrong user in the TreeView """
-                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                full_path = path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
                 user_path = user + path
 
                 if config.sections["ui"]["reverse_file_paths"]:
@@ -563,7 +563,7 @@ class TransferList(UserInterface):
                             empty_int,
                             empty_int,
                             empty_int,
-                            Transfer(user=user)
+                            Transfer(user=user, path=full_path)
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
@@ -663,8 +663,8 @@ class TransferList(UserInterface):
 
         self.users.clear()
         self.paths.clear()
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
         self.transfersmodel.clear()
 
         for transfer in self.transfer_list:
@@ -822,33 +822,21 @@ class TransferList(UserInterface):
         data = []
 
         for transfer in self.selected_transfers:
-            user = transfer.user
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
-            path = transfer.path
-            size = speed = length = num = bitrate = None
-
-            size = str(human_size(transfer.size))
-
-            if transfer.speed:
-                speed = str(human_speed(transfer.speed))
-
-            bitrate = str(transfer.bitrate)
-            length = str(transfer.length)
-
             directory = fullname.rsplit("\\", 1)[0]
 
             data.append({
-                "user": user,
+                "user": transfer.user,
                 "fn": fullname,
-                "position": num,
                 "filename": filename,
                 "directory": directory,
-                "path": path,
-                "size": size,
-                "speed": speed,
-                "bitrate": bitrate,
-                "length": length
+                "path": transfer.path,
+                "queue_position": transfer.queue_position,
+                "speed": transfer.speed,
+                "size": transfer.size,
+                "bitrate": transfer.bitrate,
+                "length": transfer.length
             })
 
         if data:

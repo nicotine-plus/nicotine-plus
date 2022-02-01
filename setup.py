@@ -31,11 +31,20 @@ import glob
 
 from pkgutil import walk_packages
 from setuptools import setup
+from setuptools.command.build_py import build_py
 
 import pynicotine
 
 from pynicotine.config import config
-from pynicotine.i18n import generate_translations
+from pynicotine.i18n import build_translations
+from pynicotine.i18n import get_translation_paths
+
+
+class BuildPyCommand(build_py):
+
+    def run(self):
+        build_translations()
+        build_py.run(self)
 
 
 if __name__ == '__main__':
@@ -60,9 +69,9 @@ functionality while keeping current with the Soulseek protocol."""
         ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
         ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
-        ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md") + ["COPYING"]),
+        ("share/doc/nicotine", glob.glob("[!404.md]*.md") + glob.glob("doc/*.md")),
         ("share/man/man1", glob.glob("data/*.1"))
-    ] + generate_translations()[0]
+    ] + get_translation_paths()
 
     # Run setup
     setup(
@@ -80,5 +89,6 @@ functionality while keeping current with the Soulseek protocol."""
         scripts=["nicotine"],
         data_files=DATA_FILES,
         python_requires=">=3.5",
-        install_requires=["PyGObject>=3.18"]
+        install_requires=["PyGObject>=3.18"],
+        cmdclass={"build_py": BuildPyCommand}
     )

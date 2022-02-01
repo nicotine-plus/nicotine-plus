@@ -195,6 +195,16 @@ class NicotineFrame(UserInterface):
         set_global_style()
         self.update_visuals()
 
+        """ Connect """
+
+        connect_ready = network_processor.start(self, self.network_callback)
+
+        if not connect_ready:
+            self.connect_action.set_enabled(False)
+
+        elif config.sections["server"]["auto_connect_startup"]:
+            self.np.connect()
+
         """ Show Window """
 
         self.update_window_properties()
@@ -204,23 +214,9 @@ class NicotineFrame(UserInterface):
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
-        """ Connect """
-
-        # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.set_widget_online_status(False)
-
-        connect_ready = network_processor.start(self, self.network_callback)
-
         if not connect_ready:
-            self.connect_action.set_enabled(False)
-
             # Set up fast configure dialog
             self.on_fast_configure()
-
-        elif config.sections["server"]["auto_connect_startup"]:
-            self.np.connect()
-
-        self.update_completions()
 
     """ Window State """
 
@@ -400,29 +396,19 @@ class NicotineFrame(UserInterface):
         self.disconnect_action.set_enabled(status)
         self.away_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
+        self.tray_icon.set_server_actions_sensitive(status)
 
-        self.UserBrowseCombo.set_sensitive(status)
+        if not status:
+            return
 
         if self.current_page_id == self.userbrowse.page_id:
             GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
-        self.UserInfoCombo.set_sensitive(status)
-
         if self.current_page_id == self.userinfo.page_id:
             GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
-        self.SearchCombo.set_sensitive(status)
-
         if self.current_page_id == self.search.page_id:
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
-
-        self.interests.RecommendationsButton.set_sensitive(status)
-        self.interests.SimilarUsersButton.set_sensitive(status)
-
-        self.ChatroomsEntry.set_sensitive(status)
-        self.RoomList.set_sensitive(status)
-
-        self.tray_icon.set_server_actions_sensitive(status)
 
     """ Action Callbacks """
 
@@ -680,18 +666,18 @@ class NicotineFrame(UserInterface):
         self.application.add_action(self.connect_action)
         self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
 
-        self.disconnect_action = Gio.SimpleAction(name="disconnect")
+        self.disconnect_action = Gio.SimpleAction(name="disconnect", enabled=False)
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
         state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state))
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
         self.away_action.connect("change-state", self.on_away)
         self.MainWindow.add_action(self.away_action)
         self.application.set_accels_for_action("win.away", ["<Primary>h"])
 
-        self.get_privileges_action = Gio.SimpleAction(name="getprivileges")
+        self.get_privileges_action = Gio.SimpleAction(name="getprivileges", enabled=False)
         self.get_privileges_action.connect("activate", self.on_get_privileges)
         self.application.add_action(self.get_privileges_action)
 
@@ -1546,6 +1532,7 @@ class NicotineFrame(UserInterface):
             self.set_auto_away(False)
         else:
             self.set_user_status(_("Away"))
+            self.remove_away_timer()
 
         self.tray_icon.set_away(is_away)
         self.away_action.set_state(GLib.Variant("b", is_away))
@@ -1817,13 +1804,7 @@ class NicotineFrame(UserInterface):
 
         dialog.destroy()
         loop.quit()
-
-        try:
-            self.np.quit()
-        except Exception:
-            """ We attempt a clean shut down, but this may not be possible if
-            the program didn't initialize fully. Ignore any additional errors
-            in that case. """
+        self.np.quit()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -1956,7 +1937,6 @@ class NicotineFrame(UserInterface):
         # Save window state (window size, position, columns)
         self.save_window_state()
 
-        config.write_configuration()
         log.remove_listener(self.log_callback)
 
         # Terminate GtkApplication

@@ -27,6 +27,7 @@ from itertools import islice
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import increment_token
 from pynicotine.utils import PUNCTUATION
 
 
@@ -39,7 +40,7 @@ class Search:
         self.queue = queue
         self.ui_callback = None
         self.searches = {}
-        self.searchid = int(random.random() * (2 ** 31 - 1))
+        self.token = int(random.random() * (2 ** 31 - 1))
         self.wishlist_interval = 0
         self.share_dbs = share_dbs
         self.geoip = geoip
@@ -47,11 +48,15 @@ class Search:
 
         # Create wishlist searches
         for term in config.sections["server"]["autosearch"]:
-            search_id = self.increment_search_id()
-            self.searches[search_id] = {"id": search_id, "term": term, "mode": "wishlist", "ignore": True}
+            self.token = increment_token(self.token)
+            self.searches[self.token] = {"id": self.token, "term": term, "mode": "wishlist", "ignore": True}
 
         if hasattr(ui_callback, "search"):
             self.ui_callback = ui_callback.search
+
+    def server_login(self):
+        if self.ui_callback:
+            self.ui_callback.server_login()
 
     def server_disconnect(self):
 
@@ -79,23 +84,23 @@ class Search:
     """ Outgoing search requests """
 
     @staticmethod
-    def add_allowed_search_id(search_id):
+    def add_allowed_token(token):
         """ Allow parsing search result messages for a search ID """
-        slskmessages.SEARCH_TOKENS_ALLOWED.add(search_id)
+        slskmessages.SEARCH_TOKENS_ALLOWED.add(token)
 
     @staticmethod
-    def remove_allowed_search_id(search_id):
+    def remove_allowed_token(token):
         """ Disallow parsing search result messages for a search ID """
-        slskmessages.SEARCH_TOKENS_ALLOWED.discard(search_id)
+        slskmessages.SEARCH_TOKENS_ALLOWED.discard(token)
 
-    def add_search(self, search_id, term, mode, ignore):
-        self.searches[search_id] = {"id": search_id, "term": term, "mode": mode, "ignore": ignore}
-        self.add_allowed_search_id(search_id)
+    def add_search(self, term, mode, ignore):
+        self.searches[self.token] = {"id": self.token, "term": term, "mode": mode, "ignore": ignore}
+        self.add_allowed_token(self.token)
 
-    def remove_search(self, search_id):
+    def remove_search(self, token):
 
-        self.remove_allowed_search_id(search_id)
-        search = self.searches.get(search_id)
+        self.remove_allowed_token(token)
+        search = self.searches.get(token)
 
         if search is None:
             return
@@ -104,7 +109,7 @@ class Search:
             search["ignore"] = True
             return
 
-        del self.searches[search_id]
+        del self.searches[token]
 
     def process_search_term(self, text, mode, room, user):
 
@@ -158,8 +163,8 @@ class Search:
 
         text, room, users = processed_search
 
-        # Get a new search ID
-        self.increment_search_id()
+        # Get a new search token
+        self.token = increment_token(self.token)
 
         # Get excluded words (starting with "-")
         searchterm_words = text.split()
@@ -199,55 +204,55 @@ class Search:
             self.config.write_configuration()
 
         if mode == "global":
-            self.do_global_search(self.searchid, searchterm)
+            self.do_global_search(searchterm)
 
         elif mode == "rooms":
-            self.do_rooms_search(self.searchid, searchterm, room)
+            self.do_rooms_search(searchterm, room)
 
         elif mode == "buddies":
-            self.do_buddies_search(self.searchid, searchterm)
+            self.do_buddies_search(searchterm)
 
         elif mode == "user":
-            self.do_peer_search(self.searchid, searchterm, users)
+            self.do_peer_search(searchterm, users)
 
-        self.add_search(self.searchid, searchterm, mode, ignore=False)
+        self.add_search(searchterm, mode, ignore=False)
 
         if self.ui_callback:
-            self.ui_callback.do_search(self.searchid, searchterm, mode, room, user)
+            self.ui_callback.do_search(self.token, searchterm, mode, room, user)
 
-        return (self.searchid, searchterm, searchterm_without_special)
+        return (self.token, searchterm, searchterm_without_special)
 
-    def do_global_search(self, search_id, text):
-        self.queue.append(slskmessages.FileSearch(search_id, text))
+    def do_global_search(self, text):
+        self.queue.append(slskmessages.FileSearch(self.token, text))
 
         """ Request a list of related searches from the server.
         Seemingly non-functional since 2018 (always receiving empty lists). """
 
         # self.queue.append(slskmessages.RelatedSearch(text))
 
-    def do_rooms_search(self, search_id, text, room=None):
+    def do_rooms_search(self, text, room=None):
 
         if room != _("Joined Rooms "):
-            self.queue.append(slskmessages.RoomSearch(room, search_id, text))
+            self.queue.append(slskmessages.RoomSearch(room, self.token, text))
 
         elif self.core.chatrooms.ui_callback is not None:
             for joined_room in self.core.chatrooms.ui_callback.pages:
-                self.queue.append(slskmessages.RoomSearch(joined_room, search_id, text))
+                self.queue.append(slskmessages.RoomSearch(joined_room, self.token, text))
 
-    def do_buddies_search(self, search_id, text):
+    def do_buddies_search(self, text):
 
         for row in self.config.sections["server"]["userlist"]:
             if row and isinstance(row, list):
                 user = str(row[0])
-                self.queue.append(slskmessages.UserSearch(user, search_id, text))
+                self.queue.append(slskmessages.UserSearch(user, self.token, text))
 
-    def do_peer_search(self, search_id, text, users):
+    def do_peer_search(self, text, users):
         for user in users:
-            self.queue.append(slskmessages.UserSearch(user, search_id, text))
+            self.queue.append(slskmessages.UserSearch(user, self.token, text))
 
-    def do_wishlist_search(self, search_id, text):
-        self.add_allowed_search_id(search_id)
-        self.queue.append(slskmessages.WishlistSearch(search_id, text))
+    def do_wishlist_search(self, token, text):
+        self.add_allowed_token(token)
+        self.queue.append(slskmessages.WishlistSearch(token, text))
 
     def do_wishlist_search_interval(self):
 
@@ -272,25 +277,18 @@ class Search:
 
         return True
 
-    def get_current_search_id(self):
-        return self.searchid
-
-    def increment_search_id(self):
-        self.searchid += 1
-        return self.searchid
-
     def add_wish(self, wish):
 
         if not wish:
             return
 
-        # Get a new search ID
-        self.increment_search_id()
+        # Get a new search token
+        self.token = increment_token(self.token)
 
         if wish not in self.config.sections["server"]["autosearch"]:
             self.config.sections["server"]["autosearch"].append(wish)
 
-        self.add_search(self.searchid, wish, "wishlist", ignore=True)
+        self.add_search(wish, "wishlist", ignore=True)
 
         if self.ui_callback:
             self.ui_callback.add_wish(wish)
@@ -423,7 +421,7 @@ class Search:
             # DB is closed, perhaps due to rescanning shares or closing the application
             return None
 
-    def process_search_request(self, searchterm, user, searchid, direct=False):
+    def process_search_request(self, searchterm, user, token, direct=False):
         """ Note: since this section is accessed every time a search request arrives,
         several times a second, please keep it as optimized and memory
         sparse as possible! """
@@ -527,7 +525,7 @@ class Search:
 
         message = slskmessages.FileSearchResult(
             None, self.core.login_username,
-            searchid, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
+            token, fileinfos, slotsavail, uploadspeed, queuesize, fifoqueue)
 
         self.core.send_message_to_peer(user, message)
 

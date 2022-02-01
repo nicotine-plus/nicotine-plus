@@ -40,7 +40,7 @@ class Downloads(TransferList):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.aborted_status = _("Paused")
+        self.aborted_status = "Paused"
 
         TransferList.__init__(self, frame, transfer_type="download")
 
@@ -120,16 +120,10 @@ class Downloads(TransferList):
         downloaddir = config.sections["transfers"]["downloaddir"]
         incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
 
-        transfer = next(iter(self.selected_transfers), None)
-
-        if not transfer:
-            return
-
-        if transfer.status == "Finished":
-            if os.path.exists(transfer.path):
-                final_path = transfer.path
-            else:
-                final_path = downloaddir
+        for transfer in self.selected_transfers:
+            if transfer.status == "Finished":
+                final_path = transfer.path if os.path.exists(transfer.path) else downloaddir
+                break
         else:
             final_path = incompletedir
 

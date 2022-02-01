@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import textwrap
 import threading
 import time
 
@@ -101,6 +100,9 @@ class Notifications:
 
         if title is None:
             title = config.application_name
+
+        title = title.strip()
+        message = message.strip()
 
         try:
             if sys.platform == "win32":
@@ -200,8 +202,9 @@ class WinNotify:
             # Tray icon was disabled by the user. Enable it temporarily to show a notification.
             self.tray_icon.show()
 
-        self.nid.sz_info_title = textwrap.shorten(title, width=63, placeholder="...")
-        self.nid.sz_info = textwrap.shorten(message, width=255, placeholder="...")
+        # Need to account for the null terminated character appended to the message length by Windows
+        self.nid.sz_info_title = (title[:62].strip() + "…") if len(title) > 63 else title
+        self.nid.sz_info = (message[:254].strip() + "…") if len(message) > 255 else message
 
         windll.shell32.Shell_NotifyIconW(self.NIM_MODIFY, byref(self.nid))
         time.sleep(timeout)

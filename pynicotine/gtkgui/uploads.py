@@ -39,7 +39,7 @@ class Uploads(TransferList):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.aborted_status = _("Aborted")
+        self.aborted_status = "Aborted"
 
         TransferList.__init__(self, frame, transfer_type="upload")
 
@@ -133,8 +133,8 @@ class Uploads(TransferList):
 
         for user in self.selected_users:
             for transfer in self.transfer_list:
-                if transfer.user == user:
-                    self.selected_transfers.add(transfer)
+                if transfer.user == user and transfer not in self.selected_transfers:
+                    self.selected_transfers.append(transfer)
 
         self.abort_transfers()
 

@@ -1,5 +1,5 @@
 # COPYRIGHT (C) 2020-2022 Nicotine+ Team
-# COPYRIGHT (C) 2020 Mathias <mail@mathias.is>
+# COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -31,6 +31,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 
 import os
 import signal
+import sys
 import time
 
 from collections import deque
@@ -220,6 +221,7 @@ class NicotineCore:
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+        log.add_debug("Using Python executable: %s", str(sys.executable))
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
@@ -271,28 +273,29 @@ class NicotineCore:
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
 
-        # Notify plugins
-        self.pluginhandler.shutdown_notification()
-
-        # Disable plugins
-        for plugin in self.pluginhandler.list_installed_plugins():
-            self.pluginhandler.disable_plugin(plugin)
+        if self.pluginhandler:
+            self.pluginhandler.quit()
 
         # Shut down networking thread
-        if not self.protothread.server_disconnected:
-            self.protothread.manual_server_disconnect = True
-            self.server_disconnect()
+        if self.protothread:
+            if not self.protothread.server_disconnected:
+                self.protothread.manual_server_disconnect = True
+                self.server_disconnect()
 
-        self.protothread.abort()
+            self.protothread.abort()
 
         # Save download/upload list to file
-        self.transfers.quit()
+        if self.transfers:
+            self.transfers.quit()
 
         # Closing up all shelves db
-        self.shares.quit()
+        if self.shares:
+            self.shares.quit()
 
         if self.ui_callback:
             self.ui_callback.quit()
+
+        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
@@ -365,6 +368,7 @@ class NicotineCore:
         self.privatechats.server_disconnect()
         self.userinfo.server_disconnect()
         self.userbrowse.server_disconnect()
+        self.interests.server_disconnect()
 
         if self.ui_callback:
             self.ui_callback.server_disconnect()
@@ -410,7 +414,7 @@ class NicotineCore:
 
         user_address = self.protothread.user_addresses.get(user)
 
-        if user_address:
+        if user_address and user != self.protothread.server_username:
             ip_address, _port = user_address
             country_code = self.geoip.get_country_code(ip_address)
             return country_code
@@ -533,6 +537,7 @@ class NicotineCore:
                 self.user_ip_address = msg.ip_address
 
             self.transfers.server_login()
+            self.search.server_login()
             self.userbrowse.server_login()
             self.userinfo.server_login()
             self.userlist.server_login()
@@ -704,8 +709,8 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
-        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
+        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def get_user_stats(self, msg, log_contents=True):
         """ Server code: 36 """
@@ -1181,5 +1186,5 @@ class NicotineCore:
 
         # Verbose: log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
+        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)

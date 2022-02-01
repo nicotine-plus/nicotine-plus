@@ -67,6 +67,15 @@ class PluginHandler:
 
         self.load_enabled()
 
+    def quit(self):
+
+        # Notify plugins
+        self.shutdown_notification()
+
+        # Disable plugins
+        for plugin in self.list_installed_plugins():
+            self.disable_plugin(plugin)
+
     def update_completions(self, plugin):
 
         if not self.config.sections["words"]["commands"]:
@@ -260,10 +269,19 @@ class PluginHandler:
         with open(info_path, encoding="utf-8") as file_handle:
             for line in file_handle:
                 try:
-                    key, val = line.split("=", 1)
-                    infodict[key.strip()] = literal_eval(val.strip())
-                except ValueError:
-                    pass  # this happens on blank lines
+                    key, value = line.split("=", 1)
+                    key = key.strip()
+                    value = value.strip()
+
+                    # Translatable string
+                    if value.startswith("_(") and value.endswith(")"):
+                        infodict[key] = _(literal_eval(value[2:-1]))
+                        continue
+
+                    infodict[key] = literal_eval(value)
+
+                except Exception:
+                    pass  # this can happen on blank lines
 
         return infodict
 
@@ -413,11 +431,11 @@ class PluginHandler:
 
         return args
 
-    def search_request_notification(self, searchterm, user, searchid):
-        self.trigger_event("search_request_notification", (searchterm, user, searchid))
+    def search_request_notification(self, searchterm, user, token):
+        self.trigger_event("search_request_notification", (searchterm, user, token))
 
-    def distrib_search_notification(self, searchterm, user, searchid):
-        self.trigger_event("distrib_search_notification", (searchterm, user, searchid))
+    def distrib_search_notification(self, searchterm, user, token):
+        self.trigger_event("distrib_search_notification", (searchterm, user, token))
 
     def public_room_message_notification(self, room, user, line):
         self.trigger_event("public_room_message_notification", (room, user, line))
@@ -646,10 +664,10 @@ class BasePlugin:
     def public_room_message_notification(self, room, user, line):
         pass
 
-    def search_request_notification(self, searchterm, user, searchid):
+    def search_request_notification(self, searchterm, user, token):
         pass
 
-    def distrib_search_notification(self, searchterm, user, searchid):
+    def distrib_search_notification(self, searchterm, user, token):
         pass
 
     def incoming_private_chat_event(self, user, line):

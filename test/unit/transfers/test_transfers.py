@@ -92,8 +92,8 @@ class TransfersTest(unittest.TestCase):
         self.assertEqual(transfer.status, "Finished")
         self.assertEqual(transfer.size, 11733776)
         self.assertEqual(transfer.current_byte_offset, 11733776)
-        self.assertEqual(transfer.bitrate, "319")
-        self.assertEqual(transfer.length, "4:53")
+        self.assertIsNone(transfer.bitrate)
+        self.assertIsNone(transfer.length)
 
         transfer = self.transfers.uploads[2]
 

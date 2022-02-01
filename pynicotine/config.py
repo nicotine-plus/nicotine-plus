@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.2.1.rc1"
+        self.version = "3.2.1.rc3"
         self.python_version = sys.version
         self.gtk_version = ""
 
@@ -72,6 +72,7 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
+        self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
@@ -206,11 +207,8 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "friendsonly": False,
                 "buddysharestrustedonly": False,
                 "friendsnolimits": False,
-                "enablebuddyshares": False,
-                "enabletransferbuttons": True,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
                 "geoblock": False,
@@ -444,7 +442,10 @@ class Config:
                 "shownotificationperfolder",
                 "prioritize",
                 "sharedownloaddir",
-                "geopanic"
+                "geopanic",
+                "enablebuddyshares",
+                "friendsonly",
+                "enabletransferbuttons"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -581,6 +582,8 @@ class Config:
         except Exception:
             return
 
+        self.config_loaded = True
+
     def parse_config(self, filename):
         """ Parses the config file """
 
@@ -692,9 +695,9 @@ class Config:
                         self.sections[i][j] = default_val
 
                         log.add("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
-                            (i[:120] + '..') if len(i) > 120 else i,
-                            (j[:120] + '..') if len(j) > 120 else j,
-                            (val[:120] + '..') if len(val) > 120 else val
+                            (i[:120] + '…') if len(i) > 120 else i,
+                            (j[:120] + '…') if len(j) > 120 else j,
+                            (val[:120] + '…') if len(val) > 120 else val
                         ))
 
         server = self.sections["server"]
@@ -720,6 +723,9 @@ class Config:
         self.parser.write(filename)
 
     def write_configuration(self):
+
+        if not self.config_loaded:
+            return
 
         # Write new config options to file
         for section, options in self.sections.items():

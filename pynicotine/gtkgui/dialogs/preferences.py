@@ -209,11 +209,7 @@ class NetworkFrame(UserInterface):
         )
 
     def on_toggle_upnp(self, widget, *_args):
-
-        active = widget.get_active()
-        self.portmap_required = active
-
-        self.UPnPInterval.get_parent().set_sensitive(active)
+        self.portmap_required = widget.get_active()
 
     def on_modify_upnp_interval(self, *_args):
         self.portmap_required = True
@@ -281,8 +277,6 @@ class DownloadsFrame(UserInterface):
 
         self.preferences.set_widgets_data(self.options)
 
-        self.UploadsAllowed.get_parent().set_sensitive(self.RemoteDownloads.get_active())
-
         self.filtersiters.clear()
         self.filterlist.clear()
 
@@ -323,10 +317,6 @@ class DownloadsFrame(UserInterface):
                 "download_doubleclick": self.DownloadDoubleClick.get_active()
             }
         }
-
-    def on_remote_downloads(self, widget):
-        sensitive = widget.get_active()
-        self.UploadsAllowed.get_parent().set_sensitive(sensitive)
 
     def on_add_filter_response(self, dialog, response_id, _data):
 
@@ -785,11 +775,7 @@ class UploadsFrame(UserInterface):
         }
 
     def set_settings(self):
-
         self.preferences.set_widgets_data(self.options)
-
-        self.on_queue_use_slots_toggled(self.QueueUseSlots)
-        self.on_limit_toggled(self.Limit)
 
     def get_settings(self):
 
@@ -811,19 +797,6 @@ class UploadsFrame(UserInterface):
                 "upload_doubleclick": self.UploadDoubleClick.get_active()
             }
         }
-
-    def on_queue_use_slots_toggled(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.QueueSlots.get_parent().set_sensitive(sensitive)
-
-        self.QueueBandwidth.get_parent().set_sensitive(not sensitive)
-        self.QueueBandwidthText1.get_parent().set_sensitive(not sensitive)
-
-    def on_limit_toggled(self, widget):
-        sensitive = widget.get_active()
-        self.LimitSpeed.get_parent().set_sensitive(sensitive)
 
 
 class UserInfoFrame(UserInterface):
@@ -1081,13 +1054,8 @@ class BannedUsersFrame(UserInterface):
         self.banlist = config.sections["server"]["banlist"][:]
         self.preferences.set_widgets_data(self.options)
 
-        self.on_country_codes_toggled(self.GeoBlock)
-
         if config.sections["transfers"]["geoblockcc"] is not None:
             self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
-
-        self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
-        self.on_use_custom_ban_toggled(self.UseCustomBan)
 
         if config.sections["server"]["ipblocklist"] is not None:
             self.blocked_list = config.sections["server"]["ipblocklist"].copy()
@@ -1117,15 +1085,6 @@ class BannedUsersFrame(UserInterface):
                 "customgeoblock": self.CustomGeoBlock.get_text()
             }
         }
-
-    def on_country_codes_toggled(self, widget):
-        self.GeoBlockCC.get_parent().set_sensitive(widget.get_active())
-
-    def on_use_custom_geo_block_toggled(self, widget):
-        self.CustomGeoBlock.get_parent().set_sensitive(widget.get_active())
-
-    def on_use_custom_ban_toggled(self, widget):
-        self.CustomBan.get_parent().set_sensitive(widget.get_active())
 
     def on_add_banned_response(self, dialog, response_id, _data):
 
@@ -1605,10 +1564,7 @@ class UserInterfaceFrame(UserInterface):
 
         if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
-            self.hide_tray_icon_settings()
-        else:
-            sensitive = self.TrayiconCheck.get_active()
-            self.StartupHidden.set_sensitive(sensitive)
+            self.TraySettings.hide()
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
@@ -1684,20 +1640,6 @@ class UserInterfaceFrame(UserInterface):
                 "startup_hidden": self.StartupHidden.get_active()
             }
         }
-
-    """ Tray """
-
-    def hide_tray_icon_settings(self):
-
-        # Hide widgets
-        self.TraySettings.hide()
-
-    def on_toggle_tray(self, widget):
-
-        self.StartupHidden.set_sensitive(widget.get_active())
-
-        if not widget.get_active() and self.StartupHidden.get_active():
-            self.StartupHidden.set_active(widget.get_active())
 
     """ Icons """
 
@@ -2550,17 +2492,18 @@ class PluginsFrame(UserInterface):
         cols = initialise_columns(
             self.frame, None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugin", _("Plugin"), 380, "text", None]
+            ["plugin", _("Plugin"), -1, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)
         cols["plugin"].set_sort_column_id(1)
 
+        cols["enabled"].get_widget().hide()
+
         renderers = cols["enabled"].get_cells()
-        column_pos = 0
 
         for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
+            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView)
 
         self.PluginTreeView.set_model(self.plugins_model)
 
@@ -2633,12 +2576,12 @@ class PluginsFrame(UserInterface):
 
         self.check_properties_button(self.selected_plugin)
 
-    def cell_toggle_callback(self, _widget, index, _treeview, pos):
+    def cell_toggle_callback(self, _widget, index, _treeview):
 
         iterator = self.plugins_model.get_iter(index)
         plugin = self.plugins_model.get_value(iterator, 2)
         value = self.plugins_model.get_value(iterator, 0)
-        self.plugins_model.set(iterator, pos, not value)
+        self.plugins_model.set(iterator, 0, not value)
 
         if not value:
             self.frame.np.pluginhandler.enable_plugin(plugin)
@@ -2649,12 +2592,7 @@ class PluginsFrame(UserInterface):
 
     def on_plugins_enable(self, *_args):
 
-        active = self.PluginsEnable.get_active()
-
-        for widget in (self.PluginTreeView, self.PluginProperties):
-            widget.set_sensitive(active)
-
-        if active:
+        if self.PluginsEnable.get_active():
             # Enable all selected plugins
             for plugin in self.get_enabled_plugins():
                 self.frame.np.pluginhandler.enable_plugin(plugin)
@@ -2665,6 +2603,8 @@ class PluginsFrame(UserInterface):
         # Disable all plugins
         for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
             self.frame.np.pluginhandler.disable_plugin(plugin)
+
+        self.PluginProperties.set_sensitive(False)
 
     @staticmethod
     def on_add_plugins(*_args):

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -319,6 +319,8 @@ Swedish
 Turkish
  - Oğuz Ersen (2021–2022)
 
+Ukrainian
+ - uniss2209 (2022)
 """
 
     def __init__(self, frame):

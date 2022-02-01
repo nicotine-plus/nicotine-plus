@@ -38,13 +38,12 @@ SETTINGS_PORTAL = None
 if "gi.repository.Adw" not in sys.modules:
     # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
     try:
-        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
-                                                         Gio.DBusProxyFlags.NONE,
-                                                         None,
-                                                         "org.freedesktop.portal.Desktop",
-                                                         "/org/freedesktop/portal/desktop",
-                                                         "org.freedesktop.portal.Settings",
-                                                         None)
+        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
+            Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
+            "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
+            "org.freedesktop.portal.Settings", None
+        )
+
     except Exception:
         pass
 
@@ -54,14 +53,10 @@ GTK_SETTINGS = Gtk.Settings.get_default()
 def read_color_scheme():
 
     try:
-        value = SETTINGS_PORTAL.call_sync("Read",
-                                          GLib.Variant(
-                                              "(ss)",
-                                              ("org.freedesktop.appearance",
-                                               "color-scheme")),
-                                          Gio.DBusCallFlags.NONE,
-                                          -1,
-                                          None)
+        value = SETTINGS_PORTAL.call_sync(
+            "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+            Gio.DBusCallFlags.NONE, -1, None
+        )
 
         return value.get_child_value(0).get_variant().get_variant().get_uint32()
 
@@ -180,10 +175,6 @@ def set_global_css():
     }
 
     /* Buttons */
-
-    .circular {
-        border-radius: 9999px;
-    }
 
     .count {
         padding-left: 10px;

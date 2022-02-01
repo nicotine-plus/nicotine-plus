@@ -73,9 +73,6 @@ class UserBrowses(IconNotebook):
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-            if self.get_n_pages() > 0:
-                self.frame.userbrowse_status_page.hide()
-
         page = self.pages[user]
         page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
@@ -824,7 +821,7 @@ class UserBrowse(UserInterface):
             self.FileTreeView.grab_focus()
 
         # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
-        # ToDo: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
+        # TODO: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
         """ Left: collapse row
@@ -1073,18 +1070,15 @@ class UserBrowse(UserInterface):
             iterator = model.get_iter(path)
             filename = model.get_value(iterator, 0)
             virtual_path = "\\".join([self.selected_folder, filename])
-            size = model.get_value(iterator, 1)
-            bitratestr = model.get_value(iterator, 2)
-            length = model.get_value(iterator, 3)
 
             data.append({
                 "user": self.user,
                 "fn": virtual_path,
                 "filename": filename,
                 "directory": self.selected_folder,
-                "size": size,
-                "bitrate": bitratestr,
-                "length": length
+                "size": model.get_value(iterator, 4),
+                "bitrate": model.get_value(iterator, 2),
+                "length": model.get_value(iterator, 3)
             })
 
         if data:
@@ -1121,7 +1115,9 @@ class UserBrowse(UserInterface):
     def on_focus_folder_left_accelerator(self, *_args):
         """ Left: focus back parent folder (left arrow) """
 
-        if self.FileScrolledWindow.get_hadjustment().get_value() > 0.0:
+        _path, column = self.FileTreeView.get_cursor()
+
+        if self.FileTreeView.get_column(0) != column:
             return False  # allow horizontal scrolling
 
         self.FolderTreeView.grab_focus()
@@ -1261,12 +1257,11 @@ class UserBrowse(UserInterface):
 
     def on_close(self, *_args):
 
+        self.clear_model()
+
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
-
-        if self.userbrowses.get_n_pages() == 0:
-            self.frame.userbrowse_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()

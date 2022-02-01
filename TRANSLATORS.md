@@ -76,3 +76,6 @@
 
 ## Turkish
  - Oğuz Ersen (2021–2022)
+
+## Ukrainian
+ - uniss2209 (2022)

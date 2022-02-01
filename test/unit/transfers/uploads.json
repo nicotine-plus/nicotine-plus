@@ -1,7 +1,7 @@
 [
     ["user1", "Junk\\Song1.mp3", "", "Paused", 10093741, 5000, "320", "4:12"],
-    ["user2", "Junk\\Song2.mp3", "", "Old", 10734496, null, "319", "4:28"],
+    ["user2", "Junk\\Song2.mp3", "", "Old", 10734496, null, "320", "4:28"],
     ["user3", "Junk\\Song3.flac", "", "Finished", 27231044, 27231044, "792", "4:28"],
     ["user4", "Junk\\Song4.mp3", "", "Finished", 9456698, 9456698, "128", "0:00"],
-    ["user5", "Junk\\Song5.mp3", "", "Finished", 11733776, 11733776, "319", "4:53"]
+    ["user5", "Junk\\Song5.mp3", "", "Finished", 11733776, 11733776, null, null]
 ]

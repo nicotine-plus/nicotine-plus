@@ -53,8 +53,7 @@ class UserList(UserInterface):
         self.frame = frame
         self.page_id = "userlist"
 
-        """ Columns """
-
+        # Columns
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
             Gio.Icon,             # (0)  status icon
@@ -117,8 +116,7 @@ class UserList(UserInterface):
 
         self.UserListTree.set_model(self.usersmodel)
 
-        """ Lists """
-
+        # Lists
         for row in config.sections["server"]["userlist"]:
             self.append_user_row(row)
 
@@ -131,8 +129,7 @@ class UserList(UserInterface):
 
             CompletionEntry(combo_box.get_child(), self.usersmodel, column=2)
 
-        """ Popup """
-
+        # Popup menus
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
         self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)

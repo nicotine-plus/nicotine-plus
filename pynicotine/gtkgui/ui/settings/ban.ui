@@ -50,7 +50,6 @@
                       <object class="GtkCheckButton" id="GeoBlock">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Country codes to block (comma separated):</property>
-                        <signal name="toggled" handler="on_country_codes_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -59,6 +58,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="sensitive" bind-source="GeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="GeoBlockCC">
                         <property name="visible">True</property>
@@ -77,7 +77,6 @@
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Sent to users as the reason for being geo blocked.</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_use_custom_geo_block_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -86,6 +85,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="sensitive" bind-source="UseCustomGeoBlock" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="CustomGeoBlock">
                         <property name="visible">True</property>
@@ -105,7 +105,6 @@
                         <property name="visible">True</property>
                         <property name="tooltip_text" translatable="yes">Sent to users as the reason for being banned.</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_use_custom_ban_toggled"/>
                       </object>
                     </child>
                   </object>
@@ -114,6 +113,7 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="sensitive" bind-source="UseCustomBan" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkEntry" id="CustomBan">
                         <property name="visible">True</property>

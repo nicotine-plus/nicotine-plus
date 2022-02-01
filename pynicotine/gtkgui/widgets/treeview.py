@@ -116,12 +116,13 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     i = 0
     cols = OrderedDict()
+    num_cols = len(args)
     column_config = None
 
     # GTK 4 rows need more padding to match GTK 3
     if Gtk.get_major_version() == 4:
         progress_padding = 1
-        height_padding = 4
+        height_padding = 5
     else:
         progress_padding = 0
         height_padding = 3
@@ -166,7 +167,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
         elif column_type == "toggle":
             xalign = 0.5
-            renderer = Gtk.CellRendererToggle(xalign=xalign)
+            renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
             column = Gtk.TreeViewColumn(column_id, renderer, active=i)
 
         elif column_type == "icon":
@@ -206,6 +207,10 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             weight, underline = extra
             column.add_attribute(renderer, "weight", weight)
             column.add_attribute(renderer, "underline", underline)
+
+        # Allow individual cells to receive visual focus
+        if num_cols > 1:
+            renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
         column.set_min_width(20)
@@ -471,7 +476,7 @@ def get_file_path_tooltip_text(column_value, _strip_prefix):
 
 
 def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
-    return column_value.filename
+    return column_value.filename or column_value.path
 
 
 def get_user_status_tooltip_text(column_value, _strip_prefix):
@@ -498,7 +503,7 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
     function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("folder", "filename"), function)
+                        ("folder", "filename", "path"), function)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):
