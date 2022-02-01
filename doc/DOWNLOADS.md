@@ -62,13 +62,13 @@ pkg install py-nicotine-plus
 
 ### pip
 
-If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+If Nicotine+ is not packaged for your system, it can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
 ```
 
-Keep in mind that Nicotine+ will not auto-update. When a new release is available, run the following:
+Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
 
 ```sh
 pip3 install --upgrade nicotine-plus
