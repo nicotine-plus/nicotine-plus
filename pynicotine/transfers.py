@@ -1263,9 +1263,6 @@ class Transfers:
             })
             break
 
-            if self.downloadsview:
-                self.downloadsview.update(i)
-
     def file_download(self, msg):
         """ A file download is in progress """
 
