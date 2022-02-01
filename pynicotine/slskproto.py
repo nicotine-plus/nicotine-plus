@@ -918,14 +918,7 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer(self, user, addr, init):
         """ Initiate a connection with a peer """
 
-        if self.has_existing_user_socket(user, init.conn_type):
-            log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
-                          "but existing connection already exists"), {
-                'type': init.conn_type,
-                'user': user,
-                'addr': addr
-            })
-            return
+        self.replace_existing_connection(init)
 
         self._init_msgs[user + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
@@ -1034,6 +1027,23 @@ class SlskProtoThread(threading.Thread):
                 })
 
         self.process_conn_messages(init)
+
+    def replace_existing_connection(self, init):
+
+        user = init.target_user
+        conn_type = init.conn_type
+
+        if user == self.server_username or not self.has_existing_user_socket(user, conn_type):
+            return
+
+        log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
+            "type": init.conn_type,
+            "user": user
+        })
+        prev_init = self._init_msgs.get(user + conn_type)
+        init.outgoing_msgs = prev_init.outgoing_msgs
+        prev_init.outgoing_msgs = []
+        self.close_connection(self._conns, prev_init.sock)
 
     def close_connection(self, connection_list, sock, callback=True):
 
@@ -1420,15 +1430,7 @@ class SlskProtoThread(threading.Thread):
                             'addr': addr
                         })
 
-                        if user != self.server_username and self.has_existing_user_socket(user, conn_type):
-                            log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
-                                "type": conn_type,
-                                "user": user
-                            })
-                            prev_init = self._init_msgs.get(user + conn_type)
-                            msg.outgoing_msgs = prev_init.outgoing_msgs
-                            prev_init.outgoing_msgs.clear()
-                            self.close_connection(self._conns, prev_init.sock)
+                        self.replace_existing_connection(msg)
 
                         conn_obj.init = msg
                         conn_obj.init.addr = addr
