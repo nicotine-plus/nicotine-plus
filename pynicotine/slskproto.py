@@ -918,7 +918,14 @@ class SlskProtoThread(threading.Thread):
     def connect_to_peer(self, user, addr, init):
         """ Initiate a connection with a peer """
 
-        self.replace_existing_connection(init)
+        if self.has_existing_user_socket(user, init.conn_type):
+            log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
+                          "but existing connection already exists"), {
+                'type': init.conn_type,
+                'user': user,
+                'addr': addr
+            })
+            return
 
         self._init_msgs[user + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
