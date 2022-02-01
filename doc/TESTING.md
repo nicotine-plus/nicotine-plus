@@ -1,6 +1,6 @@
 # Testing Nicotine+
 
-For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ and test the latest changes and bug fixes.
+For those who like living on the bleeding edge, you can run the latest unstable build of Nicotine+ and test recent changes and bug fixes.
 
 If you want to download the current stable version of Nicotine+, see [DOWNLOADS.md](DOWNLOADS.md).
 
