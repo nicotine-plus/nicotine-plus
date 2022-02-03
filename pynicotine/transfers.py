@@ -2007,7 +2007,7 @@ class Transfers:
                     # When our port is closed, certain clients can take up to ~30 seconds before they
                     # initiate a 'F' connection, since they only send an indirect connection request after
                     # attempting to connect to our port for a certain time period.
-                    # Known clients: Soulseek NS, ~20 seconds; soulseeX, ~30 seconds.
+                    # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
                     # To account for potential delays while initializing the connection, add 15 seconds
                     # to the timeout value.
 
