@@ -238,19 +238,17 @@ class PrivateChat(UserInterface):
 
     def append_log_lines(self, path, numlines):
 
-        try:
-            self._append_log_lines(path, numlines, "utf-8")
-
-        except UnicodeDecodeError:
-            self._append_log_lines(path, numlines, "latin-1")
-
-    def _append_log_lines(self, path, numlines, encoding="utf-8"):
-
-        with open(path, encoding=encoding) as lines:
+        with open(path, "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
 
             for line in lines:
+                try:
+                    line = line.decode("utf-8")
+
+                except UnicodeDecodeError:
+                    line = line.decode("latin-1")
+
                 self.chat_textview.append_line(line, self.tag_hilite, timestamp_format="", scroll=False)
 
     def server_login(self):
