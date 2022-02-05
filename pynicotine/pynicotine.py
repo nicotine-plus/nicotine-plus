@@ -219,16 +219,17 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
-        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
-        log.add_debug("Using Python executable: %s", str(sys.executable))
-
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
-
         script_dir = os.path.dirname(__file__)
-        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
 
+        log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
+        log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
+        log.add_debug("Using configuration: %(file)s", {"file": config.filename})
+        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
+        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+
+        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
         self.now_playing = NowPlaying(config)
