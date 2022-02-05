@@ -1086,11 +1086,18 @@ class Search(UserInterface):
         self.column_offsets[col_title] = offset
         save_columns(self.treeview_name, self.ResultsList.get_columns())
 
-    def on_row_activated(self, treeview, _path, _column):
+    def on_row_activated(self, treeview, path, _column):
 
         self.select_results()
 
-        self.on_download_files()
+        iterator = self.resultsmodel.get_iter(path)
+        filename = self.resultsmodel.get_value(iterator, 6)
+
+        if not filename:
+            self.on_download_folders()
+        else:
+            self.on_download_files()
+
         treeview.get_selection().unselect_all()
 
     def on_popup_menu(self, menu, _widget):
