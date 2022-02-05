@@ -298,6 +298,7 @@ class NicotineCore:
 
         config.write_configuration()
 
+        log.add_debug("Saved configuration: %(file)s", {"file": config.filename})
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
             "version": config.version,
