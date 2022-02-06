@@ -26,13 +26,13 @@ Unlike the repository installation method, you need to download and install Nico
 
 Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
 
-- [Download Nicotine+ Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+- [Download Unstable Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
 ### pip
 
 To install the latest unstable build of Nicotine+ using [pip](https://pip.pypa.io/), ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
-```console
+```sh
 pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
 
@@ -40,13 +40,13 @@ Nicotine+ will now be available in your list of programs.
 
 To update to the latest unstable build of Nicotine+, run the following:
 
-```console
+```sh
 pip install --upgrade git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
 
 To uninstall Nicotine+, run:
 
-```console
+```sh
 pip uninstall nicotine-plus
 ```
 
@@ -54,7 +54,7 @@ pip uninstall nicotine-plus
 
 To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
-```console
+```sh
 git clone https://github.com/nicotine-plus/nicotine-plus.git
 cd nicotine-plus
 ./nicotine
@@ -62,7 +62,7 @@ cd nicotine-plus
 
 To update to the latest unstable build of Nicotine+, run the following:
 
-```console
+```sh
 cd nicotine-plus
 git pull
 ```
