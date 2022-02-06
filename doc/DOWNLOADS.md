@@ -18,7 +18,9 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can download one [here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/). Unlike the repository installation method, Nicotine+ will not update automatically unless you download and install it again each time a new release is available.
+If you prefer to install a .deb package directly, you can [download one here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/).
+
+Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
 ### Fedora
 
@@ -30,11 +32,9 @@ sudo dnf install nicotine+
 
 ### Flatpak
 
-If your distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of [Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine), run the following:
+If your distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
 
-```sh
-flatpak install flathub org.nicotine_plus.Nicotine
-```
+- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
 ### Arch Linux/Manjaro/Parabola
 
@@ -125,7 +125,7 @@ A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Cata
 
 *NOTE: If your Mac has an Apple M1 chip, please use the [official macOS installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip) instead. Installing Nicotine+ from Homebrew will currently not work on Apple M1 devices due to issues in upstream dependencies.*
 
-On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh), run the following:
+On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh). Run the following:
 
 ```sh
 brew install nicotine-plus

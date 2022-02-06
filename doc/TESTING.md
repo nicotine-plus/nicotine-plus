@@ -8,7 +8,7 @@ If you want to download the current stable version of Nicotine+, see [DOWNLOADS.
 
 ### Ubuntu/Debian
 
-The project builds [daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build, run the following:
+[Daily unstable snapshots](https://code.launchpad.net/~nicotine-team/+recipe/nicotine+-daily) are built in a separate [unstable PPA repository](https://code.launchpad.net/~nicotine-team/+archive/ubuntu/unstable). To install the latest unstable build of Nicotine+, run the following:
 
 ```sh
 sudo apt install software-properties-common
@@ -18,19 +18,19 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can download one [here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
+If you prefer to install a .deb package directly, you can [download one here](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/debian-package.zip).
 
-Unlike the repository installation method, Nicotine+ will not update automatically unless you download and install it again.
+Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest unstable build.
 
 ### Flatpak
 
-Unstable [Flatpak](https://www.flatpak.org/setup/) packages are generated after every commit to the master branch, and should only be used for testing.
+Unstable [Flatpak](https://www.flatpak.org/setup/) packages are built after every commit to the master branch.
 
-- [Download Nicotine+ Flatpak Package *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
+- [Download Nicotine+ Flatpak Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/flatpak-package.zip)
 
 ### pip
 
-To install the latest unstable build of Nicotine+ locally (no root required) using [pip](https://pip.pypa.io/), run the following:
+To install the latest unstable build of Nicotine+ using [pip](https://pip.pypa.io/), ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```console
 pip install git+https://github.com/nicotine-plus/nicotine-plus.git
@@ -38,22 +38,21 @@ pip install git+https://github.com/nicotine-plus/nicotine-plus.git
 
 Nicotine+ will now be available in your list of programs.
 
-To update your installation of Nicotine+, run the following command:
+To update to the latest unstable build of Nicotine+, run the following:
 
 ```console
 pip install --upgrade git+https://github.com/nicotine-plus/nicotine-plus.git
 ```
 
 To uninstall Nicotine+, run:
+
 ```console
 pip uninstall nicotine-plus
 ```
 
 ### Git
 
-This is not particularly difficult, but may require some [dependancies](DEPENDENCIES.md) to be installed manually.
-
-To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, run the following:
+To run Nicotine+ directly from a local [Git](https://git-scm.com/) folder, ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```console
 git clone https://github.com/nicotine-plus/nicotine-plus.git
@@ -70,18 +69,18 @@ git pull
 
 ## Windows
 
-Unstable Windows packages are generated after every commit to the master branch, and should only be used for testing.
+Unstable Windows packages are built after every commit to the master branch.
 
-- [Download Nicotine+ 64-bit Windows Installer *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
-- [Download Nicotine+ 32-bit Windows Installer *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
+- [Download Unstable 64-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-installer.zip)
+- [Download Unstable 32-bit Windows Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-installer.zip)
 
 Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
 
-- [Download Nicotine+ 64-bit Windows Portable Package *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
-- [Download Nicotine+ 32-bit Windows Portable Package *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
+- [Download Unstable 64-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-x86_64-package.zip)
+- [Download Unstable 32-bit Windows Portable Package](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/windows-i686-package.zip)
 
 ## macOS (Catalina/10.15 and newer)
 
-Unstable macOS installers are generated after every commit to the master branch, and should only be used for testing.
+Unstable macOS installers are built after every commit to the master branch.
 
-- [Download Nicotine+ macOS Installer *(latest unstable build)*](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
+- [Download Unstable macOS Installer](https://nightly.link/nicotine-plus/nicotine-plus/workflows/packaging/master/macos-installer.zip)
