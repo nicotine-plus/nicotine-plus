@@ -14,7 +14,7 @@ Changes
  * Optimized parent row expansions when adding new search results and transfers into tree views
  * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
  * Optimized loading performance and reduce memory usage of open chat tabs
- * Optimized connection initialization performancegit a when uploading to certain users
+ * Optimized connection initialization performance when uploading to certain users
  * Changed the chat log filename replacement character from - to _ in room names containing an illegal character
  * Changed display of items in the Uploads transfer list to virtual folder paths instead of local folder paths
  * Added display of local folder paths for local items in the File Properties dialog
