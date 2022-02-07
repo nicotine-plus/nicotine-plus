@@ -1762,7 +1762,7 @@ class Transfers:
         # Check if username subfolders should be created for downloads
         if self.config.sections["transfers"]["usernamesubfolders"]:
             try:
-                downloaddir = os.path.join(downloaddir, user)
+                downloaddir = os.path.join(downloaddir, clean_file(user))
 
                 if not os.path.isdir(downloaddir):
                     os.makedirs(downloaddir)
