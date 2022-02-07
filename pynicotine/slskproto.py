@@ -936,7 +936,7 @@ class SlskProtoThread(threading.Thread):
             'addr': addr
         })
 
-        if not init.token:
+        if not init.indirect:
             # Also request indirect connection in case the user's port is closed
             self.connect_to_peer_indirect(init)
 

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-28 06:00+0200\n"
+"POT-Creation-Date: 2022-02-06 17:33+0200\n"
 "PO-Revision-Date: 2022-01-10 21:44+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1475,169 +1475,169 @@ msgstr ""
 "Ön a GTK nem támogatott verzióját használja %(major_version)s. Telepítse a "
 "GTK %(complete_version)s vagy újabb verzióját."
 
-#: pynicotine/gtkgui/chatrooms.py:425 pynicotine/gtkgui/interests.py:107
-#: pynicotine/gtkgui/transferlist.py:137 pynicotine/gtkgui/userlist.py:80
+#: pynicotine/gtkgui/chatrooms.py:419 pynicotine/gtkgui/interests.py:108
+#: pynicotine/gtkgui/transferlist.py:137 pynicotine/gtkgui/userlist.py:79
 msgid "Status"
 msgstr "Állapot"
 
-#: pynicotine/gtkgui/chatrooms.py:426 pynicotine/gtkgui/search.py:340
-#: pynicotine/gtkgui/userlist.py:81
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:333
+#: pynicotine/gtkgui/chatrooms.py:420 pynicotine/gtkgui/search.py:335
+#: pynicotine/gtkgui/userlist.py:80
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:265
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:314
 #: pynicotine/gtkgui/ui/userinfo.ui:266
 msgid "Country"
 msgstr "Ország"
 
-#: pynicotine/gtkgui/chatrooms.py:427
-#: pynicotine/gtkgui/dialogs/preferences.py:910
-#: pynicotine/gtkgui/dialogs/preferences.py:1069
-#: pynicotine/gtkgui/interests.py:108 pynicotine/gtkgui/privatechat.py:222
-#: pynicotine/gtkgui/search.py:339 pynicotine/gtkgui/transferlist.py:134
-#: pynicotine/gtkgui/userbrowse.py:182 pynicotine/gtkgui/userbrowse.py:194
-#: pynicotine/gtkgui/userbrowse.py:247 pynicotine/gtkgui/userbrowse.py:264
-#: pynicotine/gtkgui/userlist.py:82
+#: pynicotine/gtkgui/chatrooms.py:421
+#: pynicotine/gtkgui/dialogs/preferences.py:883
+#: pynicotine/gtkgui/dialogs/preferences.py:1042
+#: pynicotine/gtkgui/interests.py:109 pynicotine/gtkgui/privatechat.py:219
+#: pynicotine/gtkgui/search.py:334 pynicotine/gtkgui/transferlist.py:134
+#: pynicotine/gtkgui/userbrowse.py:179 pynicotine/gtkgui/userbrowse.py:191
+#: pynicotine/gtkgui/userbrowse.py:244 pynicotine/gtkgui/userbrowse.py:261
+#: pynicotine/gtkgui/userlist.py:81
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:229
 msgid "User"
 msgstr "User"
 
-#: pynicotine/gtkgui/chatrooms.py:428 pynicotine/gtkgui/interests.py:109
-#: pynicotine/gtkgui/search.py:341 pynicotine/gtkgui/transferlist.py:141
-#: pynicotine/gtkgui/userlist.py:83
+#: pynicotine/gtkgui/chatrooms.py:422 pynicotine/gtkgui/interests.py:110
+#: pynicotine/gtkgui/search.py:336 pynicotine/gtkgui/transferlist.py:141
+#: pynicotine/gtkgui/userlist.py:82
 msgid "Speed"
 msgstr "Sebesség"
 
-#: pynicotine/gtkgui/chatrooms.py:429 pynicotine/gtkgui/interests.py:110
-#: pynicotine/gtkgui/userlist.py:84 pynicotine/gtkgui/ui/mainwindow.ui:379
-#: pynicotine/gtkgui/ui/mainwindow.ui:619
+#: pynicotine/gtkgui/chatrooms.py:423 pynicotine/gtkgui/interests.py:111
+#: pynicotine/gtkgui/userlist.py:83 pynicotine/gtkgui/ui/mainwindow.ui:380
+#: pynicotine/gtkgui/ui/mainwindow.ui:620
 msgid "Files"
 msgstr "Fájlok"
 
-#: pynicotine/gtkgui/chatrooms.py:459
+#: pynicotine/gtkgui/chatrooms.py:453
 #, fuzzy
 msgid "Sear_ch User's Files"
 msgstr "User fájljainak _keresése"
 
-#: pynicotine/gtkgui/chatrooms.py:460 pynicotine/gtkgui/chatrooms.py:627
-#: pynicotine/gtkgui/userlist.py:143 pynicotine/gtkgui/userlist.py:340
+#: pynicotine/gtkgui/chatrooms.py:454 pynicotine/gtkgui/chatrooms.py:619
+#: pynicotine/gtkgui/userlist.py:140 pynicotine/gtkgui/userlist.py:337
 #, fuzzy
 msgid "Private Rooms"
 msgstr "Privát szobák"
 
-#: pynicotine/gtkgui/chatrooms.py:464 pynicotine/gtkgui/chatrooms.py:475
-#: pynicotine/gtkgui/privatechat.py:211
+#: pynicotine/gtkgui/chatrooms.py:458 pynicotine/gtkgui/chatrooms.py:469
+#: pynicotine/gtkgui/privatechat.py:208
 #, fuzzy
 msgid "Find…"
 msgstr "Találat"
 
-#: pynicotine/gtkgui/chatrooms.py:466 pynicotine/gtkgui/chatrooms.py:477
-#: pynicotine/gtkgui/chatrooms.py:658 pynicotine/gtkgui/chatrooms.py:661
-#: pynicotine/gtkgui/privatechat.py:213 pynicotine/gtkgui/privatechat.py:281
-#: pynicotine/gtkgui/search.py:394 pynicotine/gtkgui/transferlist.py:202
+#: pynicotine/gtkgui/chatrooms.py:460 pynicotine/gtkgui/chatrooms.py:471
+#: pynicotine/gtkgui/chatrooms.py:650 pynicotine/gtkgui/chatrooms.py:653
+#: pynicotine/gtkgui/privatechat.py:210 pynicotine/gtkgui/privatechat.py:276
+#: pynicotine/gtkgui/search.py:388 pynicotine/gtkgui/transferlist.py:202
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:272
 msgid "Copy"
 msgstr "Másolás"
 
-#: pynicotine/gtkgui/chatrooms.py:467 pynicotine/gtkgui/chatrooms.py:479
-#: pynicotine/gtkgui/privatechat.py:215
+#: pynicotine/gtkgui/chatrooms.py:461 pynicotine/gtkgui/chatrooms.py:473
+#: pynicotine/gtkgui/privatechat.py:212
 msgid "Copy All"
 msgstr "Mindet Másol"
 
-#: pynicotine/gtkgui/chatrooms.py:469
+#: pynicotine/gtkgui/chatrooms.py:463
 #, fuzzy
 msgid "Clear Activity View"
 msgstr "Tiszta tevékenység nézet"
 
-#: pynicotine/gtkgui/chatrooms.py:471 pynicotine/gtkgui/chatrooms.py:485
-#: pynicotine/gtkgui/chatrooms.py:490
+#: pynicotine/gtkgui/chatrooms.py:465 pynicotine/gtkgui/chatrooms.py:479
+#: pynicotine/gtkgui/chatrooms.py:484
 #, fuzzy
 msgid "_Leave Room"
 msgstr "Kilépés a szobából"
 
-#: pynicotine/gtkgui/chatrooms.py:478 pynicotine/gtkgui/chatrooms.py:662
-#: pynicotine/gtkgui/privatechat.py:214 pynicotine/gtkgui/privatechat.py:282
+#: pynicotine/gtkgui/chatrooms.py:472 pynicotine/gtkgui/chatrooms.py:654
+#: pynicotine/gtkgui/privatechat.py:211 pynicotine/gtkgui/privatechat.py:277
 #, fuzzy
 msgid "Copy Link"
 msgstr "_URL másolása"
 
-#: pynicotine/gtkgui/chatrooms.py:481
+#: pynicotine/gtkgui/chatrooms.py:475
 #, fuzzy
 msgid "View Room Log"
 msgstr "Belépett szobák "
 
-#: pynicotine/gtkgui/chatrooms.py:482
+#: pynicotine/gtkgui/chatrooms.py:476
 #, fuzzy
 msgid "Delete Room Log…"
 msgstr "Szobanapló törlése…"
 
-#: pynicotine/gtkgui/chatrooms.py:484 pynicotine/gtkgui/privatechat.py:220
+#: pynicotine/gtkgui/chatrooms.py:478 pynicotine/gtkgui/privatechat.py:217
 #, fuzzy
 msgid "Clear Message View"
 msgstr "Üzenet Küldése"
 
-#: pynicotine/gtkgui/chatrooms.py:616
+#: pynicotine/gtkgui/chatrooms.py:608
 msgid "--- old messages above ---"
 msgstr "--- régebbi üzenetek felül ---"
 
-#: pynicotine/gtkgui/chatrooms.py:702
+#: pynicotine/gtkgui/chatrooms.py:694
 #: pynicotine/gtkgui/widgets/notifications.py:96
 #, python-format
 msgid "%(user)s mentioned you in the %(room)s room"
 msgstr "%(user)s említette Önt a(z) %(room)s szobában"
 
-#: pynicotine/gtkgui/chatrooms.py:720
+#: pynicotine/gtkgui/chatrooms.py:712
 #, fuzzy, python-format
 msgid "Message by %(user)s in the %(room)s room"
 msgstr "%(user)s említette Önt a(z) %(room)s szobában"
 
-#: pynicotine/gtkgui/chatrooms.py:815
+#: pynicotine/gtkgui/chatrooms.py:807
 #, python-format
 msgid "%s joined the room"
 msgstr "%s belépett a szobába"
 
-#: pynicotine/gtkgui/chatrooms.py:833
+#: pynicotine/gtkgui/chatrooms.py:825
 #, python-format
 msgid "%s left the room"
 msgstr "%s elhagyta a szobát"
 
-#: pynicotine/gtkgui/chatrooms.py:872
+#: pynicotine/gtkgui/chatrooms.py:864
 #, python-format
 msgid "%s has gone away"
 msgstr "%s nincs a gépnél"
 
-#: pynicotine/gtkgui/chatrooms.py:874
+#: pynicotine/gtkgui/chatrooms.py:866
 #, python-format
 msgid "%s has returned"
 msgstr "%s visszajött"
 
-#: pynicotine/gtkgui/chatrooms.py:973 pynicotine/gtkgui/privatechat.py:266
+#: pynicotine/gtkgui/chatrooms.py:965 pynicotine/gtkgui/privatechat.py:261
 msgid "--- disconnected ---"
 msgstr "--- szétkapcsolva ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1000 pynicotine/gtkgui/privatechat.py:261
+#: pynicotine/gtkgui/chatrooms.py:989 pynicotine/gtkgui/privatechat.py:256
 msgid "--- reconnected ---"
 msgstr "--- újrakapcsolódva ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1081 pynicotine/gtkgui/privatechat.py:305
+#: pynicotine/gtkgui/chatrooms.py:1070 pynicotine/gtkgui/privatechat.py:300
 #, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "Naplózott üzenetek törlése?"
 
-#: pynicotine/gtkgui/chatrooms.py:1082
+#: pynicotine/gtkgui/chatrooms.py:1071
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this room?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:73
-#: pynicotine/gtkgui/dialogs/preferences.py:551
+#: pynicotine/gtkgui/dialogs/preferences.py:541
 #, fuzzy
 msgid "Virtual Folder"
 msgstr "Virtuális név"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:74
-#: pynicotine/gtkgui/dialogs/preferences.py:552 pynicotine/gtkgui/search.py:343
-#: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:154
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:65
+#: pynicotine/gtkgui/dialogs/preferences.py:542 pynicotine/gtkgui/search.py:338
+#: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:151
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
 #, fuzzy
 msgid "Folder"
 msgstr "Mappa"
@@ -1657,7 +1657,7 @@ msgid "Get Soulseek Privileges…"
 msgstr "Szerezd meg a Soulseek kiváltságokat…"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:187
-#: pynicotine/gtkgui/dialogs/preferences.py:680
+#: pynicotine/gtkgui/dialogs/preferences.py:670
 #, fuzzy
 msgid "Add a Shared Folder"
 msgstr "Megosztott mappa hozzáadása"
@@ -1724,72 +1724,72 @@ msgstr "Adja meg a bejelentkezéskor használandó jelszót:"
 msgid "Change Password"
 msgstr "Jelszó változtatás"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:267
+#: pynicotine/gtkgui/dialogs/preferences.py:263
 msgid "Filter"
 msgstr "Szűrő"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:268
+#: pynicotine/gtkgui/dialogs/preferences.py:264
 msgid "Escaped"
 msgstr "Kilépett"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:353
+#: pynicotine/gtkgui/dialogs/preferences.py:343
 #, fuzzy
 msgid "Add Download Filter"
 msgstr "_File(-ok) letöltése"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:354
+#: pynicotine/gtkgui/dialogs/preferences.py:344
 msgid "Enter a new download filter:"
 msgstr "Írjon be egy új letöltési szűrőt:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:414
+#: pynicotine/gtkgui/dialogs/preferences.py:404
 #, fuzzy
 msgid "Edit Download Filter"
 msgstr "Szűrő szerkesztése"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:415
+#: pynicotine/gtkgui/dialogs/preferences.py:405
 #, fuzzy
 msgid "Modify the following download filter:"
 msgstr "E szűrő módosítása:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:509
+#: pynicotine/gtkgui/dialogs/preferences.py:499
 #, python-format
 msgid "%(num)d Failed! %(error)s "
 msgstr "%(num)d Hibás! %(error)s "
 
-#: pynicotine/gtkgui/dialogs/preferences.py:516
+#: pynicotine/gtkgui/dialogs/preferences.py:506
 #, fuzzy
 msgid "Filters Successful"
 msgstr "Szűrők Sikeres"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:553
+#: pynicotine/gtkgui/dialogs/preferences.py:543
 #, fuzzy
 msgid "Buddy-only"
 msgstr "Csak haveroknak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:728
+#: pynicotine/gtkgui/dialogs/preferences.py:718
 #, fuzzy
 msgid "Edit Shared Folder"
 msgstr "Megosztás csak barátoknak"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:729
+#: pynicotine/gtkgui/dialogs/preferences.py:719
 #, python-format
 msgid "Enter new virtual name for '%(dir)s':"
 msgstr "Írjon be új virtuális nevet ehhez: '%(dir)s':"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:897
-#: pynicotine/gtkgui/dialogs/preferences.py:1056
+#: pynicotine/gtkgui/dialogs/preferences.py:870
+#: pynicotine/gtkgui/dialogs/preferences.py:1029
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:156
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:232
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:191
 msgid "Username"
 msgstr "Felhasználónév"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:909
-#: pynicotine/gtkgui/dialogs/preferences.py:1068
+#: pynicotine/gtkgui/dialogs/preferences.py:882
+#: pynicotine/gtkgui/dialogs/preferences.py:1041
 #, fuzzy
 msgid "IP Address"
 msgstr "IP-cím blokkolása..."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:960
+#: pynicotine/gtkgui/dialogs/preferences.py:933
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
 #: pynicotine/gtkgui/widgets/popupmenu.py:277
 #: pynicotine/gtkgui/ui/userinfo.ui:538
@@ -1797,27 +1797,27 @@ msgstr "IP-cím blokkolása..."
 msgid "Ignore User"
 msgstr "Felhasználó figyelmen kívül hagyása"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:961
+#: pynicotine/gtkgui/dialogs/preferences.py:934
 #, fuzzy
 msgid "Enter the name of the user you want to ignore:"
 msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1008
+#: pynicotine/gtkgui/dialogs/preferences.py:981
 #, fuzzy
 msgid "Ignore IP Address"
 msgstr "IP-cím mellőzése..."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1009
+#: pynicotine/gtkgui/dialogs/preferences.py:982
 #, fuzzy
 msgid "Enter an IP address you want to ignore:"
 msgstr "Írja be a felhasználót, akinek az IP-címét le szeretné kérni:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1009
-#: pynicotine/gtkgui/dialogs/preferences.py:1196
+#: pynicotine/gtkgui/dialogs/preferences.py:982
+#: pynicotine/gtkgui/dialogs/preferences.py:1155
 msgid "* is a wildcard"
 msgstr "* az helyettesítőjel"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1146
+#: pynicotine/gtkgui/dialogs/preferences.py:1105
 #: pynicotine/gtkgui/widgets/popupmenu.py:234
 #: pynicotine/gtkgui/widgets/popupmenu.py:276
 #: pynicotine/gtkgui/ui/userinfo.ui:510
@@ -1825,36 +1825,36 @@ msgstr "* az helyettesítőjel"
 msgid "Ban User"
 msgstr "Felhasználó tiltása"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1147
+#: pynicotine/gtkgui/dialogs/preferences.py:1106
 #, fuzzy
 msgid "Enter the name of the user you want to ban:"
 msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1195
+#: pynicotine/gtkgui/dialogs/preferences.py:1154
 #, fuzzy
 msgid "Block IP Address"
 msgstr "IP-cím blokkolása..."
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1196
+#: pynicotine/gtkgui/dialogs/preferences.py:1155
 #, fuzzy
 msgid "Enter an IP address you want to block:"
 msgstr "Írja be a felhasználót, akinek az IP-címét le szeretné kérni:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1263
-#: pynicotine/gtkgui/dialogs/preferences.py:1278
+#: pynicotine/gtkgui/dialogs/preferences.py:1222
+#: pynicotine/gtkgui/dialogs/preferences.py:1237
 msgid "Pattern"
 msgstr "Példa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1279
+#: pynicotine/gtkgui/dialogs/preferences.py:1238
 msgid "Replacement"
 msgstr "Helyettesítés"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1345
+#: pynicotine/gtkgui/dialogs/preferences.py:1304
 #, fuzzy
 msgid "Censor Pattern"
 msgstr "Példa"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1346
+#: pynicotine/gtkgui/dialogs/preferences.py:1305
 #, fuzzy
 msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
@@ -1864,181 +1864,181 @@ msgstr ""
 "Adjon szóközöket a szavak köré, hogy a szavakon belüli karakterláncok ne "
 "egyezzenek (sorok elején és végén hibás lehet)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1491
+#: pynicotine/gtkgui/dialogs/preferences.py:1450
 msgid "Top"
 msgstr "Fent"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1492
+#: pynicotine/gtkgui/dialogs/preferences.py:1451
 msgid "Bottom"
 msgstr "Lent"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1493
+#: pynicotine/gtkgui/dialogs/preferences.py:1452
 msgid "Left"
 msgstr "Balra"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1494
+#: pynicotine/gtkgui/dialogs/preferences.py:1453
 msgid "Right"
 msgstr "Jobbra"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1498
+#: pynicotine/gtkgui/dialogs/preferences.py:1457
 #, fuzzy
 msgid "Connected"
 msgstr "Csatlakozva:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1499
+#: pynicotine/gtkgui/dialogs/preferences.py:1458
 #, fuzzy
 msgid "Disconnected"
 msgstr "Megszakítva:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1500
-#: pynicotine/gtkgui/frame.py:1547
-#: pynicotine/gtkgui/widgets/iconnotebook.py:468
+#: pynicotine/gtkgui/dialogs/preferences.py:1459
+#: pynicotine/gtkgui/frame.py:1534
+#: pynicotine/gtkgui/widgets/iconnotebook.py:470
 #: pynicotine/gtkgui/widgets/trayicon.py:97
 #: pynicotine/gtkgui/widgets/treeview.py:485
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
 msgid "Away"
 msgstr "Távollét"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1501
-#: pynicotine/gtkgui/dialogs/preferences.py:1502
+#: pynicotine/gtkgui/dialogs/preferences.py:1460
+#: pynicotine/gtkgui/dialogs/preferences.py:1461
 msgid "Highlight"
 msgstr "Fontos"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1503
+#: pynicotine/gtkgui/dialogs/preferences.py:1462
 #, fuzzy
 msgid "Window"
 msgstr "Ablak:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1504
+#: pynicotine/gtkgui/dialogs/preferences.py:1463
 #, fuzzy
 msgid "Notification"
 msgstr "Értesítés"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1508
+#: pynicotine/gtkgui/dialogs/preferences.py:1467
 #, fuzzy
 msgid "Connected (Tray)"
 msgstr "Csatlakozva:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1509
+#: pynicotine/gtkgui/dialogs/preferences.py:1468
 #, fuzzy
 msgid "Disconnected (Tray)"
 msgstr "Megszakítva:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1510
+#: pynicotine/gtkgui/dialogs/preferences.py:1469
 #, fuzzy
 msgid "Away (Tray)"
 msgstr "Távol (tálca)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1511
+#: pynicotine/gtkgui/dialogs/preferences.py:1470
 #, fuzzy
 msgid "Message (Tray)"
 msgstr "Üzenetek"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1969
+#: pynicotine/gtkgui/dialogs/preferences.py:1911
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:1970
+#: pynicotine/gtkgui/dialogs/preferences.py:1912
 #, fuzzy
 msgid "Command"
 msgstr "Parancs :"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2159
+#: pynicotine/gtkgui/dialogs/preferences.py:2101
 #, fuzzy
 msgid "Username;APIKEY:"
 msgstr "Felhsználónév;APIKEY :"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2163
+#: pynicotine/gtkgui/dialogs/preferences.py:2105
 #, fuzzy
 msgid "Client name (e.g. amarok, audacious, exaile) or empty for auto:"
 msgstr "Ügyfél neve (pl. amarok, audacious, exaile) vagy üres az automatikus:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2167
+#: pynicotine/gtkgui/dialogs/preferences.py:2109
 #: pynicotine/gtkgui/ui/settings/network.ui:86
 #, fuzzy
 msgid "Username:"
 msgstr "felhasznalonev"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2171
+#: pynicotine/gtkgui/dialogs/preferences.py:2113
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:89
 #, fuzzy
 msgid "Command:"
 msgstr "Parancs :"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2179
-#: pynicotine/gtkgui/dialogs/preferences.py:2182
+#: pynicotine/gtkgui/dialogs/preferences.py:2121
+#: pynicotine/gtkgui/dialogs/preferences.py:2124
 msgid "Title"
 msgstr "Cím"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2181
+#: pynicotine/gtkgui/dialogs/preferences.py:2123
 #, python-format
 msgid "Now Playing (typically \"%(artist)s - %(title)s\")"
 msgstr "Épp hallgatva (általában \"%(artist)s - %(title)s\")"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2182
-#: pynicotine/gtkgui/dialogs/preferences.py:2190
+#: pynicotine/gtkgui/dialogs/preferences.py:2124
+#: pynicotine/gtkgui/dialogs/preferences.py:2132
 msgid "Artist"
 msgstr "Előadó"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2184
-#: pynicotine/gtkgui/search.py:347 pynicotine/gtkgui/userbrowse.py:216
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:164
+#: pynicotine/gtkgui/dialogs/preferences.py:2126
+#: pynicotine/gtkgui/search.py:342 pynicotine/gtkgui/userbrowse.py:213
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:141
 msgid "Length"
 msgstr "Hossz"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2186
-#: pynicotine/gtkgui/search.py:346 pynicotine/gtkgui/userbrowse.py:215
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:199
+#: pynicotine/gtkgui/dialogs/preferences.py:2128
+#: pynicotine/gtkgui/search.py:341 pynicotine/gtkgui/userbrowse.py:212
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:167
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:266
 #: pynicotine/gtkgui/ui/search.ui:297
 msgid "Bitrate"
 msgstr "Bitráta"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2188
+#: pynicotine/gtkgui/dialogs/preferences.py:2130
 msgid "Comment"
 msgstr "Megjegyzés"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2192
+#: pynicotine/gtkgui/dialogs/preferences.py:2134
 msgid "Album"
 msgstr "Album"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2194
+#: pynicotine/gtkgui/dialogs/preferences.py:2136
 msgid "Track Number"
 msgstr "Track szám"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2196
+#: pynicotine/gtkgui/dialogs/preferences.py:2138
 msgid "Year"
 msgstr "Év"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2198
+#: pynicotine/gtkgui/dialogs/preferences.py:2140
 msgid "Filename (URI)"
 msgstr "Filenév (URI)"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2200
+#: pynicotine/gtkgui/dialogs/preferences.py:2142
 msgid "Program"
 msgstr "Program"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2242
+#: pynicotine/gtkgui/dialogs/preferences.py:2184
 #, fuzzy, python-format
 msgid "%s Settings"
 msgstr "Beállítások"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2252
-#: pynicotine/gtkgui/dialogs/preferences.py:2714
+#: pynicotine/gtkgui/dialogs/preferences.py:2194
+#: pynicotine/gtkgui/dialogs/preferences.py:2654
 msgid "Cancel"
 msgstr "Mégsem"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2252
-#: pynicotine/gtkgui/dialogs/preferences.py:2717
+#: pynicotine/gtkgui/dialogs/preferences.py:2194
+#: pynicotine/gtkgui/dialogs/preferences.py:2657
 msgid "OK"
 msgstr "OK"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2328
+#: pynicotine/gtkgui/dialogs/preferences.py:2270
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:140
 msgid "Add"
 msgstr "Hozzáad"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2329
+#: pynicotine/gtkgui/dialogs/preferences.py:2271
 #: pynicotine/gtkgui/ui/dialogs/wishlist.ui:113
 #: pynicotine/gtkgui/ui/settings/ban.ui:242
 #: pynicotine/gtkgui/ui/settings/ban.ui:365
@@ -2052,124 +2052,124 @@ msgstr "Hozzáad"
 msgid "Remove"
 msgstr "Eltávolít"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2552
+#: pynicotine/gtkgui/dialogs/preferences.py:2494
 msgid "Enabled"
 msgstr "engedélyezve"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2553
+#: pynicotine/gtkgui/dialogs/preferences.py:2495
 #, fuzzy
 msgid "Plugin"
 msgstr "Beépülők"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2619
+#: pynicotine/gtkgui/dialogs/preferences.py:2562
 #, fuzzy
 msgid "No Plugin Selected"
 msgstr "<b>Nincs kiválasztva beépülő</b>"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2708
+#: pynicotine/gtkgui/dialogs/preferences.py:2648
 #: pynicotine/gtkgui/widgets/trayicon.py:107
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:62
 #, fuzzy
 msgid "Preferences"
 msgstr "Beállítások"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2715
+#: pynicotine/gtkgui/dialogs/preferences.py:2655
 #, fuzzy
 msgid "Export"
 msgstr "Exportálás"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2716
+#: pynicotine/gtkgui/dialogs/preferences.py:2656
 #, fuzzy
 msgid "Apply"
 msgstr "Alkalmaz"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2729
+#: pynicotine/gtkgui/dialogs/preferences.py:2669
 #: pynicotine/gtkgui/ui/settings/network.ui:42
 #, fuzzy
 msgid "Network"
 msgstr "Hálózat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2730
+#: pynicotine/gtkgui/dialogs/preferences.py:2670
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:17
 #, fuzzy
 msgid "User Interface"
 msgstr "Felület"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2731
+#: pynicotine/gtkgui/dialogs/preferences.py:2671
 #: pynicotine/gtkgui/ui/settings/shares.ui:17
 msgid "Shares"
 msgstr "Megosztások"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2732
-#: pynicotine/gtkgui/frame.py:1115 pynicotine/gtkgui/frame.py:1634
+#: pynicotine/gtkgui/dialogs/preferences.py:2672
+#: pynicotine/gtkgui/frame.py:1102 pynicotine/gtkgui/frame.py:1621
 #: pynicotine/gtkgui/widgets/trayicon.py:90
-#: pynicotine/gtkgui/ui/mainwindow.ui:511
+#: pynicotine/gtkgui/ui/mainwindow.ui:512
 #: pynicotine/gtkgui/ui/settings/downloads.ui:27
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:146
 msgid "Downloads"
 msgstr "Letöltések"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2733
-#: pynicotine/gtkgui/frame.py:1116 pynicotine/gtkgui/frame.py:1635
+#: pynicotine/gtkgui/dialogs/preferences.py:2673
+#: pynicotine/gtkgui/frame.py:1103 pynicotine/gtkgui/frame.py:1622
 #: pynicotine/gtkgui/widgets/trayicon.py:91
-#: pynicotine/gtkgui/ui/mainwindow.ui:751
+#: pynicotine/gtkgui/ui/mainwindow.ui:752
 #: pynicotine/gtkgui/ui/settings/uploads.ui:48
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:158
 msgid "Uploads"
 msgstr "Feltöltések"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2734
+#: pynicotine/gtkgui/dialogs/preferences.py:2674
 #: pynicotine/gtkgui/ui/settings/search.ui:42
 msgid "Searches"
 msgstr "Keresések"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2735
-#: pynicotine/gtkgui/frame.py:1118 pynicotine/gtkgui/ui/mainwindow.ui:1088
+#: pynicotine/gtkgui/dialogs/preferences.py:2675
+#: pynicotine/gtkgui/frame.py:1105 pynicotine/gtkgui/ui/mainwindow.ui:1091
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:182
 #, fuzzy
 msgid "User Info"
 msgstr "Felhasználói információk"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2736
+#: pynicotine/gtkgui/dialogs/preferences.py:2676
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:799
 #, fuzzy
 msgid "Chats"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2737
+#: pynicotine/gtkgui/dialogs/preferences.py:2677
 #: pynicotine/gtkgui/ui/settings/nowplaying.ui:16
 #, fuzzy
 msgid "Now Playing"
 msgstr "Most lejátszás"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2738
+#: pynicotine/gtkgui/dialogs/preferences.py:2678
 #: pynicotine/gtkgui/ui/settings/log.ui:16
 msgid "Logging"
 msgstr "Naplózás"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2739
+#: pynicotine/gtkgui/dialogs/preferences.py:2679
 #: pynicotine/gtkgui/ui/settings/ban.ui:16
 #, fuzzy
 msgid "Banned Users"
 msgstr "Kitiltott userek:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2740
+#: pynicotine/gtkgui/dialogs/preferences.py:2680
 #, fuzzy
 msgid "Ignored Users"
 msgstr "Mellőzött felhasználók:"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2741
+#: pynicotine/gtkgui/dialogs/preferences.py:2681
 #: pynicotine/gtkgui/ui/settings/plugin.ui:28
 msgid "Plugins"
 msgstr "Beépülők"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:2742
+#: pynicotine/gtkgui/dialogs/preferences.py:2682
 #: pynicotine/gtkgui/ui/settings/urlhandlers.ui:21
 #, fuzzy
 msgid "URL Handlers"
 msgstr "Kezelő"
 
-#: pynicotine/gtkgui/dialogs/preferences.py:3110
+#: pynicotine/gtkgui/dialogs/preferences.py:3050
 #, fuzzy
 msgid "Pick a File Name for Config Backup"
 msgstr "Válasszon egy fájlnevet a konfigurációs biztonsági másolathoz"
@@ -2195,7 +2195,7 @@ msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 msgid "Wishlist"
 msgstr "Kívánságlista keresése"
 
-#: pynicotine/gtkgui/dialogs/wishlist.py:61 pynicotine/gtkgui/search.py:218
+#: pynicotine/gtkgui/dialogs/wishlist.py:61 pynicotine/gtkgui/search.py:215
 #, fuzzy
 msgid "Wish"
 msgstr "Kívánságok"
@@ -2221,7 +2221,7 @@ msgid "Do you really want to clear your wishlist?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
 #: pynicotine/gtkgui/downloads.py:40
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:98
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
 msgid "Path"
 msgstr "Útvonal"
 
@@ -2303,24 +2303,24 @@ msgstr ""
 "Biztos, hogy %(num)i fájlokat szeretne letölteni %(user)s %(folder)s "
 "mappájából?"
 
-#: pynicotine/gtkgui/frame.py:147 pynicotine/pynicotine.py:221
-#: pynicotine/pynicotine.py:222
+#: pynicotine/gtkgui/frame.py:147 pynicotine/pynicotine.py:222
+#: pynicotine/pynicotine.py:223
 #, fuzzy, python-format
 msgid "Loading %(program)s %(version)s"
 msgstr "Nicotine+ verzió %s"
 
-#: pynicotine/gtkgui/frame.py:369 pynicotine/gtkgui/widgets/iconnotebook.py:472
+#: pynicotine/gtkgui/frame.py:366 pynicotine/gtkgui/widgets/iconnotebook.py:474
 #: pynicotine/gtkgui/widgets/treeview.py:490
-#: pynicotine/gtkgui/ui/mainwindow.ui:1789
+#: pynicotine/gtkgui/ui/mainwindow.ui:1793
 msgid "Offline"
 msgstr "Nem elérhető"
 
-#: pynicotine/gtkgui/frame.py:383
+#: pynicotine/gtkgui/frame.py:380
 #, fuzzy
 msgid "Invalid Password"
 msgstr "Jelszó"
 
-#: pynicotine/gtkgui/frame.py:384
+#: pynicotine/gtkgui/frame.py:381
 #, fuzzy, python-format
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
@@ -2329,7 +2329,7 @@ msgstr ""
 "Az %s felhasználó már létezik, és a megadott jelszó érvénytelen. Kérjük, "
 "válasszon másik felhasználónevet, ha most jelentkezik be először."
 
-#: pynicotine/gtkgui/frame.py:391 pynicotine/gtkgui/widgets/filechooser.py:87
+#: pynicotine/gtkgui/frame.py:388 pynicotine/gtkgui/widgets/filechooser.py:87
 #: pynicotine/gtkgui/widgets/filechooser.py:118
 #: pynicotine/gtkgui/widgets/filechooser.py:167
 #: pynicotine/gtkgui/widgets/filechooser.py:203
@@ -2338,248 +2338,248 @@ msgstr ""
 msgid "_Cancel"
 msgstr "_Mégse"
 
-#: pynicotine/gtkgui/frame.py:392
+#: pynicotine/gtkgui/frame.py:389
 #, fuzzy
 msgid "Change _Login Details"
 msgstr "Bejelentkezési adatok módosítása"
 
-#: pynicotine/gtkgui/frame.py:615
+#: pynicotine/gtkgui/frame.py:602
 #, fuzzy
 msgid "Error retrieving latest version"
 msgstr "Hiba a legújabb verzió lekérdezésében"
 
-#: pynicotine/gtkgui/frame.py:622
+#: pynicotine/gtkgui/frame.py:609
 #, fuzzy, python-format
 msgid "Version %s is available"
 msgstr "Az %s verzió elérhető"
 
-#: pynicotine/gtkgui/frame.py:625
+#: pynicotine/gtkgui/frame.py:612
 #, fuzzy, python-format
 msgid "released on %s"
 msgstr "megjelent a %s"
 
-#: pynicotine/gtkgui/frame.py:630
+#: pynicotine/gtkgui/frame.py:617
 #, fuzzy
 msgid "Out of date"
 msgstr "Elavult"
 
-#: pynicotine/gtkgui/frame.py:638 pynicotine/gtkgui/frame.py:646
+#: pynicotine/gtkgui/frame.py:625 pynicotine/gtkgui/frame.py:633
 #, fuzzy
 msgid "Up to date"
 msgstr "Naprakész"
 
-#: pynicotine/gtkgui/frame.py:639
+#: pynicotine/gtkgui/frame.py:626
 #, fuzzy
 msgid "You appear to be using a development version of Nicotine+."
 msgstr "Úgy tűnik, hogy a Nicotine+ fejlesztői verzióját használja."
 
-#: pynicotine/gtkgui/frame.py:647
+#: pynicotine/gtkgui/frame.py:634
 msgid "You are using the latest version of Nicotine+."
 msgstr "Ön a legújabb Nicotine+ verziót használja."
 
-#: pynicotine/gtkgui/frame.py:892
+#: pynicotine/gtkgui/frame.py:879
 msgid "_Connect"
 msgstr "_Csatlakozás"
 
-#: pynicotine/gtkgui/frame.py:893
+#: pynicotine/gtkgui/frame.py:880
 msgid "_Disconnect"
 msgstr "_Megszakítás"
 
-#: pynicotine/gtkgui/frame.py:894
+#: pynicotine/gtkgui/frame.py:881
 #, fuzzy
 msgid "_Away"
 msgstr "_Away"
 
-#: pynicotine/gtkgui/frame.py:895
+#: pynicotine/gtkgui/frame.py:882
 #, fuzzy
 msgid "Soulseek _Privileges"
 msgstr "_Elsőbbségi"
 
-#: pynicotine/gtkgui/frame.py:901
+#: pynicotine/gtkgui/frame.py:888
 #, fuzzy
 msgid "_Preferences"
 msgstr "_Beállítások"
 
-#: pynicotine/gtkgui/frame.py:906
+#: pynicotine/gtkgui/frame.py:893
 #, fuzzy
 msgid "_Quit…"
 msgstr "_Kilépés"
 
-#: pynicotine/gtkgui/frame.py:906 pynicotine/gtkgui/frame.py:1905
+#: pynicotine/gtkgui/frame.py:893 pynicotine/gtkgui/frame.py:1892
 msgid "_Quit"
 msgstr "_Kilépés"
 
-#: pynicotine/gtkgui/frame.py:926
+#: pynicotine/gtkgui/frame.py:913
 #, fuzzy
 msgid "Prefer Dark _Mode"
 msgstr "Inkább sötét _Mode"
 
-#: pynicotine/gtkgui/frame.py:927
+#: pynicotine/gtkgui/frame.py:914
 #, fuzzy
 msgid "Use _Header Bar"
 msgstr "_Header Bar használata"
 
-#: pynicotine/gtkgui/frame.py:928
+#: pynicotine/gtkgui/frame.py:915
 #, fuzzy
 msgid "Show _Log History Pane"
 msgstr "_Naplóablak mutatása"
 
-#: pynicotine/gtkgui/frame.py:930
+#: pynicotine/gtkgui/frame.py:917
 #, fuzzy
 msgid "Buddy List in Separate Tab"
 msgstr "Barátlista külön fülön"
 
-#: pynicotine/gtkgui/frame.py:931
+#: pynicotine/gtkgui/frame.py:918
 #, fuzzy
 msgid "Buddy List in Chat Rooms"
 msgstr "Barátlista a chatszobákban"
 
-#: pynicotine/gtkgui/frame.py:932
+#: pynicotine/gtkgui/frame.py:919
 #, fuzzy
 msgid "Buddy List Always Visible"
 msgstr "Barátlista mindig látható"
 
-#: pynicotine/gtkgui/frame.py:941
+#: pynicotine/gtkgui/frame.py:928
 #, fuzzy
 msgid "_Rescan Shares"
 msgstr "Megosztás aktualizálása"
 
-#: pynicotine/gtkgui/frame.py:942
+#: pynicotine/gtkgui/frame.py:929
 #, fuzzy
 msgid "_Configure Shares"
 msgstr "Megosztások _beállítása"
 
-#: pynicotine/gtkgui/frame.py:950
+#: pynicotine/gtkgui/frame.py:937
 #, fuzzy
 msgid "_Browse Public Shares"
 msgstr "Publikus megosztás _tallózása"
 
-#: pynicotine/gtkgui/frame.py:951
+#: pynicotine/gtkgui/frame.py:938
 #, fuzzy
 msgid "Bro_wse Buddy Shares"
 msgstr "Barát-meg_osztás tallózása"
 
-#: pynicotine/gtkgui/frame.py:967
+#: pynicotine/gtkgui/frame.py:954
 #, fuzzy
 msgid "_Keyboard Shortcuts"
 msgstr "_Gyorsbillentyűk"
 
-#: pynicotine/gtkgui/frame.py:968
+#: pynicotine/gtkgui/frame.py:955
 #, fuzzy
 msgid "_Setup Assistant"
 msgstr "_Setup Assistant"
 
-#: pynicotine/gtkgui/frame.py:969
+#: pynicotine/gtkgui/frame.py:956
 #, fuzzy
 msgid "_Transfer Statistics"
 msgstr "Statisztikák"
 
-#: pynicotine/gtkgui/frame.py:971
+#: pynicotine/gtkgui/frame.py:958
 #, fuzzy
 msgid "Report a _Bug"
 msgstr "Hi_bajelentés"
 
-#: pynicotine/gtkgui/frame.py:972
+#: pynicotine/gtkgui/frame.py:959
 #, fuzzy
 msgid "Improve T_ranslations"
 msgstr "A T_fordítások javítása"
 
-#: pynicotine/gtkgui/frame.py:973
+#: pynicotine/gtkgui/frame.py:960
 #, fuzzy
 msgid "Check _Latest Version"
 msgstr "Kliens verzió"
 
-#: pynicotine/gtkgui/frame.py:975
+#: pynicotine/gtkgui/frame.py:962
 #, fuzzy
 msgid "_About Nicotine+"
 msgstr "Nicotine+ névjegye"
 
-#: pynicotine/gtkgui/frame.py:987 pynicotine/gtkgui/frame.py:1007
+#: pynicotine/gtkgui/frame.py:974 pynicotine/gtkgui/frame.py:994
 msgid "_View"
 msgstr "_Nézet"
 
-#: pynicotine/gtkgui/frame.py:994 pynicotine/gtkgui/frame.py:1009
+#: pynicotine/gtkgui/frame.py:981 pynicotine/gtkgui/frame.py:996
 msgid "_Help"
 msgstr "_Súgó"
 
-#: pynicotine/gtkgui/frame.py:1006
+#: pynicotine/gtkgui/frame.py:993
 msgid "_File"
 msgstr "_Fájl"
 
-#: pynicotine/gtkgui/frame.py:1008
+#: pynicotine/gtkgui/frame.py:995
 msgid "_Shares"
 msgstr "_Megosztások"
 
-#: pynicotine/gtkgui/frame.py:1114 pynicotine/gtkgui/ui/mainwindow.ui:269
+#: pynicotine/gtkgui/frame.py:1101 pynicotine/gtkgui/ui/mainwindow.ui:270
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:134
 #, fuzzy
 msgid "Search Files"
 msgstr "Fájlok _keresése"
 
-#: pynicotine/gtkgui/frame.py:1117
+#: pynicotine/gtkgui/frame.py:1104
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:205
-#: pynicotine/gtkgui/ui/mainwindow.ui:927
+#: pynicotine/gtkgui/ui/mainwindow.ui:929
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:170
 msgid "Browse Shares"
 msgstr "Megosztás tallózása"
 
-#: pynicotine/gtkgui/frame.py:1119 pynicotine/gtkgui/ui/mainwindow.ui:1237
+#: pynicotine/gtkgui/frame.py:1106 pynicotine/gtkgui/ui/mainwindow.ui:1240
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:699
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:194
 msgid "Private Chat"
 msgstr "Privát Chat"
 
-#: pynicotine/gtkgui/frame.py:1120 pynicotine/gtkgui/search.py:154
-#: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1358
+#: pynicotine/gtkgui/frame.py:1107 pynicotine/gtkgui/search.py:154
+#: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1361
 #: pynicotine/gtkgui/ui/settings/downloads.ui:91
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:206
 msgid "Buddies"
 msgstr "Barátok"
 
-#: pynicotine/gtkgui/frame.py:1121 pynicotine/gtkgui/ui/mainwindow.ui:1522
+#: pynicotine/gtkgui/frame.py:1108 pynicotine/gtkgui/ui/mainwindow.ui:1526
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:667
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:218
 msgid "Chat Rooms"
 msgstr "Chatszobák"
 
-#: pynicotine/gtkgui/frame.py:1122 pynicotine/gtkgui/ui/mainwindow.ui:1581
+#: pynicotine/gtkgui/frame.py:1109 pynicotine/gtkgui/ui/mainwindow.ui:1585
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:230
 #: pynicotine/gtkgui/ui/userinfo.ui:313
 msgid "Interests"
 msgstr "Érdeklődések"
 
-#: pynicotine/gtkgui/frame.py:1477 pynicotine/userbrowse.py:174
+#: pynicotine/gtkgui/frame.py:1464 pynicotine/userbrowse.py:174
 #, python-format
 msgid "Can't create directory '%(folder)s', reported error: %(error)s"
 msgstr "Nem lehet létrehozni a '%(folder)s' könyvtárat, hiba: %(error)s"
 
-#: pynicotine/gtkgui/frame.py:1482
+#: pynicotine/gtkgui/frame.py:1469
 #, fuzzy
 msgid "Select a Saved Shares List File"
 msgstr "Mentett részvénylistafájl kiválasztása"
 
-#: pynicotine/gtkgui/frame.py:1522
+#: pynicotine/gtkgui/frame.py:1509
 #, fuzzy
 msgid "Create New Room?"
 msgstr "Privát Szoba Létrehozás"
 
-#: pynicotine/gtkgui/frame.py:1523
+#: pynicotine/gtkgui/frame.py:1510
 #, fuzzy, python-format
 msgid "Do you really want to create a new room \"%s\"?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
-#: pynicotine/gtkgui/frame.py:1524
+#: pynicotine/gtkgui/frame.py:1511
 #, fuzzy
 msgid "Make room private"
 msgstr "Tegye a szobát priváttá"
 
-#: pynicotine/gtkgui/frame.py:1544
-#: pynicotine/gtkgui/widgets/iconnotebook.py:470
+#: pynicotine/gtkgui/frame.py:1531
+#: pynicotine/gtkgui/widgets/iconnotebook.py:472
 #: pynicotine/gtkgui/widgets/treeview.py:488
 msgid "Online"
 msgstr "Elérhető"
 
-#: pynicotine/gtkgui/frame.py:1636
+#: pynicotine/gtkgui/frame.py:1623
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:579
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:547
 #: pynicotine/gtkgui/ui/settings/downloads.ui:123
@@ -2587,81 +2587,81 @@ msgstr "Elérhető"
 msgid "Search"
 msgstr "Keresés"
 
-#: pynicotine/gtkgui/frame.py:1637
+#: pynicotine/gtkgui/frame.py:1624
 msgid "Chat"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1639
+#: pynicotine/gtkgui/frame.py:1626
 #, fuzzy
 msgid "[Debug] Connections"
 msgstr "Kapcsolat"
 
-#: pynicotine/gtkgui/frame.py:1640
+#: pynicotine/gtkgui/frame.py:1627
 #, fuzzy
 msgid "[Debug] Messages"
 msgstr "Üzenetek"
 
-#: pynicotine/gtkgui/frame.py:1641
+#: pynicotine/gtkgui/frame.py:1628
 #, fuzzy
 msgid "[Debug] Transfers"
 msgstr "Átvitelek"
 
-#: pynicotine/gtkgui/frame.py:1642
+#: pynicotine/gtkgui/frame.py:1629
 #, fuzzy
 msgid "[Debug] Miscellaneous"
 msgstr "Egyebek"
 
-#: pynicotine/gtkgui/frame.py:1646
+#: pynicotine/gtkgui/frame.py:1633
 #, fuzzy
 msgid "_Find…"
 msgstr "Találat"
 
-#: pynicotine/gtkgui/frame.py:1648 pynicotine/gtkgui/frame.py:1677
+#: pynicotine/gtkgui/frame.py:1635 pynicotine/gtkgui/frame.py:1664
 #, fuzzy
 msgid "_Copy"
 msgstr "Másolás"
 
-#: pynicotine/gtkgui/frame.py:1649
+#: pynicotine/gtkgui/frame.py:1636
 #, fuzzy
 msgid "Copy _All"
 msgstr "Mindet Másol"
 
-#: pynicotine/gtkgui/frame.py:1651
+#: pynicotine/gtkgui/frame.py:1638
 #, fuzzy
 msgid "_Open Log Folder"
 msgstr "Mappa _letöltése"
 
-#: pynicotine/gtkgui/frame.py:1652
+#: pynicotine/gtkgui/frame.py:1639
 #, fuzzy
 msgid "Open _Transfer Log"
 msgstr "Átvitelek betűtípusa:"
 
-#: pynicotine/gtkgui/frame.py:1654
+#: pynicotine/gtkgui/frame.py:1641
 #, fuzzy
 msgid "_Log Categories"
 msgstr "Kategóriák"
 
-#: pynicotine/gtkgui/frame.py:1656
+#: pynicotine/gtkgui/frame.py:1643
 #, fuzzy
 msgid "Clear Log View"
 msgstr "Napló ürítése"
 
-#: pynicotine/gtkgui/frame.py:1761
+#: pynicotine/gtkgui/frame.py:1748
 #, fuzzy, python-format
 msgid "Downloads: %(speed)s"
 msgstr "Letöltések: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1765
+#: pynicotine/gtkgui/frame.py:1752
 #, fuzzy, python-format
 msgid "Uploads: %(speed)s"
 msgstr "Feltöltések: %(speed)s"
 
-#: pynicotine/gtkgui/frame.py:1855
+#: pynicotine/gtkgui/frame.py:1842
 #, fuzzy
 msgid "Critical Error"
 msgstr "Kritikus hiba"
 
-#: pynicotine/gtkgui/frame.py:1856
+#: pynicotine/gtkgui/frame.py:1843
 #, fuzzy
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
@@ -2670,56 +2670,56 @@ msgstr ""
 "A Nicotine+ kritikus hibát észlelt, és ki kell lépnie. Kérjük, másolja ki az "
 "alábbi üzenetet, és írja be a hibajelentésbe:"
 
-#: pynicotine/gtkgui/frame.py:1858
+#: pynicotine/gtkgui/frame.py:1845
 #, fuzzy
 msgid "_Quit Nicotine+"
 msgstr "Kilépés"
 
-#: pynicotine/gtkgui/frame.py:1859
+#: pynicotine/gtkgui/frame.py:1846
 #, fuzzy
 msgid "_Copy & Report Bug"
 msgstr "Hi_bajelentés"
 
-#: pynicotine/gtkgui/frame.py:1903
+#: pynicotine/gtkgui/frame.py:1890
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:246
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:214
 msgid "Quit Nicotine+"
 msgstr "Kilépés"
 
-#: pynicotine/gtkgui/frame.py:1904
+#: pynicotine/gtkgui/frame.py:1891
 #, fuzzy
 msgid "Do you really want to exit?"
 msgstr "<b>Most már készen áll a Nicotine+ használatára!</b>"
 
-#: pynicotine/gtkgui/frame.py:1906
+#: pynicotine/gtkgui/frame.py:1893
 #, fuzzy
 msgid "_Run in Background"
 msgstr "Fut a háttérben"
 
-#: pynicotine/gtkgui/frame.py:1907
+#: pynicotine/gtkgui/frame.py:1894
 #, fuzzy
 msgid "Remember choice"
 msgstr "Emlékezzen a választásra"
 
-#: pynicotine/gtkgui/frame.py:1937
+#: pynicotine/gtkgui/frame.py:1924
 #, fuzzy
 msgid "Nicotine+ is running in the background"
 msgstr "futás a háttérben"
 
-#: pynicotine/gtkgui/interests.py:55 pynicotine/gtkgui/userinfo.py:152
+#: pynicotine/gtkgui/interests.py:56 pynicotine/gtkgui/userinfo.py:149
 msgid "Likes"
 msgstr "Tetszik"
 
-#: pynicotine/gtkgui/interests.py:68 pynicotine/gtkgui/userinfo.py:165
+#: pynicotine/gtkgui/interests.py:69 pynicotine/gtkgui/userinfo.py:162
 #, fuzzy
 msgid "Dislikes"
 msgstr "Nem tetszik"
 
-#: pynicotine/gtkgui/interests.py:83
+#: pynicotine/gtkgui/interests.py:84
 msgid "Rating"
 msgstr "Osztályozás"
 
-#: pynicotine/gtkgui/interests.py:84
+#: pynicotine/gtkgui/interests.py:85
 msgid "Item"
 msgstr "Adat"
 
@@ -2729,7 +2729,7 @@ msgid "Re_commendations for Item"
 msgstr "_Ajánlat ehhez az adathoz"
 
 #: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:148
-#: pynicotine/gtkgui/interests.py:159 pynicotine/gtkgui/userinfo.py:185
+#: pynicotine/gtkgui/interests.py:159 pynicotine/gtkgui/userinfo.py:182
 #, fuzzy
 msgid "_Search for Item"
 msgstr "Beírás _keresése"
@@ -2739,14 +2739,14 @@ msgstr "Beírás _keresése"
 msgid "_Remove Item"
 msgstr "_Eltávolítja ezt az adatot"
 
-#: pynicotine/gtkgui/interests.py:155 pynicotine/gtkgui/interests.py:364
-#: pynicotine/gtkgui/userinfo.py:182 pynicotine/gtkgui/userinfo.py:414
+#: pynicotine/gtkgui/interests.py:155 pynicotine/gtkgui/interests.py:371
+#: pynicotine/gtkgui/userinfo.py:179 pynicotine/gtkgui/userinfo.py:407
 #, fuzzy
 msgid "I _Like This"
 msgstr "Ezt _szeretem"
 
-#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:367
-#: pynicotine/gtkgui/userinfo.py:183 pynicotine/gtkgui/userinfo.py:417
+#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:374
+#: pynicotine/gtkgui/userinfo.py:180 pynicotine/gtkgui/userinfo.py:410
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Ezt _szeretem"
@@ -2756,74 +2756,74 @@ msgstr "Ezt _szeretem"
 msgid "_Recommendations for Item"
 msgstr "_Ajánlat ehhez az adathoz"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:54
+#: pynicotine/gtkgui/popovers/roomlist.py:55
 msgid "Room"
 msgstr "Szoba"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:55
-#: pynicotine/gtkgui/ui/mainwindow.ui:339
-#: pynicotine/gtkgui/ui/mainwindow.ui:579
+#: pynicotine/gtkgui/popovers/roomlist.py:56
+#: pynicotine/gtkgui/ui/mainwindow.ui:340
+#: pynicotine/gtkgui/ui/mainwindow.ui:580
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:261
 msgid "Users"
 msgstr "Felhasználók"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:63
-#: pynicotine/gtkgui/popovers/roomlist.py:181
+#: pynicotine/gtkgui/popovers/roomlist.py:64
+#: pynicotine/gtkgui/popovers/roomlist.py:185
 #, fuzzy
 msgid "Join Room"
 msgstr "Join Room"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:64
-#: pynicotine/gtkgui/popovers/roomlist.py:182
+#: pynicotine/gtkgui/popovers/roomlist.py:65
+#: pynicotine/gtkgui/popovers/roomlist.py:186
 #, fuzzy
 msgid "Leave Room"
 msgstr "Hagyj helyet"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:66
-#: pynicotine/gtkgui/popovers/roomlist.py:184
+#: pynicotine/gtkgui/popovers/roomlist.py:67
+#: pynicotine/gtkgui/popovers/roomlist.py:188
 msgid "Disown Private Room"
 msgstr "Privát Szoba Megtagadása"
 
-#: pynicotine/gtkgui/popovers/roomlist.py:67
-#: pynicotine/gtkgui/popovers/roomlist.py:185
+#: pynicotine/gtkgui/popovers/roomlist.py:68
+#: pynicotine/gtkgui/popovers/roomlist.py:189
 #, fuzzy
 msgid "Cancel Room Membership"
 msgstr "Szobai tagság törlése"
 
-#: pynicotine/gtkgui/privatechat.py:205 pynicotine/gtkgui/search.py:403
-#: pynicotine/gtkgui/userbrowse.py:166 pynicotine/gtkgui/userinfo.py:177
+#: pynicotine/gtkgui/privatechat.py:202 pynicotine/gtkgui/search.py:397
+#: pynicotine/gtkgui/userbrowse.py:163 pynicotine/gtkgui/userinfo.py:174
 #, fuzzy
 msgid "Close All Tabs…"
 msgstr "Minden lap bezárása"
 
-#: pynicotine/gtkgui/privatechat.py:206 pynicotine/gtkgui/search.py:404
-#: pynicotine/gtkgui/userbrowse.py:167 pynicotine/gtkgui/userinfo.py:178
+#: pynicotine/gtkgui/privatechat.py:203 pynicotine/gtkgui/search.py:398
+#: pynicotine/gtkgui/userbrowse.py:164 pynicotine/gtkgui/userinfo.py:175
 #, fuzzy
 msgid "_Close Tab"
 msgstr "A lapfül bezárása"
 
-#: pynicotine/gtkgui/privatechat.py:217
+#: pynicotine/gtkgui/privatechat.py:214
 #, fuzzy
 msgid "View Chat Log"
 msgstr "Csevegési napló megtekintése"
 
-#: pynicotine/gtkgui/privatechat.py:218
+#: pynicotine/gtkgui/privatechat.py:215
 #, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Chat napló törlése…"
 
-#: pynicotine/gtkgui/privatechat.py:306
+#: pynicotine/gtkgui/privatechat.py:301
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
-#: pynicotine/gtkgui/privatechat.py:324
+#: pynicotine/gtkgui/privatechat.py:319
 #, fuzzy, python-format
 msgid "Private message from %s"
 msgstr "%s"
 
-#: pynicotine/gtkgui/privatechat.py:350
+#: pynicotine/gtkgui/privatechat.py:345
 msgid ""
 "* Message(s) sent while you were offline. Timestamps are reported by the "
 "server and can be off."
@@ -2851,90 +2851,90 @@ msgstr "Szobák"
 msgid "_User"
 msgstr "User"
 
-#: pynicotine/gtkgui/search.py:338
+#: pynicotine/gtkgui/search.py:333
 #, fuzzy
 msgid "ID"
 msgstr "ID"
 
-#: pynicotine/gtkgui/search.py:342
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:267
+#: pynicotine/gtkgui/search.py:337
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:217
 #, fuzzy
 msgid "In Queue"
 msgstr "Sorban állás"
 
-#: pynicotine/gtkgui/search.py:344 pynicotine/gtkgui/transferlist.py:136
-#: pynicotine/gtkgui/userbrowse.py:213
+#: pynicotine/gtkgui/search.py:339 pynicotine/gtkgui/transferlist.py:136
+#: pynicotine/gtkgui/userbrowse.py:210
 msgid "Filename"
 msgstr "Fájlnév"
 
-#: pynicotine/gtkgui/search.py:345 pynicotine/gtkgui/transferlist.py:140
-#: pynicotine/gtkgui/userbrowse.py:214
+#: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:140
+#: pynicotine/gtkgui/userbrowse.py:211
 msgid "Size"
 msgstr "Méret"
 
-#: pynicotine/gtkgui/search.py:377 pynicotine/gtkgui/transferlist.py:181
-#: pynicotine/gtkgui/userbrowse.py:244 pynicotine/gtkgui/userbrowse.py:261
+#: pynicotine/gtkgui/search.py:371 pynicotine/gtkgui/transferlist.py:181
+#: pynicotine/gtkgui/userbrowse.py:241 pynicotine/gtkgui/userbrowse.py:258
 #, fuzzy
 msgid "Copy _File Path"
 msgstr "Másolás _File Path"
 
-#: pynicotine/gtkgui/search.py:378 pynicotine/gtkgui/transferlist.py:182
-#: pynicotine/gtkgui/userbrowse.py:180 pynicotine/gtkgui/userbrowse.py:192
-#: pynicotine/gtkgui/userbrowse.py:245 pynicotine/gtkgui/userbrowse.py:262
+#: pynicotine/gtkgui/search.py:372 pynicotine/gtkgui/transferlist.py:182
+#: pynicotine/gtkgui/userbrowse.py:177 pynicotine/gtkgui/userbrowse.py:189
+#: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:259
 msgid "Copy _URL"
 msgstr "_URL másolása"
 
-#: pynicotine/gtkgui/search.py:379 pynicotine/gtkgui/transferlist.py:183
+#: pynicotine/gtkgui/search.py:373 pynicotine/gtkgui/transferlist.py:183
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "Könyvtár-U_RL másolása"
 
-#: pynicotine/gtkgui/search.py:386 pynicotine/gtkgui/userbrowse.py:253
+#: pynicotine/gtkgui/search.py:380 pynicotine/gtkgui/userbrowse.py:250
 #, fuzzy
 msgid "_Download File(s)"
 msgstr "_File(-ok) letöltése"
 
-#: pynicotine/gtkgui/search.py:387 pynicotine/gtkgui/userbrowse.py:254
+#: pynicotine/gtkgui/search.py:381 pynicotine/gtkgui/userbrowse.py:251
 #, fuzzy
 msgid "Download File(s) _To…"
 msgstr "File-(ok) letöltése _ide..."
 
-#: pynicotine/gtkgui/search.py:388
+#: pynicotine/gtkgui/search.py:382
 #, fuzzy
 msgid "Download _Folder(s)"
 msgstr "_File(-ok) letöltése"
 
-#: pynicotine/gtkgui/search.py:389
+#: pynicotine/gtkgui/search.py:383
 #, fuzzy
 msgid "Download F_older(s) To…"
 msgstr "File-(ok) letöltése _ide..."
 
-#: pynicotine/gtkgui/search.py:391 pynicotine/gtkgui/transferlist.py:195
+#: pynicotine/gtkgui/search.py:385 pynicotine/gtkgui/transferlist.py:195
 #, fuzzy
 msgid "_Browse Folder(s)"
 msgstr "Fájlok _tallózása"
 
-#: pynicotine/gtkgui/search.py:392 pynicotine/gtkgui/transferlist.py:192
-#: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:259
+#: pynicotine/gtkgui/search.py:386 pynicotine/gtkgui/transferlist.py:192
+#: pynicotine/gtkgui/userbrowse.py:239 pynicotine/gtkgui/userbrowse.py:256
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "Tulajdonságok"
 
-#: pynicotine/gtkgui/search.py:395 pynicotine/gtkgui/transferlist.py:203
+#: pynicotine/gtkgui/search.py:389 pynicotine/gtkgui/transferlist.py:203
 msgid "User(s)"
 msgstr "User(ek)"
 
-#: pynicotine/gtkgui/search.py:400
+#: pynicotine/gtkgui/search.py:394
 #, fuzzy
 msgid "Copy Search Term"
 msgstr "Másolás keresési kifejezés"
 
-#: pynicotine/gtkgui/search.py:402
+#: pynicotine/gtkgui/search.py:396
 #, fuzzy
 msgid "Clear All Results"
 msgstr "Minden eredmény tisztítása"
 
-#: pynicotine/gtkgui/search.py:545
+#: pynicotine/gtkgui/search.py:543
 #, fuzzy, python-format
 msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
@@ -2943,41 +2943,41 @@ msgstr ""
 "Helytelen keresési eredmény %(filepath)s kiszűrve %(user)s felhasználótól a "
 "\"%(query)s\" keresési lekérdezésre"
 
-#: pynicotine/gtkgui/search.py:897
+#: pynicotine/gtkgui/search.py:895
 #, fuzzy, python-format
 msgid "_Result Filters [%d]"
 msgstr "_Eredményszűrők [%d]"
 
-#: pynicotine/gtkgui/search.py:899 pynicotine/gtkgui/ui/search.ui:103
+#: pynicotine/gtkgui/search.py:897 pynicotine/gtkgui/ui/search.ui:103
 #, fuzzy
 msgid "_Result Filters"
 msgstr "Szűrők engedélyezése"
 
-#: pynicotine/gtkgui/search.py:942
+#: pynicotine/gtkgui/search.py:940
 #, fuzzy
 msgid "Add Wi_sh"
 msgstr "Wi_sh hozzáadása"
 
-#: pynicotine/gtkgui/search.py:946
+#: pynicotine/gtkgui/search.py:944
 #, fuzzy
 msgid "Remove Wi_sh"
 msgstr "Egy álnév eltávolítása"
 
-#: pynicotine/gtkgui/search.py:960
+#: pynicotine/gtkgui/search.py:958
 msgid "Select User's Results"
 msgstr "User Eredményeinek Kiválasztása"
 
-#: pynicotine/gtkgui/search.py:1066
+#: pynicotine/gtkgui/search.py:1064
 #, fuzzy, python-format
 msgid "Total: %s"
 msgstr "Összesítve"
 
-#: pynicotine/gtkgui/search.py:1164 pynicotine/gtkgui/userbrowse.py:1000
+#: pynicotine/gtkgui/search.py:1169 pynicotine/gtkgui/userbrowse.py:997
 #, fuzzy
 msgid "Select Destination Folder for File(s)"
 msgstr "Válassza ki a Fájl(ok) felhasználótól történő letöltésének célját"
 
-#: pynicotine/gtkgui/search.py:1214 pynicotine/gtkgui/userbrowse.py:732
+#: pynicotine/gtkgui/search.py:1219 pynicotine/gtkgui/userbrowse.py:729
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Válasszon egy mappát"
@@ -3062,7 +3062,7 @@ msgstr "Túl sok megabájt"
 msgid "File not shared"
 msgstr "Fájl nincs megosztva"
 
-#: pynicotine/gtkgui/transferlist.py:108 pynicotine/transfers.py:1870
+#: pynicotine/gtkgui/transferlist.py:108 pynicotine/transfers.py:1872
 #, fuzzy
 msgid "Download folder error"
 msgstr "Könyvtár letöltési hiba"
@@ -3094,7 +3094,7 @@ msgstr "Eltelt idő"
 msgid "Time Left"
 msgstr "Hátralévő idő"
 
-#: pynicotine/gtkgui/transferlist.py:190 pynicotine/gtkgui/userbrowse.py:240
+#: pynicotine/gtkgui/transferlist.py:190 pynicotine/gtkgui/userbrowse.py:237
 #, fuzzy
 msgid "Send to _Player"
 msgstr "Küldés a _lejátszóba"
@@ -3160,57 +3160,57 @@ msgstr "Minden eredmény tisztítása"
 msgid "Do you really want to clear all uploads?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
 
-#: pynicotine/gtkgui/userbrowse.py:165
+#: pynicotine/gtkgui/userbrowse.py:162
 #, fuzzy
 msgid "_Save Shares List to Disk"
 msgstr "_Mentés a megosztások listájáról a lemezre"
 
-#: pynicotine/gtkgui/userbrowse.py:174 pynicotine/gtkgui/userbrowse.py:238
+#: pynicotine/gtkgui/userbrowse.py:171 pynicotine/gtkgui/userbrowse.py:235
 #, fuzzy
 msgid "Upload Folder…"
 msgstr "Mappa feltöltése…"
 
-#: pynicotine/gtkgui/userbrowse.py:175
+#: pynicotine/gtkgui/userbrowse.py:172
 #, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
 msgstr "Mappa feltöltése (almappákkal) a felhasználóhoz"
 
-#: pynicotine/gtkgui/userbrowse.py:177 pynicotine/gtkgui/userbrowse.py:241
+#: pynicotine/gtkgui/userbrowse.py:174 pynicotine/gtkgui/userbrowse.py:238
 #, fuzzy
 msgid "Open in File _Manager"
 msgstr "Megnyitás fájlkezelőben"
 
-#: pynicotine/gtkgui/userbrowse.py:179 pynicotine/gtkgui/userbrowse.py:191
+#: pynicotine/gtkgui/userbrowse.py:176 pynicotine/gtkgui/userbrowse.py:188
 #, fuzzy
 msgid "Copy _Folder Path"
 msgstr "Könyvtár-URL másolása"
 
-#: pynicotine/gtkgui/userbrowse.py:186 pynicotine/gtkgui/userbrowse.py:256
+#: pynicotine/gtkgui/userbrowse.py:183 pynicotine/gtkgui/userbrowse.py:253
 #, fuzzy
 msgid "_Download Folder"
 msgstr "Mappa _letöltése"
 
-#: pynicotine/gtkgui/userbrowse.py:187 pynicotine/gtkgui/userbrowse.py:257
+#: pynicotine/gtkgui/userbrowse.py:184 pynicotine/gtkgui/userbrowse.py:254
 #, fuzzy
 msgid "Download Folder _To…"
 msgstr "Mappa letöltése _ide..."
 
-#: pynicotine/gtkgui/userbrowse.py:188
+#: pynicotine/gtkgui/userbrowse.py:185
 #, fuzzy
 msgid "Download Folder & Subfolder(s)"
 msgstr "_File(-ok) letöltése"
 
-#: pynicotine/gtkgui/userbrowse.py:189
+#: pynicotine/gtkgui/userbrowse.py:186
 #, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
 msgstr "File-(ok) letöltése _ide..."
 
-#: pynicotine/gtkgui/userbrowse.py:237
+#: pynicotine/gtkgui/userbrowse.py:234
 #, fuzzy
 msgid "Up_load File(s)…"
 msgstr "Fájl(ok) _feltöltése"
 
-#: pynicotine/gtkgui/userbrowse.py:456
+#: pynicotine/gtkgui/userbrowse.py:453
 #, fuzzy
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
@@ -3219,7 +3219,7 @@ msgstr ""
 "A felhasználó megosztott fájljainak listája üres. Vagy a felhasználó nem "
 "oszt meg semmit, vagy a fájlokat magánjelleggel osztja meg."
 
-#: pynicotine/gtkgui/userbrowse.py:465
+#: pynicotine/gtkgui/userbrowse.py:462
 #, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
@@ -3229,54 +3229,54 @@ msgstr ""
 "offline, vagy mindkettőtöknek zárt figyelőportja van, vagy átmeneti "
 "kapcsolódási probléma áll fenn."
 
-#: pynicotine/gtkgui/userbrowse.py:730
+#: pynicotine/gtkgui/userbrowse.py:727
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Válassza ki a Mappa felhasználótól történő letöltésének célját"
 
-#: pynicotine/gtkgui/userbrowse.py:777
+#: pynicotine/gtkgui/userbrowse.py:774
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Mappa feltöltése (almappákkal) a felhasználóhoz"
 
-#: pynicotine/gtkgui/userbrowse.py:779
+#: pynicotine/gtkgui/userbrowse.py:776
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Mappa feltöltése…"
 
-#: pynicotine/gtkgui/userbrowse.py:784 pynicotine/gtkgui/userbrowse.py:1041
+#: pynicotine/gtkgui/userbrowse.py:781 pynicotine/gtkgui/userbrowse.py:1038
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Írja be az felhasználót, akinek fel szeretne tölteni:"
 
-#: pynicotine/gtkgui/userbrowse.py:1040
+#: pynicotine/gtkgui/userbrowse.py:1037
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Fájl(ok) feltöltése"
 
-#: pynicotine/gtkgui/userinfo.py:195
+#: pynicotine/gtkgui/userinfo.py:192
 msgid "Zoom 1:1"
 msgstr "Nagyít 1:1"
 
-#: pynicotine/gtkgui/userinfo.py:196
+#: pynicotine/gtkgui/userinfo.py:193
 msgid "Zoom In"
 msgstr "Nagyítás"
 
-#: pynicotine/gtkgui/userinfo.py:197
+#: pynicotine/gtkgui/userinfo.py:194
 msgid "Zoom Out"
 msgstr "Kicsinyítés"
 
-#: pynicotine/gtkgui/userinfo.py:199
+#: pynicotine/gtkgui/userinfo.py:196
 #, fuzzy
 msgid "Save Picture"
 msgstr "Kép mentése"
 
-#: pynicotine/gtkgui/userinfo.py:260
+#: pynicotine/gtkgui/userinfo.py:253
 #, fuzzy, python-format
 msgid "Failed to load picture for user %(user)s: %(error)s"
 msgstr "A külső WAN-port hozzárendelése sikertelen: %(error)s"
 
-#: pynicotine/gtkgui/userinfo.py:331
+#: pynicotine/gtkgui/userinfo.py:324
 #, fuzzy
 msgid ""
 "Unable to request information from user. Either you both have a closed "
@@ -3287,15 +3287,15 @@ msgstr ""
 "figyelőportja van, vagy a felhasználó offline, vagy átmeneti kapcsolati "
 "probléma áll fenn."
 
-#: pynicotine/gtkgui/userinfo.py:365
+#: pynicotine/gtkgui/userinfo.py:358
 msgid "Yes"
 msgstr "Igen"
 
-#: pynicotine/gtkgui/userinfo.py:365
+#: pynicotine/gtkgui/userinfo.py:358
 msgid "No"
 msgstr "Nem"
 
-#: pynicotine/gtkgui/userinfo.py:387 pynicotine/gtkgui/widgets/popupmenu.py:551
+#: pynicotine/gtkgui/userinfo.py:380 pynicotine/gtkgui/widgets/popupmenu.py:551
 #: pynicotine/gtkgui/widgets/treeview.py:465
 #: pynicotine/gtkgui/ui/userinfo.ui:115 pynicotine/gtkgui/ui/userinfo.ui:142
 #: pynicotine/gtkgui/ui/userinfo.ui:169 pynicotine/gtkgui/ui/userinfo.ui:196
@@ -3304,79 +3304,79 @@ msgstr "Nem"
 msgid "Unknown"
 msgstr "Ismeretlen"
 
-#: pynicotine/gtkgui/userinfo.py:453
+#: pynicotine/gtkgui/userinfo.py:446
 #, python-format
 msgid "Picture saved to %s"
 msgstr "Kép elmentve ide: %s"
 
-#: pynicotine/gtkgui/userinfo.py:455
+#: pynicotine/gtkgui/userinfo.py:448
 #, python-format
 msgid "Picture not saved, %s already exists."
 msgstr "Kép nincs elmentve, %s már létezik."
 
-#: pynicotine/gtkgui/userinfo.py:467
+#: pynicotine/gtkgui/userinfo.py:460
 #, fuzzy
 msgid "Save as…"
 msgstr "Mentés másként…"
 
-#: pynicotine/gtkgui/userlist.py:85
+#: pynicotine/gtkgui/userlist.py:84
 msgid "Trusted"
 msgstr "Megbízható"
 
-#: pynicotine/gtkgui/userlist.py:86
+#: pynicotine/gtkgui/userlist.py:85
 msgid "Notify"
 msgstr "Értesítés"
 
-#: pynicotine/gtkgui/userlist.py:87
+#: pynicotine/gtkgui/userlist.py:86
 #, fuzzy
 msgid "Prioritized"
 msgstr "Prioritás"
 
-#: pynicotine/gtkgui/userlist.py:88
+#: pynicotine/gtkgui/userlist.py:87
 #, fuzzy
 msgid "Last Seen"
 msgstr "Utoljára aktív"
 
-#: pynicotine/gtkgui/userlist.py:89
+#: pynicotine/gtkgui/userlist.py:88
 #, fuzzy
 msgid "Note"
 msgstr "jegyzet"
 
-#: pynicotine/gtkgui/userlist.py:142
+#: pynicotine/gtkgui/userlist.py:139
 #, fuzzy
 msgid "Add User _Note…"
 msgstr "User hozzáadása barátlistához"
 
-#: pynicotine/gtkgui/userlist.py:144
+#: pynicotine/gtkgui/userlist.py:141
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:360
 msgid "_Remove"
 msgstr "_Eltávolít"
 
-#: pynicotine/gtkgui/userlist.py:187 pynicotine/gtkgui/userlist.py:438
+#: pynicotine/gtkgui/userlist.py:184 pynicotine/gtkgui/userlist.py:435
 msgid "Never seen"
 msgstr "Még nem aktív"
 
-#: pynicotine/gtkgui/userlist.py:363
+#: pynicotine/gtkgui/userlist.py:360
 #, python-format
 msgid "User %s is away"
 msgstr "%s távol van"
 
-#: pynicotine/gtkgui/userlist.py:365
+#: pynicotine/gtkgui/userlist.py:362
 #, python-format
 msgid "User %s is online"
 msgstr "%s elérhető"
 
-#: pynicotine/gtkgui/userlist.py:367
+#: pynicotine/gtkgui/userlist.py:364
 #, python-format
 msgid "User %s is offline"
 msgstr "%s nem elérhető"
 
-#: pynicotine/gtkgui/userlist.py:547
+#: pynicotine/gtkgui/userlist.py:544
 #, fuzzy
 msgid "Add User Note"
 msgstr "User hozzáadása barátlistához"
 
-#: pynicotine/gtkgui/userlist.py:548
+#: pynicotine/gtkgui/userlist.py:545
 #, fuzzy, python-format
 msgid "Add a note about user %s:"
 msgstr "Adjon hozzá néhány, az %s felhasználóhoz kapcsolódó jegyzetet:"
@@ -3429,17 +3429,17 @@ msgstr "(Nincs)"
 msgid "Close tab"
 msgstr "A lapfül bezárása"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:255
+#: pynicotine/gtkgui/widgets/iconnotebook.py:256
 #, fuzzy
 msgid "Unread Tabs"
 msgstr "Olvasatlan lapok"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:371
+#: pynicotine/gtkgui/widgets/iconnotebook.py:372
 #, fuzzy
 msgid "Close All Tabs?"
 msgstr "A lapfül bezárása"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:372
+#: pynicotine/gtkgui/widgets/iconnotebook.py:373
 #, fuzzy
 msgid "Do you really want to close all tabs?"
 msgstr "Tényleg ki szeretne lépni a Nicotine+-ból?"
@@ -3564,13 +3564,13 @@ msgstr "\"%s\" álnév \"üresen tért vissza\""
 msgid "Command %s is not recognized"
 msgstr "%s parancs nem ismert"
 
-#: pynicotine/gtkgui/widgets/theme.py:327
+#: pynicotine/gtkgui/widgets/theme.py:323
 #, fuzzy, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
 msgstr "Hiba az egyéni ikon betöltése %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:84
-#: pynicotine/gtkgui/widgets/trayicon.py:352
+#: pynicotine/gtkgui/widgets/trayicon.py:353
 #, fuzzy
 msgid "Show Nicotine+"
 msgstr "Nicotine+ elrejtése / mutatása"
@@ -3640,7 +3640,7 @@ msgid "Enter the name of the user whose shares you want to see:"
 msgstr ""
 "Írja be a felhasználót, akinek a megosztási listáját le szeretné kérni:"
 
-#: pynicotine/gtkgui/widgets/trayicon.py:350
+#: pynicotine/gtkgui/widgets/trayicon.py:351
 #, fuzzy
 msgid "Hide Nicotine+"
 msgstr "Nicotine+ elrejtése / mutatása"
@@ -3820,42 +3820,42 @@ msgstr ""
 msgid "Loading plugin system"
 msgstr "Beépülő kezelő betöltése"
 
-#: pynicotine/pynicotine.py:259
+#: pynicotine/pynicotine.py:261
 #, fuzzy
 msgid "You need to specify a username and password before connecting…"
 msgstr "A csatlakozás előtt meg kell adnia egy felhasználónevet és jelszót…"
 
-#: pynicotine/pynicotine.py:265
+#: pynicotine/pynicotine.py:267
 #, fuzzy, python-format
 msgid "Quitting %(program)s %(version)s, %(status)s…"
 msgstr "Nicotine+ verzió %s"
 
-#: pynicotine/pynicotine.py:268
+#: pynicotine/pynicotine.py:270
 #, fuzzy
 msgid "terminating"
 msgstr "megszüntető"
 
-#: pynicotine/pynicotine.py:268
+#: pynicotine/pynicotine.py:270
 #, fuzzy
 msgid "application closing"
 msgstr "a pályázat lezárása"
 
-#: pynicotine/pynicotine.py:298
+#: pynicotine/pynicotine.py:300
 #, fuzzy, python-format
 msgid "Quit %(program)s %(version)s, %(status)s!"
 msgstr "Nicotine+ verzió %s"
 
-#: pynicotine/pynicotine.py:301
+#: pynicotine/pynicotine.py:303
 #, fuzzy
 msgid "terminated"
 msgstr "megszűnt"
 
-#: pynicotine/pynicotine.py:301
+#: pynicotine/pynicotine.py:303
 #, fuzzy
 msgid "done"
 msgstr "kész"
 
-#: pynicotine/pynicotine.py:313
+#: pynicotine/pynicotine.py:315
 #, fuzzy, python-format
 msgid ""
 "The network interface you specified, '%s', does not exist. Change or remove "
@@ -3864,7 +3864,7 @@ msgstr ""
 "A megadott hálózati interfész, \"%s\" nem létezik. Módosítsa vagy távolítsa "
 "el a megadott hálózati interfészt, és indítsa újra a Nicotine+ programot."
 
-#: pynicotine/pynicotine.py:323
+#: pynicotine/pynicotine.py:325
 #, fuzzy
 msgid ""
 "The range you specified for client connection ports was {}-{}, but none of "
@@ -3873,7 +3873,7 @@ msgstr ""
 "Az ügyfélkapcsolati portoknál megadott tartomány {}-{} volt, de ezek közül "
 "egyik sem volt használható. Növelje és/vagy "
 
-#: pynicotine/pynicotine.py:330
+#: pynicotine/pynicotine.py:332
 msgid ""
 "Note that part of your range lies below 1024, this is usually not allowed on "
 "most operating systems with the exception of Windows."
@@ -3881,50 +3881,50 @@ msgstr ""
 "Jegyezze meg, hogy a tartománya része 1024 alatt van, ez általában nem "
 "megengedett a legtöbb operációs rendszeren, a Windows kivételével."
 
-#: pynicotine/pynicotine.py:345
+#: pynicotine/pynicotine.py:347
 #, python-format
 msgid "Connecting to %(host)s:%(port)s"
 msgstr "Csatlakozás ide: %(host)s:%(port)s"
 
-#: pynicotine/pynicotine.py:560
+#: pynicotine/pynicotine.py:564
 #, fuzzy, python-format
 msgid "Unable to connect to the server. Reason: %s"
 msgstr "Nem sikerült csatlakozni a kiszolgálóhoz. Ok: %s"
 
-#: pynicotine/pynicotine.py:605
+#: pynicotine/pynicotine.py:609
 #, fuzzy, python-format
 msgid "Cannot retrieve the IP of user %s, since this user is offline"
 msgstr ""
 "Az %s felhasználó IP-címe ismeretlen, mivel a felhasználó offline állapotban "
 "van."
 
-#: pynicotine/pynicotine.py:608
+#: pynicotine/pynicotine.py:612
 #, fuzzy, python-format
 msgid "IP address of user %(user)s is %(ip)s, port %(port)i%(country)s"
 msgstr "%(user)s IP-címe %(ip)s, port: %(port)i%(country)s"
 
-#: pynicotine/pynicotine.py:660
+#: pynicotine/pynicotine.py:664
 #, fuzzy, python-format
 msgid "Chat message from user '%(user)s' in room '%(room)s': %(message)s"
 msgstr ""
 "Csevegőüzenet „%(user)s” felhasználótól a „%(room)s” szobában: %(message)s"
 
-#: pynicotine/pynicotine.py:696
+#: pynicotine/pynicotine.py:700
 #, fuzzy, python-format
 msgid "Private message from user '%(user)s': %(message)s"
 msgstr "Privát üzenet tőle: %(user)s"
 
-#: pynicotine/pynicotine.py:738
+#: pynicotine/pynicotine.py:742
 #, fuzzy
 msgid "Someone logged in to your Soulseek account elsewhere"
 msgstr "Valaki máshol jelentkezett be az Ön Soulseek fiókjába."
 
-#: pynicotine/pynicotine.py:775
+#: pynicotine/pynicotine.py:779
 #, python-format
 msgid "%i privileged users"
 msgstr "%i elsőbbségi user"
 
-#: pynicotine/pynicotine.py:794
+#: pynicotine/pynicotine.py:798
 #, fuzzy
 msgid ""
 "You have no privileges. Privileges are not required, but allow your "
@@ -3933,7 +3933,7 @@ msgstr ""
 "Nincsenek kiváltságaid. A jogosultságok nem szükségesek, de lehetővé teszik, "
 "hogy a letöltések a nem jogosult felhasználók előtt kerüljenek sorba."
 
-#: pynicotine/pynicotine.py:797
+#: pynicotine/pynicotine.py:801
 #, python-format
 msgid ""
 "%(days)i days, %(hours)i hours, %(minutes)i minutes, %(seconds)i seconds of "
@@ -3942,48 +3942,48 @@ msgstr ""
 "Még %(days)i nap, %(hours)i óra, %(minutes)i perc és %(seconds)i másodperc "
 "maradt hátra elsőbbségben."
 
-#: pynicotine/pynicotine.py:896
+#: pynicotine/pynicotine.py:900
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "A jelszava megváltozott"
 
-#: pynicotine/pynicotine.py:953
+#: pynicotine/pynicotine.py:957
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Felhasználó %(user)s a megosztott fájlok listáját böngészi"
 
-#: pynicotine/pynicotine.py:1008
+#: pynicotine/pynicotine.py:1012
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s lekéri az userinfót"
 
-#: pynicotine/pynicotine.py:1058
+#: pynicotine/pynicotine.py:1062
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr ""
 "(Vigyázat: %(realuser)s user megpróbálja becsapni! Hamis név: %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1101
+#: pynicotine/pynicotine.py:1105
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr ""
 "Nem sikerült lekérni a megosztott mappa tartalmát %(folder)s: %(error)s"
 
-#: pynicotine/search.py:231 pynicotine/gtkgui/ui/mainwindow.ui:115
+#: pynicotine/search.py:235 pynicotine/gtkgui/ui/mainwindow.ui:115
 msgid "Joined Rooms "
 msgstr "Belépett szobák "
 
-#: pynicotine/search.py:256
+#: pynicotine/search.py:260
 #, fuzzy
 msgid "Server does not permit performing wishlist searches at this time"
 msgstr "A kiszolgáló jelenleg nem engedélyezi a kívánságlista keresését"
 
-#: pynicotine/search.py:315
+#: pynicotine/search.py:319
 #, fuzzy, python-format
 msgid "Wishlist wait period set to %s seconds"
 msgstr "A kívánságlista várakozási ideje %s másodpercre van beállítva."
 
-#: pynicotine/search.py:530
+#: pynicotine/search.py:534
 #, fuzzy, python-format
 msgid ""
 "User %(user)s is directly searching for \"%(query)s\", returning %(num)i "
@@ -3992,7 +3992,7 @@ msgstr ""
 "Az %(user)s felhasználó közvetlenül az \"%(query)s\"-re keres, és %(num)i "
 "eredményt ad vissza."
 
-#: pynicotine/search.py:537
+#: pynicotine/search.py:541
 #, fuzzy, python-format
 msgid "User %(user)s is searching for \"%(query)s\", returning %(num)i results"
 msgstr ""
@@ -4080,7 +4080,7 @@ msgstr "Nem sikerült elküldeni a megosztott fájlok számát a kiszolgálónak
 msgid "Rescan progress: %s"
 msgstr "Mappák: %s"
 
-#: pynicotine/slskmessages.py:2292
+#: pynicotine/slskmessages.py:2293
 #, fuzzy, python-format
 msgid "Unable to read shares database. Please rescan your shares. Error: %s"
 msgstr ""
@@ -4107,47 +4107,47 @@ msgstr "A szerver nem működik vagy nem válaszol, újrapróbálás %i mp múlv
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nem lehet csatlakozni a szerverre: %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:2116
+#: pynicotine/slskproto.py:2168
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Csatlakozva a szerverre: %(host)s:%(port)s, belépés..."
 
-#: pynicotine/transfers.py:1003
+#: pynicotine/transfers.py:1005
 #, python-format
 msgid "I/O error: %s"
 msgstr "I/O hiba: %s"
 
-#: pynicotine/transfers.py:1066 pynicotine/transfers.py:1870
+#: pynicotine/transfers.py:1068 pynicotine/transfers.py:1872
 #, python-format
 msgid "OS error: %s"
 msgstr "Operációs rendszer hiba: %s"
 
-#: pynicotine/transfers.py:1090
+#: pynicotine/transfers.py:1092
 #, python-format
 msgid "Can't get an exclusive lock on file - I/O error: %s"
 msgstr "Nem lehet hozzáférni a fájlhoz - I/O hiba: %s"
 
-#: pynicotine/transfers.py:1098 pynicotine/transfers.py:1329
+#: pynicotine/transfers.py:1100 pynicotine/transfers.py:1331
 #, python-format
 msgid "Download I/O error: %s"
 msgstr "Letöltési I/O hiba: %s"
 
-#: pynicotine/transfers.py:1118
+#: pynicotine/transfers.py:1120
 #, python-format
 msgid "Download started: user %(user)s, file %(file)s"
 msgstr "Letöltés elindult: %(user)s user, %(file)s fájl"
 
-#: pynicotine/transfers.py:1166
+#: pynicotine/transfers.py:1168
 #, python-format
 msgid "Upload I/O error: %s"
 msgstr "Feltöltési I/O hiba: %s"
 
-#: pynicotine/transfers.py:1185
+#: pynicotine/transfers.py:1187
 #, fuzzy, python-format
 msgid "Upload started: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Feltöltés elindult: %(user)s user, %(file)s fájl"
 
-#: pynicotine/transfers.py:1769
+#: pynicotine/transfers.py:1771
 #, fuzzy, python-format
 msgid ""
 "Unable to save download to username subfolder, falling back to default "
@@ -4156,77 +4156,77 @@ msgstr ""
 "A letöltés nem menthető a felhasználónév almappába, visszaesik az "
 "alapértelmezett letöltési mappába. Hiba: %s"
 
-#: pynicotine/transfers.py:1824
+#: pynicotine/transfers.py:1826
 #, python-format
 msgid "%(file)s downloaded from %(user)s"
 msgstr "%(file)s letöltve tőle: %(user)s"
 
-#: pynicotine/transfers.py:1828
+#: pynicotine/transfers.py:1830
 #, fuzzy
 msgid "File downloaded"
 msgstr "Fájl letöltve"
 
-#: pynicotine/transfers.py:1833
+#: pynicotine/transfers.py:1835
 #, python-format
 msgid "Trouble executing '%s'"
 msgstr "Futtatás probléma: '%s'"
 
-#: pynicotine/transfers.py:1835
+#: pynicotine/transfers.py:1837
 #, python-format
 msgid "Executed: %s"
 msgstr "Futtatva: %s"
 
-#: pynicotine/transfers.py:1851
+#: pynicotine/transfers.py:1853
 #, python-format
 msgid "%(folder)s downloaded from %(user)s"
 msgstr "%(folder)s letöltve tőle: %(user)s"
 
-#: pynicotine/transfers.py:1855
+#: pynicotine/transfers.py:1857
 #, fuzzy
 msgid "Folder downloaded"
 msgstr "Letöltött mappa"
 
-#: pynicotine/transfers.py:1860
+#: pynicotine/transfers.py:1862
 #, python-format
 msgid "Trouble executing on folder: %s"
 msgstr "Futtatási probléma a könyvtárban: %s"
 
-#: pynicotine/transfers.py:1862
+#: pynicotine/transfers.py:1864
 #, python-format
 msgid "Executed on folder: %s"
 msgstr "Futtatva a könyvtárban: %s"
 
-#: pynicotine/transfers.py:1888
+#: pynicotine/transfers.py:1890
 #, python-format
 msgid "Couldn't move '%(tempfile)s' to '%(file)s': %(error)s"
 msgstr "Nem lehetett mozgatni '%(tempfile)s' ide: '%(file)s', %(error)s"
 
-#: pynicotine/transfers.py:1921
+#: pynicotine/transfers.py:1923
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
 msgstr "Letöltés befejeződött: %(user)s felasználó, %(file)s fájl"
 
-#: pynicotine/transfers.py:1948
+#: pynicotine/transfers.py:1942
 #, fuzzy, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr "Letöltés befejeződött: %(user)s felasználó, %(file)s fájl"
 
-#: pynicotine/transfers.py:2296
+#: pynicotine/transfers.py:2297
 #, python-format
 msgid "Upload aborted, user %(user)s file %(file)s"
 msgstr "Feltöltés megszakítva, %(user)s user, %(file)s fájl"
 
-#: pynicotine/transfers.py:2303
+#: pynicotine/transfers.py:2304
 #, python-format
 msgid "Download aborted, user %(user)s file %(file)s"
 msgstr "Letöltés megszakítva, %(user)s user, %(file)s fájl"
 
-#: pynicotine/transfers.py:2361
+#: pynicotine/transfers.py:2362
 #, python-format
 msgid "Error: %(num)d Download filters failed! %(error)s "
 msgstr "Hiba: %(num)d Letöltési szűrő hibás! %(error)s "
 
-#: pynicotine/transfers.py:2365
+#: pynicotine/transfers.py:2366
 #, python-format
 msgid "Error: Download Filter failed! Verify your filters. Reason: %s"
 msgstr "Hiba: Letöltési Szűrő hibás! Ellenőrizd a szűrőket. Oka: %s"
@@ -4342,12 +4342,12 @@ msgstr "Eltávolított %(alias)s álnév: %(action)s\n"
 msgid "No such alias (%(alias)s)\n"
 msgstr "Nincs ilyen álnév (%(alias)s)\n"
 
-#: pynicotine/gtkgui/ui/buddylist.ui:33 pynicotine/gtkgui/ui/mainwindow.ui:1302
+#: pynicotine/gtkgui/ui/buddylist.ui:33 pynicotine/gtkgui/ui/mainwindow.ui:1305
 #, fuzzy
 msgid "Add buddy…"
 msgstr "Add buddy…"
 
-#: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1303
+#: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1306
 #, fuzzy
 msgid "Enter the username of the person you want to add to your buddy list"
 msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
@@ -4490,33 +4490,33 @@ msgstr ""
 "biztosít. A kiváltságok lehetővé teszik, hogy a letöltéseid a nem "
 "kiváltságos felhasználók előtt kerüljenek sorba."
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:32
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
 #, fuzzy
 msgid "File Name"
 msgstr "Fájlnév"
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:131
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
 #, fuzzy
 msgid "File Size"
 msgstr "Fájl mérete"
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:300
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 #, fuzzy
 msgid "Last Speed"
 msgstr "Utolsó sebesség"
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:371
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:294
 #, fuzzy
 msgid "Download file"
 msgstr "Fájl letöltése"
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:392
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:315
 #, fuzzy
 msgid "Previous file"
 msgstr "Előző fájl"
 
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:408
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:331
 #, fuzzy
 msgid "Next file"
 msgstr "Következő fájl"
@@ -4699,47 +4699,47 @@ msgid "Current Session"
 msgstr "Kliens verzió"
 
 #: pynicotine/gtkgui/ui/dialogs/statistics.ui:36
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:219
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:213
 #, fuzzy
 msgid "Started Downloads"
 msgstr "Letöltések"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:63
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:246
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:62
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:239
 #, fuzzy
 msgid "Completed Downloads"
 msgstr "Letöltés azonnal"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:90
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:273
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:88
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:265
 #, fuzzy
 msgid "Downloaded Size"
 msgstr "Letöltve"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:122
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:305
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:119
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:296
 #, fuzzy
 msgid "Started Uploads"
 msgstr "Feltöltések"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:149
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:332
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:145
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:322
 #, fuzzy
 msgid "Completed Uploads"
 msgstr "Álnév parancsok kiegészítése"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:176
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:359
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:171
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:348
 #, fuzzy
 msgid "Uploaded Size"
 msgstr "Fájl(ok) _feltöltése"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:203
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:197
 #, fuzzy
 msgid "Total"
 msgstr "Összesítve"
 
-#: pynicotine/gtkgui/ui/dialogs/statistics.ui:401
+#: pynicotine/gtkgui/ui/dialogs/statistics.ui:389
 #, fuzzy
 msgid "_Reset Statistics…"
 msgstr "Statisztikák"
@@ -4817,7 +4817,7 @@ msgstr "Adj hozzá valamit, amit nem szeretsz…"
 msgid "Recommendations"
 msgstr "Ajánlat ehhez: %s"
 
-#: pynicotine/gtkgui/ui/interests.ui:232
+#: pynicotine/gtkgui/ui/interests.ui:233
 #, fuzzy
 msgid "Similar Users"
 msgstr "Hasonló felhasználók"
@@ -4837,19 +4837,19 @@ msgid "Room…"
 msgstr "Szoba"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:141
-#: pynicotine/gtkgui/ui/mainwindow.ui:818
-#: pynicotine/gtkgui/ui/mainwindow.ui:996
-#: pynicotine/gtkgui/ui/mainwindow.ui:1157
+#: pynicotine/gtkgui/ui/mainwindow.ui:820
+#: pynicotine/gtkgui/ui/mainwindow.ui:999
+#: pynicotine/gtkgui/ui/mainwindow.ui:1160
 #, fuzzy
 msgid "Username…"
 msgstr "Felhasználónév"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:161
+#: pynicotine/gtkgui/ui/mainwindow.ui:162
 #, fuzzy
 msgid "Search term…"
 msgstr "Keresések"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:162
+#: pynicotine/gtkgui/ui/mainwindow.ui:163
 #, fuzzy
 msgid ""
 "Search patterns: with a word = term, without a word = -term, partial word = "
@@ -4858,16 +4858,16 @@ msgstr ""
 "Keresési minták: tartalmaz egy szót = kifejezés, ne tartalmazza a szót = -"
 "kifejezés"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:199
+#: pynicotine/gtkgui/ui/mainwindow.ui:200
 #, fuzzy
 msgid "_Wishlist"
 msgstr "Kívánságlista keresése"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:213
+#: pynicotine/gtkgui/ui/mainwindow.ui:214
 msgid "Configure searches"
 msgstr "Keresések beállítása"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:281
+#: pynicotine/gtkgui/ui/mainwindow.ui:282
 #, fuzzy
 msgid ""
 "Enter a search term to search for files shared by other users on the "
@@ -4876,23 +4876,23 @@ msgstr ""
 "Adjon meg egy keresési kifejezést a Soulseek hálózaton más felhasználók "
 "által megosztott fájlok kereséséhez."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:423
-#: pynicotine/gtkgui/ui/mainwindow.ui:663 pynicotine/gtkgui/ui/search.ui:119
+#: pynicotine/gtkgui/ui/mainwindow.ui:424
+#: pynicotine/gtkgui/ui/mainwindow.ui:664 pynicotine/gtkgui/ui/search.ui:119
 #: pynicotine/gtkgui/ui/userbrowse.ui:188
 msgid "Expand / Collapse all"
 msgstr "Kibővít / Összecsuk mindet"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:438
-#: pynicotine/gtkgui/ui/mainwindow.ui:678
+#: pynicotine/gtkgui/ui/mainwindow.ui:439
+#: pynicotine/gtkgui/ui/mainwindow.ui:679
 #, fuzzy
 msgid "File grouping mode"
 msgstr "Fájlcsoportosítási mód"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:455
+#: pynicotine/gtkgui/ui/mainwindow.ui:456
 msgid "Configure downloads"
 msgstr "Letöltések beállítása"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:523
+#: pynicotine/gtkgui/ui/mainwindow.ui:524
 #, fuzzy
 msgid ""
 "Files you download from other users are queued here, and can be paused and "
@@ -4901,11 +4901,11 @@ msgstr ""
 "A más felhasználóktól letöltött fájlok itt kerülnek sorba, és igény szerint "
 "szüneteltethetők és folytathatók."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:695
+#: pynicotine/gtkgui/ui/mainwindow.ui:696
 msgid "Configure uploads"
 msgstr "Feltöltések beállítása"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:763
+#: pynicotine/gtkgui/ui/mainwindow.ui:764
 #, fuzzy
 msgid ""
 "Users' attempts to download your shared files are queued and managed here"
@@ -4913,28 +4913,28 @@ msgstr ""
 "A felhasználók megosztott fájljainak letöltési kísérletei itt kerülnek sorba "
 "állításra és kezelésre."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:819
+#: pynicotine/gtkgui/ui/mainwindow.ui:821
 #, fuzzy
 msgid "Enter the username of the person whose files you want to see"
 msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:856
+#: pynicotine/gtkgui/ui/mainwindow.ui:858
 #, fuzzy
 msgid "Opens a local list of shared files that was previously saved to disk"
 msgstr ""
 "Megnyitja a megosztott fájlok helyi listáját, amelyet korábban lemezre "
 "mentett."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:857
+#: pynicotine/gtkgui/ui/mainwindow.ui:859
 #, fuzzy
 msgid "_Open List"
 msgstr "Kitiltottak listája"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:871
+#: pynicotine/gtkgui/ui/mainwindow.ui:873
 msgid "Configure shares"
 msgstr "Megosztás konfigurálása"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:939
+#: pynicotine/gtkgui/ui/mainwindow.ui:941
 #, fuzzy
 msgid ""
 "Enter the name of a user, whose shared files you'd like to browse. You can "
@@ -4943,17 +4943,17 @@ msgstr ""
 "Adja meg a felhasználó nevét a megosztott fájlok listájának böngészéséhez. "
 "Megnyithat egy korábban elmentett listát is."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:997
+#: pynicotine/gtkgui/ui/mainwindow.ui:1000
 #, fuzzy
 msgid "Enter the username of the person whose information you want to see"
 msgstr "Írja be a privát szoba nevét, amit létre akar hozni"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1034
+#: pynicotine/gtkgui/ui/mainwindow.ui:1037
 #, fuzzy
 msgid "Update I_nfo"
 msgstr "Useri_nfó"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1100
+#: pynicotine/gtkgui/ui/mainwindow.ui:1103
 #, fuzzy
 msgid ""
 "Enter the name of a user to view their user description, information and "
@@ -4962,18 +4962,18 @@ msgstr ""
 "Adja meg a felhasználó nevét a felhasználói leírás, az információk és a "
 "személyes kép megtekintéséhez."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1158
+#: pynicotine/gtkgui/ui/mainwindow.ui:1161
 #, fuzzy
 msgid "Enter the username of the person you want to send a message to"
 msgstr "Írja be a felhasználót, akinek privát üzenetet küldene:"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1181
-#: pynicotine/gtkgui/ui/mainwindow.ui:1466
+#: pynicotine/gtkgui/ui/mainwindow.ui:1184
+#: pynicotine/gtkgui/ui/mainwindow.ui:1470
 #, fuzzy
 msgid "Configure chats"
 msgstr "Megosztás konfigurálása"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1249
+#: pynicotine/gtkgui/ui/mainwindow.ui:1252
 #, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
@@ -4981,7 +4981,7 @@ msgstr ""
 "Adja meg egy felhasználó nevét, hogy privát szöveges beszélgetést kezdjen "
 "vele."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1370
+#: pynicotine/gtkgui/ui/mainwindow.ui:1373
 #, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
@@ -4990,12 +4990,12 @@ msgstr ""
 "Adjon hozzá felhasználókat a barátlistájához, hogy megoszthasson velük "
 "bizonyos mappákat, és értesítést kapjon, ha online vannak."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1425
+#: pynicotine/gtkgui/ui/mainwindow.ui:1429
 #, fuzzy
 msgid "Create or join room…"
 msgstr "Privát Szoba Létrehozás"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1426
+#: pynicotine/gtkgui/ui/mainwindow.ui:1430
 #, fuzzy
 msgid ""
 "Enter the name of a room you want to join. If the room doesn't exist, it "
@@ -5004,12 +5004,12 @@ msgstr ""
 "Adja meg a csatlakozni kívánt szoba nevét. Ha a szoba nem létezik, akkor "
 "létrejön."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1442
+#: pynicotine/gtkgui/ui/mainwindow.ui:1446
 #, fuzzy
 msgid "_Room List"
 msgstr "Szobák"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1534
+#: pynicotine/gtkgui/ui/mainwindow.ui:1538
 #, fuzzy
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
@@ -5018,30 +5018,30 @@ msgstr ""
 "Csatlakozzon egy meglévő csevegőszobához, vagy hozzon létre egy új szobát, "
 "hogy a Soulseek hálózat többi felhasználójával cseveghessen."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1683
+#: pynicotine/gtkgui/ui/mainwindow.ui:1687
 msgid "Scanning Shares"
 msgstr "Aktualizálás elindult"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1700
+#: pynicotine/gtkgui/ui/mainwindow.ui:1704
 msgid "Connections"
 msgstr "Kapcsolat"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1729
+#: pynicotine/gtkgui/ui/mainwindow.ui:1733
 #, fuzzy
 msgid "Downloading (speed / active users)"
 msgstr "Letöltés (sebesség / aktív felhasználók)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1757
+#: pynicotine/gtkgui/ui/mainwindow.ui:1761
 #, fuzzy
 msgid "Uploading (speed / active users)"
 msgstr "Feltöltés (sebesség / aktív felhasználók)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1803
+#: pynicotine/gtkgui/ui/mainwindow.ui:1807
 #, fuzzy
 msgid "Enable alternative download and upload speed limits"
 msgstr "Alternatív letöltési és feltöltési sebességkorlátozások engedélyezése"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1821
+#: pynicotine/gtkgui/ui/mainwindow.ui:1825
 #, fuzzy
 msgid "Show log history"
 msgstr "_Naplóablak mutatása"
@@ -6002,7 +6002,7 @@ msgstr "Teljes letöltési sebesség limitálása ennyi kB/s-re:"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:210
 #: pynicotine/gtkgui/ui/settings/uploads.ui:149
 #: pynicotine/gtkgui/ui/settings/uploads.ui:179
-#: pynicotine/gtkgui/ui/settings/uploads.ui:430
+#: pynicotine/gtkgui/ui/settings/uploads.ui:431
 #, fuzzy
 msgid "Kibibytes (2^10 bytes) per second."
 msgstr "Kibájt (2^10 bájt) másodpercenként."
@@ -6207,22 +6207,22 @@ msgstr "Automatikus csatlakozás a kiszolgálóhoz indításkor"
 msgid "Use UPnP to forward listening port (interval in hours):"
 msgstr "Használja az UPnP-t a port automatikus hozzárendeléséhez a routeremen"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:382
+#: pynicotine/gtkgui/ui/settings/network.ui:383
 #, fuzzy
 msgid "Enable CTCP-like private message responses (client version)"
 msgstr "Engedélyezi a CTCP-szerű PÜ válaszokat (kliens verzió)"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:400
+#: pynicotine/gtkgui/ui/settings/network.ui:401
 #, fuzzy
 msgid "Soulseek server:"
 msgstr "Soulseek szerver:"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:425
+#: pynicotine/gtkgui/ui/settings/network.ui:426
 #, fuzzy
 msgid "Network interface (requires a restart):"
 msgstr "Helyesírás-ellenőrzés engedélyezése (újraindítás szükséges)"
 
-#: pynicotine/gtkgui/ui/settings/network.ui:440
+#: pynicotine/gtkgui/ui/settings/network.ui:441
 #, fuzzy
 msgid ""
 "Binds connections to a specific network interface, useful for e.g. ensuring "
@@ -6267,22 +6267,22 @@ msgstr "Beállítások tesztelése"
 msgid "Enable plugins"
 msgstr "Beépülők engedélyezése"
 
-#: pynicotine/gtkgui/ui/settings/plugin.ui:98
+#: pynicotine/gtkgui/ui/settings/plugin.ui:99
 #, fuzzy
 msgid "_Add Plugins"
 msgstr "Beépülők"
 
-#: pynicotine/gtkgui/ui/settings/plugin.ui:133
+#: pynicotine/gtkgui/ui/settings/plugin.ui:134
 #, fuzzy
 msgid "_Settings"
 msgstr "Beállítások"
 
-#: pynicotine/gtkgui/ui/settings/plugin.ui:203
+#: pynicotine/gtkgui/ui/settings/plugin.ui:204
 #, fuzzy
 msgid "Version:"
 msgstr "Verzió: "
 
-#: pynicotine/gtkgui/ui/settings/plugin.ui:224
+#: pynicotine/gtkgui/ui/settings/plugin.ui:225
 #, fuzzy
 msgid "Author(s):"
 msgstr "Szerző(k): "
@@ -6560,12 +6560,12 @@ msgstr "FIFO várakozási mód"
 msgid "Queue uploads if total transfer speed reaches (KiB/s):"
 msgstr "Feltöltések várakoztatásba, ha a max. átviteli sebességet eléri"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:445
+#: pynicotine/gtkgui/ui/settings/uploads.ui:446
 #, fuzzy
 msgid "Limit number of upload slots to:"
 msgstr "Feltöltési szál korlátozása erre:"
 
-#: pynicotine/gtkgui/ui/settings/uploads.ui:446
+#: pynicotine/gtkgui/ui/settings/uploads.ui:447
 #, fuzzy
 msgid ""
 "If disabled, slots will automatically be determined by available bandwidth "

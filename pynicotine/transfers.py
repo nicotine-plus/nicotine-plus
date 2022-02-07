@@ -1742,7 +1742,7 @@ class Transfers:
         # Check if username subfolders should be created for downloads
         if self.config.sections["transfers"]["usernamesubfolders"]:
             try:
-                downloaddir = os.path.join(downloaddir, user)
+                downloaddir = os.path.join(downloaddir, clean_file(user))
 
                 if not os.path.isdir(downloaddir):
                     os.makedirs(downloaddir)
@@ -1978,7 +1978,14 @@ class Transfers:
 
             if self.transfer_request_times:
                 for transfer, start_time in self.transfer_request_times.copy().items():
-                    if (current_time - start_time) >= 30:
+                    # When our port is closed, certain clients can take up to ~30 seconds before they
+                    # initiate a 'F' connection, since they only send an indirect connection request after
+                    # attempting to connect to our port for a certain time period.
+                    # Known clients: Nicotine+ 2.2.0 - 3.2.0, 2 s; Soulseek NS, ~20 s; soulseeX, ~30 s.
+                    # To account for potential delays while initializing the connection, add 15 seconds
+                    # to the timeout value.
+
+                    if (current_time - start_time) >= 45:
                         self.network_callback([slskmessages.TransferTimeout(transfer)])
 
             if self.core.protothread.exit.wait(1):

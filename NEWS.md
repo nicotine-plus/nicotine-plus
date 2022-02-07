@@ -14,6 +14,7 @@ Changes
  * Optimized parent row expansions when adding new search results and transfers into tree views
  * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
  * Optimized loading performance and reduce memory usage of open chat tabs
+ * Optimized connection initialization performance when uploading to certain users
  * Changed the chat log filename replacement character from - to _ in room names containing an illegal character
  * Changed display of items in the Uploads transfer list to virtual folder paths instead of local folder paths
  * Added display of local folder paths for local items in the File Properties dialog
@@ -27,7 +28,8 @@ Corrections
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
  * IMPORTANT: Fixed a regression where pausing a download doesn't actually pause it if translations are used
  * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
- * Fixed an issue where uploads can become stuck in the transfer queue forever
+ * Fixed an issue where uploads could become stuck in the transfer queue forever
+ * Fixed an issue where paused downloads started downloading in a random order when resumed
  * Fixed a regression where the bandwidth status indicator failed to update if the transfers tab was inactive
  * Fixed broken scrollbar when changing active page in the Preferences dialog
  * Fixed labels of UI elements in the Russian translation (thank you @SnIPeRSnIPeR)
@@ -57,6 +59,7 @@ Issues closed on GitHub
  * Connect to remote host? ([#1839](https://github.com/nicotine-plus/nicotine-plus/issues/1839))
  * Error message appeard while trying to exit the client ([#1850](https://github.com/nicotine-plus/nicotine-plus/issues/1850))
  * \[3.2.1.rc2\] Crash when resuming transfers ([#1853](https://github.com/nicotine-plus/nicotine-plus/issues/1853))
+ * Way to handle lots of small files on your upload queue ([#1865](https://github.com/nicotine-plus/nicotine-plus/issues/1865))
 
 Version 3.2.0 (December 18, 2021)
 ---------------------------------

@@ -67,7 +67,7 @@ Nicotine+ will first try to find your translation files in your project folder, 
 
 In order to use the updated translations when running Nicotine+ from your project folder, you need to generate `.mo` files by running:
 
-```console
+```sh
 python3 setup.py build
 ```
 
@@ -96,6 +96,6 @@ This part is relevant for developers.
 
 The translation template file `po/nicotine.pot` should be updated after modifying strings in the codebase. To update the template, run the following command:
 
-```console
+```sh
 python3 po/update_pot.py
 ```
