@@ -260,6 +260,7 @@ class IconNotebook:
 
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
+            self.unread_button.set_has_frame(False)
             self.unread_button.set_icon_name("emblem-important-symbolic")
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
