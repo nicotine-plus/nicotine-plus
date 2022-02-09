@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-06 17:33+0200\n"
+"POT-Creation-Date: 2022-02-09 20:49+0200\n"
 "PO-Revision-Date: 2022-01-10 21:30+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1904,7 +1904,7 @@ msgstr "Katkaise yhteys"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1459
 #: pynicotine/gtkgui/frame.py:1534
-#: pynicotine/gtkgui/widgets/iconnotebook.py:470
+#: pynicotine/gtkgui/widgets/iconnotebook.py:471
 #: pynicotine/gtkgui/widgets/trayicon.py:97
 #: pynicotine/gtkgui/widgets/treeview.py:485
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
@@ -2331,7 +2331,7 @@ msgstr ""
 msgid "Loading %(program)s %(version)s"
 msgstr "Lopetamme Nicotine+ %(version)s, %(status)s…"
 
-#: pynicotine/gtkgui/frame.py:366 pynicotine/gtkgui/widgets/iconnotebook.py:474
+#: pynicotine/gtkgui/frame.py:366 pynicotine/gtkgui/widgets/iconnotebook.py:475
 #: pynicotine/gtkgui/widgets/treeview.py:490
 #: pynicotine/gtkgui/ui/mainwindow.ui:1793
 msgid "Offline"
@@ -2604,7 +2604,7 @@ msgid "Make room private"
 msgstr "Tee huoneesta yksityinen"
 
 #: pynicotine/gtkgui/frame.py:1531
-#: pynicotine/gtkgui/widgets/iconnotebook.py:472
+#: pynicotine/gtkgui/widgets/iconnotebook.py:473
 #: pynicotine/gtkgui/widgets/treeview.py:488
 msgid "Online"
 msgstr "Linjalla"
@@ -3480,12 +3480,12 @@ msgstr "Sulje"
 msgid "Unread Tabs"
 msgstr "Lukemattomat välilehdet"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:372
+#: pynicotine/gtkgui/widgets/iconnotebook.py:373
 #, fuzzy
 msgid "Close All Tabs?"
 msgstr "Suljetko kaikki välilehdet?"
 
-#: pynicotine/gtkgui/widgets/iconnotebook.py:373
+#: pynicotine/gtkgui/widgets/iconnotebook.py:374
 #, fuzzy
 msgid "Do you really want to close all tabs?"
 msgstr "Syötä sen käyttäjän nimi jolle haluat lähettää:"
