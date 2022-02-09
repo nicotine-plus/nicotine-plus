@@ -24,11 +24,11 @@ Changes
 
 Corrections
 
- * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path
+ * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path (affects version 3.0.3 and later)
+ * IMPORTANT: Fixed an issue where uploads could become stuck in the transfer queue forever
  * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
- * IMPORTANT: Fixed a regression where pausing a download doesn't actually pause it if translations are used
+ * Fixed a regression where pausing a download doesn't actually pause it if translations are used
  * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
- * Fixed an issue where uploads could become stuck in the transfer queue forever
  * Fixed an issue where paused downloads started downloading in a random order when resumed
  * Fixed a regression where the bandwidth status indicator failed to update if the transfers tab was inactive
  * Fixed broken scrollbar when changing active page in the Preferences dialog
