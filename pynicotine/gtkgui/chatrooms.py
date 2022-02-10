@@ -697,7 +697,8 @@ class ChatRoom(UserInterface):
 
         self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
-        if self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active():
+        if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.Main)
+                and self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 

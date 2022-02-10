@@ -306,7 +306,8 @@ class PrivateChat(UserInterface):
 
         self.chats.request_tab_hilite(self.Main)
 
-        if self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active():
+        if (self.chats.get_current_page() == self.chats.page_num(self.Main)
+                and self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
