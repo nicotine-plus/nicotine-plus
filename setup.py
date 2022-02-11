@@ -64,8 +64,8 @@ functionality while keeping current with the Soulseek protocol."""
     PACKAGE_DATA = {package: ["*.bin", "*.md", "*.py", "*.svg", "*.ui", "PLUGININFO"] for package in PACKAGES}
 
     DATA_FILES = [
-        ("share/applications", glob.glob("data/*.desktop")),
-        ("share/metainfo", glob.glob("data/*.metainfo.xml")),
+        ("share/applications", ["data/" + config.application_id + ".desktop"]),
+        ("share/metainfo", ["data/" + config.application_id + ".metainfo.xml"]),
         ("share/icons/hicolor/scalable/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/apps/*.svg")),
         ("share/icons/hicolor/scalable/intl", glob.glob("pynicotine/gtkgui/icons/hicolor/scalable/intl/*.svg")),
         ("share/icons/hicolor/symbolic/apps", glob.glob("pynicotine/gtkgui/icons/hicolor/symbolic/apps/*.svg")),
