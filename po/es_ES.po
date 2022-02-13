@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-09 20:49+0200\n"
-"PO-Revision-Date: 2022-01-24 22:53+0000\n"
+"PO-Revision-Date: 2022-02-11 21:40+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -1900,7 +1900,7 @@ msgstr "Terminada/filtrada"
 #: pynicotine/gtkgui/downloads.py:50 pynicotine/gtkgui/transferlist.py:100
 #: pynicotine/gtkgui/uploads.py:50
 msgid "Finished"
-msgstr "Finalizada"
+msgstr "Terminada"
 
 #: pynicotine/gtkgui/downloads.py:51 pynicotine/gtkgui/transferlist.py:99
 msgid "Paused"
@@ -3671,13 +3671,13 @@ msgstr "No se pudo mover «%(tempfile)s» a «%(file)s»: %(error)s"
 #: pynicotine/transfers.py:1923
 #, python-format
 msgid "Download finished: user %(user)s, file %(file)s"
-msgstr "Descarga finalizada: usuario %(user)s, archivo %(file)s"
+msgstr "Descarga terminada: usuario %(user)s, archivo %(file)s"
 
 #: pynicotine/transfers.py:1942
 #, python-format
 msgid "Upload finished: user %(user)s, IP address %(ip)s, file %(file)s"
 msgstr ""
-"Subida finalizada: usuario %(user)s, dirección IP %(ip)s, archivo %(file)s"
+"Subida terminada: usuario %(user)s, dirección IP %(ip)s, archivo %(file)s"
 
 #: pynicotine/transfers.py:2297
 #, python-format
@@ -4185,7 +4185,7 @@ msgstr "Limpiar"
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
-msgstr "Limpiar finalizadas"
+msgstr "Limpiar terminadas"
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 msgid "Clear _Downloads…"
@@ -5852,11 +5852,11 @@ msgstr "Mostrar notificaciones para:"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:350
 msgid "Finished file downloads"
-msgstr "Descargas de archivos finalizadas"
+msgstr "Descargas de archivos terminadas"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:362
 msgid "Finished folder downloads"
-msgstr "Descargas de carpetas finalizadas"
+msgstr "Descargas de carpetas terminadas"
 
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:374
 msgid "Private messages"
