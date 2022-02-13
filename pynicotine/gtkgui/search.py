@@ -807,8 +807,8 @@ class Search(UserInterface):
                     and value <= sfilter + (factor / 2))
 
         if used_operator == "!=":
-            return not (value >= sfilter - (factor / 2)  # pylint:disable=chained-comparison
-                        and value <= sfilter + (factor / 2))
+            return not (value >= sfilter - (factor / 8)  # pylint:disable=chained-comparison
+                        and value <= sfilter + (factor / 8))
 
         operation = self.operators.get(used_operator)
         return operation(value, sfilter)
