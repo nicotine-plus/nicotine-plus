@@ -422,12 +422,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Send M_essage</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -451,12 +453,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">_Browse Files</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -480,12 +484,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">_Add to Buddy List</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -508,12 +514,14 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Ban User</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -536,12 +544,14 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Ignore User</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -565,12 +575,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Show IP A_ddress</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -595,12 +607,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Save _Picture</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
@@ -630,12 +644,14 @@
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">_Refresh Info</property>
                             <property name="use-underline">True</property>
+                            <attributes>
+                              <attribute name="weight" value="normal"/>
+                            </attributes>
                           </object>
                         </child>
                       </object>
                     </child>
                     <style>
-                      <class name="body"/>
                       <class name="flat"/>
                     </style>
                   </object>
