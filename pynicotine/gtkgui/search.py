@@ -803,12 +803,12 @@ class Search(UserInterface):
 
         # Exact size match is unlikely, so approximate within +/- unit tolerance
         if used_operator == "==":
-            return (value >= sfilter - (factor / 2)
-                    and value <= sfilter + (factor / 2))  # pylint:disable=chained-comparison
+            return (value >= sfilter - (factor / 2)  # pylint:disable=chained-comparison
+                    and value <= sfilter + (factor / 2))
 
         if used_operator == "!=":
-            return not (value >= sfilter - (factor / 2)
-                        and value <= sfilter + (factor / 2))  # pylint:disable=chained-comparison
+            return not (value >= sfilter - (factor / 2)  # pylint:disable=chained-comparison
+                        and value <= sfilter + (factor / 2))
 
         operation = self.operators.get(used_operator)
         return operation(value, sfilter)
