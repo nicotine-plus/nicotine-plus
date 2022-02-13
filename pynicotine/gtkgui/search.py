@@ -801,15 +801,14 @@ class Search(UserInterface):
         except ValueError:
             return True
 
-        operation = self.operators.get(used_operator)
-
         # Exact size match is unlikely, so approximate within +/- unit tolerance
-        if operation == operator.eq:
-            return (value >= sfilter - (factor / 2) and value <= sfilter + (factor / 2))
+        if used_operator == "==":
+            return (value >= sfilter - (factor / 2)) and (value <= sfilter + (factor / 2))
 
-        elif operation == operator.ne:
-            return not (value >= sfilter - (factor / 2) and value <= sfilter + (factor / 2))
+        if used_operator == "!=":
+            return not (value >= sfilter - (factor / 2)) and (value <= sfilter + (factor / 2))
 
+        operation = self.operators.get(used_operator)
         return operation(value, sfilter)
 
     @staticmethod
