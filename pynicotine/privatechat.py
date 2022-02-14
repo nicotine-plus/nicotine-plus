@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -98,6 +98,8 @@ class PrivateChats:
         for user in self.config.sections["privatechat"]["users"]:
             if isinstance(user, str) and user not in self.users:
                 self.show_user(user, switch_page=False)
+
+        self.update_completions()
 
     def auto_replace(self, message):
 

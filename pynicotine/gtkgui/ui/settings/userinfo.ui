@@ -43,7 +43,7 @@
                         <property name="right-margin">8</property>
                         <property name="top-margin">5</property>
                         <property name="bottom-margin">5</property>
-                        <property name="wrap-mode">word</property>
+                        <property name="wrap-mode">word-char</property>
                       </object>
                     </child>
                     <style>
@@ -83,7 +83,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultImage">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_default_image" swapped="no"/>
+                        <signal name="clicked" handler="on_default_image"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

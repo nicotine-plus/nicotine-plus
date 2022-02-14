@@ -109,7 +109,7 @@
                                   <object class="GtkButton" id="ChangePassword">
                                     <property name="halign">end</property>
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_change_password" swapped="no"/>
+                                    <signal name="clicked" handler="on_change_password"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -355,7 +355,7 @@
                         <property name="label" translatable="yes">Use UPnP to forward listening port (interval in hours):</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_toggle_upnp" swapped="no"/>
+                        <signal name="toggled" handler="on_toggle_upnp"/>
                       </object>
                     </child>
                   </object>
@@ -364,13 +364,14 @@
                   <object class="GtkFlowBoxChild">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="sensitive" bind-source="UseUPnP" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <child>
                       <object class="GtkSpinButton" id="UPnPInterval">
                         <property name="visible">True</property>
                         <property name="width-chars">6</property>
                         <property name="adjustment">adjustment_UPnPInterval</property>
                         <property name="numeric">1</property>
-                        <signal name="value-changed" handler="on_modify_upnp_interval" swapped="no"/>
+                        <signal name="value-changed" handler="on_modify_upnp_interval"/>
                       </object>
                     </child>
                   </object>

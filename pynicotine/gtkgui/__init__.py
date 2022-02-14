@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -22,7 +22,7 @@ import os
 def check_gui_dependencies():
 
     if os.getenv("NICOTINE_GTK_VERSION") == '4':
-        gtk_version = (4, 4, 0)
+        gtk_version = (4, 6, 0)
         pygobject_version = (3, 40, 0)
     else:
         gtk_version = pygobject_version = (3, 18, 0)

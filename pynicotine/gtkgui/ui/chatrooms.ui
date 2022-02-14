@@ -46,7 +46,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
@@ -90,7 +90,7 @@
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">10</property>
                                 <property name="right-margin">10</property>
                                 <property name="top-margin">5</property>
@@ -135,12 +135,31 @@
                         <child>
                           <object class="GtkMenuButton" id="ShowRoomWall">
                             <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Room wall</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">view-list-symbolic</property>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="image-button"/>
+                            </style>
                           </object>
                         </child>
                         <child>
                           <object class="GtkMenuButton" id="ShowChatHelp">
                             <property name="visible">True</property>
                             <property name="tooltip-text" translatable="yes">Chat room command help</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="icon-name">dialog-question-symbolic</property>
+                              </object>
+                            </child>
+                            <style>
+                              <class name="image-button"/>
+                            </style>
                           </object>
                         </child>
                       </object>
@@ -174,7 +193,7 @@
                     <child>
                       <object class="GtkButton" id="PeopleButton">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_ignore_users_settings" swapped="no"/>
+                        <signal name="clicked" handler="on_ignore_users_settings"/>
                         <child>
                           <object class="GtkLabel" id="LabelPeople">
                             <property name="visible">True</property>
@@ -200,7 +219,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="width-request">350</property>
+                        <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
@@ -208,7 +227,8 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="has-tooltip">True</property>
-                            <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                            <property name="search-column">2</property>
+                            <signal name="query-tooltip" handler="on_tooltip"/>
                             <signal name="row-activated" handler="on_row_activated"/>
                           </object>
                         </child>
@@ -230,7 +250,7 @@
                         <property name="label" translatable="yes">_Auto-join Room</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_autojoin" swapped="no"/>
+                        <signal name="toggled" handler="on_autojoin"/>
                       </object>
                     </child>
                     <child>
@@ -238,7 +258,7 @@
                         <property name="label" translatable="yes">_Log Conversation</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_log_toggled" swapped="no"/>
+                        <signal name="toggled" handler="on_log_toggled"/>
                       </object>
                     </child>
                   </object>

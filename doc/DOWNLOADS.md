@@ -1,14 +1,14 @@
 # Download Nicotine+
 
-Download stable builds of Nicotine+ for your operating system.
+Download the current stable version of Nicotine+ for your operating system. For the release notes, see [NEWS.md](/NEWS.md).
+
+If you want to download the latest unstable build and help test Nicotine+, see [TESTING.md](TESTING.md).
 
 ## GNU/Linux, *BSD, Solaris
 
-If you have no need to modify the Nicotine+ source, you are strongly recommended to use packages for your distribution/operating system. This will save you time.
-
 ### Ubuntu/Debian
 
-To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the stable Nicotine+ apt repository (PPA) by running the following:
+To use [stable packages](https://launchpad.net/~nicotine-team/+archive/ubuntu/stable) on Ubuntu and Debian, add the *nicotine-team/stable* PPA repository by running the following:
 
 ```sh
 sudo apt install software-properties-common
@@ -18,7 +18,9 @@ sudo apt update
 sudo apt install nicotine
 ```
 
-If you prefer to install a .deb package directly, you can download one [here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/). Unlike the repository installation method, Nicotine+ will not update automatically; you need to download a .deb package each time a new release is available.
+If you prefer to install a .deb package directly, you can [download one here](http://ppa.launchpad.net/nicotine-team/stable/ubuntu/pool/main/n/nicotine/).
+
+Unlike the repository installation method, you need to download and install Nicotine+ from the link above every time you want to update to the latest version.
 
 ### Fedora
 
@@ -30,9 +32,9 @@ sudo dnf install nicotine+
 
 ### Flatpak
 
-If your distribution supports Flatpak, you can install Nicotine+ from Flathub.
+If your Linux distribution supports [Flatpak](https://www.flatpak.org/setup/), you can install the current stable version of Nicotine+ from Flathub.
 
-- [Download Nicotine+ on Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
+- [Download Nicotine+ from Flathub](https://flathub.org/apps/details/org.nicotine_plus.Nicotine)
 
 ### Arch Linux/Manjaro/Parabola
 
@@ -60,13 +62,13 @@ pkg install py-nicotine-plus
 
 ### pip
 
-If Nicotine+ is not available for your system, it can be installed using [pip](https://pip.pypa.io/en/stable/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
+If Nicotine+ is not packaged for your system, the current stable version can be installed using [pip](https://pip.pypa.io/). Ensure the [runtime dependencies](DEPENDENCIES.md) are installed, and run the following:
 
 ```sh
 pip3 install nicotine-plus
 ```
 
-Keep in mind that Nicotine+ will not auto-update. When a new release is available, run the following:
+Keep in mind that Nicotine+ will not update automatically. When a new release is available, run the following:
 
 ```sh
 pip3 install --upgrade nicotine-plus
@@ -74,19 +76,19 @@ pip3 install --upgrade nicotine-plus
 
 ## Windows
 
-### Official Builds
+### Official Release
 
 Stable Windows installers for Nicotine+ are available for download. Installing Nicotine+ requires administrator privileges.
 
-NOTE: The installer format has changed in Nicotine+ 3.2.0. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).
+*NOTE: The installer format has changed since Nicotine+ 3.2.0. If you are upgrading from Nicotine+ 3.1.1 or earlier, please uninstall Nicotine+ first (this will not remove your existing settings).*
 
-- [64-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
-- [32-bit Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
+- [Download Nicotine+ 64-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-installer.zip.sha256)]
+- [Download Nicotine+ 32-bit Windows Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-installer.zip.sha256)]
 
 Portable packages are also available. They can be run from your home directory, and do not require installation or administrator privileges.
 
-- [64-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
-- [32-bit Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
+- [Download Nicotine+ 64-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
+- [Download Nicotine+ 32-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
 
 ### Scoop
 
@@ -113,19 +115,17 @@ choco install nicotine-plus
 
 ## macOS
 
-### Official Builds (Catalina/10.15 and newer)
+### Official Release (Catalina/10.15 and newer)
 
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
-- [Download Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
+- [Download Nicotine+ macOS Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
 
 ### Homebrew (Mojave/10.14 and newer)
 
-NOTE: If your Mac has an Apple M1 chip, please use the [official installer](#official-builds-catalina1015-and-newer) instead. Nicotine+ installed from Homebrew will currently not work on these devices due to issues in upstream dependencies.
+*NOTE: If your Mac has an Apple M1 chip, please use the [official macOS installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip) instead. Installing Nicotine+ from Homebrew will currently not work on Apple M1 devices due to issues in upstream dependencies.*
 
-On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh).
-
-Once Homebrew is set up, run the following:
+On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh). Run the following:
 
 ```sh
 brew install nicotine-plus

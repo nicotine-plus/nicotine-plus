@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
@@ -33,7 +33,6 @@ from pynicotine.gtkgui.widgets.filechooser import save_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -49,8 +48,6 @@ class UserInfos(IconNotebook):
 
         IconNotebook.__init__(self, frame, frame.userinfo_notebook, "userinfo")
         self.notebook.connect("switch-page", self.on_switch_info_page)
-
-        CompletionEntry(frame.UserInfoEntry, frame.UserInfoCombo.get_model())
 
     def on_switch_info_page(self, _notebook, page, _page_num):
 
@@ -68,9 +65,6 @@ class UserInfos(IconNotebook):
             self.pages[user] = page = UserInfo(self, user)
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
-
-            if self.get_n_pages() > 0:
-                self.frame.userinfo_status_page.hide()
 
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -126,6 +120,7 @@ class UserInfo(UserInterface):
 
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.descr_textview = TextView(self.descr)
+        self.UserLabel.set_text(user)
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
@@ -136,9 +131,7 @@ class UserInfo(UserInterface):
             self.picture_view.add_controller(self.scroll_controller)
 
         else:
-            self.picture = Gtk.Image()
-            self.picture.show()
-
+            self.picture = Gtk.Image(visible=True)
             self.picture_view.add(self.picture)
             self.picture_view.connect("scroll-event", self.on_scroll_event)
 
@@ -194,7 +187,7 @@ class UserInfo(UserInterface):
         popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
         popup.add_items(*get_interest_items(popup))
 
-        popup = PopupMenu(self.frame, self.picture_view, self.on_picture_popup_menu)
+        popup = PopupMenu(self.frame, self.picture_view)
         popup.add_items(
             ("#" + _("Zoom 1:1"), self.make_zoom_normal),
             ("#" + _("Zoom In"), self.make_zoom_in),
@@ -222,7 +215,7 @@ class UserInfo(UserInterface):
     def load_picture(self, data):
 
         if not data:
-            self.picture.hide()
+            self.picture_view.hide()
             return
 
         try:
@@ -237,9 +230,9 @@ class UserInfo(UserInterface):
                 picture_width = self.picture_data.get_width()
                 picture_height = self.picture_data.get_height()
 
-                allocation = self.picture_view.get_allocation()
-                max_width = allocation.width - 24
-                max_height = allocation.height - 24
+                allocation = self.placeholder_picture.get_allocation()
+                max_width = allocation.width - 72
+                max_height = allocation.height - 72
 
                 # Resize picture to fit container
                 ratio = min(max_width / picture_width, max_height / picture_height)
@@ -254,9 +247,7 @@ class UserInfo(UserInterface):
             gc.collect()
 
             self.actual_zoom = 0
-            self.SavePicture.set_sensitive(True)
-
-            self.picture.show()
+            self.picture_view.show()
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -358,8 +349,9 @@ class UserInfo(UserInterface):
         if msg is None:
             return
 
-        self.descr_textview.clear()
-        self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
+        if msg.descr:
+            self.descr_textview.clear()
+            self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
 
         self.uploads.set_text(humanize(msg.totalupl))
         self.queuesize.set_text(humanize(msg.queuesize))
@@ -468,10 +460,6 @@ class UserInfo(UserInterface):
             title=_("Save as…")
         )
 
-    def on_picture_popup_menu(self, menu, _widget):
-        for action in menu.actions.values():
-            action.set_enabled(self.picture is not None and self.picture_data is not None)
-
     def on_scroll(self, _controller, _scroll_x, scroll_y):
 
         if scroll_y < 0:
@@ -502,9 +490,6 @@ class UserInfo(UserInterface):
         del self.userinfos.pages[self.user]
         self.frame.np.userinfo.remove_user(self.user)
         self.userinfos.remove_page(self.Main)
-
-        if self.userinfos.get_n_pages() == 0:
-            self.frame.userinfo_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

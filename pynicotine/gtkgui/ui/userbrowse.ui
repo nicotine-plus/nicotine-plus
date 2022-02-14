@@ -147,14 +147,14 @@
                                     <property name="hexpand">True</property>
                                     <property name="tooltip-text" translatable="yes">Search files and folders (exact match)</property>
                                     <property name="width-chars">18</property>
-                                    <signal name="activate" handler="on_search" swapped="no"/>
+                                    <signal name="activate" handler="on_search"/>
                                   </object>
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="SaveButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Save shares list to disk</property>
-                                    <signal name="clicked" handler="on_save" swapped="no"/>
+                                    <signal name="clicked" handler="on_save"/>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
@@ -170,7 +170,7 @@
                                   <object class="GtkButton" id="RefreshButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Refresh files</property>
-                                    <signal name="clicked" handler="on_refresh" swapped="no"/>
+                                    <signal name="clicked" handler="on_refresh"/>
                                     <child>
                                       <object class="GtkImage">
                                         <property name="visible">True</property>
@@ -186,7 +186,7 @@
                                   <object class="GtkToggleButton" id="ExpandButton">
                                     <property name="visible">True</property>
                                     <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
-                                    <signal name="toggled" handler="on_expand" swapped="no"/>
+                                    <signal name="toggled" handler="on_expand"/>
                                     <child>
                                       <object class="GtkImage" id="expand">
                                         <property name="visible">True</property>
@@ -235,7 +235,6 @@
                       <object class="GtkProgressBar" id="progressbar1">
                         <property name="valign">center</property>
                         <property name="visible">True</property>
-                        <property name="pulse-step">0.10000000149</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
@@ -243,7 +242,7 @@
                       </object>
                     </child>
                     <style>
-                      <class name="border-right"/>
+                      <class name="border-end"/>
                     </style>
                   </object>
                 </child>

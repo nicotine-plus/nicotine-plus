@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -38,13 +38,12 @@ SETTINGS_PORTAL = None
 if "gi.repository.Adw" not in sys.modules:
     # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
     try:
-        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
-                                                         Gio.DBusProxyFlags.NONE,
-                                                         None,
-                                                         "org.freedesktop.portal.Desktop",
-                                                         "/org/freedesktop/portal/desktop",
-                                                         "org.freedesktop.portal.Settings",
-                                                         None)
+        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
+            Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
+            "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
+            "org.freedesktop.portal.Settings", None
+        )
+
     except Exception:
         pass
 
@@ -54,14 +53,10 @@ GTK_SETTINGS = Gtk.Settings.get_default()
 def read_color_scheme():
 
     try:
-        value = SETTINGS_PORTAL.call_sync("Read",
-                                          GLib.Variant(
-                                              "(ss)",
-                                              ("org.freedesktop.appearance",
-                                               "color-scheme")),
-                                          Gio.DBusCallFlags.NONE,
-                                          -1,
-                                          None)
+        value = SETTINGS_PORTAL.call_sync(
+            "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+            Gio.DBusCallFlags.NONE, -1, None
+        )
 
         return value.get_child_value(0).get_variant().get_variant().get_uint32()
 
@@ -159,7 +154,8 @@ def set_global_css():
 
     /* Borders */
 
-    .border-top {
+    .border-top,
+    .preferences-border .dialog-action-box {
         border-top: 1px solid @borders;
     }
 
@@ -167,23 +163,18 @@ def set_global_css():
         border-bottom: 1px solid @borders;
     }
 
-    .border-left {
-        border-left: 1px solid @borders;
+    .border-start:dir(ltr),
+    .border-end:dir(rtl) {
+        /* Use box-shadow to avoid double window border in narrow flowbox */
+        box-shadow: -1px 0 0 0 @borders;
     }
 
-    .border-right {
-        border-right: 1px solid @borders;
-    }
-
-    .preferences-border .dialog-action-box {
-        border-top: 1px solid @borders;
+    .border-end:dir(ltr),
+    .border-start:dir(rtl) {
+        box-shadow: 1px 0 0 0 @borders;
     }
 
     /* Buttons */
-
-    .circular {
-        border-radius: 9999px;
-    }
 
     .count {
         padding-left: 10px;

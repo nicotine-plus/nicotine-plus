@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -21,8 +21,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import os
 
 from collections import deque
 
@@ -55,6 +53,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
@@ -181,11 +180,10 @@ class ChatRooms(IconNotebook):
             page_num = self.page_num(tab.Main)
             self.set_current_page(page_num)
 
-        if msg.room != "Public ":
+        if msg.room == "Public ":
+            self.roomlist.toggle_feed_check(True)
+        else:
             self.frame.RoomSearchCombo.append_text(msg.room)
-
-        if self.get_n_pages() > 0:
-            self.frame.chatrooms_status_page.hide()
 
     def leave_room(self, msg):
 
@@ -197,15 +195,14 @@ class ChatRooms(IconNotebook):
         self.remove_page(page.Main)
         del self.pages[msg.room]
 
-        if msg.room != "Public ":
+        if msg.room == "Public ":
+            self.roomlist.toggle_feed_check(False)
+        else:
             self.frame.RoomSearchCombo.remove_all()
             self.frame.RoomSearchCombo.append_text("Joined Rooms ")
 
             for room in self.pages:
                 self.frame.RoomSearchCombo.append_text(room)
-
-        if self.get_n_pages() == 0:
-            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass
@@ -334,10 +331,7 @@ class ChatRooms(IconNotebook):
     def server_login(self):
 
         for room in config.sections["server"]["autojoin"]:
-            if room == 'Public ':
-                self.roomlist.feed_check.set_active(True)
-
-            elif isinstance(room, str):
+            if isinstance(room, str):
                 self.autojoin_rooms.add(room)
 
     def server_disconnect(self):
@@ -360,18 +354,11 @@ class ChatRoom(UserInterface):
         self.room = room
 
         if Gtk.get_major_version() == 4:
-            self.ShowRoomWall.set_icon_name("view-list-symbolic")
-            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
-
             self.ChatPaned.set_resize_start_child(True)
             self.ChatPaned.set_shrink_start_child(False)
             self.ChatPaned.set_resize_end_child(False)
             self.ChatPanedSecond.set_shrink_end_child(False)
-
         else:
-            self.ShowRoomWall.set_image(Gtk.Image(icon_name="view-list-symbolic"))
-            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
-
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "resize", True)
             self.ChatPaned.child_set_property(self.ChatPanedSecond, "shrink", False)
             self.ChatPaned.child_set_property(self.UserView, "resize", False)
@@ -401,9 +388,9 @@ class ChatRoom(UserInterface):
 
         self.Log.set_active(config.sections["logging"]["chatrooms"])
         if not self.Log.get_active():
-            self.Log.set_active((self.room in config.sections["logging"]["rooms"]))
+            self.Log.set_active(self.room in config.sections["logging"]["rooms"])
 
-        self.AutoJoin.set_active((room in config.sections["server"]["autojoin"]))
+        self.AutoJoin.set_active(room in config.sections["server"]["autojoin"])
 
         self.toggle_chat_buttons()
 
@@ -431,9 +418,9 @@ class ChatRoom(UserInterface):
             self.frame, ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
-            ["user", _("User"), 100, "text", attribute_columns],
+            ["user", _("User"), 155, "text", attribute_columns],
             ["speed", _("Speed"), 100, "number", None],
-            ["files", _("Files"), 100, "number", None]
+            ["files", _("Files"), -1, "number", None]
         )
 
         cols["status"].set_sort_column_id(5)
@@ -563,31 +550,29 @@ class ChatRoom(UserInterface):
         if not config.sections["logging"]["readroomlogs"]:
             return
 
-        filename = self.room.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.room) + ".log"
         numlines = config.sections["logging"]["readroomlines"]
 
         try:
             get_path(config.sections["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
 
-        except IOError:
+        except OSError:
             pass
 
     def append_log_lines(self, path, numlines):
 
-        try:
-            self._append_log_lines(path, numlines, "utf-8")
-
-        except UnicodeDecodeError:
-            self._append_log_lines(path, numlines, "latin-1")
-
-    def _append_log_lines(self, path, numlines, encoding="utf-8"):
-
-        with open(path, 'r', encoding=encoding) as lines:
+        with open(path, "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
             login = config.sections["server"]["login"]
 
             for line in lines:
+                try:
+                    line = line.decode("utf-8")
+
+                except UnicodeDecodeError:
+                    line = line.decode("latin-1")
+
                 user = None
                 tag = None
                 usertag = None
@@ -622,15 +607,14 @@ class ChatRoom(UserInterface):
             if lines:
                 self.chat_textview.append_line(_("--- old messages above ---"), self.tag_hilite, scroll=False)
 
-    @staticmethod
-    def populate_user_menu(user, menu, menu_private_rooms):
+    def populate_user_menu(self, user, menu, menu_private_rooms):
 
         menu.set_user(user)
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
         private_rooms_enabled = (menu_private_rooms.items
-                                 and menu.user != config.sections["server"]["login"])
+                                 and menu.user != self.frame.np.login_username)
 
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
@@ -672,24 +656,11 @@ class ChatRoom(UserInterface):
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])
 
-    def update_room_wall_tooltip(self, active):
-
-        if active:
-            self.ShowRoomWall.set_tooltip_text(_("Room wall (personal message set)"))
-            return
-
-        self.ShowRoomWall.set_tooltip_text(_("Room wall"))
-
     def ticker_set(self, msg):
 
         self.tickers.clear_tickers()
-        login = config.sections["server"]["login"]
-        has_own_ticker = False
 
         for user, message in msg.msgs:
-            if user == login:
-                has_own_ticker = True
-
             if self.frame.np.network_filter.is_user_ignored(user) or \
                     self.frame.np.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
@@ -697,15 +668,9 @@ class ChatRoom(UserInterface):
 
             self.tickers.add_ticker(user, message)
 
-        self.update_room_wall_tooltip(has_own_ticker)
-
     def ticker_add(self, msg):
 
         user = msg.user
-        login = config.sections["server"]["login"]
-
-        if user == login:
-            self.update_room_wall_tooltip(True)
 
         if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
             # User ignored, ignore Ticker messages
@@ -714,12 +679,6 @@ class ChatRoom(UserInterface):
         self.tickers.add_ticker(msg.user, msg.msg)
 
     def ticker_remove(self, msg):
-
-        login = config.sections["server"]["login"]
-
-        if msg.user == login:
-            self.update_room_wall_tooltip(False)
-
         self.tickers.remove_ticker(msg.user)
 
     def show_notification(self, login, user, text, tag):
@@ -738,7 +697,8 @@ class ChatRoom(UserInterface):
 
         self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
-        if self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active():
+        if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.Main)
+                and self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
@@ -765,16 +725,16 @@ class ChatRoom(UserInterface):
         if self.frame.np.network_filter.is_user_ip_ignored(user):
             return
 
-        login = config.sections["server"]["login"]
+        login_username = self.frame.np.login_username
 
-        if user == login:
+        if user == login_username:
             tag = self.tag_local
-        elif text.upper().find(login.upper()) > -1:
+        elif text.upper().find(login_username.upper()) > -1:
             tag = self.tag_hilite
         else:
             tag = self.tag_remote
 
-        self.show_notification(login, user, text, tag)
+        self.show_notification(login_username, user, text, tag)
 
         if text.startswith("/me "):
             if public:
@@ -796,12 +756,13 @@ class ChatRoom(UserInterface):
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
-        if user != login:
+        if user != login_username:
             self.chat_textview.append_line(
                 self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
@@ -1003,15 +964,15 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
-        self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
             self.update_user_tag(username)
 
     def rejoined(self, users):
 
-        # Update user list with an inexpensive sorting function
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.usersmodel.get_sort_column_id()
+        self.usersmodel.set_default_sort_func(lambda *args: 0)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for userdata in users:
@@ -1022,11 +983,8 @@ class ChatRoom(UserInterface):
 
             self.add_user_row(userdata)
 
-        self.UserList.set_sensitive(True)
-
-        # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        if sort_column is not None and sort_type is not None:
+            self.usersmodel.set_sort_column_id(sort_column, sort_type)
 
         # Spit this line into chat log
         self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite)

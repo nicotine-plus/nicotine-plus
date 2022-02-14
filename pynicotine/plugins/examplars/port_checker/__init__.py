@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -52,9 +52,7 @@ class Plugin(BasePlugin):
 
     def incoming_public_chat_notification(self, room, user, line):
 
-        my_username = self.config.sections["server"]["login"]
-
-        if room != self.checkroom or not self.settings['keyword_enabled'] or my_username == user:
+        if room != self.checkroom or not self.settings['keyword_enabled'] or self.core.login_username == user:
             return
 
         if not self.throttle.ok_to_respond(room, user, line, 10):

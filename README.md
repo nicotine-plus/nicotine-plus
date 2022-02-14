@@ -13,25 +13,24 @@ Check out the [screenshots](data/screenshots/SCREENSHOTS.md) and [source code](h
 
 # Download Nicotine+
 
-The current stable version of Nicotine+ is 3.2.0, released on December 18, 2021. See the [release notes](NEWS.md).
+The current stable version of Nicotine+ is 3.2.1, released on February 10, 2022. See the [release notes](NEWS.md).
 
-Stable builds are available for:
+Downloads are available for:
 
 - [GNU/Linux, *BSD and Solaris](doc/DOWNLOADS.md#gnulinux-bsd-solaris)
 - [Windows](doc/DOWNLOADS.md#windows)
 - [macOS](doc/DOWNLOADS.md#macos)
 
-If you want to download unstable builds and help test Nicotine+, see [TESTING.md](doc/TESTING.md).
-
 # Getting Involved
 
-If you feel like contributing to Nicotine+, several options are available:
+If you feel like contributing to Nicotine+, there are several ways to help:
 
 * Report a problem or suggest improvements by
   * discussing your findings in the [#nicotine+ IRC channel](https://web.libera.chat/?channel=#nicotine+) on [Libera.Chat](https://libera.chat/), or
   * [creating a new issue](https://github.com/nicotine-plus/nicotine-plus/issues) on GitHub.
+* Install the latest unstable build and test Nicotine+, see [TESTING.md](doc/TESTING.md).
 * Translate Nicotine+ into another language with [Hosted Weblate](https://hosted.weblate.org/engage/nicotine-plus), see [TRANSLATIONS.md](doc/TRANSLATIONS.md).
-* Package Nicotine+ for a distribution or operating system, see [DEPENDENCIES.md](doc/DEPENDENCIES.md).
+* Package Nicotine+ for a distribution or operating system, see [PACKAGING.md](doc/PACKAGING.md).
 * Implement bug fixes and features, see [DEVELOPING.md](doc/DEVELOPING.md).
   * For a list of tasks, see the [issue tracker](https://github.com/nicotine-plus/nicotine-plus/issues).
   * For documentation on the Soulseek protocol, see [SLSKPROTOCOL.md](doc/SLSKPROTOCOL.md).
@@ -45,12 +44,12 @@ I stumbled across this quote:
 >
 > So I thought what the hell and bluntly stole etc's idea.  
 
-<p align="right">Hyriand, <i>founder of the Nicotine project</i>, 2003</p>
+<p align="right">Hyriand, <i>former Nicotine maintainer</i>, 2003</p>
 
 # Legal and Privacy
 
 - When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
-- Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, since the Nicotine+ Team does not operate it.
+- Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
 # License
 

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2013 SeeSchloss <see@seos.fr>
 # COPYRIGHT (C) 2009-2010 Quinox <quinox@users.sf.net>
@@ -29,15 +29,13 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
-from pynicotine.gtkgui.utils import copy_file_url
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -56,8 +54,6 @@ class UserBrowses(IconNotebook):
         IconNotebook.__init__(self, frame, frame.userbrowse_notebook, "userbrowse")
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
-        CompletionEntry(frame.UserBrowseEntry, frame.UserBrowseCombo.get_model())
-
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
         if self.frame.current_page_id != self.page_id:
@@ -65,16 +61,10 @@ class UserBrowses(IconNotebook):
 
         for tab in self.pages.values():
             if tab.Main == page:
-
-                # Remember folder or file selection
-                if tab.num_selected_files >= 1:
-                    GLib.idle_add(lambda: tab.FileTreeView.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
-                else:
-                    GLib.idle_add(lambda: tab.FolderTreeView.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
-
+                GLib.idle_add(tab.grab_view_focus)
                 break
 
-    def show_user(self, user, folder=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
+    def show_user(self, user, path=None, local_shares_type=None, indeterminate_progress=False, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserBrowse(self, user)
@@ -83,15 +73,13 @@ class UserBrowses(IconNotebook):
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-            if self.get_n_pages() > 0:
-                self.frame.userbrowse_status_page.hide()
-
         page = self.pages[user]
-
         page.indeterminate_progress = indeterminate_progress
         page.local_shares_type = local_shares_type
-        page.queued_folder = folder
-        page.browse_queued_folder()
+        page.queued_path = path
+
+        page.browse_queued_path()
+        page.grab_view_focus()
 
         if switch_page:
             self.set_current_page(self.page_num(page.Main))
@@ -138,7 +126,7 @@ class UserBrowse(UserInterface):
         self.frame = userbrowses.frame
         self.user = user
         self.local_shares_type = None
-        self.queued_folder = None
+        self.queued_path = None
 
         self.shares = {}
         self.dir_iters = {}
@@ -274,45 +262,45 @@ class UserBrowse(UserInterface):
             )
 
         # Key Bindings (FolderTreeView)
-        setup_accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
-        setup_accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
-        setup_accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
-        setup_accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
-        setup_accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
+        Accelerator("Left", self.FolderTreeView, self.on_folder_collapse_accelerator)
+        Accelerator("minus", self.FolderTreeView, self.on_folder_collapse_accelerator)  # "-"
+        Accelerator("backslash", self.FolderTreeView, self.on_folder_collapse_sub_accelerator)  # "\"
+        Accelerator("equal", self.FolderTreeView, self.on_folder_expand_sub_accelerator)  # "=" (for US/UK laptop)
+        Accelerator("Right", self.FolderTreeView, self.on_folder_expand_accelerator)
 
-        setup_accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
-        setup_accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
-        setup_accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
-        setup_accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
+        Accelerator("<Shift>Return", self.FolderTreeView, self.on_folder_focus_filetree_accelerator)  # brwse into
+        Accelerator("<Primary>Return", self.FolderTreeView, self.on_folder_transfer_to_accelerator)  # w/to prompt
+        Accelerator("<Shift><Primary>Return", self.FolderTreeView, self.on_folder_transfer_accelerator)  # no prmt
+        Accelerator("<Primary><Alt>Return", self.FolderTreeView, self.on_folder_open_manager_accelerator)
 
         # Key Bindings (FileTreeView)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
-            setup_accelerator(accelerator, self.FileTreeView, self.on_focus_folder_accelerator)
+            Accelerator(accelerator, self.FileTreeView, self.on_focus_folder_accelerator)
 
-        setup_accelerator("Left", self.FileTreeView, self.on_focus_folder_left_accelerator)
+        Accelerator("Left", self.FileTreeView, self.on_focus_folder_left_accelerator)
 
-        setup_accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
-        setup_accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
-        setup_accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
-        setup_accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
-        setup_accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
+        Accelerator("<Shift>Return", self.FileTreeView, self.on_file_transfer_multi_accelerator)  # multi activate
+        Accelerator("<Primary>Return", self.FileTreeView, self.on_file_transfer_to_accelerator)  # with to prompt
+        Accelerator("<Shift><Primary>Return", self.FileTreeView, self.on_file_transfer_accelerator)  # no prompt
+        Accelerator("<Primary><Alt>Return", self.FileTreeView, self.on_file_open_manager_accelerator)
+        Accelerator("<Alt>Return", self.FileTreeView, self.on_file_properties_accelerator)
 
         # Key Bindings (General)
         for widget in (self.Main, self.FolderTreeView, self.FileTreeView):
-            setup_accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
+            Accelerator("<Primary>f", widget, self.on_search_accelerator)  # Find focus
 
         for widget in (self.Main, self.SearchEntry):
-            setup_accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
-            setup_accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
+            Accelerator("<Primary>g", widget, self.on_search_next_accelerator)  # Next search match
+            Accelerator("<Shift><Primary>g", widget, self.on_search_previous_accelerator)
 
-        setup_accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
-        setup_accelerator("F3", self.Main, self.on_search_next_accelerator)
-        setup_accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
+        Accelerator("Escape", self.SearchEntry, self.on_search_escape_accelerator)
+        Accelerator("F3", self.Main, self.on_search_next_accelerator)
+        Accelerator("<Shift>F3", self.Main, self.on_search_previous_accelerator)
 
-        setup_accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
-        setup_accelerator("F5", self.Main, self.on_refresh_accelerator)
-        setup_accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
-        setup_accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
+        Accelerator("<Primary>backslash", self.Main, self.on_expand_accelerator)  # expand / collapse all (button)
+        Accelerator("F5", self.Main, self.on_refresh_accelerator)
+        Accelerator("<Primary>r", self.Main, self.on_refresh_accelerator)  # Refresh
+        Accelerator("<Primary>s", self.Main, self.on_save_accelerator)  # Save Shares List
 
         self.ExpandButton.set_active(True)
         self.update_visuals()
@@ -371,12 +359,10 @@ class UserBrowse(UserInterface):
             self.FolderTreeView.collapse_all()
 
         iterator = self.dir_store.get_iter_first()
-        sel = self.FolderTreeView.get_selection()
-        sel.unselect_all()
 
         if iterator:
             path = self.dir_store.get_path(iterator)
-            sel.select_path(path)
+            self.FolderTreeView.set_cursor(path)
 
         self.set_finished()
 
@@ -425,20 +411,34 @@ class UserBrowse(UserInterface):
 
         return total_size, len(shares)
 
-    def browse_queued_folder(self):
+    def browse_queued_path(self):
 
-        iterator = self.dir_iters.get(self.queued_folder)
+        if self.queued_path is None:
+            return
+
+        folder, filename = self.queued_path.rsplit("\\", 1)
+        iterator = self.dir_iters.get(folder)
 
         if not iterator:
             return
 
-        self.queued_folder = None
-        sel = self.FolderTreeView.get_selection()
-        path = self.dir_store.get_path(iterator)
+        self.queued_path = None
 
+        # Scroll to the requested folder
+        path = self.dir_store.get_path(iterator)
         self.FolderTreeView.expand_to_path(path)
-        sel.select_path(path)
+        self.FolderTreeView.set_cursor(path)
         self.FolderTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
+
+        iterator = self.file_iters.get(filename)
+
+        if not iterator:
+            return
+
+        # Scroll to the requested file
+        path = self.file_store.get_path(iterator)
+        self.FileTreeView.set_cursor(path)
+        self.FileTreeView.scroll_to_cell(path, None, True, 0.5, 0.5)
 
     def shared_file_list(self, msg):
 
@@ -446,7 +446,7 @@ class UserBrowse(UserInterface):
         self.info_bar.set_visible(False)
 
         if msg.list or msg.privatelist:
-            self.browse_queued_folder()
+            self.browse_queued_path()
 
         else:
             self.info_bar.show_message(
@@ -495,7 +495,7 @@ class UserBrowse(UserInterface):
 
         directory = self.dir_user_data.get(iter_user_data)
 
-        if directory is None:
+        if directory is None or self.selected_folder == directory:
             return
 
         self.selected_folder = directory
@@ -539,6 +539,14 @@ class UserBrowse(UserInterface):
             filesize = model.get_value(iterator, 4)
 
             self.selected_files[rawfilename] = filesize
+
+    def grab_view_focus(self):
+
+        if self.num_selected_files >= 1:
+            self.FileTreeView.grab_focus()
+            return
+
+        self.FolderTreeView.grab_focus()
 
     """ Download/Upload """
 
@@ -710,7 +718,7 @@ class UserBrowse(UserInterface):
 
         try:
             self.download_directory(self.selected_folder, prefix=os.path.join(selected, ""), recurse=recurse)
-        except IOError:  # failed to open
+        except OSError:  # failed to open
             log.add('Failed to open %r for reading', selected)  # notify user
 
     def on_download_directory_to(self, *_args, recurse=False):
@@ -792,7 +800,8 @@ class UserBrowse(UserInterface):
             return
 
         path = self.selected_folder + '\\'
-        copy_file_url(self.user, path)
+        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        copy_text(url)
 
     """ Key Bindings (FolderTreeView) """
 
@@ -811,8 +820,8 @@ class UserBrowse(UserInterface):
             # This is the deepest level, so move focus over to Files if there are any
             self.FileTreeView.grab_focus()
 
-        # Note: Other Folder actions are handled by setup_accelerator functions [Shift/Ctrl/Alt+Return]
-        # ToDo: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
+        # Note: Other Folder actions are handled by Accelerator functions [Shift/Ctrl/Alt+Return]
+        # TODO: Mouse double-click actions will need *_args for keycode state & mods [Ctrl/Alt+DblClick]
 
     def on_folder_collapse_accelerator(self, *_args):
         """ Left: collapse row
@@ -967,7 +976,7 @@ class UserBrowse(UserInterface):
 
         try:
             self.on_download_files(prefix=selected)
-        except IOError:  # failed to open
+        except OSError:  # failed to open
             log.add('failed to open %r for reading', selected)  # notify user
 
     def on_download_files_to(self, *_args):
@@ -1061,18 +1070,15 @@ class UserBrowse(UserInterface):
             iterator = model.get_iter(path)
             filename = model.get_value(iterator, 0)
             virtual_path = "\\".join([self.selected_folder, filename])
-            size = model.get_value(iterator, 1)
-            bitratestr = model.get_value(iterator, 2)
-            length = model.get_value(iterator, 3)
 
             data.append({
                 "user": self.user,
                 "fn": virtual_path,
                 "filename": filename,
                 "directory": self.selected_folder,
-                "size": size,
-                "bitrate": bitratestr,
-                "length": length
+                "size": model.get_value(iterator, 4),
+                "bitrate": model.get_value(iterator, 2),
+                "length": model.get_value(iterator, 3)
             })
 
         if data:
@@ -1092,7 +1098,8 @@ class UserBrowse(UserInterface):
             return
 
         path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        copy_file_url(self.user, path)
+        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        copy_text(url)
 
     """ Key Bindings (FileTreeView) """
 
@@ -1108,7 +1115,9 @@ class UserBrowse(UserInterface):
     def on_focus_folder_left_accelerator(self, *_args):
         """ Left: focus back parent folder (left arrow) """
 
-        if self.FileScrolledWindow.get_hadjustment().get_value() > 0.0:
+        _path, column = self.FileTreeView.get_cursor()
+
+        if self.FileTreeView.get_column(0) != column:
             return False  # allow horizontal scrolling
 
         self.FolderTreeView.grab_focus()
@@ -1248,12 +1257,11 @@ class UserBrowse(UserInterface):
 
     def on_close(self, *_args):
 
+        self.clear_model()
+
         del self.userbrowses.pages[self.user]
         self.frame.np.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
-
-        if self.userbrowses.get_n_pages() == 0:
-            self.frame.userbrowse_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.userbrowses.remove_all_pages()

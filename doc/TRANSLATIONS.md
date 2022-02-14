@@ -45,6 +45,20 @@ Our first priority is to get all strings translated.
 Please use an underscore in the translated string, if the original string also has one. Just pick the letter that strikes you as most suitable.
 Getting the right underscore next to the right letter is something that's easier to do if you see nicotine+ running with the updated translation strings.
 
+
+## Suggesting improvements to the original English
+We love suggestions! If a string in the original English version seems odd or can be improved, please create an issue, and we will think about it and discuss it.
+
+If you simply edit a string to your liking, we may never notice and then a good idea is lost, or you may create confusion because of a problem you have never thought about.
+
+So please, translate all strings as literal as possible, and discuss your thoughts in an issue.
+
+
+## Conflicts with other translators
+
+If you notice another translator is undoing your translations, please don't revert it back, but add a comment to the string, and discuss with the other translator about the best translation.
+
+
 ## Testing Updated Translations
 
 After translating, you can test your translation by running Nicotine+ with the new translations.
@@ -53,7 +67,7 @@ Nicotine+ will first try to find your translation files in your project folder, 
 
 In order to use the updated translations when running Nicotine+ from your project folder, you need to generate `.mo` files by running:
 
-```console
+```sh
 python3 setup.py build
 ```
 
@@ -73,7 +87,7 @@ Nicotine+ will try to autodetect your language based on what locale you are usin
 
 ## Adding Yourself to Translators
 
-If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/master/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/ui/dialogs/about.ui](https://github.com/nicotine-plus/nicotine-plus/blob/master/pynicotine/gtkgui/ui/dialogs/about.ui). Add yourself to the top of matching section and then create a PR (pull request).
+If you want you can add yourself to [TRANSLATORS.md](https://github.com/nicotine-plus/nicotine-plus/blob/master/TRANSLATORS.md) and the credits list in Help → About: [pynicotine/gtkgui/dialogs/about.py](https://github.com/nicotine-plus/nicotine-plus/blob/master/pynicotine/gtkgui/dialogs/about.py). Add yourself to the top of matching section and then create a PR (pull request).
 
 
 ## Updating Translation Template
@@ -82,6 +96,6 @@ This part is relevant for developers.
 
 The translation template file `po/nicotine.pot` should be updated after modifying strings in the codebase. To update the template, run the following command:
 
-```console
+```sh
 python3 po/update_pot.py
 ```

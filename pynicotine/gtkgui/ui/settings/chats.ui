@@ -371,7 +371,7 @@
                     <child>
                       <object class="GtkButton" id="RoomDefaultTimestamp">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_room_default_timestamp" swapped="no"/>
+                        <signal name="clicked" handler="on_room_default_timestamp"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -430,7 +430,7 @@
                     <child>
                       <object class="GtkButton" id="PrivateDefaultTimestamp">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_private_default_timestamp" swapped="no"/>
+                        <signal name="clicked" handler="on_private_default_timestamp"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -524,7 +524,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultTTSCommand">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_default_tts" swapped="no"/>
+                        <signal name="clicked" handler="on_default_tts"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -581,7 +581,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultRoomMessage">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_default_rooms" swapped="no"/>
+                        <signal name="clicked" handler="on_default_rooms"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -638,7 +638,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultPrivateMessage">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_default_private" swapped="no"/>
+                        <signal name="clicked" handler="on_default_private"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -806,7 +806,7 @@
                                 <child>
                                   <object class="GtkButton" id="AddCensor">
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_add_censored" swapped="no"/>
+                                    <signal name="clicked" handler="on_add_censored"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -834,7 +834,7 @@
                                 <child>
                                   <object class="GtkButton" id="RemoveCensor">
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_remove_censored" swapped="no"/>
+                                    <signal name="clicked" handler="on_remove_censored"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -959,7 +959,7 @@
                                 <child>
                                   <object class="GtkButton" id="AddReplacement">
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_add_replacement" swapped="no"/>
+                                    <signal name="clicked" handler="on_add_replacement"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -987,7 +987,7 @@
                                 <child>
                                   <object class="GtkButton" id="RemoveReplacement">
                                     <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_remove_replacement" swapped="no"/>
+                                    <signal name="clicked" handler="on_remove_replacement"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>

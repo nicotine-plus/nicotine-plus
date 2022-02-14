@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -20,7 +20,7 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
@@ -43,7 +43,7 @@ class WishList(UserInterface):
             modal=False,
             content_box=self.main,
             quit_callback=self.hide,
-            title=_("Search Wishlist"),
+            title=_("Wishlist"),
             width=600,
             height=600
         )
@@ -72,9 +72,8 @@ class WishList(UserInterface):
 
         CompletionEntry(self.wish_entry, self.store)
 
-        setup_accelerator("Delete", self.main, self.on_remove_wish)
-        setup_accelerator("Delete", self.wish_entry, self.on_remove_wish)
-        setup_accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
+        Accelerator("Delete", self.list_view, self.on_remove_wish)
+        Accelerator("<Shift>Tab", self.list_view, self.on_list_focus_entry_accelerator)  # skip column header
 
     def on_list_focus_entry_accelerator(self, *_args):
         self.wish_entry.grab_focus()

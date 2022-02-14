@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE
@@ -24,6 +24,7 @@ import unittest
 
 from collections import deque
 from time import sleep
+from unittest.mock import MagicMock
 from unittest.mock import Mock
 from unittest.mock import patch
 
@@ -71,16 +72,6 @@ class MockSocket(Mock):
 
 class SlskProtoTest(unittest.TestCase):
 
-    try:
-        import pytest
-        pytest_skip = pytest.mark.skip(reason="currently non-functional under pytest")
-
-    except ImportError:
-        # Not using pytest, don't skip test
-        pytest_skip = unittest.skipIf(None, None)
-
-    # TODO: This test works fine in PyUnit, but shows selector permission errors in pytest. Figure out why.
-    @pytest_skip
     def test_server_conn(self):
 
         queue = deque()
@@ -89,6 +80,9 @@ class SlskProtoTest(unittest.TestCase):
             port=None, port_range=(1, 65535), network_filter=None,
             eventprocessor=Mock()
         )
+
+        # Windows doesn't accept mock_socket in select() calls
+        proto.selector = MagicMock()
 
         with patch('socket.socket') as mock_socket:
             mock_socket.set_data(LOGIN_DATAFILE)
@@ -111,7 +105,6 @@ class SlskProtoTest(unittest.TestCase):
             self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
 
             proto.abort()
-
             self.assertIsNone(proto.server_socket)
 
     @staticmethod

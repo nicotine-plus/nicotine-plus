@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -209,11 +209,7 @@ class NetworkFrame(UserInterface):
         )
 
     def on_toggle_upnp(self, widget, *_args):
-
-        active = widget.get_active()
-        self.portmap_required = active
-
-        self.UPnPInterval.get_parent().set_sensitive(active)
+        self.portmap_required = widget.get_active()
 
     def on_modify_upnp_interval(self, *_args):
         self.portmap_required = True
@@ -281,8 +277,6 @@ class DownloadsFrame(UserInterface):
 
         self.preferences.set_widgets_data(self.options)
 
-        self.UploadsAllowed.get_parent().set_sensitive(self.RemoteDownloads.get_active())
-
         self.filtersiters.clear()
         self.filterlist.clear()
 
@@ -324,10 +318,6 @@ class DownloadsFrame(UserInterface):
             }
         }
 
-    def on_remote_downloads(self, widget):
-        sensitive = widget.get_active()
-        self.UploadsAllowed.get_parent().set_sensitive(sensitive)
-
     def on_add_filter_response(self, dialog, response_id, _data):
 
         dfilter = dialog.get_response_value()
@@ -353,7 +343,6 @@ class DownloadsFrame(UserInterface):
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            option=True,
             optionvalue=True,
             optionmessage="Escape this filter?",
             droplist=list(self.filtersiters.keys())
@@ -416,7 +405,6 @@ class DownloadsFrame(UserInterface):
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
             default=dfilter,
-            option=True,
             optionvalue=escapedvalue,
             optionmessage="Escape this filter?",
             droplist=list(self.filtersiters.keys())
@@ -730,7 +718,6 @@ class SharesFrame(UserInterface):
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
-                option=True,
                 optionvalue=buddy_only,
                 optionmessage="Share with buddies only?",
                 callback=self.on_edit_shared_dir_response,
@@ -788,11 +775,7 @@ class UploadsFrame(UserInterface):
         }
 
     def set_settings(self):
-
         self.preferences.set_widgets_data(self.options)
-
-        self.on_queue_use_slots_toggled(self.QueueUseSlots)
-        self.on_limit_toggled(self.Limit)
 
     def get_settings(self):
 
@@ -814,19 +797,6 @@ class UploadsFrame(UserInterface):
                 "upload_doubleclick": self.UploadDoubleClick.get_active()
             }
         }
-
-    def on_queue_use_slots_toggled(self, widget):
-
-        sensitive = widget.get_active()
-
-        self.QueueSlots.get_parent().set_sensitive(sensitive)
-
-        self.QueueBandwidth.get_parent().set_sensitive(not sensitive)
-        self.QueueBandwidthText1.get_parent().set_sensitive(not sensitive)
-
-    def on_limit_toggled(self, widget):
-        sensitive = widget.get_active()
-        self.LimitSpeed.get_parent().set_sensitive(sensitive)
 
 
 class UserInfoFrame(UserInterface):
@@ -1084,13 +1054,8 @@ class BannedUsersFrame(UserInterface):
         self.banlist = config.sections["server"]["banlist"][:]
         self.preferences.set_widgets_data(self.options)
 
-        self.on_country_codes_toggled(self.GeoBlock)
-
         if config.sections["transfers"]["geoblockcc"] is not None:
             self.GeoBlockCC.set_text(config.sections["transfers"]["geoblockcc"][0])
-
-        self.on_use_custom_geo_block_toggled(self.UseCustomGeoBlock)
-        self.on_use_custom_ban_toggled(self.UseCustomBan)
 
         if config.sections["server"]["ipblocklist"] is not None:
             self.blocked_list = config.sections["server"]["ipblocklist"].copy()
@@ -1120,15 +1085,6 @@ class BannedUsersFrame(UserInterface):
                 "customgeoblock": self.CustomGeoBlock.get_text()
             }
         }
-
-    def on_country_codes_toggled(self, widget):
-        self.GeoBlockCC.get_parent().set_sensitive(widget.get_active())
-
-    def on_use_custom_geo_block_toggled(self, widget):
-        self.CustomGeoBlock.get_parent().set_sensitive(widget.get_active())
-
-    def on_use_custom_ban_toggled(self, widget):
-        self.CustomBan.get_parent().set_sensitive(widget.get_active())
 
     def on_add_banned_response(self, dialog, response_id, _data):
 
@@ -1608,10 +1564,7 @@ class UserInterfaceFrame(UserInterface):
 
         if sys.platform == "darwin" or Gtk.get_major_version() == 4:
             # Tray icons don't work as expected on macOS
-            self.hide_tray_icon_settings()
-        else:
-            sensitive = self.TrayiconCheck.get_active()
-            self.StartupHidden.set_sensitive(sensitive)
+            self.TraySettings.hide()
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
@@ -1687,20 +1640,6 @@ class UserInterfaceFrame(UserInterface):
                 "startup_hidden": self.StartupHidden.get_active()
             }
         }
-
-    """ Tray """
-
-    def hide_tray_icon_settings(self):
-
-        # Hide widgets
-        self.TraySettings.hide()
-
-    def on_toggle_tray(self, widget):
-
-        self.StartupHidden.set_sensitive(widget.get_active())
-
-        if not widget.get_active() and self.StartupHidden.get_active():
-            self.StartupHidden.set_active(widget.get_active())
 
     """ Icons """
 
@@ -1854,15 +1793,8 @@ class SearchesFrame(UserInterface):
         self.ShowSearchHelp.set_popover(self.filter_help.popover)
 
         if Gtk.get_major_version() == 4:
-            button = self.ShowSearchHelp.get_first_child()
-            button.set_child(self.FilterHelpLabel)
-            button.get_style_context().remove_class("image-button")
-            button.get_style_context().add_class("image-text-button")
-
             # Scroll to the focused widget
             self.filter_help.container.get_child().set_scroll_to_focus(True)
-        else:
-            self.ShowSearchHelp.add(self.FilterHelpLabel)
 
         self.options = {
             "searches": {
@@ -2252,6 +2184,7 @@ class PluginsFrame(UserInterface):
                 title=_("%s Settings") % name,
                 modal=True,
                 default_width=600,
+                default_height=425,
                 use_header_bar=config.sections["ui"]["header_bar"]
             )
             set_dialog_properties(self, self.settings.dialog)
@@ -2265,11 +2198,22 @@ class PluginsFrame(UserInterface):
             self.connect("response", self.on_response)
 
             self.primary_container = Gtk.Box(
-                orientation=Gtk.Orientation.VERTICAL,
+                orientation=Gtk.Orientation.VERTICAL, width_request=340, visible=True,
                 margin_top=14, margin_bottom=14, margin_start=18, margin_end=18, spacing=12
             )
 
-            self.get_content_area().add(self.primary_container)
+            scrolled_window = Gtk.ScrolledWindow(
+                hexpand=True, vexpand=True, min_content_height=300,
+                hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
+            )
+
+            if Gtk.get_major_version() == 4:
+                scrolled_window.set_child(self.primary_container)
+                scrolled_window.get_child().set_scroll_to_focus(True)
+                self.get_content_area().append(scrolled_window)
+            else:
+                scrolled_window.add(self.primary_container)
+                self.get_content_area().add(scrolled_window)
 
             self.option_widgets = {}
             self.options = {}
@@ -2277,11 +2221,11 @@ class PluginsFrame(UserInterface):
 
         @staticmethod
         def generate_label(text):
-            return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0)
+            return Gtk.Label(label=text, use_markup=True, hexpand=True, wrap=True, xalign=0, visible=True)
 
         def generate_widget_container(self, description, vertical=False):
 
-            container = Gtk.Box(spacing=12)
+            container = Gtk.Box(spacing=12, visible=True)
 
             if vertical:
                 container.set_orientation(Gtk.Orientation.VERTICAL)
@@ -2294,27 +2238,28 @@ class PluginsFrame(UserInterface):
 
         def generate_tree_view(self, name, description, value):
 
-            container = Gtk.Box(spacing=6)
+            container = Gtk.Box(spacing=6, visible=True)
+            frame_container = Gtk.Frame(visible=True)
 
             scrolled_window = Gtk.ScrolledWindow(
-                hexpand=True, vexpand=True, min_content_height=200, min_content_width=350,
-                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC
+                hexpand=True, vexpand=True, min_content_height=125,
+                hscrollbar_policy=Gtk.PolicyType.AUTOMATIC, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC, visible=True
             )
 
-            self.option_widgets[name] = Gtk.TreeView(model=Gtk.ListStore(str))
+            self.option_widgets[name] = Gtk.TreeView(model=Gtk.ListStore(str), visible=True)
 
             if Gtk.get_major_version() == 4:
-                scrolled_window.set_has_frame(True)
                 scrolled_window.set_child(self.option_widgets[name])
+                frame_container.set_child(scrolled_window)
             else:
-                scrolled_window.set_shadow_type(Gtk.ShadowType.IN)
                 scrolled_window.add(self.option_widgets[name])
+                frame_container.add(scrolled_window)
 
-            container.add(scrolled_window)
+            container.add(frame_container)
 
             cols = initialise_columns(
                 self.settings.frame, None, self.option_widgets[name],
-                [description, description, 150, "edit", None]
+                [description, description, -1, "edit", None]
             )
 
             try:
@@ -2322,10 +2267,10 @@ class PluginsFrame(UserInterface):
             except Exception:
                 pass
 
-            add_button = Gtk.Button(label=_("Add"))
-            remove_button = Gtk.Button(label=_("Remove"))
+            add_button = Gtk.Button(label=_("Add"), visible=True)
+            remove_button = Gtk.Button(label=_("Remove"), visible=True)
 
-            box = Gtk.Box(spacing=6)
+            box = Gtk.Box(spacing=6, visible=True)
             box.add(add_button)
             box.add(remove_button)
 
@@ -2380,7 +2325,7 @@ class PluginsFrame(UserInterface):
                             value=0, lower=minimum, upper=maximum, step_increment=stepsize, page_increment=10,
                             page_size=0
                         ),
-                        climb_rate=1, digits=decimals, valign=Gtk.Align.CENTER
+                        climb_rate=1, digits=decimals, valign=Gtk.Align.CENTER, visible=True
                     )
                     label.set_mnemonic_widget(button)
                     self.settings.set_widget(button, config.sections["plugins"][config_name][name])
@@ -2388,34 +2333,34 @@ class PluginsFrame(UserInterface):
                     container.add(self.option_widgets[name])
 
                 elif data["type"] in ("bool",):
-                    container = Gtk.Box()
+                    container = Gtk.Box(visible=True)
 
-                    self.option_widgets[name] = Gtk.CheckButton(label=data["description"])
-                    self.settings.set_widget(self.option_widgets[name], config.sections["plugins"][config_name][name])
+                    self.option_widgets[name] = button = Gtk.CheckButton(label=data["description"], visible=True)
+                    self.settings.set_widget(button, config.sections["plugins"][config_name][name])
+
+                    if Gtk.get_major_version() == 4:
+                        button.get_last_child().set_wrap(True)
+                    else:
+                        button.get_child().set_line_wrap(True)
 
                     self.primary_container.add(container)
-                    container.add(self.option_widgets[name])
+                    container.add(button)
 
                 elif data["type"] in ("radio",):
                     container, label = self.generate_widget_container(data["description"])
 
-                    box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL)
+                    box = Gtk.Box(spacing=6, orientation=Gtk.Orientation.VERTICAL, visible=True)
                     container.add(box)
 
                     last_radio = None
                     group_radios = []
 
-                    for label in data["options"]:
-                        if Gtk.get_major_version() == 4:
-                            radio = Gtk.CheckButton(label=label)
-                        else:
-                            radio = Gtk.RadioButton.new_with_label_from_widget(last_radio, label)
+                    for option_label in data["options"]:
+                        widget_class = Gtk.CheckButton if Gtk.get_major_version() == 4 else Gtk.RadioButton
+                        radio = widget_class(group=last_radio, label=option_label, visible=True)
 
                         if not last_radio:
                             self.option_widgets[name] = radio
-
-                        elif Gtk.get_major_version() == 4:
-                            radio.set_group(last_radio)
 
                         last_radio = radio
                         group_radios.append(radio)
@@ -2428,7 +2373,7 @@ class PluginsFrame(UserInterface):
                 elif data["type"] in ("dropdown",):
                     container, label = self.generate_widget_container(data["description"])
 
-                    self.option_widgets[name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER)
+                    self.option_widgets[name] = combobox = Gtk.ComboBoxText(valign=Gtk.Align.CENTER, visible=True)
                     label.set_mnemonic_widget(combobox)
 
                     for text_label in data["options"]:
@@ -2440,7 +2385,7 @@ class PluginsFrame(UserInterface):
                 elif data["type"] in ("str", "string"):
                     container, label = self.generate_widget_container(data["description"])
 
-                    self.option_widgets[name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER)
+                    self.option_widgets[name] = entry = Gtk.Entry(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
                     label.set_mnemonic_widget(entry)
 
                     self.settings.set_widget(entry, config.sections["plugins"][config_name][name])
@@ -2451,34 +2396,33 @@ class PluginsFrame(UserInterface):
 
                     self.option_widgets[name] = textview = Gtk.TextView(
                         accepts_tab=False, pixels_above_lines=1, pixels_below_lines=1,
-                        left_margin=8, right_margin=8, top_margin=5, bottom_margin=5
+                        left_margin=8, right_margin=8, top_margin=5, bottom_margin=5,
+                        wrap_mode=Gtk.WrapMode.WORD_CHAR, visible=True
                     )
 
                     label.set_mnemonic_widget(textview)
                     self.settings.set_widget(textview, config.sections["plugins"][config_name][name])
 
-                    frame_container = Gtk.Frame()
-
+                    frame_container = Gtk.Frame(visible=True)
                     scrolled_window = Gtk.ScrolledWindow(
-                        hexpand=True, vexpand=True, min_content_height=200, min_content_width=600
-                    )
+                        hexpand=True, vexpand=True, min_content_height=125, visible=True)
 
                     if Gtk.get_major_version() == 4:
-                        frame_container.set_child(textview)
-                        scrolled_window.set_child(frame_container)
-                        container.append(scrolled_window)
+                        frame_container.set_child(scrolled_window)
+                        scrolled_window.set_child(textview)
+                        container.append(frame_container)
 
                     else:
-                        frame_container.add(textview)
-                        scrolled_window.add(frame_container)
-                        container.add(scrolled_window)
+                        frame_container.add(scrolled_window)
+                        scrolled_window.add(textview)
+                        container.add(frame_container)
 
                 elif data["type"] in ("list string",):
                     self.generate_tree_view(name, data["description"], value)
 
                 elif data["type"] in ("file",):
                     container, label = self.generate_widget_container(data["description"])
-                    button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER)
+                    button_widget = Gtk.Button(hexpand=True, valign=Gtk.Align.CENTER, visible=True)
 
                     try:
                         chooser = data["chooser"]
@@ -2493,9 +2437,6 @@ class PluginsFrame(UserInterface):
 
                 else:
                     log.add_debug("Unknown setting type '%s', data '%s'", (name, data))
-
-            if Gtk.get_major_version() == 3:
-                self.show_all()
 
         @staticmethod
         def on_add(_widget, treeview):
@@ -2551,19 +2492,119 @@ class PluginsFrame(UserInterface):
         cols = initialise_columns(
             self.frame, None, self.PluginTreeView,
             ["enabled", _("Enabled"), 0, "toggle", None],
-            ["plugin", _("Plugin"), 380, "text", None]
+            ["plugin", _("Plugin"), -1, "text", None]
         )
 
         cols["enabled"].set_sort_column_id(0)
         cols["plugin"].set_sort_column_id(1)
 
+        cols["enabled"].get_widget().hide()
+
         renderers = cols["enabled"].get_cells()
-        column_pos = 0
 
         for render in renderers:
-            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView, column_pos)
+            render.connect('toggled', self.cell_toggle_callback, self.PluginTreeView)
 
         self.PluginTreeView.set_model(self.plugins_model)
+
+    def set_settings(self):
+
+        self.preferences.set_widgets_data(self.options)
+
+        self.on_plugins_enable()
+        self.pluginsiters = {}
+        self.plugins_model.clear()
+        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
+
+        for plugin in plugins:
+            try:
+                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
+            except OSError:
+                continue
+
+            enabled = (plugin in config.sections["plugins"]["enabled"])
+            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
+                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
+            )
+
+        return {}
+
+    def get_enabled_plugins(self):
+
+        enabled_plugins = []
+
+        for plugin in self.plugins_model:
+            enabled = self.plugins_model.get_value(plugin.iter, 0)
+
+            if enabled:
+                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
+                enabled_plugins.append(plugin_name)
+
+        return enabled_plugins
+
+    def get_settings(self):
+
+        return {
+            "plugins": {
+                "enable": self.PluginsEnable.get_active(),
+                "enabled": self.get_enabled_plugins()
+            }
+        }
+
+    def check_properties_button(self, plugin):
+        self.PluginProperties.set_sensitive(bool(self.frame.np.pluginhandler.get_plugin_settings(plugin)))
+
+    def on_select_plugin(self, selection):
+
+        model, iterator = selection.get_selected()
+
+        if iterator is None:
+            self.selected_plugin = _("No Plugin Selected")
+            info = {}
+        else:
+            self.selected_plugin = model.get_value(iterator, 2)
+            info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
+
+        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
+        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
+        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get("Authors", '-'))})
+
+        self.descr_textview.clear()
+        self.descr_textview.append_line("%(description)s" % {
+            "description": info.get("Description", '').replace(r'\n', '\n')},
+            showstamp=False, scroll=False)
+
+        self.check_properties_button(self.selected_plugin)
+
+    def cell_toggle_callback(self, _widget, index, _treeview):
+
+        iterator = self.plugins_model.get_iter(index)
+        plugin = self.plugins_model.get_value(iterator, 2)
+        value = self.plugins_model.get_value(iterator, 0)
+        self.plugins_model.set(iterator, 0, not value)
+
+        if not value:
+            self.frame.np.pluginhandler.enable_plugin(plugin)
+        else:
+            self.frame.np.pluginhandler.disable_plugin(plugin)
+
+        self.check_properties_button(plugin)
+
+    def on_plugins_enable(self, *_args):
+
+        if self.PluginsEnable.get_active():
+            # Enable all selected plugins
+            for plugin in self.get_enabled_plugins():
+                self.frame.np.pluginhandler.enable_plugin(plugin)
+
+            self.check_properties_button(self.selected_plugin)
+            return
+
+        # Disable all plugins
+        for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
+            self.frame.np.pluginhandler.disable_plugin(plugin)
+
+        self.PluginProperties.set_sensitive(False)
 
     @staticmethod
     def on_add_plugins(*_args):
@@ -2591,111 +2632,6 @@ class PluginsFrame(UserInterface):
         )
 
         dialog_show(dialog)
-
-    def on_select_plugin(self, selection):
-
-        model, iterator = selection.get_selected()
-
-        if iterator is None:
-            self.selected_plugin = _("No Plugin Selected")
-            info = {}
-        else:
-            self.selected_plugin = model.get_value(iterator, 2)
-            info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
-
-        self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
-        self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
-        self.PluginAuthor.set_markup("<b>%(author)s</b>" % {"author": ", ".join(info.get("Authors", '-'))})
-
-        self.descr_textview.clear()
-        self.descr_textview.append_line("%(description)s" % {
-            "description": info.get("Description", '').replace(r'\n', '\n')},
-            showstamp=False, scroll=False)
-
-        self.check_properties_button(self.selected_plugin)
-
-    def cell_toggle_callback(self, _widget, index, _treeview, pos):
-
-        iterator = self.plugins_model.get_iter(index)
-        plugin = self.plugins_model.get_value(iterator, 2)
-        value = self.plugins_model.get_value(iterator, 0)
-        self.plugins_model.set(iterator, pos, not value)
-
-        if not value:
-            self.frame.np.pluginhandler.enable_plugin(plugin)
-        else:
-            self.frame.np.pluginhandler.disable_plugin(plugin)
-
-        self.check_properties_button(plugin)
-
-    def check_properties_button(self, plugin):
-        settings = self.frame.np.pluginhandler.get_plugin_settings(plugin)
-
-        if settings is not None:
-            self.PluginProperties.set_sensitive(True)
-        else:
-            self.PluginProperties.set_sensitive(False)
-
-    def set_settings(self):
-
-        self.preferences.set_widgets_data(self.options)
-        self.on_plugins_enable(None)
-        self.pluginsiters = {}
-        self.plugins_model.clear()
-        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
-
-        for plugin in plugins:
-            try:
-                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
-            except IOError:
-                continue
-
-            enabled = (plugin in config.sections["plugins"]["enabled"])
-            self.pluginsiters[filter] = self.plugins_model.insert_with_valuesv(
-                -1, self.column_numbers, [enabled, info.get('Name', plugin), plugin]
-            )
-
-        return {}
-
-    def get_enabled_plugins(self):
-
-        enabled_plugins = []
-
-        for plugin in self.plugins_model:
-            enabled = self.plugins_model.get_value(plugin.iter, 0)
-
-            if enabled:
-                plugin_name = self.plugins_model.get_value(plugin.iter, 2)
-                enabled_plugins.append(plugin_name)
-
-        return enabled_plugins
-
-    def on_plugins_enable(self, *_args):
-
-        active = self.PluginsEnable.get_active()
-
-        for widget in (self.PluginTreeView, self.PluginInfo):
-            widget.set_sensitive(active)
-
-        if active:
-            # Enable all selected plugins
-            for plugin in self.get_enabled_plugins():
-                self.frame.np.pluginhandler.enable_plugin(plugin)
-
-            return
-
-        # Disable all plugins
-        for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
-            self.frame.np.pluginhandler.disable_plugin(plugin)
-
-    def get_settings(self):
-
-        return {
-            "plugins": {
-                "enable": self.PluginsEnable.get_active(),
-                "enabled": self.get_enabled_plugins()
-            }
-        }
 
 
 class Preferences(UserInterface):
@@ -3014,7 +2950,7 @@ class Preferences(UserInterface):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.frame.np.add_upnp_portmapping()
+            self.frame.np.upnp.add_port_mapping()
 
         if theme_required:
             # Dark mode
@@ -3047,8 +2983,8 @@ class Preferences(UserInterface):
             self.frame.search.populate_search_history()
 
         # UPnP
-        if not config.sections["server"]["upnp"] and self.frame.np.upnp_timer:
-            self.frame.np.upnp_timer.cancel()
+        if not config.sections["server"]["upnp"]:
+            self.frame.np.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()

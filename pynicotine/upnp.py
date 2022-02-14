@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 #
 # GNU GENERAL PUBLIC LICENSE
 #    Version 3, 29 June 2007
@@ -16,11 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import threading
 import time
 import select
 import socket
-
-from gettext import gettext as _
 
 from pynicotine.logfacility import log
 from pynicotine.utils import http_request
@@ -89,6 +88,9 @@ class SSDP:
     @staticmethod
     def get_router_control_url(url_scheme, base_url, root_url):
 
+        service_type = None
+        control_url = None
+
         try:
             from xml.etree import ElementTree
 
@@ -99,18 +101,15 @@ class SSDP:
             xml = ElementTree.fromstring(response)
 
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
-                service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
-                control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+                found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                if service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
-                                    "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                    "urn:schemas-upnp-org:service:WANIPConnection:2"):
+                if found_service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                                          "urn:schemas-upnp-org:service:WANPPPConnection:1",
+                                          "urn:schemas-upnp-org:service:WANIPConnection:2"):
                     # We found a router with UPnP enabled
+                    service_type = found_service_type
+                    control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
                     break
-
-            else:
-                service_type = None
-                control_url = None
 
         except Exception as error:
             # Invalid response
@@ -227,21 +226,36 @@ class SSDP:
         return routers
 
 
-class UPnPPortMapping:
+class UPnP:
     """ Class that handles UPnP Port Mapping """
 
-    request_body = (
-        '<?xml version="1.0"?>\r\n'
-        '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
-        's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"><s:Body><u:AddPortMapping '
-        'xmlns:u="%s"><NewRemoteHost></NewRemoteHost>'
-        '<NewExternalPort>%s</NewExternalPort><NewProtocol>%s</NewProtocol><NewInternalPort>%s</NewInternalPort>'
-        '<NewInternalClient>%s</NewInternalClient><NewEnabled>1</NewEnabled>'
-        '<NewPortMappingDescription>%s</NewPortMappingDescription><NewLeaseDuration>%s</NewLeaseDuration>'
-        '</u:AddPortMapping></s:Body></s:Envelope>\r\n')
+    request_body = ('<?xml version="1.0"?>\r\n'
+                    + '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" '
+                    + 's:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">'
+                    + '<s:Body>'
+                    + '<u:AddPortMapping xmlns:u="%s">'
+                    + '<NewRemoteHost></NewRemoteHost>'
+                    + '<NewExternalPort>%s</NewExternalPort>'
+                    + '<NewProtocol>%s</NewProtocol>'
+                    + '<NewInternalPort>%s</NewInternalPort>'
+                    + '<NewInternalClient>%s</NewInternalClient>'
+                    + '<NewEnabled>1</NewEnabled>'
+                    + '<NewPortMappingDescription>%s</NewPortMappingDescription>'
+                    + '<NewLeaseDuration>%s</NewLeaseDuration>'
+                    + '</u:AddPortMapping>'
+                    + '</s:Body>'
+                    + '</s:Envelope>\r\n')
 
-    def add_port_mapping(self, router, protocol, public_port, private_ip, private_port,
-                         mapping_description, lease_duration):
+    def __init__(self, core, config):
+
+        self.core = core
+        self.config = config
+        self.timer = None
+
+        self.add_port_mapping()
+
+    def _request_port_mapping(self, router, protocol, public_port, private_ip, private_port,
+                              mapping_description, lease_duration):
         """
         Function that adds a port mapping to the router.
         If a port mapping already exists, it is updated with a lease period of 24 hours.
@@ -272,7 +286,7 @@ class UPnPPortMapping:
         xml = ElementTree.fromstring(response)
 
         if not xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body"):
-            raise Exception("Invalid port mapping response: %s" % response.encode('utf-8'))
+            raise Exception(_("Invalid response: %s") % response.encode('utf-8'))
 
         log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
 
@@ -280,7 +294,7 @@ class UPnPPortMapping:
         error_description = xml.findtext(".//{urn:schemas-upnp-org:control-1-0}errorDescription")
 
         if error_code or error_description:
-            raise Exception("Error code %(code)s: %(description)s" %
+            raise Exception(_("Error code %(code)s: %(description)s") %
                             {"code": error_code, "description": error_description})
 
     @staticmethod
@@ -328,7 +342,7 @@ class UPnPPortMapping:
 
         return router
 
-    def update_port_mapping(self, listening_port):
+    def _update_port_mapping(self, listening_port):
         """
         This function supports creating a Port Mapping via the UPnP
         IGDv1 and IGDv2 protocol.
@@ -336,11 +350,42 @@ class UPnPPortMapping:
         Any UPnP port mapping done with IGDv2 will expire after a
         maximum of 7 days (lease period), according to the protocol.
         We set the lease period to a shorter 24 hours, and regularly
-        renew the port mapping (see pynicotine.py).
+        renew the port mapping.
         """
 
         try:
-            local_ip_address = self._update_port_mapping(listening_port)
+            log.add_debug("UPnP: Creating Port Mapping rule...")
+
+            # Find local IP address
+            local_ip_address = self.find_local_ip_address()
+
+            # Find router
+            router = self.find_router(local_ip_address)
+
+            if not router:
+                raise RuntimeError(_("UPnP is not available on this network"))
+
+            # Perform the port mapping
+            log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
+                listening_port,
+                local_ip_address,
+                listening_port
+            ))
+
+            try:
+                self._request_port_mapping(
+                    router=router,
+                    protocol="TCP",
+                    public_port=listening_port,
+                    private_ip=local_ip_address,
+                    private_port=listening_port,
+                    mapping_description="NicotinePlus",
+                    lease_duration=86400  # Expires in 24 hours
+                )
+
+            except Exception as error:
+                raise RuntimeError(
+                    _("Failed to map the external WAN port: %(error)s") % {"error": error}) from error
 
         except Exception as error:
             from traceback import format_exc
@@ -358,39 +403,41 @@ class UPnPPortMapping:
             "local_port": listening_port
         })
 
-    def _update_port_mapping(self, listening_port):
+    def add_port_mapping(self):
 
-        log.add_debug("UPnP: Creating Port Mapping rule...")
+        # Test if we want to do a port mapping
+        if not self.config.sections["server"]["upnp"]:
+            return
 
-        # Find local IP address
-        local_ip_address = self.find_local_ip_address()
+        # Do the port mapping
+        thread = threading.Thread(target=self._add_port_mapping)
+        thread.name = "UPnPAddPortmapping"
+        thread.daemon = True
+        thread.start()
 
-        # Find router
-        router = self.find_router(local_ip_address)
+        # Repeat
+        self._start_timer()
 
-        if not router:
-            raise RuntimeError("UPnP is not available on this network")
+    def _add_port_mapping(self):
+        self._update_port_mapping(self.core.protothread.listenport)
 
-        # Perform the port mapping
-        log.add_debug("UPnP: Trying to redirect external WAN port %s TCP => %s port %s TCP", (
-            listening_port,
-            local_ip_address,
-            listening_port
-        ))
+    def _start_timer(self):
+        """ Port mapping entries last 24 hours, we need to regularly renew them.
+        The default interval is 4 hours. """
 
-        try:
-            self.add_port_mapping(
-                router=router,
-                protocol="TCP",
-                public_port=listening_port,
-                private_ip=local_ip_address,
-                private_port=listening_port,
-                mapping_description="NicotinePlus",
-                lease_duration=86400  # Expires in 24 hours
-            )
+        self.cancel_timer()
+        upnp_interval = self.config.sections["server"]["upnp_interval"]
 
-        except Exception as error:
-            raise RuntimeError(
-                _("Failed to map the external WAN port: %(error)s") % {"error": error}) from error
+        if upnp_interval < 1:
+            return
 
-        return local_ip_address
+        upnp_interval_seconds = upnp_interval * 60 * 60
+
+        self.timer = threading.Timer(upnp_interval_seconds, self.add_port_mapping)
+        self.timer.name = "UPnPTimer"
+        self.timer.daemon = True
+        self.timer.start()
+
+    def cancel_timer(self):
+        if self.timer:
+            self.timer.cancel()

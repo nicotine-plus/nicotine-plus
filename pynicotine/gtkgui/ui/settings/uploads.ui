@@ -86,14 +86,14 @@
                   <object class="GtkComboBoxText" id="UploadDoubleClick">
                     <property name="visible">True</property>
                     <items>
-                      <item>Nothing</item>
-                      <item>Send to Player</item>
-                      <item>Open in File Manager</item>
-                      <item>Search</item>
-                      <item>Abort</item>
-                      <item>Clear</item>
-                      <item>Retry</item>
-                      <item>Browse Folder</item>
+                      <item translatable="yes">Nothing</item>
+                      <item translatable="yes">Send to Player</item>
+                      <item translatable="yes">Open in File Manager</item>
+                      <item translatable="yes">Search</item>
+                      <item translatable="yes">Abort</item>
+                      <item translatable="yes">Clear</item>
+                      <item translatable="yes">Retry</item>
+                      <item translatable="yes">Browse Folder</item>
                     </items>
                   </object>
                 </child>
@@ -134,7 +134,6 @@
                     <property name="label" translatable="yes">Limit upload speed to (KiB/s):</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_limit_toggled" swapped="no"/>
                   </object>
                 </child>
               </object>
@@ -143,6 +142,7 @@
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="sensitive" bind-source="Limit" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="LimitSpeed">
                     <property name="visible">True</property>
@@ -424,6 +424,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|invert-boolean|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="QueueBandwidth">
                     <property name="visible">True</property>
@@ -444,7 +445,6 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">Limit number of upload slots to:</property>
                     <property name="tooltip-text" translatable="yes">If disabled, slots will automatically be determined by available bandwidth limitations.</property>
-                    <signal name="toggled" handler="on_queue_use_slots_toggled" swapped="no"/>
                   </object>
                 </child>
               </object>
@@ -453,6 +453,7 @@ First In, First Out: Files will be uploaded in the order they were queued.</prop
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="sensitive" bind-source="QueueUseSlots" bind-property="active" bind-flags="bidirectional|sync-create"/>
                 <child>
                   <object class="GtkSpinButton" id="QueueSlots">
                     <property name="visible">True</property>

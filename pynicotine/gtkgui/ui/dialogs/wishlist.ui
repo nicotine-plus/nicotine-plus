@@ -26,8 +26,8 @@
         <property name="hexpand">True</property>
         <property name="placeholder-text" translatable="yes">Add Wish…</property>
         <property name="primary-icon-name">list-add-symbolic</property>
-        <signal name="activate" handler="on_add_wish" swapped="no"/>
-        <signal name="icon-press" handler="on_add_wish" swapped="no"/>
+        <signal name="activate" handler="on_add_wish"/>
+        <signal name="icon-press" handler="on_add_wish"/>
       </object>
     </child>
     <child>
@@ -69,7 +69,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_edit_wish" swapped="no"/>
+                    <signal name="clicked" handler="on_edit_wish"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -96,7 +96,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">True</property>
-                    <signal name="clicked" handler="on_remove_wish" swapped="no"/>
+                    <signal name="clicked" handler="on_remove_wish"/>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -128,7 +128,7 @@
                     <child>
                       <object class="GtkButton">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_clear_wishlist" swapped="no"/>
+                        <signal name="clicked" handler="on_clear_wishlist"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

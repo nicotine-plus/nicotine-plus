@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009 Quinox <quinox@users.sf.net>
@@ -30,6 +30,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
@@ -52,8 +53,7 @@ class UserList(UserInterface):
         self.frame = frame
         self.page_id = "userlist"
 
-        """ Columns """
-
+        # Columns
         self.user_iterators = {}
         self.usersmodel = Gtk.ListStore(
             Gio.Icon,             # (0)  status icon
@@ -116,21 +116,20 @@ class UserList(UserInterface):
 
         self.UserListTree.set_model(self.usersmodel)
 
-        """ Lists """
-
+        # Lists
         for row in config.sections["server"]["userlist"]:
             self.append_user_row(row)
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        self.buddies_combo_entries = (
-            self.frame.UserSearchCombo, self.frame.PrivateChatCombo, self.frame.UserInfoCombo,
-            self.frame.UserBrowseCombo)
+        for combo_box in (self.frame.UserSearchCombo, self.frame.PrivateChatCombo, self.frame.UserInfoCombo,
+                          self.frame.UserBrowseCombo):
+            combo_box.set_model(self.usersmodel)
+            combo_box.set_entry_text_column(2)
 
-        self.buddies_combos_fill()
+            CompletionEntry(combo_box.get_child(), self.usersmodel, column=2)
 
-        """ Popup """
-
+        # Popup menus
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
         self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)
@@ -209,16 +208,6 @@ class UserList(UserInterface):
         ]
 
         self.user_iterators[username] = self.usersmodel.insert_with_valuesv(0, self.column_numbers, row)
-
-    def buddies_combos_fill(self):
-
-        for widget in self.buddies_combo_entries:
-            widget.remove_all()
-            widget.append_text("")
-
-            for row in config.sections["server"]["userlist"]:
-                if row and isinstance(row, list):
-                    widget.append_text(str(row[0]))
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):
@@ -343,7 +332,7 @@ class UserList(UserInterface):
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
         private_rooms_enabled = (self.popup_menu_private_rooms.items
-                                 and status > 0 and menu.user != config.sections["server"]["login"])
+                                 and status > 0 and menu.user != self.frame.np.login_username)
 
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
@@ -456,9 +445,6 @@ class UserList(UserInterface):
         self.save_user_list()
         self.update()
 
-        for widget in self.buddies_combo_entries:
-            widget.append_text(user)
-
         if config.sections["words"]["buddies"]:
             self.frame.update_completions()
 
@@ -469,7 +455,6 @@ class UserList(UserInterface):
             del self.user_iterators[user]
 
         self.save_user_list()
-        self.buddies_combos_fill()
         self.update()
 
         if config.sections["words"]["buddies"]:

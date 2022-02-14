@@ -13,7 +13,7 @@ Dependencies for Nicotine+ are described in [DEPENDENCIES.md](DEPENDENCIES.md).
 
 To build source distribution files `.tar.bz2` and `.tar.gz` from the Git repository, run:
 
-```console
+```sh
 python3 setup.py sdist --formats=bztar,gztar
 ```
 
@@ -25,27 +25,21 @@ Unstable and stable PPAs are already provided for pre-compiled packages. However
 
 Start by installing the build dependencies:
 
-```console
+```sh
 sudo apt build-dep .
 ```
 
 Generate the "upstream" tarball:
 
-```console
+```sh
 python3 setup.py sdist
 mk-origtargz dist/nicotine-plus-*.tar.gz
 ```
 
-Build the Debian source package:
+Build the Debian package:
 
-```console
-debuild -S -sa
-```
-
-Build the binary from the source package and upstream tarball via `sbuild`:
-
-```console
-sbuild ../nicotine_*.dsc
+```sh
+debuild -sa -us -uc
 ```
 
 
@@ -59,7 +53,7 @@ Follow the instructions on installing MSYS2: [https://pygobject.readthedocs.io/e
 
 Clone the `nicotine-plus` Git repository:
 
-```console
+```sh
 pacman -S git
 git clone https://github.com/nicotine-plus/nicotine-plus
 cd nicotine-plus
@@ -67,7 +61,7 @@ cd nicotine-plus
 
 Install dependencies:
 
-```console
+```sh
 export NICOTINE_GTK_VERSION=3
 export ARCH=x86_64
 pacman --noconfirm -S --needed mingw-w64-$ARCH-python
@@ -77,7 +71,7 @@ python3 packaging/windows/dependencies_packaging.py
 
 Build the application:
 
-```console
+```sh
 python3 packaging/windows/setup.py bdist_msi
 ```
 

@@ -42,8 +42,8 @@
                     <property name="width-chars">15</property>
                     <property name="placeholder-text" translatable="yes">Add something you like…</property>
                     <property name="primary-icon-name">non-starred-symbolic</property>
-                    <signal name="activate" handler="on_add_thing_i_like" swapped="no"/>
-                    <signal name="icon-press" handler="on_add_thing_i_like" swapped="no"/>
+                    <signal name="activate" handler="on_add_thing_i_like"/>
+                    <signal name="icon-press" handler="on_add_thing_i_like"/>
                   </object>
                 </child>
                 <child>
@@ -64,9 +64,6 @@
                         </child>
                       </object>
                     </child>
-                    <style>
-                      <class name="border-bottom"/>
-                    </style>
                   </object>
                 </child>
               </object>
@@ -100,8 +97,8 @@
                     <property name="width-chars">15</property>
                     <property name="placeholder-text" translatable="yes">Add something you dislike…</property>
                     <property name="primary-icon-name">action-unavailable-symbolic</property>
-                    <signal name="activate" handler="on_add_thing_i_dislike" swapped="no"/>
-                    <signal name="icon-press" handler="on_add_thing_i_dislike" swapped="no"/>
+                    <signal name="activate" handler="on_add_thing_i_dislike"/>
+                    <signal name="icon-press" handler="on_add_thing_i_dislike"/>
                   </object>
                 </child>
                 <child>
@@ -143,7 +140,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -166,8 +163,9 @@
                         <child>
                           <object class="GtkButton" id="RecommendationsButton">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="tooltip-text">Refresh list of recommendations</property>
-                            <signal name="clicked" handler="on_recommendations_clicked" swapped="no"/>
+                            <signal name="clicked" handler="on_recommendations_clicked"/>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -203,11 +201,11 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="border-end"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="border-right"/>
-                </style>
               </object>
             </child>
             <child>
@@ -218,7 +216,7 @@
                   <object class="GtkBox" id="SimilarUsers">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -241,8 +239,9 @@
                         <child>
                           <object class="GtkButton" id="SimilarUsersButton">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="tooltip-text">Show users with similar interests</property>
-                            <signal name="clicked" handler="on_similar_users_clicked" swapped="no"/>
+                            <signal name="clicked" handler="on_similar_users_clicked"/>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -269,7 +268,8 @@
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="has-tooltip">True</property>
-                                <signal name="query-tooltip" handler="on_tooltip" swapped="no"/>
+                                <property name="search-column">1</property>
+                                <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_ru_row_activated"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>

@@ -123,7 +123,7 @@
                     <child>
                       <object class="GtkButton" id="addButton">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_add" swapped="no"/>
+                        <signal name="clicked" handler="on_add"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -190,7 +190,7 @@
                     <child>
                       <object class="GtkButton" id="RemoveHandler">
                         <property name="visible">True</property>
-                        <signal name="clicked" handler="on_remove" swapped="no"/>
+                        <signal name="clicked" handler="on_remove"/>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2009-2011 Quinox <quinox@users.sf.net>
@@ -26,7 +26,7 @@ import os
 
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.utils import open_file_path
 
@@ -39,8 +39,7 @@ class Uploads(TransferList):
         self.path_label = _("Folder")
         self.retry_label = _("_Retry")
         self.abort_label = _("_Abort")
-        self.aborted_status = _("Aborted")
-        self.tray_template = _("Uploads: %(speed)s")
+        self.aborted_status = "Aborted"
 
         TransferList.__init__(self, frame, transfer_type="upload")
 
@@ -83,7 +82,8 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            copy_file_url(user, transfer.filename)
+            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename)
+            copy_text(url)
 
     def on_copy_dir_url(self, *_args):
 
@@ -91,7 +91,8 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            copy_file_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
@@ -122,9 +123,9 @@ class Uploads(TransferList):
             return
 
         user = config.sections["server"]["login"]
-        folder = transfer.filename.rsplit('\\', 1)[0]
+        folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
-        self.frame.np.userbrowse.browse_user(user, folder=folder)
+        self.frame.np.userbrowse.browse_user(user, path=folder)
 
     def on_abort_user(self, *_args):
 
@@ -132,8 +133,8 @@ class Uploads(TransferList):
 
         for user in self.selected_users:
             for transfer in self.transfer_list:
-                if transfer.user == user:
-                    self.selected_transfers.add(transfer)
+                if transfer.user == user and transfer not in self.selected_transfers:
+                    self.selected_transfers.append(transfer)
 
         self.abort_transfers()
 

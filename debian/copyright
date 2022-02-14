@@ -6,7 +6,7 @@ Source: https://github.com/nicotine-plus/nicotine-plus/
 Files: *
 Copyright: 2001-2003 PySoulSeek Contributors
            2003-2004 Nicotine Team
-           2004-2021 Nicotine+ Team
+           2004-2022 Nicotine+ Team
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py
@@ -18,13 +18,13 @@ Files: pynicotine/geoip/ipcountrydb.bin
 Copyright: 2001-2018 Hexasoft Development Sdn. Bhd.
 License: CC-BY-SA-4.0
 
-Files: pynicotine/gtkgui/icons/flags/*
-Copyright: 2016 Bowtie AB
-           2018 Jack Marsh
+Files: pynicotine/gtkgui/icons/hicolor/scalable/intl/nplus-flag-*.svg
+Copyright: 2016-2017 Bowtie AB
+           2018-2020 Jack Marsh
 License: MIT
 
 Files: pynicotine/metadata/*
-Copyright: 2014-2019 Tom Wallroth
+Copyright: 2014-2021 Tom Wallroth
            2020-2021 Nicotine+ Team
 License: MIT
 

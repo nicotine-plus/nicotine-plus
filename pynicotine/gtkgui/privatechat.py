@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007 Gallows <g4ll0ws@gmail.com>
@@ -21,11 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from collections import deque
-from time import altzone
-from time import daylight
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -38,13 +34,13 @@ from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_user_status_color
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import open_log
@@ -58,7 +54,6 @@ class PrivateChats(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         self.completion = ChatCompletion()
-        CompletionEntry(frame.PrivateChatEntry, frame.PrivateChatCombo.get_model())
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
 
         if Gtk.get_major_version() == 4:
@@ -109,7 +104,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.Main, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
-        if msg.user == config.sections["server"]["login"]:
+        if msg.user == self.frame.np.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
@@ -120,9 +115,6 @@ class PrivateChats(IconNotebook):
             self.pages[user] = page = PrivateChat(self, user)
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
-
-            if self.get_n_pages() > 0:
-                self.frame.private_status_page.hide()
 
         if switch_page and self.get_current_page() != self.page_num(self.pages[user].Main):
             self.set_current_page(self.page_num(self.pages[user].Main))
@@ -181,13 +173,8 @@ class PrivateChat(UserInterface):
         self.chats = chats
         self.frame = chats.frame
 
-        if Gtk.get_major_version() == 4:
-            self.ShowChatHelp.set_icon_name("dialog-question-symbolic")
-        else:
-            self.ShowChatHelp.set_image(Gtk.Image(icon_name="dialog-question-symbolic"))
-
         self.opened = False
-        self.offlinemessage = False
+        self.offline_message = False
         self.status = 0
 
         if user in self.frame.np.user_statuses:
@@ -240,32 +227,29 @@ class PrivateChat(UserInterface):
     def read_private_log(self):
 
         # Read log file
-        filename = self.user.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.user) + ".log"
         numlines = config.sections["logging"]["readprivatelines"]
 
         try:
             get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
 
-        except IOError:
+        except OSError:
             pass
 
     def append_log_lines(self, path, numlines):
 
-        try:
-            self._append_log_lines(path, numlines, "utf-8")
-
-        except UnicodeDecodeError:
-            self._append_log_lines(path, numlines, "latin-1")
-
-    def _append_log_lines(self, path, numlines, encoding="utf-8"):
-
-        with open(path, 'r', encoding=encoding) as lines:
+        with open(path, "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
 
             for line in lines:
-                self.chat_textview.append_line(line, self.tag_hilite, timestamp_format="", username=self.user,
-                                               usertag=self.tag_hilite, scroll=False)
+                try:
+                    line = line.decode("utf-8")
+
+                except UnicodeDecodeError:
+                    line = line.decode("latin-1")
+
+                self.chat_textview.append_line(line, self.tag_hilite, timestamp_format="", scroll=False)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
@@ -276,12 +260,11 @@ class PrivateChat(UserInterface):
         timestamp_format = config.sections["logging"]["private_timestamp"]
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
-        self.offlinemessage = False
+        self.offline_message = False
 
         # Offline color for usernames
-        status = 0
-        self.update_remote_username_tag(status)
-        self.update_local_username_tag(status)
+        self.update_remote_username_tag(status=0)
+        self.update_local_username_tag(status=0)
 
     def set_label(self, label):
         self.popup_menu_user_tab.set_parent(label)
@@ -323,7 +306,8 @@ class PrivateChat(UserInterface):
 
         self.chats.request_tab_hilite(self.Main)
 
-        if self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active():
+        if (self.chats.get_current_page() == self.chats.page_num(self.Main)
+                and self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
@@ -341,9 +325,10 @@ class PrivateChat(UserInterface):
 
         text = msg.msg
         newmessage = msg.newmessage
-        timestamp = msg.timestamp
+        timestamp = msg.timestamp if not newmessage else None
+        usertag = self.tag_username
 
-        self.show_notification(msg.msg)
+        self.show_notification(text)
 
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
@@ -354,35 +339,23 @@ class PrivateChat(UserInterface):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
-        if not newmessage and not self.offlinemessage:
-            self.chat_textview.append_line(
-                _("* Message(s) sent while you were offline. Timestamps are reported by the server and can be off."),
-                self.tag_hilite, timestamp_format=timestamp_format
-            )
-            self.offlinemessage = True
-
-        if newmessage and self.offlinemessage:
-            self.offlinemessage = False
-
         if not newmessage:
+            tag = usertag = self.tag_hilite
 
-            # The timestamps from the server are off by a lot, so we'll only use them when this is an offline message
-            # Also, they are in UTC so we need to correct them
-            if daylight:
-                timestamp -= (3600 * daylight)
-            else:
-                timestamp += altzone
+            if not self.offline_message:
+                self.chat_textview.append_line(_("* Message(s) sent while you were offline. Timestamps are reported by "
+                                                 "the server and can be off."), tag, timestamp_format=timestamp_format)
+                self.offline_message = True
 
-            self.chat_textview.append_line(line, self.tag_hilite, timestamp=timestamp,
-                                           timestamp_format=timestamp_format, username=self.user,
-                                           usertag=self.tag_username)
         else:
-            self.chat_textview.append_line(line, tag, timestamp_format=timestamp_format, username=self.user,
-                                           usertag=self.tag_username)
+            self.offline_message = False
+
+        self.chat_textview.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
+                                       username=self.user, usertag=usertag)
 
         if self.Log.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
+                          timestamp, timestamp_format=config.sections["logging"]["log_timestamp"])
 
     def echo_message(self, text, message_type):
 
@@ -396,24 +369,21 @@ class PrivateChat(UserInterface):
 
     def send_message(self, text):
 
-        my_username = config.sections["server"]["login"]
+        my_username = self.frame.np.login_username
 
-        if text[:4] == "/me ":
+        if text.startswith("/me "):
             line = "* %s %s" % (my_username, text[4:])
-            usertag = tag = self.tag_action
-
+            tag = self.tag_action
         else:
-            tag = self.tag_local
-            usertag = self.tag_my_username
             line = "[%s] %s" % (my_username, text)
+            tag = self.tag_local
 
-        timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_textview.append_line(line, tag, timestamp_format=timestamp_format,
-                                       username=my_username, usertag=usertag)
+        self.chat_textview.append_line(line, tag, timestamp_format=config.sections["logging"]["private_timestamp"],
+                                       username=my_username, usertag=self.tag_my_username)
 
         if self.Log.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp_format)
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
+                          timestamp_format=config.sections["logging"]["log_timestamp"])
 
     def update_visuals(self):
 
@@ -472,9 +442,6 @@ class PrivateChat(UserInterface):
         self.frame.np.privatechats.remove_user(self.user)
 
         self.chats.remove_page(self.Main)
-
-        if self.chats.get_n_pages() == 0:
-            self.frame.private_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.chats.remove_all_pages()

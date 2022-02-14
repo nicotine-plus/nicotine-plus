@@ -38,7 +38,7 @@
                     <property name="label" translatable="yes">Enable plugins</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_plugins_enable" swapped="no"/>
+                    <signal name="toggled" handler="on_plugins_enable"/>
                   </object>
                 </child>
                 <child>
@@ -57,10 +57,11 @@
                               <object class="GtkTreeView" id="PluginTreeView">
                                 <property name="visible">True</property>
                                 <property name="search-column">1</property>
+                                <property name="sensitive" bind-source="PluginsEnable" bind-property="active" bind-flags="bidirectional|sync-create"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection">
                                     <property name="mode">browse</property>
-                                    <signal name="changed" handler="on_select_plugin" swapped="no"/>
+                                    <signal name="changed" handler="on_select_plugin"/>
                                   </object>
                                 </child>
                               </object>
@@ -81,7 +82,7 @@
                             <child>
                               <object class="GtkButton" id="PluginFolder">
                                 <property name="visible">True</property>
-                                <signal name="clicked" handler="on_add_plugins" swapped="no"/>
+                                <signal name="clicked" handler="on_add_plugins"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -116,7 +117,7 @@
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="valign">center</property>
-                                    <signal name="clicked" handler="on_plugin_properties" swapped="no"/>
+                                    <signal name="clicked" handler="on_plugin_properties"/>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -158,7 +159,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkBox" id="PluginInfo">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="spacing">18</property>
                 <property name="orientation">vertical</property>
@@ -258,7 +259,7 @@
                                 <property name="editable">False</property>
                                 <property name="cursor-visible">False</property>
                                 <property name="pixels-above-lines">1</property>
-                                <property name="pixels-below-lines">1</property>
+                                <property name="pixels-below-lines">2</property>
                                 <property name="left-margin">8</property>
                                 <property name="right-margin">8</property>
                                 <property name="top-margin">5</property>

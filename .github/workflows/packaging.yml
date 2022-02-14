@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -25,15 +25,9 @@ jobs:
 
       - name: Build Debian package
         run: |
-          # Generate tarball
           python setup.py sdist
           mk-origtargz dist/nicotine-plus-*.tar.gz
-
-          # Build source package
-          debuild -S -sa -us -uc
-
-          # Build binary
-          debuild -b -sa -us -uc
+          debuild -sa -us -uc
 
       - name: Prepare artifacts
         run: |
@@ -56,7 +50,7 @@ jobs:
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
       with:
         bundle: flatpak-package.flatpak
-        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.yaml
+        manifest-path: packaging/flatpak/org.nicotine_plus.Nicotine.json
         run-tests: true
         cache-key: flatpak-builder-${{ github.sha }}
 
@@ -119,6 +113,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set system language
+        run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
+
       - name: Install build dependencies
         run: |
           brew update
@@ -131,8 +128,7 @@ jobs:
           rm -rf dist/Nicotine+/
 
       - name: Generate .dmg
-        run: |
-          python3 packaging/macos/create_dmg.py
+        run: python3 packaging/macos/create_dmg.py
 
       - name: Archive installer artifacts
         uses: actions/upload-artifact@v2

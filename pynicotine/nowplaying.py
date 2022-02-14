@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2008 Gallows <g4ll0ws@gmail.com>
@@ -116,7 +116,7 @@ class NowPlaying:
         title = title.replace("$p", "%(program)s")
 
         title = title % self.title
-        title = ' '.join((x for x in title.replace('\r', '\n').split('\n') if x))
+        title = ' '.join(x for x in title.replace('\r', '\n').split('\n') if x)
 
         if title:
             if callback:
@@ -185,14 +185,10 @@ class NowPlaying:
         dbus_property = 'org.freedesktop.DBus.Properties'
 
         if not player:
-
-            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
-                                                Gio.DBusProxyFlags.NONE,
-                                                None,
-                                                'org.freedesktop.DBus',
-                                                '/org/freedesktop/DBus',
-                                                'org.freedesktop.DBus',
-                                                None)
+            dbus_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None
+            )
 
             names = dbus_proxy.ListNames()
             players = []
@@ -213,13 +209,10 @@ class NowPlaying:
                 log.add(_("Auto-detected MPRIS player: %s"), player)
 
         try:
-            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
-                                                Gio.DBusProxyFlags.NONE,
-                                                None,
-                                                dbus_mpris_service + player,
-                                                dbus_mpris_path,
-                                                dbus_property,
-                                                None)
+            dbus_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
+            )
 
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 

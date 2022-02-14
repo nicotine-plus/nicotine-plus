@@ -276,7 +276,7 @@ indent-string='    '
 max-line-length=120
 
 # Maximum number of lines in a module.
-max-module-lines=3500
+max-module-lines=3300
 
 # Allow the body of a class to be on the same line as the declaration if body
 # contains single statement.
@@ -350,7 +350,7 @@ check-quote-consistency=no
 
 # This flag controls whether the implicit-str-concat should generate a warning
 # on implicit string concatenation in sequences defined over several lines.
-check-str-concat-over-line-jumps=no
+check-str-concat-over-line-jumps=yes
 
 
 [TYPECHECK]
@@ -434,7 +434,7 @@ dummy-variables-rgx=_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy|^ignored_|^unused_
 ignored-argument-names=_.*|^ignored_|^unused_
 
 # Tells whether we should check for unused import in __init__ files.
-init-import=no
+init-import=yes
 
 # List of qualified module names which can have objects that can redefine
 # builtins.
@@ -444,7 +444,7 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 [CLASSES]
 
 # Warn about protected attribute access inside special methods
-check-protected-access-in-special-methods=no
+check-protected-access-in-special-methods=yes
 
 # List of method names used to declare (i.e. assign) instance attributes.
 defining-attr-methods=__init__,
@@ -470,7 +470,7 @@ valid-metaclass-classmethod-first-arg=cls
 [DESIGN]
 
 # Maximum number of arguments for function / method.
-max-args=24
+max-args=10
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=8

@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2007-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
@@ -44,7 +44,6 @@ from pynicotine.slskmessages import CantCreateRoom
 from pynicotine.slskmessages import ChangePassword
 from pynicotine.slskmessages import CheckPrivileges
 from pynicotine.slskmessages import ChildDepth
-from pynicotine.slskmessages import ConnClose
 from pynicotine.slskmessages import ConnCloseIP
 from pynicotine.slskmessages import ConnectToPeer
 from pynicotine.slskmessages import DistribAlive
@@ -54,11 +53,11 @@ from pynicotine.slskmessages import DistribBranchRoot
 from pynicotine.slskmessages import DistribChildDepth
 from pynicotine.slskmessages import DistribEmbeddedMessage
 from pynicotine.slskmessages import DistribMessage
-from pynicotine.slskmessages import DistribRequest
 from pynicotine.slskmessages import DistribSearch
 from pynicotine.slskmessages import DownloadFile
 from pynicotine.slskmessages import EmbeddedMessage
 from pynicotine.slskmessages import ExactFileSearch
+from pynicotine.slskmessages import FileConnClose
 from pynicotine.slskmessages import FileError
 from pynicotine.slskmessages import FileMessage
 from pynicotine.slskmessages import FileOffset
@@ -150,7 +149,7 @@ from pynicotine.slskmessages import ServerDisconnect
 from pynicotine.slskmessages import ServerMessage
 from pynicotine.slskmessages import ServerPing
 from pynicotine.slskmessages import ServerTimeout
-from pynicotine.slskmessages import SetCurrentConnectionCount
+from pynicotine.slskmessages import SetConnectionStats
 from pynicotine.slskmessages import SetDownloadLimit
 from pynicotine.slskmessages import SetStatus
 from pynicotine.slskmessages import SetUploadLimit
@@ -175,6 +174,7 @@ from pynicotine.slskmessages import UserPrivileged
 from pynicotine.slskmessages import UserSearch
 from pynicotine.slskmessages import WishlistInterval
 from pynicotine.slskmessages import WishlistSearch
+from pynicotine.slskmessages import increment_token
 
 
 # Set the maximum number of open files to the hard limit reported by the OS.
@@ -250,17 +250,17 @@ class Connection:
 
 class PeerConnection(Connection):
 
-    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "piercefw", "lastcallback")
+    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "indirect", "lastcallback")
 
-    def __init__(self, sock=None, addr=None, events=None, init=None):
+    def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
         Connection.__init__(self, sock, addr, events)
         self.init = init
+        self.indirect = indirect
         self.filereq = None
         self.filedown = None
         self.fileupl = None
         self.filereadbytes = 0
         self.bytestoread = 0
-        self.piercefw = None
         self.lastcallback = time.time()
 
 
@@ -410,7 +410,6 @@ class SlskProtoThread(threading.Thread):
 
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
-    CONNCOUNT_CALLBACK_INTERVAL = 0.5
 
     def __init__(self, core_callback, queue, bindip, interface, port, port_range, network_filter, eventprocessor):
         """ core_callback is a NicotineCore callback function to be called with messages
@@ -464,15 +463,23 @@ class SlskProtoThread(threading.Thread):
         self.manual_server_disconnect = False
         self.server_socket = None
         self.server_address = None
+        self.server_username = None
         self.server_timer = None
         self.server_timeout_value = -1
 
+        self.parent_socket = None
+        self.potential_parents = {}
+        self.distrib_parent_min_speed = 0
+        self.distrib_parent_speed_ratio = 1
+        self.max_distrib_children = 10
+
         self._numsockets = 1
+        self._last_conn_stat_time = 0
 
         self._conns = {}
         self._connsinprogress = {}
         self._out_indirect_conn_request_times = {}
-        self._token = 100
+        self._token = 0
         self.exit = threading.Event()
         self.user_addresses = {}
 
@@ -485,7 +492,8 @@ class SlskProtoThread(threading.Thread):
         self._dlimits = {}
         self.total_uploads = 0
         self.total_downloads = 0
-        self.last_conncount_callback = time.time()
+        self.total_download_bandwidth = 0
+        self.total_upload_bandwidth = 0
         self.last_cycle_time = time.time()
         self.current_cycle_loop_count = 0
         self.last_cycle_loop_count = 0
@@ -573,7 +581,7 @@ class SlskProtoThread(threading.Thread):
                 log.add_debug("Maximum number of concurrent connections (sockets): %i", MAXSOCKETS)
                 break
 
-            except socket.error as error:
+            except OSError as error:
                 log.add_debug("Cannot listen on port %(port)s: %(error)s", {"port": listenport, "error": error})
                 continue
 
@@ -609,7 +617,8 @@ class SlskProtoThread(threading.Thread):
         if self._want_abort:
             return
 
-        self._callback_msgs.append(SetCurrentConnectionCount(0))
+        # Reset connection stats
+        self._callback_msgs.append(SetConnectionStats())
 
         if not self.server_address:
             # We didn't successfully establish a connection to the server
@@ -627,6 +636,7 @@ class SlskProtoThread(threading.Thread):
             self.set_server_timer()
 
         self.server_address = None
+        self.server_username = None
         self._callback_msgs.append(ServerDisconnect(self.manual_server_disconnect))
 
     def server_timeout(self):
@@ -652,6 +662,7 @@ class SlskProtoThread(threading.Thread):
         """ Call this to abort the thread """
         self._want_abort = True
 
+        self.listen_socket.close()
         self.selector.close()
         self.server_disconnect()
 
@@ -762,6 +773,16 @@ class SlskProtoThread(threading.Thread):
 
         return len(conn_obj.obuf) > 0 or len(conn_obj.ibuf) > 0
 
+    def has_existing_user_socket(self, user, conn_type):
+
+        if conn_type != 'F':
+            prev_init = self._init_msgs.get(user + conn_type)
+
+            if prev_init is not None and prev_init.sock is not None:
+                return True
+
+        return False
+
     @staticmethod
     def pack_network_message(msg_obj):
 
@@ -795,6 +816,18 @@ class SlskProtoThread(threading.Thread):
 
         return None
 
+    def unpack_embedded_message(self, msg):
+        """ This message embeds a distributed message. We unpack the distributed message and process it. """
+
+        if msg.distrib_code not in self.distribclasses:
+            return None
+
+        distrib_class = self.distribclasses[msg.distrib_code]
+        distrib_msg = distrib_class(None)
+        distrib_msg.parse_network_message(msg.distrib_message)
+
+        return distrib_msg
+
     def modify_connection_events(self, conn_obj, events):
 
         if conn_obj.events != events:
@@ -813,26 +846,28 @@ class SlskProtoThread(threading.Thread):
 
         msgs.clear()
 
-    def send_message_to_peer(self, user, message, login, address=None):
+    def send_message_to_peer(self, user, message, address=None):
 
         init = None
-
-        if message.__class__ is FileRequest:
-            conn_type = 'F'
-
-        elif message.__class__ is DistribRequest:
-            conn_type = 'D'
-
-        else:
-            conn_type = 'P'
+        conn_type = 'F' if message.__class__ is FileRequest else 'P'
 
         if conn_type != 'F':
-            # Check if there's already a connection object for the specified username
+            # Check if there's already a connection for the specified username
+            init = self._init_msgs.get(user + conn_type)
 
-            for _, i in self._init_msgs.items():
-                if i.target_user == user and i.conn_type == conn_type:
-                    init = i
-                    break
+            if init is None:
+                # Check if we have a pending PeerInit message (currently requesting user IP address)
+                pending_init_msgs = self._init_msgs.get(user, [])
+
+                for msg in pending_init_msgs:
+                    if msg.conn_type == conn_type:
+                        init = msg
+                        break
+
+        log.add_conn("Sending message of type %(type)s to user %(user)s", {
+            'type': message.__class__,
+            'user': user
+        })
 
         if init is not None:
             log.add_conn("Found existing connection of type %(type)s for user %(user)s, using it.", {
@@ -848,32 +883,28 @@ class SlskProtoThread(threading.Thread):
 
         else:
             # This is a new peer, initiate a connection
-            self.initiate_connection_to_peer(user, conn_type, message, login, address)
+            self.initiate_connection_to_peer(user, conn_type, message, address)
 
-        log.add_conn("Sending message of type %(type)s to user %(user)s", {
-            'type': message.__class__,
-            'user': user
-        })
-
-    def initiate_connection_to_peer(self, user, conn_type, message, login, address=None):
+    def initiate_connection_to_peer(self, user, conn_type, message=None, address=None):
         """ Prepare to initiate a connection with a peer """
 
-        init = PeerInit(init_user=login, target_user=user, conn_type=conn_type)
-        init.outgoing_msgs.append(message)
+        init = PeerInit(init_user=self.server_username, target_user=user, conn_type=conn_type)
         addr = None
 
-        if user == login:
-            # Bypass public IP address request if we connect to ourselves
-            addr = (self.bindip or '127.0.0.1', self.listenport)
+        if message is not None:
+            init.outgoing_msgs.append(message)
 
-        elif user in self.user_addresses:
+        if user in self.user_addresses:
             addr = self.user_addresses[user]
 
         elif address is not None:
             self.user_addresses[user] = addr = address
 
         if addr is None:
-            self._init_msgs[user] = init
+            if self._init_msgs.get(user) is None:
+                self._init_msgs[user] = []
+
+            self._init_msgs[user].append(init)
             self._queue.append(GetPeerAddress(user))
 
             log.add_conn("Requesting address for user %(user)s", {
@@ -882,12 +913,21 @@ class SlskProtoThread(threading.Thread):
 
         else:
             init.addr = addr
-            self.connect_to_peer_direct(user, addr, init)
+            self.connect_to_peer(user, addr, init)
 
-    def connect_to_peer_direct(self, user, addr, init):
-        """ Initiate a connection with a peer directly """
+    def connect_to_peer(self, user, addr, init):
+        """ Initiate a connection with a peer """
 
-        self._init_msgs[str(addr) + init.conn_type] = init
+        if self.has_existing_user_socket(user, init.conn_type):
+            log.add_conn(("Direct connection of type %(type)s to user %(user)s %(addr)s requested, "
+                          "but existing connection already exists"), {
+                'type': init.conn_type,
+                'user': user,
+                'addr': addr
+            })
+            return
+
+        self._init_msgs[user + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
 
         log.add_conn("Attempting direct connection of type %(type)s to user %(user)s %(addr)s", {
@@ -895,6 +935,10 @@ class SlskProtoThread(threading.Thread):
             'user': user,
             'addr': addr
         })
+
+        if not init.indirect:
+            # Also request indirect connection in case the user's port is closed
+            self.connect_to_peer_indirect(init)
 
     def connect_error(self, error, conn_obj):
 
@@ -911,9 +955,12 @@ class SlskProtoThread(threading.Thread):
             self.set_server_timer()
             return
 
-        if not conn_obj.init.token:
-            # We can't correct to peer directly, request indirect connection
-            self.connect_to_peer_indirect(conn_obj, error)
+        if not conn_obj.init.indirect:
+            log.add_conn(("Direct connection of type %(type)s to user %(user)s failed. Error: %(error)s"), {
+                "type": conn_obj.init.conn_type,
+                "user": conn_obj.init.target_user,
+                "error": error
+            })
             return
 
         if conn_obj.init in self._out_indirect_conn_request_times:
@@ -925,26 +972,85 @@ class SlskProtoThread(threading.Thread):
                 'error': error
             })
 
-    def connect_to_peer_indirect(self, conn, error):
-        """ Send a message to the server to ask the peer to connect to us instead (indirect connection) """
+    def connect_to_peer_indirect(self, init):
+        """ Send a message to the server to ask the peer to connect to us (indirect connection) """
 
-        self._token += 1
+        self._token = increment_token(self._token)
 
-        username = conn.init.target_user
-        conn_type = conn.init.conn_type
-        conn.init.token = self._token
+        username = init.target_user
+        conn_type = init.conn_type
+        init.token = self._token
 
-        self._init_msgs[self._token] = conn.init
-        self._out_indirect_conn_request_times[conn.init] = time.time()
+        self._init_msgs[self._token] = init
+        self._out_indirect_conn_request_times[init] = time.time()
         self._queue.append(ConnectToPeer(self._token, username, conn_type))
 
-        log.add_conn(("Direct connection of type %(type)s to user %(user)s failed, attempting indirect "
-                      "connection with token %(token)s. Error: %(error)s"), {
-            "type": conn_type,
+        log.add_conn(("Attempting indirect connection to user %(user)s with token %(token)s"), {
             "user": username,
-            "token": self._token,
-            "error": error
+            "token": self._token
         })
+
+    def establish_outgoing_connection(self, sock, addr, events, init):
+
+        self._conns[sock] = PeerConnection(sock=sock, addr=addr, events=events, init=init, indirect=init.indirect)
+
+        user = init.target_user
+        conn_type = init.conn_type
+        token = init.token
+        init.sock = sock
+
+        log.add_conn(("Established outgoing connection of type %(type)s with user %(user)s. List of "
+                      "outgoing messages: %(messages)s"), {
+            'type': conn_type,
+            'user': user,
+            'messages': init.outgoing_msgs
+        })
+
+        if init.indirect:
+            log.add_conn(("Responding to indirect connection request of type %(type)s from "
+                          "user %(user)s, token %(token)s"), {
+                'type': conn_type,
+                'user': user,
+                'token': token
+            })
+            self._queue.append(PierceFireWall(sock, token))
+
+        else:
+            # Direct connection established
+            log.add_conn("Sending PeerInit message of type %(type)s to user %(user)s", {
+                'type': conn_type,
+                'user': user
+            })
+            self._queue.append(init)
+
+            # Direct and indirect connections are attempted at the same time, clean up
+            self._init_msgs.pop(init.token, None)
+
+            if self._out_indirect_conn_request_times.pop(init, None):
+                log.add_conn(("Stopping indirect connection attempt of type %(type)s to user "
+                              "%(user)s"), {
+                    'type': conn_type,
+                    'user': user
+                })
+
+        self.process_conn_messages(init)
+
+    def replace_existing_connection(self, init):
+
+        user = init.target_user
+        conn_type = init.conn_type
+
+        if user == self.server_username or not self.has_existing_user_socket(user, conn_type):
+            return
+
+        log.add_conn("Discarding existing connection of type %(type)s to user %(user)s", {
+            "type": init.conn_type,
+            "user": user
+        })
+        prev_init = self._init_msgs.get(user + conn_type)
+        init.outgoing_msgs = prev_init.outgoing_msgs
+        prev_init.outgoing_msgs = []
+        self.close_connection(self._conns, prev_init.sock)
 
     def close_connection(self, connection_list, sock, callback=True):
 
@@ -955,15 +1061,23 @@ class SlskProtoThread(threading.Thread):
         conn_obj = connection_list[sock]
         conn_type = conn_obj.init.conn_type if conn_obj.init else 'S'
 
-        if callback:
-            self._callback_msgs.append(ConnClose(sock, conn_type))
+        if sock == self.parent_socket and not self.server_disconnected:
+            self.send_have_no_parent()
 
         if self._is_download(conn_obj):
             self.total_downloads -= 1
+
+            if not self.total_downloads:
+                self.total_download_bandwidth = 0
+
             self._calc_download_limit()
 
         elif self._is_upload(conn_obj):
             self.total_uploads -= 1
+
+            if not self.total_uploads:
+                self.total_upload_bandwidth = 0
+
             self._calc_upload_limit_function()
 
         # If we're shutting down, we've already closed the selector in abort()
@@ -981,7 +1095,15 @@ class SlskProtoThread(threading.Thread):
         if conn_obj.init is None:
             return
 
-        self._init_msgs.pop(str(conn_obj.addr) + conn_obj.init.conn_type, None)
+        init_key = conn_obj.init.target_user + conn_obj.init.conn_type
+        init = self._init_msgs.get(init_key)
+
+        if conn_obj.init == init:
+            # Don't remove init message if connection has been superseded
+            del self._init_msgs[init_key]
+
+        if callback and conn_type == 'F':
+            self._callback_msgs.append(FileConnClose(sock))
 
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_obj.init.conn_type,
@@ -1071,7 +1193,7 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[server_socket] = conn_obj
             self._numsockets += 1
 
-        except socket.error as err:
+        except OSError as err:
             self.connect_error(err, conn_obj)
             server_socket.close()
             self.server_disconnect()
@@ -1096,56 +1218,125 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack server messages
             if msgtype in self.serverclasses:
+                msg_class = self.serverclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.serverclasses[msgtype], msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
+                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "server")
 
-                if self.serverclasses[msgtype] is Login and msg.success:
-                    # Check for indirect connection timeouts
-                    self.exit.clear()
+                if msg is not None:
+                    if msg_class is EmbeddedMessage:
+                        msg = self.unpack_embedded_message(msg)
 
-                    thread = threading.Thread(target=self._check_indirect_connection_timeouts)
-                    thread.name = "IndirectConnectionTimeoutTimer"
-                    thread.daemon = True
-                    thread.start()
+                    elif msg_class is Login:
+                        if msg.success:
+                            # Check for indirect connection timeouts
+                            self.exit.clear()
 
-                if self.serverclasses[msgtype] is ConnectToPeer:
-                    user = msg.user
-                    addr = (msg.ip_address, msg.port)
-                    conn_type = msg.conn_type
-                    token = msg.token
+                            thread = threading.Thread(target=self._check_indirect_connection_timeouts)
+                            thread.name = "IndirectConnectionTimeoutTimer"
+                            thread.daemon = True
+                            thread.start()
 
-                    init = PeerInit(addr=addr, init_user=user, target_user=user, conn_type=conn_type, token=token)
-                    self.connect_to_peer_direct(user, addr, init)
+                            msg.username = self.server_username
+                            self._queue.append(CheckPrivileges())
 
-                if self.serverclasses[msgtype] is GetUserStatus:
-                    if msg.status <= 0:
-                        # User went offline, reset stored IP address
-                        if msg.user in self.user_addresses:
-                            del self.user_addresses[msg.user]
+                            # Ask for a list of parents to connect to (distributed network)
+                            self.send_have_no_parent()
 
-                if self.serverclasses[msgtype] is GetPeerAddress:
-                    init = self._init_msgs.pop(msg.user, None)
+                            # TODO: We can currently receive search requests from a parent connection, but
+                            # redirecting results to children is not implemented yet. Tell the server we don't accept
+                            # children for now.
+                            self._queue.append(AcceptChildren(0))
 
-                    if msg.port == 0:
-                        log.add_conn(
-                            "Server reported port 0 for user %(user)s, giving up", {
-                                'user': msg.user
-                            }
-                        )
+                            # Request a complete room list. A limited room list not including blacklisted rooms and
+                            # rooms with few users is automatically sent when logging in, but subsequent room list
+                            # requests contain all rooms.
+                            self._queue.append(RoomList())
 
-                    else:
+                        else:
+                            self._queue.append(ServerDisconnect())
+
+                    elif msg_class is ConnectToPeer:
+                        user = msg.user
+                        addr = (msg.ip_address, msg.port)
+                        conn_type = msg.conn_type
+                        token = msg.token
+
+                        log.add_conn(("Received indirect connection request of type %(type)s from user %(user)s, "
+                                      "token %(token)s, address %(addr)s"), {
+                            "type": conn_type,
+                            "user": user,
+                            "token": token,
+                            "addr": addr
+                        })
+                        init = PeerInit(addr=addr, init_user=user, target_user=user,
+                                        conn_type=conn_type, indirect=True, token=token)
+                        self.connect_to_peer(user, addr, init)
+
+                    elif msg_class is GetUserStatus:
+                        if msg.status <= 0:
+                            # User went offline, reset stored IP address
+                            if msg.user in self.user_addresses:
+                                del self.user_addresses[msg.user]
+
+                    elif msg_class is GetUserStats:
+                        if msg.user == self.server_username:
+                            self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
+
+                    elif msg_class is GetPeerAddress:
+                        pending_init_msgs = self._init_msgs.pop(msg.user, [])
+
+                        if msg.port == 0:
+                            log.add_conn(
+                                "Server reported port 0 for user %(user)s", {
+                                    'user': msg.user
+                                }
+                            )
+
                         addr = (msg.ip_address, msg.port)
 
-                        if init is not None:
+                        for init in pending_init_msgs:
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
                             init.addr = addr
-                            self.connect_to_peer_direct(msg.user, addr, init)
+                            self.connect_to_peer(msg.user, addr, init)
 
-                    self.user_addresses[msg.user] = (msg.ip_address, msg.port)
+                        # We already store a local IP address for our username
+                        if msg.user != self.server_username:
+                            self.user_addresses[msg.user] = addr
 
-                if msg is not None:
-                    self._callback_msgs.append(msg)
+                    elif msg_class is Relogged:
+                        self.manual_server_disconnect = True
+
+                    elif msg_class is PossibleParents:
+                        # Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
+                        # We attempt to connect to them all at once, since connection errors are fairly common.
+
+                        self.potential_parents = msg.list
+                        log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
+
+                        if self.parent_socket is None and self.potential_parents:
+                            for user in self.potential_parents:
+                                addr = self.potential_parents[user]
+
+                                log.add_conn("Attempting parent connection to user %s", user)
+                                self.initiate_connection_to_peer(user, 'D', address=addr)
+
+                    elif msg_class is ParentMinSpeed:
+                        self.distrib_parent_min_speed = msg.speed
+
+                    elif msg_class is ParentSpeedRatio:
+                        self.distrib_parent_speed_ratio = msg.ratio
+
+                    elif msg_class is ResetDistributed:
+                        log.add_conn("Received a reset request for distributed network")
+
+                        if self.parent_socket is not None:
+                            self.close_connection(self._conns, self.parent_socket)
+
+                        self.send_have_no_parent()
+
+                    if msg is not None:
+                        self._callback_msgs.append(msg)
 
             else:
                 log.add("Server message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
@@ -1198,14 +1389,17 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer init messages
             if msgtype in self.peerinitclasses:
+                msg_class = self.peerinitclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.peerinitclasses[msgtype], msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1,
-                    "peer init", conn_obj.sock)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "peer init", conn_obj.sock)
 
                 if msg is not None:
-                    if self.peerinitclasses[msgtype] is PierceFireWall:
-                        log.add_conn("Received indirect connection attempt (PierceFireWall) with token %s", msg.token)
-                        conn_obj.piercefw = msg
+                    if msg_class is PierceFireWall:
+                        log.add_conn(("Received indirect connection response (PierceFireWall) with token "
+                                      "%(token)s, address %(addr)s"), {
+                            "token": msg.token,
+                            "addr": conn_obj.addr
+                        })
 
                         log.add_conn("List of stored PeerInit messages: %s", str(self._init_msgs))
                         log.add_conn("Attempting to fetch PeerInit message for token %s", msg.token)
@@ -1219,35 +1413,42 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, conn_obj.sock)
                             return
 
-                        self._init_msgs[str(conn_obj.addr) + 'P'] = conn_obj.init
+                        self._init_msgs[conn_obj.init.target_user + conn_obj.init.conn_type] = conn_obj.init
                         conn_obj.init.sock = conn_obj.sock
                         self._out_indirect_conn_request_times.pop(conn_obj.init, None)
 
-                        log.add_conn(("User %(user)s managed to connect to us indirectly (token %(token)s), "
-                                      "connection is established"), {
+                        log.add_conn("Indirect connection to user %(user)s with token %(token)s established", {
                             "user": conn_obj.init.target_user,
                             "token": msg.token
                         })
 
-                        self._queue.append(conn_obj.init)
+                        conn_obj.indirect = True
                         self.process_conn_messages(conn_obj.init)
 
-                    elif self.peerinitclasses[msgtype] is PeerInit:
-                        conn_obj.init = msg
-                        conn_obj.init.addr = conn_obj.addr
-                        self._init_msgs[str(conn_obj.addr) + msg.conn_type] = msg
+                    elif msg_class is PeerInit:
+                        user = msg.target_user
+                        conn_type = msg.conn_type
+                        addr = conn_obj.addr
 
-                        log.add_conn("Received incoming direct connection of type %(type)s from user %(user)s", {
-                            'type': msg.conn_type,
-                            'user': msg.target_user
+                        log.add_conn(("Received incoming direct connection of type %(type)s from user "
+                                      "%(user)s %(addr)s"), {
+                            'type': conn_type,
+                            'user': user,
+                            'addr': addr
                         })
+
+                        self.replace_existing_connection(msg)
+
+                        conn_obj.init = msg
+                        conn_obj.init.addr = addr
+                        self._init_msgs[user + conn_type] = msg
 
                         self.process_conn_messages(msg)
 
                     self._callback_msgs.append(msg)
 
             else:
-                if conn_obj.piercefw is None:
+                if not conn_obj.indirect:
                     log.add("Peer init message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
                             {'type': msgtype, 'size': msgsize - 1,
                              'msg_buffer': msg_buffer[idx + 5:idx + msgsize_total]})
@@ -1280,8 +1481,6 @@ class SlskProtoThread(threading.Thread):
             if msg is None:
                 return
 
-            conn_obj.piercefw = msg_obj
-
             conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
             conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
             conn_obj.obuf.extend(msg)
@@ -1293,9 +1492,7 @@ class SlskProtoThread(threading.Thread):
             if msg is None:
                 return
 
-            conn_obj.init = msg_obj
-
-            if conn_obj.piercefw is not None:
+            if conn_obj.indirect:
                 return
 
             conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
@@ -1313,7 +1510,6 @@ class SlskProtoThread(threading.Thread):
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             conn_obj = ConnectionInProgress(sock, msg_obj.addr, msg_obj.init)
-            msg_obj.init.sock = sock
 
             sock.setblocking(0)
 
@@ -1329,7 +1525,7 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[sock] = conn_obj
             self._numsockets += 1
 
-        except socket.error as err:
+        except OSError as err:
             self.connect_error(err, conn_obj)
             sock.close()
 
@@ -1367,11 +1563,11 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack peer messages
             if msgtype in self.peerclasses:
+                msg_class = self.peerclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.peerclasses[msgtype], msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4,
-                    "peer", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 8:idx + msgsize_total], msgsize - 4, "peer", conn_obj.init)
 
-                if msg.__class__ is FileSearchResult:
+                if msg_class is FileSearchResult:
                     search_result_received = True
 
                 if msg is not None:
@@ -1379,7 +1575,6 @@ class SlskProtoThread(threading.Thread):
 
             else:
                 host, port = conn_obj.addr
-
                 log.add(("Peer message type %(type)s size %(size)i contents %(msg_buffer)s unknown, "
                          "from user: %(user)s, %(host)s:%(port)s"),
                         {'type': msgtype, 'size': msgsize - 4, 'msg_buffer': msg_buffer[idx + 8:idx + msgsize_total],
@@ -1444,7 +1639,7 @@ class SlskProtoThread(threading.Thread):
                 try:
                     conn_obj.filedown.file.write(addedbytes)
 
-                except IOError as strerror:
+                except OSError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, strerror))
                     self.close_connection(self._conns, conn_obj.sock)
 
@@ -1477,7 +1672,7 @@ class SlskProtoThread(threading.Thread):
                     conn_obj.fileupl.file.seek(msg.offset)
                     self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-                except IOError as strerror:
+                except OSError as strerror:
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, strerror))
                     self.close_connection(self._conns, conn_obj.sock)
 
@@ -1527,6 +1722,17 @@ class SlskProtoThread(threading.Thread):
 
     """ Distributed Connection """
 
+    def send_have_no_parent(self):
+        """ Inform the server we have no parent. The server should either send
+        us a PossibleParents message, or start sending us search requests. """
+
+        self.parent_socket = None
+        log.add_conn("We have no parent, requesting a new one")
+
+        self._queue.append(HaveNoParent(1))
+        self._queue.append(BranchRoot(self.server_username))
+        self._queue.append(BranchLevel(0))
+
     def process_distrib_input(self, conn_obj, msg_buffer):
         """ We have a distributed network connection, parent has sent us
         something, this function retrieves messages
@@ -1550,12 +1756,60 @@ class SlskProtoThread(threading.Thread):
 
             # Unpack distributed messages
             if msgtype in self.distribclasses:
+                msg_class = self.distribclasses[msgtype]
                 msg = self.unpack_network_message(
-                    self.distribclasses[msgtype], msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1,
-                    "distrib", conn_obj.init)
+                    msg_class, msg_buffer_mem[idx + 5:idx + msgsize_total], msgsize - 1, "distrib", conn_obj.init)
 
                 if msg is not None:
-                    self._callback_msgs.append(msg)
+                    if msg_class is DistribEmbeddedMessage:
+                        msg = self.unpack_embedded_message(msg)
+
+                    elif msg_class is DistribBranchLevel:
+                        if msg.value < 0:
+                            # There are rare cases of parents sending a branch level value of -1,
+                            # presumably buggy clients
+                            log.add_conn(("Received an invalid branch level value %(level)s from user %(user)s. "
+                                          "Closing connection.") % {"level": msg.value, "user": msg.init.target_user})
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        if self.parent_socket is None and msg.init.target_user in self.potential_parents:
+                            # We have a successful connection with a potential parent. Tell the server who
+                            # our parent is, and stop requesting new potential parents.
+                            self.parent_socket = conn_obj.sock
+
+                            self._queue.append(HaveNoParent(0))
+                            self._queue.append(BranchLevel(msg.value + 1))
+
+                            log.add_conn("Adopting user %s as parent", msg.init.target_user)
+                            log.add_conn("Our branch level is %s", msg.value + 1)
+
+                        elif conn_obj.sock != self.parent_socket:
+                            # Unwanted connection, close it
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        else:
+                            # Inform the server of our new branch level
+                            self._queue.append(BranchLevel(msg.value + 1))
+                            log.add_conn("Received a branch level update from our parent. Our new branch level is %s",
+                                         msg.value + 1)
+
+                    elif msg_class is DistribBranchRoot:
+                        if conn_obj.sock != self.parent_socket:
+                            # Unwanted connection, close it
+                            conn_obj.ibuf = bytearray()
+                            self.close_connection(self._conns, conn_obj.sock)
+                            return
+
+                        # Inform the server of our branch root
+                        self._queue.append(BranchRoot(msg.user))
+                        log.add_conn("Our branch root is user %s", msg.user)
+
+                    if msg is not None:
+                        self._callback_msgs.append(msg)
 
             else:
                 log.add("Distrib message type %(type)i size %(size)i contents %(msg_buffer)s unknown",
@@ -1652,7 +1906,7 @@ class SlskProtoThread(threading.Thread):
             elif issubclass(msg_class, ServerMessage):
                 self.process_server_output(msg_obj)
 
-            elif msg_class is ConnClose and msg_obj.sock in self._conns:
+            elif msg_class is FileConnClose and msg_obj.sock in self._conns:
                 sock = msg_obj.sock
                 self.close_connection(self._conns, sock)
 
@@ -1695,7 +1949,7 @@ class SlskProtoThread(threading.Thread):
                 self._calc_upload_limit_function()
 
             elif msg_obj.__class__ is SendNetworkMessage:
-                self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.login, msg_obj.addr)
+                self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
 
     def read_data(self, conn_obj):
 
@@ -1722,6 +1976,9 @@ class SlskProtoThread(threading.Thread):
 
         if not data:
             return False
+
+        if sock is not self.server_socket and conn_obj.filedown:
+            self.total_download_bandwidth += len(data)
 
         return True
 
@@ -1766,7 +2023,7 @@ class SlskProtoThread(threading.Thread):
 
                         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-            except IOError as strerror:
+            except OSError as strerror:
                 self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, strerror))
                 self.close_connection(self._conns, sock)
 
@@ -1776,6 +2033,7 @@ class SlskProtoThread(threading.Thread):
             if bytes_send <= 0:
                 return
 
+            self.total_upload_bandwidth += bytes_send
             current_time = time.time()
             finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
 
@@ -1809,9 +2067,14 @@ class SlskProtoThread(threading.Thread):
 
             # Send updated connection count to NicotineCore. Avoid sending too many
             # updates at once, if there are a lot of connections.
-            if (current_time - self.last_conncount_callback) > self.CONNCOUNT_CALLBACK_INTERVAL:
-                self._callback_msgs.append(SetCurrentConnectionCount(self._numsockets))
-                self.last_conncount_callback = current_time
+            if (current_time - self._last_conn_stat_time) >= 1:
+                self._callback_msgs.append(
+                    SetConnectionStats(self._numsockets, self.total_downloads, self.total_download_bandwidth,
+                                       self.total_uploads, self.total_upload_bandwidth))
+
+                self.total_download_bandwidth = 0
+                self.total_upload_bandwidth = 0
+                self._last_conn_stat_time = current_time
 
             # Process outgoing messages
             if self._queue:
@@ -1820,14 +2083,15 @@ class SlskProtoThread(threading.Thread):
             # Check which connections are ready to send/receive data
             try:
                 key_events = self.selector.select(timeout=-1)
-                input_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_READ)
-                output_list = set(key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE)
+                input_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_READ}
+                output_list = {key.fileobj for key, event in key_events if event & selectors.EVENT_WRITE}
 
             except OSError as error:
                 # Error recieved; terminate networking loop
 
                 log.add("Major Socket Error: Networking terminated! %s", error)
-                self._want_abort = True
+                self.abort()
+                break
 
             except ValueError as error:
                 # Possibly opened too many sockets
@@ -1858,7 +2122,7 @@ class SlskProtoThread(threading.Thread):
 
                         self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
                         self._numsockets += 1
-                        log.add_conn("Incoming connection")
+                        log.add_conn("Incoming connection from %s", str(incaddr))
 
                         # Event flags are modified to include 'write' in subsequent loops, if necessary.
                         # Don't do it here, otherwise connections may break.
@@ -1885,7 +2149,7 @@ class SlskProtoThread(threading.Thread):
                         # Check if the socket has any data for us
                         sock_in_progress.recv(1, socket.MSG_PEEK)
 
-                except socket.error as err:
+                except OSError as err:
                     self.connect_error(err, conn_obj)
                     self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
@@ -1907,10 +2171,13 @@ class SlskProtoThread(threading.Thread):
                                 }
                             )
 
-                            self.server_address = addr
-                            self.server_timeout_value = -1
                             login, password = conn_obj.login
+                            self.user_addresses[login] = (self.bindip or '127.0.0.1', self.listenport)
                             conn_obj.login = True
+
+                            self.server_address = addr
+                            self.server_username = login
+                            self.server_timeout_value = -1
 
                             self._queue.append(
                                 Login(
@@ -1939,21 +2206,7 @@ class SlskProtoThread(threading.Thread):
                                 self.close_connection(self._connsinprogress, sock_in_progress)
                                 continue
 
-                            self._conns[sock_in_progress] = conn_obj = PeerConnection(
-                                sock=sock_in_progress, addr=addr, events=events, init=conn_obj.init)
-
-                            if not conn_obj.init.token:
-                                conn_obj.init.sock = sock_in_progress
-                                self._queue.append(conn_obj.init)
-                            else:
-                                self._queue.append(PierceFireWall(conn_obj.sock, conn_obj.init.token))
-
-                            log.add_conn(("Established connection with user %(user)s. List of outgoing "
-                                          "messages: %(messages)s"), {
-                                'user': conn_obj.init.target_user,
-                                'messages': conn_obj.init.outgoing_msgs
-                            })
-                            self.process_conn_messages(conn_obj.init)
+                            self.establish_outgoing_connection(sock_in_progress, addr, events, conn_obj.init)
 
                         del self._connsinprogress[sock_in_progress]
 
@@ -1982,7 +2235,7 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, sock)
                             continue
 
-                    except socket.error as err:
+                    except OSError as err:
                         log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
                                       "Error: %(error)s"), {
                             "addr": conn_obj.addr,

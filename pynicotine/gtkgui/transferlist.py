@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -33,7 +33,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
@@ -63,31 +63,22 @@ class TransferList(UserInterface):
 
         self.user_counter = getattr(frame, "%sUsers" % transfer_type.title())
         self.file_counter = getattr(frame, "%sFiles" % transfer_type.title())
-        self.bandwidth_status = getattr(frame, "%s_status" % transfer_type)
-        self.tray_callback = getattr(frame.tray_icon, "set_%s_status" % transfer_type)
         grouping_button = getattr(frame, "ToggleTree%ss" % transfer_type.title())
 
         if Gtk.get_major_version() == 4:
-            grouping_button.set_icon_name("view-list-symbolic")
-
             self.ClearTransfers.set_has_frame(False)
-            self.ClearTransfers.set_label(self.ClearTransfersLabel.get_first_child().get_text())
-        else:
-            grouping_button.set_image(Gtk.Image(icon_name="view-list-symbolic"))
 
-            self.ClearTransfers.add(self.ClearTransfersLabel)
+        Accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
+        Accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
+        Accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
+        Accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
 
-        setup_accelerator("t", self.Transfers, self.on_abort_transfers_accelerator)
-        setup_accelerator("r", self.Transfers, self.on_retry_transfers_accelerator)
-        setup_accelerator("Delete", self.Transfers, self.on_clear_transfers_accelerator)
-        setup_accelerator("<Alt>Return", self.Transfers, self.on_file_properties_accelerator)
-
-        self.last_ui_update = self.last_save = 0
+        self.last_ui_update = 0
         self.transfer_list = []
         self.users = {}
         self.paths = {}
-        self.selected_users = set()
-        self.selected_transfers = set()
+        self.selected_users = []
+        self.selected_transfers = []
         self.tree_users = None
 
         # Status list
@@ -144,7 +135,7 @@ class TransferList(UserInterface):
             ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
             ["status", _("Status"), 140, "text", None],
-            ["queue_position", _("Queue Position"), 50, "number", None],
+            ["queue_position", _("Queue Position"), 75, "number", None],
             ["percent", _("Percent"), 70, "progress", None],
             ["size", _("Size"), 170, "number", None],
             ["speed", _("Speed"), 90, "number", None],
@@ -238,8 +229,8 @@ class TransferList(UserInterface):
 
     def select_transfers(self):
 
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
 
         model, paths = self.Transfers.get_selection().get_selected_rows()
 
@@ -262,11 +253,11 @@ class TransferList(UserInterface):
 
         transfer = model.get_value(iterator, 14)
 
-        if transfer.filename is not None:
-            self.selected_transfers.add(transfer)
+        if transfer.filename is not None and transfer not in self.selected_transfers:
+            self.selected_transfers.append(transfer)
 
-        if select_user:
-            self.selected_users.add(transfer.user)
+        if select_user and transfer.user not in self.selected_users:
+            self.selected_users.append(transfer.user)
 
     def new_transfer_notification(self, finished=False):
         if self.frame.current_page_id != self.page_id:
@@ -298,23 +289,6 @@ class TransferList(UserInterface):
 
         return status
 
-    def update_bandwidth(self):
-
-        bandwidth = 0
-        num_active_users = 0
-
-        for i in self.transfer_list:
-            speed = i.speed
-
-            if speed is not None:
-                bandwidth = bandwidth + speed
-                num_active_users += 1
-
-        bandwidth = human_speed(bandwidth)
-
-        self.bandwidth_status.set_text("%(speed)s (%(num)i)" % {'num': num_active_users, 'speed': bandwidth})
-        self.tray_callback(self.tray_template % {'speed': bandwidth})
-
     def update_num_users_files(self):
         self.user_counter.set_text(str(len(self.users)))
         self.file_counter.set_text(str(len(self.transfer_list)))
@@ -323,25 +297,10 @@ class TransferList(UserInterface):
 
         current_time = time()
         last_ui_update = self.last_ui_update
-
-        if (current_time - self.last_save) > 15:
-
-            """ Save list of transfers to file every 15 seconds """
-
-            if self.frame.np.transfers is not None:
-                self.frame.np.transfers.save_transfers("downloads")
-                self.frame.np.transfers.save_transfers("uploads")
-
-            self.last_save = current_time
-
         finished = (transfer is not None and transfer.status == "Finished")
 
-        if forceupdate or finished or (current_time - last_ui_update) > 1:
-            self.update_bandwidth()
-            self.last_ui_update = current_time
-
         if not forceupdate and self.frame.current_page_id != self.page_id:
-            """ No need to do unnecessary work if transfers are not visible """
+            # No need to do unnecessary work if transfers are not visible
             return
 
         if transfer is not None:
@@ -352,10 +311,7 @@ class TransferList(UserInterface):
                 self.update_specific(transfer_i)
 
         if forceupdate or finished or (current_time - last_ui_update) > 1:
-
-            """ Unless a transfer finishes, use a cooldown to avoid updating
-            too often """
-
+            # Unless a transfer finishes, use a cooldown to avoid updating too often
             self.update_parent_rows()
 
     def update_parent_rows(self, only_remove=False):
@@ -457,7 +413,7 @@ class TransferList(UserInterface):
         transfer = self.transfersmodel.get_value(initer, 14)
 
         if self.transfersmodel.get_value(initer, 3) != translated_status:
-            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
+            self.transfersmodel.set_value(initer, 3, translated_status)
             transfer.status = salientstatus
 
         if self.transfersmodel.get_value(initer, 7) != hspeed:
@@ -583,7 +539,7 @@ class TransferList(UserInterface):
 
                 """ Paths can be empty if files are downloaded individually, make sure we
                 don't add files to the wrong user in the TreeView """
-                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                full_path = path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
                 user_path = user + path
 
                 if config.sections["ui"]["reverse_file_paths"]:
@@ -607,7 +563,7 @@ class TransferList(UserInterface):
                             empty_int,
                             empty_int,
                             empty_int,
-                            Transfer(user=user)
+                            Transfer(user=user, path=full_path)
                         ]
                     )
                     expand_folder = self.expand_button.get_active()
@@ -707,8 +663,8 @@ class TransferList(UserInterface):
 
         self.users.clear()
         self.paths.clear()
-        self.selected_transfers = set()
-        self.selected_users = set()
+        self.selected_transfers.clear()
+        self.selected_users.clear()
         self.transfersmodel.clear()
 
         for transfer in self.transfer_list:
@@ -866,33 +822,21 @@ class TransferList(UserInterface):
         data = []
 
         for transfer in self.selected_transfers:
-            user = transfer.user
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
-            path = transfer.path
-            size = speed = length = num = bitrate = None
-
-            size = str(human_size(transfer.size))
-
-            if transfer.speed:
-                speed = str(human_speed(transfer.speed))
-
-            bitrate = str(transfer.bitrate)
-            length = str(transfer.length)
-
             directory = fullname.rsplit("\\", 1)[0]
 
             data.append({
-                "user": user,
+                "user": transfer.user,
                 "fn": fullname,
-                "position": num,
                 "filename": filename,
                 "directory": directory,
-                "path": path,
-                "size": size,
-                "speed": speed,
-                "bitrate": bitrate,
-                "length": length
+                "path": transfer.path,
+                "queue_position": transfer.queue_position,
+                "speed": transfer.speed,
+                "size": transfer.size,
+                "bitrate": transfer.bitrate,
+                "length": transfer.length
             })
 
         if data:

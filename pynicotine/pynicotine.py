@@ -1,5 +1,5 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
-# COPYRIGHT (C) 2020 Mathias <mail@mathias.is>
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Mathias <mail@mathias.is>
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016 Mutnick <muhing@yahoo.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -31,7 +31,7 @@ This is the actual client code. Actual GUI classes are in the separate modules
 
 import os
 import signal
-import threading
+import sys
 import time
 
 from collections import deque
@@ -52,6 +52,7 @@ from pynicotine.search import Search
 from pynicotine.shares import Shares
 from pynicotine.transfers import Statistics
 from pynicotine.transfers import Transfers
+from pynicotine.upnp import UPnP
 from pynicotine.userbrowse import UserBrowse
 from pynicotine.userinfo import UserInfo
 from pynicotine.userlist import UserList
@@ -80,6 +81,7 @@ class NicotineCore:
         self.pluginhandler = None
         self.now_playing = None
         self.protothread = None
+        self.upnp = None
         self.geoip = None
         self.notifications = None
 
@@ -90,33 +92,23 @@ class NicotineCore:
         self.bindip = bindip
         self.port = port
 
-        self.user_statuses = {}
-        self.watched_users = set()
-        self.ip_requested = set()
-
-        self.queue = deque()
-
         self.shutdown = False
         self.away = False
         self.logged_in = False
+        self.login_username = None  # Only present while logged in
         self.user_ip_address = None
         self.privileges_left = None
-
-        self.parent_socket = None
-        self.potential_parents = {}
-        self.distrib_parent_min_speed = 0
-        self.distrib_parent_speed_ratio = 1
-        self.max_distrib_children = 10
-
-        self.upnp_timer = None
         self.ban_message = "You are banned from downloading my shared files. Ban message: \"%s\""
 
+        self.queue = deque()
+        self.user_statuses = {}
+        self.watched_users = set()
+        self.ip_requested = set()
         self.requested_info_times = {}
         self.requested_share_times = {}
 
         # Callback handlers for messages
         self.events = {
-            slskmessages.ConnClose: self.conn_close,
             slskmessages.ServerDisconnect: self.server_disconnect,
             slskmessages.Login: self.login,
             slskmessages.ChangePassword: self.change_password,
@@ -158,6 +150,7 @@ class NicotineCore:
             slskmessages.UploadFailed: self.upload_failed,
             slskmessages.PlaceInQueue: self.place_in_queue,
             slskmessages.FileError: self.file_error,
+            slskmessages.FileConnClose: self.file_conn_close,
             slskmessages.FolderContentsResponse: self.folder_contents_response,
             slskmessages.FolderContentsRequest: self.folder_contents_request,
             slskmessages.RoomList: self.room_list,
@@ -168,34 +161,32 @@ class NicotineCore:
             slskmessages.AddToPrivileged: self.add_to_privileged,
             slskmessages.CheckPrivileges: self.check_privileges,
             slskmessages.ServerPing: self.dummy_message,
-            slskmessages.ParentMinSpeed: self.parent_min_speed,
-            slskmessages.ParentSpeedRatio: self.parent_speed_ratio,
+            slskmessages.ParentMinSpeed: self.dummy_message,
+            slskmessages.ParentSpeedRatio: self.dummy_message,
             slskmessages.ParentInactivityTimeout: self.dummy_message,
             slskmessages.SearchInactivityTimeout: self.dummy_message,
             slskmessages.MinParentsInCache: self.dummy_message,
             slskmessages.WishlistInterval: self.wishlist_interval,
             slskmessages.DistribAliveInterval: self.dummy_message,
             slskmessages.DistribChildDepth: self.dummy_message,
-            slskmessages.DistribBranchLevel: self.distrib_branch_level,
-            slskmessages.DistribBranchRoot: self.distrib_branch_root,
+            slskmessages.DistribBranchLevel: self.dummy_message,
+            slskmessages.DistribBranchRoot: self.dummy_message,
             slskmessages.AdminMessage: self.admin_message,
-            slskmessages.TunneledMessage: self.tunneled_message,
+            slskmessages.TunneledMessage: self.dummy_message,
             slskmessages.PlaceholdUpload: self.dummy_message,
             slskmessages.PlaceInQueueRequest: self.place_in_queue_request,
             slskmessages.UploadQueueNotification: self.dummy_message,
-            slskmessages.EmbeddedMessage: self.embedded_message,
             slskmessages.FileSearch: self.search_request,
             slskmessages.RoomSearch: self.search_request,
             slskmessages.UserSearch: self.search_request,
             slskmessages.RelatedSearch: self.dummy_message,
-            slskmessages.PossibleParents: self.possible_parents,
+            slskmessages.PossibleParents: self.dummy_message,
             slskmessages.DistribAlive: self.dummy_message,
             slskmessages.DistribSearch: self.distrib_search,
-            slskmessages.DistribEmbeddedMessage: self.embedded_message,
-            slskmessages.ResetDistributed: self.reset_distributed,
+            slskmessages.ResetDistributed: self.dummy_message,
             slskmessages.ServerTimeout: self.server_timeout,
             slskmessages.TransferTimeout: self.transfer_timeout,
-            slskmessages.SetCurrentConnectionCount: self.set_current_connection_count,
+            slskmessages.SetConnectionStats: self.set_connection_stats,
             slskmessages.GlobalRecommendations: self.global_recommendations,
             slskmessages.Recommendations: self.recommendations,
             slskmessages.ItemRecommendations: self.item_recommendations,
@@ -230,6 +221,7 @@ class NicotineCore:
 
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+        log.add_debug("Using Python executable: %s", str(sys.executable))
 
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
@@ -259,10 +251,10 @@ class NicotineCore:
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
             self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
-
-        self.add_upnp_portmapping()
+        self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
+        self.set_connection_stats(slskmessages.SetConnectionStats())
         connect_ready = not config.need_config()
 
         if not connect_ready:
@@ -281,28 +273,29 @@ class NicotineCore:
         # Indicate that a shutdown has started, to prevent UI callbacks from networking thread
         self.shutdown = True
 
-        # Notify plugins
-        self.pluginhandler.shutdown_notification()
-
-        # Disable plugins
-        for plugin in self.pluginhandler.list_installed_plugins():
-            self.pluginhandler.disable_plugin(plugin)
+        if self.pluginhandler:
+            self.pluginhandler.quit()
 
         # Shut down networking thread
-        if not self.protothread.server_disconnected:
-            self.protothread.manual_server_disconnect = True
-            self.server_disconnect()
+        if self.protothread:
+            if not self.protothread.server_disconnected:
+                self.protothread.manual_server_disconnect = True
+                self.server_disconnect()
 
-        self.protothread.abort()
+            self.protothread.abort()
 
         # Save download/upload list to file
-        self.transfers.abort_transfers()
+        if self.transfers:
+            self.transfers.quit()
 
         # Closing up all shelves db
-        self.shares.quit()
+        if self.shares:
+            self.shares.quit()
 
         if self.ui_callback:
             self.ui_callback.quit()
+
+        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
@@ -358,6 +351,103 @@ class NicotineCore:
     def disconnect(self):
         self.queue.append(slskmessages.ServerDisconnect())
 
+    def server_disconnect(self, msg=None):
+
+        self.logged_in = False
+
+        # Clean up connections
+        self.user_statuses.clear()
+        self.watched_users.clear()
+
+        self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
+
+        self.transfers.server_disconnect()
+        self.search.server_disconnect()
+        self.userlist.server_disconnect()
+        self.chatrooms.server_disconnect()
+        self.privatechats.server_disconnect()
+        self.userinfo.server_disconnect()
+        self.userbrowse.server_disconnect()
+        self.interests.server_disconnect()
+
+        if self.ui_callback:
+            self.ui_callback.server_disconnect()
+
+        self.login_username = None
+
+    def send_message_to_peer(self, user, message, address=None):
+        """ Sends message to a peer. Used when we know the username of a peer,
+        but don't have/know an active connection. """
+
+        self.queue.append(slskmessages.SendNetworkMessage(user, message, address))
+
+    def set_away_mode(self, is_away, save_state=False):
+
+        if save_state:
+            config.sections["server"]["away"] = is_away
+
+        self.away = is_away
+        self.request_set_status(is_away and 1 or 2)
+
+        if self.ui_callback:
+            self.ui_callback.set_away_mode(is_away)
+
+    def request_change_password(self, password):
+        self.queue.append(slskmessages.ChangePassword(password))
+
+    def request_check_privileges(self):
+        self.queue.append(slskmessages.CheckPrivileges())
+
+    def request_give_privileges(self, user, days):
+        self.queue.append(slskmessages.GivePrivileges(user, days))
+
+    def request_ip_address(self, username):
+        self.ip_requested.add(username)
+        self.queue.append(slskmessages.GetPeerAddress(username))
+
+    def request_set_status(self, status):
+        self.queue.append(slskmessages.SetStatus(status))
+
+    def get_user_country(self, user):
+        """ Retrieve a user's country code if previously cached, otherwise request
+        user's IP address to determine country """
+
+        user_address = self.protothread.user_addresses.get(user)
+
+        if user_address and user != self.protothread.server_username:
+            ip_address, _port = user_address
+            country_code = self.geoip.get_country_code(ip_address)
+            return country_code
+
+        if user not in self.ip_requested:
+            self.queue.append(slskmessages.GetPeerAddress(user))
+
+        return None
+
+    def watch_user(self, user, force_update=False):
+        """ Tell the server we want to be notified of status/stat updates
+        for a user """
+
+        if not isinstance(user, str):
+            return
+
+        if not force_update and user in self.watched_users:
+            # Already being watched, and we don't need to re-fetch the status/stats
+            return
+
+        self.queue.append(slskmessages.AddUser(user))
+
+        # Get privilege status
+        self.queue.append(slskmessages.GetUserStatus(user))
+
+    @staticmethod
+    def dummy_message(msg):
+        log.add_msg_contents(msg)
+
+    def ignore(self, msg):
+        # Ignore received message
+        pass
+
     def network_event(self, msgs):
 
         for i in msgs:
@@ -370,15 +460,111 @@ class NicotineCore:
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
-    def send_message_to_peer(self, user, message, address=None):
-        """ Sends message to a peer. Used when we know the username of a peer,
-        but don't have/know an active connection. """
+    def show_connection_error_message(self, msg):
+        """ Request UI to show error messages related to connectivity """
 
-        self.queue.append(slskmessages.SendNetworkMessage(
-            user, message, config.sections["server"]["login"], address))
+        for i in msg.msgs:
+            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
+                self.transfers.get_cant_connect_request(i.token)
+
+            elif i.__class__ is slskmessages.QueueUpload:
+                self.transfers.get_cant_connect_queue_file(msg.user, i.file)
+
+            elif i.__class__ is slskmessages.GetSharedFileList:
+                self.userbrowse.show_connection_error(msg.user)
+
+            elif i.__class__ is slskmessages.UserInfoRequest:
+                self.userinfo.show_connection_error(msg.user)
+
+    def message_progress(self, msg):
+
+        if msg.msg_type is slskmessages.SharedFileList:
+            self.userbrowse.message_progress(msg)
+
+        elif msg.msg_type is slskmessages.UserInfoReply:
+            self.userinfo.message_progress(msg)
+
+    def server_timeout(self, *_args):
+        if not config.need_config():
+            self.connect()
+
+    def check_download_queue(self, _msg):
+        self.transfers.check_download_queue()
+
+    def check_upload_queue(self, _msg):
+        self.transfers.check_upload_queue()
+
+    def file_download(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_download(msg)
+
+    def file_upload(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_upload(msg)
+
+    def file_error(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_error(msg)
+
+    def file_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_conn_close(msg.sock)
+
+    def transfer_timeout(self, msg):
+        self.transfers.transfer_timeout(msg)
+
+    def set_connection_stats(self, msg):
+        if self.ui_callback:
+            self.ui_callback.set_connection_stats(msg)
+
+    """
+    Incoming Server Messages
+    """
+
+    def login(self, msg):
+        """ Server code: 1 """
+
+        log.add_msg_contents(msg)
+
+        if msg.success:
+            self.logged_in = True
+            self.login_username = msg.username
+
+            self.set_away_mode(config.sections["server"]["away"])
+            self.watch_user(msg.username)
+
+            if msg.ip_address is not None:
+                self.user_ip_address = msg.ip_address
+
+            self.transfers.server_login()
+            self.search.server_login()
+            self.userbrowse.server_login()
+            self.userinfo.server_login()
+            self.userlist.server_login()
+            self.privatechats.server_login()
+            self.chatrooms.server_login()
+
+            if self.ui_callback:
+                self.ui_callback.server_login()
+
+            if msg.banner:
+                log.add(msg.banner)
+
+            self.interests.server_login()
+            self.shares.send_num_shared_folders_files()
+
+            self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
+            self.pluginhandler.server_connect_notification()
+
+        else:
+            if msg.reason == "INVALIDPASS":
+                self.ui_callback.invalid_password()
+                return
+
+            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
 
     def get_peer_address(self, msg):
-        """ Server responds with the IP address and port of the user we requested """
+        """ Server code: 3 """
 
         log.add_msg_contents(msg)
 
@@ -429,261 +615,6 @@ class NicotineCore:
             'port': msg.port,
             'country': country
         })
-
-    def show_connection_error_message(self, msg):
-        """ Request UI to show error messages related to connectivity """
-
-        for i in msg.msgs:
-            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
-                self.transfers.get_cant_connect_request(i.token)
-
-            elif i.__class__ is slskmessages.QueueUpload:
-                self.transfers.get_cant_connect_queue_file(msg.user, i.file)
-
-            elif i.__class__ is slskmessages.GetSharedFileList:
-                self.userbrowse.show_connection_error(msg.user)
-
-            elif i.__class__ is slskmessages.UserInfoRequest:
-                self.userinfo.show_connection_error(msg.user)
-
-    def server_disconnect(self, msg=None):
-
-        self.logged_in = False
-
-        # Clean up connections
-        self.user_statuses.clear()
-        self.watched_users.clear()
-
-        self.pluginhandler.server_disconnect_notification(msg.manual_disconnect if msg else True)
-
-        self.transfers.server_disconnect()
-        self.search.server_disconnect()
-        self.userlist.server_disconnect()
-        self.chatrooms.server_disconnect()
-        self.privatechats.server_disconnect()
-        self.userinfo.server_disconnect()
-        self.userbrowse.server_disconnect()
-
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
-
-    def conn_close(self, msg):
-
-        log.add_msg_contents(msg)
-
-        if msg.sock == self.parent_socket:
-            self.send_have_no_parent()
-            return
-
-        if msg.conn_type == 'F':
-            self.transfers.conn_close(msg.sock)
-
-    def start_upnp_timer(self):
-        """ Port mapping entries last 24 hours, we need to regularly renew them.
-        The default interval is 4 hours. """
-
-        if self.upnp_timer:
-            self.upnp_timer.cancel()
-
-        upnp_interval = config.sections["server"]["upnp_interval"]
-
-        if upnp_interval < 1:
-            return
-
-        upnp_interval_seconds = upnp_interval * 60 * 60
-
-        self.upnp_timer = threading.Timer(upnp_interval_seconds, self.add_upnp_portmapping)
-        self.upnp_timer.name = "UPnPTimer"
-        self.upnp_timer.daemon = True
-        self.upnp_timer.start()
-
-    def add_upnp_portmapping(self):
-
-        # Test if we want to do a port mapping
-        if not config.sections["server"]["upnp"]:
-            return
-
-        # Do the port mapping
-        thread = threading.Thread(target=self._add_upnp_portmapping)
-        thread.name = "UPnPAddPortmapping"
-        thread.daemon = True
-        thread.start()
-
-        # Repeat
-        self.start_upnp_timer()
-
-    def _add_upnp_portmapping(self):
-
-        from pynicotine.upnp import UPnPPortMapping
-        upnp = UPnPPortMapping()
-        upnp.update_port_mapping(self.protothread.listenport)
-
-    def set_away_mode(self, is_away, save_state=False):
-
-        if save_state:
-            config.sections["server"]["away"] = is_away
-
-        self.away = is_away
-        self.request_set_status(is_away and 1 or 2)
-
-        if self.ui_callback:
-            self.ui_callback.set_away_mode(is_away)
-
-    def server_timeout(self, *_args):
-        if not config.need_config():
-            self.connect()
-
-    def transfer_timeout(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.transfer_timeout(msg)
-
-    def request_change_password(self, password):
-        self.queue.append(slskmessages.ChangePassword(password))
-
-    def request_check_privileges(self):
-        self.queue.append(slskmessages.CheckPrivileges())
-
-    def request_give_privileges(self, user, days):
-        self.queue.append(slskmessages.GivePrivileges(user, days))
-
-    def request_ip_address(self, username):
-        self.ip_requested.add(username)
-        self.queue.append(slskmessages.GetPeerAddress(username))
-
-    def request_set_status(self, status):
-        self.queue.append(slskmessages.SetStatus(status))
-
-    def get_user_country(self, user):
-        """ Retrieve a user's country code if previously cached, otherwise request
-        user's IP address to determine country """
-
-        user_address = self.protothread.user_addresses.get(user)
-
-        if user_address:
-            ip_address, _port = user_address
-            country_code = self.geoip.get_country_code(ip_address)
-            return country_code
-
-        if user not in self.ip_requested:
-            self.queue.append(slskmessages.GetPeerAddress(user))
-
-        return None
-
-    def watch_user(self, user, force_update=False):
-        """ Tell the server we want to be notified of status/stat updates
-        for a user """
-
-        if not isinstance(user, str):
-            return
-
-        if not force_update and user in self.watched_users:
-            # Already being watched, and we don't need to re-fetch the status/stats
-            return
-
-        self.queue.append(slskmessages.AddUser(user))
-
-        # Get privilege status
-        self.queue.append(slskmessages.GetUserStatus(user))
-
-    @staticmethod
-    def dummy_message(msg):
-        log.add_msg_contents(msg)
-
-    def ignore(self, msg):
-        # Ignore received message
-        pass
-
-    def message_progress(self, msg):
-
-        if msg.msg_type is slskmessages.SharedFileList:
-            self.userbrowse.message_progress(msg)
-
-        elif msg.msg_type is slskmessages.UserInfoReply:
-            self.userinfo.message_progress(msg)
-
-    def check_download_queue(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.check_download_queue()
-
-    def check_upload_queue(self, _msg):
-        self.transfers.check_upload_queue()
-
-    def file_download(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_download(msg)
-
-    def file_upload(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_upload(msg)
-
-    def file_error(self, msg):
-        log.add_msg_contents(msg)
-        self.transfers.file_error(msg)
-
-    def set_current_connection_count(self, msg):
-        if self.ui_callback:
-            self.ui_callback.set_socket_status(msg.msg)
-
-    """
-    Incoming Server Messages
-    """
-
-    def login(self, msg):
-        """ Server code: 1 """
-
-        log.add_msg_contents(msg)
-
-        if msg.success:
-            self.logged_in = True
-            self.set_away_mode(config.sections["server"]["away"])
-            self.watch_user(config.sections["server"]["login"])
-
-            if msg.ip_address is not None:
-                self.user_ip_address = msg.ip_address
-
-            self.transfers.server_login()
-            self.userbrowse.server_login()
-            self.userinfo.server_login()
-            self.userlist.server_login()
-            self.privatechats.server_login()
-            self.chatrooms.server_login()
-
-            if self.ui_callback:
-                self.ui_callback.server_login()
-
-            if msg.banner:
-                log.add(msg.banner)
-
-            self.interests.server_login()
-
-            self.queue.append(slskmessages.CheckPrivileges())
-
-            # Ask for a list of parents to connect to (distributed network)
-            self.send_have_no_parent()
-
-            # TODO: We can currently receive search requests from a parent connection, but
-            # redirecting results to children is not implemented yet. Tell the server we don't accept
-            # children for now.
-            self.queue.append(slskmessages.AcceptChildren(0))
-
-            self.shares.send_num_shared_folders_files()
-
-            # Request a complete room list. A limited room list not including blacklisted rooms and
-            # rooms with few users is automatically sent when logging in, but subsequent room list
-            # requests contain all rooms.
-            self.queue.append(slskmessages.RoomList())
-
-            self.queue.append(slskmessages.PrivateRoomToggle(config.sections["server"]["private_chatrooms"]))
-            self.pluginhandler.server_connect_notification()
-
-        else:
-            self.queue.append(slskmessages.ServerDisconnect())
-
-            if msg.reason == "INVALIDPASS":
-                self.ui_callback.invalid_password()
-                return
-
-            log.add_important_error(_("Unable to connect to the server. Reason: %s"), msg.reason)
 
     def add_user(self, msg):
         """ Server code: 5 """
@@ -778,8 +709,8 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=True)
-        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.searchid)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=True)
+        self.pluginhandler.search_request_notification(msg.searchterm, msg.user, msg.token)
 
     def get_user_stats(self, msg, log_contents=True):
         """ Server code: 36 """
@@ -787,9 +718,8 @@ class NicotineCore:
         if log_contents:
             log.add_msg_contents(msg)
 
-        if msg.user == config.sections["server"]["login"]:
+        if msg.user == self.login_username:
             self.transfers.upload_speed = msg.avgspeed
-            self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
 
         self.interests.get_user_stats(msg)
         self.userinfo.get_user_stats(msg)
@@ -841,38 +771,12 @@ class NicotineCore:
 
         log.add_important_info(msg.msg)
 
-    def tunneled_message(self, msg):
-        """ Server code: 68 """
-        """ DEPRECATED """
-
-        if msg.code in self.protothread.peerclasses:
-            peermsg = self.protothread.peerclasses[msg.code](None)
-            peermsg.parse_network_message(msg.msg)
-            peermsg.tunneleduser = msg.user
-            peermsg.tunneledtoken = msg.token
-            peermsg.tunneledaddr = msg.addr
-            self.network_callback([peermsg])
-        else:
-            log.add_msg_contents("Unknown tunneled message: %s", log.contents(msg))
-
     def privileged_users(self, msg):
         """ Server code: 69 """
 
         log.add_msg_contents(msg)
         self.transfers.set_privileged_users(msg.users)
         log.add(_("%i privileged users"), (len(msg.users)))
-
-    def parent_min_speed(self, msg):
-        """ Server code: 83 """
-
-        log.add_msg_contents(msg)
-        self.distrib_parent_min_speed = msg.speed
-
-    def parent_speed_ratio(self, msg):
-        """ Server code: 84 """
-
-        log.add_msg_contents(msg)
-        self.distrib_parent_speed_ratio = msg.ratio
 
     def add_to_privileged(self, msg):
         """ Server code: 91 """
@@ -903,39 +807,6 @@ class NicotineCore:
             })
 
         self.privileges_left = msg.seconds
-
-    def embedded_message(self, msg):
-        """ Server/distrib code: 93 """
-        """ This message embeds a distributed message. We unpack the distributed message and
-        process it. """
-
-        # Verbose: log.add_msg_contents(msg)
-
-        if msg.distrib_code in self.protothread.distribclasses:
-            distrib_class = self.protothread.distribclasses[msg.distrib_code]
-            distrib_msg = distrib_class(None)
-            distrib_msg.parse_network_message(msg.distrib_message)
-
-            # Process the distributed message
-            self.events[distrib_class](distrib_msg)
-
-    def possible_parents(self, msg):
-        """ Server code: 102 """
-        """ Server sent a list of 10 potential parents, whose purpose is to forward us search requests.
-        We attempt to connect to them all at once, since connection errors are fairly common. """
-
-        log.add_msg_contents(msg)
-
-        self.potential_parents = msg.list
-        log.add_conn("Server sent us a list of %s possible parents", len(msg.list))
-
-        if self.parent_socket is None and self.potential_parents:
-
-            for user in self.potential_parents:
-                addr = self.potential_parents[user]
-
-                self.send_message_to_peer(user, slskmessages.DistribRequest(), address=addr)
-                log.add_conn("Attempting parent connection to user %s", user)
 
     def wishlist_interval(self, msg):
         """ Server code: 104 """
@@ -972,17 +843,6 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.chatrooms.ticker_remove(msg)
-
-    def reset_distributed(self, msg):
-        """ Server code: 130 """
-
-        log.add_msg_contents(msg)
-        log.add_conn("Received a reset request for distributed network")
-
-        if self.parent_socket is not None:
-            self.queue.append(slskmessages.ConnClose(self.parent_socket))
-
-        self.send_have_no_parent()
 
     def private_room_users(self, msg):
         """ Server code: 133 """
@@ -1096,7 +956,7 @@ class NicotineCore:
 
         log.add(_("User %(user)s is browsing your list of shared files"), {'user': user})
 
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         checkuser, reason = self.network_filter.check_user(user, ip_address)
 
         if not checkuser:
@@ -1138,8 +998,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         user = msg.init.target_user
-        login_user = config.sections["server"]["login"]
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         request_time = time.time()
 
         if user in self.requested_info_times and request_time < self.requested_info_times[user] + 0.4:
@@ -1149,7 +1008,7 @@ class NicotineCore:
 
         self.requested_info_times[user] = request_time
 
-        if login_user != user:
+        if self.login_username != user:
             log.add(_("User %(user)s is reading your user info"), {'user': user})
 
         status, reason = self.network_filter.check_user(user, ip_address)
@@ -1157,7 +1016,7 @@ class NicotineCore:
         if not status:
             pic = None
             descr = self.ban_message % reason
-            descr += "\n\n--------------------------------------------------------\n\n"
+            descr += "\n\n----------------------------------------------\n\n"
             descr += unescape(config.sections["userinfo"]["descr"])
 
         else:
@@ -1212,7 +1071,7 @@ class NicotineCore:
         log.add_msg_contents(msg)
 
         init = msg.init
-        ip_address = msg.init.addr[0]
+        ip_address, _port = msg.init.addr
         username = msg.init.target_user
         checkuser, reason = self.network_filter.check_user(username, ip_address)
 
@@ -1327,66 +1186,5 @@ class NicotineCore:
 
         # Verbose: log.add_msg_contents(msg)
 
-        self.search.process_search_request(msg.searchterm, msg.user, msg.searchid, direct=False)
-        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.searchid)
-
-    def send_have_no_parent(self):
-        """ Inform the server we have no parent. The server should either send
-        us a PossibleParents message, or start sending us search requests. """
-
-        self.parent_socket = None
-        log.add_conn("We have no parent, requesting a new one")
-
-        self.queue.append(slskmessages.HaveNoParent(1))
-        self.queue.append(slskmessages.BranchRoot(config.sections["server"]["login"]))
-        self.queue.append(slskmessages.BranchLevel(0))
-
-    def distrib_branch_level(self, msg):
-        """ Distrib code: 4 """
-        """ This message is received when we have a successful connection with a potential
-        parent. Tell the server who our parent is, and stop requesting new potential parents. """
-
-        log.add_msg_contents(msg)
-        sock = msg.init.sock
-        username = msg.init.target_user
-
-        if msg.value < 0:
-            # There are rare cases of parents sending a branch level value of -1, presumably buggy clients
-            log.add_conn("Received an invalid branch level value %(level)s from user %(user)s. Closing connection." %
-                         {"level": msg.value, "user": username})
-            self.queue.append(slskmessages.ConnClose(sock))
-            return
-
-        if self.parent_socket is None and username in self.potential_parents:
-            self.parent_socket = sock
-
-            self.queue.append(slskmessages.HaveNoParent(0))
-            self.queue.append(slskmessages.BranchLevel(msg.value + 1))
-
-            log.add_conn("Adopting user %s as parent", username)
-            log.add_conn("Our branch level is %s", msg.value + 1)
-            return
-
-        if sock != self.parent_socket:
-            # Unwanted connection, close it
-            self.queue.append(slskmessages.ConnClose(sock))
-            return
-
-        # Inform the server of our new branch level
-        self.queue.append(slskmessages.BranchLevel(msg.value + 1))
-        log.add_conn("Received a branch level update from our parent. Our new branch level is %s", msg.value + 1)
-
-    def distrib_branch_root(self, msg):
-        """ Distrib code: 5 """
-
-        log.add_msg_contents(msg)
-        sock = msg.init.sock
-
-        if sock != self.parent_socket:
-            # Unwanted connection, close it
-            self.queue.append(slskmessages.ConnClose(sock))
-            return
-
-        # Inform the server of our branch root
-        self.queue.append(slskmessages.BranchRoot(msg.user))
-        log.add_conn("Our branch root is user %s", msg.user)
+        self.search.process_search_request(msg.searchterm, msg.user, msg.token, direct=False)
+        self.pluginhandler.distrib_search_notification(msg.searchterm, msg.user, msg.token)
