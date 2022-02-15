@@ -763,7 +763,7 @@ class Search(UserInterface):
     def check_digit(self, sfilter, value, factorize=True):
 
         used_operator = ">="
-        if sfilter.startswith((">", "<", "=", "!")):
+        if sfilter.startswith((">", "<", "=")):
             used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
 
         if not sfilter:
@@ -797,18 +797,9 @@ class Search(UserInterface):
             return True
 
         try:
-            sfilter = float(sfilter) * factor
+            sfilter = int(sfilter) * factor
         except ValueError:
             return True
-
-        # Exact size match is unlikely, so approximate within +/- unit tolerance
-        if used_operator == "==":
-            return (value >= sfilter - (factor / 16)  # pylint:disable=chained-comparison
-                    and value <= sfilter + (factor / 16))
-
-        if used_operator == "!=":
-            return not (value >= sfilter - (factor / 16)  # pylint:disable=chained-comparison
-                        and value <= sfilter + (factor / 16))
 
         operation = self.operators.get(used_operator)
         return operation(value, sfilter)
@@ -822,7 +813,7 @@ class Search(UserInterface):
         value = value.upper()
         allowed = False
 
-        for country_code in sfilter.split("|"):
+        for country_code in re.split('\|| |,|\+|&|and|or', sfilter):
             if country_code == value:
                 allowed = True
 
@@ -1138,7 +1129,7 @@ class Search(UserInterface):
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
             country_code = self.resultsmodel.get_value(iterator, 12)
-            country_text = "%s (%s)" % (self.frame.np.geoip.country_code_to_name(country_code), country_code)
+            country = "%s / %s" % (country_code, self.frame.np.geoip.country_code_to_name(country_code))
 
             data.append({
                 "user": self.resultsmodel.get_value(iterator, 1),
@@ -1150,7 +1141,7 @@ class Search(UserInterface):
                 "queue_position": self.resultsmodel.get_value(iterator, 15),
                 "bitrate": self.resultsmodel.get_value(iterator, 8),
                 "length": self.resultsmodel.get_value(iterator, 9),
-                "country": country_text
+                "country": country
             })
 
         if data:
