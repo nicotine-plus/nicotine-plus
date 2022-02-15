@@ -464,9 +464,11 @@ def get_country_tooltip_text(column_value, strip_prefix):
     if not column_value.startswith(strip_prefix):
         return _("Unknown")
 
-    column_value = column_value[len(strip_prefix):]
-    if column_value:
-        return GeoIP.country_code_to_name(column_value)
+    country_code = column_value[len(strip_prefix):]
+
+    if country_code:
+        country = GeoIP.country_code_to_name(country_code)
+        return "%s (%s)" % (country, country_code)
 
     return _("Earth")
 
