@@ -813,7 +813,7 @@ class Search(UserInterface):
         value = value.upper()
         allowed = False
 
-        for country_code in re.split(r'\|| |,|\+|&|and|or', sfilter):
+        for country_code in sfilter.split("|"):
             if country_code == value:
                 allowed = True
 
