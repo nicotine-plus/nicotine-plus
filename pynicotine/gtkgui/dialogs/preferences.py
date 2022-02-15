@@ -1720,10 +1720,10 @@ class UserInterfaceFrame(UserInterface):
 
         if isinstance(widget, Gtk.Entry):
             rgba = Gdk.RGBA()
-            rgba.parse(widget.get_text())
 
-            color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
-            color_button.set_rgba(rgba)
+            if rgba.parse(widget.get_text()):
+                color_button = getattr(self, Gtk.Buildable.get_name(widget).replace("Entry", "Pick"))
+                color_button.set_rgba(rgba)
 
         self.theme_required = True
 
