@@ -1129,7 +1129,7 @@ class Search(UserInterface):
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
             country_code = self.resultsmodel.get_value(iterator, 12)
-            country = "%s / %s" % (country_code, self.frame.np.geoip.country_code_to_name(country_code))
+            country = "%s (%s)" % (self.frame.np.geoip.country_code_to_name(country_code), country_code)
 
             data.append({
                 "user": self.resultsmodel.get_value(iterator, 1),
