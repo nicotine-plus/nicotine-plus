@@ -21,6 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+from html import escape
 
 from gi.repository import Gdk
 from gi.repository import Gtk
@@ -141,12 +142,9 @@ class TabLabel(Gtk.Box):
         if sys.platform != "darwin":
             self._add_close_button()
 
-    def _set_text_color(self, color):
+    def _set_text_color(self, color=None):
 
-        color_rgba = Gdk.RGBA()
-
-        if color_rgba.parse(color):
-            from html import escape
+        if color:
             self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
             return
 
