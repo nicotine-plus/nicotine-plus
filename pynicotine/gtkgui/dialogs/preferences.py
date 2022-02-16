@@ -1687,16 +1687,6 @@ class UserInterfaceFrame(UserInterface):
 
         self.update_color_button(defaults, color_id)
 
-    def clear_color(self, section, color_id):
-
-        widget = self.options[section][color_id]
-
-        if isinstance(widget, Gtk.Entry):
-            widget.set_text("")
-
-        color_button = self.colorsd[section][color_id]
-        color_button.set_rgba(Gdk.RGBA())
-
     def on_color_set(self, widget):
 
         rgba = widget.get_rgba()

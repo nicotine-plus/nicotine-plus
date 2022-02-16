@@ -371,6 +371,9 @@ def load_icons():
 """ Widget Fonts and Colors """
 
 
+COLOR_RGBA = Gdk.RGBA()
+
+
 def get_user_status_color(status):
 
     if status == 1:
@@ -387,11 +390,9 @@ def parse_color_string(color_string):
     """ Take a color string, e.g. BLUE, and return a HEX color code """
 
     if color_string:
-        color_rgba = Gdk.RGBA()
-
-        if color_rgba.parse(color_string):
+        if COLOR_RGBA.parse(color_string):
             color_hex = "#%02X%02X%02X" % (
-                round(color_rgba.red * 255), round(color_rgba.green * 255), round(color_rgba.blue * 255))
+                round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
             return color_hex
 
     return None

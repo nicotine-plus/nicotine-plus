@@ -29,6 +29,7 @@ from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import get_status_icon
+from pynicotine.gtkgui.widgets.theme import parse_color_string
 from pynicotine.config import config
 
 
@@ -143,11 +144,11 @@ class TabLabel(Gtk.Box):
 
     def _set_text_color(self, color):
 
-        color_rgba = Gdk.RGBA()
+        color_hex = parse_color_string(color)
 
-        if color_rgba.parse(color):
+        if color_hex:
             from html import escape
-            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color, escape(self.text)))
+            self.label.set_markup("<span foreground=\"%s\">%s</span>" % (color_hex, escape(self.text)))
             return
 
         self.label.set_text("%s" % self.text)
