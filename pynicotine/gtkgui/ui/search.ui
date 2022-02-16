@@ -159,14 +159,14 @@
                 <property name="margin-start">12</property>
                 <property name="margin-end">6</property>
                 <child>
-                  <object class="GtkFlowBox">
+                  <object class="GtkFlowBox" id="FiltersFlowBox">
                     <property name="visible">True</property>
                     <property name="column-spacing">12</property>
                     <property name="row-spacing">6</property>
-                    <property name="max-children-per-line">6</property>
+                    <property name="max-children-per-line">7</property>
                     <property name="selection-mode">none</property>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterInBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -195,7 +195,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterOutBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -224,7 +224,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterTypeBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -253,7 +253,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterSizeBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -282,7 +282,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterBitrateBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -311,7 +311,36 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild">
+                      <object class="GtkFlowBoxChild" id="FilterLengthBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <child>
+                          <object class="GtkComboBoxText" id="FilterLength">
+                            <property name="visible">True</property>
+                            <property name="has-entry">True</property>
+                            <property name="hexpand">True</property>
+                            <child internal-child="entry">
+                              <object class="GtkEntry">
+                                <property name="width-chars">10</property>
+                                <property name="placeholder-text" translatable="yes">Length…</property>
+                                <property name="tooltip-text" translatable="yes">Length, e.g. 2:20|!3:30|=4:40</property>
+                                <property name="primary-icon-name">media-playback-start-symbolic</property>
+                                <signal name="activate" handler="on_refilter"/>
+                                <signal name="changed" handler="on_filter_entry_changed"/>
+                                <signal name="icon-press" handler="on_refilter"/>
+                              </object>
+                            </child>
+                            <child internal-child="button">
+                              <object class="GtkButton">
+                                <signal name="clicked" handler="focus_combobox"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkFlowBoxChild" id="FilterCountryBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -342,7 +371,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkBox" id="FilterFreeSlotBox">
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
