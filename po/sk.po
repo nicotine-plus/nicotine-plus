@@ -2950,8 +2950,9 @@ msgstr ""
 "%(user)s pre vyhľadávací dopyt „%(query)s“"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
+#, fuzzy
 msgid "[PRIVATE]"
-msgstr ""
+msgstr "[SÚKROMNÉ]"
 
 #: pynicotine/gtkgui/search.py:895
 #, fuzzy, python-format

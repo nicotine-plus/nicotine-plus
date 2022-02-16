@@ -2505,8 +2505,9 @@ msgstr ""
 "\"%(query)s\" uitgefilterd"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
+#, fuzzy
 msgid "[PRIVATE]"
-msgstr ""
+msgstr "[PRIVAAT]"
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format

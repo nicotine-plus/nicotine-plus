@@ -2987,8 +2987,9 @@ msgstr ""
 "søgeforespørgsel \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
+#, fuzzy
 msgid "[PRIVATE]"
-msgstr ""
+msgstr "[PRIVAT]"
 
 #: pynicotine/gtkgui/search.py:895
 #, fuzzy, python-format

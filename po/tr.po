@@ -2507,8 +2507,9 @@ msgstr ""
 "sonucu %(filepath)s filtrelendi"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
+#, fuzzy
 msgid "[PRIVATE]"
-msgstr ""
+msgstr "[ÖZEL]"
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
