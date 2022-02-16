@@ -769,6 +769,7 @@ class Search(UserInterface):
         if not sfilter:
             return True
 
+        adjust = 64
         factor = 1
         if factorize:
             base = 1024  # Default to binary for "k", "m", "g" suffixes
@@ -783,14 +784,17 @@ class Search(UserInterface):
 
             if sfilter.lower()[-1:] == "g":
                 factor = pow(base, 3)
+                adjust = factor / 32
                 sfilter = sfilter[:-1]
 
             elif sfilter.lower()[-1:] == "m":
                 factor = pow(base, 2)
+                adjust = factor / 8
                 sfilter = sfilter[:-1]
 
             elif sfilter.lower()[-1:] == "k":
                 factor = base
+                adjust = factor * 32
                 sfilter = sfilter[:-1]
 
         if not sfilter:
@@ -803,12 +807,10 @@ class Search(UserInterface):
 
         # Exact size match is unlikely, so approximate within +/- unit tolerance
         if used_operator == "==":
-            return (value >= sfilter - (factor / 4)  # pylint:disable=chained-comparison
-                    and value <= sfilter + (factor / 4))
+            return (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
 
         if used_operator == "!=":
-            return not (value >= sfilter - (factor / 4)  # pylint:disable=chained-comparison
-                        and value <= sfilter + (factor / 4))
+            return not (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
 
         operation = self.operators.get(used_operator)
         return operation(value, sfilter)
