@@ -6294,7 +6294,7 @@ msgstr "Rodyti privačiai bendrinamus failus ieškos rezultatuose"
 #, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
-"to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
+"to search requests. Such files are prefixed with '[PRIVATE]', and are "
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Kiti klientai gali pasiūlyti galimybę siųsti privačiai bendrinamus failus "

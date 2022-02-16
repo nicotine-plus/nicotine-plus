@@ -6390,7 +6390,7 @@ msgstr "Vise privat delte filer i søgeresultater"
 #, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
-"to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
+"to search requests. Such files are prefixed with '[PRIVATE]', and are "
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Andre klienter kan tilbyde en mulighed for at sende privat delte filer som "

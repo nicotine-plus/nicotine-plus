@@ -5544,9 +5544,10 @@ msgstr ""
 "Afficher les fichiers partagés en privé dans les résultats de recherche"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
+#, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
-"to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
+"to search requests. Such files are prefixed with '[PRIVATE]', and are "
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "D'autres clients peuvent proposer une option permettant d'envoyer des "

@@ -5478,7 +5478,7 @@ msgstr "Arama sonuçlarında özel olarak paylaşılan dosyaları göster"
 #: pynicotine/gtkgui/ui/settings/search.ui:68
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
-"to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
+"to search requests. Such files are prefixed with '[PRIVATE]', and are "
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Diğer istemciler, arama isteklerine yanıt olarak özel olarak paylaşılan "

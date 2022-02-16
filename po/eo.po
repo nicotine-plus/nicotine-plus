@@ -6444,7 +6444,7 @@ msgstr "Montru private kundividitajn dosierojn en serĉrezultoj"
 #, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
-"to search requests. Such files are prefixed with '[PRIVATE FILE]', and are "
+"to search requests. Such files are prefixed with '[PRIVATE]', and are "
 "not downloadable unless the uploader gives explicit permission."
 msgstr ""
 "Aliaj klientoj povas proponi eblon sendi private kundividitajn dosierojn en "
