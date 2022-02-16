@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-09 20:49+0200\n"
-"PO-Revision-Date: 2022-02-11 21:40+0000\n"
+"PO-Revision-Date: 2022-02-16 21:23+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -1887,7 +1887,7 @@ msgstr "Ruta"
 
 #: pynicotine/gtkgui/downloads.py:41
 msgid "_Resume"
-msgstr "_Reanudar"
+msgstr "_Reintentar"
 
 #: pynicotine/gtkgui/downloads.py:42
 msgid "P_ause"
@@ -2653,7 +2653,7 @@ msgstr "Enviar al _Reproductor"
 
 #: pynicotine/gtkgui/transferlist.py:191
 msgid "_Open in File Manager"
-msgstr "_Abrir en el gestor de archivos"
+msgstr "_Mostrar en el gestor de archivos"
 
 #: pynicotine/gtkgui/transferlist.py:194
 msgid "_Search"
@@ -2717,7 +2717,7 @@ msgstr "Subir carpeta y subcarpeta(s)…"
 
 #: pynicotine/gtkgui/userbrowse.py:174 pynicotine/gtkgui/userbrowse.py:238
 msgid "Open in File _Manager"
-msgstr "Abrir en el _gestor de archivos"
+msgstr "Mostrar en el _gestor de archivos"
 
 #: pynicotine/gtkgui/userbrowse.py:176 pynicotine/gtkgui/userbrowse.py:188
 msgid "Copy _Folder Path"
@@ -4169,7 +4169,7 @@ msgstr "Editar"
 #: pynicotine/gtkgui/ui/downloads.ui:68
 #: pynicotine/gtkgui/ui/settings/downloads.ui:126
 msgid "Resume"
-msgstr "Reanudar"
+msgstr "Reintentar"
 
 #: pynicotine/gtkgui/ui/downloads.ui:96
 #: pynicotine/gtkgui/ui/settings/downloads.ui:124
@@ -5238,7 +5238,7 @@ msgstr "Enviar al reproductor"
 #: pynicotine/gtkgui/ui/settings/downloads.ui:122
 #: pynicotine/gtkgui/ui/settings/uploads.ui:91
 msgid "Open in File Manager"
-msgstr "Abrir en el gestor de archivos"
+msgstr "Mostrar en el gestor de archivos"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:127
 #: pynicotine/gtkgui/ui/settings/uploads.ui:96
