@@ -176,6 +176,7 @@ class Searches(IconNotebook):
         config.sections["searches"]["filtertype"] = []
         config.sections["searches"]["filtersize"] = []
         config.sections["searches"]["filterbr"] = []
+        config.sections["searches"]["filterlength"] = []
         config.sections["searches"]["filtercc"] = []
         config.write_configuration()
 
@@ -418,7 +419,8 @@ class Search(UserInterface):
             "filtersize": self.FilterSize,
             "filterbr": self.FilterBitrate,
             "filtercc": self.FilterCountry,
-            "filtertype": self.FilterType
+            "filtertype": self.FilterType,
+            "filterlength": self.FilterLength
         }
 
         self.ShowFilters.set_active(config.sections["searches"]["filters_visible"])
@@ -510,6 +512,9 @@ class Search(UserInterface):
 
         if num_filters > 6:
             self.FilterType.get_child().set_text(str(sfilter[6]))
+
+        if num_filters > 7:
+            self.FilterLength.get_child().set_text(str(sfilter[7]))
 
         self.on_refilter()
 
@@ -857,6 +862,69 @@ class Search(UserInterface):
 
         return allowed
 
+    @staticmethod
+    def check_length(sfilter, value):
+
+        allowed = matched = ditched = False
+        minimum, maximum = 0, 99999999
+
+        for condition in sfilter.split("|"):
+
+            if condition.startswith((">", "<", "=", "!")):
+                used_operator, slength = condition[:1] + "=", condition[1:].rstrip()
+            else:
+                used_operator, slength = ">=", condition.rstrip()  # default
+
+            if not slength:
+                continue
+            elif not isinstance(slength, int):
+                try:
+                    slength = int(slength)  # Round to nearest Second to match value
+                except ValueError as error:
+                    # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                    if ":" in slength:
+                        try:
+                            slength = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(slength.split(":"))))
+                        except ValueError as error:
+                            continue
+                    else:
+                        continue
+
+            if used_operator == "==":
+                if value == slength:
+                    return True  # matched = True  # = explicitly specified
+
+            elif used_operator == ">=":
+                if slength > minimum:
+                    minimum = slength
+
+                if value >= minimum:
+                    matched = True
+                elif value < minimum:
+                    ditched = True
+
+            elif used_operator == "<=":
+                if slength < maximum:
+                    maximum = slength
+
+                if value <= maximum:
+                    matched = True
+                elif value > maximum:
+                    ditched = True
+
+            elif used_operator == "!=":
+                if value == slength:
+                    return False  # ditched = True  # ! explicitly unwanted
+                elif value != slength and not ditched:
+                    matched = True
+
+        # Check the set against final range, as applicable
+        if matched and value >= minimum and value <= maximum:
+            return True
+
+        if ditched or (value < minimum) or (value > maximum):
+            return False
+
     def check_filter(self, row):
 
         if self.active_filter_count == 0:
@@ -885,6 +953,9 @@ class Search(UserInterface):
             return False
 
         if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
+            return False
+
+        if filters["filterlength"] and not self.check_length(filters["filterlength"], row[16].get_uint64()):
             return False
 
         return True
@@ -1344,7 +1415,8 @@ class Search(UserInterface):
             "filterbr": self.FilterBitrate.get_active_text().strip(),
             "filterslot": self.FilterFreeSlot.get_active(),
             "filtercc": self.FilterCountry.get_active_text().strip().upper(),
-            "filtertype": self.FilterType.get_active_text().strip().lower()
+            "filtertype": self.FilterType.get_active_text().strip().lower(),
+            "filterlength": self.FilterLength.get_active_text().strip(),
         }
 
         if self.filters == filters:
