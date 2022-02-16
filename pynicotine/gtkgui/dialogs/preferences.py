@@ -1830,6 +1830,9 @@ class SearchesFrame(UserInterface):
             if num_filters > 6:
                 self.FilterType.set_text(str(searches["defilter"][6]))
 
+            if num_filters > 7:
+                self.FilterLength.set_text(str(searches["defilter"][7]))
+
         self.ClearSearchHistorySuccess.hide()
         self.ClearFilterHistorySuccess.hide()
 
@@ -1848,7 +1851,8 @@ class SearchesFrame(UserInterface):
                     self.FilterBR.get_text(),
                     self.FilterFree.get_active(),
                     self.FilterCC.get_text(),
-                    self.FilterType.get_text()
+                    self.FilterType.get_text(),
+                    self.FilterLength.get_text()
                 ],
                 "search_results": self.ToggleResults.get_active(),
                 "max_displayed_results": self.MaxDisplayedResults.get_value_as_int(),
