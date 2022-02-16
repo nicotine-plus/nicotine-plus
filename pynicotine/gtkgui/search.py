@@ -877,7 +877,8 @@ class Search(UserInterface):
 
             if not slength:
                 continue
-            elif not isinstance(slength, int):
+
+            if not isinstance(slength, int):
                 try:
                     slength = int(slength)  # Round to nearest Second to match value
                 except ValueError:
@@ -913,16 +914,16 @@ class Search(UserInterface):
                     ditched = True
 
             elif used_operator == "!=":
-                if value == slength:
-                    return False  # ditched = True  # ! explicitly unwanted
-                elif value != slength and not ditched:
+                if value != slength and not ditched:
                     matched = True
+                elif value == slength:
+                    return False  # ditched = True  # ! explicitly unwanted
 
         # Check the set against final range, as applicable
-        if matched and value >= minimum and value <= maximum:
+        if matched and (value >= minimum) and (value <= maximum):
             return True
 
-        if ditched or (value < minimum) or (value > maximum):
+        if ditched or ((value < minimum) or (value > maximum)):
             return False
 
     def check_filter(self, row):
