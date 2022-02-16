@@ -865,7 +865,7 @@ class Search(UserInterface):
     @staticmethod
     def check_length(sfilter, value):
 
-        allowed = matched = ditched = False
+        matched = ditched = False
         minimum, maximum = 0, 99999999
 
         for condition in sfilter.split("|"):
@@ -880,12 +880,12 @@ class Search(UserInterface):
             elif not isinstance(slength, int):
                 try:
                     slength = int(slength)  # Round to nearest Second to match value
-                except ValueError as error:
+                except ValueError:
                     # Convert string from HH:MM:SS or MM:SS into Seconds as integer
                     if ":" in slength:
                         try:
                             slength = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(slength.split(":"))))
-                        except ValueError as error:
+                        except ValueError:
                             continue
                     else:
                         continue
