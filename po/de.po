@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-02 01:17+0300\n"
-"PO-Revision-Date: 2023-05-17 12:34+0000\n"
+"PO-Revision-Date: 2023-05-17 14:52+0000\n"
 "Last-Translator: Han <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -1671,8 +1671,8 @@ msgid ""
 "Filtered out incorrect search result %(filepath)s from user %(user)s for "
 "search query \"%(query)s\""
 msgstr ""
-"Falsches Suchergebnis %(filepath)s von Benutzer %(user)s für Suchanfrage "
-"\"%(query)s\" herausgefiltert"
+"Falsches Suchergebnis %(filepath)s von Benutzer %(user)s für Suchanfrage \""
+"%(query)s\" herausgefiltert"
 
 #: pynicotine/gtkgui/search.py:713 pynicotine/gtkgui/userbrowse.py:459
 #, python-format
@@ -2290,8 +2290,7 @@ msgstr "Dokument/Text"
 #: pynicotine/gtkgui/widgets/theme.py:431
 #, python-format
 msgid "Error loading custom icon %(path)s: %(error)s"
-msgstr ""
-"Fehler beim Laden eines benutzerdefinierten Symbols %(path)s: %(error)s"
+msgstr "Fehler beim Laden eines benutzerdefinierten Symbols %(path)s: %(error)s"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:93
 msgid "Show Nicotine+"
@@ -3747,8 +3746,7 @@ msgstr "Server erlaubt derzeit keine Wunschlistensuche"
 #: pynicotine/search.py:556
 #, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr ""
-"Benutzer %(user)s sucht nach \"%(query)s\", %(num)i Ergebnisse gefunden"
+msgstr "Benutzer %(user)s sucht nach \"%(query)s\", %(num)i Ergebnisse gefunden"
 
 #: pynicotine/shares.py:73
 #, python-format
@@ -4081,8 +4079,7 @@ msgstr "URL %(url)s kann nicht geöffnet werden: %(error)s"
 #: pynicotine/utils.py:424
 #, python-format
 msgid "Something went wrong while reading file %(filename)s: %(error)s"
-msgstr ""
-"Beim Lesen der Datei %(filename)s ist ein Fehler aufgetreten: %(error)s"
+msgstr "Beim Lesen der Datei %(filename)s ist ein Fehler aufgetreten: %(error)s"
 
 #: pynicotine/utils.py:429
 #, python-format
@@ -4990,8 +4987,8 @@ msgid ""
 "Values must be entered as numeric digits only. The unit is always Kb/s "
 "(Kilobits per second)."
 msgstr ""
-"Werte dürfen nur als Ziffern eingegeben werden. Die Einheit ist immer Kb/s "
-"(Kilobit pro Sekunde)."
+"Werte dürfen nur als Ziffern eingegeben werden. Die Einheit ist immer Kb/s ("
+"Kilobit pro Sekunde)."
 
 #: pynicotine/gtkgui/ui/popovers/searchfilterhelp.ui:320
 msgid ""
@@ -5117,8 +5114,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtert Ergebnisse heraus, deren Dateipfade den angegebenen Text enthalten. "
-"Es können mehrere Phrasen und Wörter angegeben werden, z. B. exakte Phrase|"
-"Musik|Begriff|exakte Phrase zwei"
+"Es können mehrere Phrasen und Wörter angegeben werden, z. B. exakte "
+"Phrase|Musik|Begriff|exakte Phrase zwei"
 
 #: pynicotine/gtkgui/ui/search.ui:215
 msgid "Exclude text…"
@@ -5132,8 +5129,8 @@ msgid ""
 "phrase two"
 msgstr ""
 "Filtert Ergebnisse heraus, deren Dateipfade den angegebenen Text enthalten. "
-"Es können mehrere Phrasen und Wörter angegeben werden, z. B. exakte Phrase|"
-"Musik|Begriff|exakte Phrase zwei"
+"Es können mehrere Phrasen und Wörter angegeben werden, z. B. exakte "
+"Phrase|Musik|Begriff|exakte Phrase zwei"
 
 #: pynicotine/gtkgui/ui/search.ui:244
 msgid "File type…"
