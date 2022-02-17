@@ -250,7 +250,7 @@ class NicotineCore:
         port_range = config.sections["server"]["portrange"]
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
+            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self)
         self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
