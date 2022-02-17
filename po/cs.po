@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 05:32+0200\n"
+"POT-Creation-Date: 2022-02-17 17:24+0200\n"
 "PO-Revision-Date: 2022-01-10 19:58+0000\n"
 "Last-Translator: Mathias <mail@mathias.is>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1639,7 +1639,7 @@ msgstr "Virtuální složka"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:74
 #: pynicotine/gtkgui/dialogs/preferences.py:542 pynicotine/gtkgui/search.py:338
 #: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:151
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
 #, fuzzy
 msgid "Folder"
 msgstr "Složka"
@@ -2272,7 +2272,7 @@ msgid "Do you really want to clear your wishlist?"
 msgstr "Opravdu si chcete vymazat seznam přání?"
 
 #: pynicotine/gtkgui/downloads.py:40
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
 #, fuzzy
 msgid "Path"
 msgstr "Cesta"
@@ -2794,38 +2794,58 @@ msgstr "Hodnocení"
 msgid "Item"
 msgstr "Položka"
 
-#: pynicotine/gtkgui/interests.py:140
+#: pynicotine/gtkgui/interests.py:140 pynicotine/gtkgui/interests.py:148
 #, fuzzy
 msgid "Re_commendations for Item"
 msgstr "Re_commendations pro položku"
 
-#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:148
-#: pynicotine/gtkgui/interests.py:159 pynicotine/gtkgui/userinfo.py:182
+#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:149
+#: pynicotine/gtkgui/interests.py:160 pynicotine/gtkgui/userinfo.py:182
 #, fuzzy
 msgid "_Search for Item"
 msgstr "_Search pro položku"
 
-#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:150
+#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:151
 #, fuzzy
 msgid "_Remove Item"
 msgstr "_Remove položka"
 
-#: pynicotine/gtkgui/interests.py:155 pynicotine/gtkgui/interests.py:371
+#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:376
 #: pynicotine/gtkgui/userinfo.py:179 pynicotine/gtkgui/userinfo.py:407
 #, fuzzy
 msgid "I _Like This"
 msgstr "_Like jsem to"
 
-#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:374
+#: pynicotine/gtkgui/interests.py:157 pynicotine/gtkgui/interests.py:379
 #: pynicotine/gtkgui/userinfo.py:180 pynicotine/gtkgui/userinfo.py:410
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "_Dislike jsem to"
 
-#: pynicotine/gtkgui/interests.py:158
+#: pynicotine/gtkgui/interests.py:159
 #, fuzzy
 msgid "_Recommendations for Item"
 msgstr "_Recommendations pro položku"
+
+#: pynicotine/gtkgui/interests.py:285
+#, fuzzy, python-format
+msgid "Recommendations (%s)"
+msgstr "Doporučení"
+
+#: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
+#, fuzzy
+msgid "Recommendations"
+msgstr "Doporučení"
+
+#: pynicotine/gtkgui/interests.py:308
+#, fuzzy, python-format
+msgid "Similar Users (%s)"
+msgstr "Podobní uživatelé"
+
+#: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
+#, fuzzy
+msgid "Similar Users"
+msgstr "Podobní uživatelé"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 #, fuzzy
@@ -2947,6 +2967,7 @@ msgstr "Jméno souboru"
 
 #: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:140
 #: pynicotine/gtkgui/userbrowse.py:211
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
 #, fuzzy
 msgid "Size"
 msgstr "Velikost"
@@ -4045,27 +4066,27 @@ msgstr ""
 "%(days)i dny, %(hours)i hodiny, %(minutes)i minuty, %(seconds)i sekundy "
 "oprávnění ke stažení vlevo."
 
-#: pynicotine/pynicotine.py:900
+#: pynicotine/pynicotine.py:906
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Vaše heslo bylo změněno. Heslo je %s"
 
-#: pynicotine/pynicotine.py:957
+#: pynicotine/pynicotine.py:963
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Uživatel %(user)s prochází váš seznam sdílených souborů"
 
-#: pynicotine/pynicotine.py:1012
+#: pynicotine/pynicotine.py:1018
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Uživatel %(user)s čte vaše uživatelské údaje"
 
-#: pynicotine/pynicotine.py:1062
+#: pynicotine/pynicotine.py:1068
 #, fuzzy, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Upozornění: %(realuser)s se pokouší zfalšovat %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1105
+#: pynicotine/pynicotine.py:1111
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nepodařilo se načíst sdílenou složku %(folder)s: %(error)s"
@@ -4177,27 +4198,27 @@ msgstr ""
 "Nelze číst databázi sdílených složek. Prosím, znovu prozývejte své akcie. "
 "Chyba: %s"
 
-#: pynicotine/slskproto.py:580
+#: pynicotine/slskproto.py:579
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "Poslech na portu %i"
 
-#: pynicotine/slskproto.py:630
+#: pynicotine/slskproto.py:629
 #, fuzzy, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Odpojeno od serveru %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:658
+#: pynicotine/slskproto.py:657
 #, fuzzy, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Zdá se, že server nefunguje nebo nereaguje, opakování za %i sekundy"
 
-#: pynicotine/slskproto.py:949
+#: pynicotine/slskproto.py:948
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nelze se připojit k serveru %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:2168
+#: pynicotine/slskproto.py:2159
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Připojeno k serveru %(host)s:%(port)s, přihlášení…"
@@ -4583,14 +4604,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
 #, fuzzy
-msgid "File Name"
+msgid "Name"
 msgstr "Název souboru"
-
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
-#, fuzzy
-msgid "File Size"
-msgstr "Velikost souboru"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 #, fuzzy
@@ -4909,16 +4924,6 @@ msgstr "Osobní nelibost"
 #, fuzzy
 msgid "Add something you dislike…"
 msgstr "Přidejte něco, co se vám nelíbí…"
-
-#: pynicotine/gtkgui/ui/interests.ui:157
-#, fuzzy
-msgid "Recommendations"
-msgstr "Doporučení"
-
-#: pynicotine/gtkgui/ui/interests.ui:233
-#, fuzzy
-msgid "Similar Users"
-msgstr "Podobní uživatelé"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 #, fuzzy
@@ -5592,6 +5597,11 @@ msgstr ""
 "Je také možné invertovat filtr a zadat přípony souborů, které nechcete ve "
 "výsledcích.\n"
 "    Příklad: !mp3|! jpg"
+
+#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
+#, fuzzy
+msgid "File Size"
+msgstr "Velikost souboru"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:203
 #, fuzzy

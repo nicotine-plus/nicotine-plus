@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 05:32+0200\n"
+"POT-Creation-Date: 2022-02-17 17:24+0200\n"
 "PO-Revision-Date: 2022-01-15 16:11+0000\n"
 "Last-Translator: Mariusz <wisniowy@g.pl>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1356,7 +1356,7 @@ msgstr "Wirtualny folder"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:74
 #: pynicotine/gtkgui/dialogs/preferences.py:542 pynicotine/gtkgui/search.py:338
 #: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:151
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
 msgid "Folder"
 msgstr "Folder"
 
@@ -1891,7 +1891,7 @@ msgid "Do you really want to clear your wishlist?"
 msgstr "Jesteś pewien, że chcesz wyczyścić listę życzeń?"
 
 #: pynicotine/gtkgui/downloads.py:40
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
 msgid "Path"
 msgstr "Ścieżka"
 
@@ -2332,32 +2332,50 @@ msgstr "Ocena"
 msgid "Item"
 msgstr "Obiekt"
 
-#: pynicotine/gtkgui/interests.py:140
+#: pynicotine/gtkgui/interests.py:140 pynicotine/gtkgui/interests.py:148
 msgid "Re_commendations for Item"
 msgstr "Re_komendacje dla tego obiektu"
 
-#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:148
-#: pynicotine/gtkgui/interests.py:159 pynicotine/gtkgui/userinfo.py:182
+#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:149
+#: pynicotine/gtkgui/interests.py:160 pynicotine/gtkgui/userinfo.py:182
 msgid "_Search for Item"
 msgstr "_Szukaj tego obiektu"
 
-#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:150
+#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:151
 msgid "_Remove Item"
 msgstr "_Usuń ten obiekt"
 
-#: pynicotine/gtkgui/interests.py:155 pynicotine/gtkgui/interests.py:371
+#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:376
 #: pynicotine/gtkgui/userinfo.py:179 pynicotine/gtkgui/userinfo.py:407
 msgid "I _Like This"
 msgstr "L_ubię to"
 
-#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:374
+#: pynicotine/gtkgui/interests.py:157 pynicotine/gtkgui/interests.py:379
 #: pynicotine/gtkgui/userinfo.py:180 pynicotine/gtkgui/userinfo.py:410
 msgid "I _Dislike This"
 msgstr "Nie L_ubię tego"
 
-#: pynicotine/gtkgui/interests.py:158
+#: pynicotine/gtkgui/interests.py:159
 msgid "_Recommendations for Item"
 msgstr "Re_komendacje dla tego obiektu"
+
+#: pynicotine/gtkgui/interests.py:285
+#, fuzzy, python-format
+msgid "Recommendations (%s)"
+msgstr "Rekomendacje dla %s"
+
+#: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
+msgid "Recommendations"
+msgstr "Rekomendacje"
+
+#: pynicotine/gtkgui/interests.py:308
+#, fuzzy, python-format
+msgid "Similar Users (%s)"
+msgstr "Podobni użytkownicy"
+
+#: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
+msgid "Similar Users"
+msgstr "Podobni użytkownicy"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 msgid "Room"
@@ -2460,6 +2478,7 @@ msgstr "Nazwa pliku"
 
 #: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:140
 #: pynicotine/gtkgui/userbrowse.py:211
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
 msgid "Size"
 msgstr "Rozmiar"
 
@@ -3419,27 +3438,27 @@ msgstr ""
 "Pozostało %(days)i dni, %(hours)i godzin, %(minutes)i minut, %(seconds)i "
 "sekund uprzywilejowanego pobierania."
 
-#: pynicotine/pynicotine.py:900
+#: pynicotine/pynicotine.py:906
 #, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Twoje hasło zostało zmienione. Hasło to %s"
 
-#: pynicotine/pynicotine.py:957
+#: pynicotine/pynicotine.py:963
 #, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Użytkownik %(user)s przegląda twoją listę udostępnionych zasobów"
 
-#: pynicotine/pynicotine.py:1012
+#: pynicotine/pynicotine.py:1018
 #, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "Użytkownik %(user)s przegląda informacje o tobie"
 
-#: pynicotine/pynicotine.py:1062
+#: pynicotine/pynicotine.py:1068
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Uwaga: %(realuser)s próbuje podszyć się pod %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1105
+#: pynicotine/pynicotine.py:1111
 #, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Błąd podczas pobierania zawartości folderu %(folder)s: %(error)s"
@@ -3548,27 +3567,27 @@ msgstr ""
 "Nie można odczytać bazy danych zasobów. Proszę ponownie przeskanować zasoby. "
 "Błąd: %s"
 
-#: pynicotine/slskproto.py:580
+#: pynicotine/slskproto.py:579
 #, python-format
 msgid "Listening on port: %i"
 msgstr "Nasłuchiwanie na porcie: %i"
 
-#: pynicotine/slskproto.py:630
+#: pynicotine/slskproto.py:629
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Rozłączony od serwera %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:658
+#: pynicotine/slskproto.py:657
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Serwer jest rozłączony albo nie odpowiada, ponawianie za %i sekund"
 
-#: pynicotine/slskproto.py:949
+#: pynicotine/slskproto.py:948
 #, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nie można połączyć się z serwerem %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:2168
+#: pynicotine/slskproto.py:2159
 #, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Połączony do serwera %(host)s:%(port)s, logowanie…"
@@ -3933,13 +3952,9 @@ msgstr ""
 "użytkownikami."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
-msgid "File Name"
+#, fuzzy
+msgid "Name"
 msgstr "Nazwa pliku"
-
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
-msgid "File Size"
-msgstr "Rozmiar pliku"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 msgid "Last Speed"
@@ -4199,14 +4214,6 @@ msgstr "Osobiste niechęci"
 #: pynicotine/gtkgui/ui/interests.ui:98
 msgid "Add something you dislike…"
 msgstr "Dodaj coś, czego nie lubisz…"
-
-#: pynicotine/gtkgui/ui/interests.ui:157
-msgid "Recommendations"
-msgstr "Rekomendacje"
-
-#: pynicotine/gtkgui/ui/interests.ui:233
-msgid "Similar Users"
-msgstr "Podobni użytkownicy"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 msgid "Menu"
@@ -4766,6 +4773,10 @@ msgstr ""
 "Możliwe jest również odwrócenie filtru, określając rozszerzenia plików, "
 "których nie chcesz mieć w wynikach.\n"
 "   Przykład: !mp3|!jpg"
+
+#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
+msgid "File Size"
+msgstr "Rozmiar pliku"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:203
 msgid "Filters files based upon their file size."
@@ -7191,10 +7202,6 @@ msgstr "Odśwież informacje"
 
 #~ msgid "I Like"
 #~ msgstr "Lubię"
-
-#, python-format
-#~ msgid "Recommendations for %s"
-#~ msgstr "Rekomendacje dla %s"
 
 #, python-format
 #~ msgid "%s mentioned you in the %s room"

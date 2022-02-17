@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 05:32+0200\n"
+"POT-Creation-Date: 2022-02-17 17:24+0200\n"
 "PO-Revision-Date: 2022-01-10 21:21+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -1638,7 +1638,7 @@ msgstr "Virtualus aplankas"
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:74
 #: pynicotine/gtkgui/dialogs/preferences.py:542 pynicotine/gtkgui/search.py:338
 #: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:151
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
 #, fuzzy
 msgid "Folder"
 msgstr "Aplankas"
@@ -2237,7 +2237,7 @@ msgid "Do you really want to clear your wishlist?"
 msgstr "Ar tikrai norite išvalyti savo pageidavimų sąrašą?"
 
 #: pynicotine/gtkgui/downloads.py:40
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
 msgid "Path"
 msgstr "Kelias"
 
@@ -2740,38 +2740,58 @@ msgstr "Įvertinimas"
 msgid "Item"
 msgstr "Elementas"
 
-#: pynicotine/gtkgui/interests.py:140
+#: pynicotine/gtkgui/interests.py:140 pynicotine/gtkgui/interests.py:148
 #, fuzzy
 msgid "Re_commendations for Item"
 msgstr "%s rekomendacijos"
 
-#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:148
-#: pynicotine/gtkgui/interests.py:159 pynicotine/gtkgui/userinfo.py:182
+#: pynicotine/gtkgui/interests.py:141 pynicotine/gtkgui/interests.py:149
+#: pynicotine/gtkgui/interests.py:160 pynicotine/gtkgui/userinfo.py:182
 #, fuzzy
 msgid "_Search for Item"
 msgstr "_Ieškoti failų"
 
-#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:150
+#: pynicotine/gtkgui/interests.py:143 pynicotine/gtkgui/interests.py:151
 #, fuzzy
 msgid "_Remove Item"
 msgstr "_Remove elementas"
 
-#: pynicotine/gtkgui/interests.py:155 pynicotine/gtkgui/interests.py:371
+#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:376
 #: pynicotine/gtkgui/userinfo.py:179 pynicotine/gtkgui/userinfo.py:407
 #, fuzzy
 msgid "I _Like This"
 msgstr "Aš _Like Tai"
 
-#: pynicotine/gtkgui/interests.py:156 pynicotine/gtkgui/interests.py:374
+#: pynicotine/gtkgui/interests.py:157 pynicotine/gtkgui/interests.py:379
 #: pynicotine/gtkgui/userinfo.py:180 pynicotine/gtkgui/userinfo.py:410
 #, fuzzy
 msgid "I _Dislike This"
 msgstr "Aš _Dislike Tai"
 
-#: pynicotine/gtkgui/interests.py:158
+#: pynicotine/gtkgui/interests.py:159
 #, fuzzy
 msgid "_Recommendations for Item"
 msgstr "%s rekomendacijos"
+
+#: pynicotine/gtkgui/interests.py:285
+#, fuzzy, python-format
+msgid "Recommendations (%s)"
+msgstr "Rekomendacijas"
+
+#: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
+#, fuzzy
+msgid "Recommendations"
+msgstr "Rekomendacijas"
+
+#: pynicotine/gtkgui/interests.py:308
+#, fuzzy, python-format
+msgid "Similar Users (%s)"
+msgstr "Panašūs vartotojai"
+
+#: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
+#, fuzzy
+msgid "Similar Users"
+msgstr "Panašūs vartotojai"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 msgid "Room"
@@ -2888,6 +2908,7 @@ msgstr "Failo pavadinimas"
 
 #: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:140
 #: pynicotine/gtkgui/userbrowse.py:211
+#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
 msgid "Size"
 msgstr "Dydis"
 
@@ -3955,27 +3976,27 @@ msgstr ""
 "Liko %(days)i dien., %(hours)i val., %(minutes)i min., %(seconds)i sek. "
 "atsisiuntimo privilegijų."
 
-#: pynicotine/pynicotine.py:900
+#: pynicotine/pynicotine.py:906
 #, fuzzy, python-format
 msgid "Your password has been changed. Password is %s"
 msgstr "Jūsų slaptažodis buvo pakeistas"
 
-#: pynicotine/pynicotine.py:957
+#: pynicotine/pynicotine.py:963
 #, fuzzy, python-format
 msgid "User %(user)s is browsing your list of shared files"
 msgstr "Vartotojas %(user)s naršo jūsų bendrinamų failų sąrašą"
 
-#: pynicotine/pynicotine.py:1012
+#: pynicotine/pynicotine.py:1018
 #, fuzzy, python-format
 msgid "User %(user)s is reading your user info"
 msgstr "%(user)s daro UserInfo užklausą"
 
-#: pynicotine/pynicotine.py:1062
+#: pynicotine/pynicotine.py:1068
 #, python-format
 msgid "(Warning: %(realuser)s is attempting to spoof %(fakeuser)s) "
 msgstr "(Dėmesio: %(realuser)s bando apsimesti naudotoju %(fakeuser)s) "
 
-#: pynicotine/pynicotine.py:1105
+#: pynicotine/pynicotine.py:1111
 #, fuzzy, python-format
 msgid "Failed to fetch the shared folder %(folder)s: %(error)s"
 msgstr "Nepavyko iškviesti bendrai naudojamo aplanko %(folder)s: %(error)s"
@@ -4086,27 +4107,27 @@ msgstr ""
 "Neįmanoma nuskaityti bendrai naudojamos duomenų bazės. Prašome perskirstyti "
 "savo akcijas. Klaida: %s"
 
-#: pynicotine/slskproto.py:580
+#: pynicotine/slskproto.py:579
 #, fuzzy, python-format
 msgid "Listening on port: %i"
 msgstr "Klausomasi prievado %i"
 
-#: pynicotine/slskproto.py:630
+#: pynicotine/slskproto.py:629
 #, python-format
 msgid "Disconnected from server %(host)s:%(port)s"
 msgstr "Atsijungta nuo serverio %(host)s:%(port)s"
 
-#: pynicotine/slskproto.py:658
+#: pynicotine/slskproto.py:657
 #, python-format
 msgid "The server seems to be down or not responding, retrying in %i seconds"
 msgstr "Arba serveris neveikia, arba neatsako, kitas bandymas po %i sek"
 
-#: pynicotine/slskproto.py:949
+#: pynicotine/slskproto.py:948
 #, fuzzy, python-format
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nepavyko prisijungti prie serverio %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:2168
+#: pynicotine/slskproto.py:2159
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Prisijungta prie serverio %(host)s:%(port)s, registruojamasi..."
@@ -4490,14 +4511,8 @@ msgstr ""
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
 #, fuzzy
-msgid "File Name"
+msgid "Name"
 msgstr "Failo vardas"
-
-#: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:117
-#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
-#, fuzzy
-msgid "File Size"
-msgstr "Failo dydis"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 #, fuzzy
@@ -4814,16 +4829,6 @@ msgstr "Mėgsta"
 #, fuzzy
 msgid "Add something you dislike…"
 msgstr "Pridėti tai, kas jums nepatinka…"
-
-#: pynicotine/gtkgui/ui/interests.ui:157
-#, fuzzy
-msgid "Recommendations"
-msgstr "Rekomendacijas"
-
-#: pynicotine/gtkgui/ui/interests.ui:233
-#, fuzzy
-msgid "Similar Users"
-msgstr "Panašūs vartotojai"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 #, fuzzy
@@ -5469,6 +5474,11 @@ msgstr ""
 "Taip pat galima apversti filtrą, nurodant failų plėtinius, kurių nenorite "
 "savo rezultatuose.\n"
 "    Pavyzdys: !mp3|! jpg"
+
+#: pynicotine/gtkgui/ui/popovers/searchfilters.ui:186
+#, fuzzy
+msgid "File Size"
+msgstr "Failo dydis"
 
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:203
 #, fuzzy
