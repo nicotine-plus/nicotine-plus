@@ -312,16 +312,31 @@ class TransferList(UserInterface):
 
         if forceupdate or finished or (current_time - last_ui_update) > 1:
             # Unless a transfer finishes, use a cooldown to avoid updating too often
-            self.update_parent_rows()
+            self.update_parent_rows(transfer)
 
-    def update_parent_rows(self, only_remove=False):
+    def update_parent_rows(self, transfer, only_remove=False):
 
         if self.tree_users != "ungrouped":
-            for path, pathiter in list(self.paths.items()):
-                self.update_parent_row(pathiter, path, only_remove=only_remove, folder=True)
+            if transfer is not None:
+                username = transfer.user
+                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                user_path = username + path
 
-            for username, useriter in list(self.users.items()):
-                self.update_parent_row(useriter, username, only_remove=only_remove)
+                user_path_iter = self.paths.get(user_path)
+                user_iter = self.users.get(username)
+
+                if user_path_iter:
+                    self.update_parent_row(user_path_iter, user_path, only_remove=only_remove, folder=True)
+
+                if user_iter:
+                    self.update_parent_row(user_iter, username, only_remove=only_remove)
+
+            else:
+                for user_path, user_path_iter in list(self.paths.items()):
+                    self.update_parent_row(user_path_iter, user_path, only_remove=only_remove, folder=True)
+
+                for username, user_iter in list(self.users.items()):
+                    self.update_parent_row(user_iter, username, only_remove=only_remove)
 
         # Show tab description if necessary
         self.status_page.set_visible(not self.transfer_list)
@@ -650,7 +665,7 @@ class TransferList(UserInterface):
         if transfer.iterator is not None:
             self.transfersmodel.remove(transfer.iterator)
 
-        self.update_parent_rows(only_remove=True)
+        self.update_parent_rows(transfer, only_remove=True)
 
     def clear_transfers(self, status):
 
