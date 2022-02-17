@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 17:24+0200\n"
-"PO-Revision-Date: 2022-02-17 11:16+0000\n"
+"PO-Revision-Date: 2022-02-17 18:10+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -2367,18 +2367,18 @@ msgid "_Recommendations for Item"
 msgstr "Empfelungen für diesen Eintrag"
 
 #: pynicotine/gtkgui/interests.py:285
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations (%s)"
-msgstr "Empfehlungen"
+msgstr "Empfehlungen (%s)"
 
 #: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
 msgid "Recommendations"
 msgstr "Empfehlungen"
 
 #: pynicotine/gtkgui/interests.py:308
-#, fuzzy, python-format
+#, python-format
 msgid "Similar Users (%s)"
-msgstr "Ähnliche Benutzer"
+msgstr "Ähnliche Benutzer (%s)"
 
 #: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
 msgid "Similar Users"
@@ -3990,9 +3990,8 @@ msgstr ""
 "nicht privilegierten Benutzern in die Warteschlange gestellt."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
-#, fuzzy
 msgid "Name"
-msgstr "Datei Name"
+msgstr "Name"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 msgid "Last Speed"
