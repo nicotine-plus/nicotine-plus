@@ -53,6 +53,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
+from pynicotine.utils import factorize
 from pynicotine.utils import humanize
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
@@ -765,43 +766,9 @@ class Search(UserInterface):
 
         return iterator
 
-    @staticmethod
-    def factorize(filesize, base=1024):
-        """ Converts filesize string with a given unit into raw integer size,
-            defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+    """ Result Filters """
 
-        if not filesize:
-            return None, None
-
-        if filesize[-1:].lower() == 'b':
-            base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-            filesize = filesize[:-1]
-
-        if filesize[-1:].lower() == 'i':
-            base = 1024  # Binary requested, stop using decimal
-            filesize = filesize[:-1]
-
-        if filesize.lower()[-1:] == "g":
-            factor = pow(base, 3)
-            filesize = filesize[:-1]
-
-        elif filesize.lower()[-1:] == "m":
-            factor = pow(base, 2)
-            filesize = filesize[:-1]
-
-        elif filesize.lower()[-1:] == "k":
-            factor = base
-            filesize = filesize[:-1]
-
-        else:
-            factor = 1
-
-        try:
-            return int(float(filesize) * factor), factor
-        except ValueError:
-            return None, factor
-
-    def check_digit(self, sfilter, value, factorize=True):
+    def check_digit(self, sfilter, value, filesize=True):
 
         allowed = blocked = False
 
@@ -812,8 +779,8 @@ class Search(UserInterface):
             else:
                 used_operator, sdigit = ">=", condition
 
-            if sdigit and factorize:
-                sdigit, factor = self.factorize(sdigit)  # File Size
+            if sdigit and filesize:
+                sdigit, factor = factorize(sdigit)  # File Size
             elif sdigit:
                 try:
                     factor = 1
