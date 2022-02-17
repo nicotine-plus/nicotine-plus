@@ -820,11 +820,14 @@ class TransferList(UserInterface):
     def on_file_properties(self, *_args):
 
         data = []
+        selected_size = 0
 
         for transfer in self.selected_transfers:
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
             directory = fullname.rsplit("\\", 1)[0]
+            file_size = transfer.size
+            selected_size += file_size
 
             data.append({
                 "user": transfer.user,
@@ -834,13 +837,13 @@ class TransferList(UserInterface):
                 "path": transfer.path,
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
-                "size": transfer.size,
+                "size": file_size,
                 "bitrate": transfer.bitrate,
                 "length": transfer.length
             })
 
         if data:
-            FileProperties(self.frame, data, download_button=False).show()
+            FileProperties(self.frame, data, total_size=selected_size, download_button=False).show()
 
     def on_copy_file_path(self, *_args):
 
