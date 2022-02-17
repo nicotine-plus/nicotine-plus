@@ -1300,6 +1300,7 @@ class SlskProtoThread(threading.Thread):
                             self.connect_to_peer(msg.user, addr, init)
 
                         # We already store a local IP address for our username
+                        # Port 0 means the user is offline or bugged, don't store address
                         if msg.user != self.server_username and msg.port != 0:
                             self.user_addresses[msg.user] = addr
 
