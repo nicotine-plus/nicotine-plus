@@ -760,7 +760,8 @@ class Search(UserInterface):
 
         return iterator
 
-    def factorize(self, string, base=1024):
+    @staticmethod
+    def factorize(string, base=1024):
         """ Convert a string with a given size unit into raw size as integer,
             defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
 
@@ -831,7 +832,8 @@ class Search(UserInterface):
                 else:
                     adjust = factor
 
-                matched = (value >= (sdigit - adjust)) and (value <= (sdigit + adjust))
+                minimum, maximum = (sdigit - adjust), (sdigit + adjust)
+                matched = (value >= minimum) and (value <= maximum)
 
                 if used_operator == "==" and matched:
                     return True
