@@ -528,15 +528,8 @@ class Search:
 
         self.core.send_message_to_peer(user, message)
 
-        if direct:
-            log.add_search(_("User %(user)s is directly searching for \"%(query)s\", found %(num)i results"), {
-                'user': user,
-                'query': searchterm_old,
-                'num': numresults
-            })
-        else:
-            log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
-                'user': user,
-                'query': searchterm_old,
-                'num': numresults
-            })
+        log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
+            'user': user,
+            'query': searchterm_old,
+            'num': numresults
+        })
