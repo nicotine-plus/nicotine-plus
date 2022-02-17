@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 23:26+0200\n"
+"POT-Creation-Date: 2022-02-16 23:50+0200\n"
 "PO-Revision-Date: 2022-01-10 21:26+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Esperanto <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -27,8 +27,7 @@ msgstr "Nicotine+"
 msgid "Soulseek Client"
 msgstr "Soulseek Kliento"
 
-#: data/org.nicotine_plus.Nicotine.desktop.in:7
-#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
+#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
 #, fuzzy
 msgid "Graphical client for the Soulseek peer-to-peer network"
@@ -38,6 +37,11 @@ msgstr "Grafika kliento por la kunul-al-kunula reto Soulseek"
 #, fuzzy
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;dividado;muziko;P2P;kunulo-al-kunulo;GTK;"
+
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
+#, fuzzy
+msgid "Graphical client for the Soulseek network"
+msgstr "Grafika kliento por la kunul-al-kunula reto Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 #, fuzzy
@@ -3002,8 +3006,8 @@ msgstr ""
 "serĉdemando \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy
-msgid "[PRIVATE]"
+#, fuzzy, python-format
+msgid "[PRIVATE]  %s"
 msgstr "[PRIVATA]"
 
 #: pynicotine/gtkgui/search.py:895
@@ -7149,10 +7153,9 @@ msgstr "Konservu _Bildon"
 msgid "_Refresh Info"
 msgstr "_Refreŝigi Informojn"
 
-#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
-msgid "[PRIVATE]  %s"
-msgstr "[PRIVATA]"
+#, fuzzy
+#~ msgid "[PRIVATE]"
+#~ msgstr "[PRIVATA]"
 
 #, fuzzy
 #~ msgid "Room wall (personal message set)"

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 23:26+0200\n"
-"PO-Revision-Date: 2022-01-23 16:02+0000\n"
+"POT-Creation-Date: 2022-02-16 23:50+0200\n"
+"PO-Revision-Date: 2022-02-16 23:27+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/nl/>\n"
@@ -26,8 +26,7 @@ msgstr "Nicotine+"
 msgid "Soulseek Client"
 msgstr "Soulseek cliënt"
 
-#: data/org.nicotine_plus.Nicotine.desktop.in:7
-#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
+#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
 msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
@@ -35,6 +34,10 @@ msgstr "Grafische client voor het Soulseek peer-to-peer netwerk"
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;delen;muziek;P2P;peer-naar-peer;GTK;"
+
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
+msgid "Graphical client for the Soulseek network"
+msgstr "Grafische client voor het Soulseek netwerk"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2505,9 +2508,9 @@ msgstr ""
 "\"%(query)s\" uitgefilterd"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy
-msgid "[PRIVATE]"
-msgstr "[PRIVAAT]"
+#, python-format
+msgid "[PRIVATE]  %s"
+msgstr "[PRIVÉ] %s"
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
@@ -5491,7 +5494,6 @@ msgid "Show privately shared files in search results"
 msgstr "Toon privé gedeelde bestanden in zoekresultaten"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
-#, fuzzy
 msgid ""
 "Other clients may offer an option to send privately shared files in response "
 "to search requests. Such files are prefixed with '[PRIVATE]', and are not "
@@ -5499,8 +5501,8 @@ msgid ""
 msgstr ""
 "Andere clients kunnen een optie bieden om privé gedeelde bestanden te "
 "verzenden als reactie op zoekopdrachten. Dergelijke bestanden worden "
-"voorafgegaan door '[PRIVÉBESTAND]' en kunnen niet worden gedownload, tenzij "
-"de uploader daar uitdrukkelijk toestemming voor geeft."
+"voorafgegaan door '[PRIVÉ]' en kunnen niet worden gedownload tenzij de "
+"uploader daar uitdrukkelijk toestemming voor geeft."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:87
 msgid "Limit number of results per search:"
@@ -6066,10 +6068,9 @@ msgstr "Bewaar _Beeld"
 msgid "_Refresh Info"
 msgstr "Info _vernieuwen"
 
-#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
-msgid "[PRIVATE]  %s"
-msgstr "[PRIVAAT]"
+#, fuzzy
+#~ msgid "[PRIVATE]"
+#~ msgstr "[PRIVAAT]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Kamerwand (eigen bericht ingesteld)"

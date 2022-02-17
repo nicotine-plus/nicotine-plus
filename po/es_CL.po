@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 23:26+0200\n"
+"POT-Creation-Date: 2022-02-16 23:50+0200\n"
 "PO-Revision-Date: 2022-01-17 20:57+0000\n"
 "Last-Translator: MELERIX <melerix@outlook.com>\n"
 "Language-Team: Spanish (Chile) <https://hosted.weblate.org/projects/nicotine-"
@@ -26,8 +26,7 @@ msgstr "Nicotine+"
 msgid "Soulseek Client"
 msgstr "Cliente de Soulseek"
 
-#: data/org.nicotine_plus.Nicotine.desktop.in:7
-#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
+#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
 msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Cliente gráfico para la red par a par de Soulseek"
@@ -35,6 +34,11 @@ msgstr "Cliente gráfico para la red par a par de Soulseek"
 #: data/org.nicotine_plus.Nicotine.desktop.in:12
 msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek;Nicotine;compartir;música;P2P;para a par;GTK;"
+
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
+#, fuzzy
+msgid "Graphical client for the Soulseek network"
+msgstr "Cliente gráfico para la red par a par de Soulseek"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2513,8 +2517,8 @@ msgstr ""
 "%(user)s para la consulta de búsqueda «%(query)s»"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy
-msgid "[PRIVATE]"
+#, fuzzy, python-format
+msgid "[PRIVATE]  %s"
 msgstr "[PRIVADO]"
 
 #: pynicotine/gtkgui/search.py:895
@@ -6112,10 +6116,9 @@ msgstr "Guardar _Imagen"
 msgid "_Refresh Info"
 msgstr "_Actualizar información"
 
-#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
-msgid "[PRIVATE]  %s"
-msgstr "[PRIVADO]"
+#, fuzzy
+#~ msgid "[PRIVATE]"
+#~ msgstr "[PRIVADO]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Muro de la sala (mensaje personal definido)"

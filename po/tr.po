@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-16 23:26+0200\n"
+"POT-Creation-Date: 2022-02-16 23:50+0200\n"
 "PO-Revision-Date: 2022-01-10 19:39+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
@@ -26,8 +26,7 @@ msgstr "Nicotine+"
 msgid "Soulseek Client"
 msgstr "Soulseek İstemcisi"
 
-#: data/org.nicotine_plus.Nicotine.desktop.in:7
-#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9 pynicotine/config.py:64
+#: data/org.nicotine_plus.Nicotine.desktop.in:7 pynicotine/config.py:64
 #: pynicotine/gtkgui/ui/dialogs/fastconfigure.ui:48
 msgid "Graphical client for the Soulseek peer-to-peer network"
 msgstr "Soulseek eşler arası ağı için grafiksel istemci"
@@ -37,6 +36,11 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr ""
 "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;paylaşım;müzik;eşler-"
 "arası;"
+
+#: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
+#, fuzzy
+msgid "Graphical client for the Soulseek network"
+msgstr "Soulseek eşler arası ağı için grafiksel istemci"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2507,8 +2511,8 @@ msgstr ""
 "sonucu %(filepath)s filtrelendi"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy
-msgid "[PRIVATE]"
+#, fuzzy, python-format
+msgid "[PRIVATE]  %s"
 msgstr "[ÖZEL]"
 
 #: pynicotine/gtkgui/search.py:895
@@ -6055,10 +6059,9 @@ msgstr "Resmi _Kaydet"
 msgid "_Refresh Info"
 msgstr "Bilgileri _Yenile"
 
-#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
-msgid "[PRIVATE]  %s"
-msgstr "[ÖZEL]"
+#, fuzzy
+#~ msgid "[PRIVATE]"
+#~ msgstr "[ÖZEL]"
 
 #~ msgid "Room wall (personal message set)"
 #~ msgstr "Oda duvarı (kişisel mesaj ayarlandı)"
