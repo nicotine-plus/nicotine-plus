@@ -790,40 +790,73 @@ class Search(UserInterface):
             string = string[:-1]
 
         if not string:
-            return None
+            return None, factor
 
         try:
             result = int(float(string) * factor)
         except ValueError:
-            return False
+            return False, factor
 
-        return result
+        return result, factor
 
     def check_digit(self, sfilter, value, factorize=True):
 
-        used_operator = ">="
-        if sfilter.startswith((">", "<", "=", "!")):
-            used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
+        allowed = matched = blocked = False
 
-        if factorize:
-            sfilter = self.factorize(sfilter)
+        for condition in sfilter.split("|"):
 
-        if not sfilter:
-            return True
+            if condition.strip().startswith((">", "<", "=", "!")):
+                used_operator, sdigit = condition[:1] + "=", condition[1:]
+            else:
+                used_operator, sdigit = ">=", condition
 
-        if factorize and used_operator in ("==", "!="):
-            # An exact match is unlikely, so approximate size to within +/- 0.1 MiB
-            adjust = 131072
-            match = (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
+            if factorize:
+                sdigit, factor = self.factorize(sdigit)  # File Size
+            else:
+                try:
+                    sdigit, factor = int(sdigit), 1  # Bitrate
+                except ValueError:
+                    continue
 
-            if used_operator == "==":
-                return match
+            log.add_debug(str(sdigit) + ", " + str(factor))
 
-            if used_operator == "!=":
-                return not match
+            if not sdigit:
+                continue
 
-        operation = self.operators.get(used_operator)
-        return operation(value, sfilter)
+            if used_operator in ("==", "!="):
+                if factor > 1024:
+                    # Exact match is unlikely, so approximate to
+                    # within +/- 0.1 MiB or 1 MiB if over 100 MiB
+                    adjust = factor / 8 if sdigit < 104857600 else factor
+                else:
+                    adjust = factor
+
+                matched = (value >= (sdigit - adjust)) and (value <= (sdigit + adjust))
+
+                if used_operator == "==" and matched:
+                    return True
+
+                if used_operator == "!=" and matched:
+                    blocked = True
+
+                elif used_operator == "!=" and not matched:
+                    allowed = True
+
+                continue
+
+            operation = self.operators.get(used_operator)
+            matched = operation(value, sdigit)
+
+            if matched:
+                allowed = True
+
+            if not matched:
+                blocked = True
+
+        if blocked:
+            return False
+
+        return allowed
 
     @staticmethod
     def check_country(sfilter, value):
