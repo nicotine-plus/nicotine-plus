@@ -761,48 +761,44 @@ class Search(UserInterface):
         return iterator
 
     @staticmethod
-    def factorize(string, base=1024):
-        """ Convert a string with a given size unit into raw size as integer,
+    def factorize(filesize, base=1024):
+        """ Converts filesize string with a given unit into raw integer size,
             defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
 
-        if not string:
-            return None
+        if not filesize:
+            return None, None
 
-        if string[-1:].lower() == 'b':
+        if filesize[-1:].lower() == 'b':
             base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-            string = string[:-1]
+            filesize = filesize[:-1]
 
-        if string[-1:].lower() == 'i':
+        if filesize[-1:].lower() == 'i':
             base = 1024  # Binary requested, stop using decimal
-            string = string[:-1]
+            filesize = filesize[:-1]
 
-        factor = 1
-
-        if string.lower()[-1:] == "g":
+        if filesize.lower()[-1:] == "g":
             factor = pow(base, 3)
-            string = string[:-1]
+            filesize = filesize[:-1]
 
-        elif string.lower()[-1:] == "m":
+        elif filesize.lower()[-1:] == "m":
             factor = pow(base, 2)
-            string = string[:-1]
+            filesize = filesize[:-1]
 
-        elif string.lower()[-1:] == "k":
+        elif filesize.lower()[-1:] == "k":
             factor = base
-            string = string[:-1]
+            filesize = filesize[:-1]
 
-        if not string:
-            return None, factor
+        else:
+            factor = 1
 
         try:
-            result = int(float(string) * factor)
+            return int(float(filesize) * factor), factor
         except ValueError:
-            return False, factor
-
-        return result, factor
+            return None, factor
 
     def check_digit(self, sfilter, value, factorize=True):
 
-        allowed = matched = blocked = False
+        allowed = blocked = False
 
         for condition in sfilter.split("|"):
 
@@ -811,54 +807,38 @@ class Search(UserInterface):
             else:
                 used_operator, sdigit = ">=", condition
 
-            if factorize:
+            if sdigit and factorize:
                 sdigit, factor = self.factorize(sdigit)  # File Size
-            else:
+            elif sdigit:
                 try:
                     sdigit, factor = int(sdigit), 1  # Bitrate
                 except ValueError:
                     continue
 
-            log.add_debug(str(sdigit) + ", " + str(factor))
-
             if not sdigit:
                 continue
 
-            if used_operator in ("==", "!="):
-                if factor > 1024:
-                    # Exact match is unlikely, so approximate to
-                    # within +/- 0.1 MiB or 1 MiB if over 100 MiB
-                    adjust = factor / 8 if sdigit < 104857600 else factor
-                else:
-                    adjust = factor
+            if factor > 1 and used_operator in ("==", "!="):
+                # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
+                adjust = factor / 8 if factor > 1024 and sdigit < 104857600 else factor  # TODO: GiB
 
-                minimum, maximum = (sdigit - adjust), (sdigit + adjust)
-                matched = (value >= minimum) and (value <= maximum)
+                if (sdigit - adjust) <= value <= (sdigit + adjust):
+                    return True if used_operator == "==" else False
 
-                if used_operator == "==" and matched:
-                    return True
-
-                if used_operator == "!=" and matched:
-                    blocked = True
-
-                elif used_operator == "!=" and not matched:
+                if used_operator == "!=":
                     allowed = True
 
                 continue
 
             operation = self.operators.get(used_operator)
-            matched = operation(value, sdigit)
 
-            if matched:
+            if operation(value, sdigit) and not blocked:
                 allowed = True
+                continue
 
-            if not matched:
-                blocked = True
+            blocked = True
 
-        if blocked:
-            return False
-
-        return allowed
+        return False if blocked else allowed
 
     @staticmethod
     def check_country(sfilter, value):
