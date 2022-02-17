@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 17:24+0200\n"
-"PO-Revision-Date: 2022-02-17 11:17+0000\n"
+"PO-Revision-Date: 2022-02-17 17:35+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -2358,18 +2358,18 @@ msgid "_Recommendations for Item"
 msgstr "Öge için _Tavsiyeler"
 
 #: pynicotine/gtkgui/interests.py:285
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations (%s)"
-msgstr "Tavsiyeler"
+msgstr "Tavsiyeler (%s)"
 
 #: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
 msgid "Recommendations"
 msgstr "Tavsiyeler"
 
 #: pynicotine/gtkgui/interests.py:308
-#, fuzzy, python-format
+#, python-format
 msgid "Similar Users (%s)"
-msgstr "Benzer Kullanıcılar"
+msgstr "Benzer Kullanıcılar (%s)"
 
 #: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
 msgid "Similar Users"
@@ -3948,9 +3948,8 @@ msgstr ""
 "önce kuyruğa alınacaktır."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
-#, fuzzy
 msgid "Name"
-msgstr "Dosya Adı"
+msgstr "Ad"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 msgid "Last Speed"
