@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 05:32+0200\n"
-"PO-Revision-Date: 2022-02-17 11:17+0000\n"
+"PO-Revision-Date: 2022-02-17 15:25+0000\n"
 "Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
@@ -2654,7 +2654,7 @@ msgstr "Error de archivo remoto"
 
 #: pynicotine/gtkgui/transferlist.py:138
 msgid "Queue"
-msgstr "En cola"
+msgstr "Posición en la cola"
 
 #: pynicotine/gtkgui/transferlist.py:139
 msgid "Percent"
