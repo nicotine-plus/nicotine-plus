@@ -34,7 +34,7 @@ from gi.repository import Pango
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 
 
@@ -85,16 +85,15 @@ def create_grouping_menu(window, active_mode, callback):
 
 
 def select_user_row_iter(fmodel, sel, user_index, selected_user, iterator):
+
     while iterator is not None:
         user = fmodel.get_value(iterator, user_index)
 
         if selected_user == user:
-            sel.select_path(fmodel.get_path(iterator),)
+            sel.select_path(fmodel.get_path(iterator))
 
         child = fmodel.iter_children(iterator)
-
         select_user_row_iter(fmodel, sel, user_index, selected_user, child)
-
         iterator = fmodel.iter_next(iterator)
 
 
@@ -117,7 +116,18 @@ def initialise_columns(frame, treeview_name, treeview, *args):
 
     i = 0
     cols = OrderedDict()
+    num_cols = len(args)
     column_config = None
+
+    # GTK 4 rows need more padding to match GTK 3
+    if Gtk.get_major_version() == 4:
+        progress_padding = 1
+        height_padding = 5
+    else:
+        progress_padding = 0
+        height_padding = 3
+
+    width_padding = 10
 
     for column_id, title, width, column_type, extra in args:
         if treeview_name:
@@ -135,35 +145,32 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         if not isinstance(width, int):
             width = 0
 
-        # GTK 4 rows need more padding to match GTK 3
-        height_padding = 4 if Gtk.get_major_version() == 4 else 3
+        xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=10, ypad=height_padding)
-            column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-
-        elif column_type == "center":
-            renderer = Gtk.CellRendererText(xalign=0.5)
+            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "number":
-            renderer = Gtk.CellRendererText(xalign=0.9)
+            xalign = 1
+            renderer = Gtk.CellRendererText(xalign=xalign, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
-            column.set_alignment(0.9)
+            column.set_alignment(xalign)
 
         elif column_type == "edit":
-            renderer = Gtk.CellRendererText(editable=True, xpad=10, ypad=height_padding)
+            renderer = Gtk.CellRendererText(editable=True, xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "progress":
-            renderer = Gtk.CellRendererProgress()
+            renderer = Gtk.CellRendererProgress(ypad=progress_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, value=i)
 
         elif column_type == "toggle":
-            renderer = Gtk.CellRendererToggle(xalign=0.5)
+            xalign = 0.5
+            renderer = Gtk.CellRendererToggle(xalign=xalign, xpad=13)
             column = Gtk.TreeViewColumn(column_id, renderer, active=i)
 
-        else:
+        elif column_type == "icon":
             renderer = Gtk.CellRendererPixbuf()
 
             if column_id == "country":
@@ -201,12 +208,20 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column.add_attribute(renderer, "weight", weight)
             column.add_attribute(renderer, "underline", underline)
 
+        # Allow individual cells to receive visual focus
+        if num_cols > 1:
+            renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
+
         column.set_reorderable(True)
         column.set_min_width(20)
 
-        column.set_widget(Gtk.Label(label=title))
-        column.get_widget().set_margin_start(5)
-        column.get_widget().show()
+        label = Gtk.Label(label=title, margin_start=5, margin_end=5, visible=True)
+        column.set_widget(label)
+
+        if xalign == 1 and Gtk.get_major_version() == 4:
+            # Gtk.TreeViewColumn.set_alignment() only changes the sort arrow position in GTK 4
+            # Actually align the label to the right here instead
+            label.get_parent().set_halign(Gtk.Align.END)
 
         cols[column_id] = column
 
@@ -218,7 +233,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
     treeview.connect("columns-changed", set_last_column_autosize)
     treeview.emit("columns-changed")
 
-    setup_accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
+    Accelerator("<Primary>c", treeview, on_copy_cell_data_accelerator)
     treeview.column_menu = PopupMenu(frame, treeview, callback=press_header, connect_events=False)
 
     if Gtk.get_major_version() == 4:
@@ -449,9 +464,11 @@ def get_country_tooltip_text(column_value, strip_prefix):
     if not column_value.startswith(strip_prefix):
         return _("Unknown")
 
-    column_value = column_value[len(strip_prefix):]
-    if column_value:
-        return GeoIP.country_code_to_name(column_value)
+    country_code = column_value[len(strip_prefix):]
+
+    if country_code:
+        country = GeoIP.country_code_to_name(country_code)
+        return "%s (%s)" % (country, country_code)
 
     return _("Earth")
 
@@ -461,7 +478,7 @@ def get_file_path_tooltip_text(column_value, _strip_prefix):
 
 
 def get_transfer_file_path_tooltip_text(column_value, _strip_prefix):
-    return column_value.filename
+    return column_value.filename or column_value.path
 
 
 def get_user_status_tooltip_text(column_value, _strip_prefix):
@@ -488,7 +505,7 @@ def show_file_path_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn, transf
     function = get_file_path_tooltip_text if not transfer else get_transfer_file_path_tooltip_text
 
     return show_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn,
-                        ("folder", "filename"), function)
+                        ("folder", "filename", "path"), function)
 
 
 def show_user_status_tooltip(treeview, pos_x, pos_y, tooltip, sourcecolumn):

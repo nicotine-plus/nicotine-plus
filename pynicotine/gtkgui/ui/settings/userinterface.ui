@@ -47,11 +47,11 @@
                         <property name="label" translatable="yes">Display tray icon</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_toggle_tray"/>
                       </object>
                     </child>
                     <child>
                       <object class="GtkCheckButton" id="StartupHidden">
+                        <property name="sensitive" bind-source="TrayiconCheck" bind-property="active" bind-flags="bidirectional|sync-create"/>
                         <property name="label" translatable="yes">Minimize to tray on startup</property>
                         <property name="visible">True</property>
                         <property name="use-underline">True</property>

@@ -45,6 +45,7 @@ class Interests(UserInterface):
         self.page_id = "interests"
         self.populated_recommends = False
 
+        # Columns
         self.likes = {}
         self.likes_model = Gtk.ListStore(str)
         self.likes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
@@ -105,15 +106,19 @@ class Interests(UserInterface):
         cols = initialise_columns(
             frame, None, self.RecommendationUsersList,
             ["status", _("Status"), 25, "icon", None],
-            ["user", _("User"), 100, "text", None],
-            ["speed", _("Speed"), 100, "text", None],
-            ["files", _("Files"), 100, "text", None],
+            ["user", _("User"), 135, "text", None],
+            ["speed", _("Speed"), 60, "number", None],
+            ["files", _("Files"), -1, "number", None],
         )
 
         cols["status"].set_sort_column_id(4)
         cols["user"].set_sort_column_id(1)
         cols["speed"].set_sort_column_id(5)
         cols["files"].set_sort_column_id(6)
+
+        cols["user"].set_expand(True)
+        cols["speed"].set_expand(True)
+        cols["files"].set_expand(True)
 
         cols["status"].get_widget().hide()
 
@@ -129,8 +134,7 @@ class Interests(UserInterface):
                 self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(
                     -1, self.dislikes_column_numbers, [thing])
 
-        """ Popup """
-
+        # Popup menus
         self.til_popup_menu = popup = PopupMenu(self.frame, self.LikesList, self.on_popup_til_menu)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item),
@@ -162,11 +166,18 @@ class Interests(UserInterface):
 
     def server_login(self):
 
+        self.RecommendationsButton.set_sensitive(True)
+        self.SimilarUsersButton.set_sensitive(True)
+
         if self.frame.current_page_id != self.page_id:
             # Only populate recommendations if the tab is open on login
             return
 
         self.populate_recommendations()
+
+    def server_disconnect(self):
+        self.RecommendationsButton.set_sensitive(False)
+        self.SimilarUsersButton.set_sensitive(False)
 
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """

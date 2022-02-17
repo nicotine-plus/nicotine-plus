@@ -22,7 +22,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.logfacility import log
 from pynicotine.utils import add_alias
 from pynicotine.utils import get_alias
@@ -30,7 +30,7 @@ from pynicotine.utils import is_alias
 from pynicotine.utils import unalias
 
 
-""" Text Entry/View-related """
+""" Text Entry-related """
 
 
 class ChatEntry:
@@ -48,8 +48,8 @@ class ChatEntry:
         self.is_chatroom = is_chatroom
 
         entry.connect("activate", self.on_enter)
-        setup_accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
-        setup_accelerator("Tab", entry, self.on_tab_complete_accelerator)
+        Accelerator("<Shift>Tab", entry, self.on_tab_complete_accelerator, True)
+        Accelerator("Tab", entry, self.on_tab_complete_accelerator)
 
         # Emoji Picker
         try:
@@ -284,21 +284,29 @@ class ChatCompletion:
 
         self.entry = None
         self.entry_changed_handler = None
+        self.entry_completion = None
         self.model = Gtk.ListStore(str)
-        self.completion = Gtk.EntryCompletion(model=self.model)
-        self.completion.set_text_column(0)
-        self.completion.set_match_func(self.entry_completion_find_match)
-        self.completion.connect("match-selected", self.entry_completion_found_match)
 
         self.column_numbers = list(range(self.model.get_n_columns()))
 
+    def create_entry_completion(self):
+
+        self.entry_completion = Gtk.EntryCompletion(model=self.model)
+        self.entry_completion.set_text_column(0)
+        self.entry_completion.set_match_func(self.entry_completion_find_match)
+        self.entry_completion.connect("match-selected", self.entry_completion_found_match)
+
     def set_entry(self, entry):
 
-        if self.entry_changed_handler:
+        if self.entry is not None:
+            self.entry.set_completion(None)
             self.entry.disconnect(self.entry_changed_handler)
 
+        # Reusing an existing GtkEntryCompletion object after unsetting it doesn't work well
+        self.create_entry_completion()
+        entry.set_completion(self.entry_completion)
+
         self.entry = entry
-        entry.set_completion(self.completion)
         self.entry_changed_handler = entry.connect("changed", self.on_entry_changed)
 
     def add_completion(self, item):
@@ -352,11 +360,14 @@ class ChatCompletion:
 
     def set_completion_list(self, completion_list):
 
+        if self.entry_completion is None:
+            return
+
         config_words = config.sections["words"]
 
-        self.completion.set_popup_single_match(not config_words["onematch"])
-        self.completion.set_minimum_key_length(config_words["characters"])
-        self.completion.set_inline_completion(False)
+        self.entry_completion.set_popup_single_match(not config_words["onematch"])
+        self.entry_completion.set_minimum_key_length(config_words["characters"])
+        self.entry_completion.set_inline_completion(False)
 
         self.model.clear()
         self.completion_iters.clear()
@@ -370,14 +381,14 @@ class ChatCompletion:
         self.completion_list = completion_list
 
         if not config_words["dropdown"]:
-            self.completion.set_popup_completion(False)
+            self.entry_completion.set_popup_completion(False)
             return
 
         for word in completion_list:
             word = str(word)
             self.completion_iters[word] = self.model.insert_with_valuesv(-1, self.column_numbers, [word])
 
-        self.completion.set_popup_completion(True)
+        self.entry_completion.set_popup_completion(True)
 
     def entry_completion_find_match(self, _completion, entry_text, iterator):
 
@@ -546,10 +557,10 @@ class TextSearchBar:
         if not controller_widget:
             controller_widget = textview
 
-        setup_accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
+        Accelerator("<Primary>f", controller_widget, self.on_show_search_accelerator)
 
         for widget in (controller_widget, entry):
-            setup_accelerator("Escape", widget, self.on_hide_search_accelerator)
+            Accelerator("Escape", widget, self.on_hide_search_accelerator)
 
     def on_search_match(self, search_type, restarted=False):
 

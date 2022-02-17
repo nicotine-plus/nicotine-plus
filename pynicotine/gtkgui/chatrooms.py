@@ -22,8 +22,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from collections import deque
 
 from gi.repository import Gio
@@ -55,6 +53,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
+from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
 from pynicotine.utils import get_path
 from pynicotine.utils import humanize
@@ -186,9 +185,6 @@ class ChatRooms(IconNotebook):
         else:
             self.frame.RoomSearchCombo.append_text(msg.room)
 
-        if self.get_n_pages() > 0:
-            self.frame.chatrooms_status_page.hide()
-
     def leave_room(self, msg):
 
         page = self.pages.get(msg.room)
@@ -207,9 +203,6 @@ class ChatRooms(IconNotebook):
 
             for room in self.pages:
                 self.frame.RoomSearchCombo.append_text(room)
-
-        if self.get_n_pages() == 0:
-            self.frame.chatrooms_status_page.show()
 
     def private_room_users(self, msg):
         pass
@@ -425,9 +418,9 @@ class ChatRoom(UserInterface):
             self.frame, ("chat_room", room), self.UserList,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
-            ["user", _("User"), 100, "text", attribute_columns],
+            ["user", _("User"), 155, "text", attribute_columns],
             ["speed", _("Speed"), 100, "number", None],
-            ["files", _("Files"), 100, "number", None]
+            ["files", _("Files"), -1, "number", None]
         )
 
         cols["status"].set_sort_column_id(5)
@@ -557,7 +550,7 @@ class ChatRoom(UserInterface):
         if not config.sections["logging"]["readroomlogs"]:
             return
 
-        filename = self.room.replace(os.sep, "-") + ".log"
+        filename = clean_file(self.room) + ".log"
         numlines = config.sections["logging"]["readroomlines"]
 
         try:
@@ -568,20 +561,18 @@ class ChatRoom(UserInterface):
 
     def append_log_lines(self, path, numlines):
 
-        try:
-            self._append_log_lines(path, numlines, "utf-8")
-
-        except UnicodeDecodeError:
-            self._append_log_lines(path, numlines, "latin-1")
-
-    def _append_log_lines(self, path, numlines, encoding="utf-8"):
-
-        with open(path, encoding=encoding) as lines:
+        with open(path, "rb") as lines:
             # Only show as many log lines as specified in config
             lines = deque(lines, numlines)
             login = config.sections["server"]["login"]
 
             for line in lines:
+                try:
+                    line = line.decode("utf-8")
+
+                except UnicodeDecodeError:
+                    line = line.decode("latin-1")
+
                 user = None
                 tag = None
                 usertag = None
@@ -665,24 +656,11 @@ class ChatRoom(UserInterface):
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])
 
-    def update_room_wall_tooltip(self, active):
-
-        if active:
-            self.ShowRoomWall.set_tooltip_text(_("Room wall (personal message set)"))
-            return
-
-        self.ShowRoomWall.set_tooltip_text(_("Room wall"))
-
     def ticker_set(self, msg):
 
         self.tickers.clear_tickers()
-        login_username = self.frame.np.login_username
-        has_own_ticker = False
 
         for user, message in msg.msgs:
-            if user == login_username:
-                has_own_ticker = True
-
             if self.frame.np.network_filter.is_user_ignored(user) or \
                     self.frame.np.network_filter.is_user_ip_ignored(user):
                 # User ignored, ignore Ticker messages
@@ -690,14 +668,9 @@ class ChatRoom(UserInterface):
 
             self.tickers.add_ticker(user, message)
 
-        self.update_room_wall_tooltip(has_own_ticker)
-
     def ticker_add(self, msg):
 
         user = msg.user
-
-        if user == self.frame.np.login_username:
-            self.update_room_wall_tooltip(True)
 
         if self.frame.np.network_filter.is_user_ignored(user) or self.frame.np.network_filter.is_user_ip_ignored(user):
             # User ignored, ignore Ticker messages
@@ -706,10 +679,6 @@ class ChatRoom(UserInterface):
         self.tickers.add_ticker(msg.user, msg.msg)
 
     def ticker_remove(self, msg):
-
-        if msg.user == self.frame.np.login_username:
-            self.update_room_wall_tooltip(False)
-
         self.tickers.remove_ticker(msg.user)
 
     def show_notification(self, login, user, text, tag):
@@ -728,7 +697,8 @@ class ChatRoom(UserInterface):
 
         self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
-        if self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active():
+        if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.Main)
+                and self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
@@ -786,7 +756,8 @@ class ChatRoom(UserInterface):
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line, timestamp_format)
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
@@ -993,15 +964,15 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite)
-        self.UserList.set_sensitive(False)
 
         for username in self.tag_users:
             self.update_user_tag(username)
 
     def rejoined(self, users):
 
-        # Update user list with an inexpensive sorting function
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        # Temporarily disable sorting for increased performance
+        sort_column, sort_type = self.usersmodel.get_sort_column_id()
+        self.usersmodel.set_default_sort_func(lambda *args: 0)
         self.usersmodel.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
         for userdata in users:
@@ -1012,11 +983,8 @@ class ChatRoom(UserInterface):
 
             self.add_user_row(userdata)
 
-        self.UserList.set_sensitive(True)
-
-        # Reinitialize sorting after loop is complet
-        self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
-        self.usersmodel.set_default_sort_func(lambda *args: -1)
+        if sort_column is not None and sort_type is not None:
+            self.usersmodel.set_sort_column_id(sort_column, sort_type)
 
         # Spit this line into chat log
         self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite)

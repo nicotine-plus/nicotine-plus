@@ -24,7 +24,6 @@ from gi.repository import GLib
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.utils import copy_all_text
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.theme import update_tag_visuals
 from pynicotine.utils import open_uri
@@ -159,14 +158,14 @@ class TextView:
 
         buf_x, buf_y = self.textview.window_to_buffer_coords(Gtk.TextWindowType.WIDGET,
                                                              self.pressed_x, self.pressed_y)
-        iterator_data = self.textview.get_iter_at_location(buf_x, buf_y)
+        iterator_data = self.textview.get_iter_at_position(buf_x, buf_y)
 
         try:
-            _over_text, iterator = iterator_data
+            _over_text, iterator, _trailing = iterator_data
 
-        except TypeError:
-            # Support older GTK 3 versions
-            iterator = iterator_data
+        except ValueError:
+            # GTK 3.18
+            iterator, _trailing = iterator_data
 
         return iterator.get_tags()
 
@@ -262,7 +261,12 @@ class TextView:
         copy_text(self.get_url_for_selected_pos())
 
     def on_copy_all_text(self, *_args):
-        copy_all_text(self.textview)
+
+        textbuffer = self.textview.get_buffer()
+        start, end = textbuffer.get_bounds()
+        text = textbuffer.get_text(start, end, True)
+
+        copy_text(text)
 
     def on_clear_all_text(self, *_args):
         self.clear()

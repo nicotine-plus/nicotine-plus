@@ -38,13 +38,12 @@ SETTINGS_PORTAL = None
 if "gi.repository.Adw" not in sys.modules:
     # GNOME 42+ system-wide dark mode for vanilla GTK (no libadwaita)
     try:
-        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(Gio.BusType.SESSION,
-                                                         Gio.DBusProxyFlags.NONE,
-                                                         None,
-                                                         "org.freedesktop.portal.Desktop",
-                                                         "/org/freedesktop/portal/desktop",
-                                                         "org.freedesktop.portal.Settings",
-                                                         None)
+        SETTINGS_PORTAL = Gio.DBusProxy.new_for_bus_sync(
+            Gio.BusType.SESSION, Gio.DBusProxyFlags.NONE, None,
+            "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop",
+            "org.freedesktop.portal.Settings", None
+        )
+
     except Exception:
         pass
 
@@ -54,14 +53,10 @@ GTK_SETTINGS = Gtk.Settings.get_default()
 def read_color_scheme():
 
     try:
-        value = SETTINGS_PORTAL.call_sync("Read",
-                                          GLib.Variant(
-                                              "(ss)",
-                                              ("org.freedesktop.appearance",
-                                               "color-scheme")),
-                                          Gio.DBusCallFlags.NONE,
-                                          -1,
-                                          None)
+        value = SETTINGS_PORTAL.call_sync(
+            "Read", GLib.Variant("(ss)", ("org.freedesktop.appearance", "color-scheme")),
+            Gio.DBusCallFlags.NONE, -1, None
+        )
 
         return value.get_child_value(0).get_variant().get_variant().get_uint32()
 
@@ -159,7 +154,8 @@ def set_global_css():
 
     /* Borders */
 
-    .border-top {
+    .border-top,
+    .preferences-border .dialog-action-box {
         border-top: 1px solid @borders;
     }
 
@@ -169,23 +165,16 @@ def set_global_css():
 
     .border-start:dir(ltr),
     .border-end:dir(rtl) {
-        border-left: 1px solid @borders;
+        /* Use box-shadow to avoid double window border in narrow flowbox */
+        box-shadow: -1px 0 0 0 @borders;
     }
 
     .border-end:dir(ltr),
     .border-start:dir(rtl) {
-        border-right: 1px solid @borders;
-    }
-
-    .preferences-border .dialog-action-box {
-        border-top: 1px solid @borders;
+        box-shadow: 1px 0 0 0 @borders;
     }
 
     /* Buttons */
-
-    .circular {
-        border-radius: 9999px;
-    }
 
     .count {
         padding-left: 10px;
@@ -382,6 +371,9 @@ def load_icons():
 """ Widget Fonts and Colors """
 
 
+COLOR_RGBA = Gdk.RGBA()
+
+
 def get_user_status_color(status):
 
     if status == 1:
@@ -398,11 +390,9 @@ def parse_color_string(color_string):
     """ Take a color string, e.g. BLUE, and return a HEX color code """
 
     if color_string:
-        color_rgba = Gdk.RGBA()
-
-        if color_rgba.parse(color_string):
+        if COLOR_RGBA.parse(color_string):
             color_hex = "#%02X%02X%02X" % (
-                round(color_rgba.red * 255), round(color_rgba.green * 255), round(color_rgba.blue * 255))
+                round(COLOR_RGBA.red * 255), round(COLOR_RGBA.green * 255), round(COLOR_RGBA.blue * 255))
             return color_hex
 
     return None

@@ -140,7 +140,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -163,6 +163,7 @@
                         <child>
                           <object class="GtkButton" id="RecommendationsButton">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="tooltip-text">Refresh list of recommendations</property>
                             <signal name="clicked" handler="on_recommendations_clicked"/>
                             <child>
@@ -200,11 +201,11 @@
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="border-end"/>
+                    </style>
                   </object>
                 </child>
-                <style>
-                  <class name="border-end"/>
-                </style>
               </object>
             </child>
             <child>
@@ -215,7 +216,7 @@
                   <object class="GtkBox" id="SimilarUsers">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
-                    <property name="width-request">280</property>
+                    <property name="width-request">320</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -238,6 +239,7 @@
                         <child>
                           <object class="GtkButton" id="SimilarUsersButton">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="tooltip-text">Show users with similar interests</property>
                             <signal name="clicked" handler="on_similar_users_clicked"/>
                             <child>
@@ -266,6 +268,7 @@
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="has-tooltip">True</property>
+                                <property name="search-column">1</property>
                                 <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_ru_row_activated"/>
                                 <child internal-child="selection">

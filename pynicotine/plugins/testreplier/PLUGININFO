@@ -1,4 +1,4 @@
 Version = "2021-04-16r00"
-Authors = ['Nicotine+ Team']
+Authors = ["Nicotine+"]
 Name = "Test Replier"
 Description = "Replies to messages 'test' in chatrooms with the message 'Test failed.' or a randomly selected custom message."

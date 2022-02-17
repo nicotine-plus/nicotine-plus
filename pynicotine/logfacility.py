@@ -82,7 +82,7 @@ class Logger:
         if config.sections["logging"].get("debug_file_output", False):
             folder = config.sections["logging"]["debuglogsdir"]
 
-            self.write_log(folder, self.file_name, msg, timestamp_format)
+            self.write_log(folder, self.file_name, msg, timestamp_format=timestamp_format)
 
         for callback in self.listeners:
             try:
@@ -154,19 +154,20 @@ class Logger:
         if msg_args:
             msg = msg % msg_args
 
-        self.write_log(folder, "transfers", msg, timestamp_format)
+        self.write_log(folder, "transfers", msg, timestamp_format=timestamp_format)
 
-    def write_log(self, logsdir, filename, msg, timestamp_format="%Y-%m-%d %H:%M:%S"):
+    def write_log(self, logsdir, filename, msg, timestamp=None, timestamp_format="%Y-%m-%d %H:%M:%S"):
 
         try:
-            filename = filename.replace(os.sep, "-") + ".log"
+            from pynicotine.utils import clean_file
+            filename = clean_file(filename) + ".log"
             oldumask = os.umask(0o077)
 
             if not os.path.exists(logsdir):
                 os.makedirs(logsdir)
 
             from pynicotine.utils import get_path
-            get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp_format, msg))
+            get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp, timestamp_format, msg))
 
         except Exception as error:
             self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s") %
@@ -175,12 +176,12 @@ class Logger:
     @staticmethod
     def write_log_callback(path, data):
 
-        oldumask, timestamp_format, msg = data
+        oldumask, timestamp, timestamp_format, msg = data
 
         with open(path, 'ab', 0) as logfile:
             os.umask(oldumask)
 
-            text = "%s %s\n" % (time.strftime(timestamp_format), msg)
+            text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)
             logfile.write(text.encode('utf-8', 'replace'))
 
 

@@ -31,7 +31,8 @@ from pkgutil import walk_packages
 import pynicotine.plugins
 
 from pynicotine.config import config
-from pynicotine.i18n import generate_translations
+from pynicotine.i18n import build_translations
+from pynicotine.i18n import get_translation_paths
 from stdlib_list import stdlib_list
 
 
@@ -47,7 +48,8 @@ hiddenimports = ["certifi"] + list(stdlib_list()) + \
 
 # GTK Builder files, plugins, geoip database, translations
 datas = [("../../pynicotine", "pynicotine")]
-mo_entries, languages = generate_translations()
+languages = build_translations()
+mo_entries = get_translation_paths()
 
 for target_path, mo_files in mo_entries:
     datas.append(("../../" + mo_files[0], target_path))

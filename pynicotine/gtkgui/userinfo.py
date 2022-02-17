@@ -66,9 +66,6 @@ class UserInfos(IconNotebook):
             self.append_page(page.Main, user, page.on_close, user=user)
             page.set_label(self.get_tab_label_inner(page.Main))
 
-            if self.get_n_pages() > 0:
-                self.frame.userinfo_status_page.hide()
-
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].Main))
             self.frame.change_main_page("userinfo")
@@ -123,9 +120,7 @@ class UserInfo(UserInterface):
 
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.descr_textview = TextView(self.descr)
-
         self.UserLabel.set_text(user)
-        self.descr_textview.append_line(_("No user description provided"), showstamp=False, scroll=False)
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
@@ -221,7 +216,6 @@ class UserInfo(UserInterface):
 
         if not data:
             self.picture_view.hide()
-            self.placeholder_picture.show()
             return
 
         try:
@@ -237,8 +231,8 @@ class UserInfo(UserInterface):
                 picture_height = self.picture_data.get_height()
 
                 allocation = self.placeholder_picture.get_allocation()
-                max_width = allocation.width - 24
-                max_height = allocation.height - 24
+                max_width = allocation.width - 72
+                max_height = allocation.height - 72
 
                 # Resize picture to fit container
                 ratio = min(max_width / picture_width, max_height / picture_height)
@@ -253,10 +247,7 @@ class UserInfo(UserInterface):
             gc.collect()
 
             self.actual_zoom = 0
-            self.SavePicture.set_sensitive(True)
-
             self.picture_view.show()
-            self.placeholder_picture.hide()
 
         except Exception as error:
             log.add(_("Failed to load picture for user %(user)s: %(error)s"), {
@@ -499,9 +490,6 @@ class UserInfo(UserInterface):
         del self.userinfos.pages[self.user]
         self.frame.np.userinfo.remove_user(self.user)
         self.userinfos.remove_page(self.Main)
-
-        if self.userinfos.get_n_pages() == 0:
-            self.frame.userinfo_status_page.show()
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

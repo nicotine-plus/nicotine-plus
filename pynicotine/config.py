@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.2.1.rc1"
+        self.version = "3.2.2.dev1"
         self.python_version = sys.version
         self.gtk_version = ""
 
@@ -72,6 +72,7 @@ class Config:
         self.issue_tracker_url = "https://github.com/nicotine-plus/nicotine-plus/issues"
         self.translations_url = "https://nicotine-plus.org/doc/TRANSLATIONS"
 
+        self.config_loaded = False
         self.parser = configparser.ConfigParser(strict=False, interpolation=None)
         self.sections = defaultdict(dict)
         self.defaults = {}
@@ -155,10 +156,10 @@ class Config:
         log_dir = os.path.join(self.data_dir, "logs")
         self.defaults = {
             "server": {
-                "server": ('server.slsknet.org', 2242),
-                "login": '',
-                "passw": '',
-                "interface": '',
+                "server": ("server.slsknet.org", 2242),
+                "login": "",
+                "passw": "",
+                "interface": "",
                 "ctcpmsgs": False,
                 "autosearch": [],
                 "autoreply": "",
@@ -177,7 +178,6 @@ class Config:
                 "private_chatrooms": False,
                 "command_aliases": {}
             },
-
             "transfers": {
                 "incompletedir": os.path.join(self.data_dir, 'incomplete'),
                 "downloaddir": os.path.join(self.data_dir, 'downloads'),
@@ -207,15 +207,11 @@ class Config:
                 "customgeoblock": "Sorry, your country is blocked",
                 "queuelimit": 10000,
                 "filelimit": 100,
-                "friendsonly": False,
                 "buddysharestrustedonly": False,
                 "friendsnolimits": False,
-                "enablebuddyshares": False,
-                "enabletransferbuttons": True,
                 "groupdownloads": "folder_grouping",
                 "groupuploads": "folder_grouping",
                 "geoblock": False,
-                "geopanic": False,
                 "geoblockcc": [""],
                 "remotedownloads": True,
                 "uploadallowed": 2,
@@ -237,12 +233,10 @@ class Config:
                 "downloadsexpanded": True,
                 "uploadsexpanded": True
             },
-
             "userinfo": {
                 "descr": "''",
                 "pic": ""
             },
-
             "words": {
                 "censored": [],
                 "autoreplaced": {
@@ -268,7 +262,6 @@ class Config:
                 "aliases": True,
                 "onematch": False
             },
-
             "logging": {
                 "debug": False,
                 "debugmodes": [],
@@ -290,27 +283,22 @@ class Config:
                 "readprivatelines": 15,
                 "rooms": []
             },
-
             "privatechat": {
                 "store": True,
                 "users": []
             },
-
             "columns": {
                 "file_search": {},
                 "download": {},
                 "upload": {},
                 "user_browse": {},
                 "buddy_list": {},
-                "chat_room": {},
-                "hideflags": False
+                "chat_room": {}
             },
-
             "searches": {
                 "expand_searches": True,
                 "group_searches": "folder_grouping",
                 "maxresults": 50,
-                "re_filter": False,
                 "enable_history": True,
                 "history": [],
                 "enablefilters": False,
@@ -328,7 +316,6 @@ class Config:
                 "remove_special_chars": True,
                 "private_search_results": True
             },
-
             "ui": {
                 "dark_mode": False,
                 "header_bar": True,
@@ -349,7 +336,6 @@ class Config:
                 "inputcolor": "",
                 "spellcheck": True,
                 "exitdialog": 1,
-                "notexists": True,
                 "tab_default": "",
                 "tab_hilite": "#497ec2",
                 "tab_changed": "#497ec2",
@@ -361,16 +347,8 @@ class Config:
                 "tabbrowse": "Top",
                 "tabsearch": "Top",
                 "tab_status_icons": True,
-                "labelmain": 0,
-                "labelrooms": 0,
-                "labelprivate": 0,
-                "labelinfo": 0,
-                "labelbrowse": 0,
-                "labelsearch": 0,
-                "decimalsep": ",",
                 "globalfont": "",
                 "chatfont": "",
-                "roomlistcollapsed": False,
                 "tabclosers": True,
                 "searchfont": "",
                 "listfont": "",
@@ -398,7 +376,6 @@ class Config:
                     "chatrooms",
                     "interests"
                 ],
-                "showaway": False,
                 "buddylistinchatrooms": "tab",
                 "trayicon": True,
                 "startup_hidden": False,
@@ -416,22 +393,16 @@ class Config:
                 "file_path_tooltips": True,
                 "reverse_file_paths": True
             },
-
             "private_rooms": {
                 "rooms": {}
             },
-
             "urls": {
-                "urlcatching": True,
-                "protocols": {},
-                "humanizeurls": True
+                "protocols": {}
             },
-
             "interests": {
                 "likes": [],
                 "dislikes": []
             },
-
             "players": {
                 "default": "",
                 "npothercommand": "",
@@ -439,11 +410,9 @@ class Config:
                 "npformatlist": [],
                 "npformat": ""
             },
-
             "notifications": {
                 "notification_window_title": True,
                 "notification_tab_colors": False,
-                "notification_tab_icons": True,
                 "notification_popup_sound": False,
                 "notification_popup_file": True,
                 "notification_popup_folder": True,
@@ -451,12 +420,10 @@ class Config:
                 "notification_popup_chatroom": False,
                 "notification_popup_chatroom_mention": True
             },
-
             "plugins": {
                 "enable": True,
                 "enabled": []
             },
-
             "statistics": {
                 "started_downloads": 0,
                 "completed_downloads": 0,
@@ -474,7 +441,11 @@ class Config:
                 "shownotification",
                 "shownotificationperfolder",
                 "prioritize",
-                "sharedownloaddir"
+                "sharedownloaddir",
+                "geopanic",
+                "enablebuddyshares",
+                "friendsonly",
+                "enabletransferbuttons"
             ),
             "server": (
                 "lastportstatuscheck",
@@ -502,7 +473,17 @@ class Config:
                 "chat_hidebuttons",
                 "tab_reorderable",
                 "private_search_results",
-                "private_shares"
+                "private_shares",
+                "labelmain",
+                "labelrooms",
+                "labelprivate",
+                "labelinfo",
+                "labelbrowse",
+                "labelsearch",
+                "notexists",
+                "roomlistcollapsed",
+                "showaway",
+                "decimalsep"
             ),
             "columns": (
                 "downloads",
@@ -524,13 +505,15 @@ class Config:
                 "upload_columns",
                 "upload_widths",
                 "filesearch_columns",
-                "filesearch_widths"
+                "filesearch_widths",
+                "hideflags"
             ),
             "searches": (
                 "distrib_timer",
                 "distrib_ignore",
                 "reopen_tabs",
-                "max_stored_results"
+                "max_stored_results",
+                "re_filter"
             ),
             "userinfo": (
                 "descrutf8"
@@ -549,6 +532,13 @@ class Config:
             "language": (
                 "language",
                 "setlanguage"
+            ),
+            "urls": (
+                "urlcatching",
+                "humanizeurls"
+            ),
+            "notifications": (
+                "notification_tab_icons"
             )
         }
 
@@ -591,6 +581,8 @@ class Config:
 
         except Exception:
             return
+
+        self.config_loaded = True
 
     def parse_config(self, filename):
         """ Parses the config file """
@@ -703,9 +695,9 @@ class Config:
                         self.sections[i][j] = default_val
 
                         log.add("Config error: Couldn't decode '%s' section '%s' value '%s', value has been reset", (
-                            (i[:120] + '..') if len(i) > 120 else i,
-                            (j[:120] + '..') if len(j) > 120 else j,
-                            (val[:120] + '..') if len(val) > 120 else val
+                            (i[:120] + '…') if len(i) > 120 else i,
+                            (j[:120] + '…') if len(j) > 120 else j,
+                            (val[:120] + '…') if len(val) > 120 else val
                         ))
 
         server = self.sections["server"]
@@ -731,6 +723,9 @@ class Config:
         self.parser.write(filename)
 
     def write_configuration(self):
+
+        if not self.config_loaded:
+            return
 
         # Write new config options to file
         for section, options in self.sections.items():

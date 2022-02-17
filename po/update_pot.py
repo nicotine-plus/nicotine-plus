@@ -24,11 +24,16 @@ import os
 def update_pot():
     """ Update .pot translation template """
 
+    # Desktop, Python and GtkBuilder files
     files = (sorted(glob.glob("data/**/*.in", recursive=True), key=os.path.abspath)
              + sorted(glob.glob("pynicotine/**/*.py", recursive=True), key=os.path.abspath)
              + sorted(glob.glob("pynicotine/**/*.ui", recursive=True), key=os.path.abspath))
 
     os.system("xgettext -o po/nicotine.pot " + " ".join(files))
+
+    # PLUGININFO files
+    files = sorted(glob.glob("pynicotine/plugins/**/PLUGININFO", recursive=True))
+    os.system("xgettext --join-existing -L Python -o po/nicotine.pot " + " ".join(files))
 
 
 if __name__ == '__main__':

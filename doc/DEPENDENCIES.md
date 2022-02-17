@@ -7,7 +7,7 @@
 - [python](https://www.python.org/) >= 3.5 for interpreter;
 - [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) >= 3.18 for using GObject introspection with Python 3;
 - [gir1.2-gtk-3.0](https://www.gtk.org/) >= 3.18 for GObject introspection bindings for GTK;
-- [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/en/latest/) for scanning shared files.
+- [gdbm](https://www.gnu.org.ua/software/gdbm/) or [semidbm](https://semidbm.readthedocs.io/) for scanning shared files.
 
 ### Recommended
 
@@ -18,11 +18,11 @@
 
 - [appstream](https://www.freedesktop.org/wiki/Distributions/AppStream/) for generating translations;
 - [gettext](https://www.gnu.org/software/gettext/) for generating translations;
-- [setuptools](https://setuptools.readthedocs.io/en/latest/) for packaging.
+- [setuptools](https://setuptools.readthedocs.io/) for packaging.
 
 ## Testing
 
-- [flake8](https://flake8.pycqa.org/en/latest/) for lint checks;
+- [flake8](https://flake8.pycqa.org/) for lint checks;
 - [pylint](https://www.pylint.org/) for lint checks;
 - [pygobject](https://pygobject.readthedocs.io/en/latest/getting_started.html) for integration tests;
 - [gir1.2-gtk-3.0](https://www.gtk.org/) for integration tests.

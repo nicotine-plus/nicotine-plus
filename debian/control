@@ -10,15 +10,15 @@ Build-Depends:
     dh-python,
     gettext,
     gir1.2-gtk-3.0 (>= 3.18),
-    lintian,
     python3 (>= 3.5),
     python3-gdbm,
     python3-gi (>= 3.18),
-    python3-setuptools,
-    xvfb
+    python3-pytest,
+    python3-pytest-xvfb,
+    python3-setuptools
 Vcs-Git: https://github.com/nicotine-plus/nicotine-plus.git
-Vcs-browser: https://github.com/nicotine-plus/nicotine-plus
-X-Python-Version: >= 3.5
+Vcs-Browser: https://github.com/nicotine-plus/nicotine-plus
+X-Python3-Version: >= 3.5
 Homepage: https://nicotine-plus.org
 Rules-Requires-Root: no
 

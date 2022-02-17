@@ -1,8 +1,14 @@
-nicotine (3.2.1-rc1) impish; urgency=medium
+nicotine (3.2.2-dev1) impish; urgency=medium
 
-  * Release candidate version 1.
+  * Development version.
 
- -- Mat <mail@mathias.is>  Sun, 19 Dec 2021 05:57:09 +0300
+ -- Mat <mail@mathias.is>  Sun, 13 Feb 2022 06:29:53 +0300
+
+nicotine (3.2.1-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Wed, 09 Feb 2022 21:01:58 +0300
 
 nicotine (3.2.0-1) impish; urgency=medium
 

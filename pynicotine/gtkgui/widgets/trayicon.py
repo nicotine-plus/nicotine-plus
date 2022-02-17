@@ -293,6 +293,7 @@ class TrayIcon:
                 tray_icon.connect("popup-menu", self.on_status_icon_popup)
 
             self.tray_icon = tray_icon
+            self.set_server_actions_sensitive(False)
 
         self.set_alternative_speed_limit(config.sections["transfers"]["usealtlimits"])
 

@@ -53,6 +53,7 @@
  - owczi
 
 ## Portuguese Brazilian
+ - b1llso (2022)
  - yyyyyyyan (2020)
  - Suicide|Solution (2006)
 
@@ -75,3 +76,6 @@
 
 ## Turkish
  - Oğuz Ersen (2021–2022)
+
+## Ukrainian
+ - uniss2209 (2022)

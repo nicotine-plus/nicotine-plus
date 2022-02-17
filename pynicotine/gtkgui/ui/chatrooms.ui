@@ -135,6 +135,7 @@
                         <child>
                           <object class="GtkMenuButton" id="ShowRoomWall">
                             <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Room wall</property>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -218,7 +219,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkScrolledWindow">
-                        <property name="width-request">350</property>
+                        <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
@@ -226,6 +227,7 @@
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <property name="has-tooltip">True</property>
+                            <property name="search-column">2</property>
                             <signal name="query-tooltip" handler="on_tooltip"/>
                             <signal name="row-activated" handler="on_row_activated"/>
                           </object>

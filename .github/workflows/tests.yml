@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.5, 3.6, 3.7, 3.8, 3.9, '3.10', pypy-3.6, pypy-3.7]
+        python: ['3.5', '3.6', '3.7', '3.8', '3.9', '3.10', 'pypy-3.6', 'pypy-3.7']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -76,7 +76,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        gtk: [3]
+        gtk: [3, 4]
     env:
       NICOTINE_GTK_VERSION: ${{ matrix.gtk }}
     steps:
@@ -89,7 +89,9 @@ jobs:
         run: defaults write NSGlobalDomain AppleLanguages "(en-US)"
 
       - name: Install dependencies
-        run: python3 packaging/macos/dependencies_core.py
+        run: |
+          brew update
+          python3 packaging/macos/dependencies_core.py
 
       - name: Flake8 linter
         run: python3 -m flake8

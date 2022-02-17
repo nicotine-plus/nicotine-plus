@@ -114,7 +114,7 @@ class Plugin(BasePlugin):
                 "User %s seems to have zero files but does have %s shared folders, the remote client could be wrong.",
                 (user, stats['dirs'])
             )
-            # ToDo: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request #
+            # TODO: Implement alternative fallback method (num_files | num_folders) from a Browse Shares request
 
         if stats['files'] == 0 and stats['dirs'] == 0:
             # SoulseekQt only sends the number of shared files/folders to the server once on startup (see Issue #1565)

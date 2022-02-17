@@ -42,7 +42,6 @@ from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
 from pynicotine.gtkgui.dialogs.statistics import Statistics
 from pynicotine.gtkgui.downloads import Downloads
 from pynicotine.gtkgui.interests import Interests
-from pynicotine.gtkgui.notifications import Notifications
 from pynicotine.gtkgui.privatechat import PrivateChats
 from pynicotine.gtkgui.search import Searches
 from pynicotine.gtkgui.uploads import Uploads
@@ -55,6 +54,7 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import message_dialog
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
@@ -69,6 +69,7 @@ from pynicotine.gtkgui.widgets.trayicon import TrayIcon
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_latest_version
+from pynicotine.utils import human_speed
 from pynicotine.utils import make_version
 from pynicotine.utils import open_file_path
 from pynicotine.utils import open_log
@@ -194,6 +195,16 @@ class NicotineFrame(UserInterface):
         set_global_style()
         self.update_visuals()
 
+        """ Connect """
+
+        connect_ready = network_processor.start(self, self.network_callback)
+
+        if not connect_ready:
+            self.connect_action.set_enabled(False)
+
+        elif config.sections["server"]["auto_connect_startup"]:
+            self.np.connect()
+
         """ Show Window """
 
         self.update_window_properties()
@@ -203,23 +214,9 @@ class NicotineFrame(UserInterface):
         if not start_hidden and not config.sections["ui"]["startup_hidden"]:
             self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
-        """ Connect """
-
-        # Disable a few elements until we're logged in (search field, download buttons etc.)
-        self.set_widget_online_status(False)
-
-        connect_ready = network_processor.start(self, self.network_callback)
-
         if not connect_ready:
-            self.connect_action.set_enabled(False)
-
             # Set up fast configure dialog
             self.on_fast_configure()
-
-        elif config.sections["server"]["auto_connect_startup"]:
-            self.np.connect()
-
-        self.update_completions()
 
     """ Window State """
 
@@ -371,10 +368,6 @@ class NicotineFrame(UserInterface):
         self.set_widget_online_status(False)
         self.tray_icon.set_connected(False)
 
-        # Reset transfer stats (speed, total files/users)
-        self.downloads.update_bandwidth()
-        self.uploads.update_bandwidth()
-
     def invalid_password_response(self, dialog, response_id, _data):
 
         if response_id == 2:
@@ -403,29 +396,19 @@ class NicotineFrame(UserInterface):
         self.disconnect_action.set_enabled(status)
         self.away_action.set_enabled(status)
         self.get_privileges_action.set_enabled(status)
+        self.tray_icon.set_server_actions_sensitive(status)
 
-        self.UserBrowseCombo.set_sensitive(status)
+        if not status:
+            return
 
         if self.current_page_id == self.userbrowse.page_id:
             GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
-        self.UserInfoCombo.set_sensitive(status)
-
         if self.current_page_id == self.userinfo.page_id:
             GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
-        self.SearchCombo.set_sensitive(status)
-
         if self.current_page_id == self.search.page_id:
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
-
-        self.interests.RecommendationsButton.set_sensitive(status)
-        self.interests.SimilarUsersButton.set_sensitive(status)
-
-        self.ChatroomsEntry.set_sensitive(status)
-        self.RoomList.set_sensitive(status)
-
-        self.tray_icon.set_server_actions_sensitive(status)
 
     """ Action Callbacks """
 
@@ -683,18 +666,18 @@ class NicotineFrame(UserInterface):
         self.application.add_action(self.connect_action)
         self.application.set_accels_for_action("app.connect", ["<Shift><Primary>c"])
 
-        self.disconnect_action = Gio.SimpleAction(name="disconnect")
+        self.disconnect_action = Gio.SimpleAction(name="disconnect", enabled=False)
         self.disconnect_action.connect("activate", self.on_disconnect)
         self.application.add_action(self.disconnect_action)
         self.application.set_accels_for_action("app.disconnect", ["<Shift><Primary>d"])
 
         state = config.sections["server"]["away"]
-        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state))
+        self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
         self.away_action.connect("change-state", self.on_away)
         self.MainWindow.add_action(self.away_action)
         self.application.set_accels_for_action("win.away", ["<Primary>h"])
 
-        self.get_privileges_action = Gio.SimpleAction(name="getprivileges")
+        self.get_privileges_action = Gio.SimpleAction(name="getprivileges", enabled=False)
         self.get_privileges_action.connect("activate", self.on_get_privileges)
         self.application.add_action(self.get_privileges_action)
 
@@ -1455,12 +1438,16 @@ class NicotineFrame(UserInterface):
 
     def on_get_shares(self, widget, *_args):
 
-        username = widget.get_text()
+        entry_text = widget.get_text()
 
-        if not username:
+        if not entry_text:
             return
 
-        self.np.userbrowse.browse_user(username)
+        if entry_text.startswith("slsk://"):
+            self.np.userbrowse.open_soulseek_url(entry_text)
+        else:
+            self.np.userbrowse.browse_user(entry_text)
+
         widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, _data):
@@ -1545,6 +1532,7 @@ class NicotineFrame(UserInterface):
             self.set_auto_away(False)
         else:
             self.set_user_status(_("Away"))
+            self.remove_away_timer()
 
         self.tray_icon.set_away(is_away)
         self.away_action.set_state(GLib.Variant("b", is_away))
@@ -1748,8 +1736,20 @@ class NicotineFrame(UserInterface):
     def set_user_status(self, status):
         self.UserStatus.set_text(status)
 
-    def set_current_connection_count(self, num_conns):
-        self.SocketStatus.set_text(repr(num_conns))
+    def set_connection_stats(self, msg):
+
+        total_conns = repr(msg.total_conns)
+
+        if self.SocketStatus.get_text() != total_conns:
+            self.SocketStatus.set_text(repr(msg.total_conns))
+
+        download_bandwidth = human_speed(msg.download_bandwidth)
+        self.download_status.set_text("%(speed)s (%(num)i)" % {'num': msg.download_conns, 'speed': download_bandwidth})
+        self.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
+
+        upload_bandwidth = human_speed(msg.upload_bandwidth)
+        self.upload_status.set_text("%(speed)s (%(num)i)" % {'num': msg.upload_conns, 'speed': upload_bandwidth})
+        self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
         self.scan_progress_indeterminate = True
@@ -1804,13 +1804,7 @@ class NicotineFrame(UserInterface):
 
         dialog.destroy()
         loop.quit()
-
-        try:
-            self.np.quit()
-        except Exception:
-            """ We attempt a clean shut down, but this may not be possible if
-            the program didn't initialize fully. Ignore any additional errors
-            in that case. """
+        self.np.quit()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
@@ -1943,7 +1937,6 @@ class NicotineFrame(UserInterface):
         # Save window state (window size, position, columns)
         self.save_window_state()
 
-        config.write_configuration()
         log.remove_listener(self.log_callback)
 
         # Terminate GtkApplication

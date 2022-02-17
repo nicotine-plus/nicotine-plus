@@ -3,6 +3,64 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.2.1 (February 10, 2022)
+---------------------------------
+
+Changes
+
+ * Optimized overall performance and stability related to Soulseek server and peer connections
+ * Optimized performance and improve robustness of the round robin queue system (thank you @toofar)
+ * Optimized scrolling performance and avoid FPS drops when scrolling large lists containing country flags
+ * Optimized parent row expansions when adding new search results and transfers into tree views
+ * Optimized loading performance of downloads/uploads history and avoid unnecessary saving of transfer lists
+ * Optimized loading performance and reduce memory usage of open chat tabs
+ * Optimized connection initialization performance when uploading to certain users
+ * Changed the chat log filename replacement character from - to _ in room names containing an illegal character
+ * Changed display of items in the Uploads transfer list to virtual folder paths instead of local folder paths
+ * Added display of local folder paths for local items in the File Properties dialog
+ * Added direct folder and file browsing with slsk:// URLs in the Browse Shares text entry
+ * Added new Ukrainian translation (thank you @uniss2209)
+ * Lots of updates to the translations (thanks to our [many contributors](https://nicotine-plus.org/TRANSLATORS) on [Weblate](https://hosted.weblate.org/engage/nicotine-plus))
+
+Corrections
+
+ * CRITICAL: Fixed a crash vulnerability when receiving a download request with a malformed file path (affects version 3.0.3 and later)
+ * IMPORTANT: Fixed an issue where uploads could become stuck in the transfer queue forever
+ * IMPORTANT: Fixed an issue where language translations were not automatically applied on Windows and macOS
+ * Fixed a regression where pausing a download doesn't actually pause it if translations are used
+ * Fixed an issue where downloads failed to start if the temporary incomplete filename is more than 255 characters
+ * Fixed an issue where paused downloads started downloading in a random order when resumed
+ * Fixed a regression where the bandwidth status indicator failed to update if the transfers tab was inactive
+ * Fixed broken scrollbar when changing active page in the Preferences dialog
+ * Fixed labels of UI elements in the Russian translation (thank you @SnIPeRSnIPeR)
+
+Issues closed on GitHub
+
+ * After using Clear on an uploaded item, it gets removed, but then returns ([#1745](https://github.com/nicotine-plus/nicotine-plus/issues/1745))
+ * Direct Connection Fails ([#1748](https://github.com/nicotine-plus/nicotine-plus/issues/1748))
+ * I cannot see my profile info and picture like I am able to on other user's profiles ([#1751](https://github.com/nicotine-plus/nicotine-plus/issues/1751))
+ * All file paths are reversed (e.g. /home/foo/Downloads -> /Downloads/foo/home/) ([#1759](https://github.com/nicotine-plus/nicotine-plus/issues/1759))
+ * Logs mention "privileged" users not "prioritized" users ([#1764](https://github.com/nicotine-plus/nicotine-plus/issues/1764))
+ * Add an option to print full paths relatively to their share ([#1775](https://github.com/nicotine-plus/nicotine-plus/issues/1775))
+ * Can't connect to soulseek network - specified ports unusable (Windows 11) ([#1778](https://github.com/nicotine-plus/nicotine-plus/issues/1778))
+ * Windows 11: \[3.1.1\] Just crashed on Win 11 insider ring ([#1777](https://github.com/nicotine-plus/nicotine-plus/issues/1777))
+ * \[3.2.0.dev1\] Unknown config option 'show_private_results' ([#1779](https://github.com/nicotine-plus/nicotine-plus/issues/1779))
+ * \[3.2.1.dev1\] Crash on adding user to buddy list ([#1792](https://github.com/nicotine-plus/nicotine-plus/issues/1792))
+ * Windows/macOS: Can't change language in app ([#1796](https://github.com/nicotine-plus/nicotine-plus/issues/1796))
+ * \[3.2.1.dev1\] Occasional crash ([#1798](https://github.com/nicotine-plus/nicotine-plus/issues/1798))
+ * \[3.2.1.dev1\] Country_Code related Critical Error since update to Mint 20.3 ([#1806](https://github.com/nicotine-plus/nicotine-plus/issues/1806))
+ * Increase network speed update time ([#1817](https://github.com/nicotine-plus/nicotine-plus/issues/1817))
+ * \[3.2.1.dev1\] GTK 4: Closing private chat tab can crash Nicotine+ ([#1821](https://github.com/nicotine-plus/nicotine-plus/issues/1821)
+ * When a filename is 255 characters long ([#1825](https://github.com/nicotine-plus/nicotine-plus/issues/1825))
+ * Excessive memory usage when browsing large shares ([#1826](https://github.com/nicotine-plus/nicotine-plus/issues/1826))
+ * Windows: Couldn't write to log file "/mu/.log" ([#1828](https://github.com/nicotine-plus/nicotine-plus/issues/1828))
+ * Windows: "String too long" crash on notification popup ([#1829](https://github.com/nicotine-plus/nicotine-plus/issues/1829))
+ * Windows: Spaces at the end of directories are trimmed when creating ([#1835](https://github.com/nicotine-plus/nicotine-plus/issues/1835))
+ * Connect to remote host? ([#1839](https://github.com/nicotine-plus/nicotine-plus/issues/1839))
+ * Error message appeard while trying to exit the client ([#1850](https://github.com/nicotine-plus/nicotine-plus/issues/1850))
+ * \[3.2.1.rc2\] Crash when resuming transfers ([#1853](https://github.com/nicotine-plus/nicotine-plus/issues/1853))
+ * Way to handle lots of small files on your upload queue ([#1865](https://github.com/nicotine-plus/nicotine-plus/issues/1865))
+
 Version 3.2.0 (December 18, 2021)
 ---------------------------------
 

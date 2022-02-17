@@ -17,12 +17,14 @@
             <property name="selection-mode">browse</property>
             <signal name="row-selected" handler="on_switch_page"/>
             <style>
-              <class name="border-end"/>
               <class name="navigation-sidebar"/>
               <class name="view"/>
             </style>
           </object>
         </child>
+        <style>
+          <class name="border-end"/>
+        </style>
       </object>
     </child>
     <child>
@@ -30,7 +32,7 @@
         <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="hscrollbar-policy">never</property>
-        <property name="width-request">380</property>
+        <property name="width-request">400</property>
         <child>
           <object class="GtkViewport" id="viewport">
             <property name="visible">True</property>

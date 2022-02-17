@@ -35,6 +35,7 @@ import webbrowser
 from pynicotine.config import config
 from pynicotine.logfacility import log
 
+FILE_SIZE_SUFFIXES = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 PUNCTUATION = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
                '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '–', '—', '‐', '’', '“', '”', '…']
 ILLEGALPATHCHARS = ['?', ':', '>', '<', '|', '*', '"']
@@ -98,8 +99,8 @@ def clean_path(path, absolute=False):
 
     path = ''.join([drive, path])
 
-    # Path can never end with a period on Windows machines
-    path = path.rstrip('.')
+    # Path can never end with a period or space on Windows machines
+    path = path.rstrip('. ')
 
     return path
 
@@ -193,7 +194,7 @@ def _handle_log(folder, filename, callback):
         if not os.path.isdir(folder):
             os.makedirs(folder)
 
-        filename = filename.replace(os.sep, "-") + ".log"
+        filename = clean_file(filename) + ".log"
         get_path(folder, filename, callback)
 
     except Exception as error:
@@ -393,47 +394,31 @@ def get_result_bitrate_length(filesize, attributes):
     return h_bitrate, bitrate, h_length, length
 
 
-size_suffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+def _human_speed_or_size(unit):
+
+    template = "%.3g %s"
+    try:
+        for suffix in FILE_SIZE_SUFFIXES:
+            if unit < 1024:
+                if unit > 999:
+                    template = "%.4g %s"
+
+                return template % (unit, suffix)
+
+            unit /= 1024
+
+    except TypeError:
+        pass
+
+    return unit
+
+
+def human_speed(speed):
+    return _human_speed_or_size(speed) + "/s"
 
 
 def human_size(filesize):
-    try:
-        step_unit = 1024.0
-
-        for i in size_suffixes:
-            if filesize < step_unit:
-                return "%3.1f %s" % (filesize, i)
-
-            filesize /= step_unit
-
-    except TypeError:
-        pass
-
-    return filesize
-
-
-speed_suffixes = ['B/s', 'KiB/s', 'MiB/s', 'GiB/s', 'TiB/s', 'PiB/s', 'EiB/s', 'ZiB/s', 'YiB/s']
-
-
-def human_speed(filesize):
-    try:
-        step_unit = 1024
-        template = "%3.1f %s"
-
-        for index, suffix in enumerate(speed_suffixes):
-            if filesize < step_unit:
-                if index <= 1:
-                    # Don't show decimals for KiB/s and B/s
-                    template = "%i %s"
-
-                return template % (filesize, suffix)
-
-            filesize /= step_unit
-
-    except TypeError:
-        pass
-
-    return filesize
+    return _human_speed_or_size(filesize)
 
 
 def humanize(number):

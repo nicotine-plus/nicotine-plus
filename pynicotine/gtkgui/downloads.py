@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
@@ -27,7 +27,7 @@ import os
 
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
-from pynicotine.gtkgui.utils import copy_file_url
+from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.utils import open_file_path
 
@@ -40,8 +40,7 @@ class Downloads(TransferList):
         self.path_label = _("Path")
         self.retry_label = _("_Resume")
         self.abort_label = _("P_ause")
-        self.aborted_status = _("Paused")
-        self.tray_template = _("Downloads: %(speed)s")
+        self.aborted_status = "Paused"
 
         TransferList.__init__(self, frame, transfer_type="download")
 
@@ -104,30 +103,27 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename)
+            url = self.frame.np.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            copy_text(url)
 
     def on_copy_dir_url(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            copy_file_url(transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = self.frame.np.userbrowse.get_soulseek_url(
+                transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            copy_text(url)
 
     def on_open_file_manager(self, *_args):
 
         downloaddir = config.sections["transfers"]["downloaddir"]
         incompletedir = config.sections["transfers"]["incompletedir"] or downloaddir
 
-        transfer = next(iter(self.selected_transfers), None)
-
-        if not transfer:
-            return
-
-        if transfer.status == "Finished":
-            if os.path.exists(transfer.path):
-                final_path = transfer.path
-            else:
-                final_path = downloaddir
+        for transfer in self.selected_transfers:
+            if transfer.status == "Finished":
+                final_path = transfer.path if os.path.exists(transfer.path) else downloaddir
+                break
         else:
             final_path = incompletedir
 
@@ -165,10 +161,10 @@ class Downloads(TransferList):
 
         for transfer in self.selected_transfers:
             user = transfer.user
-            folder = transfer.filename.rsplit('\\', 1)[0]
+            folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, folder=folder)
+                self.frame.np.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)

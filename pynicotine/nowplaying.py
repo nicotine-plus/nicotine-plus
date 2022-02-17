@@ -185,14 +185,10 @@ class NowPlaying:
         dbus_property = 'org.freedesktop.DBus.Properties'
 
         if not player:
-
-            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
-                                                Gio.DBusProxyFlags.NONE,
-                                                None,
-                                                'org.freedesktop.DBus',
-                                                '/org/freedesktop/DBus',
-                                                'org.freedesktop.DBus',
-                                                None)
+            dbus_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                'org.freedesktop.DBus', '/org/freedesktop/DBus', 'org.freedesktop.DBus', None
+            )
 
             names = dbus_proxy.ListNames()
             players = []
@@ -213,13 +209,10 @@ class NowPlaying:
                 log.add(_("Auto-detected MPRIS player: %s"), player)
 
         try:
-            dbus_proxy = Gio.DBusProxy.new_sync(self.bus,
-                                                Gio.DBusProxyFlags.NONE,
-                                                None,
-                                                dbus_mpris_service + player,
-                                                dbus_mpris_path,
-                                                dbus_property,
-                                                None)
+            dbus_proxy = Gio.DBusProxy.new_sync(
+                self.bus, Gio.DBusProxyFlags.NONE, None,
+                dbus_mpris_service + player, dbus_mpris_path, dbus_property, None
+            )
 
             metadata = dbus_proxy.Get('(ss)', dbus_mpris_player_service, 'Metadata')
 

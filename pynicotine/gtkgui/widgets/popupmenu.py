@@ -31,7 +31,7 @@ from gi.repository import Gtk
 from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.utils import setup_accelerator
+from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import entry_dialog
 
 
@@ -413,7 +413,7 @@ class PopupMenu:
             self.gesture_press = Gtk.GestureLongPress()
             parent.add_controller(self.gesture_press)
 
-            setup_accelerator("<Shift>F10", parent, self._callback_menu)
+            Accelerator("<Shift>F10", parent, self._callback_menu)
 
         else:
             self.gesture_click = Gtk.GestureMultiPress(widget=parent)

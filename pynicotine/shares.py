@@ -32,6 +32,7 @@ import time
 
 from pynicotine import slskmessages
 from pynicotine.logfacility import log
+from pynicotine.slskmessages import UINT_LIMIT
 from pynicotine.utils import PUNCTUATION
 from pynicotine.utils import rename_process
 
@@ -59,8 +60,6 @@ else:
         "option2": "semidbm"
     })
     sys.exit()
-
-UINT_LIMIT = 4294967295
 
 
 class Scanner:
