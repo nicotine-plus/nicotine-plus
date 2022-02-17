@@ -823,7 +823,10 @@ class Search(UserInterface):
                 adjust = factor / 8 if factor > 1024 and sdigit < 104857600 else factor  # TODO: GiB
 
                 if (sdigit - adjust) <= value <= (sdigit + adjust):
-                    return True if used_operator == "==" else False
+                    if used_operator == "!=":
+                        return False
+
+                    return True
 
                 if used_operator == "!=":
                     allowed = True
