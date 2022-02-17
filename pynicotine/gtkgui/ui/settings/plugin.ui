@@ -82,6 +82,7 @@
                             <child>
                               <object class="GtkButton" id="PluginFolder">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Add Plugins</property>
                                 <signal name="clicked" handler="on_add_plugins"/>
                                 <child>
                                   <object class="GtkBox">
@@ -96,6 +97,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">_Add Plugins</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -116,7 +118,7 @@
                                   <object class="GtkButton" id="PluginProperties">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
-                                    <property name="valign">center</property>
+                                    <property name="tooltip-text" translatable="yes">Settings</property>
                                     <signal name="clicked" handler="on_plugin_properties"/>
                                     <child>
                                       <object class="GtkBox">
@@ -131,6 +133,7 @@
                                         <child>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
+                                            <property name="ellipsize">end</property>
                                             <property name="label" translatable="yes">_Settings</property>
                                             <property name="use-underline">True</property>
                                           </object>

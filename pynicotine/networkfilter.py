@@ -154,7 +154,7 @@ class NetworkFilter:
         """ Check if this user is banned, geoip-blocked, and which shares
         it is allowed to access based on transfer and shares settings. """
 
-        if self.is_user_banned(user):
+        if self.is_user_banned(user) or (ip_address is not None and self.is_ip_blocked(ip_address)):
             if self.config.sections["transfers"]["usecustomban"]:
                 return 0, "Banned (%s)" % self.config.sections["transfers"]["customban"]
 

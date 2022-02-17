@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sys import maxsize
-from time import time
 
 from gi.repository import Gio
 from gi.repository import GLib
@@ -135,7 +134,7 @@ class TransferList(UserInterface):
             ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
             ["status", _("Status"), 140, "text", None],
-            ["queue_position", _("Queue Position"), 75, "number", None],
+            ["queue_position", _("Queue"), 75, "number", None],
             ["percent", _("Percent"), 70, "progress", None],
             ["size", _("Size"), 170, "number", None],
             ["speed", _("Speed"), 90, "number", None],
@@ -295,10 +294,6 @@ class TransferList(UserInterface):
 
     def update(self, transfer=None, forceupdate=False):
 
-        current_time = time()
-        last_ui_update = self.last_ui_update
-        finished = (transfer is not None and transfer.status == "Finished")
-
         if not forceupdate and self.frame.current_page_id != self.page_id:
             # No need to do unnecessary work if transfers are not visible
             return
@@ -310,25 +305,35 @@ class TransferList(UserInterface):
             for transfer_i in reversed(self.transfer_list):
                 self.update_specific(transfer_i)
 
-        if forceupdate or finished or (current_time - last_ui_update) > 1:
-            # Unless a transfer finishes, use a cooldown to avoid updating too often
-            self.update_parent_rows()
+        self.update_parent_rows(transfer)
 
-    def update_parent_rows(self, only_remove=False):
+    def update_parent_rows(self, transfer=None):
 
         if self.tree_users != "ungrouped":
-            for path, pathiter in list(self.paths.items()):
-                self.update_parent_row(pathiter, path, only_remove=only_remove, folder=True)
+            if transfer is not None:
+                username = transfer.user
+                path = transfer.path if self.type == "download" else transfer.filename.rsplit('\\', 1)[0]
+                user_path = username + path
 
-            for username, useriter in list(self.users.items()):
-                self.update_parent_row(useriter, username, only_remove=only_remove)
+                user_path_iter = self.paths.get(user_path)
+                user_iter = self.users.get(username)
+
+                if user_path_iter:
+                    self.update_parent_row(user_path_iter, user_path, folder=True)
+
+                if user_iter:
+                    self.update_parent_row(user_iter, username)
+
+            else:
+                for user_path, user_path_iter in list(self.paths.items()):
+                    self.update_parent_row(user_path_iter, user_path, folder=True)
+
+                for username, user_iter in list(self.users.items()):
+                    self.update_parent_row(user_iter, username)
 
         # Show tab description if necessary
         self.status_page.set_visible(not self.transfer_list)
         self.Main.set_visible(self.transfer_list)
-
-        self.update_num_users_files()
-        self.last_ui_update = time()
 
     @staticmethod
     def get_hqueue_position(queue_position):
@@ -364,7 +369,7 @@ class TransferList(UserInterface):
 
         return size
 
-    def update_parent_row(self, initer, key, only_remove=False, folder=False):
+    def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
         percent = totalsize = position = 0
@@ -378,9 +383,6 @@ class TransferList(UserInterface):
             dictionary = self.paths if folder else self.users
             self.transfersmodel.remove(initer)
             del dictionary[key]
-            return
-
-        if only_remove:
             return
 
         while iterator is not None:
@@ -606,6 +608,7 @@ class TransferList(UserInterface):
             )
         )
         transfer.iterator = iterator
+        self.update_num_users_files()
 
         if expand_user:
             self.Transfers.expand_row(self.transfersmodel.get_path(self.users[user]), False)
@@ -628,9 +631,12 @@ class TransferList(UserInterface):
                     self.update(transfer)
 
             if clear:
-                self.remove_specific(transfer)
+                self.remove_specific(transfer, update_parent_row=False)
 
-    def remove_specific(self, transfer, cleartreeviewonly=False):
+        self.update_parent_rows()
+        self.update_num_users_files()
+
+    def remove_specific(self, transfer, cleartreeviewonly=False, update_parent_row=True):
 
         user = transfer.user
 
@@ -650,7 +656,9 @@ class TransferList(UserInterface):
         if transfer.iterator is not None:
             self.transfersmodel.remove(transfer.iterator)
 
-        self.update_parent_rows(only_remove=True)
+        if update_parent_row:
+            self.update_parent_rows(transfer)
+            self.update_num_users_files()
 
     def clear_transfers(self, status):
 
@@ -820,11 +828,14 @@ class TransferList(UserInterface):
     def on_file_properties(self, *_args):
 
         data = []
+        selected_size = 0
 
         for transfer in self.selected_transfers:
             fullname = transfer.filename
             filename = fullname.split("\\")[-1]
             directory = fullname.rsplit("\\", 1)[0]
+            file_size = transfer.size
+            selected_size += file_size
 
             data.append({
                 "user": transfer.user,
@@ -834,13 +845,13 @@ class TransferList(UserInterface):
                 "path": transfer.path,
                 "queue_position": transfer.queue_position,
                 "speed": transfer.speed,
-                "size": transfer.size,
+                "size": file_size,
                 "bitrate": transfer.bitrate,
                 "length": transfer.length
             })
 
         if data:
-            FileProperties(self.frame, data, download_button=False).show()
+            FileProperties(self.frame, data, total_size=selected_size, download_button=False).show()
 
     def on_copy_file_path(self, *_args):
 

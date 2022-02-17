@@ -191,7 +191,7 @@ class NicotineCore:
             slskmessages.Recommendations: self.recommendations,
             slskmessages.ItemRecommendations: self.item_recommendations,
             slskmessages.SimilarUsers: self.similar_users,
-            slskmessages.ItemSimilarUsers: self.similar_users,
+            slskmessages.ItemSimilarUsers: self.item_similar_users,
             slskmessages.UserInterests: self.user_interests,
             slskmessages.RoomTickerState: self.room_ticker_state,
             slskmessages.RoomTickerAdd: self.room_ticker_add,
@@ -219,16 +219,16 @@ class NicotineCore:
 
     def start(self, ui_callback=None, network_callback=None):
 
-        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
-        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
-        log.add_debug("Using Python executable: %s", str(sys.executable))
-
         self.ui_callback = ui_callback
         self.network_callback = network_callback if network_callback else self.network_event
-
         script_dir = os.path.dirname(__file__)
-        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
 
+        log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
+        log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
+        log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
+        log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
+
+        self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
         self.notifications = Notifications(config, ui_callback)
         self.network_filter = NetworkFilter(self, config, self.queue, self.geoip)
         self.now_playing = NowPlaying(config)
@@ -250,7 +250,7 @@ class NicotineCore:
         port_range = config.sections["server"]["portrange"]
         interface = config.sections["server"]["interface"]
         self.protothread = slskproto.SlskProtoThread(
-            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self.network_filter, self)
+            self.network_callback, self.queue, self.bindip, interface, self.port, port_range, self)
         self.upnp = UPnP(self, config)
         self.pluginhandler = PluginHandler(self, config)
 
@@ -815,7 +815,7 @@ class NicotineCore:
         self.search.set_wishlist_interval(msg)
 
     def similar_users(self, msg):
-        """ Server code: 110 and 112 """
+        """ Server code: 110 """
 
         log.add_msg_contents(msg)
         self.interests.similar_users(msg)
@@ -825,6 +825,12 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.interests.item_recommendations(msg)
+
+    def item_similar_users(self, msg):
+        """ Server code: 112 """
+
+        log.add_msg_contents(msg)
+        self.interests.item_similar_users(msg)
 
     def room_ticker_state(self, msg):
         """ Server code: 113 """

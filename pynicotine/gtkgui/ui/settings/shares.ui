@@ -99,6 +99,7 @@
                     <child>
                       <object class="GtkButton" id="addSharesButton">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Add…</property>
                         <signal name="clicked" handler="on_add_shared_dir"/>
                         <child>
                           <object class="GtkBox">
@@ -113,6 +114,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">True</property>
                               </object>
@@ -127,6 +129,7 @@
                     <child>
                       <object class="GtkButton" id="renameVirtualsButton">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Edit…</property>
                         <signal name="clicked" handler="on_edit_shared_dir"/>
                         <child>
                           <object class="GtkBox">
@@ -141,6 +144,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">True</property>
                               </object>
@@ -155,6 +159,7 @@
                     <child>
                       <object class="GtkButton" id="removeSharesButton">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Remove</property>
                         <signal name="clicked" handler="on_remove_shared_dir"/>
                         <child>
                           <object class="GtkBox">
@@ -169,6 +174,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="use-underline">True</property>
                               </object>

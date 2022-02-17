@@ -411,7 +411,7 @@ class SlskProtoThread(threading.Thread):
     IN_PROGRESS_STALE_AFTER = 2
     CONNECTION_MAX_IDLE = 60
 
-    def __init__(self, core_callback, queue, bindip, interface, port, port_range, network_filter, eventprocessor):
+    def __init__(self, core_callback, queue, bindip, interface, port, port_range, eventprocessor):
         """ core_callback is a NicotineCore callback function to be called with messages
         list as a parameter. queue is deque object that holds network messages from
         NicotineCore. """
@@ -434,7 +434,6 @@ class SlskProtoThread(threading.Thread):
         self.listenport = None
         self.portrange = (port, port) if port else port_range
         self.interface = interface
-        self._network_filter = network_filter
         self._eventprocessor = eventprocessor
 
         self.serverclasses = {}
@@ -2109,24 +2108,16 @@ class SlskProtoThread(threading.Thread):
                 except Exception:
                     time.sleep(0.01)
                 else:
-                    if self._network_filter.is_ip_blocked(incaddr[0]):
-                        log.add_conn("Ignoring connection request from blocked IP address %(ip)s:%(port)s", {
-                            'ip': incaddr[0],
-                            'port': incaddr[1]
-                        })
-                        incsock.close()
+                    events = selectors.EVENT_READ
+                    incsock.setblocking(0)
 
-                    else:
-                        events = selectors.EVENT_READ
-                        incsock.setblocking(0)
+                    self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
+                    self._numsockets += 1
+                    log.add_conn("Incoming connection from %s", str(incaddr))
 
-                        self._conns[incsock] = PeerConnection(sock=incsock, addr=incaddr, events=events)
-                        self._numsockets += 1
-                        log.add_conn("Incoming connection from %s", str(incaddr))
-
-                        # Event flags are modified to include 'write' in subsequent loops, if necessary.
-                        # Don't do it here, otherwise connections may break.
-                        self.selector.register(incsock, events)
+                    # Event flags are modified to include 'write' in subsequent loops, if necessary.
+                    # Don't do it here, otherwise connections may break.
+                    self.selector.register(incsock, events)
 
             # Manage outgoing connections in progress
             for sock_in_progress in self._connsinprogress.copy():
@@ -2198,14 +2189,6 @@ class SlskProtoThread(threading.Thread):
                             if self.listenport is not None:
                                 self._queue.append(SetWaitPort(self.listenport))
                         else:
-                            if self._network_filter.is_ip_blocked(addr[0]):
-                                log.add_conn("Ignoring connection request from blocked IP address %(ip)s:%(port)s", {
-                                    "ip": addr[0],
-                                    "port": addr[1]
-                                })
-                                self.close_connection(self._connsinprogress, sock_in_progress)
-                                continue
-
                             self.establish_outgoing_connection(sock_in_progress, addr, events, conn_obj.init)
 
                         del self._connsinprogress[sock_in_progress]

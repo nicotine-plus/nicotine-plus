@@ -538,7 +538,7 @@ class SharesFrame(UserInterface):
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
+            ["virtual_folder", _("Virtual Folder"), 165, "text", None],
             ["folder", _("Folder"), -1, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
         )
