@@ -823,7 +823,7 @@ class Search(UserInterface):
                         try:
                             # Convert string from HH:MM:SS or MM:SS into Seconds as integer
                             sdigit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(sdigit.split(":"))))
-                        except ValueError as error:
+                        except ValueError:
                             continue
 
             if not isinstance(sdigit, int):
@@ -839,6 +839,7 @@ class Search(UserInterface):
 
                     return True
 
+                allowed = used_operator == "!="
                 continue
 
             operation = self.operators.get(used_operator)
