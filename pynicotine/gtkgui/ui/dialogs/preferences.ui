@@ -32,7 +32,7 @@
         <property name="visible">True</property>
         <property name="hexpand">True</property>
         <property name="hscrollbar-policy">never</property>
-        <property name="width-request">380</property>
+        <property name="width-request">400</property>
         <child>
           <object class="GtkViewport" id="viewport">
             <property name="visible">True</property>
