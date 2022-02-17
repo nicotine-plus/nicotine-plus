@@ -765,49 +765,91 @@ class Search(UserInterface):
 
         return iterator
 
-    def check_digit(self, sfilter, value, factorize=True):
+    @staticmethod
+    def factorize(filesize, base=1024):
+        """ Converts filesize string with a given unit into raw integer size,
+            defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
 
-        used_operator = ">="
-        if sfilter.startswith((">", "<", "=")):
-            used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
+        if not filesize:
+            return None, None
 
-        if not sfilter:
-            return True
+        if filesize[-1:].lower() == 'b':
+            base = 1000  # Byte suffix detected, prepare to use decimal if necessary
+            filesize = filesize[:-1]
 
-        factor = 1
-        if factorize:
-            base = 1024  # Default to binary for "k", "m", "g" suffixes
+        if filesize[-1:].lower() == 'i':
+            base = 1024  # Binary requested, stop using decimal
+            filesize = filesize[:-1]
 
-            if sfilter[-1:].lower() == 'b':
-                base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-                sfilter = sfilter[:-1]
+        if filesize.lower()[-1:] == "g":
+            factor = pow(base, 3)
+            filesize = filesize[:-1]
 
-            if sfilter[-1:].lower() == 'i':
-                base = 1024  # Binary requested, stop using decimal
-                sfilter = sfilter[:-1]
+        elif filesize.lower()[-1:] == "m":
+            factor = pow(base, 2)
+            filesize = filesize[:-1]
 
-            if sfilter.lower()[-1:] == "g":
-                factor = pow(base, 3)
-                sfilter = sfilter[:-1]
+        elif filesize.lower()[-1:] == "k":
+            factor = base
+            filesize = filesize[:-1]
 
-            elif sfilter.lower()[-1:] == "m":
-                factor = pow(base, 2)
-                sfilter = sfilter[:-1]
-
-            elif sfilter.lower()[-1:] == "k":
-                factor = base
-                sfilter = sfilter[:-1]
-
-        if not sfilter:
-            return True
+        else:
+            factor = 1
 
         try:
-            sfilter = int(sfilter) * factor
+            return int(float(filesize) * factor), factor
         except ValueError:
-            return True
+            return None, factor
 
-        operation = self.operators.get(used_operator)
-        return operation(value, sfilter)
+    def check_digit(self, sfilter, value, factorize=True):
+
+        allowed = blocked = False
+
+        for condition in sfilter.split("|"):
+
+            if condition.strip().startswith((">", "<", "=", "!")):
+                used_operator, sdigit = condition[:1] + "=", condition[1:]
+            else:
+                used_operator, sdigit = ">=", condition
+
+            if sdigit and factorize:
+                sdigit, factor = self.factorize(sdigit)  # File Size
+            elif sdigit:
+                try:
+                    factor = 1
+                    sdigit = int(sdigit)  # Bitrate (or raw size, or seconds)
+                except ValueError:
+                    if ":" in sdigit:  # Length
+                        try:
+                            # Convert string from HH:MM:SS or MM:SS into Seconds as integer
+                            sdigit = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(sdigit.split(":"))))
+                        except ValueError as error:
+                            continue
+
+            if not isinstance(sdigit, int):
+                continue
+
+            if factor > 1 and used_operator in ("==", "!="):
+                # Exact match is unlikely, so approximate within +/- 0.1 MiB or 1 MiB if over 100 MiB
+                adjust = factor / 8 if factor > 1024 and sdigit < 104857600 else factor  # TODO: GiB
+
+                if (sdigit - adjust) <= value <= (sdigit + adjust):
+                    if used_operator == "!=":
+                        return False
+
+                    return True
+
+                continue
+
+            operation = self.operators.get(used_operator)
+
+            if operation(value, sdigit) and not blocked:
+                allowed = True
+                continue
+
+            blocked = True
+
+        return False if blocked else allowed
 
     @staticmethod
     def check_country(sfilter, value):
@@ -862,70 +904,6 @@ class Search(UserInterface):
 
         return allowed
 
-    @staticmethod
-    def check_length(sfilter, value):
-
-        matched = ditched = False
-        minimum, maximum = 0, 99999999
-
-        for condition in sfilter.split("|"):
-
-            if condition.startswith((">", "<", "=", "!")):
-                used_operator, slength = condition[:1] + "=", condition[1:].rstrip()
-            else:
-                used_operator, slength = ">=", condition.rstrip()  # default
-
-            if not slength:
-                continue
-
-            if not isinstance(slength, int):
-                try:
-                    slength = int(slength)  # Round to nearest Second to match value
-                except ValueError:
-                    # Convert string from HH:MM:SS or MM:SS into Seconds as integer
-                    if ":" in slength:
-                        try:
-                            slength = sum(x * int(t) for x, t in zip([1, 60, 3600], reversed(slength.split(":"))))
-                        except ValueError:
-                            continue
-                    else:
-                        continue
-
-            if used_operator == "==":
-                if value == slength:
-                    return True  # matched = True  # = explicitly specified
-
-            elif used_operator == ">=":
-                if slength > minimum:
-                    minimum = slength
-
-                if value >= minimum:
-                    matched = True
-                elif value < minimum:
-                    ditched = True
-
-            elif used_operator == "<=":
-                if slength < maximum:
-                    maximum = slength
-
-                if value <= maximum:
-                    matched = True
-                elif value > maximum:
-                    ditched = True
-
-            elif used_operator == "!=":
-                if value != slength and not ditched:
-                    matched = True
-                elif value == slength:
-                    return False  # ditched = True  # ! explicitly unwanted
-
-        # Check the set against final range, as applicable
-        if matched and (value >= minimum) and (value <= maximum):
-            return True
-
-        if ditched or ((value < minimum) or (value > maximum)):
-            return False
-
     def check_filter(self, row):
 
         if self.active_filter_count == 0:
@@ -956,7 +934,7 @@ class Search(UserInterface):
         if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
             return False
 
-        if filters["filterlength"] and not self.check_length(filters["filterlength"], row[16].get_uint64()):
+        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_uint64(), False):
             return False
 
         return True
