@@ -290,7 +290,12 @@ class Interests(UserInterface):
     def on_similar_users_clicked(self, *_args):
         self.frame.np.interests.request_similar_users()
 
-    def set_recommendations(self, recommendations):
+    def set_recommendations(self, recommendations, item=None):
+
+        if item:
+            self.RecommendationsLabel.set_label(_("Recommendations (%s)") % item)
+        else:
+            self.RecommendationsLabel.set_label(_("Recommendations"))
 
         self.recommendations_model.clear()
 
@@ -306,14 +311,19 @@ class Interests(UserInterface):
         self.set_recommendations(msg.recommendations + msg.unrecommendations)
 
     def item_recommendations(self, msg):
-        self.set_recommendations(msg.recommendations + msg.unrecommendations)
+        self.set_recommendations(msg.recommendations + msg.unrecommendations, msg.thing)
 
-    def similar_users(self, msg):
+    def set_similar_users(self, users, item=None):
+
+        if item:
+            self.SimilarUsersLabel.set_label(_("Similar Users (%s)") % item)
+        else:
+            self.SimilarUsersLabel.set_label(_("Similar Users"))
 
         self.recommendation_users_model.clear()
         self.recommendation_users = {}
 
-        for user in msg.users:
+        for user in users:
             iterator = self.recommendation_users_model.insert_with_valuesv(
                 -1, self.recommendation_users_column_numbers,
                 [get_status_icon(0), user, "", "0", 0, 0, 0]
@@ -322,6 +332,12 @@ class Interests(UserInterface):
 
             # Request user status, speed and number of shared files
             self.frame.np.watch_user(user, force_update=True)
+
+    def similar_users(self, msg):
+        self.set_similar_users(msg.users)
+
+    def item_similar_users(self, msg):
+        self.set_similar_users(msg.users, msg.thing)
 
     def get_user_status(self, msg):
 
@@ -374,6 +390,14 @@ class Interests(UserInterface):
         menu.actions[_("I _Dislike This")].set_state(
             GLib.Variant("b", item in config.sections["interests"]["dislikes"])
         )
+
+    def on_r_row_activated(self, treeview, _path, _column):
+
+        item = self.get_selected_item(treeview, column=1)
+
+        if item is not None:
+            self.frame.np.interests.request_item_recommendations(item)
+            self.frame.np.interests.request_item_similar_users(item)
 
     def on_popup_ru_menu(self, menu, widget):
 
