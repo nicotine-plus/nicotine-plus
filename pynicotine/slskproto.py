@@ -1300,7 +1300,7 @@ class SlskProtoThread(threading.Thread):
                             self.connect_to_peer(msg.user, addr, init)
 
                         # We already store a local IP address for our username
-                        if msg.user != self.server_username:
+                        if msg.user != self.server_username and msg.port != 0:
                             self.user_addresses[msg.user] = addr
 
                     elif msg_class is Relogged:
