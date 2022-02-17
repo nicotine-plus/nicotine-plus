@@ -1023,30 +1023,30 @@ class UserBrowse(UserInterface):
         open_file_path(file_path=self.core.shares.virtual2real(self.selected_folder),
                        command=config.sections["ui"]["filemanager"])
 
-    def on_file_properties(self, _action, _state, folder=False):
+    def on_file_properties(self, _action, _state, all_files=False):
 
         data = []
+        folder = self.selected_folder
         selected_size = 0
         selected_length = 0
 
-        if folder:
-            for file_data in self.shares[self.selected_folder]:
+        if all_files:
+            files = self.shares.get(folder)
+
+            if not files:
+                return
+
+            for file_data in files:
                 filename = file_data[1]
                 file_size = file_data[2]
-                virtual_path = "\\".join([self.selected_folder, filename])
+                virtual_path = "\\".join([folder, filename])
                 h_bitrate, _bitrate, h_length, length = get_result_bitrate_length(file_size, file_data[4])
                 selected_size += file_size
                 selected_length += length
 
-                data.append({
-                    "user": self.user,
-                    "fn": virtual_path,
-                    "filename": filename,
-                    "directory": self.selected_folder,
-                    "size": file_size,
-                    "bitrate": h_bitrate,
-                    "length": h_length
-                })
+                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
+                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
+
         else:
             model, paths = self.file_list_view.get_selection().get_selected_rows()
 
@@ -1054,19 +1054,13 @@ class UserBrowse(UserInterface):
                 iterator = model.get_iter(path)
                 filename = model.get_value(iterator, 0)
                 file_size = model.get_value(iterator, 4)
-                virtual_path = "\\".join([self.selected_folder, filename])
+                virtual_path = "\\".join([folder, filename])
                 selected_size += file_size
                 selected_length += model.get_value(iterator, 6)
 
-                data.append({
-                    "user": self.user,
-                    "fn": virtual_path,
-                    "filename": filename,
-                    "directory": self.selected_folder,
-                    "size": file_size,
-                    "bitrate": model.get_value(iterator, 2),
-                    "length": model.get_value(iterator, 3)
-                })
+                data.append({"user": self.user, "fn": virtual_path, "filename": filename,
+                             "directory": folder, "size": file_size, "bitrate": model.get_value(iterator, 2),
+                             "length": model.get_value(iterator, 3)})
 
         if data:
             FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
