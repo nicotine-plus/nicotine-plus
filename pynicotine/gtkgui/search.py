@@ -760,57 +760,67 @@ class Search(UserInterface):
 
         return iterator
 
+    def factorize(self, string, base=1024):
+        """ Convert a string with a given size unit into raw size as integer,
+            defaults to binary for "k", "m", "g" suffixes (KiB, MiB, GiB) """
+
+        if not string:
+            return None
+
+        if string[-1:].lower() == 'b':
+            base = 1000  # Byte suffix detected, prepare to use decimal if necessary
+            string = string[:-1]
+
+        if string[-1:].lower() == 'i':
+            base = 1024  # Binary requested, stop using decimal
+            string = string[:-1]
+
+        factor = 1
+
+        if string.lower()[-1:] == "g":
+            factor = pow(base, 3)
+            string = string[:-1]
+
+        elif string.lower()[-1:] == "m":
+            factor = pow(base, 2)
+            string = string[:-1]
+
+        elif string.lower()[-1:] == "k":
+            factor = base
+            string = string[:-1]
+
+        if not string:
+            return None
+
+        try:
+            result = int(float(string) * factor)
+        except ValueError:
+            return False
+
+        return result
+
     def check_digit(self, sfilter, value, factorize=True):
 
         used_operator = ">="
         if sfilter.startswith((">", "<", "=", "!")):
             used_operator, sfilter = sfilter[:1] + "=", sfilter[1:]
 
-        if not sfilter:
-            return True
-
-        adjust = 64
-        factor = 1
         if factorize:
-            base = 1024  # Default to binary for "k", "m", "g" suffixes
-
-            if sfilter[-1:].lower() == 'b':
-                base = 1000  # Byte suffix detected, prepare to use decimal if necessary
-                sfilter = sfilter[:-1]
-
-            if sfilter[-1:].lower() == 'i':
-                base = 1024  # Binary requested, stop using decimal
-                sfilter = sfilter[:-1]
-
-            if sfilter.lower()[-1:] == "g":
-                factor = pow(base, 3)
-                adjust = factor / 32
-                sfilter = sfilter[:-1]
-
-            elif sfilter.lower()[-1:] == "m":
-                factor = pow(base, 2)
-                adjust = factor / 8
-                sfilter = sfilter[:-1]
-
-            elif sfilter.lower()[-1:] == "k":
-                factor = base
-                adjust = factor * 32
-                sfilter = sfilter[:-1]
+            sfilter = self.factorize(sfilter)
 
         if not sfilter:
             return True
 
-        try:
-            sfilter = float(sfilter) * factor
-        except ValueError:
-            return True
+        if factorize and used_operator in ("==", "!="):
+            # An exact match is unlikely, so approximate size to within +/- 0.1 MiB
+            adjust = 131072
+            match = (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
 
-        # Exact size match is unlikely, so approximate within +/- unit tolerance
-        if used_operator == "==":
-            return (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
+            if used_operator == "==":
+                return match
 
-        if used_operator == "!=":
-            return not (value >= (sfilter - adjust)) and (value <= (sfilter + adjust))
+            if used_operator == "!=":
+                return not match
 
         operation = self.operators.get(used_operator)
         return operation(value, sfilter)
