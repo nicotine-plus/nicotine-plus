@@ -418,13 +418,12 @@ class Search:
             return results
 
         except ValueError:
-            # DB is closed, perhaps due to rescanning shares or closing the application
+            log.add_debug("Error: DB closed during search, perhaps due to rescanning shares or closing the application")
             return None
 
     def process_search_request(self, searchterm, user, token, direct=False):
-        """ Note: since this section is accessed every time a search request arrives,
-        several times a second, please keep it as optimized and memory
-        sparse as possible! """
+        """ Note: since this section is accessed every time a search request arrives several
+            times per second, please keep it as optimized and memory sparse as possible! """
 
         if not searchterm:
             return
@@ -505,15 +504,13 @@ class Search:
                 fileinfos.append(fileinfo)
 
         if numresults != len(fileinfos):
-            log.add_debug(("File index inconsistency while responding to search request "
-                           "\"%(query)s\". %(expected_num)s results expected, but only %(total_num)s "
-                           "results were found in database."), {
+            log.add_debug(("Error: File index inconsistency while responding to search request \"%(query)s\". "
+                           "Expected %(expected_num)i results, but found %(total_num)i results in database."), {
                 "query": searchterm_old,
                 "expected_num": numresults,
                 "total_num": len(fileinfos)
             })
-
-        numresults = len(fileinfos)
+            numresults = len(fileinfos)
 
         if not numresults:
             return
@@ -530,16 +527,14 @@ class Search:
         self.core.send_message_to_peer(user, message)
 
         if direct:
-            log.add_search(
-                _("User %(user)s is directly searching for \"%(query)s\", returning %(num)i results"), {
-                    'user': user,
-                    'query': searchterm_old,
-                    'num': numresults
-                })
+            log.add_search(_("User %(user)s is directly searching for \"%(query)s\", found %(num)i results"), {
+                'user': user,
+                'query': searchterm_old,
+                'num': numresults
+            })
         else:
-            log.add_search(
-                _("User %(user)s is searching for \"%(query)s\", returning %(num)i results"), {
-                    'user': user,
-                    'query': searchterm_old,
-                    'num': numresults
-                })
+            log.add_search(_("User %(user)s is searching for \"%(query)s\", found %(num)i results"), {
+                'user': user,
+                'query': searchterm_old,
+                'num': numresults
+            })
