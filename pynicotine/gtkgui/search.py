@@ -1176,12 +1176,17 @@ class Search(UserInterface):
     def on_file_properties(self, *_args):
 
         data = []
+        selected_size = 0
+        selected_length = 0
 
         for path in self.selected_results:
             iterator = self.resultsmodel.get_iter(path)
 
             virtual_path = self.resultsmodel.get_value(iterator, 11)
             directory, filename = virtual_path.rsplit('\\', 1)
+            file_size = self.resultsmodel.get_value(iterator, 13)
+            selected_size += file_size
+            selected_length += self.resultsmodel.get_value(iterator, 16)
             country_code = self.resultsmodel.get_value(iterator, 12)
             country = "%s (%s)" % (self.core.geoip.country_code_to_name(country_code), country_code)
 
@@ -1190,7 +1195,7 @@ class Search(UserInterface):
                 "fn": virtual_path,
                 "filename": filename,
                 "directory": directory,
-                "size": self.resultsmodel.get_value(iterator, 13),
+                "size": file_size,
                 "speed": self.resultsmodel.get_value(iterator, 14),
                 "queue_position": self.resultsmodel.get_value(iterator, 15),
                 "bitrate": self.resultsmodel.get_value(iterator, 8),
@@ -1199,7 +1204,7 @@ class Search(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, self.core, data).show()
+            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
 
     def on_download_files(self, *_args, prefix=""):
 

@@ -167,6 +167,7 @@ class UserBrowse(UserInterface):
         self.file_iters = {}
 
         self.selected_folder = None
+        self.selected_folder_size = 0
         self.selected_files = {}
         self.num_selected_files = 0
 
@@ -206,6 +207,7 @@ class UserBrowse(UserInterface):
                 ("#" + _("Upload Folder & Subfolder(s)…"), self.on_upload_directory_recursive_to),
                 ("", None),
                 ("#" + _("Open in File _Manager"), self.on_file_manager),
+                ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
@@ -218,6 +220,8 @@ class UserBrowse(UserInterface):
                 ("#" + _("Download Folder _To…"), self.on_download_directory_to),
                 ("#" + _("Download Folder & Subfolder(s)"), self.on_download_directory_recursive),
                 ("#" + _("Download Folder & Subfolder(s) To…"), self.on_download_directory_recursive_to),
+                ("", None),
+                ("#" + _("F_ile Properties"), self.on_file_properties, True),
                 ("", None),
                 ("#" + _("Copy _Folder Path"), self.on_copy_folder_path),
                 ("#" + _("Copy _URL"), self.on_copy_dir_url),
@@ -306,6 +310,7 @@ class UserBrowse(UserInterface):
         Accelerator("<Primary>Return", self.folder_tree_view, self.on_folder_transfer_to_accelerator)  # w/to prompt
         Accelerator("<Shift><Primary>Return", self.folder_tree_view, self.on_folder_transfer_accelerator)  # no prmt
         Accelerator("<Primary><Alt>Return", self.folder_tree_view, self.on_folder_open_manager_accelerator)
+        Accelerator("<Alt>Return", self.folder_tree_view, self.on_file_properties_accelerator, True)
 
         # Key Bindings (file_list_view)
         for accelerator in ("<Shift>Tab", "BackSpace", "backslash"):  # Avoid header, navigate up, "\"
@@ -548,10 +553,13 @@ class UserBrowse(UserInterface):
         self.file_store.set_default_sort_func(lambda *_args: 0)
         self.file_store.set_sort_column_id(-1, Gtk.SortType.ASCENDING)
 
+        selected_folder_size = 0
+
         for file in files:
             # Filename, HSize, Bitrate, HLength, Size, Length
             filename = file[1]
             size = file[2]
+            selected_folder_size += size
             h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
 
             file_row = [filename, human_size(size), h_bitrate, h_length,
@@ -560,6 +568,8 @@ class UserBrowse(UserInterface):
                         GObject.Value(GObject.TYPE_UINT, length)]
 
             self.file_iters[filename] = self.file_store.insert_with_valuesv(-1, self.file_column_numbers, file_row)
+
+        self.selected_folder_size = selected_folder_size
 
         if sort_column is not None and sort_type is not None:
             self.file_store.set_sort_column_id(sort_column, sort_type)
@@ -680,8 +690,9 @@ class UserBrowse(UserInterface):
 
         self.set_directory(iterator.user_data)
 
-    def on_folder_popup_menu(self, *_args):
+    def on_folder_popup_menu(self, menu, _treeview):
         self.user_popup.toggle_user_items()
+        menu.actions[_("F_ile Properties")].set_enabled(bool(self.shares.get(self.selected_folder)))
 
     def on_download_directory(self, *_args):
 
@@ -1012,28 +1023,53 @@ class UserBrowse(UserInterface):
         open_file_path(file_path=self.core.shares.virtual2real(self.selected_folder),
                        command=config.sections["ui"]["filemanager"])
 
-    def on_file_properties(self, *_args):
+    def on_file_properties(self, _action, _state, folder=False):
 
         data = []
-        model, paths = self.file_list_view.get_selection().get_selected_rows()
+        selected_size = 0
+        selected_length = 0
 
-        for path in paths:
-            iterator = model.get_iter(path)
-            filename = model.get_value(iterator, 0)
-            virtual_path = "\\".join([self.selected_folder, filename])
+        if folder:
+            for file_data in self.shares[self.selected_folder]:
+                filename = file_data[1]
+                file_size = file_data[2]
+                virtual_path = "\\".join([self.selected_folder, filename])
+                h_bitrate, _bitrate, h_length, length = get_result_bitrate_length(file_size, file_data[4])
+                selected_size += file_size
+                selected_length += length
 
-            data.append({
-                "user": self.user,
-                "fn": virtual_path,
-                "filename": filename,
-                "directory": self.selected_folder,
-                "size": model.get_value(iterator, 4),
-                "bitrate": model.get_value(iterator, 2),
-                "length": model.get_value(iterator, 3)
-            })
+                data.append({
+                    "user": self.user,
+                    "fn": virtual_path,
+                    "filename": filename,
+                    "directory": self.selected_folder,
+                    "size": file_size,
+                    "bitrate": h_bitrate,
+                    "length": h_length
+                })
+        else:
+            model, paths = self.file_list_view.get_selection().get_selected_rows()
+
+            for path in paths:
+                iterator = model.get_iter(path)
+                filename = model.get_value(iterator, 0)
+                file_size = model.get_value(iterator, 4)
+                virtual_path = "\\".join([self.selected_folder, filename])
+                selected_size += file_size
+                selected_length += model.get_value(iterator, 6)
+
+                data.append({
+                    "user": self.user,
+                    "fn": virtual_path,
+                    "filename": filename,
+                    "directory": self.selected_folder,
+                    "size": file_size,
+                    "bitrate": model.get_value(iterator, 2),
+                    "length": model.get_value(iterator, 3)
+                })
 
         if data:
-            FileProperties(self.frame, self.core, data).show()
+            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
 
     def on_copy_file_path(self, *_args):
 
@@ -1162,9 +1198,7 @@ class UserBrowse(UserInterface):
         if len(self.file_store) <= 0:
             self.folder_tree_view.grab_focus()  # avoid nav trap
 
-        if self.num_selected_files >= 1:
-            self.on_file_properties()
-
+        self.on_file_properties(*_args)
         return True
 
     """ Callbacks (General) """
