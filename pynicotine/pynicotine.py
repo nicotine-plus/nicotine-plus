@@ -226,7 +226,6 @@ class NicotineCore:
         log.add(_("Loading %(program)s %(version)s"), {"program": "Python", "version": config.python_version})
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": "Python", "exe": str(sys.executable)})
         log.add_debug("Using %(program)s executable: %(exe)s", {"program": config.application_name, "exe": script_dir})
-        log.add_debug("Using configuration: %(file)s", {"file": config.filename})
         log.add(_("Loading %(program)s %(version)s"), {"program": config.application_name, "version": config.version})
 
         self.geoip = GeoIP(os.path.join(script_dir, "geoip/ipcountrydb.bin"))
@@ -298,7 +297,6 @@ class NicotineCore:
 
         config.write_configuration()
 
-        log.add_debug("Saved configuration: %(file)s", {"file": config.filename})
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
             "version": config.version,
