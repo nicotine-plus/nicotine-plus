@@ -456,6 +456,7 @@
                     <child>
                       <object class="GtkButton" id="AddFilter">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Add</property>
                         <signal name="clicked" handler="on_add_filter"/>
                         <child>
                           <object class="GtkBox">
@@ -470,6 +471,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Add…</property>
                                 <property name="use-underline">True</property>
                               </object>
@@ -484,6 +486,7 @@
                     <child>
                       <object class="GtkButton" id="EditFilter">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Edit…</property>
                         <signal name="clicked" handler="on_edit_filter"/>
                         <child>
                           <object class="GtkBox">
@@ -498,6 +501,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Edit…</property>
                                 <property name="use-underline">True</property>
                               </object>
@@ -512,6 +516,7 @@
                     <child>
                       <object class="GtkButton" id="RemoveFilter">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Remove</property>
                         <signal name="clicked" handler="on_remove_filter"/>
                         <child>
                           <object class="GtkBox">
@@ -526,6 +531,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="use-underline">True</property>
                               </object>
@@ -545,6 +551,7 @@
                         <child>
                           <object class="GtkButton" id="DefaultFilters">
                             <property name="visible">True</property>
+                            <property name="tooltip-text" translatable="yes">Load Defaults</property>
                             <signal name="clicked" handler="on_default_filters"/>
                             <child>
                               <object class="GtkBox">
@@ -559,6 +566,7 @@
                                 <child>
                                   <object class="GtkLabel">
                                     <property name="visible">True</property>
+                                    <property name="ellipsize">end</property>
                                     <property name="label" translatable="yes">Load Defaults</property>
                                     <property name="use-underline">True</property>
                                   </object>

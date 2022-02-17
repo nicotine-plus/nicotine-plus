@@ -326,6 +326,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                    <property name="width-chars">12</property>
                   </object>
                 </child>
                 <child>
@@ -334,9 +335,22 @@
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_room_default_timestamp"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -368,6 +382,7 @@
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="tooltip-text">https://docs.python.org/3/library/time.html</property>
+                    <property name="width-chars">12</property>
                   </object>
                 </child>
                 <child>
@@ -376,9 +391,22 @@
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_private_default_timestamp"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -437,6 +465,12 @@
                       <item>echo $ | festival --tts</item>
                       <item>flite -t $</item>
                     </items>
+                    <child internal-child="entry">
+                      <object class="GtkEntry">
+                        <property name="visible">True</property>
+                        <property name="width-chars">16</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
@@ -445,9 +479,22 @@
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_default_tts"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -478,6 +525,7 @@
                   <object class="GtkEntry" id="RoomMessage">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
+                    <property name="width-chars">20</property>
                   </object>
                 </child>
                 <child>
@@ -486,9 +534,22 @@
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_default_rooms"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -519,6 +580,7 @@
                   <object class="GtkEntry" id="PrivateMessage">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
+                    <property name="width-chars">20</property>
                   </object>
                 </child>
                 <child>
@@ -527,9 +589,22 @@
                     <property name="tooltip-text" translatable="yes">Default</property>
                     <signal name="clicked" handler="on_default_private"/>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="icon-name">edit-clear-symbolic</property>
+                        <property name="spacing">6</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-clear-symbolic</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="ellipsize">end</property>
+                            <property name="label" translatable="yes">Default</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -666,6 +741,7 @@
                                 <child>
                                   <object class="GtkButton" id="AddCensor">
                                     <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Add…</property>
                                     <signal name="clicked" handler="on_add_censored"/>
                                     <child>
                                       <object class="GtkBox">
@@ -694,6 +770,7 @@
                                 <child>
                                   <object class="GtkButton" id="RemoveCensor">
                                     <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_censored"/>
                                     <child>
                                       <object class="GtkBox">
@@ -819,6 +896,7 @@
                                 <child>
                                   <object class="GtkButton" id="AddReplacement">
                                     <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Add…</property>
                                     <signal name="clicked" handler="on_add_replacement"/>
                                     <child>
                                       <object class="GtkBox">
@@ -847,6 +925,7 @@
                                 <child>
                                   <object class="GtkButton" id="RemoveReplacement">
                                     <property name="visible">True</property>
+                                    <property name="tooltip-text" translatable="yes">Remove</property>
                                     <signal name="clicked" handler="on_remove_replacement"/>
                                     <child>
                                       <object class="GtkBox">

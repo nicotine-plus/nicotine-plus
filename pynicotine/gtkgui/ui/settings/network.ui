@@ -99,6 +99,7 @@
                               <object class="GtkButton" id="ChangePassword">
                                 <property name="halign">end</property>
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Change Password</property>
                                 <signal name="clicked" handler="on_change_password"/>
                                 <child>
                                   <object class="GtkBox">

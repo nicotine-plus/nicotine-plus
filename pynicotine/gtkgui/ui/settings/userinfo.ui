@@ -83,6 +83,7 @@
                     <child>
                       <object class="GtkButton" id="DefaultImage">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Reset Picture</property>
                         <signal name="clicked" handler="on_default_image"/>
                         <child>
                           <object class="GtkBox">
@@ -97,6 +98,7 @@
                             <child>
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
+                                <property name="ellipsize">end</property>
                                 <property name="label" translatable="yes">Reset Picture</property>
                                 <property name="use-underline">True</property>
                               </object>
