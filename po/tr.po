@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 05:32+0200\n"
-"PO-Revision-Date: 2022-01-10 19:39+0000\n"
+"PO-Revision-Date: 2022-02-17 11:17+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -38,9 +38,8 @@ msgstr ""
 "arası;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
-#, fuzzy
 msgid "Graphical client for the Soulseek network"
-msgstr "Soulseek eşler arası ağı için grafiksel istemci"
+msgstr "Soulseek ağı için grafiksel istemci"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:11
 msgid "Nicotine+ is a graphical client for the Soulseek peer-to-peer network."
@@ -2524,9 +2523,9 @@ msgstr ""
 "sonucu %(filepath)s filtrelendi"
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
+#, python-format
 msgid "[PRIVATE]  %s"
-msgstr "[ÖZEL]"
+msgstr "[ÖZEL]  %s"
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
@@ -2647,9 +2646,8 @@ msgid "Remote file error"
 msgstr "Uzak dosya hatası"
 
 #: pynicotine/gtkgui/transferlist.py:138
-#, fuzzy
 msgid "Queue"
-msgstr "Kuyruğa alındı"
+msgstr "Kuyruk"
 
 #: pynicotine/gtkgui/transferlist.py:139
 msgid "Percent"
@@ -3457,11 +3455,10 @@ msgid "Wishlist wait period set to %s seconds"
 msgstr "Dilek listesi bekleme süresi %s saniyeye ayarlandı"
 
 #: pynicotine/search.py:529
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
-"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor ve %(num)i sonuç "
-"döndürüyor"
+"%(user)s kullanıcısı \"%(query)s\" için arama yapıyor, %(num)i sonuç bulundu"
 
 #: pynicotine/shares.py:99
 msgid "Rescanning shares…"
@@ -5470,18 +5467,16 @@ msgid "Enable plugins"
 msgstr "Eklentileri etkinleştir"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:85
-#, fuzzy
 msgid "Add Plugins"
-msgstr "_Eklenti Ekle"
+msgstr "Eklenti Ekle"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:101
 msgid "_Add Plugins"
 msgstr "_Eklenti Ekle"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:121
-#, fuzzy
 msgid "Settings"
-msgstr "_Ayarlar"
+msgstr "Ayarlar"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:137
 msgid "_Settings"
