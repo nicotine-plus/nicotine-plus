@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 05:32+0200\n"
-"PO-Revision-Date: 2022-02-16 22:11+0000\n"
+"PO-Revision-Date: 2022-02-17 11:16+0000\n"
 "Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
@@ -2655,9 +2655,8 @@ msgid "Remote file error"
 msgstr "Fehler in einer entfernten Datei"
 
 #: pynicotine/gtkgui/transferlist.py:138
-#, fuzzy
 msgid "Queue"
-msgstr "In Warteschlange"
+msgstr "Warteschlange"
 
 #: pynicotine/gtkgui/transferlist.py:139
 msgid "Percent"
@@ -3483,10 +3482,9 @@ msgid "Wishlist wait period set to %s seconds"
 msgstr "Wartezeit der Wunschliste auf %s Sekunden festgelegt"
 
 #: pynicotine/search.py:529
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
-msgstr ""
-"Benutzer %(user)s sucht nach \"%(query)s\" und erhält %(num)i Ergebnisse"
+msgstr "Benutzer %(user)s sucht nach \"%(query)s\", %(num)i Ergebnisse gefunden"
 
 #: pynicotine/shares.py:99
 msgid "Rescanning shares…"
@@ -5525,18 +5523,16 @@ msgid "Enable plugins"
 msgstr "Plugins einschalten"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:85
-#, fuzzy
 msgid "Add Plugins"
-msgstr "_Plugins hinzufügen"
+msgstr "Plugins hinzufügen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:101
 msgid "_Add Plugins"
 msgstr "_Plugins hinzufügen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:121
-#, fuzzy
 msgid "Settings"
-msgstr "_Einstellungen"
+msgstr "Einstellungen"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:137
 msgid "_Settings"
