@@ -148,6 +148,7 @@
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
+                            <property name="wrap">True</property>
                             <property name="label" translatable="yes">Recommendations</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -158,6 +159,7 @@
                           <object class="GtkButton" id="recommendations_button">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
+                            <property name="valign">center</property>
                             <property name="tooltip-text">Refresh list of recommendations</property>
                             <signal name="clicked" handler="on_recommendations_clicked"/>
                             <child>
@@ -186,6 +188,7 @@
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="search-column">1</property>
+                                <signal name="row-activated" handler="on_r_row_activated"/>
                               </object>
                             </child>
                           </object>
@@ -221,6 +224,7 @@
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
+                            <property name="wrap">True</property>
                             <property name="label" translatable="yes">Similar Users</property>
                             <attributes>
                               <attribute name="weight" value="bold"/>
@@ -231,6 +235,7 @@
                           <object class="GtkButton" id="similar_users_button">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
+                            <property name="valign">center</property>
                             <property name="tooltip-text">Show users with similar interests</property>
                             <signal name="clicked" handler="on_similar_users_clicked"/>
                             <child>

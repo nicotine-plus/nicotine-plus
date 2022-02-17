@@ -194,7 +194,7 @@ class NicotineCore:
             slskmessages.Recommendations: self.recommendations,
             slskmessages.ItemRecommendations: self.item_recommendations,
             slskmessages.SimilarUsers: self.similar_users,
-            slskmessages.ItemSimilarUsers: self.similar_users,
+            slskmessages.ItemSimilarUsers: self.item_similar_users,
             slskmessages.UserInterests: self.user_interests,
             slskmessages.RoomTickerState: self.room_ticker_state,
             slskmessages.RoomTickerAdd: self.room_ticker_add,
@@ -832,7 +832,7 @@ class NicotineCore:
         self.search.set_wishlist_interval(msg)
 
     def similar_users(self, msg):
-        """ Server code: 110 and 112 """
+        """ Server code: 110 """
 
         log.add_msg_contents(msg)
         self.interests.similar_users(msg)
@@ -842,6 +842,12 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.interests.item_recommendations(msg)
+
+    def item_similar_users(self, msg):
+        """ Server code: 112 """
+
+        log.add_msg_contents(msg)
+        self.interests.item_similar_users(msg)
 
     def room_ticker_state(self, msg):
         """ Server code: 113 """
