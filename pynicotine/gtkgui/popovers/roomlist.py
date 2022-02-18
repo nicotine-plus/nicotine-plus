@@ -68,8 +68,6 @@ class RoomList(UserInterface):
             ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
-        self.list_view.set_headers_clickable(True)
-
         self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
         self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
 
@@ -191,6 +189,7 @@ class RoomList(UserInterface):
 
     def on_popup_join(self, *_args):
         self.frame.np.chatrooms.request_join_room(self.popup_room)
+        self.popover.hide()
 
     def on_show_chat_feed(self, *_args):
 
