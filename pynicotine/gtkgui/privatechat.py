@@ -151,6 +151,10 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.message_user(msg)
 
+    def toggle_chat_buttons(self):
+        for page in self.pages.values():
+            page.toggle_chat_buttons()
+
     def set_completion_list(self, completion_list):
 
         page = self.get_nth_page(self.get_current_page())
@@ -189,7 +193,8 @@ class PrivateChat(UserInterface):
             self.help_button,
             self.log_toggle,
             self.search_bar,
-            self.search_entry
+            self.search_entry,
+            self.speech_toggle
         ) = self.widgets
 
         self.user = user
@@ -215,6 +220,8 @@ class PrivateChat(UserInterface):
                   self.core.privatechats.send_message, self.core.privatechats.CMDS)
 
         self.log_toggle.set_active(config.sections["logging"]["privatechat"])
+
+        self.toggle_chat_buttons()
 
         self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_view.textview, connect_events=False)
         self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
@@ -307,6 +314,9 @@ class PrivateChat(UserInterface):
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()
 
+    def toggle_chat_buttons(self):
+        self.speech_toggle.set_visible(config.sections["ui"]["speechenabled"])
+
     def on_find_chat_log(self, *_args):
         self.search_bar.show()
 
@@ -362,9 +372,11 @@ class PrivateChat(UserInterface):
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_action
+            speech = line[2:]
         else:
             line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
+            speech = text
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
@@ -381,6 +393,11 @@ class PrivateChat(UserInterface):
 
         self.chat_view.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
                                    username=self.user, usertag=usertag)
+
+        if self.speech_toggle.get_active():
+            self.core.notifications.new_tts(
+                config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
+            )
 
         if self.log_toggle.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]

@@ -220,13 +220,6 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.message_user(msg)
 
-        self.core.notifications.new_tts(
-            self.config.sections["ui"]["speechprivate"], {
-                "user": msg.user,
-                "message": msg.msg
-            }
-        )
-
         self.core.pluginhandler.incoming_private_chat_notification(msg.user, msg.msg)
 
         if ctcpversion and not self.config.sections["server"]["ctcpmsgs"]:
