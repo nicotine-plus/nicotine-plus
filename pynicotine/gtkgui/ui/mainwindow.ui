@@ -1147,6 +1147,7 @@
                                       <object class="GtkBox" id="private_title">
                                         <property name="visible">True</property>
                                         <property name="hexpand">True</property>
+                                        <property name="spacing">4</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkComboBoxText" id="PrivateChatCombo">
@@ -1167,6 +1168,30 @@
                                             <child internal-child="button">
                                               <object class="GtkButton">
                                                 <signal name="clicked" handler="focus_combobox"/>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkMenuButton" id="PrivateChatHistory">
+                                            <property name="visible">True</property>
+                                            <child>
+                                              <object class="GtkBox">
+                                                <property name="visible">True</property>
+                                                <property name="spacing">6</property>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="label" translatable="yes">Chat _History</property>
+                                                    <property name="use-underline">True</property>
+                                                  </object>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkImage">
+                                                    <property name="visible">True</property>
+                                                    <property name="icon-name">pan-down-symbolic</property>
+                                                  </object>
+                                                </child>
                                               </object>
                                             </child>
                                           </object>

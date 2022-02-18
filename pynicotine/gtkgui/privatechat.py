@@ -21,6 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from collections import deque
 
 from gi.repository import Gio
@@ -29,6 +31,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
@@ -54,11 +57,14 @@ class PrivateChats(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         self.completion = ChatCompletion()
+        self.history = ChatHistory(frame)
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
 
         if Gtk.get_major_version() == 4:
             # Scroll to the focused widget
             self.command_help.container.get_child().set_scroll_to_focus(True)
+
+        self.update_visuals()
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -151,6 +157,8 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.update_visuals()
             page.update_tags()
+
+        self.history.update_visuals()
 
     def server_login(self):
         for page in self.pages.values():
@@ -291,6 +299,7 @@ class PrivateChat(UserInterface):
 
         if response_id == 2:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+            self.chats.history.remove_user(self.user)
             self.chat_textview.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -354,8 +363,10 @@ class PrivateChat(UserInterface):
                                        username=self.user, usertag=usertag)
 
         if self.Log.get_active():
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp, timestamp_format=config.sections["logging"]["log_timestamp"])
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
 
     def echo_message(self, text, message_type):
 
@@ -382,8 +393,11 @@ class PrivateChat(UserInterface):
                                        username=my_username, usertag=self.tag_my_username)
 
         if self.Log.get_active():
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp_format=config.sections["logging"]["log_timestamp"])
+                          timestamp_format=timestamp_format)
 
     def update_visuals(self):
 
