@@ -224,20 +224,18 @@ class PopupMenu:
         if page != "userbrowse":
             self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
 
-        self.add_items(
-            ("#" + _("Show IP A_ddress"), self.on_show_ip_address),
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
-            ("", None)
-        )
-
         if page != "userlist":
             self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
 
         self.add_items(
+            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
+            ("", None),
             ("$" + _("Ban User"), self.on_ban_user),
             ("$" + _("Ignore User"), self.on_ignore_user),
-            ("$" + _("Block User's IP Address"), self.on_block_user),
-            ("$" + _("Ignore User's IP Address"), self.on_ignore_ip),
+            ("", None),
+            ("$" + _("Ban IP Address"), self.on_block_user),
+            ("$" + _("Ignore IP Address"), self.on_ignore_ip),
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
         )
 
     def set_num_selected_files(self, num_files):
@@ -279,9 +277,9 @@ class PopupMenu:
         self.actions[_("Ban User")].set_state(GLib.Variant("b", self.core.network_filter.is_user_banned(self.user)))
         self.actions[_("Ignore User")].set_state(
             GLib.Variant("b", self.core.network_filter.is_user_ignored(self.user)))
-        self.actions[_("Block User's IP Address")].set_state(
+        self.actions[_("Ban IP Address")].set_state(
             GLib.Variant("b", self.core.network_filter.get_cached_blocked_user_ip(self.user) or False))
-        self.actions[_("Ignore User's IP Address")].set_state(
+        self.actions[_("Ignore IP Address")].set_state(
             GLib.Variant("b", self.core.network_filter.get_cached_ignored_user_ip(self.user) or False))
 
         self.editing = False
