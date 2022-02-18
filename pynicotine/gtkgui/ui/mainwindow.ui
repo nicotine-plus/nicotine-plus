@@ -1156,7 +1156,7 @@
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="PrivateChatEntry">
-                                                <property name="max-width-chars">45</property>
+                                                <property name="max-width-chars">38</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
                                                 <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
