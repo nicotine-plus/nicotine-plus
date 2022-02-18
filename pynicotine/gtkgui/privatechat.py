@@ -351,7 +351,7 @@ class PrivateChat(UserInterface):
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_action
-            speech = text[4:]
+            speech = line[2:]
         else:
             line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
