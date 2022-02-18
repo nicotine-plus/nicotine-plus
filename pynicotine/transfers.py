@@ -286,9 +286,6 @@ class Transfers:
             elif loaded_status in ("Filtered", "Finished"):
                 status = loaded_status
 
-            elif current_byte_offset is not None and current_byte_offset >= size:
-                status = "Finished"
-
             else:
                 status = "User logged off"
 
