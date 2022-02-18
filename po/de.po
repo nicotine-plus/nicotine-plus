@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-02-17 18:10+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -4241,18 +4241,23 @@ msgid "Clear"
 msgstr "Entfernen"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
+"Löschen Sie jeden Download, der die Übertragung beendet hat oder von einem "
+"Filter abgefangen wurde."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Entferne Abgeschlossene"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
 msgid "Clear every download marked with a specific status."
 msgstr ""
+"Löschen Sie jeden Download, der mit einem bestimmten Status markiert ist."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 msgid "Clear _Downloads…"
@@ -4280,8 +4285,9 @@ msgid "Refresh list of recommendations"
 msgstr "Empfehlungen"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
 msgid "Show users with similar interests"
-msgstr ""
+msgstr "Benutzer mit ähnlichen Interessen anzeigen"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 msgid "Menu"
@@ -6142,14 +6148,18 @@ msgid "Ban User(s)"
 msgstr "Benutzer sperren"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
 msgstr ""
+"Löschen Sie jeden Upload, der entweder fertig übertragen oder vom Remote-"
+"Benutzer abgebrochen wurde."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
 msgid "Clear every upload marked with a specific status."
-msgstr ""
+msgstr "Löschen Sie jeden Upload, der mit einem bestimmten Status markiert ist."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 msgid "Clear Uploa_ds…"

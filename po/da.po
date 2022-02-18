@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-01-10 21:33+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Danish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/da/>\n"
 "Language: da\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -4884,10 +4884,13 @@ msgid "Clear"
 msgstr "Rens"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
+"Ryd hver download, der er færdig med at overføre eller er blevet fanget af "
+"et filter."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 #, fuzzy
@@ -4895,8 +4898,9 @@ msgid "Clear Finished"
 msgstr "Rens afsluttede"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
 msgid "Clear every download marked with a specific status."
-msgstr ""
+msgstr "Ryd hver download markeret med en bestemt status."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 #, fuzzy
@@ -4929,8 +4933,9 @@ msgid "Refresh list of recommendations"
 msgstr "Rekommendationer for %s"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
 msgid "Show users with similar interests"
-msgstr ""
+msgstr "Vis brugere med lignende interesser"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 #, fuzzy
@@ -7099,14 +7104,18 @@ msgid "Ban User(s)"
 msgstr "Forbyd bruger(er)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
 msgstr ""
+"Ryd hver upload, der enten er færdig med at overføre eller er blevet "
+"annulleret af fjernbrugeren."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
 msgid "Clear every upload marked with a specific status."
-msgstr ""
+msgstr "Ryd hver upload markeret med en bestemt status."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 #, fuzzy

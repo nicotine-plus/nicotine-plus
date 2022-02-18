@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-02-17 17:35+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/tr/>\n"
 "Language: tr\n"
@@ -4199,18 +4199,22 @@ msgid "Clear"
 msgstr "Temizle"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
+"Aktarmayı bitiren veya bir filtre tarafından yakalanan her indirmeyi "
+"temizleyin."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Tamamlananları Temizle"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
 msgid "Clear every download marked with a specific status."
-msgstr ""
+msgstr "Belirli bir durumla işaretlenmiş her indirmeyi temizleyin."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 msgid "Clear _Downloads…"
@@ -4238,8 +4242,9 @@ msgid "Refresh list of recommendations"
 msgstr "Tavsiyeler"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
 msgid "Show users with similar interests"
-msgstr ""
+msgstr "Benzer ilgi alanlarına sahip kullanıcıları göster"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 msgid "Menu"
@@ -6079,14 +6084,18 @@ msgid "Ban User(s)"
 msgstr "Kullanıcı(lar)ı Yasakla"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
 msgstr ""
+"Aktarımı tamamlanan veya uzak kullanıcı tarafından iptal edilen her "
+"yüklemeyi temizleyin."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
 msgid "Clear every upload marked with a specific status."
-msgstr ""
+msgstr "Belirli bir durumla işaretlenmiş her yüklemeyi temizleyin."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 msgid "Clear Uploa_ds…"

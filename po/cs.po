@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-01-10 19:58+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -4907,10 +4907,12 @@ msgid "Clear"
 msgstr "Jasný"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
+"Vymažte každé stahování, které dokončilo přenos nebo bylo zachyceno filtrem."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 #, fuzzy
@@ -4918,8 +4920,9 @@ msgid "Clear Finished"
 msgstr "Vymazat dokončené"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
 msgid "Clear every download marked with a specific status."
-msgstr ""
+msgstr "Vymažte každé stahování označené konkrétním stavem."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 #, fuzzy
@@ -4952,8 +4955,9 @@ msgid "Refresh list of recommendations"
 msgstr "Doporučení"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
 msgid "Show users with similar interests"
-msgstr ""
+msgstr "Zobrazit uživatele s podobnými zájmy"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 #, fuzzy
@@ -7160,14 +7164,18 @@ msgid "Ban User(s)"
 msgstr "Zakázat uživatele"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
 msgstr ""
+"Vymažte každé nahrávání, které buď dokončilo přenos, nebo bylo zrušeno "
+"vzdáleným uživatelem."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
 msgid "Clear every upload marked with a specific status."
-msgstr ""
+msgstr "Vymazat každé nahrání označené konkrétním stavem."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 #, fuzzy

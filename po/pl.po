@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-01-15 16:11+0000\n"
-"Last-Translator: Mariusz <wisniowy@g.pl>\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/pl/>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -4204,18 +4204,22 @@ msgid "Clear"
 msgstr "Wyczyść"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
+"Wyczyść każde pobranie, które zakończyło przesyłanie lub zostało "
+"przechwycone przez filtr."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Wyczyść zakończone"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
 msgid "Clear every download marked with a specific status."
-msgstr ""
+msgstr "Wyczyść każde pobranie oznaczone określonym statusem."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 msgid "Clear _Downloads…"
@@ -4243,8 +4247,9 @@ msgid "Refresh list of recommendations"
 msgstr "Rekomendacje"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
 msgid "Show users with similar interests"
-msgstr ""
+msgstr "Pokaż użytkowników o podobnych zainteresowaniach"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 msgid "Menu"
@@ -6083,14 +6088,18 @@ msgid "Ban User(s)"
 msgstr "Zablokuj użytkownika/ów"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
 msgstr ""
+"Wyczyść każde przesyłanie, które zakończyło przesyłanie lub zostało "
+"anulowane przez użytkownika zdalnego."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
 msgid "Clear every upload marked with a specific status."
-msgstr ""
+msgstr "Wyczyść każdy przesłany plik oznaczony określonym stanem."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 msgid "Clear Uploa_ds…"
