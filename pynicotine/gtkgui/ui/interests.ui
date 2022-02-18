@@ -166,7 +166,7 @@
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
-                            <property name="tooltip-text">Refresh list of recommendations</property>
+                            <property name="tooltip-text" translatable="yes">Refresh list of recommendations</property>
                             <signal name="clicked" handler="on_recommendations_clicked"/>
                             <child>
                               <object class="GtkImage">
@@ -245,7 +245,7 @@
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
-                            <property name="tooltip-text">Show users with similar interests</property>
+                            <property name="tooltip-text" translatable="yes">Show users with similar interests</property>
                             <signal name="clicked" handler="on_similar_users_clicked"/>
                             <child>
                               <object class="GtkImage">
