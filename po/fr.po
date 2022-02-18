@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-17 17:24+0200\n"
-"PO-Revision-Date: 2022-01-10 19:13+0000\n"
-"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
+"PO-Revision-Date: 2022-02-18 01:12+0000\n"
+"Last-Translator: Mohamed El Morabity <pikachu.2014@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -36,7 +36,6 @@ msgid "Soulseek;Nicotine;sharing;music;P2P;peer-to-peer;GTK;"
 msgstr "Soulseek ;Nicotine ;partage ;musique ;P2P ; pair-à-pair ;GTK ;"
 
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:9
-#, fuzzy
 msgid "Graphical client for the Soulseek network"
 msgstr "Client graphique pour le réseau P2P Soulseek"
 
@@ -2371,18 +2370,18 @@ msgid "_Recommendations for Item"
 msgstr "_Recommandations pour l'article"
 
 #: pynicotine/gtkgui/interests.py:285
-#, fuzzy, python-format
+#, python-format
 msgid "Recommendations (%s)"
-msgstr "Recommandations"
+msgstr "Recommandations (%s)"
 
 #: pynicotine/gtkgui/interests.py:287 pynicotine/gtkgui/ui/interests.ui:158
 msgid "Recommendations"
 msgstr "Recommandations"
 
 #: pynicotine/gtkgui/interests.py:308
-#, fuzzy, python-format
+#, python-format
 msgid "Similar Users (%s)"
-msgstr "Utilisateurs similaires"
+msgstr "Utilisateurs similaires (%s)"
 
 #: pynicotine/gtkgui/interests.py:310 pynicotine/gtkgui/ui/interests.ui:237
 msgid "Similar Users"
@@ -2555,9 +2554,9 @@ msgstr ""
 "%(user)s pour la requête de recherche \"%(query)s\""
 
 #: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
-#, fuzzy, python-format
+#, python-format
 msgid "[PRIVATE]  %s"
-msgstr "[PRIVÉ]"
+msgstr "[PRIVÉ] %s"
 
 #: pynicotine/gtkgui/search.py:895
 #, python-format
@@ -2678,7 +2677,6 @@ msgid "Remote file error"
 msgstr "Erreur de fichier distant"
 
 #: pynicotine/gtkgui/transferlist.py:138
-#, fuzzy
 msgid "Queue"
 msgstr "En attente"
 
@@ -3133,6 +3131,7 @@ msgid "Disconnect"
 msgstr "Se déconnecter"
 
 #: pynicotine/gtkgui/widgets/trayicon.py:101
+#, fuzzy
 msgid "Send Message"
 msgstr "Envoyer un message"
 
