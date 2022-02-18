@@ -161,28 +161,21 @@ class Logger:
         try:
             from pynicotine.utils import clean_file
             filename = clean_file(filename) + ".log"
+            path = os.path.join(logsdir, filename)
             oldumask = os.umask(0o077)
 
             if not os.path.exists(logsdir):
                 os.makedirs(logsdir)
 
-            from pynicotine.utils import get_path
-            get_path(logsdir, filename, self.write_log_callback, (oldumask, timestamp, timestamp_format, msg))
+            with open(path, 'ab', 0) as logfile:
+                os.umask(oldumask)
+
+                text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)
+                logfile.write(text.encode('utf-8', 'replace'))
 
         except Exception as error:
             self.add(_("Couldn't write to log file \"%(filename)s\": %(error)s") %
                      {"filename": filename, "error": error})
-
-    @staticmethod
-    def write_log_callback(path, data):
-
-        oldumask, timestamp, timestamp_format, msg = data
-
-        with open(path, 'ab', 0) as logfile:
-            os.umask(oldumask)
-
-            text = "%s %s\n" % (time.strftime(timestamp_format, time.localtime(timestamp)), msg)
-            logfile.write(text.encode('utf-8', 'replace'))
 
 
 class Console:

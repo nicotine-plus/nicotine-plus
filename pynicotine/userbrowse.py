@@ -23,7 +23,7 @@ import threading
 from pynicotine import slskmessages
 from pynicotine import utils
 from pynicotine.logfacility import log
-from pynicotine.utils import get_path
+from pynicotine.utils import clean_file
 from pynicotine.utils import RestrictedUnpickler
 
 
@@ -157,11 +157,6 @@ class UserBrowse:
 
         self.shared_file_list(username, msg)
 
-    @staticmethod
-    def _save_shares_list_to_file(path, shares_list):
-        with open(path, "w", encoding="utf-8") as file_handle:
-            json.dump(shares_list, file_handle, ensure_ascii=False)
-
     def save_shares_list_to_disk(self, user, shares_list):
 
         sharesdir = os.path.join(self.config.data_dir, "usershares")
@@ -175,7 +170,10 @@ class UserBrowse:
                     {'folder': sharesdir, 'error': msg})
 
         try:
-            get_path(sharesdir, user, self._save_shares_list_to_file, shares_list)
+            path = os.path.join(sharesdir, clean_file(user))
+
+            with open(path, "w", encoding="utf-8") as file_handle:
+                json.dump(shares_list, file_handle, ensure_ascii=False)
 
             log.add(_("Saved list of shared files for user '%(user)s' to %(dir)s"),
                     {'user': user, 'dir': sharesdir})

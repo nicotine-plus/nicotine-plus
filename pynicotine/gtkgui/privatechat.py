@@ -21,6 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import time
 
 from collections import deque
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
-from pynicotine.utils import get_path
 from pynicotine.utils import open_log
 
 
@@ -236,11 +236,11 @@ class PrivateChat(UserInterface):
 
         # Read log file
         filename = clean_file(self.user) + ".log"
+        path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
         numlines = config.sections["logging"]["readprivatelines"]
 
         try:
-            get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
-
+            self.append_log_lines(path, numlines)
         except OSError:
             pass
 
