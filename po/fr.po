@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-02-18 03:28+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-02-18 11:50+0000\n"
+"Last-Translator: Maxime Leroy <lisacintosh@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -1388,14 +1388,15 @@ msgid "File Properties"
 msgstr "Propriétés du fichier"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)"
-msgstr "Propriété du fichier (%(num)i sur %(total)i)"
+msgstr ""
+"Propriété du fichier (%(num)i sur %(total)i  /  %(size)s  /  %(length)s)"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
-msgstr "Propriété du fichier (%(num)i sur %(total)i)"
+msgstr "Propriété du fichier (%(num)i sur %(total)i  /  %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:94
 #: pynicotine/gtkgui/ui/settings/network.ui:189
@@ -2394,9 +2395,8 @@ msgid "Similar Users"
 msgstr "Utilisateurs similaires"
 
 #: pynicotine/gtkgui/popovers/chathistory.py:49
-#, fuzzy
 msgid "Latest Message"
-msgstr "Envoyer un message"
+msgstr "Dernier message"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 msgid "Room"
@@ -2460,11 +2460,8 @@ msgid "Private message from %s"
 msgstr "Message privé de %s"
 
 #: pynicotine/gtkgui/privatechat.py:355
-#, fuzzy
 msgid "* Message(s) sent while you were offline."
-msgstr ""
-"Un ou plusieurs messages privés vous ont étés envoyé pendant que vous étiez "
-"hors-ligne. L'horodatage est défini par le serveur et peut être décalé."
+msgstr "* Les message(s) envoyé(s) quand vous êtes hors-ligne."
 
 #: pynicotine/gtkgui/search.py:69
 msgid "_Global"
@@ -3518,7 +3515,7 @@ msgid "Wishlist wait period set to %s seconds"
 msgstr "La période d'attente de la liste de souhaits est fixée à %s secondes"
 
 #: pynicotine/search.py:529
-#, fuzzy, python-format
+#, python-format
 msgid "User %(user)s is searching for \"%(query)s\", found %(num)i results"
 msgstr ""
 "L'utilisateur %(user)s effectue une recherche sur « %(query)s », %(num)i "
@@ -4005,9 +4002,8 @@ msgstr ""
 "d'attente avant ceux des utilisateurs non privilégiés."
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:45
-#, fuzzy
 msgid "Name"
-msgstr "Nom du fichier"
+msgstr "Nom"
 
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:241
 msgid "Last Speed"
@@ -4284,14 +4280,12 @@ msgid "Add something you dislike…"
 msgstr "Ajoutez ce que vous n'aimez pas…"
 
 #: pynicotine/gtkgui/ui/interests.ui:169
-#, fuzzy
 msgid "Refresh list of recommendations"
-msgstr "Recommandations"
+msgstr "Rafraichir la liste des recommandations"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
-#, fuzzy
 msgid "Show users with similar interests"
-msgstr "Afficher les utilisateurs ayant des intérêts similaires"
+msgstr "Afficher les utilisateurs avec les mêmes intérêts"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 msgid "Menu"
@@ -4428,9 +4422,8 @@ msgstr ""
 "un message"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1185
-#, fuzzy
 msgid "Chat _History"
-msgstr "Historique de discussions"
+msgstr "_Historique des discussions"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1209
 #: pynicotine/gtkgui/ui/mainwindow.ui:1495
@@ -5587,18 +5580,16 @@ msgid "Enable plugins"
 msgstr "Activer les extensions"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:85
-#, fuzzy
 msgid "Add Plugins"
-msgstr "_Ajouter des extensions"
+msgstr "Ajouter des extensions"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:101
 msgid "_Add Plugins"
 msgstr "_Ajouter des extensions"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:121
-#, fuzzy
 msgid "Settings"
-msgstr "_Préférences"
+msgstr "Préférences"
 
 #: pynicotine/gtkgui/ui/settings/plugin.ui:137
 msgid "_Settings"
