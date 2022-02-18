@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 03:09+0200\n"
-"PO-Revision-Date: 2022-02-18 03:28+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-02-18 11:50+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -1389,14 +1389,14 @@ msgid "File Properties"
 msgstr "Datei-Eigenschaften"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:82
-#, fuzzy, python-format
+#, python-format
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)"
-msgstr "Dateieigenschaften (%(num)i von %(total)i)"
+msgstr "Dateieigenschaften (%(num)i von %(total)i / %(size)s / %(length)s)"
 
 #: pynicotine/gtkgui/dialogs/fileproperties.py:88
-#, fuzzy, python-format
+#, python-format
 msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
-msgstr "Dateieigenschaften (%(num)i von %(total)i)"
+msgstr "Dateieigenschaften (%(num)i von %(total)i / %(size)s)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:94
 #: pynicotine/gtkgui/ui/settings/network.ui:189
@@ -2391,9 +2391,8 @@ msgid "Similar Users"
 msgstr "Ähnliche Benutzer"
 
 #: pynicotine/gtkgui/popovers/chathistory.py:49
-#, fuzzy
 msgid "Latest Message"
-msgstr "Nachricht senden"
+msgstr "Neueste Nachricht"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 msgid "Room"
@@ -2457,11 +2456,8 @@ msgid "Private message from %s"
 msgstr "Private Nachricht von %s"
 
 #: pynicotine/gtkgui/privatechat.py:355
-#, fuzzy
 msgid "* Message(s) sent while you were offline."
-msgstr ""
-"* Nachricht(en) gesendet während du offline warst. Die Zeitstempel stammen "
-"vom Server und können falsch sein."
+msgstr "* Nachricht(en), die gesendet wurde(n), während du offline warst."
 
 #: pynicotine/gtkgui/search.py:69
 msgid "_Global"
@@ -4241,20 +4237,18 @@ msgid "Clear"
 msgstr "Entfernen"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
-#, fuzzy
 msgid ""
 "Clear every download that has finished transferring or been caught by a "
 "filter."
 msgstr ""
-"Löschen Sie jeden Download, der die Übertragung beendet hat oder von einem "
-"Filter abgefangen wurde."
+"Löschen Sie jeden Download, der die Übertragung abgeschlossen hat oder von "
+"einem Filter abgefangen wurde."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Entferne Abgeschlossene"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
-#, fuzzy
 msgid "Clear every download marked with a specific status."
 msgstr ""
 "Löschen Sie jeden Download, der mit einem bestimmten Status markiert ist."
@@ -4280,12 +4274,10 @@ msgid "Add something you dislike…"
 msgstr "Fügen Sie etwas hinzu, das Sie nicht mögen…"
 
 #: pynicotine/gtkgui/ui/interests.ui:169
-#, fuzzy
 msgid "Refresh list of recommendations"
-msgstr "Empfehlungen"
+msgstr "Liste der Empfehlungen aktualisieren"
 
 #: pynicotine/gtkgui/ui/interests.ui:248
-#, fuzzy
 msgid "Show users with similar interests"
 msgstr "Benutzer mit ähnlichen Interessen anzeigen"
 
@@ -4422,9 +4414,8 @@ msgstr ""
 "möchten"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1185
-#, fuzzy
 msgid "Chat _History"
-msgstr "Chat-Verlauf"
+msgstr "Chatverlauf"
 
 #: pynicotine/gtkgui/ui/mainwindow.ui:1209
 #: pynicotine/gtkgui/ui/mainwindow.ui:1495
@@ -6148,7 +6139,6 @@ msgid "Ban User(s)"
 msgstr "Benutzer sperren"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
-#, fuzzy
 msgid ""
 "Clear every upload that has either finished transferring, or been cancelled "
 "by the remote user."
@@ -6157,7 +6147,6 @@ msgstr ""
 "Benutzer abgebrochen wurde."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
-#, fuzzy
 msgid "Clear every upload marked with a specific status."
 msgstr "Löschen Sie jeden Upload, der mit einem bestimmten Status markiert ist."
 
