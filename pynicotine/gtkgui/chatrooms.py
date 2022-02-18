@@ -548,12 +548,13 @@ class ChatRoom(UserInterface):
 
     def read_room_logs(self):
 
-        if not config.sections["logging"]["readroomlogs"]:
+        numlines = config.sections["logging"]["readroomlines"]
+
+        if not numlines:
             return
 
         filename = clean_file(self.room) + ".log"
         path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
-        numlines = config.sections["logging"]["readroomlines"]
 
         try:
             self.append_log_lines(path, numlines)

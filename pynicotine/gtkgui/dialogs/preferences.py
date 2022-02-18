@@ -1182,7 +1182,6 @@ class ChatsFrame(UserInterface):
             "logging": {
                 "readroomlines": self.RoomLogLines,
                 "readprivatelines": self.PrivateLogLines,
-                "readroomlogs": self.ReadRoomLogs,
                 "rooms_timestamp": self.ChatRoomFormat,
                 "private_timestamp": self.PrivateChatFormat
             },
@@ -1384,7 +1383,6 @@ class ChatsFrame(UserInterface):
 
         return {
             "logging": {
-                "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
                 "private_timestamp": self.PrivateChatFormat.get_text(),

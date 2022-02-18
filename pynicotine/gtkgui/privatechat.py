@@ -234,10 +234,13 @@ class PrivateChat(UserInterface):
 
     def read_private_log(self):
 
-        # Read log file
+        numlines = config.sections["logging"]["readprivatelines"]
+
+        if not numlines:
+            return
+
         filename = clean_file(self.user) + ".log"
         path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
-        numlines = config.sections["logging"]["readprivatelines"]
 
         try:
             self.append_log_lines(path, numlines)
