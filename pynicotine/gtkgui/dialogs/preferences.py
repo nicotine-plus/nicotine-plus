@@ -2978,6 +2978,7 @@ class Preferences(UserInterface):
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
+        self.frame.privatechat.toggle_chat_buttons()
 
         # Transfers
         self.frame.np.transfers.update_limits()
