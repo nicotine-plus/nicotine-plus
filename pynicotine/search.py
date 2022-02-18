@@ -339,6 +339,12 @@ class Search:
         username = msg.init.target_user
         ip_address = msg.init.addr[0]
 
+        if self.core.network_filter.is_user_ignored(username):
+            return
+
+        if self.core.network_filter.is_ip_ignored(ip_address):
+            return
+
         if ip_address:
             country = self.geoip.get_country_code(ip_address)
         else:
