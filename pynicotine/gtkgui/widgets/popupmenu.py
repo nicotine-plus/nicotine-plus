@@ -314,6 +314,8 @@ class PopupMenu:
 
             popup.add_items(("", None))
 
+        popup.update_model()
+
     def clear(self):
 
         for submenu in self.submenus:
