@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-19 03:52+0200\n"
-"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"PO-Revision-Date: 2022-02-19 02:55+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
@@ -6291,10 +6291,13 @@ msgid "Unverified"
 msgstr "Neověřený"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:32
+#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
 msgstr ""
+"Ignorujte chatové zprávy a výsledky vyhledávání od uživatelů na základě "
+"uživatelského jména nebo IP adresy."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:43
 #, fuzzy
