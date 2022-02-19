@@ -1094,21 +1094,27 @@ class SlskProtoThread(threading.Thread):
         if conn_obj.init is None:
             return
 
-        init_key = conn_obj.init.target_user + conn_obj.init.conn_type
-        init = self._init_msgs.get(init_key)
-
-        if conn_obj.init == init:
-            # Don't remove init message if connection has been superseded
-            del self._init_msgs[init_key]
-
-        if callback and conn_type == 'F':
-            self._callback_msgs.append(FileConnClose(sock))
-
         log.add_conn("Removed connection of type %(type)s to user %(user)s %(addr)s", {
             'type': conn_obj.init.conn_type,
             'user': conn_obj.init.target_user,
             'addr': conn_obj.addr
         })
+
+        if callback and conn_type == 'F':
+            self._callback_msgs.append(FileConnClose(sock))
+
+        init_key = conn_obj.init.target_user + conn_obj.init.conn_type
+        init = self._init_msgs.get(init_key)
+
+        if conn_obj.init is not init:
+            # Don't remove init message if connection has been superseded
+            return
+
+        if connection_list is self._connsinprogress and init.sock is not None:
+            # Outgoing connection failed, but an indirect connection was already established
+            return
+
+        del self._init_msgs[init_key]
 
     def close_connection_by_ip(self, ip_address):
 

@@ -651,6 +651,11 @@ class Transfers:
         user = msg.init.target_user
         real_path = self.core.shares.virtual2real(msg.file)
 
+        log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
+            'user': user,
+            'msg': str(vars(msg))
+        })
+
         if not self.file_is_upload_queued(user, msg.file):
 
             limits = True
@@ -695,11 +700,6 @@ class Transfers:
                 self.queue.append(
                     slskmessages.UploadDenied(msg.init, msg.file, "File not shared.")
                 )
-
-        log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
-            'user': user,
-            'msg': str(vars(msg))
-        })
 
     def transfer_request(self, msg):
 
