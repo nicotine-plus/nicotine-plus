@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-19 03:52+0200\n"
-"PO-Revision-Date: 2022-02-19 02:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-02-19 08:17+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/de/>\n"
 "Language: de\n"
@@ -3047,9 +3047,8 @@ msgstr "Privilegien geben…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:233
 #: pynicotine/gtkgui/widgets/popupmenu.py:277
-#, fuzzy
 msgid "Ban IP Address"
-msgstr "IP-Adresse"
+msgstr "IP-Adresse sperren"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
 #: pynicotine/gtkgui/ui/userinfo.ui:576
@@ -4238,19 +4237,17 @@ msgid "Clear"
 msgstr "Entfernen"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
-#, fuzzy
 msgid "Clear all finished and filtered downloads."
-msgstr "Fertige Datei-Downloads"
+msgstr "Alle fertigen und gefilterten Downloads löschen."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Entferne Abgeschlossene"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
-#, fuzzy
 msgid "Clear all downloads marked with a specific status."
 msgstr ""
-"Löschen Sie jeden Download, der mit einem bestimmten Status markiert ist."
+"Alle Downloads, die mit einem bestimmten Status gekennzeichnet sind, löschen."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 msgid "Clear _Downloads…"
@@ -5104,14 +5101,13 @@ msgid "Restore previously open private chats on startup"
 msgstr "Zuvor geöffnete private Chats beim Start wiederherstellen"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:65
-#, fuzzy
 msgid "Number of recent private chat messages to show:"
-msgstr "Anzahl der zuletzt angezeigten Chatzeilen:"
+msgstr ""
+"Anzahl der letzten privaten Chatnachrichten, die angezeigt werden sollen:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:90
-#, fuzzy
 msgid "Number of recent chat room messages to show:"
-msgstr "Anzahl der zuletzt angezeigten Chatzeilen:"
+msgstr "Anzahl der letzten anzuzeigenden Chatroom-Nachrichten:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:117
 msgid "Chat Completion"
@@ -5170,9 +5166,8 @@ msgid "Timestamps"
 msgstr "Zeitstempel"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Private chat format:"
-msgstr "Chat-Raum-Format:"
+msgstr "Privates Chat-Format:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:329
 #: pynicotine/gtkgui/ui/settings/chats.ui:345
@@ -5421,12 +5416,11 @@ msgid "Unverified"
 msgstr "Ungeprüft"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:32
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
 msgstr ""
-"Ignorieren Sie Chat-Nachrichten und Suchergebnisse von Benutzern, basierend "
+"Ignorieren Sie Chat-Nachrichten und Suchergebnisse von Benutzern basierend "
 "auf Benutzername oder IP-Adresse."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:43
@@ -5614,16 +5608,15 @@ msgid "Show privately shared files in search results"
 msgstr "Privat freigegebene Dateien in den Suchergebnissen anzeigen"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
-#, fuzzy
 msgid ""
 "Other Soulseek clients may have the option to share files privately. If so, "
 "these files will be prefixed with '[PRIVATE]', and can not be downloaded "
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Andere Clients bieten möglicherweise eine Option zum Senden privat "
-"freigegebener Dateien als Antwort auf Suchanfragen. Solche Dateien haben das "
-"Präfix „[PRIVAT]“ und können nicht heruntergeladen werden, außer dass der "
-"Uploader die ausdrückliche Genehmigung erteilt."
+"Andere Soulseek-Kunden können die Möglichkeit haben, Dateien privat zu "
+"teilen. Wenn dies der Fall ist, wird diesen Dateien das Präfix \"[PRIVATE]\" "
+"vorangestellt und sie können erst heruntergeladen werden, wenn der Uploader "
+"die ausdrückliche Erlaubnis erteilt. Fragen Sie sie freundlich."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Limit number of results per search:"
@@ -6144,16 +6137,12 @@ msgid "Ban User(s)"
 msgstr "Benutzer sperren"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
-#, fuzzy
 msgid "Clear all finished and cancelled uploads."
-msgstr ""
-"Beendete/abgebrochene Uploads automatisch aus der Übertragungsliste löschen"
+msgstr "Alle abgeschlossenen und abgebrochenen Uploads löschen."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
-#, fuzzy
 msgid "Clear all uploads marked with a specific status."
-msgstr ""
-"Löschen Sie jeden Upload, der mit einem bestimmten Status markiert ist."
+msgstr "Jeden Upload, der mit einem bestimmten Status markiert ist, löschen."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 msgid "Clear Uploa_ds…"
