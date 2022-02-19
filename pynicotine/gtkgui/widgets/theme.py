@@ -276,13 +276,16 @@ def get_flag_icon_name(country):
 
 def get_status_icon(status):
 
+    if status == 0:
+        return get_icon("offline")
+
     if status == 1:
         return get_icon("away")
 
     if status == 2:
         return get_icon("online")
 
-    return get_icon("offline")
+    return None
 
 
 def load_ui_icon(name):

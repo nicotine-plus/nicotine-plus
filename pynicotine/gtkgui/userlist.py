@@ -67,8 +67,8 @@ class UserList(UserInterface):
             str,                  # (8)  hlast seen
             str,                  # (9)  note
             int,                  # (10) status
-            GObject.TYPE_UINT64,  # (11) speed
-            GObject.TYPE_UINT64,  # (12) file count
+            GObject.TYPE_UINT,    # (11) speed
+            GObject.TYPE_UINT,    # (12) file count
             int,                  # (13) last seen
             str                   # (14) country
         )
@@ -322,19 +322,20 @@ class UserList(UserInterface):
 
     def get_user_status(self, msg):
 
-        status = msg.status
-
-        if status < 0:
-            # User doesn't exist, nothing to do
-            return
-
         user = msg.user
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
             return
 
-        if status == int(self.usersmodel.get_value(iterator, 10)):
+        status = msg.status
+
+        if status == self.usersmodel.get_value(iterator, 10):
+            return
+
+        status_icon = get_status_icon(status)
+
+        if status_icon is None:
             return
 
         notify = self.usersmodel.get_value(iterator, 6)
@@ -350,7 +351,6 @@ class UserList(UserInterface):
             log.add(status_text, user)
             self.frame.notifications.new_text_notification(status_text % user)
 
-        status_icon = get_status_icon(status)
         self.usersmodel.set_value(iterator, 0, status_icon)
         self.usersmodel.set_value(iterator, 10, status)
 
