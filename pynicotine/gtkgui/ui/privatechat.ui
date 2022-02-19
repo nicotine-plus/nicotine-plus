@@ -60,10 +60,19 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Log">
-                <property name="label" translatable="yes">_Log</property>
+              <object class="GtkToggleButton" id="Speech">
                 <property name="visible">True</property>
-                <property name="use-underline">True</property>
+                <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
+                <property name="active">True</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">audio-volume-high-symbolic</property>
+                  </object>
+                </child>
+                <style>
+                  <class name="image-button"/>
+                </style>
               </object>
             </child>
             <child>
@@ -79,6 +88,13 @@
                 <style>
                   <class name="image-button"/>
                 </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="Log">
+                <property name="label" translatable="yes">_Log</property>
+                <property name="visible">True</property>
+                <property name="use-underline">True</property>
               </object>
             </child>
           </object>

@@ -25,7 +25,6 @@
 This module contains utility functions.
 """
 
-import errno
 import json
 import os
 import pickle
@@ -105,24 +104,6 @@ def clean_path(path, absolute=False):
     return path
 
 
-def get_path(folder_name, base_name, callback, data=None):
-    """ Call a specified function, supplying an optimal file path depending on
-    which path characters the target file system supports """
-
-    try:
-        filepath = os.path.join(folder_name, base_name)
-        callback(filepath, data)
-
-    except OSError as error:
-        if error.errno != errno.EINVAL:
-            # The issue is not caused by invalid path characters, raise error as usual
-            raise OSError from error
-
-        # Use path with forbidden characters removed (NTFS/FAT)
-        filepath = os.path.join(folder_name, clean_file(base_name))
-        callback(filepath, data)
-
-
 def open_file_path(file_path, command=None):
     """ Currently used to either open a folder or play an audio file
     Tries to run a user-specified command first, and falls back to
@@ -195,13 +176,14 @@ def _handle_log(folder, filename, callback):
             os.makedirs(folder)
 
         filename = clean_file(filename) + ".log"
-        get_path(folder, filename, callback)
+        path = os.path.join(folder, filename)
+        callback(path)
 
     except Exception as error:
         log.add("Failed to process log file: %s", error)
 
 
-def open_log_callback(path, _data):
+def open_log_callback(path):
 
     if not os.path.exists(path):
         with open(path, "w", encoding="utf-8"):
@@ -211,7 +193,7 @@ def open_log_callback(path, _data):
     open_file_path(path)
 
 
-def delete_log_callback(path, _data):
+def delete_log_callback(path):
 
     with open(path, "w", encoding="utf-8"):
         # Check if path should contain special characters

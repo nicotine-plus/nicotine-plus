@@ -21,8 +21,8 @@
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
-                    <property name="height-request">600</property>
-                    <property name="width-request">700</property>
+                    <property name="height-request">475</property>
+                    <property name="width-request">675</property>
                     <child>
                       <object class="GtkTreeView" id="list_view">
                         <property name="visible">True</property>

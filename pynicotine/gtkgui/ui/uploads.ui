@@ -142,7 +142,7 @@
               <object class="GtkMenuButton" id="ClearTransfers">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text" translatable="yes">Clear every upload marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear all uploads marked with a specific status.</property>
                 <child>
                   <object class="GtkBox" id="ClearTransfersLabel">
                     <property name="visible">True</property>

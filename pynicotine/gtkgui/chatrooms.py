@@ -22,6 +22,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from collections import deque
 
 from gi.repository import Gio
@@ -55,7 +57,6 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
-from pynicotine.utils import get_path
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_log
@@ -547,15 +548,16 @@ class ChatRoom(UserInterface):
 
     def read_room_logs(self):
 
-        if not config.sections["logging"]["readroomlogs"]:
+        numlines = config.sections["logging"]["readroomlines"]
+
+        if not numlines:
             return
 
         filename = clean_file(self.room) + ".log"
-        numlines = config.sections["logging"]["readroomlines"]
+        path = os.path.join(config.sections["logging"]["roomlogsdir"], filename)
 
         try:
-            get_path(config.sections["logging"]["roomlogsdir"], filename, self.append_log_lines, numlines)
-
+            self.append_log_lines(path, numlines)
         except OSError:
             pass
 
@@ -613,9 +615,7 @@ class ChatRoom(UserInterface):
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items
-                                 and menu.user != self.frame.np.login_username)
-
+        private_rooms_enabled = (menu_private_rooms.items and menu.user != self.frame.np.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):

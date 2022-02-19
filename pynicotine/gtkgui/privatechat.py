@@ -21,6 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import time
 
 from collections import deque
@@ -45,7 +46,6 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
-from pynicotine.utils import get_path
 from pynicotine.utils import open_log
 
 
@@ -143,6 +143,10 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.message_user(msg)
 
+    def toggle_chat_buttons(self):
+        for page in self.pages.values():
+            page.toggle_chat_buttons()
+
     def set_completion_list(self, completion_list):
 
         page = self.get_nth_page(self.get_current_page())
@@ -200,6 +204,8 @@ class PrivateChat(UserInterface):
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
+        self.toggle_chat_buttons()
+
         self.popup_menu_user_chat = PopupMenu(self.frame, self.ChatScroll, connect_events=False)
         self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
 
@@ -234,13 +240,16 @@ class PrivateChat(UserInterface):
 
     def read_private_log(self):
 
-        # Read log file
-        filename = clean_file(self.user) + ".log"
         numlines = config.sections["logging"]["readprivatelines"]
 
-        try:
-            get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
+        if not numlines:
+            return
 
+        filename = clean_file(self.user) + ".log"
+        path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
+
+        try:
+            self.append_log_lines(path, numlines)
         except OSError:
             pass
 
@@ -286,6 +295,9 @@ class PrivateChat(UserInterface):
 
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()
+
+    def toggle_chat_buttons(self):
+        self.Speech.set_visible(config.sections["ui"]["speechenabled"])
 
     def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
@@ -342,9 +354,11 @@ class PrivateChat(UserInterface):
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_action
+            speech = line[2:]
         else:
             line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
+            speech = text
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
@@ -361,6 +375,11 @@ class PrivateChat(UserInterface):
 
         self.chat_textview.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
                                        username=self.user, usertag=usertag)
+
+        if self.Speech.get_active():
+            self.frame.np.notifications.new_tts(
+                config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
+            )
 
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]

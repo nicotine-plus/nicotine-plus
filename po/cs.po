@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-17 17:24+0200\n"
-"PO-Revision-Date: 2022-01-10 19:58+0000\n"
-"Last-Translator: Mathias <mail@mathias.is>\n"
+"POT-Creation-Date: 2022-02-18 03:09+0200\n"
+"PO-Revision-Date: 2022-02-18 03:28+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/cs/>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.11-dev\n"
 
 #: data/org.nicotine_plus.Nicotine.desktop.in:5
 #: data/org.nicotine_plus.Nicotine.metainfo.xml.in:8
@@ -1466,7 +1466,7 @@ msgstr ""
 "%(complete_version)s byste měli nainstalovat nebo novější."
 
 #: pynicotine/gtkgui/chatrooms.py:419 pynicotine/gtkgui/interests.py:108
-#: pynicotine/gtkgui/transferlist.py:137 pynicotine/gtkgui/userlist.py:79
+#: pynicotine/gtkgui/transferlist.py:136 pynicotine/gtkgui/userlist.py:79
 #, fuzzy
 msgid "Status"
 msgstr "Stav"
@@ -1483,18 +1483,19 @@ msgstr "Země"
 #: pynicotine/gtkgui/chatrooms.py:421
 #: pynicotine/gtkgui/dialogs/preferences.py:883
 #: pynicotine/gtkgui/dialogs/preferences.py:1042
-#: pynicotine/gtkgui/interests.py:109 pynicotine/gtkgui/privatechat.py:219
-#: pynicotine/gtkgui/search.py:334 pynicotine/gtkgui/transferlist.py:134
-#: pynicotine/gtkgui/userbrowse.py:179 pynicotine/gtkgui/userbrowse.py:191
-#: pynicotine/gtkgui/userbrowse.py:244 pynicotine/gtkgui/userbrowse.py:261
-#: pynicotine/gtkgui/userlist.py:81
+#: pynicotine/gtkgui/interests.py:109
+#: pynicotine/gtkgui/popovers/chathistory.py:48
+#: pynicotine/gtkgui/privatechat.py:227 pynicotine/gtkgui/search.py:334
+#: pynicotine/gtkgui/transferlist.py:133 pynicotine/gtkgui/userbrowse.py:181
+#: pynicotine/gtkgui/userbrowse.py:195 pynicotine/gtkgui/userbrowse.py:248
+#: pynicotine/gtkgui/userbrowse.py:265 pynicotine/gtkgui/userlist.py:81
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:229
 #, fuzzy
 msgid "User"
 msgstr "Uživatel"
 
 #: pynicotine/gtkgui/chatrooms.py:422 pynicotine/gtkgui/interests.py:110
-#: pynicotine/gtkgui/search.py:336 pynicotine/gtkgui/transferlist.py:141
+#: pynicotine/gtkgui/search.py:336 pynicotine/gtkgui/transferlist.py:140
 #: pynicotine/gtkgui/userlist.py:82
 #, fuzzy
 msgid "Speed"
@@ -1519,22 +1520,22 @@ msgid "Private Rooms"
 msgstr "Soukromé pokoje"
 
 #: pynicotine/gtkgui/chatrooms.py:458 pynicotine/gtkgui/chatrooms.py:469
-#: pynicotine/gtkgui/privatechat.py:208
+#: pynicotine/gtkgui/privatechat.py:216
 #, fuzzy
 msgid "Find…"
 msgstr "Najít…"
 
 #: pynicotine/gtkgui/chatrooms.py:460 pynicotine/gtkgui/chatrooms.py:471
 #: pynicotine/gtkgui/chatrooms.py:650 pynicotine/gtkgui/chatrooms.py:653
-#: pynicotine/gtkgui/privatechat.py:210 pynicotine/gtkgui/privatechat.py:276
-#: pynicotine/gtkgui/search.py:388 pynicotine/gtkgui/transferlist.py:202
+#: pynicotine/gtkgui/privatechat.py:218 pynicotine/gtkgui/privatechat.py:284
+#: pynicotine/gtkgui/search.py:388 pynicotine/gtkgui/transferlist.py:201
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:272
 #, fuzzy
 msgid "Copy"
 msgstr "Kopírovat"
 
 #: pynicotine/gtkgui/chatrooms.py:461 pynicotine/gtkgui/chatrooms.py:473
-#: pynicotine/gtkgui/privatechat.py:212
+#: pynicotine/gtkgui/privatechat.py:220
 #, fuzzy
 msgid "Copy All"
 msgstr "Kopírovat vše"
@@ -1551,7 +1552,7 @@ msgid "_Leave Room"
 msgstr "_Leave místnost"
 
 #: pynicotine/gtkgui/chatrooms.py:472 pynicotine/gtkgui/chatrooms.py:654
-#: pynicotine/gtkgui/privatechat.py:211 pynicotine/gtkgui/privatechat.py:277
+#: pynicotine/gtkgui/privatechat.py:219 pynicotine/gtkgui/privatechat.py:285
 #, fuzzy
 msgid "Copy Link"
 msgstr "Odkaz na kopírování"
@@ -1566,7 +1567,7 @@ msgstr "Zobrazit deník místnosti"
 msgid "Delete Room Log…"
 msgstr "Odstranit protokol místnosti…"
 
-#: pynicotine/gtkgui/chatrooms.py:478 pynicotine/gtkgui/privatechat.py:217
+#: pynicotine/gtkgui/chatrooms.py:478 pynicotine/gtkgui/privatechat.py:225
 #, fuzzy
 msgid "Clear Message View"
 msgstr "Jasné zobrazení zpráv"
@@ -1607,17 +1608,17 @@ msgstr "%s odešel"
 msgid "%s has returned"
 msgstr "%s se vrátil"
 
-#: pynicotine/gtkgui/chatrooms.py:966 pynicotine/gtkgui/privatechat.py:261
+#: pynicotine/gtkgui/chatrooms.py:966 pynicotine/gtkgui/privatechat.py:269
 #, fuzzy
 msgid "--- disconnected ---"
 msgstr "--- odpojeno ---"
 
-#: pynicotine/gtkgui/chatrooms.py:990 pynicotine/gtkgui/privatechat.py:256
+#: pynicotine/gtkgui/chatrooms.py:990 pynicotine/gtkgui/privatechat.py:264
 #, fuzzy
 msgid "--- reconnected ---"
 msgstr "--- znovu připojen ---"
 
-#: pynicotine/gtkgui/chatrooms.py:1071 pynicotine/gtkgui/privatechat.py:300
+#: pynicotine/gtkgui/chatrooms.py:1071 pynicotine/gtkgui/privatechat.py:309
 #, fuzzy
 msgid "Delete Logged Messages?"
 msgstr "Odstranit protokolované zprávy?"
@@ -1638,7 +1639,7 @@ msgstr "Virtuální složka"
 
 #: pynicotine/gtkgui/dialogs/fastconfigure.py:74
 #: pynicotine/gtkgui/dialogs/preferences.py:542 pynicotine/gtkgui/search.py:338
-#: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:151
+#: pynicotine/gtkgui/uploads.py:39 pynicotine/gtkgui/userbrowse.py:152
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:93
 #, fuzzy
 msgid "Folder"
@@ -1664,16 +1665,21 @@ msgstr "Získejte Soulseek Privileges…"
 msgid "Add a Shared Folder"
 msgstr "Přidání sdílené složky"
 
-#: pynicotine/gtkgui/dialogs/fileproperties.py:39
+#: pynicotine/gtkgui/dialogs/fileproperties.py:42
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:170
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:217
 #, fuzzy
 msgid "File Properties"
 msgstr "Vlastnosti souboru"
 
-#: pynicotine/gtkgui/dialogs/fileproperties.py:74
+#: pynicotine/gtkgui/dialogs/fileproperties.py:82
 #, fuzzy, python-format
-msgid "File Properties (%(num)i of %(total)i)"
+msgid "File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)"
+msgstr "Vlastnosti souboru (%(num)i z %(total)i)"
+
+#: pynicotine/gtkgui/dialogs/fileproperties.py:88
+#, fuzzy, python-format
+msgid "File Properties (%(num)i of %(total)i  /  %(size)s)"
 msgstr "Vlastnosti souboru (%(num)i z %(total)i)"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:94
@@ -1910,7 +1916,7 @@ msgstr "Nesouvislý"
 #: pynicotine/gtkgui/frame.py:1534
 #: pynicotine/gtkgui/widgets/iconnotebook.py:472
 #: pynicotine/gtkgui/widgets/trayicon.py:97
-#: pynicotine/gtkgui/widgets/treeview.py:487
+#: pynicotine/gtkgui/widgets/treeview.py:486
 #: pynicotine/gtkgui/ui/dialogs/shortcuts.ui:34
 #, fuzzy
 msgid "Away"
@@ -2002,14 +2008,14 @@ msgid "Artist"
 msgstr "Umělec"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2116
-#: pynicotine/gtkgui/search.py:342 pynicotine/gtkgui/userbrowse.py:213
+#: pynicotine/gtkgui/search.py:342 pynicotine/gtkgui/userbrowse.py:217
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:141
 #, fuzzy
 msgid "Length"
 msgstr "Délka"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:2118
-#: pynicotine/gtkgui/search.py:341 pynicotine/gtkgui/userbrowse.py:212
+#: pynicotine/gtkgui/search.py:341 pynicotine/gtkgui/userbrowse.py:216
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:167
 #: pynicotine/gtkgui/ui/popovers/searchfilters.ui:266
 #: pynicotine/gtkgui/ui/search.ui:297
@@ -2292,13 +2298,13 @@ msgstr "P_ause"
 msgid "Finished / Filtered"
 msgstr "Dokončeno / filtrováno"
 
-#: pynicotine/gtkgui/downloads.py:50 pynicotine/gtkgui/transferlist.py:100
+#: pynicotine/gtkgui/downloads.py:50 pynicotine/gtkgui/transferlist.py:99
 #: pynicotine/gtkgui/uploads.py:50
 #, fuzzy
 msgid "Finished"
 msgstr "Hotový"
 
-#: pynicotine/gtkgui/downloads.py:51 pynicotine/gtkgui/transferlist.py:99
+#: pynicotine/gtkgui/downloads.py:51 pynicotine/gtkgui/transferlist.py:98
 #, fuzzy
 msgid "Paused"
 msgstr "Pozastaveno"
@@ -2308,7 +2314,7 @@ msgstr "Pozastaveno"
 msgid "Failed"
 msgstr "Neúspěšný"
 
-#: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/transferlist.py:101
+#: pynicotine/gtkgui/downloads.py:53 pynicotine/gtkgui/transferlist.py:100
 #, fuzzy
 msgid "Filtered"
 msgstr "Filtrovaný"
@@ -2364,8 +2370,8 @@ msgid "Loading %(program)s %(version)s"
 msgstr "Ukončení Nicotine+ %(version)s, %(status)s…"
 
 #: pynicotine/gtkgui/frame.py:366 pynicotine/gtkgui/widgets/iconnotebook.py:476
-#: pynicotine/gtkgui/widgets/treeview.py:492
-#: pynicotine/gtkgui/ui/mainwindow.ui:1799
+#: pynicotine/gtkgui/widgets/treeview.py:491
+#: pynicotine/gtkgui/ui/mainwindow.ui:1824
 #, fuzzy
 msgid "Offline"
 msgstr "Offline"
@@ -2587,7 +2593,7 @@ msgstr "Hledat soubory"
 msgid "Browse Shares"
 msgstr "akcie Bro_wse Buddy"
 
-#: pynicotine/gtkgui/frame.py:1106 pynicotine/gtkgui/ui/mainwindow.ui:1240
+#: pynicotine/gtkgui/frame.py:1106 pynicotine/gtkgui/ui/mainwindow.ui:1265
 #: pynicotine/gtkgui/ui/popovers/chatroomcommands.ui:699
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:194
 #, fuzzy
@@ -2595,21 +2601,21 @@ msgid "Private Chat"
 msgstr "Soukromý chat"
 
 #: pynicotine/gtkgui/frame.py:1107 pynicotine/gtkgui/search.py:154
-#: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1361
+#: pynicotine/gtkgui/ui/buddylist.ui:19 pynicotine/gtkgui/ui/mainwindow.ui:1386
 #: pynicotine/gtkgui/ui/settings/downloads.ui:91
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:206
 #, fuzzy
 msgid "Buddies"
 msgstr "Kamarádi"
 
-#: pynicotine/gtkgui/frame.py:1108 pynicotine/gtkgui/ui/mainwindow.ui:1526
+#: pynicotine/gtkgui/frame.py:1108 pynicotine/gtkgui/ui/mainwindow.ui:1551
 #: pynicotine/gtkgui/ui/popovers/privatechatcommands.ui:667
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:218
 #, fuzzy
 msgid "Chat Rooms"
 msgstr "Chat"
 
-#: pynicotine/gtkgui/frame.py:1109 pynicotine/gtkgui/ui/mainwindow.ui:1585
+#: pynicotine/gtkgui/frame.py:1109 pynicotine/gtkgui/ui/mainwindow.ui:1610
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:230
 #: pynicotine/gtkgui/ui/userinfo.ui:313
 #, fuzzy
@@ -2643,7 +2649,7 @@ msgstr "Udělejte pokoj soukromý"
 
 #: pynicotine/gtkgui/frame.py:1531
 #: pynicotine/gtkgui/widgets/iconnotebook.py:474
-#: pynicotine/gtkgui/widgets/treeview.py:490
+#: pynicotine/gtkgui/widgets/treeview.py:489
 #, fuzzy
 msgid "Online"
 msgstr "Online"
@@ -2847,6 +2853,11 @@ msgstr "Podobní uživatelé"
 msgid "Similar Users"
 msgstr "Podobní uživatelé"
 
+#: pynicotine/gtkgui/popovers/chathistory.py:49
+#, fuzzy
+msgid "Latest Message"
+msgstr "Odeslat zprávu"
+
 #: pynicotine/gtkgui/popovers/roomlist.py:55
 #, fuzzy
 msgid "Room"
@@ -2861,52 +2872,52 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:64
-#: pynicotine/gtkgui/popovers/roomlist.py:185
+#: pynicotine/gtkgui/popovers/roomlist.py:183
 #, fuzzy
 msgid "Join Room"
 msgstr "Připojte se k místnosti"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:65
-#: pynicotine/gtkgui/popovers/roomlist.py:186
+#: pynicotine/gtkgui/popovers/roomlist.py:184
 #, fuzzy
 msgid "Leave Room"
 msgstr "Nechte pokoj"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:67
-#: pynicotine/gtkgui/popovers/roomlist.py:188
+#: pynicotine/gtkgui/popovers/roomlist.py:186
 #, fuzzy
 msgid "Disown Private Room"
 msgstr "Zřekni soukromý pokoj"
 
 #: pynicotine/gtkgui/popovers/roomlist.py:68
-#: pynicotine/gtkgui/popovers/roomlist.py:189
+#: pynicotine/gtkgui/popovers/roomlist.py:187
 #, fuzzy
 msgid "Cancel Room Membership"
 msgstr "Zrušit členství v místnosti"
 
-#: pynicotine/gtkgui/privatechat.py:202 pynicotine/gtkgui/search.py:397
-#: pynicotine/gtkgui/userbrowse.py:163 pynicotine/gtkgui/userinfo.py:174
+#: pynicotine/gtkgui/privatechat.py:210 pynicotine/gtkgui/search.py:397
+#: pynicotine/gtkgui/userbrowse.py:164 pynicotine/gtkgui/userinfo.py:174
 #, fuzzy
 msgid "Close All Tabs…"
 msgstr "Zavřít všechny karty…"
 
-#: pynicotine/gtkgui/privatechat.py:203 pynicotine/gtkgui/search.py:398
-#: pynicotine/gtkgui/userbrowse.py:164 pynicotine/gtkgui/userinfo.py:175
+#: pynicotine/gtkgui/privatechat.py:211 pynicotine/gtkgui/search.py:398
+#: pynicotine/gtkgui/userbrowse.py:165 pynicotine/gtkgui/userinfo.py:175
 #, fuzzy
 msgid "_Close Tab"
 msgstr "Karta _Close"
 
-#: pynicotine/gtkgui/privatechat.py:214
+#: pynicotine/gtkgui/privatechat.py:222
 #, fuzzy
 msgid "View Chat Log"
 msgstr "Zobrazit protokol chatu"
 
-#: pynicotine/gtkgui/privatechat.py:215
+#: pynicotine/gtkgui/privatechat.py:223
 #, fuzzy
 msgid "Delete Chat Log…"
 msgstr "Odstranit protokol chatu…"
 
-#: pynicotine/gtkgui/privatechat.py:301
+#: pynicotine/gtkgui/privatechat.py:310
 #, fuzzy
 msgid ""
 "Do you really want to permanently delete all logged messages for this user?"
@@ -2914,16 +2925,14 @@ msgstr ""
 "Opravdu chcete trvale odstranit všechny protokolované zprávy pro tohoto "
 "uživatele?"
 
-#: pynicotine/gtkgui/privatechat.py:320
+#: pynicotine/gtkgui/privatechat.py:329
 #, fuzzy, python-format
 msgid "Private message from %s"
 msgstr "Soukromá zpráva z %s"
 
-#: pynicotine/gtkgui/privatechat.py:346
+#: pynicotine/gtkgui/privatechat.py:355
 #, fuzzy
-msgid ""
-"* Message(s) sent while you were offline. Timestamps are reported by the "
-"server and can be off."
+msgid "* Message(s) sent while you were offline."
 msgstr ""
 "* Zprávy odeslané, když jste byli offline. Časová razítka jsou hlášena "
 "serverem a mohou být vypnuta."
@@ -2959,43 +2968,43 @@ msgstr "ID"
 msgid "In Queue"
 msgstr "Ve frontě"
 
-#: pynicotine/gtkgui/search.py:339 pynicotine/gtkgui/transferlist.py:136
-#: pynicotine/gtkgui/userbrowse.py:210
+#: pynicotine/gtkgui/search.py:339 pynicotine/gtkgui/transferlist.py:135
+#: pynicotine/gtkgui/userbrowse.py:214
 #, fuzzy
 msgid "Filename"
 msgstr "Jméno souboru"
 
-#: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:140
-#: pynicotine/gtkgui/userbrowse.py:211
+#: pynicotine/gtkgui/search.py:340 pynicotine/gtkgui/transferlist.py:139
+#: pynicotine/gtkgui/userbrowse.py:215
 #: pynicotine/gtkgui/ui/dialogs/fileproperties.ui:69
 #, fuzzy
 msgid "Size"
 msgstr "Velikost"
 
-#: pynicotine/gtkgui/search.py:371 pynicotine/gtkgui/transferlist.py:181
-#: pynicotine/gtkgui/userbrowse.py:241 pynicotine/gtkgui/userbrowse.py:258
+#: pynicotine/gtkgui/search.py:371 pynicotine/gtkgui/transferlist.py:180
+#: pynicotine/gtkgui/userbrowse.py:245 pynicotine/gtkgui/userbrowse.py:262
 #, fuzzy
 msgid "Copy _File Path"
 msgstr "Kopírovat cestu _File"
 
-#: pynicotine/gtkgui/search.py:372 pynicotine/gtkgui/transferlist.py:182
-#: pynicotine/gtkgui/userbrowse.py:177 pynicotine/gtkgui/userbrowse.py:189
-#: pynicotine/gtkgui/userbrowse.py:242 pynicotine/gtkgui/userbrowse.py:259
+#: pynicotine/gtkgui/search.py:372 pynicotine/gtkgui/transferlist.py:181
+#: pynicotine/gtkgui/userbrowse.py:179 pynicotine/gtkgui/userbrowse.py:193
+#: pynicotine/gtkgui/userbrowse.py:246 pynicotine/gtkgui/userbrowse.py:263
 #, fuzzy
 msgid "Copy _URL"
 msgstr "Zkopírujte _URL"
 
-#: pynicotine/gtkgui/search.py:373 pynicotine/gtkgui/transferlist.py:183
+#: pynicotine/gtkgui/search.py:373 pynicotine/gtkgui/transferlist.py:182
 #, fuzzy
 msgid "Copy Folder U_RL"
 msgstr "U_RL kopírování složky"
 
-#: pynicotine/gtkgui/search.py:380 pynicotine/gtkgui/userbrowse.py:250
+#: pynicotine/gtkgui/search.py:380 pynicotine/gtkgui/userbrowse.py:254
 #, fuzzy
 msgid "_Download File(s)"
 msgstr "_Download soubory"
 
-#: pynicotine/gtkgui/search.py:381 pynicotine/gtkgui/userbrowse.py:251
+#: pynicotine/gtkgui/search.py:381 pynicotine/gtkgui/userbrowse.py:255
 #, fuzzy
 msgid "Download File(s) _To…"
 msgstr "Stáhnout soubory _To…"
@@ -3010,18 +3019,20 @@ msgstr "Stáhnout _Folder(y)"
 msgid "Download F_older(s) To…"
 msgstr "Stáhněte si F_older do…"
 
-#: pynicotine/gtkgui/search.py:385 pynicotine/gtkgui/transferlist.py:195
+#: pynicotine/gtkgui/search.py:385 pynicotine/gtkgui/transferlist.py:194
 #, fuzzy
 msgid "_Browse Folder(s)"
 msgstr "_Browse složky"
 
-#: pynicotine/gtkgui/search.py:386 pynicotine/gtkgui/transferlist.py:192
-#: pynicotine/gtkgui/userbrowse.py:239 pynicotine/gtkgui/userbrowse.py:256
+#: pynicotine/gtkgui/search.py:386 pynicotine/gtkgui/transferlist.py:191
+#: pynicotine/gtkgui/userbrowse.py:176 pynicotine/gtkgui/userbrowse.py:190
+#: pynicotine/gtkgui/userbrowse.py:243 pynicotine/gtkgui/userbrowse.py:260
+#: pynicotine/gtkgui/userbrowse.py:718
 #, fuzzy
 msgid "F_ile Properties"
 msgstr "vlastnosti F_ile"
 
-#: pynicotine/gtkgui/search.py:389 pynicotine/gtkgui/transferlist.py:203
+#: pynicotine/gtkgui/search.py:389 pynicotine/gtkgui/transferlist.py:202
 #, fuzzy
 msgid "User(s)"
 msgstr "Uživatelé"
@@ -3045,7 +3056,7 @@ msgstr ""
 "Odfiltrován nesprávný výsledek vyhledávání %(filepath)s od uživatele "
 "%(user)s pro vyhledávací dotaz \"%(query)s\""
 
-#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:402
+#: pynicotine/gtkgui/search.py:572 pynicotine/gtkgui/userbrowse.py:407
 #, fuzzy, python-format
 msgid "[PRIVATE]  %s"
 msgstr "[SOUKROMÉ]"
@@ -3075,172 +3086,172 @@ msgstr "Odebrat Wi_sh"
 msgid "Select User's Results"
 msgstr "Vyberte převody uživatele"
 
-#: pynicotine/gtkgui/search.py:1064
+#: pynicotine/gtkgui/search.py:1069
 #, fuzzy, python-format
 msgid "Total: %s"
 msgstr "Totální"
 
-#: pynicotine/gtkgui/search.py:1169 pynicotine/gtkgui/userbrowse.py:997
+#: pynicotine/gtkgui/search.py:1185 pynicotine/gtkgui/userbrowse.py:1008
 #, fuzzy
 msgid "Select Destination Folder for File(s)"
 msgstr "Vyberte cíl pro stahování souborů od uživatele"
 
-#: pynicotine/gtkgui/search.py:1219 pynicotine/gtkgui/userbrowse.py:729
+#: pynicotine/gtkgui/search.py:1237 pynicotine/gtkgui/userbrowse.py:740
 #, fuzzy
 msgid "Select Destination Folder"
 msgstr "Výběr složky"
 
-#: pynicotine/gtkgui/transferlist.py:86
+#: pynicotine/gtkgui/transferlist.py:85
 #, fuzzy
 msgid "Queued"
 msgstr "Zařazený do fronty"
 
-#: pynicotine/gtkgui/transferlist.py:87
+#: pynicotine/gtkgui/transferlist.py:86
 #, fuzzy
 msgid "Queued (prioritized)"
 msgstr "upřednostněný"
 
-#: pynicotine/gtkgui/transferlist.py:88
+#: pynicotine/gtkgui/transferlist.py:87
 #, fuzzy
 msgid "Queued (privileged)"
 msgstr "privilegovaný"
 
-#: pynicotine/gtkgui/transferlist.py:89
+#: pynicotine/gtkgui/transferlist.py:88
 #, fuzzy
 msgid "Getting status"
 msgstr "Získání stavu"
 
-#: pynicotine/gtkgui/transferlist.py:90
+#: pynicotine/gtkgui/transferlist.py:89
 #, fuzzy
 msgid "Establishing connection"
 msgstr "Navázání spojení"
 
-#: pynicotine/gtkgui/transferlist.py:91
+#: pynicotine/gtkgui/transferlist.py:90
 #, fuzzy
 msgid "Transferring"
 msgstr "Přenášení"
 
-#: pynicotine/gtkgui/transferlist.py:92
+#: pynicotine/gtkgui/transferlist.py:91
 #, fuzzy
 msgid "Cannot connect"
 msgstr "Nelze se připojit"
 
-#: pynicotine/gtkgui/transferlist.py:93
+#: pynicotine/gtkgui/transferlist.py:92
 #, fuzzy
 msgid "Pending shutdown"
 msgstr "Čeká se na vypnutí"
 
-#: pynicotine/gtkgui/transferlist.py:94
+#: pynicotine/gtkgui/transferlist.py:93
 #, fuzzy
 msgid "User logged off"
 msgstr "Uživatel se odhlásil"
 
-#: pynicotine/gtkgui/transferlist.py:95
+#: pynicotine/gtkgui/transferlist.py:94
 #, fuzzy
 msgid "Connection closed by peer"
 msgstr "Připojení uzavřené peer"
 
-#: pynicotine/gtkgui/transferlist.py:96
+#: pynicotine/gtkgui/transferlist.py:95
 #, fuzzy
 msgid "Disallowed extension"
 msgstr "Nepovolené prodloužení"
 
-#: pynicotine/gtkgui/transferlist.py:97 pynicotine/gtkgui/uploads.py:51
+#: pynicotine/gtkgui/transferlist.py:96 pynicotine/gtkgui/uploads.py:51
 #, fuzzy
 msgid "Aborted"
 msgstr "Přerušena"
 
-#: pynicotine/gtkgui/transferlist.py:98
+#: pynicotine/gtkgui/transferlist.py:97
 #, fuzzy
 msgid "Cancelled"
 msgstr "Zrušit"
 
-#: pynicotine/gtkgui/transferlist.py:102
+#: pynicotine/gtkgui/transferlist.py:101
 #, fuzzy
 msgid "Banned"
 msgstr "Zakázaný"
 
-#: pynicotine/gtkgui/transferlist.py:103
+#: pynicotine/gtkgui/transferlist.py:102
 #, fuzzy
 msgid "Blocked country"
 msgstr "Blokovaná země"
 
-#: pynicotine/gtkgui/transferlist.py:104
+#: pynicotine/gtkgui/transferlist.py:103
 #, fuzzy
 msgid "Too many files"
 msgstr "Příliš mnoho souborů"
 
-#: pynicotine/gtkgui/transferlist.py:105
+#: pynicotine/gtkgui/transferlist.py:104
 #, fuzzy
 msgid "Too many megabytes"
 msgstr "Příliš mnoho megabajtů"
 
-#: pynicotine/gtkgui/transferlist.py:106 pynicotine/gtkgui/transferlist.py:107
+#: pynicotine/gtkgui/transferlist.py:105 pynicotine/gtkgui/transferlist.py:106
 #, fuzzy
 msgid "File not shared"
 msgstr "Soubor, který není sdílen"
 
-#: pynicotine/gtkgui/transferlist.py:108 pynicotine/transfers.py:1872
+#: pynicotine/gtkgui/transferlist.py:107 pynicotine/transfers.py:1872
 #, fuzzy
 msgid "Download folder error"
 msgstr "Chyba stažení složky"
 
-#: pynicotine/gtkgui/transferlist.py:109
+#: pynicotine/gtkgui/transferlist.py:108
 #, fuzzy
 msgid "Local file error"
 msgstr "Chyba místního souboru"
 
-#: pynicotine/gtkgui/transferlist.py:110
+#: pynicotine/gtkgui/transferlist.py:109
 #, fuzzy
 msgid "Remote file error"
 msgstr "Chyba vzdáleného souboru"
 
-#: pynicotine/gtkgui/transferlist.py:138
+#: pynicotine/gtkgui/transferlist.py:137
 #, fuzzy
 msgid "Queue"
 msgstr "Zařazený do fronty"
 
-#: pynicotine/gtkgui/transferlist.py:139
+#: pynicotine/gtkgui/transferlist.py:138
 #, fuzzy
 msgid "Percent"
 msgstr "Procento"
 
-#: pynicotine/gtkgui/transferlist.py:142
+#: pynicotine/gtkgui/transferlist.py:141
 #, fuzzy
 msgid "Time Elapsed"
 msgstr "Uplynul čas"
 
-#: pynicotine/gtkgui/transferlist.py:143
+#: pynicotine/gtkgui/transferlist.py:142
 #, fuzzy
 msgid "Time Left"
 msgstr "Zbývá čas"
 
-#: pynicotine/gtkgui/transferlist.py:190 pynicotine/gtkgui/userbrowse.py:237
+#: pynicotine/gtkgui/transferlist.py:189 pynicotine/gtkgui/userbrowse.py:241
 #, fuzzy
 msgid "Send to _Player"
 msgstr "Odeslat na _Player"
 
-#: pynicotine/gtkgui/transferlist.py:191
+#: pynicotine/gtkgui/transferlist.py:190
 #, fuzzy
 msgid "_Open in File Manager"
 msgstr "_Open ve Správci souborů"
 
-#: pynicotine/gtkgui/transferlist.py:194
+#: pynicotine/gtkgui/transferlist.py:193
 #, fuzzy
 msgid "_Search"
 msgstr "_Search"
 
-#: pynicotine/gtkgui/transferlist.py:199
+#: pynicotine/gtkgui/transferlist.py:198
 #, fuzzy
 msgid "_Clear"
 msgstr "_Clear"
 
-#: pynicotine/gtkgui/transferlist.py:201
+#: pynicotine/gtkgui/transferlist.py:200
 #, fuzzy
 msgid "Clear Groups"
 msgstr "Jasné skupiny"
 
-#: pynicotine/gtkgui/transferlist.py:678
+#: pynicotine/gtkgui/transferlist.py:686
 #, fuzzy
 msgid "Select User's Transfers"
 msgstr "Vyberte převody uživatele"
@@ -3285,57 +3296,57 @@ msgstr "Vymazat všechna nahraná videa"
 msgid "Do you really want to clear all uploads?"
 msgstr "Opravdu chcete vymazat všechna nahraná videa?"
 
-#: pynicotine/gtkgui/userbrowse.py:162
+#: pynicotine/gtkgui/userbrowse.py:163
 #, fuzzy
 msgid "_Save Shares List to Disk"
 msgstr "_Save Seznam sdílených složek na disk"
 
-#: pynicotine/gtkgui/userbrowse.py:171 pynicotine/gtkgui/userbrowse.py:235
+#: pynicotine/gtkgui/userbrowse.py:172 pynicotine/gtkgui/userbrowse.py:239
 #, fuzzy
 msgid "Upload Folder…"
 msgstr "Nahrát složku do…"
 
-#: pynicotine/gtkgui/userbrowse.py:172
+#: pynicotine/gtkgui/userbrowse.py:173
 #, fuzzy
 msgid "Upload Folder & Subfolder(s)…"
 msgstr "Nahrát složku (s podsložkami) uživateli"
 
-#: pynicotine/gtkgui/userbrowse.py:174 pynicotine/gtkgui/userbrowse.py:238
+#: pynicotine/gtkgui/userbrowse.py:175 pynicotine/gtkgui/userbrowse.py:242
 #, fuzzy
 msgid "Open in File _Manager"
 msgstr "Otevřít v _Manager souborů"
 
-#: pynicotine/gtkgui/userbrowse.py:176 pynicotine/gtkgui/userbrowse.py:188
+#: pynicotine/gtkgui/userbrowse.py:178 pynicotine/gtkgui/userbrowse.py:192
 #, fuzzy
 msgid "Copy _Folder Path"
 msgstr "Kopírovat cestu _Folder"
 
-#: pynicotine/gtkgui/userbrowse.py:183 pynicotine/gtkgui/userbrowse.py:253
+#: pynicotine/gtkgui/userbrowse.py:185 pynicotine/gtkgui/userbrowse.py:257
 #, fuzzy
 msgid "_Download Folder"
 msgstr "Složka _Download"
 
-#: pynicotine/gtkgui/userbrowse.py:184 pynicotine/gtkgui/userbrowse.py:254
+#: pynicotine/gtkgui/userbrowse.py:186 pynicotine/gtkgui/userbrowse.py:258
 #, fuzzy
 msgid "Download Folder _To…"
 msgstr "Stáhnout složku _To…"
 
-#: pynicotine/gtkgui/userbrowse.py:185
+#: pynicotine/gtkgui/userbrowse.py:187
 #, fuzzy
 msgid "Download Folder & Subfolder(s)"
 msgstr "Stáhnout _Folder(y)"
 
-#: pynicotine/gtkgui/userbrowse.py:186
+#: pynicotine/gtkgui/userbrowse.py:188
 #, fuzzy
 msgid "Download Folder & Subfolder(s) To…"
 msgstr "Stáhněte si F_older do…"
 
-#: pynicotine/gtkgui/userbrowse.py:234
+#: pynicotine/gtkgui/userbrowse.py:238
 #, fuzzy
 msgid "Up_load File(s)…"
 msgstr "Up_load soubory"
 
-#: pynicotine/gtkgui/userbrowse.py:453
+#: pynicotine/gtkgui/userbrowse.py:458
 #, fuzzy
 msgid ""
 "User's list of shared files is empty. Either the user is not sharing "
@@ -3344,7 +3355,7 @@ msgstr ""
 "Seznam sdílených souborů uživatele je prázdný. Uživatel buď nic nesdílí, "
 "nebo sdílí soubory soukromě."
 
-#: pynicotine/gtkgui/userbrowse.py:462
+#: pynicotine/gtkgui/userbrowse.py:467
 #, fuzzy
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
@@ -3353,27 +3364,27 @@ msgstr ""
 "Nelze od uživatele požádat o sdílené soubory. Buď je uživatel offline, oba "
 "máte uzavřený naslouchací port nebo dojde k dočasnému problému s připojením."
 
-#: pynicotine/gtkgui/userbrowse.py:727
+#: pynicotine/gtkgui/userbrowse.py:738
 #, fuzzy
 msgid "Select Destination for Downloading Multiple Folders"
 msgstr "Vyberte Cíl pro stažení složky od uživatele"
 
-#: pynicotine/gtkgui/userbrowse.py:774
+#: pynicotine/gtkgui/userbrowse.py:785
 #, fuzzy
 msgid "Upload Folder (with Subfolders) To User"
 msgstr "Nahrát složku (s podsložkami) uživateli"
 
-#: pynicotine/gtkgui/userbrowse.py:776
+#: pynicotine/gtkgui/userbrowse.py:787
 #, fuzzy
 msgid "Upload Folder To User"
 msgstr "Nahrát složku do…"
 
-#: pynicotine/gtkgui/userbrowse.py:781 pynicotine/gtkgui/userbrowse.py:1038
+#: pynicotine/gtkgui/userbrowse.py:792 pynicotine/gtkgui/userbrowse.py:1049
 #, fuzzy
 msgid "Enter the name of the user you want to upload to:"
 msgstr "Zadejte jméno uživatele, na kterého chcete nahrát:"
 
-#: pynicotine/gtkgui/userbrowse.py:1037
+#: pynicotine/gtkgui/userbrowse.py:1048
 #, fuzzy
 msgid "Upload File(s) To User"
 msgstr "Nahrát soubory"
@@ -3424,7 +3435,7 @@ msgid "No"
 msgstr "Ne"
 
 #: pynicotine/gtkgui/userinfo.py:380 pynicotine/gtkgui/widgets/popupmenu.py:551
-#: pynicotine/gtkgui/widgets/treeview.py:465
+#: pynicotine/gtkgui/widgets/treeview.py:464
 #: pynicotine/gtkgui/ui/userinfo.ui:115 pynicotine/gtkgui/ui/userinfo.ui:142
 #: pynicotine/gtkgui/ui/userinfo.ui:169 pynicotine/gtkgui/ui/userinfo.ui:196
 #: pynicotine/gtkgui/ui/userinfo.ui:223 pynicotine/gtkgui/ui/userinfo.ui:250
@@ -3779,27 +3790,27 @@ msgstr "Zadejte jméno uživatele, jehož sdílené složky chcete zobrazit:"
 msgid "Hide Nicotine+"
 msgstr "Skrýt Nicotine+"
 
-#: pynicotine/gtkgui/widgets/treeview.py:68
+#: pynicotine/gtkgui/widgets/treeview.py:67
 #, fuzzy
 msgid "Ungrouped"
 msgstr "Rozložen"
 
-#: pynicotine/gtkgui/widgets/treeview.py:71
+#: pynicotine/gtkgui/widgets/treeview.py:70
 #, fuzzy
 msgid "Group by Folder"
 msgstr "Seskupit podle složky"
 
-#: pynicotine/gtkgui/widgets/treeview.py:74
+#: pynicotine/gtkgui/widgets/treeview.py:73
 #, fuzzy
 msgid "Group by User"
 msgstr "Seskupit podle uživatele"
 
-#: pynicotine/gtkgui/widgets/treeview.py:393
+#: pynicotine/gtkgui/widgets/treeview.py:392
 #, fuzzy, python-format
 msgid "Column #%i"
 msgstr "Sloupec #%i"
 
-#: pynicotine/gtkgui/widgets/treeview.py:473
+#: pynicotine/gtkgui/widgets/treeview.py:472
 #, fuzzy
 msgid "Earth"
 msgstr "Země"
@@ -4218,7 +4229,7 @@ msgstr "Zdá se, že server nefunguje nebo nereaguje, opakování za %i sekundy"
 msgid "Cannot connect to server %(host)s:%(port)s: %(error)s"
 msgstr "Nelze se připojit k serveru %(host)s:%(port)s: %(error)s"
 
-#: pynicotine/slskproto.py:2159
+#: pynicotine/slskproto.py:2160
 #, fuzzy, python-format
 msgid "Connected to server %(host)s:%(port)s, logging in…"
 msgstr "Připojeno k serveru %(host)s:%(port)s, přihlášení…"
@@ -4455,12 +4466,12 @@ msgstr "Odebrán alias %(alias)s: %(action)s\n"
 msgid "No such alias (%(alias)s)\n"
 msgstr "Žádný takový alias (%(alias)s)\n"
 
-#: pynicotine/gtkgui/ui/buddylist.ui:33 pynicotine/gtkgui/ui/mainwindow.ui:1305
+#: pynicotine/gtkgui/ui/buddylist.ui:33 pynicotine/gtkgui/ui/mainwindow.ui:1330
 #, fuzzy
 msgid "Add buddy…"
 msgstr "Přidat kamaráda…"
 
-#: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1306
+#: pynicotine/gtkgui/ui/buddylist.ui:34 pynicotine/gtkgui/ui/mainwindow.ui:1331
 #, fuzzy
 msgid "Enter the username of the person you want to add to your buddy list"
 msgstr ""
@@ -4895,10 +4906,23 @@ msgstr "Pauza"
 msgid "Clear"
 msgstr "Jasný"
 
+#: pynicotine/gtkgui/ui/downloads.ui:146
+#, fuzzy
+msgid ""
+"Clear every download that has finished transferring or been caught by a "
+"filter."
+msgstr ""
+"Vymažte každé stahování, které dokončilo přenos nebo bylo zachyceno filtrem."
+
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 #, fuzzy
 msgid "Clear Finished"
 msgstr "Vymazat dokončené"
+
+#: pynicotine/gtkgui/ui/downloads.ui:175
+#, fuzzy
+msgid "Clear every download marked with a specific status."
+msgstr "Vymažte každé stahování označené konkrétním stavem."
 
 #: pynicotine/gtkgui/ui/downloads.ui:183
 #, fuzzy
@@ -4925,6 +4949,16 @@ msgstr "Osobní nelibost"
 msgid "Add something you dislike…"
 msgstr "Přidejte něco, co se vám nelíbí…"
 
+#: pynicotine/gtkgui/ui/interests.ui:169
+#, fuzzy
+msgid "Refresh list of recommendations"
+msgstr "Doporučení"
+
+#: pynicotine/gtkgui/ui/interests.ui:248
+#, fuzzy
+msgid "Show users with similar interests"
+msgstr "Zobrazit uživatele s podobnými zájmy"
+
 #: pynicotine/gtkgui/ui/mainwindow.ui:27
 #, fuzzy
 msgid "Menu"
@@ -4943,7 +4977,7 @@ msgstr "Místnost…"
 #: pynicotine/gtkgui/ui/mainwindow.ui:141
 #: pynicotine/gtkgui/ui/mainwindow.ui:820
 #: pynicotine/gtkgui/ui/mainwindow.ui:999
-#: pynicotine/gtkgui/ui/mainwindow.ui:1160
+#: pynicotine/gtkgui/ui/mainwindow.ui:1161
 #, fuzzy
 msgid "Username…"
 msgstr "Uživatelské jméno…"
@@ -5070,25 +5104,30 @@ msgstr ""
 "Zadejte jméno uživatele a zobrazte jeho uživatelský popis, informace a "
 "osobní obrázek."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1161
+#: pynicotine/gtkgui/ui/mainwindow.ui:1162
 #, fuzzy
 msgid "Enter the username of the person you want to send a message to"
 msgstr "Zadejte uživatelské jméno osoby, které chcete poslat zprávu"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1184
-#: pynicotine/gtkgui/ui/mainwindow.ui:1470
+#: pynicotine/gtkgui/ui/mainwindow.ui:1185
+#, fuzzy
+msgid "Chat _History"
+msgstr "Historie chatu"
+
+#: pynicotine/gtkgui/ui/mainwindow.ui:1209
+#: pynicotine/gtkgui/ui/mainwindow.ui:1495
 #, fuzzy
 msgid "Configure chats"
 msgstr "Konfigurace sdílených složek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1252
+#: pynicotine/gtkgui/ui/mainwindow.ui:1277
 #, fuzzy
 msgid ""
 "Enter the name of a user to start a text conversation with them in private"
 msgstr ""
 "Zadejte jméno uživatele a začněte s ním textovou konverzaci v soukromí."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1373
+#: pynicotine/gtkgui/ui/mainwindow.ui:1398
 #, fuzzy
 msgid ""
 "Add users as buddies to share specific folders with them and receive "
@@ -5097,12 +5136,12 @@ msgstr ""
 "Přidání uživatelů do seznamu kamarádů pro sdílení konkrétních složek s nimi "
 "a přijímání oznámení, když jsou online"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1429
+#: pynicotine/gtkgui/ui/mainwindow.ui:1454
 #, fuzzy
 msgid "Create or join room…"
 msgstr "Vytvořit nebo spojit místnost…"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1430
+#: pynicotine/gtkgui/ui/mainwindow.ui:1455
 #, fuzzy
 msgid ""
 "Enter the name of a room you want to join. If the room doesn't exist, it "
@@ -5111,12 +5150,12 @@ msgstr ""
 "Zadejte název místnosti, ke které se chcete připojit. Pokud místnost "
 "neexistuje, bude vytvořena."
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1446
+#: pynicotine/gtkgui/ui/mainwindow.ui:1471
 #, fuzzy
 msgid "_Room List"
 msgstr "seznam _Room"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1538
+#: pynicotine/gtkgui/ui/mainwindow.ui:1563
 #, fuzzy
 msgid ""
 "Join an existing chat room, or create a new room to chat with other users on "
@@ -5125,32 +5164,32 @@ msgstr ""
 "Připojte se k existující chatovací místnosti nebo vytvořte novou místnost "
 "pro chatování s ostatními uživateli v síti Soulseek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1687
+#: pynicotine/gtkgui/ui/mainwindow.ui:1712
 #, fuzzy
 msgid "Scanning Shares"
 msgstr "Skenování sdílených složek"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1704
+#: pynicotine/gtkgui/ui/mainwindow.ui:1729
 #, fuzzy
 msgid "Connections"
 msgstr "Konexe"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1735
+#: pynicotine/gtkgui/ui/mainwindow.ui:1760
 #, fuzzy
 msgid "Downloading (speed / active users)"
 msgstr "Stahování (rychlost / aktivní uživatelé)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1765
+#: pynicotine/gtkgui/ui/mainwindow.ui:1790
 #, fuzzy
 msgid "Uploading (speed / active users)"
 msgstr "Nahrávání (rychlost / aktivní uživatelé)"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1813
+#: pynicotine/gtkgui/ui/mainwindow.ui:1838
 #, fuzzy
 msgid "Enable alternative download and upload speed limits"
 msgstr "Povolit alternativní omezení rychlosti stahování a nahrávání"
 
-#: pynicotine/gtkgui/ui/mainwindow.ui:1831
+#: pynicotine/gtkgui/ui/mainwindow.ui:1856
 #, fuzzy
 msgid "Show log history"
 msgstr "Zobrazit historii protokolů"
@@ -7123,6 +7162,20 @@ msgstr "Přerušit uživatele"
 #, fuzzy
 msgid "Ban User(s)"
 msgstr "Zakázat uživatele"
+
+#: pynicotine/gtkgui/ui/uploads.ui:144
+#, fuzzy
+msgid ""
+"Clear every upload that has either finished transferring, or been cancelled "
+"by the remote user."
+msgstr ""
+"Vymažte každé nahrávání, které buď dokončilo přenos, nebo bylo zrušeno "
+"vzdáleným uživatelem."
+
+#: pynicotine/gtkgui/ui/uploads.ui:173
+#, fuzzy
+msgid "Clear every upload marked with a specific status."
+msgstr "Vymazat každé nahrání označené konkrétním stavem."
 
 #: pynicotine/gtkgui/ui/uploads.ui:181
 #, fuzzy

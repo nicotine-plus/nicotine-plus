@@ -302,20 +302,6 @@ class UserList(UserInterface):
 
         return model.get_value(iterator, 2)
 
-    @staticmethod
-    def get_selected_username_details(treeview):
-
-        model, iterator = treeview.get_selection().get_selected()
-
-        if iterator is not None:
-            username = model.get_value(iterator, 2)
-            status = model.get_value(iterator, 10)
-
-        else:
-            username = status = None
-
-        return username, status
-
     def on_row_activated(self, treeview, _path, _column):
 
         user = self.get_selected_username(treeview)
@@ -326,14 +312,12 @@ class UserList(UserInterface):
 
     def on_popup_menu(self, menu, widget):
 
-        username, status = self.get_selected_username_details(widget)
+        username = self.get_selected_username(widget)
         menu.set_user(username)
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items
-                                 and status > 0 and menu.user != self.frame.np.login_username)
-
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.frame.np.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def get_user_status(self, msg):
