@@ -38,7 +38,7 @@ If you feel like contributing to Nicotine+, there are several ways to help:
 # Where did the name Nicotine come from?
 
 > I was in a geeky mood and was browsing [http://www.bash.org](http://www.bash.org)'s QDB.  
-I stumbled across this quote:  
+I stumbled across [this quote](http://www.bash.org/?10159):  
 >> **\<etc>** so tempting to release a product called 'nicotine' and wait for the patches.  
 >> **\<etc>** then i would have a reason to only apply one patch a day. otherwise, i'm going against medical advise.  
 >
