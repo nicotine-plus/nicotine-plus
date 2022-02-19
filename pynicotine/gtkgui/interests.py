@@ -98,8 +98,8 @@ class Interests(UserInterface):
             str,                  # (2) hspeed
             str,                  # (3) hfiles
             int,                  # (4) status
-            GObject.TYPE_UINT64,  # (5) speed
-            GObject.TYPE_UINT64   # (6) file count
+            GObject.TYPE_UINT,    # (5) speed
+            GObject.TYPE_UINT     # (6) file count
         )
 
         self.recommendation_users_column_numbers = list(range(self.recommendation_users_model.get_n_columns()))
@@ -330,15 +330,24 @@ class Interests(UserInterface):
 
     def get_user_status(self, msg):
 
-        if msg.user not in self.recommendation_users:
+        iterator = self.recommendation_users.get(msg.user)
+
+        if iterator is None:
             return
 
         status_icon = get_status_icon(msg.status)
-        self.recommendation_users_model.set(self.recommendation_users[msg.user], 0, status_icon, 4, msg.status)
+
+        if status_icon is None:
+            return
+
+        self.recommendation_users_model.set_value(iterator, 0, status_icon)
+        self.recommendation_users_model.set_value(iterator, 4, msg.status)
 
     def get_user_stats(self, msg):
 
-        if msg.user not in self.recommendation_users:
+        iterator = self.recommendation_users.get(msg.user)
+
+        if iterator is None:
             return
 
         h_speed = ""
@@ -350,8 +359,10 @@ class Interests(UserInterface):
         files = msg.files
         h_files = humanize(msg.files)
 
-        self.recommendation_users_model.set(
-            self.recommendation_users[msg.user], 2, h_speed, 3, h_files, 5, avgspeed, 6, files)
+        self.recommendation_users_model.set_value(iterator, 2, h_speed)
+        self.recommendation_users_model.set_value(iterator, 3, h_files)
+        self.recommendation_users_model.set_value(iterator, 5, GObject.Value(GObject.TYPE_UINT, avgspeed))
+        self.recommendation_users_model.set_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, files))
 
     @staticmethod
     def get_selected_item(treeview, column=0):

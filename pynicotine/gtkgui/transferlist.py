@@ -123,7 +123,7 @@ class TransferList(UserInterface):
             GObject.TYPE_UINT64,   # (10) size
             GObject.TYPE_UINT64,   # (11) current bytes
             GObject.TYPE_UINT64,   # (12) speed
-            int,                   # (13) queue position
+            GObject.TYPE_UINT,     # (13) queue position
             int,                   # (14) time elapsed
             int,                   # (15) time left
             GObject.TYPE_PYOBJECT  # (16) transfer object
@@ -444,7 +444,7 @@ class TransferList(UserInterface):
 
             self.transfersmodel.set_value(initer, 5, percent)
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
-            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, position))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT, position))
             transfer.current_byte_offset = position
 
         if self.transfersmodel.get_value(initer, 10) != totalsize:
@@ -501,7 +501,7 @@ class TransferList(UserInterface):
 
             if self.transfersmodel.get_value(initer, 13) != queue_position:
                 self.transfersmodel.set_value(initer, 4, self.get_hqueue_position(queue_position))
-                self.transfersmodel.set_value(initer, 13, queue_position)
+                self.transfersmodel.set_value(initer, 13, GObject.Value(GObject.TYPE_UINT, queue_position))
 
             return
 
@@ -620,7 +620,7 @@ class TransferList(UserInterface):
                 GObject.Value(GObject.TYPE_UINT64, size),
                 GObject.Value(GObject.TYPE_UINT64, current_byte_offset),
                 GObject.Value(GObject.TYPE_UINT64, speed),
-                queue_position,
+                GObject.Value(GObject.TYPE_UINT, queue_position),
                 elapsed,
                 left,
                 transfer

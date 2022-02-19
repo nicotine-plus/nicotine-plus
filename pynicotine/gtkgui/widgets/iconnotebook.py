@@ -210,7 +210,7 @@ class TabLabel(Gtk.Box):
 
     def set_status_icon(self, status):
 
-        icon_data = get_status_icon(status)
+        icon_data = get_status_icon(status) or get_status_icon(0)
 
         if icon_data is self.start_icon_data:
             return

@@ -305,7 +305,7 @@ class Search(UserInterface):
         # Columns
         self.treeview_name = "file_search"
         self.resultsmodel = Gtk.TreeStore(
-            GObject.TYPE_UINT64,  # (0)  num
+            int,                  # (0)  num
             str,                  # (1)  user
             str,                  # (2)  flag
             str,                  # (3)  h_speed
@@ -315,13 +315,13 @@ class Search(UserInterface):
             str,                  # (7)  h_size
             str,                  # (8)  h_bitrate
             str,                  # (9)  h_length
-            GObject.TYPE_UINT64,  # (10) bitrate
+            GObject.TYPE_UINT,    # (10) bitrate
             str,                  # (11) fullpath
             str,                  # (12) country
             GObject.TYPE_UINT64,  # (13) size
-            GObject.TYPE_UINT64,  # (14) speed
+            GObject.TYPE_UINT,    # (14) speed
             GObject.TYPE_UINT64,  # (15) queue
-            GObject.TYPE_UINT64,  # (16) length
+            GObject.TYPE_UINT,    # (16) length
             str                   # (17) color
         )
 
@@ -573,7 +573,7 @@ class Search(UserInterface):
 
             is_result_visible = self.append(
                 [
-                    GObject.Value(GObject.TYPE_UINT64, self.num_results_found),
+                    self.num_results_found,
                     user,
                     get_flag_icon_name(country),
                     h_speed,
@@ -583,13 +583,13 @@ class Search(UserInterface):
                     h_size,
                     h_bitrate,
                     h_length,
-                    GObject.Value(GObject.TYPE_UINT64, bitrate),
+                    GObject.Value(GObject.TYPE_UINT, bitrate),
                     fullpath,
                     country,
                     GObject.Value(GObject.TYPE_UINT64, size),
-                    GObject.Value(GObject.TYPE_UINT64, ulspeed),
+                    GObject.Value(GObject.TYPE_UINT, ulspeed),
                     GObject.Value(GObject.TYPE_UINT64, inqueue),
-                    GObject.Value(GObject.TYPE_UINT64, length),
+                    GObject.Value(GObject.TYPE_UINT, length),
                     GObject.Value(GObject.TYPE_STRING, color)
                 ]
             )
@@ -875,7 +875,7 @@ class Search(UserInterface):
         if filters["filtersize"] and not self.check_digit(filters["filtersize"], row[13].get_uint64()):
             return False
 
-        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint64(), False):
+        if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint(), False):
             return False
 
         if filters["filterslot"] and row[15].get_uint64() > 0:
