@@ -47,7 +47,6 @@ from pynicotine.utils import execute_command
 from pynicotine.utils import clean_file
 from pynicotine.utils import clean_path
 from pynicotine.utils import get_result_bitrate_length
-from pynicotine.utils import human_length
 from pynicotine.utils import load_file
 from pynicotine.utils import write_file_and_backup
 
@@ -1311,9 +1310,9 @@ class Transfers:
                         i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
 
                         if i.speed <= 0:
-                            i.time_left = "∞"
+                            i.time_left = 0
                         else:
-                            i.time_left = human_length((i.size - i.current_byte_offset) / i.speed)
+                            i.time_left = (i.size - i.current_byte_offset) / i.speed
 
                     if oldelapsed == i.time_elapsed:
                         needupdate = False
@@ -1367,9 +1366,9 @@ class Transfers:
                     i.speed = int(max(0, byte_difference // max(1, current_time - i.last_update)))
 
                     if i.speed <= 0:
-                        i.time_left = "∞"
+                        i.time_left = 0
                     else:
-                        i.time_left = human_length((i.size - i.current_byte_offset) / i.speed)
+                        i.time_left = (i.size - i.current_byte_offset) / i.speed
 
                 if oldelapsed == i.time_elapsed:
                     needupdate = False
@@ -1380,7 +1379,7 @@ class Transfers:
                 self.queue.append(slskmessages.SendUploadSpeed(i.speed))
 
                 i.speed = None
-                i.time_left = ""
+                i.time_left = 0
 
             i.last_byte_offset = i.current_byte_offset
             i.last_update = current_time
@@ -1897,7 +1896,7 @@ class Transfers:
         i.status = "Finished"
         i.current_byte_offset = i.size
         i.speed = None
-        i.time_left = ""
+        i.time_left = 0
         i.sock = None
 
         self.core.statistics.append_stat_value("completed_downloads", 1)
@@ -1930,7 +1929,7 @@ class Transfers:
         i.status = "Finished"
         i.current_byte_offset = i.size
         i.speed = None
-        i.time_left = ""
+        i.time_left = 0
         i.sock = None
 
         self.update_user_counter(i.user)
@@ -2275,7 +2274,7 @@ class Transfers:
         transfer.token = None
         transfer.speed = None
         transfer.queue_position = 0
-        transfer.time_left = ""
+        transfer.time_left = 0
 
         if transfer.sock is not None:
             self.queue.append(slskmessages.FileConnClose(transfer.sock))
