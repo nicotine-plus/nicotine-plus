@@ -613,9 +613,7 @@ class ChatRoom(UserInterface):
         menu.toggle_user_items()
         menu.populate_private_rooms(menu_private_rooms)
 
-        private_rooms_enabled = (menu_private_rooms.items
-                                 and menu.user != self.frame.np.login_username)
-
+        private_rooms_enabled = (menu_private_rooms.items and menu.user != self.frame.np.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
