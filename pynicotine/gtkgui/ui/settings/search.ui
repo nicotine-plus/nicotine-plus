@@ -65,44 +65,31 @@
           <object class="GtkCheckButton" id="ShowPrivateSearchResults">
             <property name="label" translatable="yes">Show privately shared files in search results</property>
             <property name="visible">True</property>
-            <property name="tooltip_text" translatable="yes">Other clients may offer an option to send privately shared files in response to search requests. Such files are prefixed with '[PRIVATE FILE]', and are not downloadable unless the uploader gives explicit permission.</property>
+            <property name="tooltip_text" translatable="yes">Other Soulseek clients may have the option to share files privately. If so, these files will be prefixed with '[PRIVATE]', and can not be downloaded until the uploader gives explicit permission. Ask them kindly.</property>
             <property name="use-underline">True</property>
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel" id="MaxDisLabel">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel" id="MaxDisLabel">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Limit number of results per search:</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">MaxDisplayedResults</property>
-                  </object>
-                </child>
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Limit number of results per search:</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">MaxDisplayedResults</property>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkSpinButton" id="MaxDisplayedResults">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkSpinButton" id="MaxDisplayedResults">
-                    <property name="visible">True</property>
-                    <property name="width-chars">6</property>
-                    <property name="adjustment">adjustment_MaxDisplayedResults</property>
-                    <property name="numeric">1</property>
-                  </object>
-                </child>
+                <property name="width-chars">9</property>
+                <property name="adjustment">adjustment_MaxDisplayedResults</property>
+                <property name="numeric">1</property>
+                <property name="valign">center</property>
               </object>
             </child>
           </object>
@@ -128,8 +115,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Search History</property>
-                        <property name="use-underline">True</property>
+                        <property name="xalign">0</property>
                       </object>
                     </child>
                   </object>
@@ -168,215 +156,180 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="row-spacing">12</property>
-            <property name="column-spacing">12</property>
-            <property name="max-children-per-line">2</property>
-            <property name="selection-mode">none</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Include:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterIn</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="FilterIn">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Exclude:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterOut</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkEntry" id="FilterOut">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">File Type:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterType</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkEntry" id="FilterType">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Include:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterIn</property>
+                    <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Size:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterSize</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
-                  <object class="GtkEntry" id="FilterIn">
+                  <object class="GtkEntry" id="FilterSize">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Filter in results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
+                <property name="label" translatable="yes">Bitrate:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterBR</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkEntry" id="FilterBR">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Exclude:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterOut</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Country Code:</property>
+                <property name="xalign">0</property>
+                <property name="wrap">True</property>
+                <property name="mnemonic_widget">FilterCC</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
-                  <object class="GtkEntry" id="FilterOut">
+                  <object class="GtkEntry" id="FilterCC">
                     <property name="visible">True</property>
-                    <property name="tooltip-text" translatable="yes">Filter out results whose file paths contain the specified text. Multiple phrases and words can be specified, e.g. exact phrase|music|term|exact phrase two</property>
+                    <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
             </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="homogeneous">True</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">File Type:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterType</property>
-                  </object>
-                </child>
               </object>
             </child>
             <child>
-              <object class="GtkFlowBoxChild">
+              <object class="GtkCheckButton" id="FilterFree">
+                <property name="label" translatable="yes">Free Slot</property>
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkEntry" id="FilterType">
-                        <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">File type, e.g. flac|wav|ape or !mp3|!m4a</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Size:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterSize</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkEntry" id="FilterSize">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Bitrate:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterBR</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkEntry" id="FilterBR">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Country Code:</property>
-                    <property name="xalign">0</property>
-                    <property name="wrap">True</property>
-                    <property name="mnemonic_widget">FilterCC</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <child>
-                      <object class="GtkEntry" id="FilterCC">
-                        <property name="visible">True</property>
-                        <property name="tooltip-text" translatable="yes">Country code, e.g. US|GB|ES or !DE|!GB</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="sensitive">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="GtkFlowBoxChild">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <child>
-                  <object class="GtkCheckButton" id="FilterFree">
-                    <property name="label" translatable="yes">Free Slot</property>
-                    <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
-                    <property name="use-underline">True</property>
-                  </object>
-                </child>
+
+                <property name="tooltip_text" translatable="yes">Only show results from users with an available upload slot.</property>
+                <property name="use-underline">True</property>
               </object>
             </child>
           </object>
@@ -401,7 +354,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Result Filter Help</property>
+                        <property name="xalign">0</property>
                       </object>
                     </child>
                   </object>
@@ -425,8 +380,9 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
+                        <property name="ellipsize">end</property>
                         <property name="label" translatable="yes">Clear Filter History</property>
-                        <property name="use-underline">True</property>
+                        <property name="xalign">0</property>
                       </object>
                     </child>
                   </object>
@@ -470,68 +426,51 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="row-spacing">12</property>
-                <property name="column-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
-                        <property name="wrap">True</property>
-                        <property name="mnemonic_widget">MinSearchChars</property>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Searches shorter than this number of characters will be ignored:</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic_widget">MinSearchChars</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkSpinButton" id="MinSearchChars">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkSpinButton" id="MinSearchChars">
-                        <property name="visible">True</property>
-                        <property name="width-chars">6</property>
-                        <property name="adjustment">adjustment_MinSearchChars</property>
-                        <property name="numeric">1</property>
-                      </object>
-                    </child>
+                    <property name="width-chars">9</property>
+                    <property name="adjustment">adjustment_MinSearchChars</property>
+                    <property name="numeric">1</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Maximum search results to send per search request:</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic_widget">MaxResults</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkSpinButton" id="MaxResults">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Maximum search results to send per search request:</property>
-                        <property name="wrap">True</property>
-                        <property name="mnemonic_widget">MaxResults</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkSpinButton" id="MaxResults">
-                        <property name="visible">True</property>
-                        <property name="width-chars">6</property>
-                        <property name="adjustment">adjustment_MaxResults</property>
-                        <property name="numeric">1</property>
-                      </object>
-                    </child>
+                    <property name="width-chars">9</property>
+                    <property name="adjustment">adjustment_MaxResults</property>
+                    <property name="numeric">1</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>

@@ -19,6 +19,7 @@
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
+from pynicotine.utils import human_length
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import humanize
@@ -26,12 +27,14 @@ from pynicotine.utils import humanize
 
 class FileProperties(UserInterface):
 
-    def __init__(self, frame, properties, download_button=True):
+    def __init__(self, frame, properties, total_size=0, total_length=0, download_button=True):
 
         super().__init__("ui/dialogs/fileproperties.ui")
 
         self.frame = frame
         self.properties = properties
+        self.total_size = total_size
+        self.total_length = total_length
 
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
@@ -71,10 +74,19 @@ class FileProperties(UserInterface):
 
     def update_title(self):
 
-        self.dialog.set_title(_("File Properties (%(num)i of %(total)i)") % {
-            'num': self.current_index + 1,
-            'total': len(self.properties)
-        })
+        index = self.current_index + 1
+        total_files = len(self.properties)
+        total_size = str(human_size(self.total_size))
+
+        if self.total_length:
+            self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
+                'num': index, 'total': total_files, 'size': total_size,
+                'length': str(human_length(self.total_length))
+            })
+            return
+
+        self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s)") % {
+                              'num': index, 'total': total_files, 'size': total_size})
 
     def update_current_file(self):
         """ Updates the UI with properties for the selected file """

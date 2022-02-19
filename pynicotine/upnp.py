@@ -88,6 +88,9 @@ class SSDP:
     @staticmethod
     def get_router_control_url(url_scheme, base_url, root_url):
 
+        service_type = None
+        control_url = None
+
         try:
             from xml.etree import ElementTree
 
@@ -98,18 +101,15 @@ class SSDP:
             xml = ElementTree.fromstring(response)
 
             for service in xml.findall(".//{urn:schemas-upnp-org:device-1-0}service"):
-                service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
-                control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
+                found_service_type = service.find(".//{urn:schemas-upnp-org:device-1-0}serviceType").text
 
-                if service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
-                                    "urn:schemas-upnp-org:service:WANPPPConnection:1",
-                                    "urn:schemas-upnp-org:service:WANIPConnection:2"):
+                if found_service_type in ("urn:schemas-upnp-org:service:WANIPConnection:1",
+                                          "urn:schemas-upnp-org:service:WANPPPConnection:1",
+                                          "urn:schemas-upnp-org:service:WANIPConnection:2"):
                     # We found a router with UPnP enabled
+                    service_type = found_service_type
+                    control_url = service.find(".//{urn:schemas-upnp-org:device-1-0}controlURL").text
                     break
-
-            else:
-                service_type = None
-                control_url = None
 
         except Exception as error:
             # Invalid response

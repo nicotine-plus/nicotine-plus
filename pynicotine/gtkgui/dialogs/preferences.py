@@ -538,7 +538,7 @@ class SharesFrame(UserInterface):
         self.column_numbers = list(range(self.shareslist.get_n_columns()))
         cols = initialise_columns(
             self.frame, None, self.Shares,
-            ["virtual_folder", _("Virtual Folder"), 0, "text", None],
+            ["virtual_folder", _("Virtual Folder"), 165, "text", None],
             ["folder", _("Folder"), -1, "text", None],
             ["buddies", _("Buddy-only"), 0, "toggle", None],
         )
@@ -1182,7 +1182,6 @@ class ChatsFrame(UserInterface):
             "logging": {
                 "readroomlines": self.RoomLogLines,
                 "readprivatelines": self.PrivateLogLines,
-                "readroomlogs": self.ReadRoomLogs,
                 "rooms_timestamp": self.ChatRoomFormat,
                 "private_timestamp": self.PrivateChatFormat
             },
@@ -1384,7 +1383,6 @@ class ChatsFrame(UserInterface):
 
         return {
             "logging": {
-                "readroomlogs": self.ReadRoomLogs.get_active(),
                 "readroomlines": self.RoomLogLines.get_value_as_int(),
                 "readprivatelines": self.PrivateLogLines.get_value_as_int(),
                 "private_timestamp": self.PrivateChatFormat.get_text(),
@@ -1686,16 +1684,6 @@ class UserInterfaceFrame(UserInterface):
             widget.set_text(defaults[section][color_id])
 
         self.update_color_button(defaults, color_id)
-
-    def clear_color(self, section, color_id):
-
-        widget = self.options[section][color_id]
-
-        if isinstance(widget, Gtk.Entry):
-            widget.set_text("")
-
-        color_button = self.colorsd[section][color_id]
-        color_button.set_rgba(Gdk.RGBA())
 
     def on_color_set(self, widget):
 
@@ -2673,9 +2661,9 @@ class Preferences(UserInterface):
             ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("Searches", _("Searches"), "system-search-symbolic"),
             ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Chats", _("Chats"), "mail-send-symbolic"),
+            ("Chats", _("Chats"), "user-available-symbolic"),
             ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
-            ("Logging", _("Logging"), "emblem-documents-symbolic"),
+            ("Logging", _("Logging"), "folder-documents-symbolic"),
             ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
             ("IgnoredUsers", _("Ignored Users"), "microphone-sensitivity-muted-symbolic"),
             ("Plugins", _("Plugins"), "list-add-symbolic"),
@@ -2988,6 +2976,7 @@ class Preferences(UserInterface):
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
+        self.frame.privatechat.toggle_chat_buttons()
 
         # Transfers
         self.frame.np.transfers.update_limits()

@@ -69,6 +69,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Edit…</property>
                     <signal name="clicked" handler="on_edit_wish"/>
                     <child>
                       <object class="GtkBox">
@@ -83,7 +84,8 @@
                         <child>
                           <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">Edit</property>
+                            <property name="label" translatable="yes">Edit…</property>
+                            <property name="ellipsize">end</property>
                           </object>
                         </child>
                       </object>
@@ -96,6 +98,7 @@
                 <child>
                   <object class="GtkButton">
                     <property name="visible">True</property>
+                    <property name="tooltip-text" translatable="yes">Remove</property>
                     <signal name="clicked" handler="on_remove_wish"/>
                     <child>
                       <object class="GtkBox">
@@ -111,6 +114,7 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Remove</property>
+                            <property name="ellipsize">end</property>
                           </object>
                         </child>
                       </object>
@@ -128,6 +132,7 @@
                     <child>
                       <object class="GtkButton">
                         <property name="visible">True</property>
+                        <property name="tooltip-text" translatable="yes">Clear All…</property>
                         <signal name="clicked" handler="on_clear_wishlist"/>
                         <child>
                           <object class="GtkBox">
@@ -143,7 +148,7 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Clear All…</property>
-                                <property name="use-underline">True</property>
+                                <property name="ellipsize">end</property>
                               </object>
                             </child>
                           </object>

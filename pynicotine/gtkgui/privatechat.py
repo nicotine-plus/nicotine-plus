@@ -21,6 +21,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import time
+
 from collections import deque
 
 from gi.repository import Gio
@@ -29,6 +32,7 @@ from gi.repository import Gtk
 
 from pynicotine import slskmessages
 from pynicotine.config import config
+from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.dialogs import option_dialog
@@ -42,7 +46,6 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import clean_file
 from pynicotine.utils import delete_log
-from pynicotine.utils import get_path
 from pynicotine.utils import open_log
 
 
@@ -54,11 +57,14 @@ class PrivateChats(IconNotebook):
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         self.completion = ChatCompletion()
+        self.history = ChatHistory(frame)
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
 
         if Gtk.get_major_version() == 4:
             # Scroll to the focused widget
             self.command_help.container.get_child().set_scroll_to_focus(True)
+
+        self.update_visuals()
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
@@ -137,6 +143,10 @@ class PrivateChats(IconNotebook):
         if page is not None:
             page.message_user(msg)
 
+    def toggle_chat_buttons(self):
+        for page in self.pages.values():
+            page.toggle_chat_buttons()
+
     def set_completion_list(self, completion_list):
 
         page = self.get_nth_page(self.get_current_page())
@@ -151,6 +161,8 @@ class PrivateChats(IconNotebook):
         for page in self.pages.values():
             page.update_visuals()
             page.update_tags()
+
+        self.history.update_visuals()
 
     def server_login(self):
         for page in self.pages.values():
@@ -192,6 +204,8 @@ class PrivateChat(UserInterface):
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
+        self.toggle_chat_buttons()
+
         self.popup_menu_user_chat = PopupMenu(self.frame, self.ChatScroll, connect_events=False)
         self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
 
@@ -226,13 +240,16 @@ class PrivateChat(UserInterface):
 
     def read_private_log(self):
 
-        # Read log file
-        filename = clean_file(self.user) + ".log"
         numlines = config.sections["logging"]["readprivatelines"]
 
-        try:
-            get_path(config.sections["logging"]["privatelogsdir"], filename, self.append_log_lines, numlines)
+        if not numlines:
+            return
 
+        filename = clean_file(self.user) + ".log"
+        path = os.path.join(config.sections["logging"]["privatelogsdir"], filename)
+
+        try:
+            self.append_log_lines(path, numlines)
         except OSError:
             pass
 
@@ -279,6 +296,9 @@ class PrivateChat(UserInterface):
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()
 
+    def toggle_chat_buttons(self):
+        self.Speech.set_visible(config.sections["ui"]["speechenabled"])
+
     def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
 
@@ -291,6 +311,7 @@ class PrivateChat(UserInterface):
 
         if response_id == 2:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
+            self.chats.history.remove_user(self.user)
             self.chat_textview.clear()
 
     def on_delete_chat_log(self, *_args):
@@ -306,7 +327,8 @@ class PrivateChat(UserInterface):
 
         self.chats.request_tab_hilite(self.Main)
 
-        if self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active():
+        if (self.chats.get_current_page() == self.chats.page_num(self.Main)
+                and self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
@@ -332,9 +354,11 @@ class PrivateChat(UserInterface):
         if text.startswith("/me "):
             line = "* %s %s" % (self.user, text[4:])
             tag = self.tag_action
+            speech = line[2:]
         else:
             line = "[%s] %s" % (self.user, text)
             tag = self.tag_remote
+            speech = text
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
 
@@ -342,8 +366,8 @@ class PrivateChat(UserInterface):
             tag = usertag = self.tag_hilite
 
             if not self.offline_message:
-                self.chat_textview.append_line(_("* Message(s) sent while you were offline. Timestamps are reported by "
-                                                 "the server and can be off."), tag, timestamp_format=timestamp_format)
+                self.chat_textview.append_line(_("* Message(s) sent while you were offline."), tag,
+                                               timestamp_format=timestamp_format)
                 self.offline_message = True
 
         else:
@@ -352,9 +376,16 @@ class PrivateChat(UserInterface):
         self.chat_textview.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
                                        username=self.user, usertag=usertag)
 
+        if self.Speech.get_active():
+            self.frame.np.notifications.new_tts(
+                config.sections["ui"]["speechprivate"], {"user": self.user, "message": speech}
+            )
+
         if self.Log.get_active():
-            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp, timestamp_format=config.sections["logging"]["log_timestamp"])
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
+            log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line, timestamp, timestamp_format)
 
     def echo_message(self, text, message_type):
 
@@ -381,8 +412,11 @@ class PrivateChat(UserInterface):
                                        username=my_username, usertag=self.tag_my_username)
 
         if self.Log.get_active():
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            self.chats.history.update_user(self.user, "%s %s" % (time.strftime(timestamp_format), line))
             log.write_log(config.sections["logging"]["privatelogsdir"], self.user, line,
-                          timestamp_format=config.sections["logging"]["log_timestamp"])
+                          timestamp_format=timestamp_format)
 
     def update_visuals(self):
 

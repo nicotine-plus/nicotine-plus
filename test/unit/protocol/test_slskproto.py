@@ -77,8 +77,7 @@ class SlskProtoTest(unittest.TestCase):
         queue = deque()
         proto = SlskProtoThread(
             core_callback=Mock(), queue=queue, interface='', bindip='',
-            port=None, port_range=(1, 65535), network_filter=None,
-            eventprocessor=Mock()
+            port=None, port_range=(1024, 65535), eventprocessor=Mock()
         )
 
         # Windows doesn't accept mock_socket in select() calls
@@ -113,8 +112,7 @@ class SlskProtoTest(unittest.TestCase):
         queue = deque()
         proto = SlskProtoThread(
             core_callback=Mock(), queue=queue, interface='', bindip='',
-            port=None, port_range=(1, 65535), network_filter=None,
-            eventprocessor=Mock()
+            port=None, port_range=(1024, 65535), eventprocessor=Mock()
         )
         proto.server_connect()
         queue.append(ServerConnect(addr=('0.0.0.0', 0), login=('username', 'password')))

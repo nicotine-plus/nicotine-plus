@@ -55,7 +55,7 @@ class Config:
         config_dir, self.data_dir = self.get_user_directories()
         self.filename = os.path.join(config_dir, "config")
         self.plugin_dir = os.path.join(self.data_dir, "plugins")
-        self.version = "3.2.1.rc3"
+        self.version = "3.3.0.dev1"
         self.python_version = sys.version
         self.gtk_version = ""
 
@@ -580,9 +580,12 @@ class Config:
                         file_handle, encoding='utf-8').load()
 
         except Exception:
-            return
+            pass
 
         self.config_loaded = True
+
+        from pynicotine.logfacility import log
+        log.add_debug("Using configuration: %(file)s", {"file": self.filename})
 
     def parse_config(self, filename):
         """ Parses the config file """
@@ -746,8 +749,11 @@ class Config:
         if not self.create_config_folder():
             return
 
+        from pynicotine.logfacility import log
         from pynicotine.utils import write_file_and_backup
+
         write_file_and_backup(self.filename, self.write_config_callback, protect=True)
+        log.add_debug("Saved configuration: %(file)s", {"file": self.filename})
 
     def write_config_backup(self, filename):
 

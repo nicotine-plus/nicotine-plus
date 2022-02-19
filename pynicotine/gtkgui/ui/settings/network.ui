@@ -2,14 +2,14 @@
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="adjustment_FirstPort">
-    <property name="lower">1</property>
+    <property name="lower">1024</property>
     <property name="upper">65535</property>
     <property name="value">2234</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment_LastPort">
-    <property name="lower">1</property>
+    <property name="lower">1024</property>
     <property name="upper">65535</property>
     <property name="value">2239</property>
     <property name="step-increment">1</property>
@@ -71,61 +71,51 @@
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkFlowBox">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="row-spacing">12</property>
-                        <property name="max-children-per-line">2</property>
-                        <property name="selection-mode">none</property>
+                        <property name="spacing">12</property>
                         <child>
-                          <object class="GtkFlowBoxChild">
+                          <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="label" translatable="yes">Username:</property>
-                                <property name="xalign">0</property>
-                                <property name="mnemonic_widget">Login</property>
-                              </object>
-                            </child>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Username:</property>
+                            <property name="xalign">0</property>
+                            <property name="mnemonic_widget">Login</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFlowBoxChild">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="can-focus">False</property>
+                            <property name="spacing">12</property>
+                            <property name="valign">center</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkEntry" id="Login">
                                 <property name="visible">True</property>
-                                <property name="spacing">12</property>
+                                <property name="hexpand">True</property>
+                                <property name="width-chars">12</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="ChangePassword">
+                                <property name="halign">end</property>
+                                <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Change Password</property>
+                                <signal name="clicked" handler="on_change_password"/>
                                 <child>
-                                  <object class="GtkEntry" id="Login">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="max-length">28</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="ChangePassword">
-                                    <property name="halign">end</property>
-                                    <property name="visible">True</property>
-                                    <signal name="clicked" handler="on_change_password"/>
+                                    <property name="spacing">6</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkImage">
                                         <property name="visible">True</property>
-                                        <property name="spacing">6</property>
-                                        <child>
-                                          <object class="GtkImage">
-                                            <property name="visible">True</property>
-                                            <property name="icon-name">dialog-password-symbolic</property>
-                                          </object>
-                                        </child>
-                                        <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="label" translatable="yes">Change Password</property>
-                                          </object>
-                                        </child>
+                                        <property name="icon-name">dialog-password-symbolic</property>
+                                      </object>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">Change Password</property>
+                                        <property name="ellipsize">end</property>
                                       </object>
                                     </child>
                                   </object>
@@ -137,58 +127,46 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBox">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="row-spacing">12</property>
-                        <property name="max-children-per-line">2</property>
-                        <property name="selection-mode">none</property>
+                        <property name="spacing">12</property>
                         <child>
-                          <object class="GtkFlowBoxChild">
+                          <object class="GtkLabel">
                             <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <child>
-                              <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="label" translatable="yes">Listening port range (requires a restart):</property>
-                                <property name="wrap">True</property>
-                                <property name="mnemonic_widget">FirstPort</property>
-                              </object>
-                            </child>
+                            <property name="hexpand">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Listening port range (requires a restart):</property>
+                            <property name="wrap">True</property>
+                            <property name="mnemonic_widget">FirstPort</property>
                           </object>
                         </child>
                         <child>
-                          <object class="GtkFlowBoxChild">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="can-focus">False</property>
+                            <property name="spacing">12</property>
+                            <property name="valign">center</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkSpinButton" id="FirstPort">
                                 <property name="visible">True</property>
-                                <property name="spacing">12</property>
-                                <child>
-                                  <object class="GtkSpinButton" id="FirstPort">
-                                    <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="adjustment">adjustment_FirstPort</property>
-                                    <property name="numeric">1</property>
-                                    <property name="tooltip-text" translatable="yes">First port</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="label" translatable="yes">to</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkSpinButton" id="LastPort">
-                                    <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="adjustment">adjustment_LastPort</property>
-                                    <property name="numeric">1</property>
-                                    <property name="tooltip-text" translatable="yes">Last port</property>
-                                  </object>
-                                </child>
+                                <property name="adjustment">adjustment_FirstPort</property>
+                                <property name="numeric">1</property>
+                                <property name="width-chars">6</property>
+                                <property name="tooltip-text" translatable="yes">First port</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">to</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSpinButton" id="LastPort">
+                                <property name="visible">True</property>
+                                <property name="adjustment">adjustment_LastPort</property>
+                                <property name="numeric">1</property>
+                                <property name="width-chars">6</property>
+                                <property name="tooltip-text" translatable="yes">Last port</property>
                               </object>
                             </child>
                           </object>
@@ -247,64 +225,48 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="column-spacing">12</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
-                        <property name="wrap">True</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">AutoAway</property>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Toggle away status after minutes of inactivity:</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">AutoAway</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkSpinButton" id="AutoAway">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkSpinButton" id="AutoAway">
-                        <property name="visible">True</property>
-                        <property name="adjustment">adjustment_AutoAway</property>
-                      </object>
-                    </child>
+                    <property name="adjustment">adjustment_AutoAway</property>
+                    <property name="valign">center</property>
+                    <property name="width-chars">6</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Auto-reply message when away:</property>
+                    <property name="wrap">True</property>
+                    <property name="xalign">0</property>
+                    <property name="mnemonic_widget">AutoReply</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkEntry" id="AutoReply">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Auto-reply message when away:</property>
-                        <property name="wrap">True</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">AutoReply</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkEntry" id="AutoReply">
-                        <property name="visible">True</property>
-                        <property name="hexpand">True</property>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>
@@ -341,39 +303,27 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkCheckButton" id="UseUPnP">
+                    <property name="label" translatable="yes">Use UPnP to forward listening port (interval in hours):</property>
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkCheckButton" id="UseUPnP">
-                        <property name="label" translatable="yes">Use UPnP to forward listening port (interval in hours):</property>
-                        <property name="visible">True</property>
-                        <property name="use-underline">True</property>
-                        <signal name="toggled" handler="on_toggle_upnp"/>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="use-underline">True</property>
+                    <signal name="toggled" handler="on_toggle_upnp"/>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkSpinButton" id="UPnPInterval">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
+                    <property name="width-chars">6</property>
+                    <property name="adjustment">adjustment_UPnPInterval</property>
+                    <property name="numeric">1</property>
+                    <property name="valign">center</property>
                     <property name="sensitive" bind-source="UseUPnP" bind-property="active" bind-flags="bidirectional|sync-create"/>
-                    <child>
-                      <object class="GtkSpinButton" id="UPnPInterval">
-                        <property name="visible">True</property>
-                        <property name="width-chars">6</property>
-                        <property name="adjustment">adjustment_UPnPInterval</property>
-                        <property name="numeric">1</property>
-                        <signal name="value-changed" handler="on_modify_upnp_interval"/>
-                      </object>
-                    </child>
+                    <signal name="value-changed" handler="on_modify_upnp_interval"/>
                   </object>
                 </child>
               </object>
@@ -386,61 +336,48 @@
               </object>
             </child>
             <child>
-              <object class="GtkFlowBox">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="row-spacing">12</property>
-                <property name="max-children-per-line">2</property>
-                <property name="selection-mode">none</property>
+                <property name="spacing">12</property>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Soulseek server:</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">Server</property>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Soulseek server:</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic_widget">Server</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkEntry" id="Server">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkEntry" id="Server">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
+                    <property name="hexpand">True</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="spacing">12</property>
+                <child>
+                  <object class="GtkLabel" id="InterfaceLabel">
+                    <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Network interface (requires a restart):</property>
+                    <property name="xalign">0</property>
+                    <property name="wrap">True</property>
+                    <property name="mnemonic_widget">Interface</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkFlowBoxChild">
+                  <object class="GtkComboBoxText" id="Interface">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
-                    <child>
-                      <object class="GtkLabel" id="InterfaceLabel">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Network interface (requires a restart):</property>
-                        <property name="xalign">0</property>
-                        <property name="mnemonic_widget">Interface</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkFlowBoxChild">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="Interface">
-                        <property name="visible">True</property>
-                        <property name="has-entry">True</property>
-                        <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
-                      </object>
-                    </child>
+                    <property name="has-entry">True</property>
+                    <property name="tooltip-text" translatable="yes">Binds connections to a specific network interface, useful for e.g. ensuring a VPN is used at all times. Leave empty to use any available interface. Only change this value if you know what you are doing.</property>
+                    <property name="valign">center</property>
                   </object>
                 </child>
               </object>

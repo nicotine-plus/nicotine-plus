@@ -141,7 +141,7 @@
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
-                <property name="tooltip-text">Clear every upload that has either finished transferring, or been cancelled by the remote user.</property>
+                <property name="tooltip-text" translatable="yes">Clear all finished and cancelled uploads.</property>
                 <signal name="clicked" handler="on_clear_finished_aborted"/>
                 <child>
                   <object class="GtkBox">
@@ -170,7 +170,7 @@
               <object class="GtkMenuButton" id="ClearTransfers">
                 <property name="visible">True</property>
                 <property name="direction">up</property>
-                <property name="tooltip-text">Clear every upload marked with a specific status.</property>
+                <property name="tooltip-text" translatable="yes">Clear all uploads marked with a specific status.</property>
                 <child>
                   <object class="GtkBox" id="ClearTransfersLabel">
                     <property name="visible">True</property>

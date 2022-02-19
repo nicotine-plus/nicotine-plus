@@ -29,7 +29,6 @@ from collections import OrderedDict
 from gi.repository import Gio
 from gi.repository import GLib
 from gi.repository import Gtk
-from gi.repository import Pango
 
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
@@ -148,7 +147,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
         xalign = 0
 
         if column_type == "text":
-            renderer = Gtk.CellRendererText(ellipsize=Pango.EllipsizeMode.END, xpad=width_padding, ypad=height_padding)
+            renderer = Gtk.CellRendererText(xpad=width_padding, ypad=height_padding)
             column = Gtk.TreeViewColumn(column_id, renderer, text=i)
 
         elif column_type == "number":
@@ -464,9 +463,11 @@ def get_country_tooltip_text(column_value, strip_prefix):
     if not column_value.startswith(strip_prefix):
         return _("Unknown")
 
-    column_value = column_value[len(strip_prefix):]
-    if column_value:
-        return GeoIP.country_code_to_name(column_value)
+    country_code = column_value[len(strip_prefix):]
+
+    if country_code:
+        country = GeoIP.country_code_to_name(country_code)
+        return "%s (%s)" % (country, country_code)
 
     return _("Earth")
 

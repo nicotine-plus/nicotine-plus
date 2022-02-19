@@ -133,6 +133,10 @@ class Interests:
         if self.ui_callback:
             self.ui_callback.similar_users(msg)
 
+    def item_similar_users(self, msg):
+        if self.ui_callback:
+            self.ui_callback.item_similar_users(msg)
+
     def get_user_status(self, msg):
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)

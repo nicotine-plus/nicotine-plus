@@ -6,6 +6,40 @@
     <property name="spacing">12</property>
     <property name="orientation">vertical</property>
     <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Ignored Users</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">6</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Ignore chat messages and search results from users, based on username or IP address.</property>
+                <property name="margin-bottom">12</property>
+                <property name="selectable">True</property>
+                <property name="wrap">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
         <property name="homogeneous">True</property>
@@ -26,7 +60,7 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Usernames</property>
+                    <property name="label" translatable="yes">Users</property>
                     <property name="mnemonic_widget">IgnoredUsers</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -72,6 +106,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_ignored"/>
                                 <child>
                                   <object class="GtkBox">
@@ -86,6 +121,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -100,6 +136,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_ignored"/>
                                 <child>
                                   <object class="GtkBox">
@@ -114,6 +151,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -194,6 +232,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Add…</property>
                                 <signal name="clicked" handler="on_add_ignored_ip"/>
                                 <child>
                                   <object class="GtkBox">
@@ -208,6 +247,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Add…</property>
                                         <property name="use-underline">True</property>
                                       </object>
@@ -222,6 +262,7 @@
                             <child>
                               <object class="GtkButton">
                                 <property name="visible">True</property>
+                                <property name="tooltip-text" translatable="yes">Remove</property>
                                 <signal name="clicked" handler="on_remove_ignored_ip"/>
                                 <child>
                                   <object class="GtkBox">
@@ -236,6 +277,7 @@
                                     <child>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
+                                        <property name="ellipsize">end</property>
                                         <property name="label" translatable="yes">Remove</property>
                                         <property name="use-underline">True</property>
                                       </object>
