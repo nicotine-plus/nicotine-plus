@@ -1106,12 +1106,20 @@ class SlskProtoThread(threading.Thread):
         init_key = conn_obj.init.target_user + conn_obj.init.conn_type
         init = self._init_msgs.get(init_key)
 
+        log.add_conn("Removing PeerInit message of type %(type)s for user %(user)s %(addr)s", {
+            'type': conn_obj.init.conn_type,
+            'user': conn_obj.init.target_user,
+            'addr': conn_obj.addr
+        })
+
         if conn_obj.init is not init:
             # Don't remove init message if connection has been superseded
+            log.add_conn("Cannot remove PeerInit message, since the connection has been superseded")
             return
 
         if connection_list is self._connsinprogress and init.sock is not None:
             # Outgoing connection failed, but an indirect connection was already established
+            log.add_conn("Cannot remove PeerInit message, an indirect connection was already established previously")
             return
 
         del self._init_msgs[init_key]
