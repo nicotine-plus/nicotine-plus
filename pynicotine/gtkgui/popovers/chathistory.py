@@ -69,15 +69,18 @@ class ChatHistory(UserInterface):
 
             try:
                 with open(file_path, "rb") as lines:
-                    line = deque(lines, 1)[0].strip()
+                    lines = deque(lines, 1)
+
+                    if not lines:
+                        continue
 
                     try:
-                        line = line.decode("utf-8")
+                        line = lines[0].decode("utf-8")
 
                     except UnicodeDecodeError:
-                        line = line.decode("latin-1")
+                        line = lines[0].decode("latin-1")
 
-                self.update_user(username, line)
+                self.update_user(username, line.strip())
 
             except OSError:
                 pass
