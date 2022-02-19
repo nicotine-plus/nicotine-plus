@@ -90,7 +90,7 @@ Portable packages are also available. They can be run from your home directory, 
 - [Download Nicotine+ 64-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-x86_64-package.zip.sha256)]
 - [Download Nicotine+ 32-bit Windows Portable Package](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/windows-i686-package.zip.sha256)]
 
-### Scoop
+### [Scoop](https://scoop.sh/)
 
 Nicotine+ can be installed using [Scoop](https://scoop.sh/). Run the following:
 
@@ -105,13 +105,20 @@ In order to upgrade Nicotine+ to a newer release, run the following:
 scoop update nicotine-plus
 ```
 
-### Chocolatey
+### [Chocolatey](https://chocolatey.org/install)
 
-Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following:
+Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following command:
 
 ```sh
 choco install nicotine-plus
 ```
+
+To upgrade Nicotine+ with chocolatey, run the following:
+
+```sh
+choco upgrade nicotine-plus
+```
+
 
 ## macOS
 
