@@ -95,6 +95,7 @@
                 <property name="label" translatable="yes">_Log</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>
+                <signal name="toggled" handler="on_log_toggled"/>
               </object>
             </child>
           </object>
