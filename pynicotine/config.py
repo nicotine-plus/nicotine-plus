@@ -281,7 +281,8 @@ class Config:
                 "readroomlogs": True,
                 "readroomlines": 15,
                 "readprivatelines": 15,
-                "rooms": []
+                "rooms": [],
+                "private_users": []
             },
             "privatechat": {
                 "store": True,
