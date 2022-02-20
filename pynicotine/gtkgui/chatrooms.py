@@ -484,6 +484,7 @@ class ChatRoom(UserInterface):
             ("#" + _("_Leave Room"), self.on_leave_room)
         )
 
+        self.setup_public_feed()
         self.ChatEntry.grab_focus()
 
         self.count_users()
@@ -493,6 +494,21 @@ class ChatRoom(UserInterface):
 
     def set_label(self, label):
         self.tab_menu.set_parent(label)
+
+    def setup_public_feed(self):
+
+        if self.room != "Public ":
+            return
+
+        for widget in (self.ActivityView, self.UserView, self.ChatEntry, self.ShowRoomWall, self.ShowChatHelp):
+            widget.hide()
+
+        for widget in (self.AutoJoin, self.Log):
+            widget.get_parent().remove(widget)
+            self.ChatEntryBox.add(widget)
+
+        self.ChatEntry.set_sensitive(False)
+        self.ChatEntryBox.set_halign(Gtk.Align.END)
 
     def add_user_row(self, userdata):
 
@@ -679,7 +695,7 @@ class ChatRoom(UserInterface):
     def ticker_remove(self, msg):
         self.tickers.remove_ticker(msg.user)
 
-    def show_notification(self, login, user, text, tag):
+    def show_notification(self, login, user, text, tag, public=False):
 
         if user == login:
             return
@@ -705,7 +721,8 @@ class ChatRoom(UserInterface):
             self.frame.notifications.add("rooms", user, self.room)
             return
 
-        if config.sections["notifications"]["notification_popup_chatroom"]:
+        if not public and config.sections["notifications"]["notification_popup_chatroom"]:
+            # Don't show notifications for "Public " room, they're too noisy
             self.frame.notifications.new_text_notification(
                 text,
                 title=_("Message by %(user)s in the %(room)s room") % {"user": user, "room": self.room},
@@ -732,7 +749,7 @@ class ChatRoom(UserInterface):
         else:
             tag = self.tag_remote
 
-        self.show_notification(login_username, user, text, tag)
+        self.show_notification(login_username, user, text, tag, public)
 
         if text.startswith("/me "):
             if public:
