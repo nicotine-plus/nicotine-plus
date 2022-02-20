@@ -202,8 +202,10 @@ class PrivateChat(UserInterface):
         ChatEntry(self.frame, self.ChatLine, chats.completion, user, slskmessages.MessageUser,
                   self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS)
 
+        # Log by default
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
+        # TTS and Log
         self.toggle_chat_buttons()
 
         self.popup_menu_user_chat = PopupMenu(self.frame, self.ChatScroll, connect_events=False)
@@ -298,6 +300,10 @@ class PrivateChat(UserInterface):
 
     def toggle_chat_buttons(self):
         self.Speech.set_visible(config.sections["ui"]["speechenabled"])
+        self.Log.set_active(self.user in config.sections["logging"]["private_users"])
+
+    def on_log_toggled(self, widget):
+        self.frame.np.privatechats.set_log_config(self.user, widget.get_active())
 
     def on_find_chat_log(self, *_args):
         self.SearchBar.set_search_mode(True)
