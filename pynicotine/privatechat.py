@@ -49,10 +49,6 @@ class PrivateChats:
         if hasattr(ui_callback, "privatechat"):
             self.ui_callback = ui_callback.privatechat
 
-        # Clear list of previously open chats if we don't want to restore them
-        if not config.sections["privatechat"]["store"]:
-            config.sections["privatechat"]["users"].clear()
-
     def server_login(self):
 
         for user in self.users:
@@ -71,7 +67,10 @@ class PrivateChats:
             return
 
         self.core.watch_user(user)
+        self.store_user(user)
         self.users.add(user)
+
+    def store_user(self, user):
 
         if user not in self.config.sections["privatechat"]["users"]:
             self.config.sections["privatechat"]["users"].append(user)
@@ -93,6 +92,8 @@ class PrivateChats:
     def load_users(self):
 
         if not self.config.sections["privatechat"]["store"]:
+            # Clear list of previously open chats if we don't want to restore them
+            self.config.sections["privatechat"]["users"].clear()
             return
 
         for user in self.config.sections["privatechat"]["users"]:
@@ -100,6 +101,15 @@ class PrivateChats:
                 self.show_user(user, switch_page=False)
 
         self.update_completions()
+
+    def set_log_config(self, user, log_active):
+
+        if log_active:
+            if user not in self.config.sections["logging"]["private_users"]:
+                self.config.sections["logging"]["private_users"].append(user)
+        else:
+            if user in self.config.sections["logging"]["private_users"]:
+                self.config.sections["logging"]["private_users"].remove(user)
 
     def auto_replace(self, message):
 
