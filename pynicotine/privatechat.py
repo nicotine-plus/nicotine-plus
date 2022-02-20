@@ -66,9 +66,9 @@ class PrivateChats:
         if user in self.users:
             return
 
-        self.core.watch_user(user)
-        self.store_user(user)
         self.users.add(user)
+        self.store_user(user)
+        self.core.watch_user(user)
 
     def store_user(self, user):
 
