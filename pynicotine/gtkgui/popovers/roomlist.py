@@ -35,6 +35,7 @@ class RoomList(UserInterface):
 
         self.frame = frame
         self.room_iters = {}
+        self.initializing_feed = False
 
         self.room_model = Gtk.ListStore(
             str,
@@ -144,9 +145,9 @@ class RoomList(UserInterface):
 
     def toggle_feed_check(self, active):
 
-        self.feed_check.handler_block_by_func(self.on_show_chat_feed)
+        self.initializing_feed = True
         self.feed_check.set_active(active)
-        self.feed_check.handler_unblock_by_func(self.on_show_chat_feed)
+        self.initializing_feed = False
 
     def update_room(self, room, user_count, private=False, owned=False):
 
@@ -192,6 +193,11 @@ class RoomList(UserInterface):
         self.popover.hide()
 
     def on_show_chat_feed(self, *_args):
+
+        if self.initializing_feed:
+            return
+
+        self.popover.hide()
 
         if self.feed_check.get_active():
             self.frame.np.chatrooms.request_join_public_room()
