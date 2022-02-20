@@ -197,10 +197,9 @@ class RoomList(UserInterface):
         if self.initializing_feed:
             return
 
-        self.popover.hide()
-
         if self.feed_check.get_active():
             self.frame.np.chatrooms.request_join_public_room()
+            self.popover.hide()
             return
 
         self.frame.np.chatrooms.request_leave_public_room()
