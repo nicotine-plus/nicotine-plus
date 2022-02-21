@@ -127,7 +127,7 @@ class NicotineCore:
             slskmessages.UserInfoReply: self.user_info_reply,
             slskmessages.UserInfoRequest: self.user_info_request,
             slskmessages.PierceFireWall: self.dummy_message,
-            slskmessages.ConnectToPeer: self.dummy_message,
+            slskmessages.ConnectToPeer: self.connect_to_peer,
             slskmessages.CantConnectToPeer: self.dummy_message,
             slskmessages.MessageProgress: self.message_progress,
             slskmessages.SharedFileList: self.shared_file_list,
@@ -692,6 +692,17 @@ class NicotineCore:
 
         log.add_msg_contents(msg)
         self.chatrooms.user_left_room(msg)
+
+    def connect_to_peer(self, msg):
+        """ Server code: 18 """
+
+        log.add_msg_contents(msg)
+
+        if msg.privileged == 1:
+            self.transfers.add_to_privileged(msg.user)
+
+        elif msg.privileged == 0:
+            self.transfers.remove_from_privileged(msg.user)
 
     def message_user(self, msg):
         """ Server code: 22 """
