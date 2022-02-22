@@ -60,6 +60,7 @@ from pynicotine.utils import delete_log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_log
+from pynicotine.utils import PUNCTUATION
 
 
 class ChatRooms(IconNotebook):
@@ -354,6 +355,8 @@ class ChatRoom(UserInterface):
         self.frame = chatrooms.frame
         self.room = room
 
+        self.users = {}
+
         if Gtk.get_major_version() == 4:
             self.ChatPaned.set_resize_start_child(True)
             self.ChatPaned.set_shrink_start_child(False)
@@ -370,7 +373,8 @@ class ChatRoom(UserInterface):
         self.leaving = False
         self.opened = False
 
-        self.users = {}
+        # Mention username word boundary matching
+        self.punctuation_list = (" " + "".join(p for p in PUNCTUATION))
 
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
@@ -704,14 +708,14 @@ class ChatRoom(UserInterface):
 
         mentioned = (tag == self.tag_hilite)
 
+        self.chatrooms.request_tab_hilite(self.Main, mentioned)
+
         if mentioned and config.sections["notifications"]["notification_popup_chatroom_mention"]:
             self.frame.notifications.new_text_notification(
                 text,
                 title=_("%(user)s mentioned you in the %(room)s room") % {"user": user, "room": self.room},
                 priority=Gio.NotificationPriority.HIGH
             )
-
-        self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
         if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.Main)
                 and self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active()):
@@ -731,10 +735,42 @@ class ChatRoom(UserInterface):
                 priority=Gio.NotificationPriority.HIGH
             )
 
+    def is_mention(self, login_lower, text_lower):
+
+        # Check that we are not mentioned (this is quick)
+        if login_lower not in text_lower:
+            return False
+
+        mentioned, mention_start, mention_next = False, 0, 0
+
+        while mentioned == False and mention_start > -1:
+            mention_start = text_lower.find(login_lower, mention_next)
+            mention_end = mention_start + len(login_lower)
+
+            # Check the mention(s) of our username is not a subword, allow for it being at the very start/end of text
+            mentioned = ((text_lower[mention_start - 1] if mention_start > 0 else " ") in self.punctuation_list and \
+                         (text_lower[mention_end] if mention_end < len(text_lower) else " ") in self.punctuation_list)
+
+            # Check the rest of the text if this mention is a subword, the next one could be valid
+            mention_next = mention_end
+
+        return mentioned
+
+    def get_tag_type(self, login, user, text_lower):
+
+        if text_lower.startswith("/me "):
+            return self.tag_action
+
+        if user == login:
+            return self.tag_local
+
+        mentioned = self.is_mention(login.lower(), text_lower)
+
+        return self.tag_hilite if mentioned else self.tag_remote
+
     def say_chat_room(self, msg, public=False):
 
         user = msg.user
-        text = msg.msg
 
         if self.frame.np.network_filter.is_user_ignored(user):
             return
@@ -744,23 +780,16 @@ class ChatRoom(UserInterface):
 
         login_username = self.frame.np.login_username
 
-        if user == login_username:
-            tag = self.tag_local
-        elif text.upper().find(login_username.upper()) > -1:
-            tag = self.tag_hilite
-        else:
-            tag = self.tag_remote
+        text = msg.msg
+        tag = self.get_tag_type(login_username, user, text.lower())
 
-        self.show_notification(login_username, user, text, tag, public)
-
-        if text.startswith("/me "):
+        if tag == self.tag_action:
             if public:
                 line = "%s | * %s %s" % (msg.room, user, text[4:])
             else:
                 line = "* %s %s" % (user, text[4:])
 
             speech = line[2:]
-            tag = self.tag_action
 
         else:
             if public:
@@ -771,34 +800,34 @@ class ChatRoom(UserInterface):
             speech = text
 
         line = "\n-- ".join(line.split("\n"))
-        if self.Log.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
-                          timestamp_format=timestamp_format)
-
         usertag = self.get_user_tag(user)
+
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
-        if user != login_username:
+        if user == login_username:
+            self.chat_textview.append_line(
+                line, tag,
+                username=user, usertag=usertag, timestamp_format=timestamp_format
+            )
+
+        else:
             self.chat_textview.append_line(
                 self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
             if self.Speech.get_active():
-
                 self.frame.np.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {
-                        "room": self.room,
-                        "user": user,
-                        "message": speech
-                    }
+                    config.sections["ui"]["speechrooms"], {"room": self.room, "user": user, "message": speech}
                 )
-        else:
-            self.chat_textview.append_line(
-                line, tag,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
-            )
+
+        if self.Log.get_active():
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room,
+                          line, timestamp_format=timestamp_format)
+
+        self.show_notification(login_username, user, text, tag)
 
     def echo_message(self, text, message_type):
 
