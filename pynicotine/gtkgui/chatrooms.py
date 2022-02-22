@@ -747,9 +747,9 @@ class ChatRoom(UserInterface):
             mention_start = text_lower.find(login_lower, mention_next)
             mention_end = mention_start + len(login_lower)
 
-            # Check the mention(s) of our username is not a subword, allow for it being at the very start/end of text
-            mentioned = ((text_lower[mention_start - 1] if mention_start > 0 else " ") in self.punctuation_list and \
-                         (text_lower[mention_end] if mention_end < len(text_lower) else " ") in self.punctuation_list)
+            # Check the mention(s) of our username is not a subword, allow for it being at the very end/start of text
+            mentioned = ((text_lower[mention_end] if mention_end < len(text_lower) else " ") in self.punctuation_list
+                         and (text_lower[mention_start - 1] if mention_start > 0 else " ") in self.punctuation_list)
 
             # Check the rest of the text if this mention is a subword, the next one could be valid
             mention_next = mention_end
