@@ -743,7 +743,7 @@ class ChatRoom(UserInterface):
 
         mentioned, mention_start, mention_next = False, 0, 0
 
-        while mentioned == False and mention_start > -1:
+        while mentioned is False and mention_start > -1:
             mention_start = text_lower.find(login_lower, mention_next)
             mention_end = mention_start + len(login_lower)
 
