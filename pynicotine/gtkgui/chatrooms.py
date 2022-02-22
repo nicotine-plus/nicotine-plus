@@ -821,13 +821,13 @@ class ChatRoom(UserInterface):
                     config.sections["ui"]["speechrooms"], {"room": self.room, "user": user, "message": speech}
                 )
 
+        self.show_notification(login_username, user, text, tag)
+
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
 
             log.write_log(config.sections["logging"]["roomlogsdir"], self.room,
                           line, timestamp_format=timestamp_format)
-
-        self.show_notification(login_username, user, text, tag)
 
     def echo_message(self, text, message_type):
 
