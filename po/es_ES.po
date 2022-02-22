@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-19 03:52+0200\n"
-"PO-Revision-Date: 2022-02-19 02:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2022-02-20 11:57+0000\n"
+"Last-Translator: Tagomago <tagomago@disroot.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/es/>\n"
 "Language: es_ES\n"
@@ -3047,9 +3047,8 @@ msgstr "_Regalar privilegios…"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:233
 #: pynicotine/gtkgui/widgets/popupmenu.py:277
-#, fuzzy
 msgid "Ban IP Address"
-msgstr "Dirección IP"
+msgstr "Vetar dirección IP"
 
 #: pynicotine/gtkgui/widgets/popupmenu.py:235
 #: pynicotine/gtkgui/ui/userinfo.ui:576
@@ -4225,16 +4224,14 @@ msgid "Clear"
 msgstr "Limpiar"
 
 #: pynicotine/gtkgui/ui/downloads.ui:146
-#, fuzzy
 msgid "Clear all finished and filtered downloads."
-msgstr "Descargas de archivos terminadas"
+msgstr "Limpiar todas las descargas terminadas o filtradas."
 
 #: pynicotine/gtkgui/ui/downloads.ui:161 pynicotine/gtkgui/ui/uploads.ui:159
 msgid "Clear Finished"
 msgstr "Limpiar terminadas"
 
 #: pynicotine/gtkgui/ui/downloads.ui:175
-#, fuzzy
 msgid "Clear all downloads marked with a specific status."
 msgstr "Limpiar todas las descargas que tengan un estado específico."
 
@@ -5089,14 +5086,12 @@ msgid "Restore previously open private chats on startup"
 msgstr "Restaurar al arranque los chats privados abiertos previamente"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:65
-#, fuzzy
 msgid "Number of recent private chat messages to show:"
-msgstr "Número de líneas de chat recientes a mostrar:"
+msgstr "Número de mensajes privados de chat recientes a mostrar:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:90
-#, fuzzy
 msgid "Number of recent chat room messages to show:"
-msgstr "Número de líneas de chat recientes a mostrar:"
+msgstr "Número de mensajes recientes de las salas de chat a mostrar:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:117
 msgid "Chat Completion"
@@ -5157,9 +5152,8 @@ msgid "Timestamps"
 msgstr "Marcas temporales"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Private chat format:"
-msgstr "Formato de sala privada:"
+msgstr "Formato de chat privado:"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:329
 #: pynicotine/gtkgui/ui/settings/chats.ui:345
@@ -5410,13 +5404,12 @@ msgid "Unverified"
 msgstr "No verificado"
 
 #: pynicotine/gtkgui/ui/settings/ignore.ui:32
-#, fuzzy
 msgid ""
 "Ignore chat messages and search results from users, based on username or IP "
 "address."
 msgstr ""
-"Ignore los mensajes de chat y los resultados de búsqueda de los usuarios, "
-"según el nombre de usuario o la dirección IP."
+"Ignorar los mensajes de chat y los resultados de búsqueda de los usuarios "
+"basándose en el nombre de usuario o en la dirección IP."
 
 #: pynicotine/gtkgui/ui/settings/log.ui:43
 msgid "Log chatrooms by default"
@@ -5603,16 +5596,15 @@ msgstr ""
 "búsqueda"
 
 #: pynicotine/gtkgui/ui/settings/search.ui:68
-#, fuzzy
 msgid ""
 "Other Soulseek clients may have the option to share files privately. If so, "
 "these files will be prefixed with '[PRIVATE]', and can not be downloaded "
 "until the uploader gives explicit permission. Ask them kindly."
 msgstr ""
-"Otros clientes pueden ofrecer una opción para enviar archivos compartidos de "
-"forma privada en respuesta a las solicitudes de búsqueda. Dichos archivos "
-"llevan el prefijo «[PRIVADO]», y no se pueden descargar a menos que el "
-"remitente dé su permiso explícito."
+"Otros clientes de Soulseek pueden tener la opción de compartir archivos de "
+"forma privada. En caso de que así sea, dichos archivos llevarán el prefijo "
+"«[PRIVADO]», y no se podrán descargar a menos que el remitente dé su permiso "
+"explícito. Pídeselo de forma amable."
 
 #: pynicotine/gtkgui/ui/settings/search.ui:81
 msgid "Limit number of results per search:"
@@ -6138,14 +6130,10 @@ msgid "Ban User(s)"
 msgstr "Vetar usuario(s)"
 
 #: pynicotine/gtkgui/ui/uploads.ui:144
-#, fuzzy
 msgid "Clear all finished and cancelled uploads."
-msgstr ""
-"Limpiar automáticamente las subidas terminadas/canceladas de la lista de "
-"transferencias"
+msgstr "Limpiar todas las subidas terminadas o canceladas."
 
 #: pynicotine/gtkgui/ui/uploads.ui:173
-#, fuzzy
 msgid "Clear all uploads marked with a specific status."
 msgstr "Limpiar todas las subidas que tengan un estado específico."
 
