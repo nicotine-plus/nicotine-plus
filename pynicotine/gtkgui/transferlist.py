@@ -378,7 +378,7 @@ class TransferList(UserInterface):
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
-        percent = totalsize = position = 0
+        percent = totalsize = current_bytes = 0
         elapsed = 0
         left = 0
         salientstatus = ""
@@ -407,7 +407,7 @@ class TransferList(UserInterface):
             elapsed += transfer.time_elapsed or 0
             left += transfer.time_left or 0
             totalsize += self.get_size(transfer.size)
-            position += transfer.current_byte_offset or 0
+            current_bytes += transfer.current_byte_offset or 0
 
             if status == "Transferring":
                 speed += transfer.speed or 0
@@ -439,16 +439,16 @@ class TransferList(UserInterface):
             transfer.time_elapsed = elapsed
             transfer.time_left = left
 
-        if self.transfersmodel.get_value(initer, 11) != position:
-            percent = self.get_percent(position, totalsize)
+        if self.transfersmodel.get_value(initer, 11) != current_bytes:
+            percent = self.get_percent(current_bytes, totalsize)
 
             self.transfersmodel.set_value(initer, 5, percent)
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
-            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT, position))
-            transfer.current_byte_offset = position
+            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_bytes))
+            transfer.current_byte_offset = current_bytes
 
         if self.transfersmodel.get_value(initer, 10) != totalsize:
-            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
+            self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
             self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, totalsize))
             transfer.size = totalsize
 
