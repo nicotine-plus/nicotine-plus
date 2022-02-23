@@ -444,7 +444,7 @@ class TransferList(UserInterface):
 
             self.transfersmodel.set_value(initer, 5, percent)
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(position), human_size(totalsize)))
-            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT, position))
+            self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, position))
             transfer.current_byte_offset = position
 
         if self.transfersmodel.get_value(initer, 10) != totalsize:
