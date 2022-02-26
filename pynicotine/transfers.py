@@ -245,8 +245,34 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
+            user = filename = path = ""
             loaded_status = current_byte_offset = bitrate = length = None
             size = 0
+
+            try:
+                if not isinstance(i[0], str):
+                    continue
+
+                user = i[0]
+            except Exception:
+                continue
+
+            try:
+                if not isinstance(i[1], str):
+                    # Invalid if int from i[6]
+                    continue
+
+                filename = i[1]
+            except Exception:
+                continue
+
+            try:
+                if not isinstance(i[2], str):
+                    continue
+
+                path = i[2]
+            except Exception:
+                continue
 
             try:
                 loaded_status = str(i[3])
@@ -294,9 +320,8 @@ class Transfers:
 
             transfer_list.appendleft(
                 Transfer(
-                    user=i[0], filename=i[1], path=i[2], status=status,
-                    size=size, current_byte_offset=current_byte_offset, bitrate=bitrate,
-                    length=length
+                    user=user, filename=filename, path=path, status=status, size=size,
+                    current_byte_offset=current_byte_offset, bitrate=bitrate, length=length
                 )
             )
 
