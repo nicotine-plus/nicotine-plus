@@ -2011,10 +2011,7 @@ class SlskProtoThread(threading.Thread):
         else:
             bytes_send = 0
 
-        if sock is self.server_socket:
-            return
-
-        if conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
+        if sock is not self.server_socket and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
 
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
@@ -2035,19 +2032,17 @@ class SlskProtoThread(threading.Thread):
                 self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, error))
                 self.close_connection(self._conns, sock)
 
-            if bytes_send <= 0:
-                return
+            if bytes_send > 0:
+                self.total_upload_bandwidth += bytes_send
+                current_time = time.time()
+                finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
 
-            self.total_upload_bandwidth += bytes_send
-            current_time = time.time()
-            finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
+                if finished or (current_time - conn_obj.lastcallback) > 1:
+                    # We save resources by not sending data back to the NicotineCore
+                    # every time a part of a file is uploaded
 
-            if finished or (current_time - conn_obj.lastcallback) > 1:
-                # We save resources by not sending data back to the NicotineCore
-                # every time a part of a file is uploaded
-
-                self._callback_msgs.append(conn_obj.fileupl)
-                conn_obj.lastcallback = current_time
+                    self._callback_msgs.append(conn_obj.fileupl)
+                    conn_obj.lastcallback = current_time
 
         if not conn_obj.obuf:
             # Nothing else to send, stop watching connection for writes
