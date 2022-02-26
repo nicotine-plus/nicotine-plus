@@ -245,65 +245,36 @@ class Transfers:
             transfer_list = self.downloads
 
         for i in transfers:
-            user = filename = path = ""
-            loaded_status = current_byte_offset = bitrate = length = None
-            size = 0
+            # User / filename / path
 
-            try:
-                if not isinstance(i[0], str):
-                    continue
-
-                user = i[0]
-            except Exception:
+            if len(i) < 3:
                 continue
 
-            try:
-                if not isinstance(i[1], str):
-                    # Invalid if int from i[6]
-                    continue
+            user = i[0]
 
-                filename = i[1]
-            except Exception:
+            if not isinstance(user, str):
                 continue
 
-            try:
-                if not isinstance(i[2], str):
-                    continue
+            filename = i[1]
 
-                path = i[2]
-            except Exception:
+            if not isinstance(filename, str):
                 continue
+
+            path = i[2]
+
+            if not isinstance(path, str):
+                continue
+
+            # Status
 
             try:
                 loaded_status = str(i[3])
-            except Exception:
-                pass
+            except IndexError:
+                loaded_status = None
 
-            try:
-                size = int(i[4])
-            except Exception:
-                pass
-
-            try:
-                current_byte_offset = int(i[5])
-            except Exception:
-                pass
-
-            try:
-                loaded_bitrate = i[6]
-
-                if loaded_bitrate is not None:
-                    bitrate = str(loaded_bitrate)
-            except Exception:
-                pass
-
-            try:
-                loaded_length = i[7]
-
-                if loaded_length is not None:
-                    length = str(loaded_length)
-            except Exception:
-                pass
+            if transfer_type == "uploads" and loaded_status != "Finished":
+                # Only finished uploads are supposed to be restored
+                continue
 
             if loaded_status in ("Aborted", "Paused"):
                 status = "Paused"
@@ -314,9 +285,37 @@ class Transfers:
             else:
                 status = "User logged off"
 
-            if transfer_type == "uploads" and status != "Finished":
-                # Only finished uploads are supposed to be restored
-                continue
+            # Size / offset
+
+            try:
+                size = int(i[4])
+            except Exception:
+                size = 0
+
+            try:
+                current_byte_offset = int(i[5])
+            except Exception:
+                current_byte_offset = None
+
+            # Bitrate / length
+
+            bitrate = length = None
+
+            try:
+                loaded_bitrate = i[6]
+
+                if loaded_bitrate is not None:
+                    bitrate = str(loaded_bitrate)
+            except IndexError:
+                pass
+
+            try:
+                loaded_length = i[7]
+
+                if loaded_length is not None:
+                    length = str(loaded_length)
+            except IndexError:
+                pass
 
             transfer_list.appendleft(
                 Transfer(
