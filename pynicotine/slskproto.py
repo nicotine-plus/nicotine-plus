@@ -1206,8 +1206,8 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[server_socket] = conn_obj
             self._numsockets += 1
 
-        except OSError as err:
-            self.connect_error(err, conn_obj)
+        except OSError as error:
+            self.connect_error(error, conn_obj)
             server_socket.close()
             self.server_disconnect()
 
@@ -1539,8 +1539,8 @@ class SlskProtoThread(threading.Thread):
             self._connsinprogress[sock] = conn_obj
             self._numsockets += 1
 
-        except OSError as err:
-            self.connect_error(err, conn_obj)
+        except OSError as error:
+            self.connect_error(error, conn_obj)
             sock.close()
 
     def process_peer_input(self, conn_obj, msg_buffer):
@@ -1653,12 +1653,9 @@ class SlskProtoThread(threading.Thread):
                 try:
                     conn_obj.filedown.file.write(addedbytes)
 
-                except OSError as strerror:
-                    self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, strerror))
+                except (OSError, ValueError) as error:
+                    self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
-
-                except ValueError:
-                    pass
 
             addedbyteslen = len(addedbytes)
             current_time = time.time()
@@ -1686,12 +1683,9 @@ class SlskProtoThread(threading.Thread):
                     conn_obj.fileupl.file.seek(msg.offset)
                     self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-                except OSError as strerror:
-                    self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, strerror))
+                except (OSError, ValueError) as error:
+                    self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
-
-                except ValueError:
-                    pass
 
                 conn_obj.fileupl.offset = msg.offset
                 self._callback_msgs.append(conn_obj.fileupl)
@@ -2037,12 +2031,9 @@ class SlskProtoThread(threading.Thread):
 
                         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-            except OSError as strerror:
-                self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, strerror))
+            except (OSError, ValueError) as error:
+                self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, error))
                 self.close_connection(self._conns, sock)
-
-            except ValueError:
-                pass
 
             if bytes_send <= 0:
                 return
@@ -2155,8 +2146,8 @@ class SlskProtoThread(threading.Thread):
                         # Check if the socket has any data for us
                         sock_in_progress.recv(1, socket.MSG_PEEK)
 
-                except OSError as err:
-                    self.connect_error(err, conn_obj)
+                except OSError as error:
+                    self.connect_error(error, conn_obj)
                     self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
                 else:
@@ -2233,11 +2224,11 @@ class SlskProtoThread(threading.Thread):
                             self.close_connection(self._conns, sock)
                             continue
 
-                    except OSError as err:
+                    except OSError as error:
                         log.add_conn(("Cannot read data from connection %(addr)s, closing connection. "
                                       "Error: %(error)s"), {
                             "addr": conn_obj.addr,
-                            "error": err
+                            "error": error
                         })
                         self.close_connection(self._conns, sock)
                         continue
