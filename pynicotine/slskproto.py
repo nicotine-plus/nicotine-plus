@@ -250,7 +250,7 @@ class Connection:
 
 class PeerConnection(Connection):
 
-    __slots__ = ("filereq", "filedown", "fileupl", "filereadbytes", "bytestoread", "indirect", "lastcallback")
+    __slots__ = ("filereq", "filedown", "fileupl", "indirect", "lastcallback")
 
     def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
         Connection.__init__(self, sock, addr, events)
@@ -259,8 +259,6 @@ class PeerConnection(Connection):
         self.filereq = None
         self.filedown = None
         self.fileupl = None
-        self.filereadbytes = 0
-        self.bytestoread = 0
         self.lastcallback = time.time()
 
 
@@ -1646,10 +1644,11 @@ class SlskProtoThread(threading.Thread):
             msg_buffer = msg_buffer[msgsize:]
 
         elif conn_obj.filedown is not None:
-            leftbytes = conn_obj.bytestoread - conn_obj.filereadbytes
+            leftbytes = conn_obj.filedown.leftbytes
             addedbytes = msg_buffer[:leftbytes]
+            addedbytes_len = len(addedbytes)
 
-            if leftbytes > 0:
+            if addedbytes_len > 0:
                 try:
                     conn_obj.filedown.file.write(addedbytes)
 
@@ -1657,24 +1656,23 @@ class SlskProtoThread(threading.Thread):
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.filedown.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
 
-            addedbyteslen = len(addedbytes)
             current_time = time.time()
-            finished = ((leftbytes - addedbyteslen) == 0)
+            finished = ((leftbytes - addedbytes_len) == 0)
 
             if finished or (current_time - conn_obj.lastcallback) > 1:
                 # We save resources by not sending data back to the NicotineCore
                 # every time a part of a file is downloaded
 
-                self._callback_msgs.append(DownloadFile(conn_obj.sock, conn_obj.filedown.file))
+                self._callback_msgs.append(conn_obj.filedown)
                 conn_obj.lastcallback = current_time
 
             if finished:
                 self.close_connection(self._conns, conn_obj.sock)
 
-            conn_obj.filereadbytes += addedbyteslen
             msg_buffer = msg_buffer[leftbytes:]
+            conn_obj.filedown.leftbytes -= addedbytes_len
 
-        elif conn_obj.fileupl is not None and conn_obj.fileupl.offset is None:
+        elif conn_obj.fileupl is not None and conn_obj.fileupl.leftbytes is None:
             msgsize = 8
             msg = self.unpack_network_message(FileOffset, msg_buffer[:msgsize], msgsize, "file", conn_obj.init)
 
@@ -1687,7 +1685,7 @@ class SlskProtoThread(threading.Thread):
                     self._callback_msgs.append(FileError(conn_obj.sock, conn_obj.fileupl.file, error))
                     self.close_connection(self._conns, conn_obj.sock)
 
-                conn_obj.fileupl.offset = msg.offset
+                conn_obj.fileupl.leftbytes = conn_obj.fileupl.size - msg.offset
                 self._callback_msgs.append(conn_obj.fileupl)
 
             msg_buffer = msg_buffer[msgsize:]
@@ -1723,7 +1721,6 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj = self._conns[msg_obj.init.sock]
-            conn_obj.bytestoread = msg_obj.filesize - msg_obj.offset
             conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -2011,31 +2008,27 @@ class SlskProtoThread(threading.Thread):
         else:
             bytes_send = 0
 
-        if sock is not self.server_socket and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
-            conn_obj.fileupl.sentbytes += bytes_send
+        if sock is not self.server_socket and conn_obj.fileupl is not None and conn_obj.fileupl.leftbytes is not None:
+            conn_obj.fileupl.leftbytes -= bytes_send
 
-            totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
+            if conn_obj.fileupl.leftbytes > 0:
+                bytestoread = bytes_send * 2 - len(conn_obj.obuf) + 10 * 4024
 
-            try:
-                size = conn_obj.fileupl.size
-
-                if totalsentbytes < size:
-                    bytestoread = bytes_send * 2 - len(conn_obj.obuf) + 10 * 4024
-
-                    if bytestoread > 0:
+                if bytestoread > 0:
+                    try:
                         read = conn_obj.fileupl.file.read(bytestoread)
                         conn_obj.obuf.extend(read)
 
                         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
 
-            except (OSError, ValueError) as error:
-                self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, error))
-                self.close_connection(self._conns, sock)
+                    except (OSError, ValueError) as error:
+                        self._callback_msgs.append(FileError(sock, conn_obj.fileupl.file, error))
+                        self.close_connection(self._conns, sock)
 
             if bytes_send > 0:
                 self.total_upload_bandwidth += bytes_send
                 current_time = time.time()
-                finished = (conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes == size)
+                finished = (conn_obj.fileupl.leftbytes == 0)
 
                 if finished or (current_time - conn_obj.lastcallback) > 1:
                     # We save resources by not sending data back to the NicotineCore

@@ -1133,8 +1133,8 @@ class Transfers:
                     if i.size > offset:
                         i.status = "Transferring"
                         i.legacy_attempt = False
-                        self.queue.append(slskmessages.DownloadFile(i.sock, file_handle))
-                        self.queue.append(slskmessages.FileOffset(msg.init, i.size, offset))
+                        self.queue.append(slskmessages.DownloadFile(i.sock, file_handle, leftbytes=(i.size - offset)))
+                        self.queue.append(slskmessages.FileOffset(msg.init, offset))
 
                         log.add_download(
                             _("Download started: user %(user)s, file %(file)s"), {
@@ -1182,7 +1182,7 @@ class Transfers:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
                 file_handle = open(real_path, "rb")
-                offset = file_handle.tell()
+                offset = 0
 
             except OSError as error:
                 log.add(_("Upload I/O error: %s"), error)
@@ -1316,7 +1316,7 @@ class Transfers:
                     del self.transfer_request_times[i]
 
                 current_time = time.time()
-                i.current_byte_offset = msg.file.tell()
+                i.current_byte_offset = i.size - msg.leftbytes
 
                 if i.start_time is None:
                     i.start_time = current_time
@@ -1372,7 +1372,7 @@ class Transfers:
                 del self.transfer_request_times[i]
 
             current_time = time.time()
-            i.current_byte_offset = msg.offset + msg.sentbytes
+            i.current_byte_offset = i.size - msg.leftbytes
 
             if i.start_time is None:
                 i.start_time = current_time
