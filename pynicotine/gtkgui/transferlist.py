@@ -378,7 +378,7 @@ class TransferList(UserInterface):
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
-        percent = totalsize = current_bytes = 0
+        totalsize = current_bytes = 0
         elapsed = 0
         left = 0
         salientstatus = ""
