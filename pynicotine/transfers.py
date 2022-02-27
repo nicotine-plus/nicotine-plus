@@ -658,11 +658,11 @@ class Transfers:
                 for file in files:
                     virtualpath = directory.rstrip('\\') + '\\' + file[1]
                     size = file[2]
-                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file[4])
+                    h_bitrate, _bitrate, h_time, _length = get_result_bitrate_length(size, file[4])
 
                     self.get_file(
                         username, virtualpath, destination,
-                        size=size, bitrate=h_bitrate, length=h_length)
+                        size=size, bitrate=h_bitrate, length=h_time)
 
                 if directory in self.requested_folders.get(username, []):
                     del self.requested_folders[username][directory]
