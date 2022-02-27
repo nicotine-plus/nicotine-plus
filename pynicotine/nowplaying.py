@@ -25,7 +25,7 @@ import json
 from pynicotine.logfacility import log
 from pynicotine.utils import execute_command
 from pynicotine.utils import http_request
-from pynicotine.utils import human_length
+from pynicotine.utils import human_time
 
 
 class NowPlaying:
@@ -248,7 +248,7 @@ class NowPlaying:
 
         # The length is in microseconds, and be represented as a signed 64-bit integer.
         try:
-            self.title['length'] = human_length(metadata['mpris:length'] // 1000000)
+            self.title['length'] = human_time(metadata['mpris:length'] // 1000000)
         except KeyError:
             self.title['length'] = '?'
 

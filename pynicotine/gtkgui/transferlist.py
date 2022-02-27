@@ -44,7 +44,7 @@ from pynicotine.gtkgui.widgets.treeview import show_file_path_tooltip
 from pynicotine.gtkgui.widgets.treeview import verify_grouping_mode
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.transfers import Transfer
-from pynicotine.utils import human_length
+from pynicotine.utils import human_time
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
@@ -351,11 +351,11 @@ class TransferList(UserInterface):
 
     @staticmethod
     def get_helapsed(elapsed):
-        return human_length(elapsed) if elapsed >= 1 else ""
+        return human_time(elapsed) if elapsed >= 1 else ""
 
     @staticmethod
     def get_hleft(left):
-        return human_length(left) if left >= 1 else ""
+        return human_time(left) if left >= 1 else ""
 
     @staticmethod
     def get_percent(current_byte_offset, size):

@@ -19,7 +19,7 @@
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.utils import human_length
+from pynicotine.utils import human_time
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 from pynicotine.utils import human_number
@@ -81,7 +81,7 @@ class FileProperties(UserInterface):
         if self.total_length:
             self.dialog.set_title(_("File Properties (%(num)i of %(total)i  /  %(size)s  /  %(length)s)") % {
                 'num': index, 'total': total_files, 'size': total_size,
-                'length': str(human_length(self.total_length))
+                'length': str(human_time(self.total_length))
             })
             return
 
