@@ -337,7 +337,7 @@ Server Messages
 
 
 class ServerMessage(SlskMessage):
-    """ This is a parent class for all server messages. """
+    msgtype = 'S'
 
 
 class Login(ServerMessage):
@@ -2181,6 +2181,8 @@ Peer Messages
 
 class PeerMessage(SlskMessage):
 
+    msgtype = 'P'
+
     def parse_file_size(self, message, pos):
 
         if message[pos + INT64_SIZE - 1] == 255:
@@ -2840,7 +2842,7 @@ File Messages
 
 
 class FileMessage(SlskMessage):
-    pass
+    msgtype = 'F'
 
 
 class FileDownloadInit(FileMessage):
@@ -2894,7 +2896,7 @@ Distributed Messages
 
 
 class DistribMessage(SlskMessage):
-    pass
+    msgtype = 'D'
 
 
 class DistribAlive(DistribMessage):
