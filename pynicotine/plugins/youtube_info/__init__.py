@@ -22,7 +22,7 @@ import re
 
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.utils import http_request
-from pynicotine.utils import human_length
+from pynicotine.utils import human_time
 from pynicotine.utils import humanize
 
 
@@ -206,4 +206,4 @@ class Plugin(BasePlugin):
         for num, designator in re.findall(r'(\d+)([DHMS])', iso_8601_duration):
             seconds += intervals[designator] * int(num)
 
-        return human_length(seconds)
+        return human_time(seconds)
