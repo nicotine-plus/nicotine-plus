@@ -1663,9 +1663,11 @@ class Transfers:
             if i.user == user and i.filename == filename:
                 if i.status == "Queued":
                     # This upload was queued previously
-                    # Use the previous queue position and time
+                    # Use the previous queue position
                     transferobj.queue_position = i.queue_position
                     previously_queued = True
+
+                transferobj.current_byte_offset = i.current_byte_offset
 
                 if i in self.transfer_request_times:
                     del self.transfer_request_times[i]
