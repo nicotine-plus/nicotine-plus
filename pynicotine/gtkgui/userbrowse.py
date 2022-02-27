@@ -524,9 +524,9 @@ class UserBrowse(UserInterface):
             filename = file[1]
             size = file[2]
             selected_folder_size += size
-            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, file[4])
+            h_bitrate, bitrate, h_time, length = get_result_bitrate_length(size, file[4])
 
-            file_row = [filename, human_size(size), h_bitrate, h_length,
+            file_row = [filename, human_size(size), h_bitrate, h_time,
                         GObject.Value(GObject.TYPE_UINT64, size),
                         GObject.Value(GObject.TYPE_UINT64, bitrate),
                         GObject.Value(GObject.TYPE_UINT64, length)]
@@ -580,11 +580,11 @@ class UserBrowse(UserInterface):
             for file_data in files:
                 virtualpath = "\\".join([folder, file_data[1]])
                 size = file_data[2]
-                h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+                h_bitrate, _bitrate, h_time, _length = get_result_bitrate_length(size, file_data[4])
 
                 self.frame.np.transfers.get_file(
                     self.user, virtualpath, destination,
-                    size=size, bitrate=h_bitrate, length=h_length)
+                    size=size, bitrate=h_bitrate, length=h_time)
 
         if not recurse:
             return
@@ -976,12 +976,12 @@ class UserBrowse(UserInterface):
 
             virtualpath = "\\".join([folder, file_data[1]])
             size = file_data[2]
-            h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+            h_bitrate, _bitrate, h_time, _length = get_result_bitrate_length(size, file_data[4])
 
             # Get the file
             self.frame.np.transfers.get_file(
                 self.user, virtualpath, prefix,
-                size=size, bitrate=h_bitrate, length=h_length)
+                size=size, bitrate=h_bitrate, length=h_time)
 
     def on_download_files_to_selected(self, selected, _data):
 
@@ -1089,12 +1089,12 @@ class UserBrowse(UserInterface):
                 filename = file_data[1]
                 file_size = file_data[2]
                 virtual_path = "\\".join([folder, filename])
-                h_bitrate, _bitrate, h_length, length = get_result_bitrate_length(file_size, file_data[4])
+                h_bitrate, _bitrate, h_time, length = get_result_bitrate_length(file_size, file_data[4])
                 selected_size += file_size
                 selected_length += length
 
                 data.append({"user": self.user, "fn": virtual_path, "filename": filename,
-                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_length})
+                             "directory": folder, "size": file_size, "bitrate": h_bitrate, "length": h_time})
 
         else:
             model, paths = self.FileTreeView.get_selection().get_selected_rows()

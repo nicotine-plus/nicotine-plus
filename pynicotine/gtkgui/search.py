@@ -314,7 +314,7 @@ class Search(UserInterface):
             str,                  # (6)  filename
             str,                  # (7)  h_size
             str,                  # (8)  h_bitrate
-            str,                  # (9)  h_length
+            str,                  # (9)  h_time
             GObject.TYPE_UINT,    # (10) bitrate
             str,                  # (11) fullpath
             str,                  # (12) country
@@ -566,7 +566,7 @@ class Search(UserInterface):
 
             size = result[2]
             h_size = human_size(size)
-            h_bitrate, bitrate, h_length, length = get_result_bitrate_length(size, result[4])
+            h_bitrate, bitrate, h_time, length = get_result_bitrate_length(size, result[4])
 
             if private:
                 name = _("[PRIVATE]  %s") % name
@@ -582,7 +582,7 @@ class Search(UserInterface):
                     name,
                     h_size,
                     h_bitrate,
-                    h_length,
+                    h_time,
                     GObject.Value(GObject.TYPE_UINT, bitrate),
                     fullpath,
                     country,
@@ -654,7 +654,7 @@ class Search(UserInterface):
 
     def add_row_to_model(self, row):
         (_counter, user, flag, h_speed, h_queue, directory, _filename, _h_size, _h_bitrate,
-            _h_length, _bitrate, fullpath, country, _size, speed, queue, _length, color) = row
+            _h_time, _bitrate, fullpath, country, _size, speed, queue, _length, color) = row
 
         expand_user = False
         expand_folder = False
@@ -1220,10 +1220,10 @@ class Search(UserInterface):
 
                 destination = self.frame.np.transfers.get_folder_destination(user, folder)
                 (_counter, user, _flag, _h_speed, _h_queue, _directory, _filename,
-                    _h_size, h_bitrate, h_length, _bitrate, fullpath, _country, size, _speed,
+                    _h_size, h_bitrate, h_time, _bitrate, fullpath, _country, size, _speed,
                     _queue, _length, _color) = row
                 visible_files.append(
-                    (user, fullpath, destination, size.get_uint64(), h_bitrate, h_length))
+                    (user, fullpath, destination, size.get_uint64(), h_bitrate, h_time))
 
             self.frame.np.search.request_folder_download(user, folder, visible_files)
 
