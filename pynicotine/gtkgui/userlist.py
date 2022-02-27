@@ -283,9 +283,6 @@ class UserList(UserInterface):
         self.usersmodel.set_value(iterator, 8, last_seen)
         self.usersmodel.set_value(iterator, 13, int(time_from_epoch))
 
-        if not online:
-            self.save_user_list()
-
     def set_note(self, iterator, store, note=None):
 
         if note is not None:
@@ -550,3 +547,5 @@ class UserList(UserInterface):
             if not self.usersmodel.get_value(iterator, 8):
                 user = self.usersmodel.get_value(iterator, 2)
                 self.set_last_seen(user)
+
+        self.save_user_list()
