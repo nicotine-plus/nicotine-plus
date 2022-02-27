@@ -852,7 +852,7 @@ class SlskProtoThread(threading.Thread):
     def send_message_to_peer(self, user, message, address=None):
 
         init = None
-        conn_type = 'F' if message.__class__ is FileUploadInit else 'P'
+        conn_type = message.msgtype
 
         if conn_type != 'F':
             # Check if there's already a connection for the specified username
