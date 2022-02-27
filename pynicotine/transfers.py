@@ -97,6 +97,7 @@ class Transfers:
         self.allow_saving_transfers = False
         self.downloads = deque()
         self.uploads = deque()
+        self.pending_queue_msgs = []
         self.privileged_users = set()
         self.requested_folders = defaultdict(dict)
         self.last_save_times = {"downloads": 0, "uploads": 0}
@@ -662,56 +663,58 @@ class Transfers:
         the queued file later. """
 
         user = msg.init.target_user
-        real_path = self.core.shares.virtual2real(msg.file)
 
         log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
             'user': user,
             'msg': str(vars(msg))
         })
 
-        if not self.file_is_upload_queued(user, msg.file):
-            limits = True
+        if self.file_is_upload_queued(user, msg.file):
+            return
 
-            if self.config.sections["transfers"]["friendsnolimits"]:
-                friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
+        ip_address, _port = msg.init.addr
+        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
 
-                if friend:
-                    limits = False
+        if not checkuser:
+            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, reason))
+            return
 
-            ip_address, _port = msg.init.addr
-            checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+        if self.core.shares.rescanning:
+            self.pending_queue_msgs.append(msg)
+            return
 
-            if not checkuser:
-                self.queue.append(
-                    slskmessages.UploadDenied(msg.init, msg.file, reason)
-                )
+        real_path = self.core.shares.virtual2real(msg.file)
 
-            elif limits and self.queue_limit_reached(user):
-                self.queue.append(
-                    slskmessages.UploadDenied(msg.init, msg.file, "Too many megabytes")
-                )
+        if not self.core.shares.file_is_shared(user, msg.file, real_path):
+            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "File not shared."))
+            return
 
-            elif limits and self.file_limit_reached(user):
-                self.queue.append(
-                    slskmessages.UploadDenied(msg.init, msg.file, "Too many files")
-                )
+        limits = True
 
-            elif self.core.shares.file_is_shared(user, msg.file, real_path):
-                newupload = Transfer(
-                    user=user, filename=msg.file,
-                    path=os.path.dirname(real_path), status="Queued",
-                    size=self.get_file_size(real_path)
-                )
-                self.append_upload(user, msg.file, newupload)
-                self.update_upload(newupload)
+        if self.config.sections["transfers"]["friendsnolimits"]:
+            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
 
-                self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
-                self.check_upload_queue()
+            if friend:
+                limits = False
 
-            else:
-                self.queue.append(
-                    slskmessages.UploadDenied(msg.init, msg.file, "File not shared.")
-                )
+        if limits and self.queue_limit_reached(user):
+            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "Too many megabytes"))
+            return
+
+        if limits and self.file_limit_reached(user):
+            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "Too many files"))
+            return
+
+        newupload = Transfer(
+            user=user, filename=msg.file,
+            path=os.path.dirname(real_path), status="Queued",
+            size=self.get_file_size(real_path)
+        )
+        self.append_upload(user, msg.file, newupload)
+        self.update_upload(newupload)
+
+        self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
+        self.check_upload_queue()
 
     def transfer_request(self, msg):
 
@@ -743,6 +746,9 @@ class Transfers:
             })
 
             response = self.transfer_request_uploads(msg)
+
+            if response is None:
+                return
 
             log.add_transfer(("Sending response to download request %(request)s for file %(filename)s "
                               "from user %(user)s: %(allowed)s"), {
@@ -851,6 +857,10 @@ class Transfers:
         if not checkuser:
             return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
 
+        if self.core.shares.rescanning:
+            self.pending_queue_msgs.append(msg)
+            return None
+
         # Do we actually share that file with the world?
         real_path = self.core.shares.virtual2real(msg.file)
 
@@ -905,6 +915,7 @@ class Transfers:
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
         response = slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
+        print('hhhhhhhhhhhhhhhhhhhhhh')
 
         transferobj = Transfer(
             user=user, filename=msg.file,
@@ -2090,6 +2101,11 @@ class Transfers:
 
         if reset_count:
             self.download_queue_timer_count = 0
+
+    def process_pending_queue_msgs(self):
+        """ Process file queue requests that arrived while our shares were rescanning """
+
+        self.network_callback(self.pending_queue_msgs)
 
     def get_upload_candidate(self):
         """ Retrieve a suitable queued transfer for uploading.

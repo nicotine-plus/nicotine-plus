@@ -463,6 +463,8 @@ class NicotineCore:
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
+        msgs.clear()
+
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
 

@@ -829,6 +829,9 @@ class Shares:
             self.send_num_shared_folders_files()
 
         self.rescanning = False
+
+        # Process any file queue requests that arrived while scanning
+        self.core.transfers.process_pending_queue_msgs()
         return error
 
     """ Quit """
