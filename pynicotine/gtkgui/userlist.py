@@ -375,7 +375,7 @@ class UserList(UserInterface):
             h_speed = human_speed(avgspeed)
 
         files = msg.files
-        h_files = humanize(files)
+        h_files = human_number(files)
 
         self.usersmodel.set_value(iterator, 3, h_speed)
         self.usersmodel.set_value(iterator, 4, h_files)

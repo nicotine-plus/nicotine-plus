@@ -403,7 +403,7 @@ def human_size(filesize):
     return _human_speed_or_size(filesize)
 
 
-def humanize(number):
+def human_number(number):
     return "{:n}".format(number)
 
 

@@ -290,7 +290,7 @@ class Interests(UserInterface):
 
         for thing, rating in recommendations:
             self.recommendations_model.insert_with_valuesv(
-                -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
+                -1, self.recommendations_column_numbers, [human_number(rating), thing, rating]
             )
 
     def global_recommendations(self, msg):
@@ -357,7 +357,7 @@ class Interests(UserInterface):
             h_speed = human_speed(avgspeed)
 
         files = msg.files
-        h_files = humanize(msg.files)
+        h_files = human_number(msg.files)
 
         self.recommendation_users_model.set_value(iterator, 2, h_speed)
         self.recommendation_users_model.set_value(iterator, 3, h_files)

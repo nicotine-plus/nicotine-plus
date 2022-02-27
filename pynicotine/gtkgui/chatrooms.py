@@ -529,7 +529,7 @@ class ChatRoom(UserInterface):
             h_speed = human_speed(avgspeed)
 
         files = userdata.files
-        h_files = humanize(files)
+        h_files = human_number(files)
 
         weight = Pango.Weight.NORMAL
         underline = Pango.Underline.NONE
@@ -867,7 +867,7 @@ class ChatRoom(UserInterface):
             h_speed = human_speed(avgspeed)
 
         self.usersmodel.set_value(iterator, 3, h_speed)
-        self.usersmodel.set_value(iterator, 4, humanize(files))
+        self.usersmodel.set_value(iterator, 4, human_number(files))
         self.usersmodel.set_value(iterator, 6, GObject.Value(GObject.TYPE_UINT, avgspeed))
         self.usersmodel.set_value(iterator, 7, GObject.Value(GObject.TYPE_UINT, files))
 

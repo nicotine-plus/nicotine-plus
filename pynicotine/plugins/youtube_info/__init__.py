@@ -173,10 +173,10 @@ class Plugin(BasePlugin):
             return None
 
         if likes != 'LIKES':
-            likes = humanize(int(likes))
+            likes = human_number(int(likes))
 
         if views != 'RESTRICTED':
-            views = humanize(int(views))
+            views = human_number(int(views))
 
         if live in ('live', 'upcoming'):
             duration = live.upper()

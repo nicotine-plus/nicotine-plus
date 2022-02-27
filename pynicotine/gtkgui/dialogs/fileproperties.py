@@ -120,7 +120,7 @@ class FileProperties(UserInterface):
         self.length_label.get_parent().set_visible(bool(length))
         self.length_value.get_parent().set_visible(bool(length))
 
-        self.queue_value.set_text(str(humanize(queue_position)))
+        self.queue_value.set_text(str(human_number(queue_position)))
         self.queue_label.get_parent().set_visible(bool(queue_position))
         self.queue_value.get_parent().set_visible(bool(queue_position))
 

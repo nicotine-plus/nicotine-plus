@@ -353,8 +353,8 @@ class UserInfo(UserInterface):
             self.descr_textview.clear()
             self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
 
-        self.uploads.set_text(humanize(msg.totalupl))
-        self.queuesize.set_text(humanize(msg.queuesize))
+        self.uploads.set_text(human_number(msg.totalupl))
+        self.queuesize.set_text(human_number(msg.queuesize))
         self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
 
         self.picture_data = None
@@ -368,8 +368,8 @@ class UserInfo(UserInterface):
         if msg.avgspeed > 0:
             self.speed.set_text(human_speed(msg.avgspeed))
 
-        self.filesshared.set_text(humanize(msg.files))
-        self.dirsshared.set_text(humanize(msg.dirs))
+        self.filesshared.set_text(human_number(msg.files))
+        self.dirsshared.set_text(human_number(msg.dirs))
 
     def set_user_country(self, country_code):
 
