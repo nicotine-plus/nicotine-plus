@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-19 03:52+0200\n"
-"PO-Revision-Date: 2022-02-25 16:36+0000\n"
-"Last-Translator: zniavre <zniavre2048@gmail.com>\n"
+"PO-Revision-Date: 2022-02-26 16:38+0000\n"
+"Last-Translator: Han Boetes <hboetes@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/nicotine-plus/"
 "nicotine-plus/fr/>\n"
 "Language: fr\n"
@@ -5173,9 +5173,8 @@ msgid "Timestamps"
 msgstr "Horodatages"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Private chat format:"
-msgstr "Format du salon privé :"
+msgstr "Format de chat privé :"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:329
 #: pynicotine/gtkgui/ui/settings/chats.ui:345
