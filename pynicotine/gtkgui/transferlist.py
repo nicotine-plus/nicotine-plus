@@ -378,7 +378,7 @@ class TransferList(UserInterface):
     def update_parent_row(self, initer, key, folder=False):
 
         speed = 0.0
-        percent = totalsize = current_bytes = 0
+        totalsize = current_bytes = 0
         elapsed = 0
         left = 0
         salientstatus = ""
@@ -417,37 +417,32 @@ class TransferList(UserInterface):
 
             iterator = self.transfersmodel.iter_next(iterator)
 
-        translated_status = self.translate_status(salientstatus)
-        helapsed = self.get_helapsed(elapsed)
-        hspeed = self.get_hspeed(speed)
         transfer = self.transfersmodel.get_value(initer, 16)
 
-        if self.transfersmodel.get_value(initer, 3) != translated_status:
-            self.transfersmodel.set_value(initer, 3, translated_status)
+        if transfer.status != salientstatus:
+            self.transfersmodel.set_value(initer, 3, self.translate_status(salientstatus))
             transfer.status = salientstatus
 
-        if self.transfersmodel.get_value(initer, 7) != hspeed:
-            self.transfersmodel.set_value(initer, 7, hspeed)
+        if transfer.speed != speed:
+            self.transfersmodel.set_value(initer, 7, self.get_hspeed(speed))
             self.transfersmodel.set_value(initer, 12, GObject.Value(GObject.TYPE_UINT64, speed))
             transfer.speed = speed
 
-        if self.transfersmodel.get_value(initer, 8) != helapsed:
-            self.transfersmodel.set_value(initer, 8, helapsed)
+        if transfer.time_elapsed != elapsed:
+            self.transfersmodel.set_value(initer, 8, self.get_helapsed(elapsed))
             self.transfersmodel.set_value(initer, 9, self.get_hleft(left))
             self.transfersmodel.set_value(initer, 14, elapsed)
             self.transfersmodel.set_value(initer, 15, left)
             transfer.time_elapsed = elapsed
             transfer.time_left = left
 
-        if self.transfersmodel.get_value(initer, 11) != current_bytes:
-            percent = self.get_percent(current_bytes, totalsize)
-
-            self.transfersmodel.set_value(initer, 5, percent)
+        if transfer.current_byte_offset != current_bytes:
+            self.transfersmodel.set_value(initer, 5, self.get_percent(current_bytes, totalsize))
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
             self.transfersmodel.set_value(initer, 11, GObject.Value(GObject.TYPE_UINT64, current_bytes))
             transfer.current_byte_offset = current_bytes
 
-        if self.transfersmodel.get_value(initer, 10) != totalsize:
+        if transfer.size != totalsize:
             self.transfersmodel.set_value(initer, 6, "%s / %s" % (human_size(current_bytes), human_size(totalsize)))
             self.transfersmodel.set_value(initer, 10, GObject.Value(GObject.TYPE_UINT64, totalsize))
             transfer.size = totalsize
