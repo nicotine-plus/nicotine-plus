@@ -1999,6 +1999,7 @@ class SlskProtoThread(threading.Thread):
         else:
             limit = None
 
+        prev_active = conn_obj.lastactive
         conn_obj.lastactive = time.time()
 
         if conn_obj.obuf:
@@ -2013,14 +2014,13 @@ class SlskProtoThread(threading.Thread):
 
         if sock is not self.server_socket and conn_obj.fileupl is not None and conn_obj.fileupl.offset is not None:
             conn_obj.fileupl.sentbytes += bytes_send
-
             totalsentbytes = conn_obj.fileupl.offset + conn_obj.fileupl.sentbytes + len(conn_obj.obuf)
 
             try:
                 size = conn_obj.fileupl.size
 
                 if totalsentbytes < size:
-                    bytestoread = bytes_send * 2 - len(conn_obj.obuf) + 10 * 4024
+                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.lastactive - prev_active)) - len(conn_obj.obuf)
 
                     if bytestoread > 0:
                         read = conn_obj.fileupl.file.read(bytestoread)
