@@ -2020,7 +2020,8 @@ class SlskProtoThread(threading.Thread):
                 size = conn_obj.fileupl.size
 
                 if totalsentbytes < size:
-                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.lastactive - prev_active)) - len(conn_obj.obuf)
+                    bytestoread = int(max(4096, bytes_send * 1.2) / max(1, conn_obj.lastactive - prev_active)
+                                      - len(conn_obj.obuf))
 
                     if bytestoread > 0:
                         read = conn_obj.fileupl.file.read(bytestoread)
