@@ -915,7 +915,6 @@ class Transfers:
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
         response = slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
-        print('hhhhhhhhhhhhhhhhhhhhhh')
 
         transferobj = Transfer(
             user=user, filename=msg.file,
@@ -1152,8 +1151,10 @@ class Transfers:
 
             return
 
-        log.add_transfer("Received unknown file download init message with token %s", token)
-        self.queue.append(slskmessages.ConnClose(msg.init.sock))
+        # Support legacy transfer system (clients: old Nicotine+ versions, slskd)
+        log.add_transfer(("Received unknown file download init message with token %s, checking if peer "
+                          "requested us to upload a file instead"), token)
+        self.file_upload_init(msg)
 
     def file_upload_init(self, msg):
         """ We are requesting to start uploading a file to a peer """
