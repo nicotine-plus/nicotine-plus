@@ -97,7 +97,6 @@ class Transfers:
         self.allow_saving_transfers = False
         self.downloads = deque()
         self.uploads = deque()
-        self.pending_queue_msgs = []
         self.privileged_users = set()
         self.requested_folders = defaultdict(dict)
         self.last_save_times = {"downloads": 0, "uploads": 0}
@@ -680,7 +679,7 @@ class Transfers:
             return
 
         if self.core.shares.rescanning:
-            self.pending_queue_msgs.append(msg)
+            self.core.shares.pending_network_msgs.append(msg)
             return
 
         real_path = self.core.shares.virtual2real(msg.file)
@@ -858,7 +857,7 @@ class Transfers:
             return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
 
         if self.core.shares.rescanning:
-            self.pending_queue_msgs.append(msg)
+            self.core.shares.pending_network_msgs.append(msg)
             return None
 
         # Do we actually share that file with the world?
@@ -2102,11 +2101,6 @@ class Transfers:
 
         if reset_count:
             self.download_queue_timer_count = 0
-
-    def process_pending_queue_msgs(self):
-        """ Process file queue requests that arrived while our shares were rescanning """
-
-        self.network_callback(self.pending_queue_msgs)
 
     def get_upload_candidate(self):
         """ Retrieve a suitable queued transfer for uploading.

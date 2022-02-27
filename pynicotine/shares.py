@@ -456,14 +456,16 @@ class Scanner:
 
 class Shares:
 
-    def __init__(self, core, config, queue, init_shares=True, ui_callback=None):
+    def __init__(self, core, config, queue, network_callback=None, ui_callback=None, init_shares=True):
 
         self.core = core
+        self.network_callback = network_callback
         self.ui_callback = ui_callback
         self.config = config
         self.queue = queue
         self.translatepunctuation = str.maketrans(dict.fromkeys(PUNCTUATION, ' '))
         self.share_dbs = {}
+        self.pending_network_msgs = []
         self.rescanning = False
         self.should_compress_shares = False
         self.compressed_shares_normal = slskmessages.SharedFileList(None, None)
@@ -830,9 +832,9 @@ class Shares:
 
         self.rescanning = False
 
-        if self.core is not None:
-            # Process any file queue requests that arrived while scanning
-            self.core.transfers.process_pending_queue_msgs()
+        # Process any file transfer queue requests that arrived while scanning
+        if self.network_callback:
+            self.network_callback(self.pending_network_msgs)
 
         return error
 
