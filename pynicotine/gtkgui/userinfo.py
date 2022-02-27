@@ -38,7 +38,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.utils import humanize
+from pynicotine.utils import human_number
 from pynicotine.utils import human_speed
 
 
@@ -353,8 +353,8 @@ class UserInfo(UserInterface):
             self.descr_textview.clear()
             self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
 
-        self.uploads.set_text(humanize(msg.totalupl))
-        self.queuesize.set_text(humanize(msg.queuesize))
+        self.uploads.set_text(human_number(msg.totalupl))
+        self.queuesize.set_text(human_number(msg.queuesize))
         self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
 
         self.picture_data = None
@@ -368,8 +368,8 @@ class UserInfo(UserInterface):
         if msg.avgspeed > 0:
             self.speed.set_text(human_speed(msg.avgspeed))
 
-        self.filesshared.set_text(humanize(msg.files))
-        self.dirsshared.set_text(humanize(msg.dirs))
+        self.filesshared.set_text(human_number(msg.files))
+        self.dirsshared.set_text(human_number(msg.dirs))
 
     def set_user_country(self, country_code):
 

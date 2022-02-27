@@ -40,7 +40,7 @@ from pynicotine.gtkgui.widgets.treeview import show_country_tooltip
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
-from pynicotine.utils import humanize
+from pynicotine.utils import human_number
 from pynicotine.utils import human_speed
 
 
@@ -375,7 +375,7 @@ class UserList(UserInterface):
             h_speed = human_speed(avgspeed)
 
         files = msg.files
-        h_files = humanize(files)
+        h_files = human_number(files)
 
         self.usersmodel.set_value(iterator, 3, h_speed)
         self.usersmodel.set_value(iterator, 4, h_files)

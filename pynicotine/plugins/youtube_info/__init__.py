@@ -23,7 +23,7 @@ import re
 from pynicotine.pluginsystem import BasePlugin
 from pynicotine.utils import http_request
 from pynicotine.utils import human_length
-from pynicotine.utils import humanize
+from pynicotine.utils import human_number
 
 
 class Plugin(BasePlugin):
@@ -173,10 +173,10 @@ class Plugin(BasePlugin):
             return None
 
         if likes != 'LIKES':
-            likes = humanize(int(likes))
+            likes = human_number(int(likes))
 
         if views != 'RESTRICTED':
-            views = humanize(int(views))
+            views = human_number(int(views))
 
         if live in ('live', 'upcoming'):
             duration = live.upper()

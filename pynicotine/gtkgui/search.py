@@ -53,7 +53,7 @@ from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
-from pynicotine.utils import humanize
+from pynicotine.utils import human_number
 from pynicotine.utils import human_size
 from pynicotine.utils import human_speed
 
@@ -611,7 +611,7 @@ class Search(UserInterface):
             h_queue = ""
         else:
             inqueue = msg.inqueue or 1  # Ensure value is always >= 1
-            h_queue = humanize(inqueue)
+            h_queue = human_number(inqueue)
 
         h_speed = ""
         ulspeed = msg.ulspeed or 0

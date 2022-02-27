@@ -30,7 +30,7 @@ from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.theme import get_status_icon
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.ui import UserInterface
-from pynicotine.utils import humanize
+from pynicotine.utils import human_number
 from pynicotine.utils import human_speed
 
 
@@ -290,7 +290,7 @@ class Interests(UserInterface):
 
         for thing, rating in recommendations:
             self.recommendations_model.insert_with_valuesv(
-                -1, self.recommendations_column_numbers, [humanize(rating), thing, rating]
+                -1, self.recommendations_column_numbers, [human_number(rating), thing, rating]
             )
 
     def global_recommendations(self, msg):
@@ -357,7 +357,7 @@ class Interests(UserInterface):
             h_speed = human_speed(avgspeed)
 
         files = msg.files
-        h_files = humanize(msg.files)
+        h_files = human_number(msg.files)
 
         self.recommendation_users_model.set_value(iterator, 2, h_speed)
         self.recommendation_users_model.set_value(iterator, 3, h_files)
