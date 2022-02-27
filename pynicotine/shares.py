@@ -830,8 +830,10 @@ class Shares:
 
         self.rescanning = False
 
-        # Process any file queue requests that arrived while scanning
-        self.core.transfers.process_pending_queue_msgs()
+        if self.core is not None:
+            # Process any file queue requests that arrived while scanning
+            self.core.transfers.process_pending_queue_msgs()
+
         return error
 
     """ Quit """
