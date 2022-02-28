@@ -50,7 +50,7 @@ class TransfersTest(unittest.TestCase):
 
         self.assertEqual(transfer.user, "user13")
         self.assertEqual(transfer.filename, "Downloaded\\Song13.mp3")
-        self.assertEqual(transfer.status, "Getting status")
+        self.assertEqual(transfer.status, "User logged off")
         self.assertEqual(transfer.size, 0)
         self.assertIsNone(transfer.current_byte_offset)
         self.assertIsNone(transfer.bitrate)
