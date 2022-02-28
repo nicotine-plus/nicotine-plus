@@ -86,7 +86,6 @@ class TransferList(UserInterface):
             "Queued (prioritized)": _("Queued (prioritized)"),
             "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
-            "Establishing connection": _("Establishing connection"),
             "Transferring": _("Transferring"),
             "Cannot connect": _("Cannot connect"),
             "Pending shutdown.": _("Pending shutdown"),
@@ -108,6 +107,7 @@ class TransferList(UserInterface):
             "Local file error": _("Local file error"),
             "Remote file error": _("Remote file error")
         }
+        self.deprioritized_statuses = ("", "Paused", "Aborted", "Finished", "Filtered")
 
         self.transfersmodel = Gtk.TreeStore(
             str,                   # (0)  user
@@ -396,7 +396,7 @@ class TransferList(UserInterface):
             transfer = self.transfersmodel.get_value(iterator, 16)
             status = transfer.status
 
-            if salientstatus in ('', "Finished", "Filtered"):  # we prefer anything over ''/finished
+            if status == "Transferring" or salientstatus in self.deprioritized_statuses:
                 salientstatus = status
 
             if status == "Filtered":
@@ -408,12 +408,7 @@ class TransferList(UserInterface):
             left += transfer.time_left or 0
             totalsize += self.get_size(transfer.size)
             current_bytes += transfer.current_byte_offset or 0
-
-            if status == "Transferring":
-                speed += transfer.speed or 0
-
-            if status in ("Transferring", "Banned", "Getting address", "Establishing connection"):
-                salientstatus = status
+            speed += transfer.speed or 0
 
             iterator = self.transfersmodel.iter_next(iterator)
 
