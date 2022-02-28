@@ -330,8 +330,6 @@ class Transfers:
         users = set()
 
         for i in self.downloads:
-            users.add(i.user)
-
             if i.status in ("Aborted", "Paused"):
                 i.status = "Paused"
 
@@ -340,6 +338,8 @@ class Transfers:
 
             else:
                 i.status = "Getting status"
+
+            users.add(i.user)
 
         for user in users:
             self.core.watch_user(user)
