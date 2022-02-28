@@ -493,7 +493,7 @@ class Transfers:
             upload_slot_limit = 1
 
         num_in_progress = 0
-        active_statuses = ("Getting status", "Establishing connection", "Transferring")
+        active_statuses = ("Getting status", "Transferring")
 
         for i in self.uploads:
             if i.status in active_statuses:
@@ -539,7 +539,7 @@ class Transfers:
 
     def file_is_upload_queued(self, user, filename):
 
-        statuses = ("Queued", "Getting status", "Establishing connection", "Transferring")
+        statuses = ("Queued", "Getting status", "Transferring")
 
         for i in self.uploads:
             if i.user == user and i.filename == filename and i.status in statuses:
@@ -552,12 +552,10 @@ class Transfers:
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
-        download_statuses = ("Queued", "Getting status", "Establishing connection", "Too many files",
-                             "Too many megabytes", "Pending shutdown.", "User logged off", "Connection closed by peer",
-                             "Cannot connect", "Remote file error")
+        download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
+                             "User logged off", "Connection closed by peer", "Cannot connect", "Remote file error")
 
-        upload_statuses = ("Getting status", "Establishing connection", "Disallowed extension",
-                           "User logged off", "Cannot connect", "Cancelled")
+        upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Cannot connect", "Cancelled")
 
         for i in reversed(self.downloads.copy()):
             if msg.user == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
@@ -830,7 +828,7 @@ class Transfers:
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
-        active_statuses = ("Getting status", "Establishing connection", "Transferring")
+        active_statuses = ("Getting status", "Transferring")
 
         for i in self.uploads:
             if i.user != user:
@@ -902,9 +900,7 @@ class Transfers:
             if i.token != msg.token:
                 continue
 
-            i.status = "Establishing connection"
             self.core.send_message_to_peer(i.user, slskmessages.FileUploadInit(None, msg.token))
-            self.update_upload(i)
             self.check_upload_queue()
             return
 
@@ -2081,7 +2077,7 @@ class Transfers:
         FIFO: Get the first queued item in the list """
 
         round_robin_queue = not self.config.sections["transfers"]["fifoqueue"]
-        active_statuses = ("Getting status", "Establishing connection", "Transferring")
+        active_statuses = ("Getting status", "Transferring")
         privileged_queue = False
 
         first_queued_transfers = OrderedDict()
@@ -2238,7 +2234,7 @@ class Transfers:
 
     def retry_upload(self, transfer):
 
-        active_statuses = ["Getting status", "Establishing connection", "Transferring"]
+        active_statuses = ["Getting status", "Transferring"]
 
         if transfer.status in active_statuses + ["Finished"]:
             # Don't retry active or finished uploads
