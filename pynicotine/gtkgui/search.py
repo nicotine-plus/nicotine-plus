@@ -1096,7 +1096,12 @@ class Search(UserInterface):
         self.select_results()
 
         iterator = self.resultsmodel.get_iter(path)
+        folder = self.resultsmodel.get_value(iterator, 5)
         filename = self.resultsmodel.get_value(iterator, 6)
+
+        if not folder and not filename:
+            # Don't activate user rows
+            return
 
         if not filename:
             self.on_download_folders()
