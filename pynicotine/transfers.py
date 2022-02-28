@@ -330,16 +330,10 @@ class Transfers:
         users = set()
 
         for i in self.downloads:
-            users.add(i.user)
-
-            if i.status in ("Aborted", "Paused"):
-                i.status = "Paused"
-
-            elif i.status in ("Filtered", "Finished"):
+            if i.status in ("Filtered", "Finished"):
                 continue
 
-            else:
-                i.status = "Getting status"
+            users.add(i.user)
 
         for user in users:
             self.core.watch_user(user)
@@ -552,25 +546,26 @@ class Transfers:
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
+        username = msg.user
+        user_offline = (msg.status <= 0)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
                              "User logged off", "Connection closed by peer", "Cannot connect", "Remote file error")
-
         upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Cannot connect", "Cancelled")
 
         for i in reversed(self.downloads.copy()):
-            if msg.user == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
-                if msg.status <= 0:
+            if username == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
+                if user_offline:
                     i.status = "User logged off"
                     self.abort_transfer(i)
                     self.update_download(i)
 
-                elif i.status in ("Getting status", "User logged off", "Connection closed by peer", "Cannot connect"):
-                    self.get_file(i.user, i.filename, i.path, i)
+                elif i.status == "User logged off":
+                    self.get_file(username, i.filename, i.path, i)
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in reversed(self.uploads.copy()):
-            if msg.user == i.user and i.status in upload_statuses:
-                if msg.status <= 0:
+            if username == i.user and i.status in upload_statuses:
+                if user_offline:
                     i.status = "User logged off"
                     self.abort_transfer(i)
 
