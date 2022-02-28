@@ -662,57 +662,39 @@ class Transfers:
         the queued file later. """
 
         user = msg.init.target_user
+        filename = msg.file
 
-        log.add_transfer("QueueUpload request: User %(user)s, %(msg)s", {
-            'user': user,
-            'msg': str(vars(msg))
+        log.add_transfer("Received upload request for file %(filename)s from user %(user)s", {
+            "user": user,
+            "filename": filename,
         })
 
-        if self.file_is_upload_queued(user, msg.file):
+        if self.file_is_upload_queued(user, filename):
             return
 
-        ip_address, _port = msg.init.addr
-        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+        real_path = self.core.shares.virtual2real(filename)
+        allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
 
-        if not checkuser:
-            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, reason))
+        log.add_transfer(("Upload request for file %(filename)s from user %(user)s: "
+                          "allowed: %(allowed)s, reason: %(reason)s"), {
+            "filename": filename,
+            "user": user,
+            "allowed": allowed,
+            "reason": reason
+        })
+
+        if not allowed:
+            if reason:
+                self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, filename, reason))
+
             return
 
-        if self.core.shares.rescanning:
-            self.core.shares.pending_network_msgs.append(msg)
-            return
+        transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
+                            status="Queued", size=self.get_file_size(real_path))
+        self.append_upload(user, filename, transfer)
+        self.update_upload(transfer)
 
-        real_path = self.core.shares.virtual2real(msg.file)
-
-        if not self.core.shares.file_is_shared(user, msg.file, real_path):
-            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "File not shared."))
-            return
-
-        limits = True
-
-        if self.config.sections["transfers"]["friendsnolimits"]:
-            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
-
-            if friend:
-                limits = False
-
-        if limits and self.queue_limit_reached(user):
-            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "Too many megabytes"))
-            return
-
-        if limits and self.file_limit_reached(user):
-            self.core.send_message_to_peer(user, slskmessages.UploadDenied(None, msg.file, "Too many files"))
-            return
-
-        newupload = Transfer(
-            user=user, filename=msg.file,
-            path=os.path.dirname(real_path), status="Queued",
-            size=self.get_file_size(real_path)
-        )
-        self.append_upload(user, msg.file, newupload)
-        self.update_upload(newupload)
-
-        self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
+        self.core.pluginhandler.upload_queued_notification(user, filename, real_path)
         self.check_upload_queue()
 
     def transfer_request(self, msg):
@@ -721,40 +703,24 @@ class Transfers:
         response = None
 
         if msg.direction == 1:
-            log.add_transfer("Received upload request %(request)s for file %(filename)s from user %(user)s", {
-                "request": msg.token,
-                "filename": msg.file,
-                "user": user
-            })
-
             response = self.transfer_request_downloads(msg)
 
-            log.add_transfer(("Sending response to upload request %(request)s for file %(filename)s "
-                              "from user %(user)s: %(allowed)s"), {
-                "request": response.token,
-                "filename": msg.file,
-                "user": user,
-                "allowed": response.allowed
+            log.add_transfer(("Responding to download request %(token)s for file %(filename)s "
+                              "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
+                "token": response.token, "filename": msg.file, "user": user,
+                "allowed": bool(response.allowed), "reason": response.reason
             })
 
         else:
-            log.add_transfer("Received download request %(request)s for file %(filename)s from user %(user)s", {
-                "request": msg.token,
-                "filename": msg.file,
-                "user": user
-            })
-
             response = self.transfer_request_uploads(msg)
 
             if response is None:
                 return
 
-            log.add_transfer(("Sending response to download request %(request)s for file %(filename)s "
-                              "from user %(user)s: %(allowed)s"), {
-                "request": response.token,
-                "filename": msg.file,
-                "user": user,
-                "allowed": response.allowed
+            log.add_transfer(("Responding to legacy upload request %(token)s for file %(filename)s "
+                              "from user %(user)s: allowed: %(allowed)s, reason: %(reason)s"), {
+                "token": response.token, "filename": msg.file, "user": user,
+                "allowed": bool(response.allowed), "reason": response.reason
             })
 
         self.core.send_message_to_peer(user, response)
@@ -764,6 +730,12 @@ class Transfers:
         user = msg.init.target_user
         filename = msg.file
         size = msg.filesize
+
+        log.add_transfer("Received download request %(token)s for file %(filename)s from user %(user)s", {
+            "token": msg.token,
+            "filename": filename,
+            "user": user
+        })
 
         cancel_reason = "Cancelled"
         accepted = True
@@ -799,8 +771,7 @@ class Transfers:
             self.transfer_request_times[i] = time.time()
 
             self.update_download(i)
-            response = slskmessages.TransferResponse(None, 1, token=i.token)
-            return response
+            return slskmessages.TransferResponse(None, 1, token=i.token)
 
         # Check if download exists in our default download folder
         if self.get_existing_download_path(user, filename, "", size):
@@ -812,81 +783,50 @@ class Transfers:
         if accepted and self.can_upload(user):
             path = ""
             if self.config.sections["transfers"]["uploadsinsubdirs"]:
-                parentdir = msg.file.replace('/', '\\').split('\\')[-2]
+                parentdir = filename.replace('/', '\\').split('\\')[-2]
                 path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
 
-            transfer = Transfer(
-                user=user, filename=msg.file, path=path,
-                status="Queued", size=msg.filesize, token=msg.token
-            )
+            transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
+                                size=msg.filesize, token=msg.token)
             self.downloads.appendleft(transfer)
+            self.update_download(transfer)
             self.core.watch_user(user)
 
-            response = slskmessages.TransferResponse(None, 0, reason="Queued", token=transfer.token)
-            self.update_download(transfer)
+            return slskmessages.TransferResponse(None, 0, reason="Queued", token=transfer.token)
 
-        else:
-            response = slskmessages.TransferResponse(None, 0, reason=cancel_reason, token=msg.token)
-            log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
-                'user': user,
-                'msg': str(vars(msg))
-            })
+        log.add_transfer("Denied file request: User %(user)s, %(msg)s", {
+            'user': user,
+            'msg': str(vars(msg))
+        })
 
-        return response
+        return slskmessages.TransferResponse(None, 0, reason=cancel_reason, token=msg.token)
 
     def transfer_request_uploads(self, msg):
         """ Remote peer is requesting to download a file through your upload queue.
         Note that the QueueUpload peer message has replaced this method of requesting
         a download in most clients. """
 
-        response = self._transfer_request_uploads(msg)
-        log.add_transfer("Legacy TransferRequest upload request: %(req)s Response: %(resp)s", {
-            'req': str(vars(msg)),
-            'resp': response
-        })
-        return response
+        user = msg.init.target_user
+        filename = msg.file
 
-    def _transfer_request_uploads(self, msg):
+        log.add_transfer("Received legacy upload request %(token)s for file %(filename)s from user %(user)s", {
+            "token": msg.token,
+            "filename": filename,
+            "user": user
+        })
 
         # Is user allowed to download?
-        user = msg.init.target_user
-        ip_address, _port = msg.init.addr
-        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+        real_path = self.core.shares.virtual2real(filename)
+        allowed, reason = self.check_queue_upload_allowed(user, msg.init.addr, filename, real_path, msg)
 
-        if not checkuser:
-            return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
+        if not allowed:
+            if reason:
+                return slskmessages.TransferResponse(None, 0, reason=reason, token=msg.token)
 
-        if self.core.shares.rescanning:
-            self.core.shares.pending_network_msgs.append(msg)
             return None
 
-        # Do we actually share that file with the world?
-        real_path = self.core.shares.virtual2real(msg.file)
-
-        if not self.core.shares.file_is_shared(user, msg.file, real_path):
-            return slskmessages.TransferResponse(None, 0, reason="File not shared.", token=msg.token)
-
-        # Is that file already in the queue?
-        if self.file_is_upload_queued(user, msg.file):
-            return slskmessages.TransferResponse(None, 0, reason="Queued", token=msg.token)
-
-        # Has user hit queue limit?
-        limits = True
-
-        if self.config.sections["transfers"]["friendsnolimits"]:
-            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
-
-            if friend:
-                limits = False
-
-        if limits and self.queue_limit_reached(user):
-            return slskmessages.TransferResponse(None, 0, reason="Too many megabytes", token=msg.token)
-
-        if limits and self.file_limit_reached(user):
-            return slskmessages.TransferResponse(None, 0, reason="Too many files", token=msg.token)
-
         # All checks passed, user can queue file!
-        self.core.pluginhandler.upload_queued_notification(user, msg.file, real_path)
+        self.core.pluginhandler.upload_queued_notification(user, filename, real_path)
 
         # Is user already downloading/negotiating a download?
         already_downloading = False
@@ -901,38 +841,31 @@ class Transfers:
                 break
 
         if not self.allow_new_uploads() or already_downloading:
-            response = slskmessages.TransferResponse(None, 0, reason="Queued", token=msg.token)
-            newupload = Transfer(
-                user=user, filename=msg.file,
-                path=os.path.dirname(real_path), status="Queued",
-                size=self.get_file_size(real_path)
-            )
-            self.append_upload(user, msg.file, newupload)
-            self.update_upload(newupload)
-            return response
+            transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
+                                status="Queued", size=self.get_file_size(real_path))
+            self.append_upload(user, filename, transfer)
+            self.update_upload(transfer)
+
+            return slskmessages.TransferResponse(None, 0, reason="Queued", token=msg.token)
 
         # All checks passed, starting a new upload.
         size = self.get_file_size(real_path)
-        response = slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
+        transfer = Transfer(user=user, filename=filename, path=os.path.dirname(real_path),
+                            status="Getting status", token=msg.token, size=size)
 
-        transferobj = Transfer(
-            user=user, filename=msg.file,
-            path=os.path.dirname(real_path), status="Getting status",
-            token=msg.token, size=size
-        )
+        self.transfer_request_times[transfer] = time.time()
+        self.append_upload(user, filename, transfer)
+        self.update_upload(transfer)
 
-        self.transfer_request_times[transferobj] = time.time()
-        self.append_upload(user, msg.file, transferobj)
-        self.update_upload(transferobj)
-        return response
+        return slskmessages.TransferResponse(None, 1, token=msg.token, filesize=size)
 
     def transfer_response(self, msg):
         """ Received a response to the file request from the peer """
 
-        log.add_transfer(("Received response for upload request %(request)s. Allowed: %(allowed)s. "
-                          "Reason: %(reason)s. Filesize: %(size)s"), {
-            "request": msg.token,
-            "allowed": msg.allowed,
+        log.add_transfer(("Received response for upload request %(token)s: allowed: %(allowed)s, "
+                          "reason: %(reason)s, file size: %(size)s"), {
+            "token": msg.token,
+            "allowed": bool(msg.allowed),
             "reason": msg.reason,
             "size": msg.filesize
         })
@@ -985,9 +918,9 @@ class Transfers:
             # Check if the transfer has started since the timeout callback was initiated
             return
 
-        log.add_transfer("Transfer %(filename)s with request %(request)s for user %(user)s timed out", {
+        log.add_transfer("Transfer %(filename)s with token %(token)s for user %(user)s timed out", {
             "filename": transfer.filename,
-            "request": transfer.token,
+            "token": transfer.token,
             "user": transfer.user
         })
 
@@ -1047,9 +980,9 @@ class Transfers:
             if token != i.token:
                 continue
 
-            log.add_transfer(("Received file download init with token %(request)s for file %(filename)s "
+            log.add_transfer(("Received file download init with token %(token)s for file %(filename)s "
                               "from user %(user)s"), {
-                "request": token,
+                "token": token,
                 "filename": i.filename,
                 "user": i.user
             })
@@ -1164,8 +1097,8 @@ class Transfers:
             if token != i.token:
                 continue
 
-            log.add_transfer("Initializing upload with token %(request)s for file %(filename)s to user %(user)s", {
-                "request": token,
+            log.add_transfer("Initializing upload with token %(token)s for file %(filename)s to user %(user)s", {
+                "token": token,
                 "filename": i.filename,
                 "user": i.user
             })
@@ -1233,9 +1166,10 @@ class Transfers:
     def upload_denied(self, msg):
 
         user = msg.init.target_user
+        filename = msg.file
 
         for i in self.downloads:
-            if i.user != user or i.filename != msg.file:
+            if i.user != user or i.filename != filename:
                 continue
 
             if i.status in ("Finished", "Paused"):
@@ -1250,12 +1184,12 @@ class Transfers:
                                  "Attempting to request file as latin-1.", {
                                      "user": user,
                                      "reason": msg.reason,
-                                     "filename": i.filename
+                                     "filename": filename
                                  })
 
                 self.abort_transfer(i)
                 i.legacy_attempt = True
-                self.get_file(i.user, i.filename, i.path, i)
+                self.get_file(i.user, filename, i.path, i)
                 break
 
             if i.status == "Transferring":
@@ -1266,7 +1200,7 @@ class Transfers:
 
             log.add_transfer("Download request denied by user %(user)s for file %(filename)s. Reason: %(reason)s", {
                 "user": user,
-                "filename": i.filename,
+                "filename": filename,
                 "reason": msg.reason
             })
             return
@@ -1274,9 +1208,10 @@ class Transfers:
     def upload_failed(self, msg):
 
         user = msg.init.target_user
+        filename = msg.file
 
         for i in self.downloads:
-            if i.user != user or i.filename != msg.file:
+            if i.user != user or i.filename != filename:
                 continue
 
             if i.status in ("Finished", "Paused", "Download folder error", "Local file error", "User logged off"):
@@ -1288,7 +1223,7 @@ class Transfers:
 
                 self.abort_transfer(i)
                 i.legacy_attempt = True
-                self.get_file(i.user, i.filename, i.path, i)
+                self.get_file(i.user, filename, i.path, i)
                 break
 
             # Already failed once previously, give up
@@ -1296,9 +1231,9 @@ class Transfers:
             self.update_download(i)
 
             log.add_transfer("Upload attempt by user %(user)s for file %(filename)s failed. Reason: %(reason)s", {
-                "filename": i.filename,
+                "filename": filename,
                 "user": user,
-                "reason": "Remote file error"
+                "reason": i.status
             })
             return
 
@@ -1471,6 +1406,7 @@ class Transfers:
     def place_in_queue_request(self, msg):
 
         user = msg.init.target_user
+        filename = msg.filename
         privileged_user = self.is_privileged(user)
         queue_position = 0
         transfer = None
@@ -1485,7 +1421,7 @@ class Transfers:
                     queue_position += 1
 
                 # Stop counting on the matching file
-                if i.user == user and i.filename == msg.file:
+                if i.user == user and i.filename == filename:
                     transfer = i
                     break
 
@@ -1503,12 +1439,12 @@ class Transfers:
                 queue_position += num_queued_users
 
                 # Stop counting on the matching file
-                if i.filename == msg.file:
+                if i.filename == filename:
                     transfer = i
                     break
 
         if queue_position > 0:
-            self.queue.append(slskmessages.PlaceInQueue(msg.init, msg.file, queue_position))
+            self.queue.append(slskmessages.PlaceInQueue(msg.init, filename, queue_position))
 
         if transfer is None:
             return
@@ -1639,10 +1575,9 @@ class Transfers:
             transfer.status = "Getting status"
             self.transfer_request_times[transfer] = time.time()
 
-            log.add_transfer(("Requesting to upload file %(filename)s with transfer "
-                              "request %(request)s to user %(user)s"), {
+            log.add_transfer(("Requesting to upload file %(filename)s with token %(token)s to user %(user)s"), {
                 "filename": filename,
-                "request": transfer.token,
+                "token": transfer.token,
                 "user": user
             })
 
@@ -2061,9 +1996,47 @@ class Transfers:
                 # Event set, we're exiting
                 return
 
-    # Find failed or stuck downloads and attempt to queue them.
-    # Also ask for the queue position of downloads.
+    def check_queue_upload_allowed(self, user, addr, filename, real_path, msg):
+
+        # Is user allowed to download?
+        ip_address, _port = addr
+        checkuser, reason = self.core.network_filter.check_user(user, ip_address)
+
+        if not checkuser:
+            return False, reason
+
+        if self.core.shares.rescanning:
+            self.core.shares.pending_network_msgs.append(msg)
+            return False, None
+
+        # Do we actually share that file with the world?
+        if not self.core.shares.file_is_shared(user, filename, real_path):
+            return False, "File not shared."
+
+        # Is that file already in the queue?
+        if self.file_is_upload_queued(user, filename):
+            return False, "Queued"
+
+        # Has user hit queue limit?
+        limits = True
+
+        if self.config.sections["transfers"]["friendsnolimits"]:
+            friend = user in (i[0] for i in self.config.sections["server"]["userlist"])
+
+            if friend:
+                limits = False
+
+        if limits and self.queue_limit_reached(user):
+            return False, "Too many megabytes"
+
+        if limits and self.file_limit_reached(user):
+            return False, "Too many files"
+
+        return True, None
+
     def check_download_queue(self):
+        """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
+        position of downloads. """
 
         statuslist_failed = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
         statuslist_limited = ("Too many files", "Too many megabytes")
