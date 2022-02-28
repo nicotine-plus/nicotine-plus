@@ -1460,7 +1460,7 @@ class Transfers:
         filename = msg.filename
 
         for i in self.downloads:
-            if i.user == username and i.filename == filename and i.status not in ("Finished", "Paused", "Filtered"):
+            if i.user == username and i.filename == filename and i.status == "Queued":
                 i.queue_position = msg.place
                 self.update_download(i)
                 return
