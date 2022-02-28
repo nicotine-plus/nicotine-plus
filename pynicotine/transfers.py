@@ -1397,7 +1397,7 @@ class Transfers:
     def place_in_queue_request(self, msg):
 
         user = msg.init.target_user
-        filename = msg.filename
+        filename = msg.file
         privileged_user = self.is_privileged(user)
         queue_position = 0
         transfer = None
