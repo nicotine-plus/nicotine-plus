@@ -735,38 +735,35 @@ class ChatRoom(UserInterface):
                 priority=Gio.NotificationPriority.HIGH
             )
 
-    def is_mention(self, login_lower, text_lower):
+    def find_whole_word(self, word, text, after=0):
+        """ Return the position of the first mention of word that is not a subword """
 
-        # Check that we are not mentioned (this is quick)
-        if login_lower not in text_lower:
-            return False
+        if word not in text:
+            return -1
 
-        mentioned, mention_start, mention_next = False, 0, 0
+        whole, start = False, 0
 
-        while mentioned is False and mention_start > -1:
-            mention_start = text_lower.find(login_lower, mention_next)
-            mention_end = mention_start + len(login_lower)
+        while whole is False and start > -1:
+            start = text.find(word, after)
+            after = start + len(word)
 
-            # Check the mention(s) of our username is not a subword, allow for it being at the very end/start of text
-            mentioned = ((text_lower[mention_end] if mention_end < len(text_lower) else " ") in self.punctuation_list
-                         and (text_lower[mention_start - 1] if mention_start > 0 else " ") in self.punctuation_list)
+            whole = ((text[after] if after < len(text) else " ") in self.punctuation_list
+                     and (text[start - 1] if start > 0 else " ") in self.punctuation_list)
 
-            # Check the rest of the text if this mention is a subword, the next one could be valid
-            mention_next = mention_end
+        return start if whole else -1
 
-        return mentioned
+    def get_tag_type(self, login, user, text):
 
-    def get_tag_type(self, login, user, text_lower):
-
-        if text_lower.startswith("/me "):
+        if text.startswith("/me "):
             return self.tag_action
 
         if user == login:
             return self.tag_local
 
-        mentioned = self.is_mention(login.lower(), text_lower)
+        if self.find_whole_word(login.lower(), text.lower()) > -1:
+            return self.tag_hilite
 
-        return self.tag_hilite if mentioned else self.tag_remote
+        return self.tag_remote
 
     def say_chat_room(self, msg, public=False):
 
@@ -781,7 +778,7 @@ class ChatRoom(UserInterface):
         login_username = self.frame.np.login_username
 
         text = msg.msg
-        tag = self.get_tag_type(login_username, user, text.lower())
+        tag = self.get_tag_type(login_username, user, text)
 
         if tag == self.tag_action:
             if public:
