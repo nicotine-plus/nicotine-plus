@@ -546,6 +546,7 @@ class Transfers:
     def get_user_status(self, msg):
         """ We get a status of a user and if he's online, we request a file from him """
 
+        update = False
         username = msg.user
         user_offline = (msg.status <= 0)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
@@ -557,10 +558,16 @@ class Transfers:
                 if user_offline:
                     i.status = "User logged off"
                     self.abort_transfer(i)
-                    self.update_download(i)
+                    update = True
 
                 elif i.status == "User logged off":
-                    self.get_file(username, i.filename, i.path, i)
+                    self.get_file(username, i.filename, i.path, i, ui_callback=False)
+                    update = True
+
+        if self.downloadsview and update:
+            self.downloadsview.update()
+
+        update = False
 
         # We need a copy due to upload auto-clearing modifying the deque during iteration
         for i in reversed(self.uploads.copy()):
@@ -568,15 +575,16 @@ class Transfers:
                 if user_offline:
                     i.status = "User logged off"
                     self.abort_transfer(i)
-
-                    if not self.auto_clear_upload(i):
-                        self.update_upload(i)
+                    self.auto_clear_upload(i)
+                    update = True
 
                 elif i.status == "User logged off":
                     i.status = "Cancelled"
+                    self.auto_clear_upload(i)
+                    update = True
 
-                    if not self.auto_clear_upload(i):
-                        self.update_upload(i)
+        if self.uploadsview and update:
+            self.uploadsview.update()
 
     def get_cant_connect_queue_file(self, username, filename):
         """ We can't connect to the user, either way (QueueUpload). """
@@ -1442,7 +1450,7 @@ class Transfers:
 
         # Update queue position in our list of uploads
         transfer.queue_position = queue_position
-        self.update_upload(transfer)
+        self.update_upload(transfer, update_parent=False)
 
     def place_in_queue(self, msg):
         """ The peer tells us our place in queue for a particular transfer """
@@ -1453,7 +1461,7 @@ class Transfers:
         for i in self.downloads:
             if i.user == username and i.filename == filename and i.status == "Queued":
                 i.queue_position = msg.place
-                self.update_download(i)
+                self.update_download(i, update_parent=False)
                 return
 
     """ Transfer Actions """
@@ -1461,7 +1469,7 @@ class Transfers:
     def get_folder(self, user, folder):
         self.core.send_message_to_peer(user, slskmessages.FolderContentsRequest(None, folder))
 
-    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None):
+    def get_file(self, user, filename, path="", transfer=None, size=0, bitrate=None, length=None, ui_callback=True):
 
         path = clean_path(path, absolute=True)
 
@@ -1525,7 +1533,8 @@ class Transfers:
                 self.core.send_message_to_peer(
                     user, slskmessages.QueueUpload(None, filename, transfer.legacy_attempt))
 
-        self.update_download(transfer)
+        if ui_callback:
+            self.update_download(transfer)
 
     def push_file(self, user, filename, size, path="", transfer=None, bitrate=None, length=None, locally_queued=False):
 
@@ -1931,19 +1940,19 @@ class Transfers:
 
         return False
 
-    def update_download(self, transfer, force_save=False):
+    def update_download(self, transfer, force_save=False, update_parent=True):
 
         self.save_transfers("downloads", force_save)
 
         if self.downloadsview:
-            self.downloadsview.update(transfer)
+            self.downloadsview.update(transfer, update_parent=update_parent)
 
-    def update_upload(self, transfer, force_save=False):
+    def update_upload(self, transfer, force_save=False, update_parent=True):
 
         self.save_transfers("uploads", force_save)
 
         if self.uploadsview:
-            self.uploadsview.update(transfer)
+            self.uploadsview.update(transfer, update_parent=update_parent)
 
     def _check_transfer_timeouts(self):
 
@@ -2357,18 +2366,29 @@ class Transfers:
     def abort_transfers(self):
         """ Stop all transfers on disconnect/shutdown """
 
+        update = False
+
         for i in self.downloads:
             if i.status not in ("Finished", "Filtered", "Paused"):
                 self.abort_transfer(i)
                 i.status = "User logged off"
-                self.update_download(i)
+                update = True
+
+        if self.downloadsview and update:
+            self.downloadsview.update()
+
+        update = False
 
         for i in self.uploads.copy():
             if i.status != "Finished":
                 self.uploads.remove(i)
+                update = True
 
                 if self.uploadsview:
-                    self.uploadsview.remove_specific(i, True)
+                    self.uploadsview.remove_specific(i, True, update_parent=False)
+
+        if self.uploadsview and update:
+            self.uploadsview.update()
 
         self.privileged_users.clear()
         self.requested_folders.clear()
