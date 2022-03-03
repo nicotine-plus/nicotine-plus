@@ -550,7 +550,7 @@ class Transfers:
         username = msg.user
         user_offline = (msg.status <= 0)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Connection closed by peer", "Cannot connect", "Remote file error")
+                             "User logged off", "Cannot connect", "Remote file error", "Cancelled")
         upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Cannot connect", "Cancelled")
 
         for i in reversed(self.downloads.copy()):
@@ -1361,7 +1361,7 @@ class Transfers:
                 if self.user_logged_out(i.user):
                     i.status = "User logged off"
                 else:
-                    i.status = "Connection closed by peer"
+                    i.status = "Cancelled"
 
             self.update_download(i)
             return
@@ -2038,7 +2038,7 @@ class Transfers:
         """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
         position of downloads. """
 
-        statuslist_failed = ("Cannot connect", "Connection closed by peer", "Local file error", "Remote file error")
+        statuslist_failed = ("Cannot connect", "Local file error", "Remote file error")
         statuslist_limited = ("Too many files", "Too many megabytes")
         reset_count = False
 
