@@ -90,7 +90,6 @@ class TransferList(UserInterface):
             "Cannot connect": _("Cannot connect"),
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
-            "Connection closed by peer": _("Connection closed by peer"),
             "Disallowed extension": _("Disallowed extension"),  # Sent by Soulseek NS for filtered extensions
             "Aborted": _("Aborted"),
             "Cancelled": _("Cancelled"),
