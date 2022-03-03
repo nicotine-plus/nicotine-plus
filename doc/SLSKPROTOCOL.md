@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on January 30, 2022
+Last updated on February 27, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -3239,27 +3239,45 @@ These messages are sent to peers over a 'F' connection, and do not have messages
 
 #### File Connection Message Index
 
-| Message                       |
-| ----------------------------- |
-| [File Request](#file-request) |
-| [File Offset](#file-offset)   |
+| Message                                   |
+| ----------------------------------------- |
+| [File Download Init](#file-download-init) |
+| [File Upload Init](#file-upload-init)     |
+| [File Offset](#file-offset)               |
 
-### File Request
+### File Download Init
 
 #### Function Names
 
-Nicotine: FileRequest
+Nicotine: FileDownloadInit
 
 #### Description
 
-We sent this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
+We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the TransferRequest message.
+
+#### Data Order
+
+  - Send
+      - *No Message*
+  - Receive
+      - **uint** <ins>token</ins>
+
+### File Upload Init
+
+#### Function Names
+
+Nicotine: FileUploadInit
+
+#### Description
+
+We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
 
 #### Data Order
 
   - Send
       - **uint** <ins>token</ins>
   - Receive
-      - **uint** <ins>token</ins>
+      - *No Message*
 
 ### File Offset
 

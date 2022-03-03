@@ -142,15 +142,18 @@ class NicotineCore:
             slskmessages.CheckUploadQueue: self.check_upload_queue,
             slskmessages.DownloadFile: self.file_download,
             slskmessages.UploadFile: self.file_upload,
-            slskmessages.FileRequest: self.file_request,
+            slskmessages.FileDownloadInit: self.file_download_init,
+            slskmessages.FileUploadInit: self.file_upload_init,
             slskmessages.TransferRequest: self.transfer_request,
             slskmessages.TransferResponse: self.transfer_response,
             slskmessages.QueueUpload: self.queue_upload,
             slskmessages.UploadDenied: self.upload_denied,
             slskmessages.UploadFailed: self.upload_failed,
             slskmessages.PlaceInQueue: self.place_in_queue,
-            slskmessages.FileError: self.file_error,
-            slskmessages.FileConnClose: self.file_conn_close,
+            slskmessages.DownloadFileError: self.download_file_error,
+            slskmessages.UploadFileError: self.upload_file_error,
+            slskmessages.DownloadConnClose: self.download_conn_close,
+            slskmessages.UploadConnClose: self.upload_conn_close,
             slskmessages.FolderContentsResponse: self.folder_contents_response,
             slskmessages.FolderContentsRequest: self.folder_contents_request,
             slskmessages.RoomList: self.room_list,
@@ -234,7 +237,7 @@ class NicotineCore:
         self.now_playing = NowPlaying(config)
         self.statistics = Statistics(config, ui_callback)
 
-        self.shares = Shares(self, config, self.queue, ui_callback=ui_callback)
+        self.shares = Shares(self, config, self.queue, self.network_callback, ui_callback)
         self.search = Search(self, config, self.queue, self.shares.share_dbs, self.geoip, ui_callback)
         self.transfers = Transfers(self, config, self.queue, self.network_callback, ui_callback)
         self.interests = Interests(self, config, self.queue, ui_callback)
@@ -460,12 +463,14 @@ class NicotineCore:
             else:
                 log.add("No handler for class %s %s", (i.__class__, dir(i)))
 
+        msgs.clear()
+
     def show_connection_error_message(self, msg):
         """ Request UI to show error messages related to connectivity """
 
         for i in msg.msgs:
-            if i.__class__ in (slskmessages.FileRequest, slskmessages.TransferRequest):
-                self.transfers.get_cant_connect_request(i.token)
+            if i.__class__ in (slskmessages.TransferRequest, slskmessages.FileUploadInit):
+                self.transfers.get_cant_connect_upload(i.token)
 
             elif i.__class__ is slskmessages.QueueUpload:
                 self.transfers.get_cant_connect_queue_file(msg.user, i.file)
@@ -502,13 +507,21 @@ class NicotineCore:
         log.add_msg_contents(msg)
         self.transfers.file_upload(msg)
 
-    def file_error(self, msg):
+    def download_file_error(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_error(msg)
+        self.transfers.download_file_error(msg)
 
-    def file_conn_close(self, msg):
+    def upload_file_error(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_conn_close(msg.sock)
+        self.transfers.upload_file_error(msg)
+
+    def download_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.download_conn_close(msg)
+
+    def upload_conn_close(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.upload_conn_close(msg)
 
     def transfer_timeout(self, msg):
         self.transfers.transfer_timeout(msg)
@@ -1189,10 +1202,17 @@ class NicotineCore:
         log.add_msg_contents(msg)
         self.transfers.place_in_queue_request(msg)
 
-    def file_request(self, msg):
+    """
+    Incoming File Messages
+    """
 
+    def file_download_init(self, msg):
         log.add_msg_contents(msg)
-        self.transfers.file_request(msg)
+        self.transfers.file_download_init(msg)
+
+    def file_upload_init(self, msg):
+        log.add_msg_contents(msg)
+        self.transfers.file_upload_init(msg)
 
     """
     Incoming Distributed Messages

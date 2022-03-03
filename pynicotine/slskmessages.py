@@ -87,6 +87,12 @@ class InitPeerConn(InternalMessage):
         self.init = init
 
 
+class ConnClose(InternalMessage):
+
+    def __init__(self, sock=None):
+        self.sock = sock
+
+
 class ConnCloseIP(InternalMessage):
     """ Sent by the main thread to the networking thread in order to close any connections
     using a certain IP address. """
@@ -163,25 +169,33 @@ class UploadFile(InternalMessage):
         self.offset = offset
 
 
-class FileError(InternalMessage):
+class DownloadFileError(InternalMessage):
     """ Sent by networking thread to indicate that a file error occurred during
     filetransfer. """
 
-    __slots__ = ("sock", "file", "strerror")
+    __slots__ = ("sock", "file", "error")
 
-    def __init__(self, sock=None, file=None, strerror=None):
+    def __init__(self, sock=None, file=None, error=None):
         self.sock = sock
         self.file = file
-        self.strerror = strerror
+        self.error = error
 
 
-class FileConnClose(InternalMessage):
+class UploadFileError(DownloadFileError):
+    pass
+
+
+class DownloadConnClose(InternalMessage):
     """ Sent by networking thread to indicate a file transfer connection has been closed """
 
     __slots__ = ("sock",)
 
     def __init__(self, sock=None):
         self.sock = sock
+
+
+class UploadConnClose(DownloadConnClose):
+    pass
 
 
 class SetUploadLimit(InternalMessage):
@@ -323,7 +337,7 @@ Server Messages
 
 
 class ServerMessage(SlskMessage):
-    """ This is a parent class for all server messages. """
+    msgtype = 'S'
 
 
 class Login(ServerMessage):
@@ -2167,6 +2181,8 @@ Peer Messages
 
 class PeerMessage(SlskMessage):
 
+    msgtype = 'P'
+
     def parse_file_size(self, message, pos):
 
         if message[pos + INT64_SIZE - 1] == 255:
@@ -2826,11 +2842,24 @@ File Messages
 
 
 class FileMessage(SlskMessage):
-    pass
+    msgtype = 'F'
 
 
-class FileRequest(FileMessage):
-    """ We sent this to a peer via a 'F' connection to tell them that we want to
+class FileDownloadInit(FileMessage):
+    """ We receive this from a peer via a 'F' connection when they want to start
+    uploading a file to us. The token is the same as the one previously included
+    in the TransferRequest message. """
+
+    def __init__(self, init, token=None):
+        self.init = init
+        self.token = token
+
+    def parse_network_message(self, message):
+        _pos, self.token = self.get_object(message, int)
+
+
+class FileUploadInit(FileMessage):
+    """ We send this to a peer via a 'F' connection to tell them that we want to
     start uploading a file. The token is the same as the one previously included
     in the TransferRequest message. """
 
@@ -2841,9 +2870,6 @@ class FileRequest(FileMessage):
     def make_network_message(self):
         msg = self.pack_object(self.token)
         return msg
-
-    def parse_network_message(self, message):
-        _pos, self.token = self.get_object(message, int)
 
 
 class FileOffset(FileMessage):
@@ -2870,7 +2896,7 @@ Distributed Messages
 
 
 class DistribMessage(SlskMessage):
-    pass
+    msgtype = 'D'
 
 
 class DistribAlive(DistribMessage):

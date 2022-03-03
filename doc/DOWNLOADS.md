@@ -107,10 +107,16 @@ scoop update nicotine-plus
 
 ### Chocolatey
 
-Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following:
+Nicotine+ can be installed using [Chocolatey](https://chocolatey.org/install). Run the following:
 
 ```sh
 choco install nicotine-plus
+```
+
+In order to upgrade Nicotine+ to a newer release, run the following:
+
+```sh
+choco upgrade nicotine-plus
 ```
 
 ## macOS
@@ -120,13 +126,3 @@ choco install nicotine-plus
 A stable macOS installer for Nicotine+ is available on macOS version 10.15 (Catalina) and newer.
 
 - [Download Nicotine+ macOS Installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip)  [[SHA256](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip.sha256)]
-
-### Homebrew (Mojave/10.14 and newer)
-
-*NOTE: If your Mac has an Apple M1 chip, please use the [official macOS installer](https://github.com/nicotine-plus/nicotine-plus/releases/latest/download/macos-installer.zip) instead. Installing Nicotine+ from Homebrew will currently not work on Apple M1 devices due to issues in upstream dependencies.*
-
-On macOS version 10.14 (Mojave), the recommended approach is to install Nicotine+ using [Homebrew](https://brew.sh). Run the following:
-
-```sh
-brew install nicotine-plus
-```
