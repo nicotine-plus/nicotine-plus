@@ -294,7 +294,7 @@ class TransferList(UserInterface):
         self.user_counter.set_text(str(len(self.users)))
         self.file_counter.set_text(str(len(self.transfer_list)))
 
-    def update(self, transfer=None, forceupdate=False):
+    def update(self, transfer=None, forceupdate=False, update_parent=True):
 
         if not forceupdate and self.frame.current_page_id != self.page_id:
             # No need to do unnecessary work if transfers are not visible
@@ -307,7 +307,8 @@ class TransferList(UserInterface):
             for transfer_i in reversed(self.transfer_list):
                 self.update_specific(transfer_i)
 
-        self.update_parent_rows(transfer)
+        if update_parent:
+            self.update_parent_rows(transfer)
 
     def update_parent_rows(self, transfer=None):
 
@@ -640,12 +641,12 @@ class TransferList(UserInterface):
                     self.update(transfer)
 
             if clear:
-                self.remove_specific(transfer, update_parent_row=False)
+                self.remove_specific(transfer, update_parent=False)
 
         self.update_parent_rows()
         self.update_num_users_files()
 
-    def remove_specific(self, transfer, cleartreeviewonly=False, update_parent_row=True):
+    def remove_specific(self, transfer, cleartreeviewonly=False, update_parent=True):
 
         user = transfer.user
 
@@ -665,7 +666,7 @@ class TransferList(UserInterface):
         if transfer.iterator is not None:
             self.transfersmodel.remove(transfer.iterator)
 
-        if update_parent_row:
+        if update_parent:
             self.update_parent_rows(transfer)
             self.update_num_users_files()
 
