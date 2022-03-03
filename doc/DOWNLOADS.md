@@ -107,10 +107,16 @@ scoop update nicotine-plus
 
 ### Chocolatey
 
-Nicotine+ can be installed using [Chocolatey](https://community.chocolatey.org/packages/nicotine-plus). Run the following:
+Nicotine+ can be installed using [Chocolatey](https://chocolatey.org/install). Run the following:
 
 ```sh
 choco install nicotine-plus
+```
+
+In order to upgrade Nicotine+ to a newer release, run the following:
+
+```sh
+choco upgrade nicotine-plus
 ```
 
 ## macOS
