@@ -57,6 +57,7 @@
               <object class="GtkEntry" id="ChatLine">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="width-chars">8</property>
               </object>
             </child>
             <child>
