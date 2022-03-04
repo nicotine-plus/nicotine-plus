@@ -108,7 +108,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="path">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
@@ -132,7 +132,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="length">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
@@ -158,7 +158,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="bitrate">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
@@ -208,7 +208,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="queue">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
@@ -232,7 +232,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="speed">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>
@@ -256,7 +256,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="country">
             <property name="visible">True</property>
             <property name="spacing">12</property>
             <child>

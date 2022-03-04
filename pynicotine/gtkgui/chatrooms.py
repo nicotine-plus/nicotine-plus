@@ -505,7 +505,7 @@ class ChatRoom(UserInterface):
             widget.hide()
 
         for widget in (self.AutoJoin, self.Log):
-            widget.get_parent().remove(widget)
+            self.RoomOptions.remove(widget)
             self.ChatEntryBox.add(widget)
 
         self.ChatEntry.set_sensitive(False)
