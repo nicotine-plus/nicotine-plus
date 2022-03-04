@@ -812,7 +812,7 @@ class ChatRoom(UserInterface):
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
 
-        self.show_notification(login_username, user, text, tag)
+        self.show_notification(login_username, user, speech, tag)
 
         if self.Log.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
