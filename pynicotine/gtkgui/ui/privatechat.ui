@@ -60,13 +60,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Log">
-                <property name="label" translatable="yes">_Log</property>
-                <property name="visible">True</property>
-                <property name="use-underline">True</property>
-              </object>
-            </child>
-            <child>
               <object class="GtkMenuButton" id="ShowChatHelp">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Private chat command help</property>
@@ -79,6 +72,13 @@
                 <style>
                   <class name="image-button"/>
                 </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="Log">
+                <property name="label" translatable="yes">_Log</property>
+                <property name="visible">True</property>
+                <property name="use-underline">True</property>
               </object>
             </child>
           </object>
