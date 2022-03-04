@@ -29,6 +29,7 @@ class InfoBar:
         self.info_bar.set_show_close_button(True)
         self.info_bar.connect("response", self._hide)
 
+        self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
         self.label = Gtk.Label(wrap=True, visible=True)
 
         if Gtk.get_major_version() == 4:
@@ -42,7 +43,7 @@ class InfoBar:
         self.set_visible(False)
 
     def set_visible(self, visible):
-        self.info_bar.get_parent().set_reveal_child(visible)
+        self.revealer.set_reveal_child(visible)
 
     def show_message(self, message):
         self.label.set_text(message)

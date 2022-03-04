@@ -237,7 +237,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="RoomOptions">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="margin-start">8</property>

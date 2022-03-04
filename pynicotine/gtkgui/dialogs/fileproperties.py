@@ -97,28 +97,22 @@ class FileProperties(UserInterface):
         country = properties.get("country") or ""
 
         self.path_value.set_text(str(path))
-        self.path_label.get_parent().set_visible(bool(path))
-        self.path_value.get_parent().set_visible(bool(path))
+        self.path.set_visible(bool(path))
 
         self.bitrate_value.set_text(str(bitrate))
-        self.bitrate_label.get_parent().set_visible(bool(bitrate))
-        self.bitrate_value.get_parent().set_visible(bool(bitrate))
+        self.bitrate.set_visible(bool(bitrate))
 
         self.length_value.set_text(str(length))
-        self.length_label.get_parent().set_visible(bool(length))
-        self.length_value.get_parent().set_visible(bool(length))
+        self.length.set_visible(bool(length))
 
         self.queue_value.set_text(str(humanize(queue_position)))
-        self.queue_label.get_parent().set_visible(bool(queue_position))
-        self.queue_value.get_parent().set_visible(bool(queue_position))
+        self.queue.set_visible(bool(queue_position))
 
         self.speed_value.set_text(str(human_speed(speed)))
-        self.speed_label.get_parent().set_visible(bool(speed))
-        self.speed_value.get_parent().set_visible(bool(speed))
+        self.speed.set_visible(bool(speed))
 
         self.country_value.set_text(str(country))
-        self.country_label.get_parent().set_visible(bool(country))
-        self.country_value.get_parent().set_visible(bool(country))
+        self.country.set_visible(bool(country))
 
         self.update_title()
 
