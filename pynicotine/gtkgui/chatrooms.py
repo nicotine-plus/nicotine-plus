@@ -781,33 +781,21 @@ class ChatRoom(UserInterface):
         tag = self.get_tag_type(login_username, user, text)
 
         if tag == self.tag_action:
-            if public:
-                line = "%s | * %s %s" % (msg.room, user, text[4:])
-            else:
-                line = "* %s %s" % (user, text[4:])
-
+            line = "* %s %s" % (user, text[4:])
             speech = line[2:]
-
         else:
-            if public:
-                line = "%s | [%s] %s" % (msg.room, user, text)
-            else:
-                line = "[%s] %s" % (user, text)
-
+            line = "[%s] %s" % (user, text)
             speech = text
+
+        if public:
+            line = "%s | %s" % (msg.room, line)
 
         line = "\n-- ".join(line.split("\n"))
         usertag = self.get_user_tag(user)
 
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
-        if user == login_username:
-            self.chat_textview.append_line(
-                line, tag,
-                username=user, usertag=usertag, timestamp_format=timestamp_format
-            )
-
-        else:
+        if user != login_username:
             self.chat_textview.append_line(
                 self.frame.np.privatechats.censor_chat(line), tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
@@ -815,8 +803,14 @@ class ChatRoom(UserInterface):
 
             if self.Speech.get_active():
                 self.frame.np.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {"room": self.room, "user": user, "message": speech}
+                    config.sections["ui"]["speechrooms"], {"room": msg.room, "user": user, "message": speech}
                 )
+
+        else:
+            self.chat_textview.append_line(
+                line, tag,
+                username=user, usertag=usertag, timestamp_format=timestamp_format
+            )
 
         self.show_notification(login_username, user, text, tag)
 
