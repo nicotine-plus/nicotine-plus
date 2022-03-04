@@ -113,7 +113,7 @@
                           <object class="GtkEntry" id="ChatEntry">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
-                            <property name="width-chars">5</property>
+                            <property name="width-chars">8</property>
                           </object>
                         </child>
                         <child>
