@@ -180,7 +180,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                     <property name="adjustment">adjustment_DownloadSpeed</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                   </object>
                 </child>
               </object>
@@ -209,7 +209,7 @@
                     <property name="visible">True</property>
                     <property name="tooltip_text" translatable="yes">Kibibytes (2^10 bytes) per second.</property>
                     <property name="adjustment">adjustment_DownloadSpeedAlternative</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                   </object>
                 </child>
               </object>

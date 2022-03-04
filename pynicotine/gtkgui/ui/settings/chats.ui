@@ -73,7 +73,7 @@
                 <property name="visible">True</property>
                 <property name="width-chars">9</property>
                 <property name="adjustment">adjustment_PrivateLogLines</property>
-                <property name="numeric">1</property>
+                <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -98,7 +98,7 @@
                 <property name="visible">True</property>
                 <property name="width-chars">9</property>
                 <property name="adjustment">adjustment_RoomLogLines</property>
-                <property name="numeric">1</property>
+                <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -184,6 +184,7 @@
                       <object class="GtkSpinButton" id="CharactersCompletion">
                         <property name="visible">True</property>
                         <property name="adjustment">adjustment_CharactersCompletion</property>
+                        <property name="numeric">True</property>
                         <property name="valign">center</property>
                         <property name="width-chars">9</property>
                         <signal name="changed" handler="on_completion_changed"/>

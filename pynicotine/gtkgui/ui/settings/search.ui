@@ -88,7 +88,7 @@
                 <property name="visible">True</property>
                 <property name="width-chars">9</property>
                 <property name="adjustment">adjustment_MaxDisplayedResults</property>
-                <property name="numeric">1</property>
+                <property name="numeric">True</property>
                 <property name="valign">center</property>
               </object>
             </child>
@@ -444,7 +444,7 @@
                     <property name="visible">True</property>
                     <property name="width-chars">9</property>
                     <property name="adjustment">adjustment_MinSearchChars</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                   </object>
                 </child>
@@ -469,7 +469,7 @@
                     <property name="visible">True</property>
                     <property name="width-chars">9</property>
                     <property name="adjustment">adjustment_MaxResults</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                   </object>
                 </child>

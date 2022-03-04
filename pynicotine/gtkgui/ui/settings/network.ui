@@ -149,7 +149,7 @@
                               <object class="GtkSpinButton" id="FirstPort">
                                 <property name="visible">True</property>
                                 <property name="adjustment">adjustment_FirstPort</property>
-                                <property name="numeric">1</property>
+                                <property name="numeric">True</property>
                                 <property name="width-chars">6</property>
                                 <property name="tooltip-text" translatable="yes">First port</property>
                               </object>
@@ -164,7 +164,7 @@
                               <object class="GtkSpinButton" id="LastPort">
                                 <property name="visible">True</property>
                                 <property name="adjustment">adjustment_LastPort</property>
-                                <property name="numeric">1</property>
+                                <property name="numeric">True</property>
                                 <property name="width-chars">6</property>
                                 <property name="tooltip-text" translatable="yes">Last port</property>
                               </object>
@@ -242,6 +242,7 @@
                   <object class="GtkSpinButton" id="AutoAway">
                     <property name="visible">True</property>
                     <property name="adjustment">adjustment_AutoAway</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="width-chars">6</property>
                   </object>
@@ -320,7 +321,7 @@
                     <property name="visible">True</property>
                     <property name="width-chars">6</property>
                     <property name="adjustment">adjustment_UPnPInterval</property>
-                    <property name="numeric">1</property>
+                    <property name="numeric">True</property>
                     <property name="valign">center</property>
                     <property name="sensitive" bind-source="UseUPnP" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <signal name="value-changed" handler="on_modify_upnp_interval"/>
