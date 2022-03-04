@@ -326,6 +326,7 @@
                                       <object class="GtkBox" id="downloads_title">
                                         <property name="visible">True</property>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
@@ -566,6 +567,7 @@
                                       <object class="GtkBox" id="uploads_title">
                                         <property name="visible">True</property>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
@@ -807,11 +809,11 @@
                                         <property name="visible">True</property>
                                         <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkComboBoxText" id="UserBrowseCombo">
                                             <property name="visible">True</property>
-                                            <property name="halign">start</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="UserBrowseEntry">
@@ -986,11 +988,11 @@
                                         <property name="visible">True</property>
                                         <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkComboBoxText" id="UserInfoCombo">
                                             <property name="visible">True</property>
-                                            <property name="halign">start</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="UserInfoEntry">
@@ -1147,11 +1149,11 @@
                                       <object class="GtkBox" id="private_title">
                                         <property name="visible">True</property>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkComboBoxText" id="PrivateChatCombo">
                                             <property name="visible">True</property>
-                                            <property name="halign">start</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
                                               <object class="GtkEntry" id="PrivateChatEntry">
@@ -1296,6 +1298,7 @@
                                       <object class="GtkBox" id="userlist_title">
                                         <property name="visible">True</property>
                                         <property name="hexpand">True</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkEntry" id="AddUserEntry">
@@ -1419,6 +1422,7 @@
                                             <property name="visible">True</property>
                                             <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
+                                            <property name="halign">start</property>
                                             <property name="spacing">4</property>
                                             <property name="valign">center</property>
                                             <child>
