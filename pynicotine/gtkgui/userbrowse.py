@@ -150,6 +150,7 @@ class UserBrowse(UserInterface):
             self.frame, None, self.FolderTreeView,
             ["folder", _("Folder"), -1, "text", None]
         )
+        cols["folder"].set_sort_column_id(0)
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
         self.FolderTreeView.set_model(self.dir_store)
