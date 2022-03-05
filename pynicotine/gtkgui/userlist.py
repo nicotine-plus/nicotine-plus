@@ -85,7 +85,7 @@ class UserList(UserInterface):
             ["notify", _("Notify"), 0, "toggle", None],
             ["privileged", _("Prioritized"), 0, "toggle", None],
             ["last_seen", _("Last Seen"), 160, "text", None],
-            ["comments", _("Note"), 400, "edit", None]
+            ["comments", _("Note"), 400, "text", None]
         )
 
         cols["status"].set_sort_column_id(10)
@@ -289,27 +289,32 @@ class UserList(UserInterface):
             store.set_value(iterator, 9, note)
             self.save_user_list()
 
-    @staticmethod
-    def get_selected_username(treeview):
+    def get_selected_username(self):
 
-        model, iterator = treeview.get_selection().get_selected()
+        model, iterator = self.UserListTree.get_selection().get_selected()
 
         if iterator is None:
             return None
 
         return model.get_value(iterator, 2)
 
-    def on_row_activated(self, treeview, _path, _column):
+    def on_row_activated(self, _treeview, _path, column):
 
-        user = self.get_selected_username(treeview)
+        user = self.get_selected_username()
 
-        if user is not None:
-            self.frame.np.privatechats.show_user(user)
-            self.frame.change_main_page("private")
+        if user is None:
+            return
 
-    def on_popup_menu(self, menu, widget):
+        if column.get_title() == "comments":
+            self.on_add_note()
+            return
 
-        username = self.get_selected_username(widget)
+        self.frame.np.privatechats.show_user(user)
+        self.frame.change_main_page("private")
+
+    def on_popup_menu(self, menu, _widget):
+
+        username = self.get_selected_username()
         menu.set_user(username)
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
@@ -457,7 +462,7 @@ class UserList(UserInterface):
 
     def on_trusted(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -470,7 +475,7 @@ class UserList(UserInterface):
 
     def on_notify(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -483,7 +488,7 @@ class UserList(UserInterface):
 
     def on_prioritized(self, action, state):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -512,7 +517,7 @@ class UserList(UserInterface):
 
     def on_add_note(self, *_args):
 
-        user = self.popup_menu.get_user()
+        user = self.get_selected_username()
         iterator = self.user_iterators.get(user)
 
         if iterator is None:
@@ -530,7 +535,7 @@ class UserList(UserInterface):
         )
 
     def on_remove_user(self, *_args):
-        self.frame.np.userlist.remove_user(self.popup_menu.get_user())
+        self.frame.np.userlist.remove_user(self.get_selected_username())
 
     def server_disconnect(self):
 
