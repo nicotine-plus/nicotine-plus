@@ -20,6 +20,7 @@ import os
 import unittest
 
 from collections import deque
+from unittest.mock import MagicMock
 from unittest.mock import Mock
 
 from pynicotine.config import config
@@ -35,7 +36,7 @@ class TransfersTest(unittest.TestCase):
 
         config.load_config()
 
-        self.transfers = Transfers(Mock(), config, deque(), Mock())
+        self.transfers = Transfers(MagicMock(), config, deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
         self.transfers.allow_saving_transfers = False
