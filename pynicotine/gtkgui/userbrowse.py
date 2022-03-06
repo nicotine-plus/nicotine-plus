@@ -561,62 +561,77 @@ class UserBrowse(UserInterface):
 
     """ Download/Upload """
 
-    def download_directory(self, folder, prefix="", recurse=False):
+    def download_directory(self, requested_folder, prefix="", recurse=False):
 
-        if folder is None:
+        if requested_folder is None:
             return
 
-        # Remember custom download location
-        self.frame.np.transfers.requested_folders[self.user][folder] = prefix
+        old_parent_folder = destination = None
 
-        # Get final download destination
-        destination = self.frame.np.transfers.get_folder_destination(self.user, folder)
+        for folder, files in self.shares.items():
+            if not recurse and requested_folder != folder:
+                continue
 
-        files = self.shares.get(folder)
+            if requested_folder not in folder:
+                # Not a subfolder of the requested folder, skip
+                continue
 
-        if files:
-            if config.sections["transfers"]["reverseorder"]:
-                files.sort(key=lambda x: x[1], reverse=True)
+            parent_folder = folder.rsplit("\\", 1)[0]
 
-            for file_data in files:
-                virtualpath = "\\".join([folder, file_data[1]])
-                size = file_data[2]
-                h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+            if parent_folder != old_parent_folder:
+                if destination:
+                    prefix = os.path.join(destination, "")
 
-                self.frame.np.transfers.get_file(
-                    self.user, virtualpath, destination,
-                    size=size, bitrate=h_bitrate, length=h_length)
+                old_parent_folder = parent_folder
 
-        if not recurse:
+            # Remember custom download location
+            self.frame.np.transfers.requested_folders[self.user][folder] = prefix
+
+            # Get final download destination
+            destination = self.frame.np.transfers.get_folder_destination(self.user, folder)
+
+            if files:
+                if config.sections["transfers"]["reverseorder"]:
+                    files.sort(key=lambda x: x[1], reverse=True)
+
+                for file_data in files:
+                    virtualpath = "\\".join([folder, file_data[1]])
+                    size = file_data[2]
+                    h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
+
+                    self.frame.np.transfers.get_file(self.user, virtualpath, destination,
+                                                     size=size, bitrate=h_bitrate, length=h_length)
+
+            if not recurse:
+                # Downloading a single folder, no need to continue
+                return
+
+    def upload_directory_to(self, user, requested_folder, recurse=False):
+
+        if not requested_folder or not user:
             return
 
-        for subdir, _subf in self.shares.items():
-            if folder in subdir and folder != subdir:
-                self.download_directory(subdir, prefix=os.path.join(destination, ""))
+        for folder, files in self.shares.items():
+            if not recurse and requested_folder != folder:
+                continue
 
-    def upload_directory_to(self, user, folder, recurse=False):
+            if requested_folder not in folder:
+                # Not a subfolder of the requested folder, skip
+                continue
 
-        if not folder or not user:
-            return
+            if files:
+                locally_queued = False
 
-        ldir = folder.split("\\")[-1]
-        files = self.shares.get(folder)
+                for file_data in files:
+                    filename = "\\".join([folder, file_data[1]])
+                    size = file_data[2]
 
-        if files:
-            locally_queued = False
+                    self.frame.np.transfers.push_file(user, filename, size, locally_queued=locally_queued)
+                    locally_queued = True
 
-            for file_data in files:
-                filename = "\\".join([folder, file_data[1]])
-                size = file_data[2]
-                self.frame.np.transfers.push_file(user, filename, size, ldir, locally_queued=locally_queued)
-                locally_queued = True
-
-        if not recurse:
-            return
-
-        for subdir, _subf in self.shares.items():
-            if folder in subdir and folder != subdir:
-                self.upload_directory_to(user, subdir, recurse)
+            if not recurse:
+                # Uploading a single folder, no need to continue
+                return
 
     """ Search """
 
@@ -1025,13 +1040,11 @@ class UserBrowse(UserInterface):
             return
 
         self.frame.np.userbrowse.send_upload_attempt_notification(user)
-
         locally_queued = False
-        prefix = ""
 
         for basename, size in self.selected_files.items():
-            self.frame.np.transfers.push_file(
-                user, "\\".join([folder, basename]), size, prefix, locally_queued=locally_queued)
+            filename = "\\".join([folder, basename])
+            self.frame.np.transfers.push_file(user, filename, size, locally_queued=locally_queued)
             locally_queued = True
 
     def on_upload_files(self, *_args):
