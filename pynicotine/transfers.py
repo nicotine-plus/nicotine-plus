@@ -2116,14 +2116,11 @@ class Transfers:
                 if user in first_queued_transfers:
                     del first_queued_transfers[user]
 
-                if user in queued_users:
-                    queued_users[user] = False
-
         oldest_time = None
         target_user = None
 
         for user, privileged in queued_users.items():
-            if privileged:
+            if privileged and user not in uploading_users:
                 privileged_queue = True
                 break
 
