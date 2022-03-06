@@ -1548,6 +1548,9 @@ class Transfers:
             size = size_attempt
 
         if transfer is None:
+            if not path:
+                path = os.path.dirname(real_path)
+
             transfer = Transfer(
                 user=user, filename=filename, path=path,
                 status="Queued", size=size, bitrate=bitrate,
