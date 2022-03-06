@@ -751,8 +751,6 @@ class ChatRoom(UserInterface):
         else:
             tag = self.tag_remote
 
-        self.show_notification(login_username, user, text, tag, public)
-
         if text.startswith("/me "):
             if public:
                 line = "%s | * %s %s" % (msg.room, user, text[4:])
@@ -799,6 +797,8 @@ class ChatRoom(UserInterface):
                 line, tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
+
+        self.show_notification(login_username, user, speech, tag, public)
 
     def echo_message(self, text, message_type):
 
