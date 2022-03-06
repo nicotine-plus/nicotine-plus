@@ -2104,20 +2104,28 @@ class Transfers:
                 privileged = self.is_privileged(user)
                 queued_users[user] = privileged
 
-                if privileged:
-                    privileged_queue = True
-
             elif i.status in active_statuses:
                 # We're currently uploading a file to the user
                 user = i.user
+
+                if user in uploading_users:
+                    continue
 
                 uploading_users.add(user)
 
                 if user in first_queued_transfers:
                     del first_queued_transfers[user]
 
+                if user in queued_users:
+                    queued_users[user] = False
+
         oldest_time = None
         target_user = None
+
+        for user, privileged in queued_users.items():
+            if privileged:
+                privileged_queue = True
+                break
 
         if not round_robin_queue:
             # skip the looping below (except the cleanup) and get the first

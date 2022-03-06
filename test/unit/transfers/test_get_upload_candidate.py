@@ -251,12 +251,13 @@ class GetUploadCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "puser1",
-                "puser1"
+                "puser1",
+                "puser2"
             ],
             in_progress=[],
             expected=[
                 "puser1",
-                None,
+                "puser2",
                 "puser1",
                 "user1",
                 "user2",
@@ -388,12 +389,13 @@ class GetUploadCandidateTest(unittest.TestCase):
                 "user1",
                 "user2",
                 "puser1",
-                "puser1"
+                "puser1",
+                "puser2"
             ],
             in_progress=[],
             expected=[
                 "puser1",
-                None,
+                "puser2",
                 "puser1",
                 "user1",
                 "user2",
