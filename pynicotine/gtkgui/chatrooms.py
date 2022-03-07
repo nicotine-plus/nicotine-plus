@@ -60,6 +60,7 @@ from pynicotine.utils import delete_log
 from pynicotine.utils import humanize
 from pynicotine.utils import human_speed
 from pynicotine.utils import open_log
+from pynicotine.utils import PUNCTUATION
 
 
 class ChatRooms(IconNotebook):
@@ -731,6 +732,26 @@ class ChatRoom(UserInterface):
                 priority=Gio.NotificationPriority.HIGH
             )
 
+    @staticmethod
+    def find_whole_word(word, text, after=0):
+        """ Return the position of the first mention of word that is not a subword """
+
+        if word not in text:
+            return -1
+
+        word_boundaries = [' '] + PUNCTUATION
+        whole = False
+        start = 0
+
+        while not whole and start > -1:
+            start = text.find(word, after)
+            after = start + len(word)
+
+            whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
+
+        return start if whole else -1
+
     def say_chat_room(self, msg, public=False):
 
         user = msg.user
@@ -746,7 +767,7 @@ class ChatRoom(UserInterface):
 
         if user == login_username:
             tag = self.tag_local
-        elif text.upper().find(login_username.upper()) > -1:
+        elif self.find_whole_word(login_username.lower(), text.lower()) > -1:
             tag = self.tag_hilite
         else:
             tag = self.tag_remote
