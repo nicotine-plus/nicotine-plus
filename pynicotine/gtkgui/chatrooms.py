@@ -739,14 +739,16 @@ class ChatRoom(UserInterface):
         if word not in text:
             return -1
 
-        whole, start = False, 0
+        word_boundaries = [' '] + PUNCTUATION
+        whole = False
+        start = 0
 
         while not whole and start > -1:
             start = text.find(word, after)
             after = start + len(word)
 
-            whole = ((text[after] if after < len(text) else " ") in [' '] + PUNCTUATION
-                     and (text[start - 1] if start > 0 else " ") in [' '] + PUNCTUATION)
+            whole = ((text[after] if after < len(text) else " ") in word_boundaries
+                     and (text[start - 1] if start > 0 else " ") in word_boundaries)
 
         return start if whole else -1
 
