@@ -373,9 +373,6 @@ class ChatRoom(UserInterface):
 
         self.users = {}
 
-        # Word boundary matching
-        self.punctuation_list = PUNCTUATION + [' ']
-
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
 
@@ -735,7 +732,8 @@ class ChatRoom(UserInterface):
                 priority=Gio.NotificationPriority.HIGH
             )
 
-    def find_whole_word(self, word, text, after=0):
+    @staticmethod
+    def find_whole_word(word, text, after=0):
         """ Return the position of the first mention of word that is not a subword """
 
         if word not in text:
@@ -747,8 +745,8 @@ class ChatRoom(UserInterface):
             start = text.find(word, after)
             after = start + len(word)
 
-            whole = ((text[after] if after < len(text) else " ") in self.punctuation_list
-                     and (text[start - 1] if start > 0 else " ") in self.punctuation_list)
+            whole = ((text[after] if after < len(text) else " ") in [' '] + PUNCTUATION
+                     and (text[start - 1] if start > 0 else " ") in [' '] + PUNCTUATION)
 
         return start if whole else -1
 
