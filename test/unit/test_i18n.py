@@ -22,7 +22,7 @@ from pynicotine.i18n import build_translations
 from pynicotine.i18n import get_translation_paths
 
 LANGUAGES = ("cs", "da", "de", "eo", "es_CL", "es_ES", "eu", "fi", "fr", "hu", "it", "lt", "nb_NO", "nl", "pl",
-             "pt_BR", "ru", "sk", "sv", "tr", "uk")
+             "pt_BR", "ru", "sk", "sv", "tr", "uk", "zh_Hans")
 
 
 class I18nTest(unittest.TestCase):
