@@ -4,10 +4,10 @@
   <object class="GtkSizeGroup">
     <property name="mode">horizontal</property>
     <widgets>
-      <widget name="RoomLogDirLabel"/>
-      <widget name="PrivateLogDirLabel"/>
-      <widget name="TransfersLogDirLabel"/>
-      <widget name="DebugLogDirLabel"/>
+      <widget name="LogRooms"/>
+      <widget name="LogPrivate"/>
+      <widget name="LogTransfers"/>
+      <widget name="LogDebug"/>
     </widgets>
   </object>
   <object class="GtkSizeGroup">
@@ -39,31 +39,112 @@
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogRooms">
-            <property name="label" translatable="yes">Log chatrooms by default</property>
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkCheckButton" id="LogRooms">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">Chat Rooms:</property>
+                <property name="tooltip-text" translatable="yes">Log chat rooms by default.</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="RoomLogDir">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogPrivate">
-            <property name="label" translatable="yes">Log private chat by default</property>
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkCheckButton" id="LogPrivate">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">Private Chat:</property>
+                <property name="tooltip-text" translatable="yes">Log private chats by default</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="PrivateLogDir">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogTransfers">
-            <property name="label" translatable="yes">Log transfers to file</property>
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkCheckButton" id="LogTransfers">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">Downloads / Uploads:</property>
+                <property name="tooltip-text" translatable="yes">Log transfers to file</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="TransfersLogDir">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="GtkCheckButton" id="LogDebug">
-            <property name="label" translatable="yes">Log debug messages to file</property>
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="use-underline">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkCheckButton" id="LogDebug">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0</property>
+                <property name="use-underline">True</property>
+                <property name="label" translatable="yes">Miscellaneous [Debug]:</property>
+                <property name="tooltip-text" translatable="yes">Log connection and protocol messages to file</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="DebugLogDir">
+                <property name="visible">True</property>
+                <property name="hexpand">True</property>
+                <property name="valign">center</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="spacing">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Log File Options</property>
+            <property name="xalign">0</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
           </object>
         </child>
         <child>
@@ -74,7 +155,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Log file timestamp format:</property>
+                <property name="label" translatable="yes">Timestamp format:</property>
                 <property name="xalign">0</property>
                 <property name="wrap">True</property>
                 <property name="mnemonic_widget">LogFileFormat</property>
@@ -120,115 +201,6 @@
                     </child>
                   </object>
                 </child>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="spacing">12</property>
-        <property name="orientation">vertical</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Folder Locations</property>
-            <property name="xalign">0</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="RoomLogDirLabel">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Chatroom logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">RoomLogDir</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="RoomLogDir">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="PrivateLogDirLabel">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Private chat logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">PrivateLogDir</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="PrivateLogDir">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="TransfersLogDirLabel">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Transfer logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">TransfersLogDir</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="TransfersLogDir">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="valign">center</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="spacing">12</property>
-            <child>
-              <object class="GtkLabel" id="DebugLogDirLabel">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Debug logs folder:</property>
-                <property name="xalign">0</property>
-                <property name="wrap">True</property>
-                <property name="mnemonic_widget">DebugLogDir</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="DebugLogDir">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="valign">center</property>
               </object>
             </child>
           </object>
