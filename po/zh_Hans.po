@@ -1424,7 +1424,6 @@ msgid "Zambia"
 msgstr "赞比亚"
 
 #: pynicotine/geoip/geoip.py:272
-#, fuzzy
 msgid "Zimbabwe"
 msgstr "津巴布韦"
 
@@ -1663,8 +1662,9 @@ msgid ""
 "You are currently logged out of the Soulseek network. If you want to change "
 "the password of an existing Soulseek account, you need to be logged into "
 "that account."
-msgstr "您当前已退出 Soulseek 网络。如果您想更改现有的 Soulseek "
-"帐户密码，您需要登录该帐户。"
+msgstr ""
+"您当前已退出 Soulseek 网络。如果您想更改现有的 Soulseek 帐户密码，您需要登录"
+"该帐户。"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:200
 msgid "Enter password to use when logging in:"
@@ -1797,7 +1797,8 @@ msgid ""
 "Enter a pattern you want to censor. Add spaces around the pattern if you "
 "don't want to match strings inside words (may fail at the beginning and end "
 "of lines)."
-msgstr "输入要审查的模式。如果您不想匹配单词中的字符串（可能在行首和行尾失败），请在"
+msgstr ""
+"输入要审查的模式。如果您不想匹配单词中的字符串（可能在行首和行尾失败），请在"
 "模式周围添加空格。"
 
 #: pynicotine/gtkgui/dialogs/preferences.py:1448
@@ -2227,7 +2228,8 @@ msgstr "无效的密码"
 msgid ""
 "User %s already exists, and the password you entered is invalid. Please "
 "choose another username if this is your first time logging in."
-msgstr "用户%s已经存在，您输入的密码无效。如果这是您第一次登录，请选择另一个用户名。"
+msgstr ""
+"用户%s已经存在，您输入的密码无效。如果这是您第一次登录，请选择另一个用户名。"
 
 #: pynicotine/gtkgui/frame.py:388 pynicotine/gtkgui/widgets/filechooser.py:87
 #: pynicotine/gtkgui/widgets/filechooser.py:118
@@ -2526,7 +2528,8 @@ msgstr "严重错误"
 msgid ""
 "Nicotine+ has encountered a critical error and needs to exit. Please copy "
 "the following message and include it in a bug report:"
-msgstr "Nicotine+ 遇到严重错误，需要退出。请复制以下消息并将其包含在bug报告中："
+msgstr ""
+"Nicotine+ 遇到严重错误，需要退出。请复制以下消息并将其包含在bug报告中："
 
 #: pynicotine/gtkgui/frame.py:1845
 msgid "_Quit Nicotine+"
@@ -3038,7 +3041,8 @@ msgstr "用户的共享文件列表为空。用户没有共享任何内容，或
 msgid ""
 "Unable to request shared files from user. Either the user is offline, you "
 "both have a closed listening port, or there's a temporary connectivity issue."
-msgstr "无法向用户请求共享文件。可能是用户离线，可能是你们有个关闭了的监听端口，也可"
+msgstr ""
+"无法向用户请求共享文件。可能是用户离线，可能是你们有个关闭了的监听端口，也可"
 "能是临时的连接问题。"
 
 #: pynicotine/gtkgui/userbrowse.py:738
@@ -3087,7 +3091,8 @@ msgid ""
 "Unable to request information from user. Either you both have a closed "
 "listening port, the user is offline, or there's a temporary connectivity "
 "issue."
-msgstr "无法向用户请求信息。可能是你们有个关闭的监听端口，可能是用户离线，也可能是临"
+msgstr ""
+"无法向用户请求信息。可能是你们有个关闭的监听端口，可能是用户离线，也可能是临"
 "时的连接问题。"
 
 #: pynicotine/gtkgui/userinfo.py:358
@@ -5557,37 +5562,30 @@ msgid "Allowed chat completions:"
 msgstr "允许的聊天完成："
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:218
-#, fuzzy
 msgid "Buddy names"
 msgstr "好友名称"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:231
-#, fuzzy
 msgid "Chat room usernames"
 msgstr "聊天室用户名"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:244
-#, fuzzy
 msgid "Room names"
-msgstr "房间名称"
+msgstr "聊天室名称"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:257
-#, fuzzy
 msgid "Built-in commands"
 msgstr "内置命令"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:270
-#, fuzzy
 msgid "Command aliases"
 msgstr "命令别名"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:293
-#, fuzzy
 msgid "Timestamps"
 msgstr "时间戳"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:307
-#, fuzzy
 msgid "Private chat format:"
 msgstr "私聊形式："
 
@@ -5624,52 +5622,42 @@ msgstr "私聊形式："
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2145
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2205
 #: pynicotine/gtkgui/ui/settings/userinterface.ui:2265
-#, fuzzy
 msgid "Default"
 msgstr "默认"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:363
-#, fuzzy
 msgid "Chat room format:"
 msgstr "聊天室格式："
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:422
-#, fuzzy
 msgid "Text-to-Speech"
 msgstr "文字转语音"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:431
-#, fuzzy
 msgid "Enable Text-to-Speech"
 msgstr "启用文字转语音"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:443
-#, fuzzy
 msgid "Text-to-Speech command:"
 msgstr "文字转语音命令："
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:508
-#, fuzzy
 msgid "Private chat message:"
 msgstr "私聊消息："
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:563
-#, fuzzy
 msgid "Chat room message:"
 msgstr "聊天室留言："
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:637
-#, fuzzy
 msgid "Censor"
 msgstr "审查"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:646
-#, fuzzy
 msgid "Enable censoring of text patterns"
 msgstr "启用审查文本模式"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:659
-#, fuzzy
 msgid "Replace censored letters with:"
 msgstr "将被删减的字母替换为："
 
@@ -5679,12 +5667,10 @@ msgid "Censored Patterns"
 msgstr "审查模式"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:822
-#, fuzzy
 msgid "Auto-Replace"
 msgstr "自动替换"
 
 #: pynicotine/gtkgui/ui/settings/chats.ui:832
-#, fuzzy
 msgid "Enable automatic replacement of words"
 msgstr "启用自动替换单词"
 
@@ -5704,7 +5690,6 @@ msgid "Download folders in reverse alphanumerical order"
 msgstr "以相反的字母数字顺序下载文件夹"
 
 #: pynicotine/gtkgui/ui/settings/downloads.ui:48
-#, fuzzy
 msgid "Store completed downloads in username subfolders"
 msgstr "将完成的下载存储在用户名子文件夹中"
 
