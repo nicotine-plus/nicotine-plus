@@ -762,11 +762,6 @@ class ChatRoom(UserInterface):
             line = "%s | %s" % (msg.room, line)
 
         line = "\n-- ".join(line.split("\n"))
-        if self.Log.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
-                          timestamp_format=timestamp_format)
-
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
@@ -788,6 +783,12 @@ class ChatRoom(UserInterface):
             )
 
         self.show_notification(login_username, user, speech, tag, public)
+
+        if self.Log.get_active():
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
     def echo_message(self, text, message_type):
 
