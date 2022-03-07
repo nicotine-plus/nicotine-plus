@@ -374,7 +374,7 @@ class ChatRoom(UserInterface):
         self.users = {}
 
         # Word boundary matching
-        self.punctuation_list = (" " + "".join(p for p in PUNCTUATION))
+        self.punctuation_list = PUNCTUATION + [' ']
 
         # Log Text Search
         TextSearchBar(self.RoomLog, self.LogSearchBar, self.LogSearchEntry)
