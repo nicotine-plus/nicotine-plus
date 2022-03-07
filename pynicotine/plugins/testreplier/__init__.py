@@ -1,6 +1,4 @@
-# pylint: disable=attribute-defined-outside-init
-
-# COPYRIGHT (C) 2020-2021 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Team
 # COPYRIGHT (C) 2008-2010 Quinox <quinox@users.sf.net>
 #
 # GNU GENERAL PUBLIC LICENSE
