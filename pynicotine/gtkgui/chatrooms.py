@@ -743,7 +743,7 @@ class ChatRoom(UserInterface):
 
         whole, start = False, 0
 
-        while whole is False and start > -1:
+        while not whole and start > -1:
             start = text.find(word, after)
             after = start + len(word)
 
