@@ -151,6 +151,7 @@ class UserBrowse(UserInterface):
             self.frame, None, self.FolderTreeView,
             ["folder", _("Folder"), -1, "text", None]
         )
+        cols["folder"].set_sort_column_id(0)
 
         self.FolderTreeView.get_selection().connect("changed", self.on_select_dir)
         self.FolderTreeView.set_model(self.dir_store)
@@ -558,65 +559,6 @@ class UserBrowse(UserInterface):
 
         self.FolderTreeView.grab_focus()
 
-    """ Download/Upload """
-
-    def download_directory(self, folder, prefix="", recurse=False):
-
-        if folder is None:
-            return
-
-        # Remember custom download location
-        self.frame.np.transfers.requested_folders[self.user][folder] = prefix
-
-        # Get final download destination
-        destination = self.frame.np.transfers.get_folder_destination(self.user, folder)
-
-        files = self.shares.get(folder)
-
-        if files:
-            if config.sections["transfers"]["reverseorder"]:
-                files.sort(key=lambda x: x[1], reverse=True)
-
-            for file_data in files:
-                virtualpath = "\\".join([folder, file_data[1]])
-                size = file_data[2]
-                h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
-
-                self.frame.np.transfers.get_file(
-                    self.user, virtualpath, destination,
-                    size=size, bitrate=h_bitrate, length=h_length)
-
-        if not recurse:
-            return
-
-        for subdir, _subf in self.shares.items():
-            if folder in subdir and folder != subdir:
-                self.download_directory(subdir, prefix=os.path.join(destination, ""))
-
-    def upload_directory_to(self, user, folder, recurse=False):
-
-        if not folder or not user:
-            return
-
-        ldir = folder.split("\\")[-1]
-        files = self.shares.get(folder)
-
-        if files:
-            locally_queued = False
-
-            for file_data in files:
-                filename = "\\".join([folder, file_data[1]])
-                size = file_data[2]
-                self.frame.np.transfers.push_file(user, filename, size, ldir, locally_queued=locally_queued)
-                locally_queued = True
-
-        if not recurse:
-            return
-
-        for subdir, _subf in self.shares.items():
-            if folder in subdir and folder != subdir:
-                self.upload_directory_to(user, subdir, recurse)
-
     """ Search """
 
     def rebuild_search_matches(self):
@@ -720,15 +662,16 @@ class UserBrowse(UserInterface):
     def on_download_directory(self, *_args):
 
         if self.selected_folder is not None:
-            self.download_directory(self.selected_folder)
+            self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
 
     def on_download_directory_recursive(self, *_args):
-        self.download_directory(self.selected_folder, prefix="", recurse=True)
+        self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
 
     def on_download_directory_to_selected(self, selected, recurse):
 
         try:
-            self.download_directory(self.selected_folder, prefix=os.path.join(selected, ""), recurse=recurse)
+            self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
+                                                     prefix=os.path.join(selected, ""), recurse=recurse)
         except OSError:  # failed to open
             log.add('Failed to open %r for reading', selected)  # notify user
 
@@ -764,7 +707,7 @@ class UserBrowse(UserInterface):
             return
 
         self.frame.np.userbrowse.send_upload_attempt_notification(user)
-        self.upload_directory_to(user, folder, recurse)
+        self.frame.np.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
 
     def on_upload_directory_to(self, *_args, recurse=False):
 
@@ -974,14 +917,7 @@ class UserBrowse(UserInterface):
             if file_data[1] not in self.selected_files:
                 continue
 
-            virtualpath = "\\".join([folder, file_data[1]])
-            size = file_data[2]
-            h_bitrate, _bitrate, h_length, _length = get_result_bitrate_length(size, file_data[4])
-
-            # Get the file
-            self.frame.np.transfers.get_file(
-                self.user, virtualpath, prefix,
-                size=size, bitrate=h_bitrate, length=h_length)
+            self.frame.np.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
 
     def on_download_files_to_selected(self, selected, _data):
 
@@ -1025,13 +961,8 @@ class UserBrowse(UserInterface):
 
         self.frame.np.userbrowse.send_upload_attempt_notification(user)
 
-        locally_queued = False
-        prefix = ""
-
         for basename, size in self.selected_files.items():
-            self.frame.np.transfers.push_file(
-                user, "\\".join([folder, basename]), size, prefix, locally_queued=locally_queued)
-            locally_queued = True
+            self.frame.np.userbrowse.upload_file(user, folder, (None, basename, size))
 
     def on_upload_files(self, *_args):
 

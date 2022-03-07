@@ -20,6 +20,7 @@ import os
 import unittest
 
 from collections import deque
+from unittest.mock import MagicMock
 from unittest.mock import Mock
 
 from pynicotine.config import config
@@ -35,7 +36,7 @@ class TransfersTest(unittest.TestCase):
 
         config.load_config()
 
-        self.transfers = Transfers(Mock(), config, deque(), Mock())
+        self.transfers = Transfers(MagicMock(), config, deque(), Mock())
         self.transfers.init_transfers()
         self.transfers.server_login()
         self.transfers.allow_saving_transfers = False
@@ -119,7 +120,7 @@ class TransfersTest(unittest.TestCase):
         """ Verify that new uploads are prepended to the list """
 
         self.transfers.push_file("newuser2", "Hello\\Upload\\File.mp3", 2000, "/home/test")
-        self.transfers.push_file("newuser99", "Home\\None.mp3", 100, "")
+        self.transfers.push_file("newuser99", "Home\\None.mp3", 100, "/home/more")
         transfer = self.transfers.uploads[1]
 
         self.assertEqual(transfer.user, "newuser2")

@@ -4,7 +4,7 @@
 # COPYRIGHT (C) 2013 eL_vErDe <gandalf@le-vert.net>
 # COPYRIGHT (C) 2008-2012 Quinox <quinox@users.sf.net>
 # COPYRIGHT (C) 2009 Hedonist <ak@sensi.org>
-# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>§
+# COPYRIGHT (C) 2006-2009 Daelstorm <daelstorm@gmail.com>
 # COPYRIGHT (C) 2003-2004 Hyriand <hyriand@thegraveyard.org>
 # COPYRIGHT (C) 2001-2003 Alexander Kanavin
 #
@@ -1548,6 +1548,9 @@ class Transfers:
             size = size_attempt
 
         if transfer is None:
+            if not path:
+                path = os.path.dirname(real_path)
+
             transfer = Transfer(
                 user=user, filename=filename, path=path,
                 status="Queued", size=size, bitrate=bitrate,
@@ -2101,12 +2104,12 @@ class Transfers:
                 privileged = self.is_privileged(user)
                 queued_users[user] = privileged
 
-                if privileged:
-                    privileged_queue = True
-
             elif i.status in active_statuses:
                 # We're currently uploading a file to the user
                 user = i.user
+
+                if user in uploading_users:
+                    continue
 
                 uploading_users.add(user)
 
@@ -2115,6 +2118,11 @@ class Transfers:
 
         oldest_time = None
         target_user = None
+
+        for user, privileged in queued_users.items():
+            if privileged and user not in uploading_users:
+                privileged_queue = True
+                break
 
         if not round_robin_queue:
             # skip the looping below (except the cleanup) and get the first

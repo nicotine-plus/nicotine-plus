@@ -755,7 +755,6 @@ class ChatRoom(UserInterface):
     def say_chat_room(self, msg, public=False):
 
         user = msg.user
-        text = msg.msg
 
         if self.frame.np.network_filter.is_user_ignored(user):
             return
@@ -764,6 +763,7 @@ class ChatRoom(UserInterface):
             return
 
         login_username = self.frame.np.login_username
+        text = msg.msg
 
         if user == login_username:
             tag = self.tag_local
@@ -772,31 +772,18 @@ class ChatRoom(UserInterface):
         else:
             tag = self.tag_remote
 
-        self.show_notification(login_username, user, text, tag, public)
-
         if text.startswith("/me "):
-            if public:
-                line = "%s | * %s %s" % (msg.room, user, text[4:])
-            else:
-                line = "* %s %s" % (user, text[4:])
-
-            speech = line[2:]
             tag = self.tag_action
-
+            line = "* %s %s" % (user, text[4:])
+            speech = line[2:]
         else:
-            if public:
-                line = "%s | [%s] %s" % (msg.room, user, text)
-            else:
-                line = "[%s] %s" % (user, text)
-
+            line = "[%s] %s" % (user, text)
             speech = text
 
-        line = "\n-- ".join(line.split("\n"))
-        if self.Log.get_active():
-            timestamp_format = config.sections["logging"]["log_timestamp"]
-            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
-                          timestamp_format=timestamp_format)
+        if public:
+            line = "%s | %s" % (msg.room, line)
 
+        line = "\n-- ".join(line.split("\n"))
         usertag = self.get_user_tag(user)
         timestamp_format = config.sections["logging"]["rooms_timestamp"]
 
@@ -807,19 +794,23 @@ class ChatRoom(UserInterface):
             )
 
             if self.Speech.get_active():
-
                 self.frame.np.notifications.new_tts(
-                    config.sections["ui"]["speechrooms"], {
-                        "room": self.room,
-                        "user": user,
-                        "message": speech
-                    }
+                    config.sections["ui"]["speechrooms"], {"room": msg.room, "user": user, "message": speech}
                 )
+
         else:
             self.chat_textview.append_line(
                 line, tag,
                 username=user, usertag=usertag, timestamp_format=timestamp_format
             )
+
+        self.show_notification(login_username, user, speech, tag, public)
+
+        if self.Log.get_active():
+            timestamp_format = config.sections["logging"]["log_timestamp"]
+
+            log.write_log(config.sections["logging"]["roomlogsdir"], self.room, line,
+                          timestamp_format=timestamp_format)
 
     def echo_message(self, text, message_type):
 

@@ -208,7 +208,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             column.add_attribute(renderer, "underline", underline)
 
         # Allow individual cells to receive visual focus
-        if num_cols > 1:
+        if num_cols > 1 and column_type != "edit":
             renderer.set_property("mode", Gtk.CellRendererMode.ACTIVATABLE)
 
         column.set_reorderable(True)
