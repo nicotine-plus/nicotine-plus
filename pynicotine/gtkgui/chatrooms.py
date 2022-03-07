@@ -734,7 +734,6 @@ class ChatRoom(UserInterface):
     def say_chat_room(self, msg, public=False):
 
         user = msg.user
-        text = msg.msg
 
         if self.frame.np.network_filter.is_user_ignored(user):
             return
@@ -743,6 +742,7 @@ class ChatRoom(UserInterface):
             return
 
         login_username = self.frame.np.login_username
+        text = msg.msg
 
         if user == login_username:
             tag = self.tag_local
@@ -754,21 +754,15 @@ class ChatRoom(UserInterface):
         self.show_notification(login_username, user, text, tag, public)
 
         if text.startswith("/me "):
-            if public:
-                line = "%s | * %s %s" % (msg.room, user, text[4:])
-            else:
-                line = "* %s %s" % (user, text[4:])
-
-            speech = line[2:]
             tag = self.tag_action
-
+            line = "* %s %s" % (user, text[4:])
+            speech = line[2:]
         else:
-            if public:
-                line = "%s | [%s] %s" % (msg.room, user, text)
-            else:
-                line = "[%s] %s" % (user, text)
-
+            line = "[%s] %s" % (user, text)
             speech = text
+
+        if public:
+            line = "%s | %s" % (msg.room, line)
 
         line = "\n-- ".join(line.split("\n"))
         if self.Log.get_active():
