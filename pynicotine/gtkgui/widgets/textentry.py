@@ -245,7 +245,7 @@ class ChatEntry:
             self.frame.on_away()
 
         elif cmd in ("/q", "/quit", "/exit"):
-            self.frame.np.quit()
+            self.frame.on_quit()
 
         elif cmd in ("/c", "/close"):
             self.frame.privatechat.pages[self.entity].on_close()
