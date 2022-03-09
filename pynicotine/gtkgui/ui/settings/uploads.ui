@@ -112,7 +112,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Upload Speed Limits</property>
+            <property name="label" translatable="yes">Speed Limits</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -240,7 +240,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Upload Queue Limits</property>
+            <property name="label" translatable="yes">Queue Limits</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -354,7 +354,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="xalign">0</property>
-            <property name="label" translatable="yes">Upload Queue Behavior</property>
+            <property name="label" translatable="yes">Queue Behavior</property>
             <attributes>
               <attribute name="weight" value="bold"/>
             </attributes>
@@ -380,7 +380,7 @@
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Free slot allocation:</property>
+                    <property name="label" translatable="yes">Upload queue type:</property>
                     <property name="wrap">True</property>
                     <property name="xalign">0</property>
                     <property name="mnemonic_widget">FirstInFirstOut</property>
