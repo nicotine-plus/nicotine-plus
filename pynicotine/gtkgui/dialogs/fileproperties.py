@@ -98,7 +98,7 @@ class FileProperties(UserInterface):
 
         self.filename_value.set_text(str(properties["filename"]))
         self.folder_value.set_text(str(properties["directory"]))
-        self.filesize_value.set_text(str(human_size(properties["size"])))
+        self.filesize_value.set_text("%s (%s B)" % (human_size(properties["size"]), humanize(properties["size"])))
         self.username_value.set_text(str(properties["user"]))
 
         path = properties.get("path") or ""
