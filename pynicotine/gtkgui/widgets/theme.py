@@ -305,7 +305,8 @@ def load_custom_icons(names):
     if not config.sections["ui"].get("icontheme"):
         return False
 
-    log.add_debug("Loading custom icons when available")
+    icon_theme_path = config.sections["ui"]["icontheme"]
+    log.add_debug("Loading custom icon theme from %s", icon_theme_path)
     extensions = ["jpg", "jpeg", "bmp", "png", "svg"]
 
     for name in names:
@@ -314,8 +315,7 @@ def load_custom_icons(names):
         loaded = False
 
         while not path or (exts and not loaded):
-            path = os.path.expanduser(os.path.join(config.sections["ui"]["icontheme"], "%s.%s" %
-                                      (name, exts.pop())))
+            path = os.path.expanduser(os.path.join(icon_theme_path, "%s.%s" % (name, exts.pop())))
 
             try:
                 if os.path.isfile(path):

@@ -279,6 +279,7 @@ class TrayIcon:
                 self.final_icon_path = self.get_final_icon_path()
 
                 if self.final_icon_path:
+                    log.add_debug("Using tray icon path %s", self.final_icon_path)
                     tray_icon.set_icon_theme_path(self.final_icon_path)
 
             else:
