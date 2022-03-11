@@ -206,10 +206,9 @@ class TrayIcon:
             icon_scheme = "trayicon_" + icon_name + "."
 
         try:
-            with os.scandir(icon_path) as folder:
-                for entry in folder:
-                    if entry.is_file() and entry.name.startswith(icon_scheme):
-                        return True
+            for entry in os.scandir(icon_path):
+                if entry.is_file() and entry.name.startswith(icon_scheme):
+                    return True
 
         except OSError as error:
             log.add_debug("Error accessing %(type)s tray icon path %(path)s: %(error)s" %
