@@ -625,17 +625,19 @@ class ResponseThrottle:
 
 class BasePlugin:
 
+    # Attributes that can be modified, see examples in the pynicotine/plugins/ folder
     __publiccommands__ = []
     __privatecommands__ = []
     settings = {}
     metasettings = {}
 
-    internal_name = None
-    human_name = None
-    parent = None
-    config = None
-    core = None
-    frame = None
+    # Attributes that are assigned when the plugin loads, do not modify these
+    internal_name = None  # Technical plugin name based on plugin folder name
+    human_name = None     # Friendly plugin name specified in the PLUGININFO file
+    parent = None         # Reference to PluginHandler
+    config = None         # Reference to global Config handler
+    core = None           # Reference to NicotineCore
+    frame = None          # Reference to NicotineFrame (GUI). Not accessible in headless/non-GUI mode. Use sparsely!
 
     def __init__(self):
         # The plugin class is initializing, plugin settings are not available yet
