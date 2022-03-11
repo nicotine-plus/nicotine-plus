@@ -285,7 +285,7 @@ class UPnP:
 
         xml = ElementTree.fromstring(response)
 
-        if not xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body"):
+        if xml.find(".//{http://schemas.xmlsoap.org/soap/envelope/}Body") is None:
             raise Exception(_("Invalid response: %s") % response.encode('utf-8'))
 
         log.add_debug("UPnP: Add port mapping response: %s", response.encode('utf-8'))
