@@ -1060,7 +1060,6 @@ class Transfers:
 
                     if i.size > offset:
                         i.status = "Transferring"
-                        i.legacy_attempt = False
                         self.queue.append(slskmessages.DownloadFile(i.sock, file_handle))
                         self.queue.append(slskmessages.FileOffset(msg.init, i.size, offset))
 
@@ -1217,10 +1216,12 @@ class Transfers:
                 # Check if there are more transfers with the same virtual path
                 continue
 
-            if not i.legacy_attempt:
+            should_retry = not i.legacy_attempt
+            self.abort_transfer(i)
+
+            if should_retry:
                 # Attempt to request file name encoded as latin-1 once
 
-                self.abort_transfer(i)
                 i.legacy_attempt = True
                 self.get_file(i.user, filename, i.path, i)
                 break
