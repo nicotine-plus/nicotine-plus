@@ -595,8 +595,9 @@ class Shares:
         if not errors:
             return
 
-        log.add(_("Failed to process the following databases: %(names)s"),
-                {'names': '\n'.join(errors)})
+        log.add(_("Failed to process the following databases: %(names)s"), {
+            'names': '\n'.join(errors)
+        })
         log.add(exception)
 
         if not reset_shares:
@@ -609,13 +610,15 @@ class Shares:
 
     def file_is_shared(self, user, virtualfilename, realfilename):
 
-        log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s",
-                         {"virtual_name": virtualfilename, "path": realfilename})
+        log.add_transfer("Checking if file is shared: %(virtual_name)s with real path %(path)s", {
+            "virtual_name": virtualfilename,
+            "path": realfilename
+        })
 
         folder, _sep, file = virtualfilename.rpartition('\\')
         shared_files = self.share_dbs.get("files")
         bshared_files = self.share_dbs.get("buddyfiles")
-        cached_file_size = None
+        file_is_shared = False
 
         if bshared_files is not None:
             for row in self.config.sections["server"]["userlist"]:
@@ -628,37 +631,37 @@ class Shares:
 
                 for fileinfo in bshared_files.get(str(folder), ""):
                     if file == fileinfo[0]:
-                        cached_file_size = fileinfo[1]
+                        file_is_shared = True
                         break
 
-        if cached_file_size is None and shared_files is not None:
+        if not file_is_shared and shared_files is not None:
             for fileinfo in shared_files.get(str(folder), ""):
                 if file == fileinfo[0]:
-                    cached_file_size = fileinfo[1]
+                    file_is_shared = True
                     break
 
-        if cached_file_size is None:
+        if not file_is_shared:
             log.add_transfer(("File is not present in the database of shared files, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"),
-                              {"virtual_name": virtualfilename, "path": realfilename})
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
             return False
 
         try:
             if not os.access(realfilename, os.R_OK):
-                log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s",
-                                 {"virtual_name": virtualfilename, "path": realfilename})
-                return False
-
-            if os.path.getsize(realfilename) != cached_file_size:
-                log.add_transfer(("File size on disk differs from file size in database, not sharing: "
-                                  "%(virtual_name)s with real path %(path)s"),
-                                  {"virtual_name": virtualfilename, "path": realfilename})
+                log.add_transfer("Cannot access file, not sharing: %(virtual_name)s with real path %(path)s", {
+                    "virtual_name": virtualfilename,
+                    "path": realfilename
+                })
                 return False
 
         except Exception:
             log.add_transfer(("Requested file path contains invalid characters or other errors, not sharing: "
-                              "%(virtual_name)s with real path %(path)s"),
-                              {"virtual_name": virtualfilename, "path": realfilename})
+                              "%(virtual_name)s with real path %(path)s"), {
+                "virtual_name": virtualfilename,
+                "path": realfilename
+            })
             return False
 
         return True
