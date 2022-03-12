@@ -58,7 +58,7 @@ class Transfer:
                  "path", "token", "size", "file", "start_time", "last_update",
                  "current_byte_offset", "last_byte_offset", "speed", "time_elapsed",
                  "time_left", "modifier", "queue_position", "bitrate", "length",
-                 "iterator", "status", "legacy_attempt")
+                 "iterator", "status", "legacy_attempt", "size_changed")
 
     def __init__(self, user=None, filename=None, path=None, status=None, token=None, size=0,
                  current_byte_offset=None, bitrate=None, length=None):
@@ -84,6 +84,7 @@ class Transfer:
         self.time_left = None
         self.iterator = None
         self.legacy_attempt = False
+        self.size_changed = False
 
 
 class Transfers:
@@ -764,7 +765,11 @@ class Transfers:
             # In that case, we rely on the cached, correct file size we received when
             # we initially added the download.
 
-            if msg.filesize > 0:
+            if size > 0:
+                if i.size != size:
+                    # The remote user's file contents have changed since we queued the download
+                    i.size_changed = True
+
                 i.size = size
 
             i.token = msg.token
@@ -788,7 +793,7 @@ class Transfers:
                 path = os.path.join(self.config.sections["transfers"]["uploaddir"], user, parentdir)
 
             transfer = Transfer(user=user, filename=filename, path=path, status="Queued",
-                                size=msg.filesize, token=msg.token)
+                                size=size, token=msg.token)
             self.downloads.appendleft(transfer)
             self.update_download(transfer)
             self.core.watch_user(user)
@@ -1040,6 +1045,11 @@ class Transfers:
                                 log.add(_("Can't get an exclusive lock on file - I/O error: %s"), error)
                         except ImportError:
                             pass
+
+                    if i.size_changed:
+                        # Remote user sent a different file size than we originally requested,
+                        # wipe any existing data in the incomplete file to avoid corruption
+                        file_handle.truncate(0)
 
                     file_handle.seek(0, 2)
                     offset = file_handle.tell()
@@ -2280,6 +2290,7 @@ class Transfers:
     def abort_transfer(self, transfer, reason="Cancelled", send_fail_message=False):
 
         transfer.legacy_attempt = False
+        transfer.size_changed = False
         transfer.token = None
         transfer.speed = None
         transfer.queue_position = 0
