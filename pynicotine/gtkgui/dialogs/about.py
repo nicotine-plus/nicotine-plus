@@ -233,7 +233,7 @@ Third-Party Attributions
   https://github.com/jackiboy/flagpack
 
 - tinytag licensed under the MIT License.
-  Copyright (c) 2014–2021 Tom Wallroth
+  Copyright (c) 2014–2022 Tom Wallroth
   https://github.com/devsnd/tinytag/
 
 
