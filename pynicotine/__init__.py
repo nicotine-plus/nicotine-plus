@@ -184,7 +184,6 @@ def run_headless(core, ci_mode):
 def run():
     """ Run application and return its exit code """
 
-    import importlib.util
     import io
     import sys
 
@@ -202,16 +201,6 @@ def run():
 
         # Support file scanning process in frozen Windows and macOS binaries
         multiprocessing.freeze_support()
-
-    # Require pynicotine module
-    if not importlib.util.find_spec("pynicotine"):
-        print("""Cannot find application modules.
-Perhaps they're installed in a directory which is not
-in an interpreter's module search path.
-(there could be a version mismatch between
-what version of Python was used to build the application
-binary package and what you try to run the application with).""")
-        return 1
 
     from pynicotine.logfacility import log
     from pynicotine.utils import rename_process
