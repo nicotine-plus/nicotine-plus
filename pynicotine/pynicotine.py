@@ -392,6 +392,9 @@ class NicotineCore:
         self.away = is_away
         self.request_set_status(is_away and 1 or 2)
 
+        # Reset away message users
+        self.privatechats.set_away_mode(is_away)
+
         if self.ui_callback:
             self.ui_callback.set_away_mode(is_away)
 
