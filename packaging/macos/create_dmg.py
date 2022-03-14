@@ -33,7 +33,10 @@ def create_dmg():
         os.mkdir(target_folder)
 
     os.chdir(target_folder)
-    os.remove(output_file)
+
+    if os.path.exists(output_file):
+        os.remove(output_file)
+
     subprocess.check_call(["create-dmg",
                            "--volname", "Nicotine+",
                            "--window-size", "600", "400",
