@@ -66,6 +66,12 @@ class PrivateChats:
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
+    def set_away_mode(self, is_away):
+
+        if not is_away:
+            # Reset list of users we've sent away messages to when the away session ends
+            self.away_message_users.clear()
+
     def add_user(self, user):
 
         if user in self.users:
@@ -169,11 +175,6 @@ class PrivateChats:
             self.ui_callback.send_message(user, ui_message)
 
     def get_user_status(self, msg):
-
-        if msg.status != 1 and msg.user == self.core.login_username:
-            # Reset list of users we've sent away messages to when the away session ends
-            self.away_message_users.clear()
-
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
@@ -223,7 +224,7 @@ class PrivateChats:
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if self.core.away and autoreply and msg.user not in self.away_message_users:
+        if autoreply and self.core.away and msg.user not in self.away_message_users:
             self.send_automatic_message(msg.user, autoreply)
             self.away_message_users.add(msg.user)
 
