@@ -66,14 +66,13 @@ class ChatRooms(IconNotebook):
 
     def __init__(self, frame):
 
-        self.autojoin_rooms = set()
-        self.roomlist = RoomList(frame)
-
         IconNotebook.__init__(self, frame, frame.chatrooms_notebook, "chatrooms")
         self.notebook.connect("switch-page", self.on_switch_chat)
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
+        self.autojoin_rooms = set()
         self.completion = ChatCompletion()
+        self.roomlist = RoomList(frame)
         self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
         if Gtk.get_major_version() == 4:
