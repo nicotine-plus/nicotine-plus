@@ -25,17 +25,21 @@ import subprocess
 
 def create_dmg():
 
-    current_dir = os.path.dirname(os.path.realpath(__file__))
+    current_folder = os.path.dirname(os.path.realpath(__file__))
+    target_folder = "dmg"
+    output_file = "Nicotine+.dmg"
 
-    os.mkdir("dmg")
-    os.chdir("dmg")
+    if not os.path.exists(target_folder):
+        os.mkdir(target_folder)
 
+    os.chdir(target_folder)
+    os.remove(output_file)
     subprocess.check_call(["create-dmg",
                            "--volname", "Nicotine+",
                            "--window-size", "600", "400",
                            "--app-drop-link", "450", "185",
-                           "Nicotine+.dmg",
-                           os.path.join(current_dir, "..", "..", "dist")])
+                           output_file,
+                           os.path.join(current_folder, "..", "..", "dist")])
 
 
 if __name__ == '__main__':
