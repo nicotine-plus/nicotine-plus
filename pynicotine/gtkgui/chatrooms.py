@@ -42,7 +42,6 @@ from pynicotine.gtkgui.widgets.dialogs import option_dialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
-from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
@@ -75,7 +74,6 @@ class ChatRooms(IconNotebook):
         self.notebook.connect("page-reordered", self.on_reordered_page)
 
         self.completion = ChatCompletion()
-        CompletionEntry(frame.ChatroomsEntry, self.roomlist.room_model)
         self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
         if Gtk.get_major_version() == 4:
