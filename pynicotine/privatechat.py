@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
-
 from pynicotine import slskmessages
 from pynicotine.utils import get_completion_list
 
@@ -42,7 +40,7 @@ class PrivateChats:
         self.queue = queue
         self.completion_list = []
         self.private_message_queue = {}
-        self.automatic_message_times = {}
+        self.away_message_users = set()
         self.users = set()
         self.ui_callback = None
 
@@ -62,6 +60,9 @@ class PrivateChats:
             self.ui_callback.server_login()
 
     def server_disconnect(self):
+
+        self.away_message_users.clear()
+
         if self.ui_callback:
             self.ui_callback.server_disconnect()
 
@@ -142,16 +143,7 @@ class PrivateChats:
             self.message_user(msg)
 
     def send_automatic_message(self, user, message):
-        """ Sends a private message with the prefix 'Automatic Message' to a user.
-        No message is sent if less than five seconds have passed since the last one. """
-
-        send_time = time.time()
-
-        if user in self.automatic_message_times and (send_time - self.automatic_message_times[user]) < 5:
-            return
-
-        self.queue.append(slskmessages.MessageUser(user, "[Automatic Message] " + message))
-        self.automatic_message_times[user] = send_time
+        self.send_message(user, "[Automatic Message] " + message)
 
     def echo_message(self, user, message, message_type="local"):
         if self.ui_callback:
@@ -177,6 +169,11 @@ class PrivateChats:
             self.ui_callback.send_message(user, ui_message)
 
     def get_user_status(self, msg):
+
+        if msg.status != 1 and msg.user == self.core.login_username:
+            # Reset list of users we've sent away messages to when the away session ends
+            self.away_message_users.clear()
+
         if self.ui_callback:
             self.ui_callback.get_user_status(msg)
 
@@ -226,8 +223,9 @@ class PrivateChats:
 
         autoreply = self.config.sections["server"]["autoreply"]
 
-        if self.core.away and msg.user not in self.automatic_message_times and autoreply:
+        if self.core.away and autoreply and msg.user not in self.away_message_users:
             self.send_automatic_message(msg.user, autoreply)
+            self.away_message_users.add(msg.user)
 
     def update_completions(self):
 
