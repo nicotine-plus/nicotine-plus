@@ -24,6 +24,7 @@ from collections import deque
 from gi.repository import Gtk
 
 from pynicotine.config import config
+from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -37,7 +38,6 @@ class ChatHistory(UserInterface):
 
         self.frame = frame
         self.iters = {}
-        self.initialized = False
 
         self.model = Gtk.ListStore(str, str)
         self.list_view.set_model(self.model)
@@ -51,15 +51,15 @@ class ChatHistory(UserInterface):
         self.cols["user"].set_sort_column_id(0)
         self.cols["latest_message"].set_sort_column_id(1)
 
+        CompletionEntry(frame.PrivateChatEntry, self.model, column=0)
+
         if Gtk.get_major_version() == 4:
             frame.PrivateChatHistory.get_first_child().get_style_context().add_class("arrow-button")
 
         frame.PrivateChatHistory.set_popover(self.popover)
+        self.load_users()
 
     def load_users(self):
-
-        if self.initialized:
-            return
 
         log_path = os.path.join(config.sections["logging"]["privatelogsdir"], "*.log")
         user_logs = sorted(glob.glob(log_path), key=os.path.getmtime)
@@ -84,8 +84,6 @@ class ChatHistory(UserInterface):
 
             except OSError:
                 pass
-
-        self.initialized = True
 
     def remove_user(self, username):
 
@@ -114,10 +112,3 @@ class ChatHistory(UserInterface):
 
         self.frame.np.privatechats.show_user(username)
         self.popover.hide()
-
-    def on_show(self, popover, param):
-
-        if not popover.get_property(param.name):
-            return
-
-        self.load_users()

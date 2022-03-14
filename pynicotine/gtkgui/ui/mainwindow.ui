@@ -1153,25 +1153,15 @@
                                         <property name="spacing">4</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkComboBoxText" id="PrivateChatCombo">
+                                          <object class="GtkEntry" id="PrivateChatEntry">
                                             <property name="visible">True</property>
-                                            <property name="has-entry">True</property>
-                                            <child internal-child="entry">
-                                              <object class="GtkEntry" id="PrivateChatEntry">
-                                                <property name="max-width-chars">38</property>
-                                                <property name="width-chars">5</property>
-                                                <property name="placeholder-text" translatable="yes">Username…</property>
-                                                <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
-                                                <property name="primary-icon-name">avatar-default-symbolic</property>
-                                                <signal name="activate" handler="on_get_private_chat"/>
-                                                <signal name="icon-press" handler="on_get_private_chat"/>
-                                              </object>
-                                            </child>
-                                            <child internal-child="button">
-                                              <object class="GtkButton">
-                                                <signal name="clicked" handler="focus_combobox"/>
-                                              </object>
-                                            </child>
+                                            <property name="max-width-chars">40</property>
+                                            <property name="width-chars">5</property>
+                                            <property name="placeholder-text" translatable="yes">Username…</property>
+                                            <property name="tooltip-text" translatable="yes">Enter the username of the person you want to send a message to</property>
+                                            <property name="primary-icon-name">avatar-default-symbolic</property>
+                                            <signal name="activate" handler="on_get_private_chat"/>
+                                            <signal name="icon-press" handler="on_get_private_chat"/>
                                           </object>
                                         </child>
                                         <child>
