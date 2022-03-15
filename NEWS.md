@@ -3,6 +3,39 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.2.2 (Release Candidate 2)
+-----------------------------------
+
+Changes
+
+ * Improvements to interoperability with other clients when transferring files
+ * 
+
+Corrections
+
+ * 
+
+Issues closed on GitHub
+
+ * Sharing mounted cloud folders? ([#1869](https://github.com/nicotine-plus/nicotine-plus/issues/1869))
+ * Just crashed on windows insider 11 slow ring ([#1875](https://github.com/nicotine-plus/nicotine-plus/issues/1875))
+ * Translations Bug when Autoconnect is off ([#1884](https://github.com/nicotine-plus/nicotine-plus/issues/1884))
+ * Listening port range open on router, yet Check Port Status test fails ([#1868](https://github.com/nicotine-plus/nicotine-plus/issues/1868))
+ * Crash (Gtk tab color) ([#1889](https://github.com/nicotine-plus/nicotine-plus/issues/1889))
+ * Auto Size Column Does Not Fit Username, Folder or Filename ([#1901](https://github.com/nicotine-plus/nicotine-plus/issues/1901))
+ * To-do list for GTK 4 ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
+ * Sort order time elapsed is off for uploads over an hour ([#1795](https://github.com/nicotine-plus/nicotine-plus/issues/1795))
+ * Nicotine+ doesn't open: Value: 'int' object has no attribute 'split' error ([#1917](https://github.com/nicotine-plus/nicotine-plus/issues/1917))
+ * Transfers Cancelling Randomly ([#1911](https://github.com/nicotine-plus/nicotine-plus/issues/1911))
+ * Departure during the copy action Nicotine+ 3.3.0.dev1 ([#1938](https://github.com/nicotine-plus/nicotine-plus/issues/1938))
+ * Nicotine+ does not preserve the folder structure when downloading ([#1940](https://github.com/nicotine-plus/nicotine-plus/issues/1940))
+ * Note editing no longer opens by double-clicking? 3.3.0.dev1 ([#1939](https://github.com/nicotine-plus/nicotine-plus/issues/1939))
+ * Upload Slots Not Opening ([#1933](https://github.com/nicotine-plus/nicotine-plus/issues/1933))
+ * Chat mentions with 1 character username ([#1790](https://github.com/nicotine-plus/nicotine-plus/issues/1790))
+ * Question: pytaglib required for 3.2.1? ([#1952](https://github.com/nicotine-plus/nicotine-plus/issues/1952))
+ * ModuleNotFoundError: No module named 'pynicotine' ([#1953](https://github.com/nicotine-plus/nicotine-plus/issues/1953))
+ * 
+
 Version 3.2.1 (February 10, 2022)
 ---------------------------------
 
