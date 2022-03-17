@@ -108,11 +108,11 @@ class BaseImplementation:
         if self.menu is None:
             return
 
-        for i in (self.disconnect_item, self.away_item, self.send_message_item,
-                  self.lookup_info_item, self.lookup_shares_item):
+        for item in (self.disconnect_item, self.away_item, self.send_message_item,
+                     self.lookup_info_item, self.lookup_shares_item):
 
-            """ Disable menu items when disconnected from server """
-            i.set_sensitive(status)
+            # Disable menu items when disconnected from server
+            item.set_sensitive(status)
 
         self.connect_item.set_sensitive(not status)
 
@@ -155,7 +155,6 @@ class BaseImplementation:
 
     @staticmethod
     def check_icon_path(icon_name, icon_path, icon_type="local"):
-
         """
         Check if tray icons exist in the specified icon path.
         There are two naming schemes for tray icons:
@@ -180,7 +179,6 @@ class BaseImplementation:
         return False
 
     def get_final_icon_path(self):
-
         """ Returns an icon path to use for tray icons, or None to fall back to
         system-wide icons. """
 
