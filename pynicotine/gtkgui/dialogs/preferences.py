@@ -1346,13 +1346,6 @@ class ChatsFrame(UserInterface):
         except (ImportError, ValueError):
             self.SpellCheck.hide()
 
-        for i in ("%(user)s", "%(message)s"):
-            if i not in config.sections["ui"]["speechprivate"]:
-                self.on_default_private(None)
-
-            if i not in config.sections["ui"]["speechrooms"]:
-                self.on_default_rooms(None)
-
         for word, replacement in config.sections["words"]["autoreplaced"].items():
             self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
                 str(word),

@@ -86,7 +86,12 @@ class Notifications:
             for key, value in args.items():
                 args[key] = self.tts_clean_message(value)
 
-            message = message % args
+            try:
+                message = message % args
+
+            except Exception as error:
+                log.add(_("Text-to-speech for message failed: %s"), error)
+                return
 
         self.tts.append(message)
 
@@ -129,4 +134,4 @@ class Notifications:
             execute_command(self.config.sections["ui"]["speechcommand"], message, background=False)
 
         except Exception as error:
-            log.add(_("Text-to-speech for message failed: %s"), str(error))
+            log.add(_("Text-to-speech for message failed: %s"), error)
