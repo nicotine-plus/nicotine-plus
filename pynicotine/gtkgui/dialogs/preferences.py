@@ -2661,7 +2661,7 @@ class Preferences(UserInterface):
             ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("Searches", _("Searches"), "system-search-symbolic"),
             ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Chats", _("Chats"), "user-available-symbolic"),
+            ("Chats", _("Chats"), "insert-text-symbolic"),
             ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
             ("Logging", _("Logging"), "folder-documents-symbolic"),
             ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),
