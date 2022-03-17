@@ -264,9 +264,7 @@ class NicotineFrame(UserInterface):
 
         """ Tray Icon/Notifications """
 
-        self.tray_icon = TrayIcon(self, core)
-        self.tray_icon.load(use_trayicon)
-
+        self.tray_icon = TrayIcon(self, core, use_trayicon)
         self.notifications = Notifications(self, core)
         self.statistics = Statistics(self, core)
 

@@ -1491,7 +1491,7 @@ class UserInterfaceFrame(UserInterface):
             (get_icon("n"), _("Window"), 64),
             (get_icon("notify"), _("Notification"), 64)]
 
-        if sys.platform != "darwin" and GTK_API_VERSION == 3:
+        if self.frame.tray_icon.available:
             icon_list += [
                 (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
                 (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
@@ -1595,9 +1595,7 @@ class UserInterfaceFrame(UserInterface):
         self.preferences.set_widgets_data(self.options)
         self.theme_required = False
 
-        if sys.platform == "darwin" or GTK_API_VERSION >= 4:
-            # Tray icons don't work as expected on macOS
-            self.TraySettings.hide()
+        self.TraySettings.set_visible(self.frame.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)

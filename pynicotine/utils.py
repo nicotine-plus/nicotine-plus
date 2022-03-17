@@ -387,24 +387,18 @@ def unescape(string):
 
 def execute_command(command, replacement=None, background=True, returnoutput=False, placeholder='$'):
     """Executes a string with commands, with partial support for bash-style quoting and pipes.
-
     The different parts of the command should be separated by spaces, a double
     quotation mark can be used to embed spaces in an argument.
     Pipes can be created using the bar symbol (|).
-
     If background is false the function will wait for all the launched
     processes to end before returning.
-
     If the 'replacement' argument is given, every occurance of 'placeholder'
     will be replaced by 'replacement'.
-
     If the command ends with the ampersand symbol background
     will be set to True. This should only be done by the request of the user,
     if you want background to be true set the function argument.
-
     The only expected error to be thrown is the RuntimeError in case something
     goes wrong while executing the command.
-
     Example commands:
     * "C:\\Program Files\\WinAmp\\WinAmp.exe" --xforce "--title=My Window Title"
     * mplayer $
