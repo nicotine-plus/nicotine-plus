@@ -26,6 +26,7 @@ Corrections
  * Fixed an issue which prevented uploads slots from opening whilst a privilaged transfer was in progress
  * Fixed a race condition where previously queued uploads were wrongly denied during rescan on startup
  * Fixed a rare crash when loading stored a downloads.json file that contains erroneous filename data
+ * Fixed broken folder structure when downloading folders containing multiple levels of subfolders
  * Fixed an unrecoverable crash loop if the Text-to-Speech message string is set with an invalid syntax
  * Fixed an issue with custom ban messages which could not be sent to a user with a blocked IP address
  * Fixed the behaviour of auto-away messages which are now sent as often as required and displayed locally
