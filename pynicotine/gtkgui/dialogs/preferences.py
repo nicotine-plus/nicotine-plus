@@ -1345,13 +1345,6 @@ class ChatsFrame(UserInterface):
         except (ImportError, ValueError):
             self.SpellCheck.hide()
 
-        for i in ("%(user)s", "%(message)s"):
-            if i not in config.sections["ui"]["speechprivate"]:
-                self.on_default_private(None)
-
-            if i not in config.sections["ui"]["speechrooms"]:
-                self.on_default_rooms(None)
-
         for word, replacement in config.sections["words"]["autoreplaced"].items():
             self.replace_list_model.insert_with_valuesv(-1, self.column_numbers, [
                 str(word),
@@ -1460,7 +1453,7 @@ class UserInterfaceFrame(UserInterface):
             (get_icon("n"), _("Window"), 64),
             (get_icon("notify"), _("Notification"), 64)]
 
-        if sys.platform != "darwin" and Gtk.get_major_version() != 4:
+        if self.frame.tray_icon.available:
             icon_list += [
                 (get_icon("trayicon_connect"), _("Connected (Tray)"), 16),
                 (get_icon("trayicon_disconnect"), _("Disconnected (Tray)"), 16),
@@ -1560,9 +1553,7 @@ class UserInterfaceFrame(UserInterface):
         self.preferences.set_widgets_data(self.options)
         self.theme_required = False
 
-        if sys.platform == "darwin" or Gtk.get_major_version() == 4:
-            # Tray icons don't work as expected on macOS
-            self.TraySettings.hide()
+        self.TraySettings.set_visible(self.frame.tray_icon.available)
 
         for page_id, enabled in config.sections["ui"]["modes_visible"].items():
             widget = self.tabs.get(page_id)
@@ -2661,7 +2652,7 @@ class Preferences(UserInterface):
             ("Uploads", _("Uploads"), "emblem-shared-symbolic"),
             ("Searches", _("Searches"), "system-search-symbolic"),
             ("UserInfo", _("User Info"), "avatar-default-symbolic"),
-            ("Chats", _("Chats"), "user-available-symbolic"),
+            ("Chats", _("Chats"), "insert-text-symbolic"),
             ("NowPlaying", _("Now Playing"), "folder-music-symbolic"),
             ("Logging", _("Logging"), "folder-documents-symbolic"),
             ("BannedUsers", _("Banned Users"), "action-unavailable-symbolic"),

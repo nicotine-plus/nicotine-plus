@@ -1803,10 +1803,12 @@ class Transfers:
             )
 
         if config["transfers"]["afterfinish"]:
-            if not execute_command(config["transfers"]["afterfinish"], filepath):
-                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
-            else:
+            try:
+                execute_command(config["transfers"]["afterfinish"], filepath)
                 log.add(_("Executed: %s"), config["transfers"]["afterfinish"])
+
+            except Exception:
+                log.add(_("Trouble executing '%s'"), config["transfers"]["afterfinish"])
 
     def folder_downloaded_actions(self, user, folderpath):
 
@@ -1830,10 +1832,12 @@ class Transfers:
             )
 
         if config["transfers"]["afterfolder"]:
-            if not execute_command(config["transfers"]["afterfolder"], folderpath):
-                log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
-            else:
+            try:
+                execute_command(config["transfers"]["afterfolder"], folderpath)
                 log.add(_("Executed on folder: %s"), config["transfers"]["afterfolder"])
+
+            except Exception:
+                log.add(_("Trouble executing on folder: %s"), config["transfers"]["afterfolder"])
 
     def download_folder_error(self, transfer, error):
 
