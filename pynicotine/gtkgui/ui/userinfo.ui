@@ -414,7 +414,7 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="icon-name">mail-send-symbolic</property>
+                            <property name="icon-name">mail-unread-symbolic</property>
                           </object>
                         </child>
                         <child>
