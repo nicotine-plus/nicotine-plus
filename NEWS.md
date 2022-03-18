@@ -16,14 +16,15 @@ Corrections
 
 Issues closed on GitHub
 
- * "[PRIVATE FILE/FOLDER]" items in 3.2.0.rc2 ([#1731](https://github.com/nicotine-plus/nicotine-plus/issues/1731))
- * Make "PRIVATE FILE" a translatable string ([#1893](https://github.com/nicotine-plus/nicotine-plus/issues/1893))
- * Double-click on Interests items to trigger "Recommendations for Item" ([#1730](https://github.com/nicotine-plus/nicotine-plus/issues/1730))
- * Determine the size etc of a folder / selected files ([#1628](https://github.com/nicotine-plus/nicotine-plus/issues/1628))
  * \[3.3.0\] Show list of logged private chat users ([#1509](https://github.com/nicotine-plus/nicotine-plus/issues/1509))
+ * Determine the size etc of a folder / selected files ([#1628](https://github.com/nicotine-plus/nicotine-plus/issues/1628))
  * Blocking or ignoring a user still shows them even when making a new search ([#1676](https://github.com/nicotine-plus/nicotine-plus/issues/1676))
+ * Double-click on Interests items to trigger "Recommendations for Item" ([#1730](https://github.com/nicotine-plus/nicotine-plus/issues/1730))
+ * "[PRIVATE FILE/FOLDER]" items in 3.2.0.rc2 ([#1731](https://github.com/nicotine-plus/nicotine-plus/issues/1731))
  * "Ban user" and "Block user's IP address" ([#1762](https://github.com/nicotine-plus/nicotine-plus/issues/1762))
- * 
+ * Question: Listening port range open on router, yet Check Port Status test fails ([#1868](https://github.com/nicotine-plus/nicotine-plus/issues/1868))
+ * Make "PRIVATE FILE" a translatable string ([#1893](https://github.com/nicotine-plus/nicotine-plus/issues/1893))
+ * ModuleNotFoundError: No module named 'pynicotine' ([#1953](https://github.com/nicotine-plus/nicotine-plus/issues/1953))
 
 Version 3.2.1 (February 10, 2022)
 ---------------------------------
