@@ -8,51 +8,46 @@ Version 3.2.2 (Release Candidate 2)
 
 Changes
 
- * Refined connection handling to improve interoperability with other clients when transferring files
- * Disallow setting user listening ports below 1024 which is in the operating system privileged range
- * Changed the /exit /quit and /q commands to respect the 'When closing Nicotine+' setting preference
- * Added display of filesize Bytes in addition to factorized size in the File Properties dialog
- * Removed an artificial delay causing slow refresh rate of active items in large transfer lists
- * Reduced visual lag of chats by appending new lines into the UI before writing into the log file
- * Simplified the Public room feed UI layout and say the actual room name in Text-to-Speech messages
- * Updated IP2Location Country Database to latest geographic IP address ranges as of 18th February 2022
- * Updated tinytag to version 1.8.1 adding support for ALAC and M4V files (thank you Tom Wallroth @devsnd)
+ * Show file size in bytes in addition to factorized size in the File Properties dialog
+ * Disallow setting listening ports below 1024, which is in the operating system privileged range
+ * /exit /quit and /q commands respect the 'When closing Nicotine+' preference
+ * Prevent visual lag in chats by displaying new messages in the GUI before writing them into the log file
+ * Simplify the Public room feed layout and mention the actual room name in text-to-speech messages
+ * Check whole words for username mentions in chat rooms to avoid raising notifications for subwords
 
 Corrections
 
- * IMPORTANT: Prevent random time outs if the remote user has a very slow or limited download speed
- * Restart incomplete downloads if the filesize changes on the remote client during transfer
- * Avoid endlessly requesting a remote file if it becomes smaller in size since the download began
- * Fixed an issue which prevented uploads slots from opening whilst a privileged transfer was in progress
+ * IMPORTANT: Prevent random upload timeouts of large files if the remote user has a slow or limited download speed
+ * Incomplete downloads are restarted if the file contents change on the uploader's end
+ * Fixed a regression where users could not be added to private rooms
+ * Fixed a regression where certain uploads could fail with a 'Cannot connect' status
+ * Fixed an issue which prevented uploads slots from opening while a privileged transfer was in progress
  * Fixed a race condition where previously queued uploads were wrongly denied during rescan on startup
- * Fixed a rare crash when loading stored a downloads.json file that contains erroneous filename data
+ * Fixed a rare issue where a download could restart endlessly if the file is unreadable on the uploader's end
+ * Fixed a rare crash when loading stored downloads that contain erroneous filename data
  * Fixed broken folder structure when downloading folders containing multiple levels of subfolders
- * Fixed an unrecoverable crash loop if the Text-to-Speech message string is set with an invalid syntax
- * Fixed an issue with custom ban messages which could not be sent to a user with a blocked IP address
+ * Fixed a crash loop if a text-to-speech message with an invalid syntax is set
+ * Fixed an issue where ban messages could not be sent to a user with a banned IP address
+ * Fixed an issue where folder names could not be copied with the Ctrl+C shortcut
+ * Fixed a rare crash when changing the color of tab labels
  * Fixed the behaviour of auto-away messages which are now sent as often as required and displayed locally
  * Fixed an issue that prevented automatic column width sizing when double clicking column separators
  * Fixed the sort order of the Time Elapsed and Time Remaining columns in the Downloads and Uploads views
- * Added whole word check for username mentions in chat rooms to avoid raising notifications for subwords
 
 Issues closed on GitHub
 
- * Sharing mounted cloud folders? ([#1869](https://github.com/nicotine-plus/nicotine-plus/issues/1869))
+ * Chat mentions with 1 character username ([#1790](https://github.com/nicotine-plus/nicotine-plus/issues/1790))
+ * Sort order time elapsed is off for uploads over an hour ([#1795](https://github.com/nicotine-plus/nicotine-plus/issues/1795))
  * Just crashed on windows insider 11 slow ring ([#1875](https://github.com/nicotine-plus/nicotine-plus/issues/1875))
  * Translations Bug when Autoconnect is off ([#1884](https://github.com/nicotine-plus/nicotine-plus/issues/1884))
- * Listening port range open on router, yet Check Port Status test fails ([#1868](https://github.com/nicotine-plus/nicotine-plus/issues/1868))
  * Crash (Gtk tab color) ([#1889](https://github.com/nicotine-plus/nicotine-plus/issues/1889))
  * Auto Size Column Does Not Fit Username, Folder or Filename ([#1901](https://github.com/nicotine-plus/nicotine-plus/issues/1901))
- * To-do list for GTK 4 ([#1554](https://github.com/nicotine-plus/nicotine-plus/issues/1554))
- * Sort order time elapsed is off for uploads over an hour ([#1795](https://github.com/nicotine-plus/nicotine-plus/issues/1795))
- * Nicotine+ doesn't open: Value: 'int' object has no attribute 'split' error ([#1917](https://github.com/nicotine-plus/nicotine-plus/issues/1917))
  * Transfers Cancelling Randomly ([#1911](https://github.com/nicotine-plus/nicotine-plus/issues/1911))
- * Departure during the copy action Nicotine+ 3.3.0.dev1 ([#1938](https://github.com/nicotine-plus/nicotine-plus/issues/1938))
- * Nicotine+ does not preserve the folder structure when downloading ([#1940](https://github.com/nicotine-plus/nicotine-plus/issues/1940))
- * Note editing no longer opens by double-clicking? 3.3.0.dev1 ([#1939](https://github.com/nicotine-plus/nicotine-plus/issues/1939))
+ * Nicotine+ doesn't open: Value: 'int' object has no attribute 'split' error ([#1917](https://github.com/nicotine-plus/nicotine-plus/issues/1917))
  * Upload Slots Not Opening ([#1933](https://github.com/nicotine-plus/nicotine-plus/issues/1933))
- * Chat mentions with 1 character username ([#1790](https://github.com/nicotine-plus/nicotine-plus/issues/1790))
- * Question: pytaglib required for 3.2.1? ([#1952](https://github.com/nicotine-plus/nicotine-plus/issues/1952))
- * ModuleNotFoundError: No module named 'pynicotine' ([#1953](https://github.com/nicotine-plus/nicotine-plus/issues/1953))
+ * Departure during the copy action Nicotine+ 3.3.0.dev1 ([#1938](https://github.com/nicotine-plus/nicotine-plus/issues/1938))
+ * Note editing no longer opens by double-clicking? 3.3.0.dev1 ([#1939](https://github.com/nicotine-plus/nicotine-plus/issues/1939))
+ * Nicotine+ does not preserve the folder structure when downloading ([#1940](https://github.com/nicotine-plus/nicotine-plus/issues/1940))
 
 Version 3.2.1 (February 10, 2022)
 ---------------------------------
