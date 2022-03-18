@@ -9,21 +9,21 @@ Version 3.2.2 (Release Candidate 2)
 Changes
 
  * Refined connection handling to improve interoperability with other clients when transferring files
- * Disallow setting user listening ports below 1024 which is in the operating system priviliged range
- * Chnaged the /exit /quit and /q commands to respect the 'When closing Nicotine+' setting preference
- * Added display of filesize Bytes in brackets after factorized size in the File Properties dialog
- * Removed an artificial delay causing slow referesh rate of active items in large transfer lists
+ * Disallow setting user listening ports below 1024 which is in the operating system privileged range
+ * Changed the /exit /quit and /q commands to respect the 'When closing Nicotine+' setting preference
+ * Added display of filesize Bytes in addition to factorized size in the File Properties dialog
+ * Removed an artificial delay causing slow refresh rate of active items in large transfer lists
  * Reduced visual lag of chats by appending new lines into the UI before writing into the log file
- * Simplified the Public Room feed UI layout and say the correct room in Text-to-Speech messages
- * Updated IP2Location Country Database to latest geographic IP address ranges as of 18th Feburary 2022
- * Updated tinytag to version 1.8.1 to add support for ALAC and M4V files (thank you Tom Wallroth @devsnd)
+ * Simplified the Public room feed UI layout and say the actual room name in Text-to-Speech messages
+ * Updated IP2Location Country Database to latest geographic IP address ranges as of 18th February 2022
+ * Updated tinytag to version 1.8.1 adding support for ALAC and M4V files (thank you Tom Wallroth @devsnd)
 
 Corrections
 
  * IMPORTANT: Prevent random time outs if the remote user has a very slow or limited download speed
  * Restart incomplete downloads if the filesize changes on the remote client during transfer
  * Avoid endlessly requesting a remote file if it becomes smaller in size since the download began
- * Fixed an issue which prevented uploads slots from opening whilst a privilaged transfer was in progress
+ * Fixed an issue which prevented uploads slots from opening whilst a privileged transfer was in progress
  * Fixed a race condition where previously queued uploads were wrongly denied during rescan on startup
  * Fixed a rare crash when loading stored a downloads.json file that contains erroneous filename data
  * Fixed broken folder structure when downloading folders containing multiple levels of subfolders
@@ -32,7 +32,7 @@ Corrections
  * Fixed the behaviour of auto-away messages which are now sent as often as required and displayed locally
  * Fixed an issue that prevented automatic column width sizing when double clicking column separators
  * Fixed the sort order of the Time Elapsed and Time Remaining columns in the Downloads and Uploads views
- * Added whole word check for username mentions in chat to avoid raising notifications for subwords
+ * Added whole word check for username mentions in chat rooms to avoid raising notifications for subwords
 
 Issues closed on GitHub
 
