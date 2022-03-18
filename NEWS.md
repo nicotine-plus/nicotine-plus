@@ -3,6 +3,52 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
+Version 3.2.2 (Release Candidate 2)
+-----------------------------------
+
+Changes
+
+ * Show file size in bytes in addition to factorized size in the File Properties dialog
+ * Disallow setting listening ports below 1024, which is in the operating system privileged range
+ * /exit /quit and /q commands respect the 'When closing Nicotine+' preference
+ * Prevent visual lag in chats by displaying new messages in the GUI before writing them into the log file
+ * Simplify the Public room feed layout and mention the actual room name in text-to-speech messages
+ * Check whole words for username mentions in chat rooms to avoid raising notifications for subwords
+
+Corrections
+
+ * IMPORTANT: Prevent random upload timeouts of large files if the remote user has a slow or limited download speed
+ * Incomplete downloads are restarted if the file contents change on the uploader's end
+ * Fixed a regression where users could not be added to private rooms
+ * Fixed a regression where certain uploads could fail with a 'Cannot connect' status
+ * Fixed an issue which prevented uploads slots from opening while a privileged transfer was in progress
+ * Fixed a race condition where previously queued uploads were wrongly denied during rescan on startup
+ * Fixed a rare issue where a download could restart endlessly if the file is unreadable on the uploader's end
+ * Fixed a rare crash when loading stored downloads that contain erroneous filename data
+ * Fixed broken folder structure when downloading folders containing multiple levels of subfolders
+ * Fixed a crash loop if a text-to-speech message with an invalid syntax is set
+ * Fixed an issue where ban messages could not be sent to a user with a banned IP address
+ * Fixed an issue where folder names could not be copied with the Ctrl+C shortcut
+ * Fixed a rare crash when changing the color of tab labels
+ * Fixed the behaviour of auto-away messages which are now sent as often as required and displayed locally
+ * Fixed an issue that prevented automatic column width sizing when double clicking column separators
+ * Fixed the sort order of the Time Elapsed and Time Remaining columns in the Downloads and Uploads views
+
+Issues closed on GitHub
+
+ * Chat mentions with 1 character username ([#1790](https://github.com/nicotine-plus/nicotine-plus/issues/1790))
+ * Sort order time elapsed is off for uploads over an hour ([#1795](https://github.com/nicotine-plus/nicotine-plus/issues/1795))
+ * Just crashed on windows insider 11 slow ring ([#1875](https://github.com/nicotine-plus/nicotine-plus/issues/1875))
+ * Translations Bug when Autoconnect is off ([#1884](https://github.com/nicotine-plus/nicotine-plus/issues/1884))
+ * Crash (Gtk tab color) ([#1889](https://github.com/nicotine-plus/nicotine-plus/issues/1889))
+ * Auto Size Column Does Not Fit Username, Folder or Filename ([#1901](https://github.com/nicotine-plus/nicotine-plus/issues/1901))
+ * Transfers Cancelling Randomly ([#1911](https://github.com/nicotine-plus/nicotine-plus/issues/1911))
+ * Nicotine+ doesn't open: Value: 'int' object has no attribute 'split' error ([#1917](https://github.com/nicotine-plus/nicotine-plus/issues/1917))
+ * Upload Slots Not Opening ([#1933](https://github.com/nicotine-plus/nicotine-plus/issues/1933))
+ * Departure during the copy action Nicotine+ 3.3.0.dev1 ([#1938](https://github.com/nicotine-plus/nicotine-plus/issues/1938))
+ * Note editing no longer opens by double-clicking? 3.3.0.dev1 ([#1939](https://github.com/nicotine-plus/nicotine-plus/issues/1939))
+ * Nicotine+ does not preserve the folder structure when downloading ([#1940](https://github.com/nicotine-plus/nicotine-plus/issues/1940))
+
 Version 3.2.1 (February 10, 2022)
 ---------------------------------
 
