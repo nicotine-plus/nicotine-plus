@@ -506,6 +506,7 @@ class ChatRoom(UserInterface):
             self.RoomOptions.remove(widget)
             self.ChatEntryBox.add(widget)
 
+        self.Speech.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.ChatEntry.set_sensitive(False)
         self.ChatEntryBox.set_halign(Gtk.Align.END)
 
