@@ -359,33 +359,25 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="picture_container">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
-                        <property name="hexpand">True</property>
-                        <property name="spacing">6</property>
                         <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <child>
-                              <object class="GtkImage" id="placeholder_picture">
-                                <property name="visible" bind-source="picture_view" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="icon-name">avatar-default-symbolic</property>
-                                <property name="pixel-size">256</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow" id="picture_view">
-                                <property name="visible">False</property>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                              </object>
-                            </child>
+                          <object class="GtkImage" id="placeholder_picture">
+                            <property name="visible" bind-source="picture_view" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="icon-name">avatar-default-symbolic</property>
+                            <property name="pixel-size">256</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="picture_view">
+                            <property name="visible">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                           </object>
                         </child>
                       </object>
