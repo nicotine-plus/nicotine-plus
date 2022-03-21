@@ -215,7 +215,7 @@ class UserInfo(UserInterface):
     def load_picture(self, data):
 
         if not data:
-            self.picture_view.hide()
+            self.placeholder_picture.show()
             return
 
         try:
@@ -230,7 +230,7 @@ class UserInfo(UserInterface):
                 picture_width = self.picture_data.get_width()
                 picture_height = self.picture_data.get_height()
 
-                allocation = self.placeholder_picture.get_allocation()
+                allocation = self.picture_container.get_allocation()
                 max_width = allocation.width - 72
                 max_height = allocation.height - 72
 
