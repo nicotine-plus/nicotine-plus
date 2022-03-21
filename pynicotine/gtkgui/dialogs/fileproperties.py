@@ -41,9 +41,7 @@ class FileProperties(UserInterface):
             height=0
         )
 
-        if not download_button:
-            self.download.hide()
-
+        self.download.set_visible(download_button)
         self.current_index = 0
 
     def on_previous(self, *_args):
@@ -80,9 +78,7 @@ class FileProperties(UserInterface):
         """ Updates the UI with properties for the selected file """
 
         properties = self.properties[self.current_index]
-
-        if len(self.properties) <= 1:
-            self.navigation_buttons.hide()
+        self.navigation_buttons.set_visible(len(self.properties) > 1)
 
         self.filename_value.set_text(str(properties["filename"]))
         self.folder_value.set_text(str(properties["directory"]))

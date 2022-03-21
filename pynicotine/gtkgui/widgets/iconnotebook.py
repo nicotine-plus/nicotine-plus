@@ -62,13 +62,11 @@ class TabLabel(Gtk.Box):
         self.close_button_visible = close_button_visible
         self.close_callback = close_callback
 
-        self.start_icon = Gtk.Image()
+        self.start_icon = Gtk.Image(visible=False)
         self.start_icon_data = None
-        self.start_icon.hide()
 
-        self.end_icon = Gtk.Image()
+        self.end_icon = Gtk.Image(visible=False)
         self.end_icon_data = None
-        self.end_icon.hide()
 
         self._pack_children()
 
