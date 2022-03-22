@@ -79,6 +79,21 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 4    | Sample Rate (Hz) |
 | 5    | Bit Depth        |
 
+#### Used Attribute Combinations
+
+- Soulseek NS, Soulseek Qt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX:
+  - {0: *bitrate*, 1: *length*, 2: *VBR*}
+
+- Soulseek Qt (2015-2-21 and earlier):
+  - {0: *bitrate*, 2: *VBR*}
+
+- Soulseek Qt (2015-6-12 and later):
+  - {0: *bitrate*}
+  - {1: *length*}
+  - {0: *bitrate*, 1: *length*}
+  - {4: *sample rate*, 5: *bit depth*}
+  - {1: *length*, 4: *sample rate*, 5: *bit depth*}
+
 # Server Messages
 
 | Send           | Receive             |
