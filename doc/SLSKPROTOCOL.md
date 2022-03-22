@@ -15,7 +15,6 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 - [Peer Messages](#peer-messages)
 - [File Messages](#file-messages)
 - [Distributed Messages](#distributed-messages)
-- [Museek Data Types](#museek-data-types)
 
 # Packing
 
@@ -108,11 +107,7 @@ server, check out
 Soulfind is obviously not the exact same the official Soulseek server,
 but it handles the protocol well enough (and can be modified).
 
-In museekd 0.1.13, these messages are sent and received in
-Museek/ServerConnection.cc and defined in Museek/ServerMessages.hh.
-Since museekd 0.2, they are defined in museekd/servermessages.h.
-
-In Nicotine, these messages are matched to their message number in
+In Nicotine+, these messages are matched to their message number in
 slskproto.py in the SlskProtoThread function, defined in slskmessages.py
 and callbacks for the messages are set in pynicotine.py.
 
@@ -227,14 +222,13 @@ and callbacks for the messages are set in pynicotine.py.
 
 **Login**
 
-#### Function Names
-
-Museekd: SLogin  
-Nicotine: Login
-
 #### Description
 
-Send your username, password, and client version.
+We send this to the server right after the connection has been established. Server responds with the greeting message.
+
+#### Function Names
+
+  - Nicotine+: Login
 
 ##### Sending Login Example
 
@@ -257,49 +251,34 @@ Send your username, password, and client version.
 
 #### Data Order
 
-  - Send Login
+  - Send
     1.  **string** <ins>username</ins>
-    2.  **string** <ins>password</ins> **A non-empty
-        string is required**
-    3.  **uint** <ins>version number</ins> *178*
-        for Museek+ *160* for Nicotine+
-    4.  **string** <ins>MD5 hex digest of
-        concatenated username & password</ins>
-    5.  **uint** <ins>minor version</ins> Minor
-        version (0x13000000 for 157 ns 13e, 0x11000000 for 157 ns 13c)
-
-<!-- end list -->
-
+    2.  **string** <ins>password</ins> **A non-empty string is required**
+    3.  **uint** <ins>version number</ins> *160* for Nicotine+
+    4.  **string** <ins>MD5 hex digest of concatenated username & password</ins>
+    5.  **uint** <ins>minor version</ins> Minor version (0x13000000 for 157 ns 13e, 0x11000000 for 157 ns 13c)
   - Receive Login Success
     1.  **bool** <ins>success</ins> 1
     2.  **string** <ins>greet</ins> A MOTD string
     3.  **uint** <ins>Your IP Address</ins>
-    4.  **string** <ins>MD5 hex digest of the
-        password string</ins> *Windows Soulseek uses this hash to
-        determine if it's connected to the official server*
-
-<!-- end list -->
-
+    4.  **string** <ins>MD5 hex digest of the password string</ins> *Windows Soulseek uses this hash to determine if it's connected to the official server*
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> *0*
-    2.  **string** <ins>reason</ins> Almost always:
-        *Bad Password*; sometimes it's a banned message or another
-        error.
+    2.  **string** <ins>reason</ins> Almost always: *Bad Password*; sometimes it's a banned message or another error.
 
 ### Server Code 2
 
 **Set Listen Port**
-
-#### Function Names
-
-Museekd: SSetListenPort  
-Nicotine: SetWaitPort
 
 #### Description
 
 We send this to the server to indicate the port number that we listen on (2234 by default).
 
 If this value is set to zero, or the message is not sent upon login (which defaults the listen port to 0), remote clients handling a `ConnectToPeer` message (code 18) will fail to properly purge the request.  Confirmed in SoulseekQt 2020.3.12, but probably impacts most or all other versions.
+
+#### Function Names
+
+  - Nicotine+: SetWaitPort
 
 #### Data Order
 
@@ -314,14 +293,13 @@ If this value is set to zero, or the message is not sent upon login (which defau
 
 **Get Peer Address**
 
-#### Function Names
-
-Museekd: SGetPeerAddress  
-Nicotine: GetPeerAddress
-
 #### Description
 
 We send this to the server to ask for a peer's address (IP address and port), given the peer's username.
+
+#### Function Names
+
+  - Nicotine+: GetPeerAddress
 
 #### Data Order
 
@@ -338,14 +316,13 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 **Add User**
 
-#### Function Names
-
-Museekd: SAddUser  
-Nicotine: AddUser
-
 #### Description
 
 Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a GetUserStats response message with the new user stats.
+
+#### Function Names
+
+  - Nicotine+: AddUser
 
 #### Data Order
 
@@ -359,7 +336,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
     - If <ins>exists</ins> is true
         1.  **uint** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
         2.  **uint** <ins>avgspeed</ins>
-        3.  **uint64** <ins>uploadnum</ins>
+        3.  **uint64** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
         4.  **uint** <ins>files</ins>
         5.  **uint** <ins>dirs</ins>
 
@@ -370,14 +347,13 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 **Remove User**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: RemoveUser
-
 #### Description
 
 Used when we no longer want to be kept updated about a user's stats.
+
+#### Function Names
+
+  - Nicotine+: RemoveUser
 
 #### Data Order
 
@@ -390,14 +366,13 @@ Used when we no longer want to be kept updated about a user's stats.
 
 **Get Status**
 
-#### Function Names
-
-Museekd: SGetStatus  
-Nicotine: GetUserStatus
-
 #### Description
 
 The server tells us if a user has gone away or has returned.
+
+#### Function Names
+
+  - Nicotine+: GetUserStatus
 
 #### Data Order
 
@@ -412,14 +387,13 @@ The server tells us if a user has gone away or has returned.
 
 **Say in Chat Room**
 
-#### Function Names
-
-Museekd: SSayChatroom  
-Nicotine: SayChatroom
-
 #### Description
 
 Either we want to say something in the chatroom, or someone else did.
+
+#### Function Names
+
+  - Nicotine+: SayChatroom
 
 #### Data Order
 
@@ -435,68 +409,57 @@ Either we want to say something in the chatroom, or someone else did.
 
 **Join a Room**
 
-#### Function Names
-
-Museekd: SJoinRoom  
-Nicotine: JoinRoom
-
 #### Description
 
 We send this message to the server when we want to join a room. If the room doesn't exist, it is created.
 
 Server responds with this message when we join a room. Contains users list with data on everyone.
 
+#### Function Names
+
+  - Nicotine+: JoinRoom
+
 #### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
     2.  **bool** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
-
-<!-- end list -->
-
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **uint** <ins>number of users in room</ins>
-        **For private rooms, also contain owner and operators**
+    2.  **uint** <ins>number of users in room</ins> **For private rooms, also contain owner and operators**
     3.  Iterate the <ins>number of users</ins>
-        **museekd uses a vector of strings**
         1.  **string** <ins>username</ins>
-    4.  **uint** <ins>number of userdata</ins>
-    5.  Iterate the <ins>number of users</ins>
-        **museekd uses a vector of userdata**
+    4.  **uint** <ins>number of statuses</ins>
+    5.  Iterate the <ins>number of statuses</ins>
         1.  **uint** <ins>status</ins>
-    6.  **uint** <ins>number of userdata</ins>
-    7.  Iterate the userdata **vector of userdata** (and add unpacked data to [User Data](#userdata))
+    6.  **uint** <ins>number of user stats</ins>
+    7.  Iterate the <ins>number of user stats</ins>
         1.  **uint** <ins>avgspeed</ins>
         2.  **uint64** <ins>uploadnum</ins>
         3.  **uint** <ins>files</ins>
         4.  **uint** <ins>dirs</ins>
     8.  **uint** <ins>number of slotsfree</ins>
-    9.  Iterate thru number of slotsfree
+    9.  Iterate the <ins>number of slotsfree</ins>
         1.  **uint** <ins>slotsfree</ins>
-    10. **uint** <ins>number of usercountries</ins>
-    11. Iterate thru number of usercountries
+    10. **uint** <ins>number of user countries</ins>
+    11. Iterate the <ins>number of user countries</ins>
         1.  **string** <ins>countrycode</ins> *Uppercase country code*
-    12. **string** <ins>owner</ins> **If private
-        room**
-    13. **uint** <ins>number of operators in
-        room</ins> **If private room**
+    12. **string** <ins>owner</ins> **If private room**
+    13. **uint** <ins>number of operators in room</ins> **If private room**
     14. Iterate the <ins>number of operators</ins>
-        **museekd uses a vector of strings**
         1.  **string** <ins>operator</ins>
 
 ### Server Code 15
 
 **Leave Room**
 
-#### Function Names
-
-Museekd: SLeaveRoom  
-Nicotine: LeaveRoom
-
 #### Description
 
 We send this to the server when we want to leave a room.
+
+#### Function Names
+
+  - Nicotine+: LeaveRoom
 
 #### Data Order
 
@@ -507,16 +470,15 @@ We send this to the server when we want to leave a room.
 
 ### Server Code 16
 
-**A User Joined a Room**
-
-#### Function Names
-
-Museekd: SUserJoinedRoom  
-Nicotine: UserJoinedRoom
+**User Joined Room**
 
 #### Description
 
 The server tells us someone has just joined a room we're in.
+
+#### Function Names
+
+  - Nicotine+: UserJoinedRoom
 
 #### Data Order
 
@@ -535,16 +497,15 @@ The server tells us someone has just joined a room we're in.
 
 ### Server Code 17
 
-**A User Left a Room**
-
-#### Function Names
-
-Museekd: SUserLeftRoom  
-Nicotine: UserLeftRoom
+**User Left Room**
 
 #### Description
 
 The server tells us someone has just left a room we're in.
+
+#### Function Names
+
+  - Nicotine+: UserLeftRoom
 
 #### Data Order
 
@@ -558,18 +519,15 @@ The server tells us someone has just left a room we're in.
 
 **Connect To Peer**
 
-#### Function Names
-
-Museekd: SConnectToPeer  
-Nicotine: ConnectToPeer
-
 #### Description
 
 Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
 
-See also: [Peer
-Connection Message
-Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#peer-connection-message-order)
+
+#### Function Names
+
+  - Nicotine+: ConnectToPeer
 
 #### Data Order
 
@@ -591,14 +549,13 @@ Order](#peer-connection-message-order)
 
 **Private Messages**
 
-#### Function Names
-
-Museekd: SPrivateMessage  
-Nicotine: MessageUser
-
 #### Description
 
 Chat phrase sent to someone or received by us in private.
+
+#### Function Names
+
+  - Nicotine+: MessageUser
 
 #### Data Order
 
@@ -616,16 +573,13 @@ Chat phrase sent to someone or received by us in private.
 
 **Acknowledge Private Message**
 
-#### Function Names
-
-Museekd: SAckPrivateMessage  
-Nicotine: MessageAcked
-
 #### Description
 
 We send this to the server to confirm that we received a private message. If we don't send it, the server will keep sending the chat phrase to us.
 
-Museekd also resets timestamps to account for server-time bugginess.
+#### Function Names
+
+  - Nicotine+: MessageAcked
 
 #### Data Order
 
@@ -638,16 +592,15 @@ Museekd also resets timestamps to account for server-time bugginess.
 
 **File Search Room**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: FileSearchRoom
-
 #### Description
 
 **OBSOLETE, use [RoomSearch](#server-code-120) server message**
 
 We send this to the server when we search for something in a room.
+
+#### Function Names
+
+  - Nicotine+: FileSearchRoom
 
 #### Data Order
 
@@ -662,16 +615,15 @@ We send this to the server when we search for something in a room.
 
 **File Search**
 
-#### Function Names
-
-Museekd: SFileSearch  
-Nicotine: FileSearch
-
 #### Description
 
 We send this to the server when we search for something. Alternatively, the server sends this message outside the distributed network to tell us that someone is searching for something, currently used for [UserSearch](#server-code-42) and [RoomSearch](#server-code-120) requests.
 
 The token is a random number generated by the client and is used to track the search results.
+
+#### Function Names
+
+  - Nicotine+: FileSearch
 
 #### Data Order
 
@@ -687,17 +639,16 @@ The token is a random number generated by the client and is used to track the se
 
 **Set Online Status**
 
-#### Function Names
-
-Museekd: SSetStatus  
-Nicotine: SetStatus
-
 #### Description
 
 We send our new status to the server. Status is a way to define whether you're available or busy. 
 
 *1 = Away  
 2 = Online*
+
+#### Function Names
+
+  - Nicotine+: SetStatus
 
 #### Data Order
 
@@ -710,16 +661,15 @@ We send our new status to the server. Status is a way to define whether you're a
 
 **Ping**
 
-#### Function Names
-
-Museekd: SPing  
-Nicotine: ServerPing
-
 #### Description
 
 **DEPRECATED**
 
 We test if the server responds.
+
+#### Function Names
+
+  - Nicotine+: ServerPing
 
 #### Data Order
 
@@ -732,14 +682,13 @@ We test if the server responds.
 
 **Send Connect Token**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: SendConnectToken
-
 #### Description
 
 **OBSOLETE, no longer used**
+
+#### Function Names
+
+  - Nicotine+: SendConnectToken
 
 #### Data Order
 
@@ -754,16 +703,15 @@ Nicotine: SendConnectToken
 
 **Send Download Speed**
 
-#### Function Names
-
-Museekd: SSendSpeed  
-Nicotine: SendDownloadSpeed
-
 #### Description
 
 **OBSOLETE, use [SendUploadSpeed](#server-code-121) server message**
 
 We used to send this after a finished download to let the server update the speed statistics for a user.
+
+#### Function Names
+
+  - Nicotine+: SendDownloadSpeed
 
 #### Data Order
 
@@ -777,14 +725,13 @@ We used to send this after a finished download to let the server update the spee
 
 **Shared Folders & Files**
 
-#### Function Names
-
-Museekd: SSharedFoldersFiles  
-Nicotine: SharedFoldersFiles
-
 #### Description
 
 We send this to server to indicate the number of folder and files that we share.
+
+#### Function Names
+
+  - Nicotine+: SharedFoldersFiles
 
 #### Data Order
 
@@ -798,14 +745,13 @@ We send this to server to indicate the number of folder and files that we share.
 
 **Get User Stats**
 
-#### Function Names
-
-Museekd: SGetUserStats  
-Nicotine: GetUserStats
-
 #### Description
 
 The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in AddUser previously. A user's stats can also be requested by sending a GetUserStats message to the server, but AddUser should be used instead.
+
+#### Function Names
+
+  - Nicotine+: GetUserStats
 
 #### Data Order
 
@@ -822,16 +768,15 @@ The server sends this to indicate a change in a user's statistics, if we've requ
 
 **Queued Downloads**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: QueuedDownloads
-
 #### Description
 
 **OBSOLETE, no longer sent by the server**
 
 The server sends this to indicate if someone has download slots available or not.
+
+#### Function Names
+
+  - Nicotine+: QueuedDownloads
 
 #### Data Order
 
@@ -846,14 +791,13 @@ The server sends this to indicate if someone has download slots available or not
 
 **Kicked from Server**
 
-#### Function Names
-
-Museekd: SKicked  
-Nicotine: Relogged
-
 #### Description
 
 The server sends this if someone else logged in under our nickname, and then disconnects us.
+
+#### Function Names
+
+  - Nicotine+: Relogged
 
 #### Data Order
 
@@ -866,14 +810,13 @@ The server sends this if someone else logged in under our nickname, and then dis
 
 **User Search**
 
-#### Function Names
-
-Museekd: SUserSearch  
-Nicotine: UserSearch
-
 #### Description
 
 We send this to the server when we search a specific user's shares. The token is a random number generated by the client and is used to track the search results.
+
+#### Function Names
+
+  - Nicotine+: UserSearch
 
 #### Data Order
 
@@ -888,16 +831,15 @@ We send this to the server when we search a specific user's shares. The token is
 
 **Add Liked Interest**
 
-#### Function Names
-
-Museekd: SInterestAdd  
-Nicotine: AddThingILike
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we add an item to our likes list.
+
+#### Function Names
+
+  - Nicotine+: AddThingILike
 
 #### Data Order
 
@@ -910,16 +852,15 @@ We send this to the server when we add an item to our likes list.
 
 **Remove Liked Interest**
 
-#### Function Names
-
-Museekd: SInterestRemove  
-Nicotine: RemoveThingILike
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our likes list.
+
+#### Function Names
+
+  - Nicotine+: RemoveThingILike
 
 #### Data Order
 
@@ -932,45 +873,33 @@ We send this to the server when we remove an item from our likes list.
 
 **Get Recommendations**
 
-#### Function Names
-
-Museekd: SGetRecommendations  
-Nicotine: Recommendations
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
+#### Function Names
+
+  - Nicotine+: Recommendations
+
 #### Data Order
 
   - Send
       - Empty Message
   - Receive
-    1.  **uint** <ins>number of total
-        recommendations</ins>
-    2.  Iterate for <ins>number of total
-        recommendations</ins>
+    1.  **uint** <ins>number of total recommendations</ins>
+    2.  Iterate for <ins>number of total recommendations</ins>
         1.  **string** <ins>recommendation</ins>
-        2.  **int** <ins>number of recommendations
-            this recommendation has</ins>
-    3.  **uint** <ins>number of total
-        unrecommendations</ins>
-    4.  Iterate for <ins>number of total
-        unrecommendations</ins>
+        2.  **int** <ins>number of recommendations this recommendation has</ins>
+    3.  **uint** <ins>number of total unrecommendations</ins>
+    4.  Iterate for <ins>number of total unrecommendations</ins>
         1.  **string** <ins>unrecommendation</ins>
-        2.  **int** <ins>number of unrecommendations
-            this unrecommendation has (negative)</ins>
+        2.  **int** <ins>number of unrecommendations this unrecommendation has (negative)</ins>
 
 ### Server Code 56
 
 **Get Global Recommendations**
-
-#### Function Names
-
-Museekd: SGetGlobalRecommendations  
-Nicotine: GlobalRecommendations
 
 #### Description
 
@@ -978,40 +907,37 @@ Nicotine: GlobalRecommendations
 
 The server sends us a list of global recommendations and a number for each.
 
+#### Function Names
+
+  - Nicotine+: GlobalRecommendations
+
 #### Data Order
 
   - Send
       - Empty Message
   - Receive
-    1.  **uint** <ins>number of total
-        recommendations</ins>
-    2.  Iterate for <ins>number of total
-        recommendations</ins>
+    1.  **uint** <ins>number of total recommendations</ins>
+    2.  Iterate for <ins>number of total recommendations</ins>
         1.  **string** <ins>recommendation</ins>
-        2.  **int** <ins>number of recommendations
-            this recommendation has</ins>
-    3.  **uint** <ins>number of total
-        unrecommendations</ins>
-    4.  Iterate for <ins>number of total
-        unrecommendations</ins>
+        2.  **int** <ins>number of recommendations this recommendation has</ins>
+    3.  **uint** <ins>number of total unrecommendations</ins>
+    4.  Iterate for <ins>number of total unrecommendations</ins>
         1.  **string** <ins>unrecommendation</ins>
-        2.  **int** <ins>number of unrecommendations
-            this unrecommendation has (negative)</ins>
+        2.  **int** <ins>number of unrecommendations this unrecommendation has (negative)</ins>
 
 ### Server Code 57
 
 **Get User Interests**
-
-#### Function Names
-
-Museekd: SUserInterests  
-Nicotine: UserInterests
 
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds with a list of interests.
+
+#### Function Names
+
+  - Nicotine+: UserInterests
 
 #### Data Order
 
@@ -1020,28 +946,25 @@ We ask the server for a user's liked and hated interests. The server responds wi
   - Receive
     1.  **string** <ins>username</ins>
     2.  **uint** <ins>number of liked interests</ins>
-    3.  Iterate for <ins>number of liked
-        interests</ins>
+    3.  Iterate for <ins>number of liked interests</ins>
         1.  **string** <ins>interest</ins>
     4.  **uint** <ins>number of hated interests</ins>
-    5.  Iterate for <ins>number of hated
-        interests</ins>
+    5.  Iterate for <ins>number of hated interests</ins>
         1.  **string** <ins>interest</ins>
 
 ### Server Code 58
 
 **Admin Command**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: AdminCommand
-
 #### Description
 
 **OBSOLETE, no longer used since Soulseek stopped supporting third-party servers in 2002**
 
 We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
+
+#### Function Names
+
+  - Nicotine+: AdminCommand
 
 #### Data Order
 
@@ -1065,8 +988,7 @@ The server sends this to indicate change in place in queue while we're waiting f
 
 #### Function Names
 
-Museekd: Unimplemented  
-Nicotine: PlaceInLineResponse
+  - Nicotine+: PlaceInLineResponse
 
 #### Data Order
 
@@ -1091,8 +1013,7 @@ The server tells us a new room has been added.
 
 #### Function Names
 
-Museekd: Unimplemented  
-Nicotine: RoomAdded
+  - Nicotine+: RoomAdded
 
 #### Data Order
 
@@ -1113,8 +1034,7 @@ The server tells us a room has been removed.
 
 #### Function Names
 
-Museekd: Unimplemented  
-Nicotine: RoomRemoved
+  - Nicotine+: RoomRemoved
 
 #### Data Order
 
@@ -1127,14 +1047,13 @@ Nicotine: RoomRemoved
 
 **Room List**
 
-#### Function Names
-
-Museekd: SRoomList  
-Nicotine: RoomList
-
 #### Description
 
 The server tells us a list of rooms and the number of users in them. When connecting to the server, the server only sends us rooms with at least 5 users. A few select rooms are also excluded, such as nicotine and The Lobby. Requesting the room list yields a response containing the missing rooms.
+
+#### Function Names
+
+  - Nicotine+: RoomList
 
 #### Data Order
 
@@ -1146,57 +1065,45 @@ The server tells us a list of rooms and the number of users in them. When connec
         1.  **string** <ins>room</ins>
     3.  **uint** <ins>number of rooms</ins>
     4.  Iterate for <ins>number of rooms</ins>
-        1.  **uint** <ins>number of users in
-            room</ins>
+        1.  **uint** <ins>number of users in room</ins>
 
 <!-- end list -->
 
 1.  **uint** <ins>number of owned private rooms</ins>
-2.  Iterate for <ins>number of owned private
-    rooms</ins>
+2.  Iterate for <ins>number of owned private rooms</ins>
     1.  **string** <ins>owned private room</ins>
 3.  **uint** <ins>number of owned private rooms</ins>
-4.  Iterate for <ins>number of owned private
-    rooms</ins>
-    1.  **uint** <ins>number of users in owned private
-        room</ins>
+4.  Iterate for <ins>number of owned private rooms</ins>
+    1.  **uint** <ins>number of users in owned private room</ins>
 
 <!-- end list -->
 
-1.  **uint** <ins>number of private rooms (except
-    owned)</ins>
-2.  Iterate for <ins>number of private rooms (except
-    owned)</ins>
+1.  **uint** <ins>number of private rooms (except owned)</ins>
+2.  Iterate for <ins>number of private rooms (except owned)</ins>
     1.  **string** <ins>private room</ins>
-3.  **uint** <ins>number of private rooms (except
-    owned)</ins>
-4.  Iterate for <ins>number of private rooms (except
-    owned)</ins>
-    1.  **uint** <ins>number of users in private rooms
-        (except owned)</ins>
+3.  **uint** <ins>number of private rooms (except owned)</ins>
+4.  Iterate for <ins>number of private rooms (except owned)</ins>
+    1.  **uint** <ins>number of users in private rooms (except owned)</ins>
 
 <!-- end list -->
 
-1.  **uint** <ins>number of operated private
-    rooms</ins>
-2.  Iterate for <ins>number of operated private
-    rooms</ins>
+1.  **uint** <ins>number of operated private rooms</ins>
+2.  Iterate for <ins>number of operated private rooms</ins>
     1.  **string** <ins>operated private room</ins>
 
 ### Server Code 65
 
 **Exact File Search**
 
-#### Function Names
-
-Museekd: SExactFileSearch  
-Nicotine: ExactFileSearch
-
 #### Description
 
 **OBSOLETE, no results even with official client**
 
 We send this to search for an exact file name and folder, to find other sources.
+
+#### Function Names
+
+  - Nicotine+: ExactFileSearch
 
 #### Data Order
 
@@ -1218,14 +1125,13 @@ We send this to search for an exact file name and folder, to find other sources.
 
 **Global / Admin Message**
 
-#### Function Names
-
-Museekd: SGlobalMessage  
-Nicotine: AdminMessage
-
 #### Description
 
 A global message from the server admin has arrived.
+
+#### Function Names
+
+  - Nicotine+: AdminMessage
 
 #### Data Order
 
@@ -1238,16 +1144,15 @@ A global message from the server admin has arrived.
 
 **Global User List**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: GlobalUserList
-
 #### Description
 
 **OBSOLETE, no longer used**
 
 We send this to get a global list of all users online.
+
+#### Function Names
+
+  - Nicotine+: GlobalUserList
 
 #### Data Order
 
@@ -1277,16 +1182,15 @@ We send this to get a global list of all users online.
 
 **Tunneled Message**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: TunneledMessage
-
 #### Description
 
 **OBSOLETE, no longer used**
 
 Server message for tunneling a chat message.
+
+#### Function Names
+
+  - Nicotine+: TunneledMessage
 
 #### Data Order
 
@@ -1307,14 +1211,13 @@ Server message for tunneling a chat message.
 
 **Privileged Users**
 
-#### Function Names
-
-Museekd: SPrivilegedUsers  
-Nicotine: PrivilegedUsers
-
 #### Description
 
 The server sends us a list of privileged users, a.k.a. users who have donated.
+
+#### Function Names
+
+  - Nicotine+: PrivilegedUsers
 
 #### Data Order
 
@@ -1329,14 +1232,13 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 
 **Have No Parents**
 
-#### Function Names
-
-Museekd: SHaveNoParents  
-Nicotine: HaveNoParent
-
 #### Description
 
 We inform the server if we have a distributed parent or not. If not, the server eventually sends us a PossibleParents message with a list of possible parents to connect to. If no candidates are found, no such message is sent by the server, and we eventually become a branch root.
+
+#### Function Names
+
+  - Nicotine+: HaveNoParent
 
 #### Data Order
 
@@ -1349,16 +1251,15 @@ We inform the server if we have a distributed parent or not. If not, the server 
 
 **Parent's IP**
 
-#### Function Names
-
-Museekd: SParentIP  
-Nicotine: SearchParent
-
 #### Description
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We send the IP address of our parent to the server.
+
+#### Function Names
+
+  - Nicotine+: SearchParent
 
 #### Data Order
 
@@ -1377,8 +1278,7 @@ The server informs us about the minimum upload speed required to become a parent
 
 #### Function Names
 
-Museekd: SParentMinSpeed  
-Nicotine: ParentMinSpeed
+  - Nicotine+: ParentMinSpeed
 
 #### Data Order
 
@@ -1397,8 +1297,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 #### Function Names
 
-Museekd: SParentSpeedRatio  
-Nicotine: ParentSpeedRatio
+  - Nicotine+: ParentSpeedRatio
 
 #### Data Order
 
@@ -1417,8 +1316,7 @@ Nicotine: ParentSpeedRatio
 
 #### Function Names
 
-Museekd: SParentInactivityTimeout  
-Nicotine: ParentInactivityTimeout
+  - Nicotine+: ParentInactivityTimeout
 
 #### Data Order
 
@@ -1437,8 +1335,7 @@ Nicotine: ParentInactivityTimeout
 
 #### Function Names
 
-Museekd: SSearchInactivityTimeout  
-Nicotine: SearchInactivityTimeout
+  - Nicotine+: SearchInactivityTimeout
 
 #### Data Order
 
@@ -1457,8 +1354,7 @@ Nicotine: SearchInactivityTimeout
 
 #### Function Names
 
-Museekd: SMinParentsInCache  
-Nicotine: MinParentsInCache
+  - Nicotine+: MinParentsInCache
 
 #### Description
 
@@ -1479,10 +1375,7 @@ Nicotine: MinParentsInCache
 
 #### Function Names
 
-Museekd: SDistribAliveInterval  
-Nicotine: DistribAliveInterval
-
-#### Description
+  - Nicotine+: DistribAliveInterval
 
 #### Data Order
 
@@ -1495,16 +1388,15 @@ Nicotine: DistribAliveInterval
 
 **Add Privileged User**
 
-#### Function Names
-
-Museekd: SAddPrivileged  
-Nicotine: AddToPrivileged
-
 #### Description
 
 **OBSOLETE, no longer sent by the server**
 
 The server sends us the username of a new privileged user, which we add to our list of global privileged users.
+
+#### Function Names
+
+  - Nicotine+: AddToPrivileged
 
 #### Data Order
 
@@ -1517,14 +1409,13 @@ The server sends us the username of a new privileged user, which we add to our l
 
 **Check Privileges**
 
-#### Function Names
-
-Museekd: SCheckPrivileges  
-Nicotine: CheckPrivileges
-
 #### Description
 
 We ask the server how much time we have left of our privileges. The server responds with the remaining time, in seconds.
+
+#### Function Names
+
+  - Nicotine+: CheckPrivileges
 
 #### Data Order
 
@@ -1543,8 +1434,7 @@ The server sends us an embedded distributed message. The only type of distribute
 
 #### Function Names
 
-Museekd: SSearchRequest  
-Nicotine: EmbeddedMessage
+  - Nicotine+: EmbeddedMessage
 
 #### Data Order
 
@@ -1564,8 +1454,7 @@ We tell the server if we want to accept child nodes.
 
 #### Function Names
 
-Museekd: SAcceptChildren  
-Nicotine: AcceptChildren (not yet used)
+  - Nicotine+: AcceptChildren (not yet used)
 
 #### Data Order
 
@@ -1586,8 +1475,7 @@ The received list always contains users whose upload speed is higher than our ow
 
 #### Function Names
 
-Museekd: SNetInfo  
-Nicotine: PossibleParents
+  - Nicotine+: PossibleParents
 
 #### Data Order
 
@@ -1604,12 +1492,11 @@ Nicotine: PossibleParents
 
 **Wishlist Search**
 
+#### Description
+
 #### Function Names
 
-Museekd: SWishlistSearch  
-Nicotine: WishlistSearch
-
-#### Description
+  - Nicotine+: WishlistSearch
 
 #### Data Order
 
@@ -1623,12 +1510,11 @@ Nicotine: WishlistSearch
 
 **Wishlist Interval**
 
+#### Description
+
 #### Function Names
 
-Museekd: SWishlistInterval  
-Nicotine: WishlistInterval
-
-#### Description
+  - Nicotine+: WishlistInterval
 
 #### Data Order
 
@@ -1641,16 +1527,15 @@ Nicotine: WishlistInterval
 
 **Get Similar Users**
 
-#### Function Names
-
-Museekd: SGetSimilarUsers  
-Nicotine: SimilarUsers
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to our interests.
+
+#### Function Names
+
+  - Nicotine+: SimilarUsers
 
 #### Data Order
 
@@ -1666,16 +1551,15 @@ The server sends us a list of similar users related to our interests.
 
 **Get Item Recommendations**
 
-#### Function Names
-
-Museekd: SGetItemRecommendations  
-Nicotine: ItemRecommendations
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
+
+#### Function Names
+
+  - Nicotine+: ItemRecommendations
 
 #### Data Order
 
@@ -1695,16 +1579,15 @@ The server sends us a list of recommendations related to a specific item, which 
 
 **Get Item Similar Users**
 
-#### Function Names
-
-Museekd: SGetItemSimilarUsers  
-Nicotine: ItemSimilarUsers
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
+
+#### Function Names
+
+  - Nicotine+: ItemSimilarUsers
 
 #### Data Order
 
@@ -1720,16 +1603,15 @@ The server sends us a list of similar users related to a specific item, which is
 
 **Room Tickers**
 
-#### Function Names
-
-Museekd: SRoomTickers  
-Nicotine: RoomTickerState
-
 #### Description
 
 The server returns a list of tickers in a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
+
+#### Function Names
+
+  - Nicotine+: RoomTickerState
 
 #### Data Order
 
@@ -1746,16 +1628,15 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 **Room Ticker Add**
 
-#### Function Names
-
-Museekd: SRoomTickerAdd  
-Nicotine: RoomTickerAdd
-
 #### Description
 
 The server sends us a new ticker that was added to a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
+
+#### Function Names
+
+  - Nicotine+: RoomTickerAdd
 
 #### Data Order
 
@@ -1770,16 +1651,15 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 **Room Ticker Remove**
 
-#### Function Names
-
-Museekd: SRoomTickerRemove  
-Nicotine: RoomTickerRemove
-
 #### Description
 
 The server informs us that a ticker was removed from a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
+
+#### Function Names
+
+  - Nicotine+: RoomTickerRemove
 
 #### Data Order
 
@@ -1793,16 +1673,15 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 **Set Room Ticker**
 
-#### Function Names
-
-Museekd: SSetRoomTicker  
-Nicotine: RoomTickerSet
-
 #### Description
 
 We send this to the server when we change our own ticker in a chat room. Sending an empty ticker string removes any existing ticker in the room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
+
+#### Function Names
+
+  - Nicotine+: RoomTickerSet
 
 #### Data Order
 
@@ -1816,16 +1695,15 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 **Add Hated Interest**
 
-#### Function Names
-
-Museekd: SInterestHatedAdd  
-Nicotine: AddThingIHate
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we add an item to our hate list.
+
+#### Function Names
+
+  - Nicotine+: AddThingIHate
 
 #### Data Order
 
@@ -1838,16 +1716,15 @@ We send this to the server when we add an item to our hate list.
 
 **Remove Hated Interest**
 
-#### Function Names
-
-Museekd: SInterestHatedRemove  
-Nicotine: RemoveThingIHate
-
 #### Description
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
+
+#### Function Names
+
+  - Nicotine+: RemoveThingIHate
 
 #### Data Order
 
@@ -1860,14 +1737,13 @@ We send this to the server when we remove an item from our hate list.
 
 **Room Search**
 
-#### Function Names
-
-Museekd: SRoomSearch  
-Nicotine: RoomSearch
-
 #### Description
 
 We send this to the server to search files shared by users who have joined a specific chat room. The token is a random number generated by the client and is used to track the search results.
+
+#### Function Names
+
+  - Nicotine+: RoomSearch
 
 #### Data Order
 
@@ -1882,14 +1758,13 @@ We send this to the server to search files shared by users who have joined a spe
 
 **Send Upload Speed**
 
-#### Function Names
-
-Museekd: SSendUploadSpeed  
-Nicotine: SendUploadSpeed
-
 #### Description
 
 We send this after a finished upload to let the server update the speed statistics for ourselves.
+
+#### Function Names
+
+  - Nicotine+: SendUploadSpeed
 
 #### Data Order
 
@@ -1902,16 +1777,15 @@ We send this after a finished upload to let the server update the speed statisti
 
 **User Privileges**
 
-#### Function Names
-
-Museekd: SUserPrivileges  
-Nicotine: UserPrivileged
-
 #### Description
 
 **DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
+
+#### Function Names
+
+  - Nicotine+: UserPrivileged
 
 #### Data Order
 
@@ -1925,14 +1799,13 @@ We ask the server whether a user is privileged or not.
 
 **Give Privileges**
 
-#### Function Names
-
-Museekd: SGivePrivileges  
-Nicotine: GivePrivileges
-
 #### Description
 
 We give (part of) our privileges, specified in days, to another user on the network.
+
+#### Function Names
+
+  - Nicotine+: GivePrivileges
 
 #### Data Order
 
@@ -1946,14 +1819,13 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 **Notify Privileges**
 
-#### Function Names
-
-Museekd: SNotifyPrivileges  
-Nicotine: NotifyPrivileges
-
 #### Description
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
+
+#### Function Names
+
+  - Nicotine+: NotifyPrivileges
 
 #### Data Order
 
@@ -1968,14 +1840,13 @@ Nicotine: NotifyPrivileges
 
 **Acknowledge Privilege Notification**
 
-#### Function Names
-
-Museekd: SAckNotifyPrivileges  
-Nicotine: AckNotifyPrivileges
-
 #### Description
 
 **DEPRECATED, no longer used**
+
+#### Function Names
+
+  - Nicotine+: AckNotifyPrivileges
 
 #### Data Order
 
@@ -1994,8 +1865,7 @@ We tell the server what our position is in our branch (xth generation) on the di
 
 #### Function Names
 
-Museekd: SBranchLevel  
-Nicotine: BranchLevel
+  - Nicotine+: BranchLevel
 
 #### Data Order
 
@@ -2014,8 +1884,7 @@ We tell the server the username of the root of the branch we're in on the distri
 
 #### Function Names
 
-Museekd: SBranchRoot  
-Nicotine: BranchRoot
+  - Nicotine+: BranchRoot
 
 #### Data Order
 
@@ -2036,8 +1905,7 @@ We tell the server the maximum number of generation of children we have on the d
 
 #### Function Names
 
-Museekd: SChildDepth  
-Nicotine: ChildDepth
+  - Nicotine+: ChildDepth
 
 #### Data Order
 
@@ -2050,14 +1918,13 @@ Nicotine: ChildDepth
 
 **Reset Distributed**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: ResetDistributed
-
 #### Description
 
 The server asks us to reset our distributed parent and children.
+
+#### Function Names
+
+  - Nicotine+: ResetDistributed
 
 #### Data Order
 
@@ -2076,8 +1943,7 @@ The server sends us a list of room users that we can alter (add operator abiliti
 
 #### Function Names
 
-Museekd: SPrivRoomAlterableMembers  
-Nicotine: PrivateRoomUsers
+  - Nicotine+: PrivateRoomUsers
 
 #### Data Order
 
@@ -2099,8 +1965,7 @@ We send this to inform the server that we've added a user to a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomAddUser  
-Nicotine: PrivateRoomAddUser
+  - Nicotine+: PrivateRoomAddUser
 
 #### Data Order
 
@@ -2121,8 +1986,7 @@ We send this to inform the server that we've removed a user from a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomRemoveUser  
-Nicotine: PrivateRoomRemoveUser
+  - Nicotine+: PrivateRoomRemoveUser
 
 #### Data Order
 
@@ -2143,8 +2007,7 @@ We send this to the server to remove our own membership of a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomDismember  
-Nicotine: PrivateRoomDismember
+  - Nicotine+: PrivateRoomDismember
 
 #### Data Order
 
@@ -2163,8 +2026,7 @@ We send this to the server to stop owning a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomDisown  
-Nicotine: PrivateRoomDisown
+  - Nicotine+: PrivateRoomDisown
 
 #### Data Order
 
@@ -2185,8 +2047,7 @@ Unknown purporse
 
 #### Function Names
 
-Museekd: SPrivRoomUnknown138  
-Nicotine: PrivateRoomSomething
+  - Nicotine+: PrivateRoomSomething
 
 #### Data Order
 
@@ -2205,8 +2066,7 @@ The server sends us this message when we are added to a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomAdded  
-Nicotine: PrivateRoomAdded
+  - Nicotine+: PrivateRoomAdded
 
 #### Data Order
 
@@ -2225,8 +2085,7 @@ The server sends us this message when we are removed from a private room.
 
 #### Function Names
 
-Museekd: SPrivRoomRemoved  
-Nicotine: PrivateRoomRemoved
+  - Nicotine+: PrivateRoomRemoved
 
 #### Data Order
 
@@ -2245,8 +2104,7 @@ We send this when we want to enable or disable invitations to private rooms.
 
 #### Function Names
 
-Museekd: SPrivRoomToggle  
-Nicotine: PrivateRoomToggle
+  - Nicotine+: PrivateRoomToggle
 
 #### Data Order
 
@@ -2265,8 +2123,7 @@ We send this to the server to change our password. We receive a response if our 
 
 #### Function Names
 
-Museekd: SNewPassword  
-Nicotine: ChangePassword
+  - Nicotine+: ChangePassword
 
 #### Data Order
 
@@ -2285,8 +2142,7 @@ We send this to the server to add private room operator abilities to a user.
 
 #### Function Names
 
-Museekd: SPrivRoomAddOperator  
-Nicotine: PrivateRoomAddOperator
+  - Nicotine+: PrivateRoomAddOperator
 
 #### Data Order
 
@@ -2307,8 +2163,7 @@ We send this to the server to remove private room operator abilities from a user
 
 #### Function Names
 
-Museekd: SPrivRoomRemoveOperator  
-Nicotine: PrivateRoomRemoveOperator
+  - Nicotine+: PrivateRoomRemoveOperator
 
 #### Data Order
 
@@ -2329,8 +2184,7 @@ The server send us this message when we're given operator abilities in a private
 
 #### Function Names
 
-Museekd: SPrivRoomOperatorAdded  
-Nicotine: PrivateRoomOperatorAdded
+  - Nicotine+: PrivateRoomOperatorAdded
 
 #### Data Order
 
@@ -2349,8 +2203,7 @@ The server send us this message when our operator abilities are removed in a pri
 
 #### Function Names
 
-Museekd: SPrivRoomOperatorRemoved  
-Nicotine: PrivateRoomOperatorRemoved
+  - Nicotine+: PrivateRoomOperatorRemoved
 
 #### Data Order
 
@@ -2369,8 +2222,7 @@ The server sends us a list of operators in a specific room, that we can remove o
 
 #### Function Names
 
-Museekd: SPrivRoomAlterableOperators  
-Nicotine: PrivateRoomOwned
+  - Nicotine+: PrivateRoomOwned
 
 #### Data Order
 
@@ -2381,7 +2233,6 @@ Nicotine: PrivateRoomOwned
     2.  **uint** <ins>number of operators in
         room</ins>
     3.  Iterate the <ins>number of operators</ins>
-        **museekd uses a vector of strings**
         1.  **string** <ins>operator</ins>
 
 ### Server Code 149
@@ -2394,15 +2245,13 @@ Sends a broadcast private message to the given list of users.
 
 #### Function Names
 
-Museekd: SMessageUsers  
-Nicotine: MessageUsers
+  - Nicotine+: MessageUsers
 
 #### Data Order
 
   - Send
     1.  **uint** <ins>number of users</ins>
     2.  Iterate the <ins>number of users</ins>
-        **museekd uses a vector of strings**
         1.  **string** <ins>username</ins>
     3.  **string** <ins>message</ins>
   - Receive
@@ -2420,8 +2269,7 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 #### Function Names
 
-Museekd: SAskPublicChat  
-Nicotine: JoinPublicRoom
+  - Nicotine+: JoinPublicRoom
 
 #### Data Order
 
@@ -2442,8 +2290,7 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 #### Function Names
 
-Museekd: SStopPublicChat  
-Nicotine: LeavePublicRoom
+  - Nicotine+: LeavePublicRoom
 
 #### Data Order
 
@@ -2464,8 +2311,7 @@ The server sends this when a new message has been written in a public room (ever
 
 #### Function Names
 
-Museekd: SPublicChat  
-Nicotine: PublicRoomMessage
+  - Nicotine+: PublicRoomMessage
 
 #### Data Order
 
@@ -2488,8 +2334,7 @@ The server returns a list of related search terms for a search query.
 
 #### Function Names
 
-Museekd: SRelatedSearch  
-Nicotine: RelatedSearch
+  - Nicotine+: RelatedSearch
 
 #### Data Order
 
@@ -2506,16 +2351,15 @@ Nicotine: RelatedSearch
 
 **Can't Connect To Peer**
 
-#### Function Names
-
-Museekd: SCannotConnect  
-Nicotine: CantConnectToPeer
-
 #### Description
 
 We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
+
+#### Function Names
+
+  - Nicotine+: CantConnectToPeer
 
 #### Data Order
 
@@ -2530,14 +2374,13 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 **Can't Create Room**
 
-#### Function Names
-
-Museekd: Unimplemented  
-Nicotine: CantCreateRoom
-
 #### Description
 
 Server tells us a new room cannot be created. This message only seems to be sent if you try to create a room with the same name as an existing private room. In other cases, such as using a room name with leading or trailing spaces, only a private message containing an error message is sent.
+
+#### Function Names
+
+  - Nicotine+: CantCreateRoom
 
 #### Data Order
 
@@ -2552,10 +2395,7 @@ Server tells us a new room cannot be created. This message only seems to be sent
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
 
-In museekd 0.1.13, these messages are sent and received in
-Museek/BaseConnection.cc and defined in Museek/InitMessages.hh. Since museekd 0.2, they are defined in museekd/handshakemessages.h.
-
-In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
 #### Message Format
 
@@ -2587,16 +2427,15 @@ If this fails, User B retries for ~1 minute. If this still fails, no connection 
 
 **Pierce Firewall**
 
-#### Function Names
-
-Museekd: HPierceFirewall  
-Nicotine: PierceFireWall
-
 #### Description
 
 This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so. The token is taken from the ConnectToPeer server message.
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
+
+#### Function Names
+
+  - Nicotine+: PierceFireWall
 
 #### Data Order
 
@@ -2609,16 +2448,15 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 **Peer Init**
 
-#### Function Names
-
-Museekd: HInitiate  
-Nicotine: PeerInit
-
 #### Description
 
 This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
+
+#### Function Names
+
+  - Nicotine+: PeerInit
 
 #### Data Order
 
@@ -2636,10 +2474,6 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 | Send         | Receive           |
 | ------------ | ----------------- |
 | Send to Peer | Receive from Peer |
-
-In museekd 0.1.13, these messages are sent and received in
-Museek/PeerConnection.cc and defined in Museek/PeerMessages.hh. Since
-museekd 0.2, they are defined in museekd/peermessages.h.
 
 In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
@@ -2685,14 +2519,13 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 **Shares Request**
 
-#### Function Names
-
-Museekd: PSharesRequest  
-Nicotine: GetShareFileList
-
 #### Description
 
 We send this to a peer to ask for a list of shared files.
+
+#### Function Names
+
+  - Nicotine+: GetShareFileList
 
 #### Data Order
 
@@ -2705,14 +2538,13 @@ We send this to a peer to ask for a list of shared files.
 
 **Shares Reply**
 
-#### Function Names
-
-Museekd: PSharesReply  
-Nicotine: SharedFileList
-
 #### Description
 
 A peer responds with a list of shared files when we've sent a GetSharedFileList.
+
+#### Function Names
+
+  - Nicotine+: SharedFileList
 
 #### Data Order
 
@@ -2753,16 +2585,15 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
 
 **Search Request**
 
-#### Function Names
-
-Museekd: PSearchRequest  
-Nicotine: FileSearchRequest
-
 #### Description
 
 **OBSOLETE, use [UserSearch](#server-code-42) server message**
 
 We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
+
+#### Function Names
+
+  - Nicotine+: FileSearchRequest
 
 #### Data Order
 
@@ -2777,14 +2608,13 @@ We send this to the peer when we search for a file. Alternatively, the peer send
 
 **Search Reply**
 
-#### Function Names
-
-Museekd: PSearchReply  
-Nicotine: FileSearchResult
-
 #### Description
 
 A peer sends this message when it has a file search match. The token is taken from original FileSearch, UserSearch or RoomSearch message.
+
+#### Function Names
+
+  - Nicotine+: FileSearchResult
 
 #### Data Order
 
@@ -2846,14 +2676,13 @@ A peer sends this message when it has a file search match. The token is taken fr
 
 **User Info Request**
 
-#### Function Names
-
-Museekd: PInfoRequest  
-Nicotine: UserInfoRequest
-
 #### Description
 
 We ask the other peer to send us their user information, picture and all.
+
+#### Function Names
+
+  - Nicotine+: UserInfoRequest
 
 #### Data Order
 
@@ -2866,14 +2695,13 @@ We ask the other peer to send us their user information, picture and all.
 
 **User Info Reply**
 
-#### Function Names
-
-Museekd: PInfoReply  
-Nicotine: UserInfoReply
-
 #### Description
 
 A peer responds with this when we've sent a UserInfoRequest.
+
+#### Function Names
+
+  - Nicotine+: UserInfoReply
 
 #### Data Order
 
@@ -2906,14 +2734,13 @@ A peer responds with this when we've sent a UserInfoRequest.
 
 **Folder Contents Request**
 
-#### Function Names
-
-Museekd: PFolderContentsRequest  
-Nicotine: FolderContentsRequest
-
 #### Description
 
 We ask the peer to send us the contents of a single folder.
+
+#### Function Names
+
+  - Nicotine+: FolderContentsRequest
 
 #### Data Order
 
@@ -2930,14 +2757,13 @@ We ask the peer to send us the contents of a single folder.
 
 **Folder Contents Reply**
 
-#### Function Names
-
-Museekd: PFolderContentsReply  
-Nicotine: FolderContentsResponse
-
 #### Description
 
 A peer responds with the contents of a particular folder (with all subfolders) when we've sent a FolderContentsRequest.
+
+#### Function Names
+
+  - Nicotine+: FolderContentsResponse
 
 #### Data Order
 
@@ -2975,16 +2801,15 @@ A peer responds with the contents of a particular folder (with all subfolders) w
 
 **Transfer Request**
 
-#### Function Names
-
-Museekd: PTransferRequest  
-Nicotine: TransferRequest
-
 #### Description
 
 This message is sent by a peer once they are ready to start uploading a file. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
 
 This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) message for this purpose today.
+
+#### Function Names
+
+  - Nicotine+: TransferRequest
 
 #### Data Order
 
@@ -3005,14 +2830,13 @@ This message was formely used to send a download request (direction 0) as well, 
 
 **Upload Reply**
 
-#### Function Names
-
-Museekd: PUploadReply  
-Nicotine: TransferResponse
-
 #### Description
 
 Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+
+#### Function Names
+
+  - Nicotine+: TransferResponse
 
 #### Data Order
 
@@ -3029,16 +2853,15 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 **Download Reply**
 
-#### Function Names
-
-Museekd: PDownloadReply  
-Nicotine: TransferResponse
-
 #### Description
 
 **DEPRECATED, use QueueUpload to request files**
 
 Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+
+#### Function Names
+
+  - Nicotine+: TransferResponse
 
 #### Data Order
 
@@ -3054,14 +2877,13 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 **Transfer Reply**
 
-#### Function Names
-
-Museekd: PTransferReply  
-Nicotine: TransferResponse
-
 #### Description
 
 Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+
+#### Function Names
+
+  - Nicotine+: TransferResponse
 
 #### Data Order
 
@@ -3078,14 +2900,13 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 **Upload Placehold**
 
-#### Function Names
-
-Museekd: PUploadPlacehold  
-Nicotine: PlaceholdUpload
-
 #### Description
 
 **OBSOLETE, no longer used**
+
+#### Function Names
+
+  - Nicotine+: PlaceholdUpload
 
 #### Data Order
 
@@ -3098,14 +2919,13 @@ Nicotine: PlaceholdUpload
 
 **Queue Upload**
 
-#### Function Names
-
-Museekd: PQueueDownload  
-Nicotine: QueueUpload
-
 #### Description
 
 This message is used to tell a peer that an upload should be queued on their end. Once the recipient is ready to transfer the requested file, they will send an upload request.
+
+#### Function Names
+
+  - Nicotine+: QueueUpload
 
 #### Data Order
 
@@ -3118,14 +2938,13 @@ This message is used to tell a peer that an upload should be queued on their end
 
 **Place In Queue Reply**
 
-#### Function Names
-
-Museekd: PPlaceInQueueReply  
-Nicotine: PlaceInQueue
-
 #### Description
 
 The peer replies with the upload queue placement of the requested file.
+
+#### Function Names
+
+  - Nicotine+: PlaceInQueue
 
 #### Data Order
 
@@ -3140,14 +2959,13 @@ The peer replies with the upload queue placement of the requested file.
 
 **Upload Failed**
 
-#### Function Names
-
-Museekd: PUploadFailed  
-Nicotine: UploadFailed
-
 #### Description
 
 This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file can not be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
+
+#### Function Names
+
+  - Nicotine+: UploadFailed
 
 #### Data Order
 
@@ -3160,14 +2978,13 @@ This message is sent whenever a file connection of an active upload closes. Soul
 
 **Upload Denied**
 
-#### Function Names
-
-Museekd: PQueueFailed  
-Nicotine: UploadDenied
-
 #### Description
 
 This message is sent to reject QueueUpload attempts and previously queued files. The reason for rejection will appear in the transfer list of the recipient.
+
+#### Function Names
+
+  - Nicotine+: UploadDenied
 
 #### Data Order
 
@@ -3182,14 +2999,13 @@ This message is sent to reject QueueUpload attempts and previously queued files.
 
 **Place In Queue Request**
 
-#### Function Names
-
-Museekd: PPlaceInQueueRequest  
-Nicotine: PlaceInQueueRequest
-
 #### Description
 
 This message is sent when asking for the upload queue placement of a file.
+
+#### Function Names
+
+  - Nicotine+: PlaceInQueueRequest
 
 #### Data Order
 
@@ -3202,16 +3018,15 @@ This message is sent when asking for the upload queue placement of a file.
 
 **Upload Queue Notification**
 
-#### Function Names
-
-Museekd: PUploadQueueNotification  
-Nicotine: UploadQueueNotification
-
 #### Description
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 This message is sent to inform a peer about an upload attempt initiated by us.
+
+#### Function Names
+
+  - Nicotine+: UploadQueueNotification
 
 #### Data Order
 
@@ -3244,13 +3059,13 @@ These messages are sent to peers over a 'F' connection, and do not have messages
 
 ### File Download Init
 
-#### Function Names
-
-Nicotine: FileDownloadInit
-
 #### Description
 
 We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the TransferRequest message.
+
+#### Function Names
+
+  - Nicotine+: FileDownloadInit
 
 #### Data Order
 
@@ -3261,13 +3076,13 @@ We receive this from a peer via a 'F' connection when they want to start uploadi
 
 ### File Upload Init
 
-#### Function Names
-
-Nicotine: FileUploadInit
-
 #### Description
 
 We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
+
+#### Function Names
+
+  - Nicotine+: FileUploadInit
 
 #### Data Order
 
@@ -3278,13 +3093,13 @@ We send this to a peer via a 'F' connection to tell them that we want to start u
 
 ### File Offset
 
-#### Function Names
-
-Nicotine: FileOffset
-
 #### Description
 
 We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
+
+#### Function Names
+
+  - Nicotine+: FileOffset
 
 #### Data Order
 
@@ -3299,11 +3114,7 @@ We send this to the uploading peer at the beginning of a 'F' connection, to tell
 | ------------ | ----------------- |
 | Send to Node | Receive from Node |
 
-In museekd 0.1.13, these messages are sent and received in
-Museek/DistribConnection.cc and defined in Museek/DistribMessages.hh.
-Since museekd 0.2, they are defined in museekd/distributedmessages.h.
-
-In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
+In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
 #### The Message format
 
@@ -3332,8 +3143,7 @@ Send it every 60 sec.
 
 #### Function Names
 
-Museekd: DPing  
-Nicotine: DistribAlive
+  - Nicotine+: DistribAlive
 
 #### Data Order
 
@@ -3353,8 +3163,7 @@ We transmit the search request to our child peers.
 
 #### Function Names
 
-Museekd: DSearchRequest  
-Nicotine: DistribSearch
+  - Nicotine+: DistribSearch
 
 #### Data Order
 
@@ -3379,8 +3188,7 @@ We tell our distributed children what our position is in our branch (xth generat
 
 #### Function Names
 
-Museekd: DBranchLevel  
-Nicotine: DistribBranchLevel
+  - Nicotine+: DistribBranchLevel
 
 #### Data Order
 
@@ -3399,8 +3207,7 @@ We tell our distributed children the username of the root of the branch we're in
 
 #### Function Names
 
-Museekd: DBranchRoot  
-Nicotine: DistribBranchRoot
+  - Nicotine+: DistribBranchRoot
 
 #### Data Order
 
@@ -3421,8 +3228,7 @@ We tell our distributed parent the maximum number of generation of children we h
 
 #### Function Names
 
-Museekd: DChildDepth  
-Nicotine: DistribChildDepth
+  - Nicotine+: DistribChildDepth
 
 #### Data Order
 
@@ -3435,12 +3241,13 @@ Nicotine: DistribChildDepth
 
 **Embedded Message**
 
+#### Description
+
 A branch root sends us an embedded distributed message. The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3). We unpack the distributed message and distribute it to our child peers.
 
 #### Function Names
 
-Museekd: Unimplemented  
-Nicotine: DistribEmbeddedMessage
+  - Nicotine+: DistribEmbeddedMessage
 
 #### Data Order
 
@@ -3450,74 +3257,6 @@ Nicotine: DistribEmbeddedMessage
   - Receive
     1.  **uchar** <ins>distributed code</ins>
     2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
-
-# Museek Data Types
-
-### StringMap
-
-  - std::map\<std::string, std::string\>
-
-### StringList
-
-  - std::vector\<std::string\>
-
-### WStringList
-
-  - std::vector\<std::wstring\> WStringList
-
-### WTickers
-
-  - std::map\<std::string, std::wstring\>
-
-### Recommendations, SimilarUsers, RoomList
-
-  - std::map\<std::string, uint\>
-
-### NetInfo
-
-  - std::map\<std::string, std::pair\<std::string, uint\> \>
-
-### UserData
-
-1.  **uint** <ins>status</ins> *Online Status*
-2.  **uint** <ins>avgspeed</ins> *Average Speed*
-3.  **uint64** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
-4.  **uint** <ins>files</ins> *Files shared*
-5.  **uint** <ins>dirs</ins> *Directories shared*
-6.  **bool** <ins>slotsfree</ins> *Slots free*
-7.  **string** <ins>countrycode</ins> *Uppercase country code*
-
-### RoomData
-
-  - std::map\<std::string, UserData\>
-
-### Folder
-
-  - std::map\<std::string, FileEntry\>
-
-### Shares
-
-  - std::map\<std::string, Folder\>
-
-### WFolder
-
-  - std::map\<std::wstring, FileEntry\>
-
-### Folders
-
-  - std::map\<std::string, Shares\>
-
-### WShares
-
-  - std::map\<std::wstring, WFolder\>
-
-### WFolders
-
-  - std::map\<std::wstring, WShares\>
-
-### off\_t
-
-  - Packed as a 64bit Integer
 
 # Credits
 
