@@ -3006,6 +3006,7 @@ A branch root sends us an embedded distributed message. The only type of distrib
 This documentation exists thanks to efforts from the following projects:
 
 - Nicotine+ (Hyriand, daelstorm, mathiascode)
+- slskd (jpdillingham)
 - Museek+ (lbponey)
 - SoleSeek
 - PySoulSeek
