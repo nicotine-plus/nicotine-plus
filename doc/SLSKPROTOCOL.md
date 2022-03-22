@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on February 27, 2022
+Last updated on March 22, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -68,6 +68,16 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | ---- | -------- |
 | 0    | Download |
 | 1    | Upload   |
+
+### File Attribute Types
+
+| Code | Type             |
+| ---- | ---------------- |
+| 0    | Bitrate (kbps)   |
+| 1    | Length (seconds) |
+| 2    | VBR (0 or 1)     |
+| 4    | Sample Rate (Hz) |
+| 5    | Bit Depth        |
 
 # Server Messages
 
@@ -2702,38 +2712,28 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
         1.  **string** <ins>directory</ins>
         2.  **uint** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uchar** ??? (unused)
+            1.  **uchar** <ins>1</ins>
             2.  **string** <ins>filename</ins>
-            3.  **unit64** <ins>size</ins> *File
-                size*
-            4.  **string** <ins>ext</ins>
-                *Extentsion*
-            5.  **uint** <ins>number of
-                attributes</ins>
-            6.  Iterate <ins>number of
-                attributes</ins>
-                1.  **uint** <ins>place in
-                    attributes</ins> (unused by museekd)
-                2.  **uint** <ins>attribute</ins>
+            3.  **unit64** <ins>file size</ins>
+            4.  **string** <ins>file extension</ins>
+            5.  **uint** <ins>number of attributes</ins>
+            6.  Iterate for <ins>number of attributes</ins>
+                1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                2.  **uint** <ins>attribute value</ins>
     4.  **uint** <ins>unknown</ins> *official clients always send a value of 0*
     5.  **uint** <ins>number of private directories</ins>
     6.  Iterate <ins>number of private directories</ins>
         1.  **string** <ins>directory</ins>
         2.  **uint** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uchar** ??? (unused)
+            1.  **uchar** <ins>1</ins>
             2.  **string** <ins>filename</ins>
-            3.  **uint64** <ins>size</ins> *File
-                size*
-            4.  **string** <ins>ext</ins>
-                *Extentsion*
-            5.  **uint** <ins>number of
-                attributes</ins>
-            6.  Iterate <ins>number of
-                attributes</ins>
-                1.  **uint** <ins>place in
-                    attributes</ins> (unused by museekd)
-                2.  **uint** <ins>attribute</ins>
+            3.  **uint64** <ins>file size</ins>
+            4.  **string** <ins>file extension</ins>
+            5.  **uint** <ins>number of attributes</ins>
+            6.  Iterate for <ins>number of attributes</ins>
+                1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                2.  **uint** <ins>attribute value</ins>
 
 ### Peer Code 8
 
@@ -2779,33 +2779,27 @@ A peer sends this message when it has a file search match. The token is taken fr
     2.  **uint** <ins>token</ins>
     3.  **uint** <ins>number of results</ins>
     4.  Iterate for <ins>number of results</ins>
-        1.  **uchar** 1
+        1.  **uchar** <ins>1</ins>
         2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
-        5.  **uint** <ins>number of attributes</ins> 0 *or* 3
+        3.  **uint64** <ins>file size</ins>
+        4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
+        5.  **uint** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
-            2.  **uint** <ins>attribute</ins>
-                - <ins>bitrate</ins> *Kbps*
-                - <ins>duration</ins> *Seconds*
-                - <ins>vbr</ins> 0 *or* 1 *(is Variable Bit Rate)*
+            1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types), Nicotine+ sends bitrate, duration and VBR*
+            2.  **uint** <ins>attribute value</ins>
     5.  **bool** <ins>slotfree</ins>
     6.  **uint** <ins>avgspeed</ins>
     7.  **uint64** <ins>queue length</ins>
     8.  **uint** <ins>number of privately shared results</ins>
     9.  Iterate for <ins>number of privately shared results</ins>
-        1.  **uchar** 1
+        1.  **uchar** c
         2.  **string** <ins>filename</ins>
-        3.  **uint64** <ins>size</ins>
-        4.  **string** <ins>ext</ins> *(SoulseekNS requires "mp3" to show the attributes)*
-        5.  **uint** <ins>number of attributes</ins> 0 *or* 3
+        3.  **uint64** <ins>file size</ins>
+        4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
+        5.  **uint** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint** <ins>place in attributes</ins> 0 *(bitrate)*;  1 *(duration)*;  2 *(vbr)*
-            2.  **uint** <ins>attribute</ins>
-                - <ins>bitrate</ins> *Kbps*
-                - <ins>duration</ins> *Seconds*
-                - <ins>vbr</ins> 0 *or* 1 *(is Variable Bit Rate)*
+            1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types), Nicotine+ sends bitrate, duration and VBR*
+            2.  **uint** <ins>attribute value</ins>
   - Receive
     1.  decompress
     2.  **string** <ins>username</ins>
@@ -2814,11 +2808,11 @@ A peer sends this message when it has a file search match. The token is taken fr
     5.  Iterate for <ins>number of results</ins>
         1.  **string** <ins>filename</ins>
         2.  **uint64** <ins>size</ins>
-        3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
-        4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
+        3.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
+        4.  **uint** <ins>number of attributes</ins>
         5.  Iterate for <ins>number of attributes</ins>
-            1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
-            2.  **uint** <ins>attribute</ins>
+            1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+            2.  **uint** <ins>attribute value</ins>
     6.  **bool** <ins>slotfree</ins>
     7.  **uint** <ins>avgspeed</ins>
     8.  **uint64** <ins>queue length</ins>
@@ -2826,11 +2820,11 @@ A peer sends this message when it has a file search match. The token is taken fr
     10.  Iterate for <ins>number of privately shared results</ins>
          1.  **string** <ins>filename</ins>
          2.  **uint64** <ins>size</ins>
-         3.  **string** <ins>ext</ins> *(Always blank from SoulseekQt clients)*
-         4.  **uint** <ins>number of attributes</ins> *(Usually 2 or 3; can be 1 in rare cases; 0 is no metadata)*
+         3.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
+         4.  **uint** <ins>number of attributes</ins>
          5.  Iterate for <ins>number of attributes</ins>
-             1.  **uint** <ins>place in attributes</ins> *(Order varies between clients and file type)*
-             2.  **uint** <ins>attribute</ins>
+             1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+             2.  **uint** <ins>attribute value</ins>
 
 ### Peer Code 15
 
@@ -2943,13 +2937,12 @@ A peer responds with the contents of a particular folder (with all subfolders) w
         3.  Iterate <ins>number of files</ins>
             1.  **uchar** <ins>1</ins>
             2.  **string** <ins>file</ins>
-            3.  **uint64** <ins>size</ins>
-            4.  **string** <ins>ext</ins> Extension
-            5.  **uint** <ins>number of
-                attributes</ins>
-                1.  **uint** <ins>attribute
-                    number</ins>
-                2.  **uint** <ins>attribute</ins>
+            3.  **uint64** <ins>file size</ins>
+            4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
+            5.  **uint** <ins>number of attributes</ins>
+            6.  Iterate for <ins>number of attributes</ins>
+                1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types), Nicotine+ sends bitrate, duration and VBR*
+                2.  **uint** <ins>attribute value</ins>
   - Receive
     1.  decompress
     2.  **uint** <ins>number of folders</ins>
@@ -2957,15 +2950,14 @@ A peer responds with the contents of a particular folder (with all subfolders) w
         1.  **string** <ins>dir</ins>
         2.  **uint** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uchar** <ins>???</ins> (unused)
+            1.  **uchar** <ins>1</ins>
             2.  **string** <ins>file</ins>
-            3.  **uint64** <ins>size</ins>
-            4.  **string** <ins>ext</ins> Extension
-            5.  **uint** <ins>number of
-                attributes</ins>
-                1.  **uint** <ins>attribute
-                    number</ins>
-                2.  **uint** <ins>attribute</ins>
+            3.  **uint64** <ins>file size</ins>
+            4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
+            5.  **uint** <ins>number of attributes</ins>
+            6.  Iterate for <ins>number of attributes</ins>
+                1.  **uint** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                2.  **uint** <ins>attribute value</ins>
 
 ### Peer Code 40
 
