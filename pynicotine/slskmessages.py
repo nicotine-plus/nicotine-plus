@@ -2257,12 +2257,12 @@ class SharedFileList(PeerMessage):
                 pos, ext = self.get_object(message, str, pos)
                 pos, numattr = self.get_object(message, int, pos)
 
-                attrs = []
+                attrs = {}
 
                 for _ in range(numattr):
-                    pos, _attrnum = self.get_object(message, int, pos)
+                    pos, attrnum = self.get_object(message, int, pos)
                     pos, attr = self.get_object(message, int, pos)
-                    attrs.append(attr)
+                    attrs[attrnum] = attr
 
                 files.append((code, name, size, ext, attrs))
 
@@ -2385,12 +2385,13 @@ class FileSearchResult(PeerMessage):
             pos, ext = self.get_object(message, str, pos)
             pos, numattr = self.get_object(message, int, pos)
 
-            attrs = []
+            attrs = {}
+
             if numattr:
                 for _ in range(numattr):
-                    pos, _attrnum = self.get_object(message, int, pos)
+                    pos, attrnum = self.get_object(message, int, pos)
                     pos, attr = self.get_object(message, int, pos)
-                    attrs.append(attr)
+                    attrs[attrnum] = attr
 
             shares.append((code, name.replace('/', '\\'), size, ext, attrs))
 
@@ -2618,12 +2619,12 @@ class FolderContentsResponse(PeerMessage):
                     pos, ext = self.get_object(message, str, pos)
                     pos, numattr = self.get_object(message, int, pos)
 
-                    attrs = []
+                    attrs = {}
 
                     for _ in range(numattr):
-                        pos, _attrnum = self.get_object(message, int, pos)
+                        pos, attrnum = self.get_object(message, int, pos)
                         pos, attr = self.get_object(message, int, pos)
-                        attrs.append(attr)
+                        attrs[attrnum] = attr
 
                     shares[folder][directory].append((code, name, size, ext, attrs))
 
