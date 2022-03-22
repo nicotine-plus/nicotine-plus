@@ -342,7 +342,7 @@ class ServerMessage(SlskMessage):
 
 class Login(ServerMessage):
     """ Server code: 1 """
-    """ We sent this to the server right after the connection has been
+    """ We send this to the server right after the connection has been
     established. Server responds with the greeting message. """
 
     def __init__(self, username=None, passwd=None, version=None, minorversion=None):
