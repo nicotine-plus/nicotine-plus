@@ -1,5 +1,8 @@
 # Nicotine+ Translators
 
+## Chinese (Simplified)
+ - hadwin (2022)
+
 ## Dutch
  - hboetes (2021–2022)
  - nince78 (2007)
@@ -64,7 +67,10 @@
 ## Slovak
  - Josef Riha (2006)
 
-## Spanish
+## Spanish (Chili)
+ - MELERIX (2022)
+
+## Spanish (Spain)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)

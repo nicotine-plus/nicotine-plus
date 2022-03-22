@@ -241,6 +241,8 @@ Third-Party Attributions
 
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
+Chinese (Simplified)
+ - hadwin
 
 Dutch
  - hboetes (2021–2022)
@@ -306,7 +308,10 @@ Russian
 Slovak
  - Josef Riha (2006)
 
-Spanish
+Spanish (Chile)
+ - MELERIX (2022)
+
+Spanish (Spain)
  - tagomago (2021–2022)
  - Strange (2021)
  - Silvio Orta (2007)
