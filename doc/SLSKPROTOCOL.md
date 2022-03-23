@@ -2363,7 +2363,7 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
         1.  **string** <ins>directory</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>1</ins>
+            1.  **uint8** <ins>code</ins> *value is always 1*
             2.  **string** <ins>filename</ins>
             3.  **unit64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins>
@@ -2377,7 +2377,7 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
         1.  **string** <ins>directory</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>1</ins>
+            1.  **uint8** <ins>code</ins> *value is always 1*
             2.  **string** <ins>filename</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins>
@@ -2424,7 +2424,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     2.  **uint32** <ins>token</ins>
     3.  **uint32** <ins>number of results</ins>
     4.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>1</ins>
+        1.  **uint8** <ins>code</ins> *value is always 1*
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>file size</ins>
         4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
@@ -2438,7 +2438,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     8.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
     9.  **uint32** <ins>number of privately shared results</ins>
     10. Iterate for <ins>number of privately shared results</ins>
-        1.  **uint8** <ins>1</ins>
+        1.  **uint8** <ins>code</ins> *value is always 1*
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>file size</ins>
         4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
@@ -2452,7 +2452,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     3.  **uint32** <ins>token</ins>
     4.  **uint32** <ins>number of results</ins>
     5.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>1</ins>
+        1.  **uint8** <ins>code</ins> *value is always 1*
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
         4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
@@ -2466,7 +2466,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     9.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
     10.  **uint32** <ins>number of privately shared results</ins>
     11.  Iterate for <ins>number of privately shared results</ins>
-         1.  **uint8** <ins>1</ins>
+         1.  **uint8** <ins>code</ins> *value is always 1*
          2.  **string** <ins>filename</ins>
          3.  **uint64** <ins>size</ins>
          4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
@@ -2568,7 +2568,7 @@ A peer responds with the contents of a particular folder (with all subfolders) w
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>1</ins>
+            1.  **uint8** <ins>code</ins> *value is always 1*
             2.  **string** <ins>file</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
@@ -2583,7 +2583,7 @@ A peer responds with the contents of a particular folder (with all subfolders) w
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>1</ins>
+            1.  **uint8** <ins>code</ins> *value is always 1*
             2.  **string** <ins>file</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
