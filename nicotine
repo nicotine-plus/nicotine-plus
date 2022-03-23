@@ -20,7 +20,7 @@
 import importlib.util
 import sys
 
-def load_module():
+def nicotine():
 
     if not importlib.util.find_spec("pynicotine"):
         print("""Cannot find the pynicotine module.
@@ -35,4 +35,4 @@ the application with.""")
 
 
 if __name__ == '__main__':
-    sys.exit(load_module())
+    sys.exit(nicotine())
