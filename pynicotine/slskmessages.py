@@ -1465,7 +1465,7 @@ class EmbeddedMessage(ServerMessage):
         self.distrib_message = None
 
     def parse_network_message(self, message):
-        pos, self.distrib_code = self.unpack_int8(message)
+        pos, self.distrib_code = self.unpack_uint8(message)
         self.distrib_message = message[pos:]
 
 
