@@ -95,7 +95,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
   - SoulseekQt (2015-6-12 and later), slskd (lossless formats):
       - {0: *bitrate*}
       - {1: *length*}
-      - {0: *bitrate*, 1: *length*} (MP3, OGG)
+      - {0: *bitrate*, 1: *length*} (MP3, OGG, WMA, M4A)
       - {4: *sample rate*, 5: *bit depth*}
       - {1: *length*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
 
