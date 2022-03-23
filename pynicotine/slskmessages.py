@@ -1148,28 +1148,23 @@ class RoomList(ServerMessage):
         pos, self.ownedprivaterooms = self.parse_rooms(message, pos)
         pos, self.otherprivaterooms = self.parse_rooms(message, pos)
 
-    def parse_rooms(self, message, original_pos):
-        try:
-            pos, numrooms = self.unpack_uint32(message, original_pos)
+    def parse_rooms(self, message, pos):
+        pos, numrooms = self.unpack_uint32(message, pos)
 
-            rooms = []
-            for i in range(numrooms):
-                pos, room = self.unpack_string(message, pos)
+        rooms = []
+        for i in range(numrooms):
+            pos, room = self.unpack_string(message, pos)
 
-                rooms.append([room, None])
+            rooms.append([room, None])
 
-            pos, numusers = self.unpack_uint32(message, pos)
+        pos, numusers = self.unpack_uint32(message, pos)
 
-            for i in range(numusers):
-                pos, usercount = self.unpack_uint32(message, pos)
+        for i in range(numusers):
+            pos, usercount = self.unpack_uint32(message, pos)
 
-                rooms[i][1] = usercount
+            rooms[i][1] = usercount
 
-            return pos, rooms
-
-        except Exception as error:
-            log.add_debug("Exception during parsing %(area)s: %(exception)s", {'area': 'RoomList', 'exception': error})
-            return original_pos, []
+        return pos, rooms
 
 
 class ExactFileSearch(ServerMessage):
