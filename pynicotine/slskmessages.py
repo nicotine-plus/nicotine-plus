@@ -2368,6 +2368,7 @@ class FileSearchResult(PeerMessage):
         self.ulspeed = ulspeed
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
+        self.unknown = 0
 
     def pack_file_info(self, fileinfo):
         msg = bytearray()
@@ -2409,7 +2410,8 @@ class FileSearchResult(PeerMessage):
 
         msg.extend(self.pack_bool(self.freeulslots))
         msg.extend(self.pack_uint32(self.ulspeed))
-        msg.extend(self.pack_uint64(self.inqueue))
+        msg.extend(self.pack_uint32(self.inqueue))
+        msg.extend(self.pack_uint32(self.unknown))
 
         return zlib.compress(msg)
 
@@ -2460,7 +2462,10 @@ class FileSearchResult(PeerMessage):
 
         pos, self.freeulslots = self.unpack_bool(message, pos)
         pos, self.ulspeed = self.unpack_uint32(message, pos)
-        pos, self.inqueue = self.unpack_uint64(message, pos)
+        pos, self.inqueue = self.unpack_uint32(message, pos)
+
+        if message[pos:]:
+            pos, self.unknown = self.unpack_uint32(message, pos)
 
         if message[pos:] and config.sections["searches"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
