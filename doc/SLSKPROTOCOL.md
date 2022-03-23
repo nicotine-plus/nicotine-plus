@@ -413,7 +413,7 @@ Server responds with this message when we join a room. Contains users list with 
 
   - Send
     1.  **string** <ins>room</ins>
-    2.  **bool** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
+    2.  **uint32** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
   - Receive
     1.  **string** <ins>room</ins>
     2.  **uint32** <ins>number of users in room</ins> **For private rooms, also contain owner and operators**
