@@ -290,10 +290,10 @@ class JoinRoomMessageTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(
-            b'\x08\x00\x00\x00nicotine',
+            b'\x08\x00\x00\x00nicotine\x00\x00\x00\x00',
             message)
         self.assertEqual(
-            b'\x08\x00\x00\x00nicotine\x01',
+            b'\x08\x00\x00\x00nicotine\x01\x00\x00\x00',
             message_private)
 
 
