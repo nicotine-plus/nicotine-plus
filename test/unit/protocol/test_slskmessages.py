@@ -43,23 +43,23 @@ from pynicotine.slskmessages import SlskMessage
 
 class SlskMessageTest(unittest.TestCase):
 
-    def test_pack_object(self):
+    def test_pack_objects(self):
         # Arrange
         obj = SlskMessage()
 
         # Act
-        unsigned_int_message = obj.pack_object(123)
-        signed_int_message = obj.pack_object(123, signedint=True)
-        long_long_message = obj.pack_object(123, unsignedlonglong=True)
-        bytes_message = obj.pack_object(b'testbytes')
-        str_message = obj.pack_object('teststring')
+        unsigned_int32_message = obj.pack_uint32(123)
+        signed_int32_message = obj.pack_int32(123)
+        unsigned_int64_message = obj.pack_uint64(123)
+        bytes_message = obj.pack_bytes(b'testbytes')
+        str_message = obj.pack_string('teststring')
 
         # Assert
-        self.assertEqual(b'{\x00\x00\x00', unsigned_int_message)
-        self.assertEqual(b'{\x00\x00\x00', signed_int_message)
-        self.assertEqual(b'{\x00\x00\x00\x00\x00\x00\x00', long_long_message)
-        self.assertEqual(b'\n\x00\x00\x00teststring', str_message)
+        self.assertEqual(b'{\x00\x00\x00', unsigned_int32_message)
+        self.assertEqual(b'{\x00\x00\x00', signed_int32_message)
+        self.assertEqual(b'{\x00\x00\x00\x00\x00\x00\x00', unsigned_int64_message)
         self.assertEqual(b'\t\x00\x00\x00testbytes', bytes_message)
+        self.assertEqual(b'\n\x00\x00\x00teststring', str_message)
 
 
 class LoginMessageTest(unittest.TestCase):
@@ -290,10 +290,10 @@ class JoinRoomMessageTest(unittest.TestCase):
 
         # Assert
         self.assertEqual(
-            b'\x08\x00\x00\x00nicotine\x00\x00\x00\x00',
+            b'\x08\x00\x00\x00nicotine',
             message)
         self.assertEqual(
-            b'\x08\x00\x00\x00nicotine\x01\x00\x00\x00',
+            b'\x08\x00\x00\x00nicotine\x01',
             message_private)
 
 
