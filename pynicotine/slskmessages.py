@@ -2352,6 +2352,7 @@ class FileSearchResult(PeerMessage):
         self.ulspeed = ulspeed
         self.inqueue = inqueue
         self.fifoqueue = fifoqueue
+        self.unknown = 0
 
     def parse_network_message(self, message):
         try:
@@ -2400,52 +2401,56 @@ class FileSearchResult(PeerMessage):
 
         pos, self.freeulslots = self.unpack_bool(message, pos)
         pos, self.ulspeed = self.unpack_uint32(message, pos)
-        pos, self.inqueue = self.unpack_uint64(message, pos)
+        pos, self.inqueue = self.unpack_uint32(message, pos)
+
+        if message[pos:]:
+            pos, self.unknown = self.unpack_uint32(message, pos)
 
         if message[pos:] and config.sections["searches"]["private_search_results"]:
             pos, self.privatelist = self._parse_result_list(message, pos)
 
     def pack_file_info(self, fileinfo):
         msg = bytearray()
-        msg.extend(bytes([1]))
-        msg.extend(self.pack_object(fileinfo[0].replace('/', '\\')))
-        msg.extend(self.pack_object(fileinfo[1], unsignedlonglong=True))
+        msg.extend(self.pack_uint8(1))
+        msg.extend(self.pack_string(fileinfo[0].replace('/', '\\')))
+        msg.extend(self.pack_uint64(fileinfo[1]))
 
         if fileinfo[2] is None or fileinfo[3] is None:
             # No metadata
-            msg.extend(self.pack_object(''))
-            msg.extend(self.pack_object(0))
+            msg.extend(self.pack_string(''))
+            msg.extend(self.pack_uint32(0))
         else:
             # FileExtension, NumAttributes
-            msg.extend(self.pack_object("mp3"))
-            msg.extend(self.pack_object(3))
+            msg.extend(self.pack_string("mp3"))
+            msg.extend(self.pack_uint32(3))
 
             # Bitrate
-            msg.extend(self.pack_object(0))
-            msg.extend(self.pack_object(fileinfo[2][0] or 0))
+            msg.extend(self.pack_uint32(0))
+            msg.extend(self.pack_uint32(fileinfo[2][0] or 0))
 
             # Duration
-            msg.extend(self.pack_object(1))
-            msg.extend(self.pack_object(fileinfo[3] or 0))
+            msg.extend(self.pack_uint32(1))
+            msg.extend(self.pack_uint32(fileinfo[3] or 0))
 
             # VBR
-            msg.extend(self.pack_object(2))
-            msg.extend(self.pack_object(fileinfo[2][1] or 0))
+            msg.extend(self.pack_uint32(2))
+            msg.extend(self.pack_uint32(fileinfo[2][1] or 0))
 
         return msg
 
     def make_network_message(self):
         msg = bytearray()
-        msg.extend(self.pack_object(self.user))
-        msg.extend(self.pack_object(self.token))
-        msg.extend(self.pack_object(len(self.list)))
+        msg.extend(self.pack_string(self.user))
+        msg.extend(self.pack_uint32(self.token))
+        msg.extend(self.pack_uint32(len(self.list)))
 
         for fileinfo in self.list:
             msg.extend(self.pack_file_info(fileinfo))
 
-        msg.extend(bytes([self.freeulslots]))
-        msg.extend(self.pack_object(self.ulspeed))
-        msg.extend(self.pack_object(self.inqueue, unsignedlonglong=True))
+        msg.extend(self.pack_bool(self.freeulslots))
+        msg.extend(self.pack_uint32(self.ulspeed))
+        msg.extend(self.pack_uint32(self.inqueue))
+        msg.extend(self.pack_uint32(self.unknown))
 
         return zlib.compress(msg)
 

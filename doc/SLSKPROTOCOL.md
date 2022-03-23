@@ -2434,9 +2434,10 @@ A peer sends this message when it has a file search match. The token is taken fr
             2.  **uint32** <ins>attribute value</ins>
     5.  **bool** <ins>slotfree</ins>
     6.  **uint32** <ins>avgspeed</ins>
-    7.  **uint64** <ins>queue length</ins>
-    8.  **uint32** <ins>number of privately shared results</ins>
-    9.  Iterate for <ins>number of privately shared results</ins>
+    7.  **uint32** <ins>queue length</ins>
+    8.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
+    9.  **uint32** <ins>number of privately shared results</ins>
+    10. Iterate for <ins>number of privately shared results</ins>
         1.  **uint8** <ins>1</ins>
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>file size</ins>
@@ -2461,9 +2462,10 @@ A peer sends this message when it has a file search match. The token is taken fr
             2.  **uint32** <ins>attribute value</ins>
     6.  **bool** <ins>slotfree</ins>
     7.  **uint32** <ins>avgspeed</ins>
-    8.  **uint64** <ins>queue length</ins>
-    9.  **uint32** <ins>number of privately shared results</ins>
-    10.  Iterate for <ins>number of privately shared results</ins>
+    8.  **uint32** <ins>queue length</ins>
+    9.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
+    10.  **uint32** <ins>number of privately shared results</ins>
+    11.  Iterate for <ins>number of privately shared results</ins>
          1.  **uint8** <ins>1</ins>
          2.  **string** <ins>filename</ins>
          3.  **uint64** <ins>size</ins>

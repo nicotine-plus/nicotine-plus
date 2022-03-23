@@ -320,7 +320,7 @@ class Search(UserInterface):
             str,                  # (12) country
             GObject.TYPE_UINT64,  # (13) size
             GObject.TYPE_UINT,    # (14) speed
-            GObject.TYPE_UINT64,  # (15) queue
+            GObject.TYPE_UINT,    # (15) queue
             GObject.TYPE_UINT,    # (16) length
             str                   # (17) color
         )
@@ -588,7 +588,7 @@ class Search(UserInterface):
                     country,
                     GObject.Value(GObject.TYPE_UINT64, size),
                     GObject.Value(GObject.TYPE_UINT, ulspeed),
-                    GObject.Value(GObject.TYPE_UINT64, inqueue),
+                    GObject.Value(GObject.TYPE_UINT, inqueue),
                     GObject.Value(GObject.TYPE_UINT, length),
                     GObject.Value(GObject.TYPE_STRING, color)
                 ]
