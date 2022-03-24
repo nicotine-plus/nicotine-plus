@@ -242,7 +242,7 @@ Third-Party Attributions
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
 Chinese (Simplified)
- - hadwin
+ - hadwin (2022)
 
 Dutch
  - hboetes (2021–2022)
