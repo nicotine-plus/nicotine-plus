@@ -1179,6 +1179,10 @@ class UserBrowse(UserInterface):
 
     def on_refresh(self, *_args):
 
+        if not self.RefreshButton.get_sensitive():
+            # Refresh is already in progress
+            return
+
         self.clear_model()
         self.FolderTreeView.grab_focus()
         self.info_bar.set_visible(False)
