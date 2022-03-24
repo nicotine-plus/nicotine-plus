@@ -92,12 +92,16 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
   - SoulseekQt (2015-2-21 and earlier):
       - {0: *bitrate*, 2: *VBR*}
 
-  - SoulseekQt (2015-6-12 and later), slskd (lossless formats):
+  - SoulseekQt (2015-6-12 and later):
       - {0: *bitrate*}
       - {1: *length*}
       - {0: *bitrate*, 1: *length*} (MP3, OGG, WMA, M4A)
       - {4: *sample rate*, 5: *bit depth*}
       - {1: *length*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
+      - {0: *bitrate*, 1: *length*, 4: *sample rate*, 5: *bit depth*} (WV)
+
+  - slskd (lossless formats):
+      - {1: *length*, 4: *sample rate*, 5: *bit depth*}
 
 # Server Messages
 
