@@ -67,7 +67,7 @@
 ## Slovak
  - Josef Riha (2006)
 
-## Spanish (Chili)
+## Spanish (Chile)
  - MELERIX (2022)
 
 ## Spanish (Spain)
