@@ -478,18 +478,15 @@ class UserBrowse(UserInterface):
         else:
             self.progressbar1.set_fraction(0.5)
 
-        self.RefreshButton.set_sensitive(False)
-
     def message_progress(self, msg):
 
         if msg.total == 0 or msg.position == 0:
-            fraction = 0.0
+            self.progressbar1.set_fraction(0.0)
         elif msg.position >= msg.total:
-            fraction = 1.0
+            self.progressbar1.set_fraction(1.0)
         else:
-            fraction = float(msg.position) / msg.total
-
-        self.progressbar1.set_fraction(fraction)
+            self.progressbar1.set_fraction(float(msg.position) / msg.total)
+            self.RefreshButton.set_sensitive(False)
 
     def set_finished(self):
 
