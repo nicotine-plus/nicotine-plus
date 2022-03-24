@@ -241,6 +241,7 @@ Third-Party Attributions
 
     TRANSLATORS = """Nicotine+ Translators
 –––––––––––––––––––––––––––––––––––––––>
+
 Chinese (Simplified)
  - hadwin (2022)
 
