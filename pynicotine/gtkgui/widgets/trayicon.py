@@ -306,8 +306,8 @@ class BaseImplementation:
     def set_icon_name(self, icon_name):
         pass
 
-    @staticmethod
-    def is_visible():
+    @classmethod
+    def is_visible(cls):
         return False
 
     def show(self):
