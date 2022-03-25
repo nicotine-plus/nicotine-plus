@@ -34,7 +34,7 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -718,14 +718,14 @@ class UserBrowse(UserInterface):
         else:
             str_title = _("Upload Folder To User")
 
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.MainWindow,
             title=str_title,
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_directory_to_response,
             callback_data=recurse,
             droplist=users
-        )
+        ).show()
 
     def on_upload_directory_recursive_to(self, *_args):
         self.on_upload_directory_to(recurse=True)
@@ -963,13 +963,13 @@ class UserBrowse(UserInterface):
                 users.append(user)
 
         users.sort()
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.MainWindow,
             title=_('Upload File(s) To User'),
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,
             droplist=users
-        )
+        ).show()
 
     def on_play_files(self, *_args):
 

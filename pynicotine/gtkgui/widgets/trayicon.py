@@ -23,7 +23,7 @@ import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
@@ -131,13 +131,13 @@ class TrayIcon:
     def on_open_private_chat(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=users
-        )
+        ).show()
 
     def on_get_a_users_info_response(self, dialog, response_id, _data):
 
@@ -153,13 +153,13 @@ class TrayIcon:
     def on_get_a_users_info(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
             droplist=users
-        )
+        ).show()
 
     def on_get_a_users_shares_response(self, dialog, response_id, _data):
 
@@ -175,13 +175,13 @@ class TrayIcon:
     def on_get_a_users_shares(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
             droplist=users
-        )
+        ).show()
 
     # GtkStatusIcon fallback
     def on_status_icon_popup(self, _status_icon, button, _activate_time):

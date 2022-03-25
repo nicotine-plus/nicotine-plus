@@ -33,7 +33,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -296,12 +296,12 @@ class PrivateChat(UserInterface):
 
     def on_delete_chat_log(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this user?'),
             callback=self.on_delete_chat_log_response
-        )
+        ).show()
 
     def show_notification(self, text):
 
