@@ -36,7 +36,7 @@ from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.dialogs.wishlist import WishList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
@@ -1185,13 +1185,12 @@ class Search(UserInterface):
 
     def on_download_files_to(self, *_args):
 
-        choose_dir(
+        FolderChooser(
             parent=self.frame.MainWindow,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            multichoice=False
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"]
+        ).show()
 
     def on_download_folders(self, *_args, download_location=""):
 
@@ -1237,13 +1236,12 @@ class Search(UserInterface):
 
     def on_download_folders_to(self, *_args):
 
-        choose_dir(
+        FolderChooser(
             parent=self.frame.MainWindow,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            multichoice=False
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"]
+        ).show()
 
     def on_copy_file_path(self, *_args):
 

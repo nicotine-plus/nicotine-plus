@@ -49,7 +49,7 @@ from pynicotine.gtkgui.userbrowse import UserBrowses
 from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.widgets.filechooser import choose_file
+from pynicotine.gtkgui.widgets.filechooser import FileChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
@@ -1446,13 +1446,13 @@ class NicotineFrame(UserInterface):
             log.add(_("Can't create directory '%(folder)s', reported error: %(error)s"),
                     {'folder': sharesdir, 'error': msg})
 
-        choose_file(
+        FileChooser(
             parent=self.MainWindow,
             title=_("Select a Saved Shares List File"),
             callback=self.on_load_from_disk_selected,
-            initialdir=sharesdir,
+            initial_folder=sharesdir,
             multiple=True
-        )
+        ).show()
 
     """ Chat """
 
