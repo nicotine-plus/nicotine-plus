@@ -306,8 +306,7 @@ class BaseImplementation:
     def set_icon_name(self, icon_name):
         pass
 
-    @classmethod
-    def is_visible(cls):
+    def is_visible(self):  # pylint:disable=no-self-use
         return False
 
     def show(self):
