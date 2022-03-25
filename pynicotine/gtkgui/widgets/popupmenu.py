@@ -32,7 +32,7 @@ from pynicotine import slskmessages
 from pynicotine.config import config
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 
 
 """ Popup/Context Menu """
@@ -558,9 +558,9 @@ class PopupMenu:
         if error:
             message += "\n\n" + error
 
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.MainWindow,
             title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response
-        )
+        ).show()

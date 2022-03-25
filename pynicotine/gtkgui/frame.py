@@ -52,8 +52,8 @@ from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.filechooser import choose_file
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
-from pynicotine.gtkgui.widgets.dialogs import message_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import MessageDialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.notifications import Notifications
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -379,14 +379,14 @@ class NicotineFrame(UserInterface):
         msg = _("User %s already exists, and the password you entered is invalid. Please choose another username "
                 "if this is your first time logging in.") % config.sections["server"]["login"]
 
-        option_dialog(
+        OptionDialog(
             parent=self.application.get_active_window(),
             title=title,
             message=msg,
             first_button=_("_Cancel"),
             second_button=_("Change _Login Details"),
             callback=self.invalid_password_response
-        )
+        ).show()
 
     def set_widget_online_status(self, status):
 
@@ -589,17 +589,15 @@ class NicotineFrame(UserInterface):
 
     def _on_check_latest(self):
 
+        def create_dialog(title, message):
+            MessageDialog(parent=self.MainWindow, title=title, message=message).show()
+
         try:
             hlatest, latest, date = get_latest_version()
             myversion = int(make_version(config.version))
 
         except Exception as error:
-            GLib.idle_add(
-                message_dialog,
-                self.MainWindow,
-                _("Error retrieving latest version"),
-                str(error)
-            )
+            GLib.idle_add(create_dialog, _("Error retrieving latest version"), str(error))
             self.checking_update = False
             return
 
@@ -609,28 +607,14 @@ class NicotineFrame(UserInterface):
             if date:
                 version_label += ", " + _("released on %s") % date
 
-            GLib.idle_add(
-                message_dialog,
-                self.MainWindow,
-                _("Out of date"),
-                version_label
-            )
+            GLib.idle_add(create_dialog, _("Out of date"), version_label)
 
         elif myversion > latest:
-            GLib.idle_add(
-                message_dialog,
-                self.MainWindow,
-                _("Up to date"),
-                _("You appear to be using a development version of Nicotine+.")
-            )
+            GLib.idle_add(create_dialog, _("Up to date"),
+                          _("You appear to be using a development version of Nicotine+."))
 
         else:
-            GLib.idle_add(
-                message_dialog,
-                self.MainWindow,
-                _("Up to date"),
-                _("You are using the latest version of Nicotine+.")
-            )
+            GLib.idle_add(create_dialog, _("Up to date"), _("You are using the latest version of Nicotine+."))
 
         self.checking_update = False
 
@@ -1502,14 +1486,14 @@ class NicotineFrame(UserInterface):
             return False
 
         if room not in self.np.chatrooms.server_rooms and room not in self.np.chatrooms.private_rooms:
-            option_dialog(
+            OptionDialog(
                 parent=self.MainWindow,
                 title=_('Create New Room?'),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 checkbox_label=_("Make room private"),
                 callback=self.on_create_room_response,
                 callback_data=room
-            )
+            ).show()
 
         else:
             self.np.chatrooms.request_join_room(room)
@@ -1648,7 +1632,7 @@ class NicotineFrame(UserInterface):
 
         if level and level.startswith("important"):
             title = "Information" if level == "important_info" else "Error"
-            message_dialog(parent=self.application.get_active_window(), title=title, message=msg)
+            MessageDialog(parent=self.application.get_active_window(), title=title, message=msg).show()
             return False
 
         # Keep verbose debug messages out of statusbar to make it more useful
@@ -1835,7 +1819,7 @@ class NicotineFrame(UserInterface):
                  (config.version, config.gtk_version, config.python_version, exc_type,
                   exc_value, ''.join(format_tb(exc_traceback))))
 
-        option_dialog(
+        OptionDialog(
             parent=self.application.get_active_window(),
             title=_("Critical Error"),
             message=_("Nicotine+ has encountered a critical error and needs to exit. "
@@ -1844,7 +1828,7 @@ class NicotineFrame(UserInterface):
             second_button=_("_Copy & Report Bug"),
             callback=self.on_critical_error_response,
             callback_data=(loop, error)
-        )
+        ).show()
 
         # Keep dialog open if error occurs on startup
         loop.run()
@@ -1883,7 +1867,7 @@ class NicotineFrame(UserInterface):
 
     def show_exit_dialog(self, remember=True):
 
-        option_dialog(
+        OptionDialog(
             parent=self.MainWindow,
             title=_('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
@@ -1891,7 +1875,7 @@ class NicotineFrame(UserInterface):
             third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else None,
             checkbox_label=_("Remember choice") if remember else None,
             callback=self.show_exit_dialog_response
-        )
+        ).show()
 
     def on_close_request(self, *_args):
 

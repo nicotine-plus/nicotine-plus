@@ -25,7 +25,7 @@ import sys
 from gi.repository import Gdk
 from gi.repository import Gtk
 
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.theme import get_status_icon
@@ -367,12 +367,12 @@ class IconNotebook:
 
     def remove_all_pages(self):
 
-        option_dialog(
+        OptionDialog(
             parent=self.window,
             title=_('Close All Tabs?'),
             message=_('Do you really want to close all tabs?'),
             callback=self.remove_all_pages_response
-        )
+        ).show()
 
     def get_current_page(self):
         return self.notebook.get_current_page()

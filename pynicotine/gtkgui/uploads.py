@@ -27,7 +27,7 @@ import os
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
@@ -58,23 +58,23 @@ class Uploads(TransferList):
 
     def on_try_clear_queued(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Uploads'),
             message=_('Do you really want to clear all queued uploads?'),
             callback=self.on_clear_response,
             callback_data="queued"
-        )
+        ).show()
 
     def on_try_clear_all(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear All Uploads'),
             message=_('Do you really want to clear all uploads?'),
             callback=self.on_clear_response,
             callback_data="all"
-        )
+        ).show()
 
     def on_copy_url(self, *_args):
 
