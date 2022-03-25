@@ -124,10 +124,10 @@ class MessageDialog:
             def callback(dialog, *_args):
                 dialog.destroy()
 
-        self.callback_function = callback
+        self.callback = callback
         self.callback_data = callback_data
 
-        self.dialog.connect("response", self.callback)
+        self.dialog.connect("response", self.on_response)
 
         if not buttons:
             buttons = [(_("Close"), Gtk.ResponseType.CLOSE)]
@@ -142,8 +142,8 @@ class MessageDialog:
 
         label.set_selectable(True)
 
-    def callback(self, _dialog, response_id):
-        self.callback_function(self, response_id, self.callback_data)
+    def on_response(self, _dialog, response_id):
+        self.callback(self, response_id, self.callback_data)
 
     def show(self):
         self.dialog.present_with_time(Gdk.CURRENT_TIME)
@@ -157,13 +157,11 @@ class EntryDialog(MessageDialog):
     def __init__(self, parent, title, message, callback, callback_data=None, default="",
                  optionmessage="", optionvalue=False, visibility=True, droplist=None):
 
-        super().__init__(
-            parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
-            callback=callback, callback_data=callback_data, width=500,
-            buttons=[
-                (_("Cancel"), Gtk.ResponseType.CANCEL),
-                (_("OK"), Gtk.ResponseType.OK)]
-        )
+        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
+                         callback=callback, callback_data=callback_data, width=500,
+                         buttons=[
+                             (_("Cancel"), Gtk.ResponseType.CANCEL),
+                             (_("OK"), Gtk.ResponseType.OK)])
 
         if droplist:
             dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
@@ -209,10 +207,8 @@ class OptionDialog(MessageDialog):
         if third_button:
             buttons.append((third_button, 3))
 
-        super().__init__(
-            parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
-            callback=callback, callback_data=callback_data, buttons=buttons
-        )
+        super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
+                         callback=callback, callback_data=callback_data, buttons=buttons)
 
         if checkbox_label:
             self.checkbox = Gtk.CheckButton(label=checkbox_label, visible=bool(checkbox_label))

@@ -35,8 +35,8 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
-from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
@@ -664,11 +664,12 @@ class SharesFrame(UserInterface):
 
     def on_add_shared_dir(self, *_args):
 
-        choose_dir(
+        FolderChooser(
             parent=self.preferences.dialog,
             callback=self.on_add_shared_dir_selected,
-            title=_("Add a Shared Folder")
-        )
+            title=_("Add a Shared Folder"),
+            multiple=True
+        ).show()
 
     def on_edit_shared_dir_response(self, dialog, response_id, path):
 
@@ -3025,13 +3026,13 @@ class Preferences(UserInterface):
 
     def back_up_config(self, *_args):
 
-        save_file(
+        FileChooserSave(
             parent=self.frame.MainWindow,
             callback=self.back_up_config_response,
-            initialdir=os.path.dirname(config.filename),
-            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            initial_folder=os.path.dirname(config.filename),
+            initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
             title=_("Pick a File Name for Config Backup")
-        )
+        ).show()
 
     def on_widget_scroll_event(self, _widget, event):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event

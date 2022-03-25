@@ -31,7 +31,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
@@ -671,14 +671,13 @@ class UserBrowse(UserInterface):
         else:
             str_title = _("Select Destination Folder")
 
-        choose_dir(
+        FolderChooser(
             parent=self.frame.MainWindow,
             title=str_title,
             callback=self.on_download_directory_to_selected,
             callback_data=recurse,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            multichoice=False
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"]
+        ).show()
 
     def on_download_directory_recursive_to(self, *_args):
         self.on_download_directory_to(recurse=True)
@@ -928,13 +927,12 @@ class UserBrowse(UserInterface):
         if not os.path.exists(path) or not os.path.isdir(path):
             path = download_folder
 
-        choose_dir(
+        FolderChooser(
             parent=self.frame.MainWindow,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
-            initialdir=path,
-            multichoice=False
-        )
+            initial_folder=path
+        ).show()
 
     def on_upload_files_response(self, dialog, response_id, _data):
 

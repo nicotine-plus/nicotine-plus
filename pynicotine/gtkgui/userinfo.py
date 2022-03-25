@@ -29,7 +29,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.geoip.geoip import GeoIP
-from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
@@ -452,13 +452,12 @@ class UserInfo(UserInterface):
         if self.picture is None or self.picture_data is None:
             return
 
-        save_file(
+        FileChooserSave(
             parent=self.frame.MainWindow,
             callback=self.on_save_picture_response,
-            initialdir=config.sections["transfers"]["downloaddir"],
-            initialfile="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S")),
-            title=_("Save as…")
-        )
+            initial_folder=config.sections["transfers"]["downloaddir"],
+            initial_file="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))
+        ).show()
 
     def on_scroll(self, _controller, _scroll_x, scroll_y):
 
