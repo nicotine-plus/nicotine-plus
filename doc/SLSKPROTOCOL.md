@@ -81,6 +81,7 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 0    | Bitrate (kbps)   |
 | 1    | Length (seconds) |
 | 2    | VBR (0 or 1)     |
+| 3    | Encoder (unused) |
 | 4    | Sample Rate (Hz) |
 | 5    | Bit Depth        |
 
