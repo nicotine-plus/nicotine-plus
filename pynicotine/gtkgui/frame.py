@@ -1473,7 +1473,7 @@ class NicotineFrame(UserInterface):
 
     def on_create_room_response(self, dialog, response_id, room):
 
-        private = dialog.checkbox.get_active()
+        private = dialog.option.get_active()
         dialog.destroy()
 
         if response_id == 2:
@@ -1492,7 +1492,7 @@ class NicotineFrame(UserInterface):
                 parent=self.MainWindow,
                 title=_('Create New Room?'),
                 message=_('Do you really want to create a new room "%s"?') % room,
-                checkbox_label=_("Make room private"),
+                option_label=_("Make room private"),
                 callback=self.on_create_room_response,
                 callback_data=room
             ).show()
@@ -1851,17 +1851,17 @@ class NicotineFrame(UserInterface):
 
     def show_exit_dialog_response(self, dialog, response_id, _data):
 
-        checkbox = dialog.checkbox.get_active()
+        remember = dialog.option.get_active()
         dialog.destroy()
 
         if response_id == 2:  # 'Quit'
-            if checkbox:
+            if remember:
                 config.sections["ui"]["exitdialog"] = 0
 
             self.np.quit()
 
         elif response_id == 3:  # 'Run in Background'
-            if checkbox:
+            if remember:
                 config.sections["ui"]["exitdialog"] = 2
 
             if self.MainWindow.get_property("visible"):
@@ -1875,7 +1875,7 @@ class NicotineFrame(UserInterface):
             message=_('Do you really want to exit?'),
             second_button=_("_Quit"),
             third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else None,
-            checkbox_label=_("Remember choice") if remember else None,
+            option_label=_("Remember choice") if remember else None,
             callback=self.show_exit_dialog_response
         ).show()
 
