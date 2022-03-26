@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 22, 2022
+Last updated on March 26, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -67,25 +67,25 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 | 1    | Away    |
 | 2    | Online  |
 
-### Transfer Direction
+### Transfer Directions
 
-| Code | Type     |
-| ---- | -------- |
-| 0    | Download |
-| 1    | Upload   |
+| Code | Direction          |
+| ---- | ------------------ |
+| 0    | Download from Peer |
+| 1    | Upload to Peer     |
 
 ### File Attribute Types
 
-| Code | Type             |
-| ---- | ---------------- |
-| 0    | Bitrate (kbps)   |
-| 1    | Length (seconds) |
-| 2    | VBR (0 or 1)     |
-| 3    | Encoder (unused) |
-| 4    | Sample Rate (Hz) |
-| 5    | Bit Depth        |
+| Code | Value             |
+| ---- | ----------------- |
+| 0    | Bitrate (kbps)    |
+| 1    | Length (seconds)  |
+| 2    | VBR (0 or 1)      |
+| 3    | Encoder (unused)  |
+| 4    | Sample Rate (Hz)  |
+| 5    | Bit Depth (bits)  |
 
-#### Used Attribute Combinations
+#### File Attribute Combinations
 
   - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX, slskd (lossy formats):
       - {0: *bitrate*, 1: *length*, 2: *VBR*}
@@ -128,9 +128,9 @@ and callbacks for the messages are set in pynicotine.py.
 | -------------- | ------- | ---------------- |
 | uint32         | uint32  | ...              |
 
-### Message Index
+### Server Message Codes
 
-| Code | Message                                           | Status     |
+| Code | Message Function                                  | Status     |
 | ---- | ------------------------------------------------- | ---------- |
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
@@ -229,17 +229,15 @@ and callbacks for the messages are set in pynicotine.py.
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
+The Nicotine+ function names used in slskmessages.py are specified below.
+
 ## Server Code 1
 
-### Description
+### Login
 
 We send this to the server right after the connection has been established. Server responds with the greeting message.
 
-### Function Names
-
-  - Nicotine+: Login
-
-### Sending Login Example
+#### Sending Login Example
 
 | Description | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
 | ----------- | -------------- | ------------ | --------------- | ----------------------- | --------------- | ----------------------- |
@@ -258,7 +256,7 @@ We send this to the server right after the connection has been established. Serv
 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36
 30 32 64 34 35 32 39 32 39 01 00 00 00**
 
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -277,17 +275,13 @@ We send this to the server right after the connection has been established. Serv
 
 ## Server Code 2
 
-### Description
+### SetWaitPort
 
 We send this to the server to indicate the port number that we listen on (2234 by default).
 
-If this value is set to zero, or the message is not sent upon login (which defaults the listen port to 0), remote clients handling a `ConnectToPeer` message (code 18) will fail to properly purge the request.  Confirmed in SoulseekQt 2020.3.12, but probably impacts most or all other versions.
+If this value is set to zero, or the message is not sent upon login (which defaults the listen port to 0), remote clients handling a [ConnectToPeer](#server-code-18) message will fail to properly purge the request.  Confirmed in SoulseekQt 2020.3.12, but probably impacts most or all other versions.
 
-### Function Names
-
-  - Nicotine+: SetWaitPort
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>port</ins>
@@ -298,15 +292,11 @@ If this value is set to zero, or the message is not sent upon login (which defau
 
 ## Server Code 3
 
-### Description
+### GetPeerAddress
 
 We send this to the server to ask for a peer's address (IP address and port), given the peer's username.
 
-### Function Names
-
-  - Nicotine+: GetPeerAddress
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -319,44 +309,33 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 ## Server Code 5
 
-### Description
+### AddUser
 
-Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a GetUserStats response message with the new user stats.
+Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
 
-### Function Names
-
-  - Nicotine+: AddUser
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
-
   - Receive
     1.  **string** <ins>username</ins>
     2.  **bool** <ins>exists</ins>
-
     - If <ins>exists</ins> is true
-        1.  **uint32** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
+        1.  **uint32** <ins>status</ins> *see [Status Codes](#status-codes)*
         2.  **uint32** <ins>avgspeed</ins>
         3.  **uint64** <ins>uploadnum</ins> *Number of uploaded files. The value changes when sending a [SendUploadSpeed](#server-code-121) server message, and is likely used by the server to calculate the average speed.*
         4.  **uint32** <ins>files</ins>
         5.  **uint32** <ins>dirs</ins>
-
         - If <ins>status</ins> is away/online
             1.  **string** <ins>countrycode</ins> *Uppercase country code*
 
 ## Server Code 6
 
-### Description
+### RemoveUser
 
 Used when we no longer want to be kept updated about a user's stats.
 
-### Function Names
-
-  - Nicotine+: RemoveUser
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -365,34 +344,26 @@ Used when we no longer want to be kept updated about a user's stats.
 
 ## Server Code 7
 
-### Description
+### GetUserStatus
 
 The server tells us if a user has gone away or has returned.
 
-### Function Names
-
-  - Nicotine+: GetUserStatus
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **uint32** <ins>status</ins> *0 == Offline, 1 == Away; 2 == Online*
+    2.  **uint32** <ins>status</ins> *see [Status Codes](#status-codes)*
     3.  **bool** <ins>privileged</ins>
 
 ## Server Code 13
 
-### Description
+### SayChatroom
 
 Either we want to say something in the chatroom, or someone else did.
 
-### Function Names
-
-  - Nicotine+: SayChatroom
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -404,17 +375,13 @@ Either we want to say something in the chatroom, or someone else did.
 
 ## Server Code 14
 
-### Description
+### JoinRoom
 
 We send this message to the server when we want to join a room. If the room doesn't exist, it is created.
 
 Server responds with this message when we join a room. Contains users list with data on everyone.
 
-### Function Names
-
-  - Nicotine+: JoinRoom
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -446,15 +413,11 @@ Server responds with this message when we join a room. Contains users list with 
 
 ## Server Code 15
 
-### Description
+### LeaveRoom
 
 We send this to the server when we want to leave a room.
 
-### Function Names
-
-  - Nicotine+: LeaveRoom
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -463,15 +426,11 @@ We send this to the server when we want to leave a room.
 
 ## Server Code 16
 
-### Description
+### UserJoinedRoom
 
 The server tells us someone has just joined a room we're in.
 
-### Function Names
-
-  - Nicotine+: UserJoinedRoom
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -488,15 +447,11 @@ The server tells us someone has just joined a room we're in.
 
 ## Server Code 17
 
-### Description
+### UserLeftRoom
 
 The server tells us someone has just left a room we're in.
 
-### Function Names
-
-  - Nicotine+: UserLeftRoom
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -506,43 +461,35 @@ The server tells us someone has just left a room we're in.
 
 ## Server Code 18
 
-### Description
+### ConnectToPeer
 
 Either we ask server to tell someone else we want to establish a connection with them, or server tells us someone wants to connect with us. Used when the side that wants a connection can't establish it, and tries to go the other way around (direct connection has failed).
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-### Function Names
-
-  - Nicotine+: ConnectToPeer
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>username</ins>
-    3.  **string** <ins>type</ins> *Connection Type (P, F or D)*
+    3.  **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **string** <ins>type</ins> *Connection Type (P, F or D)*
+    2.  **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
     3.  **ip** <ins>ip</ins>
     4.  **uint32** <ins>port</ins>
-    5.  **uint32** <ins>token</ins> *Use this token for [Pierce Firewall](#peer-init-code-0)*
+    5.  **uint32** <ins>token</ins> *Use this token for [PierceFireWall](#peer-init-code-0)*
     6.  **bool** <ins>privileged</ins>
     7.  **bool** <ins>use obfuscation</ins>
     8.  **uint32** <ins>obfuscated port</ins>
 
 ## Server Code 22
 
-### Description
+### MessageUser
 
 Chat phrase sent to someone or received by us in private.
 
-### Function Names
-
-  - Nicotine+: MessageUser
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -556,15 +503,11 @@ Chat phrase sent to someone or received by us in private.
 
 ## Server Code 23
 
-### Description
+### MessageAcked
 
 We send this to the server to confirm that we received a private message. If we don't send it, the server will keep sending the chat phrase to us.
 
-### Function Names
-
-  - Nicotine+: MessageAcked
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>message ID</ins>
@@ -573,17 +516,13 @@ We send this to the server to confirm that we received a private message. If we 
 
 ## Server Code 25
 
-### Description
+### FileSearchRoom
 
 **OBSOLETE, use [RoomSearch](#server-code-120) server message**
 
 We send this to the server when we search for something in a room.
 
-### Function Names
-
-  - Nicotine+: FileSearchRoom
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -594,17 +533,13 @@ We send this to the server when we search for something in a room.
 
 ## Server Code 26
 
-### Description
+### FileSearch
 
 We send this to the server when we search for something. Alternatively, the server sends this message outside the distributed network to tell us that someone is searching for something, currently used for [UserSearch](#server-code-42) and [RoomSearch](#server-code-120) requests.
 
-The token is a random number generated by the client and is used to track the search results.
+The token is a number generated by the client and is used to track the search results.
 
-### Function Names
-
-  - Nicotine+: FileSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -616,37 +551,29 @@ The token is a random number generated by the client and is used to track the se
 
 ## Server Code 28
 
-### Description
+### SetStatus
 
-We send our new status to the server. Status is a way to define whether you're available or busy. 
+We send our new status to the server. Status is a way to define whether we're available (online) or busy (away). 
 
 *1 = Away  
 2 = Online*
 
-### Function Names
-
-  - Nicotine+: SetStatus
-
-### Data Order
+#### Data Order
 
   - Send
-    1.  **int32** <ins>status</ins>
+    1.  **int32** <ins>status</ins> *see [Status Codes](#status-codes)*
   - Receive
       - *No Message*
 
 ## Server Code 32
 
-### Description
+### ServerPing
 
 **DEPRECATED**
 
 We test if the server responds.
 
-### Function Names
-
-  - Nicotine+: ServerPing
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -655,15 +582,11 @@ We test if the server responds.
 
 ## Server Code 33
 
-### Description
+### SendConnectToken
 
 **OBSOLETE, no longer used**
 
-### Function Names
-
-  - Nicotine+: SendConnectToken
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -674,17 +597,13 @@ We test if the server responds.
 
 ## Server Code 34
 
-### Description
+### SendDownloadSpeed
 
 **OBSOLETE, use [SendUploadSpeed](#server-code-121) server message**
 
 We used to send this after a finished download to let the server update the speed statistics for a user.
 
-### Function Names
-
-  - Nicotine+: SendDownloadSpeed
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -694,15 +613,11 @@ We used to send this after a finished download to let the server update the spee
 
 ## Server Code 35
 
-### Description
+### SharedFoldersFiles
 
 We send this to server to indicate the number of folder and files that we share.
 
-### Function Names
-
-  - Nicotine+: SharedFoldersFiles
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>dirs</ins>
@@ -712,15 +627,11 @@ We send this to server to indicate the number of folder and files that we share.
 
 ## Server Code 36
 
-### Description
+### GetUserStats
 
-The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in AddUser previously. A user's stats can also be requested by sending a GetUserStats message to the server, but AddUser should be used instead.
+The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [AddUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [AddUser](#server-code-5) should be used instead.
 
-### Function Names
-
-  - Nicotine+: GetUserStats
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -733,17 +644,13 @@ The server sends this to indicate a change in a user's statistics, if we've requ
 
 ## Server Code 40
 
-### Description
+### QueuedDownloads
 
 **OBSOLETE, no longer sent by the server**
 
 The server sends this to indicate if someone has download slots available or not.
 
-### Function Names
-
-  - Nicotine+: QueuedDownloads
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -754,15 +661,11 @@ The server sends this to indicate if someone has download slots available or not
 
 ## Server Code 41
 
-### Description
+### Relogged
 
 The server sends this if someone else logged in under our nickname, and then disconnects us.
 
-### Function Names
-
-  - Nicotine+: Relogged
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -771,15 +674,11 @@ The server sends this if someone else logged in under our nickname, and then dis
 
 ## Server Code 42
 
-### Description
+### UserSearch
 
-We send this to the server when we search a specific user's shares. The token is a random number generated by the client and is used to track the search results.
+We send this to the server when we search a specific user's shares. The token is a number generated by the client and is used to track the search results.
 
-### Function Names
-
-  - Nicotine+: UserSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -790,17 +689,13 @@ We send this to the server when we search a specific user's shares. The token is
 
 ## Server Code 51
 
-### Description
+### AddThingILike
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we add an item to our likes list.
 
-### Function Names
-
-  - Nicotine+: AddThingILike
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
@@ -809,17 +704,13 @@ We send this to the server when we add an item to our likes list.
 
 ## Server Code 52
 
-### Description
+### RemoveThingILike
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our likes list.
 
-### Function Names
-
-  - Nicotine+: RemoveThingILike
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
@@ -828,17 +719,13 @@ We send this to the server when we remove an item from our likes list.
 
 ## Server Code 54
 
-### Description
+### Recommendations
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of personal recommendations and a number for each.
 
-### Function Names
-
-  - Nicotine+: Recommendations
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -850,21 +737,17 @@ The server sends us a list of personal recommendations and a number for each.
     3.  **uint32** <ins>number of total unrecommendations</ins>
     4.  Iterate for <ins>number of total unrecommendations</ins>
         1.  **string** <ins>unrecommendation</ins>
-        2.  **int32** <ins>number of unrecommendations this unrecommendation has (negative)</ins>
+        2.  **int32** <ins>number of unrecommendations this unrecommendation has</ins> *(negative)*
 
 ## Server Code 56
 
-### Description
+### GlobalRecommendations
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of global recommendations and a number for each.
 
-### Function Names
-
-  - Nicotine+: GlobalRecommendations
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -876,21 +759,17 @@ The server sends us a list of global recommendations and a number for each.
     3.  **uint32** <ins>number of total unrecommendations</ins>
     4.  Iterate for <ins>number of total unrecommendations</ins>
         1.  **string** <ins>unrecommendation</ins>
-        2.  **int32** <ins>number of unrecommendations this unrecommendation has (negative)</ins>
+        2.  **int32** <ins>number of unrecommendations this unrecommendation has</ins> *(negative)*
 
 ## Server Code 57
 
-### Description
+### UserInterests
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We ask the server for a user's liked and hated interests. The server responds with a list of interests.
 
-### Function Names
-
-  - Nicotine+: UserInterests
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -905,17 +784,13 @@ We ask the server for a user's liked and hated interests. The server responds wi
 
 ## Server Code 58
 
-### Description
+### AdminCommand
 
 **OBSOLETE, no longer used since Soulseek stopped supporting third-party servers in 2002**
 
 We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
 
-### Function Names
-
-  - Nicotine+: AdminCommand
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>command</ins>
@@ -927,17 +802,13 @@ We send this to the server to run an admin command (e.g. to ban or silence a use
 
 ## Server Code 60
 
-### Description
+### PlaceInLineResponse
 
 **OBSOLETE, use [PlaceInQueue](#peer-code-44) peer message**
 
 The server sends this to indicate change in place in queue while we're waiting for files from another peer.
 
-### Function Names
-
-  - Nicotine+: PlaceInLineResponse
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -950,17 +821,13 @@ The server sends this to indicate change in place in queue while we're waiting f
 
 ## Server Code 62
 
-### Description
+### RoomAdded
 
 **OBSOLETE, no longer sent by the server**
 
 The server tells us a new room has been added.
 
-### Function Names
-
-  - Nicotine+: RoomAdded
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -969,17 +836,13 @@ The server tells us a new room has been added.
 
 ## Server Code 63
 
-### Description
+### RoomRemoved
 
 **OBSOLETE, no longer sent by the server**
 
 The server tells us a room has been removed.
 
-### Function Names
-
-  - Nicotine+: RoomRemoved
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -988,15 +851,11 @@ The server tells us a room has been removed.
 
 ## Server Code 64
 
-### Description
+### RoomList
 
 The server tells us a list of rooms and the number of users in them. When connecting to the server, the server only sends us rooms with at least 5 users. A few select rooms are also excluded, such as nicotine and The Lobby. Requesting the room list yields a response containing the missing rooms.
 
-### Function Names
-
-  - Nicotine+: RoomList
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -1034,17 +893,13 @@ The server tells us a list of rooms and the number of users in them. When connec
 
 ## Server Code 65
 
-### Description
+### ExactFileSearch
 
 **OBSOLETE, no results even with official client**
 
 We send this to search for an exact file name and folder, to find other sources.
 
-### Function Names
-
-  - Nicotine+: ExactFileSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -1062,15 +917,11 @@ We send this to search for an exact file name and folder, to find other sources.
 
 ## Server Code 66
 
-### Description
+### AdminMessage
 
 A global message from the server admin has arrived.
 
-### Function Names
-
-  - Nicotine+: AdminMessage
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1079,17 +930,13 @@ A global message from the server admin has arrived.
 
 ## Server Code 67
 
-### Description
+### GlobalUserList
 
 **OBSOLETE, no longer used**
 
 We send this to get a global list of all users online.
 
-### Function Names
-
-  - Nicotine+: GlobalUserList
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -1115,17 +962,13 @@ We send this to get a global list of all users online.
 
 ## Server Code 68
 
-### Description
+### TunneledMessage
 
 **OBSOLETE, no longer used**
 
 Server message for tunneling a chat message.
 
-### Function Names
-
-  - Nicotine+: TunneledMessage
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -1142,15 +985,11 @@ Server message for tunneling a chat message.
 
 ## Server Code 69
 
-### Description
+### PrivilegedUsers
 
 The server sends us a list of privileged users, a.k.a. users who have donated.
 
-### Function Names
-
-  - Nicotine+: PrivilegedUsers
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1161,15 +1000,11 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 
 ## Server Code 71
 
-### Description
+### HaveNoParent
 
-We inform the server if we have a distributed parent or not. If not, the server eventually sends us a PossibleParents message with a list of possible parents to connect to. If no candidates are found, no such message is sent by the server, and we eventually become a branch root.
+We inform the server if we have a distributed parent or not. If not, the server eventually sends us a [PossibleParents](#server-code-102) message with a list of possible parents to connect to. If no candidates are found, no such message is sent by the server, and we eventually become a branch root.
 
-### Function Names
-
-  - Nicotine+: HaveNoParent
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **bool** <ins>have parents</ins>
@@ -1178,17 +1013,13 @@ We inform the server if we have a distributed parent or not. If not, the server 
 
 ## Server Code 73
 
-### Description
+### SearchParent
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We send the IP address of our parent to the server.
 
-### Function Names
-
-  - Nicotine+: SearchParent
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **ip** <ins>ip</ins>
@@ -1197,15 +1028,11 @@ We send the IP address of our parent to the server.
 
 ## Server Code 83
 
-### Description
+### ParentMinSpeed
 
 The server informs us about the minimum upload speed required to become a parent in the distributed network.
 
-### Function Names
-
-  - Nicotine+: ParentMinSpeed
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1214,15 +1041,11 @@ The server informs us about the minimum upload speed required to become a parent
 
 ## Server Code 84
 
-### Description
+### ParentSpeedRatio
 
 The server sends us a speed ratio determining the number of children we can have in the distributed network. The maximum number of children is our upload speed divided by the speed ratio.
 
-### Function Names
-
-  - Nicotine+: ParentSpeedRatio
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1231,15 +1054,11 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 86
 
-### Description
+### ParentInactivityTimeout
 
 **OBSOLETE, no longer sent by the server**
 
-### Function Names
-
-  - Nicotine+: ParentInactivityTimeout
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1248,15 +1067,11 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 87
 
-### Description
+### SearchInactivityTimeout
 
 **OBSOLETE, no longer sent by the server**
 
-### Function Names
-
-  - Nicotine+: SearchInactivityTimeout
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1265,17 +1080,11 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 88
 
-### Description
+### MinParentsInCache
 
 **OBSOLETE, no longer sent by the server**
 
-### Function Names
-
-  - Nicotine+: MinParentsInCache
-
-### Description
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1284,15 +1093,11 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 90
 
-### Description
+### DistribAliveInterval
 
 **OBSOLETE, no longer sent by the server**
 
-### Function Names
-
-  - Nicotine+: DistribAliveInterval
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1301,17 +1106,13 @@ The server sends us a speed ratio determining the number of children we can have
 
 ## Server Code 91
 
-### Description
+### AddToPrivileged
 
 **OBSOLETE, no longer sent by the server**
 
 The server sends us the username of a new privileged user, which we add to our list of global privileged users.
 
-### Function Names
-
-  - Nicotine+: AddToPrivileged
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1320,15 +1121,11 @@ The server sends us the username of a new privileged user, which we add to our l
 
 ## Server Code 92
 
-### Description
+### CheckPrivileges
 
 We ask the server how much time we have left of our privileges. The server responds with the remaining time, in seconds.
 
-### Function Names
-
-  - Nicotine+: CheckPrivileges
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -1337,33 +1134,25 @@ We ask the server how much time we have left of our privileges. The server respo
 
 ## Server Code 93
 
-### Description
+### EmbeddedMessage
 
 The server sends us an embedded distributed message. The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3). If we receive such a message, we are a branch root in the distributed network, and we distribute the embedded message (not the unpacked distributed message) to our child peers.
 
-### Function Names
-
-  - Nicotine+: EmbeddedMessage
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
   - Receive
-    1.  **uint8** <ins>distributed code</ins>
+    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
     2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
 
 ## Server Code 100
 
-### Description
+### AcceptChildren
 
 We tell the server if we want to accept child nodes.
 
-### Function Names
-
-  - Nicotine+: AcceptChildren
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **bool** <ins>accept</ins>
@@ -1372,17 +1161,13 @@ We tell the server if we want to accept child nodes.
 
 ## Server Code 102
 
-### Description
+### PossibleParents
 
-The server send us a list of max 10 possible distributed parents to connect to. Messages of this type are sent to us at regular intervals, until we tell the server we don't need more possible parents with a HaveNoParent message.
+The server send us a list of max 10 possible distributed parents to connect to. Messages of this type are sent to us at regular intervals, until we tell the server we don't need more possible parents with a [HaveNoParent](#server-code-71) message.
 
 The received list always contains users whose upload speed is higher than our own. If we have the highest upload speed on the server, we become a branch root, and start receiving [SearchRequest](#server-code-93) messages directly from the server.
 
-### Function Names
-
-  - Nicotine+: PossibleParents
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1395,13 +1180,11 @@ The received list always contains users whose upload speed is higher than our ow
 
 ## Server Code 103
 
-### Description
+### WishlistSearch
 
-### Function Names
+We send the server one of our wishlist search queries at each interval.
 
-  - Nicotine+: WishlistSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -1411,13 +1194,13 @@ The received list always contains users whose upload speed is higher than our ow
 
 ## Server Code 104
 
-### Description
+### WishlistInterval
 
-### Function Names
+The server tells us the wishlist search interval.
 
-  - Nicotine+: WishlistInterval
+This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1426,17 +1209,11 @@ The received list always contains users whose upload speed is higher than our ow
 
 ## Server Code 110
 
-### Description
+### SimilarUsers
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
-The server sends us a list of similar users related to our interests.
-
-### Function Names
-
-  - Nicotine+: SimilarUsers
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -1448,65 +1225,50 @@ The server sends us a list of similar users related to our interests.
 
 ## Server Code 111
 
-### Description
+### ItemRecommendations
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
 
-### Function Names
-
-  - Nicotine+: ItemRecommendations
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
   - Receive
     1.  **string** <ins>item</ins>
-    2.  **uint32** <ins>number of
-        recommendations</ins><ins> </ins>
-    3.  Iterate for <ins>number of
-        recommendations</ins><ins> </ins>
+    2.  **uint32** <ins>number of recommendations</ins>
+    3.  Iterate for <ins>number of recommendations</ins>
         1.  **string** <ins>recommendation</ins>
-        2.  **uint32** <ins>number of recommendations
-            for this recommendation (can be negative)</ins>
+        2.  **uint32** <ins>number of recommendations for this recommendation</ins> *(can be negative)*
 
 ## Server Code 112
 
-### Description
+### ItemSimilarUsers
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
 
-### Function Names
-
-  - Nicotine+: ItemSimilarUsers
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
   - Receive
     1.  **string** <ins>item</ins>
     2.  **uint32** <ins>number of users</ins>
-    3.  Iterate for <ins>number of user</ins>
+    3.  Iterate for <ins>number of users</ins>
         1.  **string** <ins>username</ins>
 
 ## Server Code 113
 
-### Description
+### RoomTickerState
 
 The server returns a list of tickers in a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-### Function Names
-
-  - Nicotine+: RoomTickerState
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1519,17 +1281,13 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 ## Server Code 114
 
-### Description
+### RoomTickerAdd
 
 The server sends us a new ticker that was added to a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-### Function Names
-
-  - Nicotine+: RoomTickerAdd
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1540,17 +1298,13 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 ## Server Code 115
 
-### Description
+### RoomTickerRemove
 
 The server informs us that a ticker was removed from a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-### Function Names
-
-  - Nicotine+: RoomTickerRemove
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1560,17 +1314,13 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 ## Server Code 116
 
-### Description
+### RoomTickerSet
 
 We send this to the server when we change our own ticker in a chat room. Sending an empty ticker string removes any existing ticker in the room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-### Function Names
-
-  - Nicotine+: RoomTickerSet
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1580,17 +1330,13 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 ## Server Code 117
 
-### Description
+### AddThingIHate
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we add an item to our hate list.
 
-### Function Names
-
-  - Nicotine+: AddThingIHate
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
@@ -1599,17 +1345,13 @@ We send this to the server when we add an item to our hate list.
 
 ## Server Code 118
 
-### Description
+### RemoveThingIHate
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
 We send this to the server when we remove an item from our hate list.
 
-### Function Names
-
-  - Nicotine+: RemoveThingIHate
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>item</ins>
@@ -1618,15 +1360,13 @@ We send this to the server when we remove an item from our hate list.
 
 ## Server Code 120
 
-### Description
+### RoomSearch
 
-We send this to the server to search files shared by users who have joined a specific chat room. The token is a random number generated by the client and is used to track the search results.
+We send this to the server to search files shared by users who have joined a specific chat room.
 
-### Function Names
+The token is a number generated by the client and is used to track the search results.
 
-  - Nicotine+: RoomSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1637,15 +1377,11 @@ We send this to the server to search files shared by users who have joined a spe
 
 ## Server Code 121
 
-### Description
+### SendUploadSpeed
 
 We send this after a finished upload to let the server update the speed statistics for ourselves.
 
-### Function Names
-
-  - Nicotine+: SendUploadSpeed
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>speed</ins>
@@ -1654,17 +1390,13 @@ We send this after a finished upload to let the server update the speed statisti
 
 ## Server Code 122
 
-### Description
+### UserPrivileged
 
 **DEPRECATED, use [AddUser](#server-code-5) and [GetUserStatus](#server-code-7) server messages**
 
 We ask the server whether a user is privileged or not.
 
-### Function Names
-
-  - Nicotine+: UserPrivileged
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -1674,15 +1406,11 @@ We ask the server whether a user is privileged or not.
 
 ## Server Code 123
 
-### Description
+### GivePrivileges
 
 We give (part of) our privileges, specified in days, to another user on the network.
 
-### Function Names
-
-  - Nicotine+: GivePrivileges
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -1692,15 +1420,11 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 ## Server Code 124
 
-### Description
+### NotifyPrivileges
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-### Function Names
-
-  - Nicotine+: NotifyPrivileges
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -1711,15 +1435,11 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 ## Server Code 125
 
-### Description
+### AckNotifyPrivileges
 
 **DEPRECATED, no longer used**
 
-### Function Names
-
-  - Nicotine+: AckNotifyPrivileges
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -1728,15 +1448,11 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 ## Server Code 126
 
-### Description
+### BranchLevel
 
 We tell the server what our position is in our branch (xth generation) on the distributed network.
 
-### Function Names
-
-  - Nicotine+: BranchLevel
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>branch level</ins>
@@ -1745,15 +1461,11 @@ We tell the server what our position is in our branch (xth generation) on the di
 
 ## Server Code 127
 
-### Description
+### BranchRoot
 
 We tell the server the username of the root of the branch we're in on the distributed network.
 
-### Function Names
-
-  - Nicotine+: BranchRoot
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>branch root</ins>
@@ -1762,17 +1474,13 @@ We tell the server the username of the root of the branch we're in on the distri
 
 ## Server Code 129
 
-### Description
+### ChildDepth
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We tell the server the maximum number of generation of children we have on the distributed network.
 
-### Function Names
-
-  - Nicotine+: ChildDepth
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>child depth</ins>
@@ -1781,15 +1489,11 @@ We tell the server the maximum number of generation of children we have on the d
 
 ## Server Code 130
 
-### Description
+### ResetDistributed
 
 The server asks us to reset our distributed parent and children.
 
-### Function Names
-
-  - Nicotine+: ResetDistributed
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1798,15 +1502,11 @@ The server asks us to reset our distributed parent and children.
 
 ## Server Code 133
 
-### Description
+### PrivateRoomUsers
 
 The server sends us a list of room users that we can alter (add operator abilities / dismember).
 
-### Function Names
-
-  - Nicotine+: PrivateRoomUsers
-
-### Data Order
+#### Data Order
 
   - Send
     1.  *No Message*
@@ -1818,15 +1518,11 @@ The server sends us a list of room users that we can alter (add operator abiliti
 
 ## Server Code 134
 
-### Description
+### PrivateRoomAddUser
 
 We send this to inform the server that we've added a user to a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomAddUser
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1837,15 +1533,11 @@ We send this to inform the server that we've added a user to a private room.
 
 ## Server Code 135
 
-### Description
+### PrivateRoomRemoveUser
 
 We send this to inform the server that we've removed a user from a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomRemoveUser
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1856,15 +1548,11 @@ We send this to inform the server that we've removed a user from a private room.
 
 ## Server Code 136
 
-### Description
+### PrivateRoomDismember
 
 We send this to the server to remove our own membership of a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomDismember
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1873,15 +1561,11 @@ We send this to the server to remove our own membership of a private room.
 
 ## Server Code 137
 
-### Description
+### PrivateRoomDisown
 
 We send this to the server to stop owning a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomDisown
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1890,17 +1574,13 @@ We send this to the server to stop owning a private room.
 
 ## Server Code 138
 
-### Description
+### PrivateRoomSomething
 
 **OBSOLETE, no longer used**
 
 Unknown purporse
 
-### Function Names
-
-  - Nicotine+: PrivateRoomSomething
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1909,15 +1589,11 @@ Unknown purporse
 
 ## Server Code 139
 
-### Description
+### PrivateRoomAdded
 
 The server sends us this message when we are added to a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomAdded
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1926,15 +1602,11 @@ The server sends us this message when we are added to a private room.
 
 ## Server Code 140
 
-### Description
+### PrivateRoomRemoved
 
 The server sends us this message when we are removed from a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomRemoved
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -1943,15 +1615,11 @@ The server sends us this message when we are removed from a private room.
 
 ## Server Code 141
 
-### Description
+### PrivateRoomToggle
 
 We send this when we want to enable or disable invitations to private rooms.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomToggle
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **bool** <ins>enable</ins>
@@ -1960,15 +1628,11 @@ We send this when we want to enable or disable invitations to private rooms.
 
 ## Server Code 142
 
-### Description
+### ChangePassword
 
 We send this to the server to change our password. We receive a response if our password changes.
 
-### Function Names
-
-  - Nicotine+: ChangePassword
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>pass</ins>
@@ -1977,15 +1641,11 @@ We send this to the server to change our password. We receive a response if our 
 
 ## Server Code 143
 
-### Description
+### PrivateRoomAddOperator
 
 We send this to the server to add private room operator abilities to a user.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomAddOperator
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -1996,15 +1656,11 @@ We send this to the server to add private room operator abilities to a user.
 
 ## Server Code 144
 
-### Description
+### PrivateRoomRemoveOperator
 
 We send this to the server to remove private room operator abilities from a user.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomRemoveOperator
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>room</ins>
@@ -2015,15 +1671,11 @@ We send this to the server to remove private room operator abilities from a user
 
 ## Server Code 145
 
-### Description
+### PrivateRoomOperatorAdded
 
 The server send us this message when we're given operator abilities in a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomOperatorAdded
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2032,15 +1684,11 @@ The server send us this message when we're given operator abilities in a private
 
 ## Server Code 146
 
-### Description
+### PrivateRoomOperatorRemoved
 
 The server send us this message when our operator abilities are removed in a private room.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomOperatorRemoved
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2049,15 +1697,11 @@ The server send us this message when our operator abilities are removed in a pri
 
 ## Server Code 148
 
-### Description
+### PrivateRoomOwned
 
 The server sends us a list of operators in a specific room, that we can remove operator abilities from.
 
-### Function Names
-
-  - Nicotine+: PrivateRoomOwned
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2070,15 +1714,11 @@ The server sends us a list of operators in a specific room, that we can remove o
 
 ## Server Code 149
 
-### Description
+### MessageUsers
 
 Sends a broadcast private message to the given list of users.
 
-### Function Names
-
-  - Nicotine+: MessageUsers
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>number of users</ins>
@@ -2090,17 +1730,13 @@ Sends a broadcast private message to the given list of users.
 
 ## Server Code 150
 
-### Description
+### JoinPublicRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
-We ask the server to send us messages from all public rooms, also known as public chat.
+We ask the server to send us messages from all public rooms, also known as public room feed.
 
-### Function Names
-
-  - Nicotine+: JoinPublicRoom
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2109,17 +1745,13 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 ## Server Code 151
 
-### Description
+### LeavePublicRoom
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
-We ask the server to stop sending us messages from all public rooms, also known as public chat.
+We ask the server to stop sending us messages from all public rooms, also known as public room feed.
 
-### Function Names
-
-  - Nicotine+: LeavePublicRoom
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2128,17 +1760,13 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 ## Server Code 152
 
-### Description
+### PublicRoomMessage
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
-The server sends this when a new message has been written in a public room (every single line written in every public room).
+The server sends this when a new message has been written in the public room feed (every single line written in every public room).
 
-### Function Names
-
-  - Nicotine+: PublicRoomMessage
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2149,17 +1777,13 @@ The server sends this when a new message has been written in a public room (ever
 
 ## Server Code 153
 
-### Description
+### RelatedSearch
 
 **OBSOLETE, server sends empty list as of 2018**
 
 The server returns a list of related search terms for a search query.
 
-### Function Names
-
-  - Nicotine+: RelatedSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>query</ins>
@@ -2172,17 +1796,13 @@ The server returns a list of related search terms for a search query.
 
 ## Server Code 1001
 
-### Description
+### CantConnectToPeer
 
-We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
+We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+This message means a connection can't be established either way. See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-### Function Names
-
-  - Nicotine+: CantConnectToPeer
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -2193,15 +1813,13 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 ## Server Code 1003
 
-### Description
+### CantCreateRoom
 
-Server tells us a new room cannot be created. This message only seems to be sent if you try to create a room with the same name as an existing private room. In other cases, such as using a room name with leading or trailing spaces, only a private message containing an error message is sent.
+Server tells us a new room cannot be created.
 
-### Function Names
+This message only seems to be sent if you try to create a room with the same name as an existing private room. In other cases, such as using a room name with leading or trailing spaces, only a private message containing an error message is sent.
 
-  - Nicotine+: CantCreateRoom
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2216,45 +1834,43 @@ Server tells us a new room cannot be created. This message only seems to be sent
 
 In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
-### Message Format
+### Peer Init Message Format
 
 | Message Length | Code   | Message Contents |
 | -------------- | ------ | ---------------- |
 | uint32         | uint8  | ...              |
 
-### Message Index
+### Peer Init Message Codes
 
-| Code | Message                              |
+| Code | Message Function                     |
 | ---- | ------------------------------------ |
 | 0    | [Pierce Firewall](#peer-init-code-0) |
 | 1    | [Peer Init](#peer-init-code-1)       |
 
+The Nicotine+ function names used in slskmessages.py are specified below.
+
 ## Peer Connection Message Order
 
-1.  User A sends a [Peer Init](#peer-init-code-1) to User B.  
+1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
 If this fails (socket cannot connect), User A proceeds with an indirect connection request (step 2).
 2.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token
-4.  User B sends a [Pierce Firewall](#peer-init-code-0) to User A with the same token.  
+4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the same token.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
 If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
-5.  User B sends a [Cannot Connect](#server-code-1001) to the Server.
-6.  The Server sends a [Cannot Connect](#server-code-1001) response to User A.
+5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
 
 ## Peer Init Code 0
 
-### Description
+### PierceFireWall
 
-This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so. The token is taken from the ConnectToPeer server message.
+This is the very first message sent by the peer that established a connection, if it has been asked by the other peer to do so.
 
-See also: [Peer Connection Message Order](#peer-connection-message-order)
+The token is taken from the [ConnectToPeer](#server-code-18) server message. See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-### Function Names
-
-  - Nicotine+: PierceFireWall
-
-### Data Order
+#### Data Order
 
   - Send
       - **uint32** <ins>token</ins> *Unique Number*
@@ -2263,25 +1879,21 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 ## Peer Init Code 1
 
-### Description
+### PeerInit
 
 This message is sent by the peer that initiated a connection, not necessarily a peer that actually established it. Token apparently can be anything. Type is 'P' if it's anything but filetransfer, 'F' otherwise.
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-### Function Names
-
-  - Nicotine+: PeerInit
-
-### Data Order
+#### Data Order
 
   - Send
       - **string** <ins>username</ins> *Local Username*
-      - **string** <ins>type</ins> *Connection Type (P, F or D)*
+      - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
       - **uint32** <ins>token</ins> *Unique Number*
   - Receive
       - **string** <ins>username</ins> *Remote Username*
-      - **string** <ins>type</ins> *Connection Type (P, F or D)*
+      - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
       - **uint32** <ins>token</ins> *Unique Number*
 
 # Peer Messages
@@ -2292,15 +1904,15 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 In Nicotine, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
-### Message Format
+### Peer Message Format
 
 | Message Length | Code    | Message Contents |
 | -------------- | ------- | ---------------- |
 | uint32         | uint32  | ...              |
 
-### Message Index
+### Peer Message Codes
 
-| Code | Message                                    | Status                     |
+| Code | Message Function                           | Status                     |
 | ---- | ------------------------------------------ | -------------------------- |
 | 1    | Private Message                            | Obsolete, contents unknown |
 | 4    | [Shares Request](#peer-code-4)             |                            |
@@ -2329,17 +1941,15 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 | 51   | [Place In Queue Request](#peer-code-51)    |                            |
 | 52   | [Upload Queue Notification](#peer-code-52) | Deprecated                 |
 
+The Nicotine+ function names used in slskmessages.py are specified below.
+
 ## Peer Code 4
 
-### Description
+### GetShareFileList
 
 We send this to a peer to ask for a list of shared files.
 
-### Function Names
-
-  - Nicotine+: GetShareFileList
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2348,15 +1958,11 @@ We send this to a peer to ask for a list of shared files.
 
 ## Peer Code 5
 
-### Description
+### SharedFileList
 
-A peer responds with a list of shared files when we've sent a GetSharedFileList.
+A peer responds with a list of shared files after we've sent a [GetSharedFileList](#peer-code-4).
 
-### Function Names
-
-  - Nicotine+: SharedFileList
-
-### Data Order
+#### Data Order
 
   - Send
     1.  Iterate thru shares database
@@ -2374,7 +1980,7 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
             4.  **string** <ins>file extension</ins>
             5.  **uint32** <ins>number of attributes</ins>
             6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
     4.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
     5.  **uint32** <ins>number of private directories</ins>
@@ -2388,22 +1994,18 @@ A peer responds with a list of shared files when we've sent a GetSharedFileList.
             4.  **string** <ins>file extension</ins>
             5.  **uint32** <ins>number of attributes</ins>
             6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
 
 ## Peer Code 8
 
-### Description
+### FileSearchRequest
 
 **OBSOLETE, use [UserSearch](#server-code-42) server message**
 
 We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
 
-### Function Names
-
-  - Nicotine+: FileSearchRequest
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -2414,15 +2016,11 @@ We send this to the peer when we search for a file. Alternatively, the peer send
 
 ## Peer Code 9
 
-### Description
+### FileSearchResult
 
-A peer sends this message when it has a file search match. The token is taken from original FileSearch, UserSearch or RoomSearch message.
+A peer sends this message when it has a file search match. The token is taken from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or [RoomSearch](#server-code-120) server message.
 
-### Function Names
-
-  - Nicotine+: FileSearchResult
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>username</ins>
@@ -2435,7 +2033,7 @@ A peer sends this message when it has a file search match. The token is taken fr
         4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
         5.  **uint32** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
             2.  **uint32** <ins>attribute value</ins>
     5.  **bool** <ins>slotfree</ins>
     6.  **uint32** <ins>avgspeed</ins>
@@ -2449,7 +2047,7 @@ A peer sends this message when it has a file search match. The token is taken fr
         4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
         5.  **uint32** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
             2.  **uint32** <ins>attribute value</ins>
   - Receive
     1.  decompress
@@ -2463,7 +2061,7 @@ A peer sends this message when it has a file search match. The token is taken fr
         4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
         5.  **uint32** <ins>number of attributes</ins>
         6.  Iterate for <ins>number of attributes</ins>
-            1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+            1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
             2.  **uint32** <ins>attribute value</ins>
     6.  **bool** <ins>slotfree</ins>
     7.  **uint32** <ins>avgspeed</ins>
@@ -2477,20 +2075,16 @@ A peer sends this message when it has a file search match. The token is taken fr
          4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
          5.  **uint32** <ins>number of attributes</ins>
          6.  Iterate for <ins>number of attributes</ins>
-             1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+             1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
              2.  **uint32** <ins>attribute value</ins>
 
 ## Peer Code 15
 
-### Description
+### UserInfoRequest
 
 We ask the other peer to send us their user information, picture and all.
 
-### Function Names
-
-  - Nicotine+: UserInfoRequest
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2499,15 +2093,11 @@ We ask the other peer to send us their user information, picture and all.
 
 ## Peer Code 16
 
-### Description
+### UserInfoReply
 
-A peer responds with this when we've sent a UserInfoRequest.
+A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 
-### Function Names
-
-  - Nicotine+: UserInfoReply
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>description</ins>
@@ -2536,15 +2126,11 @@ A peer responds with this when we've sent a UserInfoRequest.
 
 ## Peer Code 36
 
-### Description
+### FolderContentsRequest
 
 We ask the peer to send us the contents of a single folder.
 
-### Function Names
-
-  - Nicotine+: FolderContentsRequest
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>number of files in directory</ins>
@@ -2557,15 +2143,11 @@ We ask the peer to send us the contents of a single folder.
 
 ## Peer Code 37
 
-### Description
+### FolderContentsResponse
 
-A peer responds with the contents of a particular folder (with all subfolders) when we've sent a FolderContentsRequest.
+A peer responds with the contents of a particular folder (with all subfolders) after we've sent a [FolderContentsRequest](#peer-code-36).
 
-### Function Names
-
-  - Nicotine+: FolderContentsResponse
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>number of folders</ins>
@@ -2579,7 +2161,7 @@ A peer responds with the contents of a particular folder (with all subfolders) w
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
             5.  **uint32** <ins>number of attributes</ins>
             6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
   - Receive
     1.  decompress
@@ -2594,31 +2176,27 @@ A peer responds with the contents of a particular folder (with all subfolders) w
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
             5.  **uint32** <ins>number of attributes</ins>
             6.  Iterate for <ins>number of attributes</ins>
-                1.  **uint32** <ins>attribute type</ins> *see [File Attribute Types](#file-attribute-types)*
+                1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
 
 ## Peer Code 40
 
-### Description
+### TransferRequest
 
-This message is sent by a peer once they are ready to start uploading a file. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
+This message is sent by a peer once they are ready to start uploading a file to us. A [TransferResponse](#peer-code-41-a) message is expected from the recipient, either allowing or rejecting the upload attempt.
 
-This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) message for this purpose today.
+This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
 
-### Function Names
-
-  - Nicotine+: TransferRequest
-
-### Data Order
+#### Data Order
 
   - Send
-    1.  **uint32** <ins>direction</ins>
+    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
           - **uint64** <ins>filesize</ins> *if direction == 1 (upload)*
   - Receive
-    1.  **uint32** <ins>direction</ins>
+    1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
     3.  **string** <ins>filename</ins>
     4.  Check contents of <ins>direction</ins>
@@ -2626,19 +2204,15 @@ This message was formely used to send a download request (direction 0) as well, 
 
 ## Peer Code 41 a
 
-*Download Reply*
+### TransferResponse *Download Reply*
 
-### Description
+**DEPRECATED, use [QueueUpload](#peer-code-43) to request files**
 
-**DEPRECATED, use QueueUpload to request files**
+Response to [TransferRequest](#peer-code-40)
 
-Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+We (or the other peer) either agrees, or tells the reason for rejecting the file download.
 
-### Function Names
-
-  - Nicotine+: TransferResponse
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -2655,17 +2229,13 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 ## Peer Code 41 b
 
-*Upload Reply*
+### TransferResponse *Upload Reply*
 
-### Description
+Response to [TransferRequest](#peer-code-40)
 
-Response to TransferRequest - either we (or the other peer) agrees, or tells the reason for rejecting the file transfer.
+We (or the other peer) either agrees, or tells the reason for rejecting the file upload.
 
-### Function Names
-
-  - Nicotine+: TransferResponse
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>token</ins>
@@ -2680,15 +2250,11 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 ## Peer Code 42
 
-### Description
+### PlaceholdUpload
 
 **OBSOLETE, no longer used**
 
-### Function Names
-
-  - Nicotine+: PlaceholdUpload
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2697,15 +2263,11 @@ Response to TransferRequest - either we (or the other peer) agrees, or tells the
 
 ## Peer Code 43
 
-### Description
+### QueueUpload
 
-This message is used to tell a peer that an upload should be queued on their end. Once the recipient is ready to transfer the requested file, they will send an upload request.
+This message is used to tell a peer that an upload should be queued on their end. Once the recipient is ready to transfer the requested file, they will send a [TransferRequest](#peer-code-40) to us.
 
-### Function Names
-
-  - Nicotine+: QueueUpload
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2714,15 +2276,11 @@ This message is used to tell a peer that an upload should be queued on their end
 
 ## Peer Code 44
 
-### Description
+### PlaceInQueue
 
 The peer replies with the upload queue placement of the requested file.
 
-### Function Names
-
-  - Nicotine+: PlaceInQueue
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2733,15 +2291,11 @@ The peer replies with the upload queue placement of the requested file.
 
 ## Peer Code 46
 
-### Description
+### UploadFailed
 
 This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file can not be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
 
-### Function Names
-
-  - Nicotine+: UploadFailed
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2750,15 +2304,11 @@ This message is sent whenever a file connection of an active upload closes. Soul
 
 ## Peer Code 50
 
-### Description
+### UploadDenied
 
-This message is sent to reject QueueUpload attempts and previously queued files. The reason for rejection will appear in the transfer list of the recipient.
+This message is sent to reject [QueueUpload](#peer-code-43) attempts and previously queued files. The reason for rejection will appear in the transfer list of the recipient.
 
-### Function Names
-
-  - Nicotine+: UploadDenied
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2769,15 +2319,11 @@ This message is sent to reject QueueUpload attempts and previously queued files.
 
 ## Peer Code 51
 
-### Description
+### PlaceInQueueRequest
 
 This message is sent when asking for the upload queue placement of a file.
 
-### Function Names
-
-  - Nicotine+: PlaceInQueueRequest
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>filename</ins>
@@ -2786,17 +2332,13 @@ This message is sent when asking for the upload queue placement of a file.
 
 ## Peer Code 52
 
-### Description
+### UploadQueueNotification
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 This message is sent to inform a peer about an upload attempt initiated by us.
 
-### Function Names
-
-  - Nicotine+: UploadQueueNotification
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2817,25 +2359,23 @@ These messages are sent to peers over a 'F' connection, and do not have messages
 | ---------------- |
 | ...              |
 
-### File Connection Message Index
+### File Connection Messages
 
-| Message                                   |
+| Message Function                          |
 | ----------------------------------------- |
 | [File Download Init](#file-download-init) |
 | [File Upload Init](#file-upload-init)     |
 | [File Offset](#file-offset)               |
 
+The Nicotine+ function names used in slskmessages.py are specified below.
+
 ## File Download Init
 
-### Description
+### FileDownloadInit
 
-We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the TransferRequest message.
+We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
-### Function Names
-
-  - Nicotine+: FileDownloadInit
-
-### Data Order
+#### Data Order
 
   - Send
       - *No Message*
@@ -2844,15 +2384,11 @@ We receive this from a peer via a 'F' connection when they want to start uploadi
 
 ## File Upload Init
 
-### Description
+### FileUploadInit
 
-We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the TransferRequest message.
+We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
-### Function Names
-
-  - Nicotine+: FileUploadInit
-
-### Data Order
+#### Data Order
 
   - Send
       - **uint32** <ins>token</ins>
@@ -2861,15 +2397,11 @@ We send this to a peer via a 'F' connection to tell them that we want to start u
 
 ## File Offset
 
-### Description
+### FileOffset
 
 We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
 
-### Function Names
-
-  - Nicotine+: FileOffset
-
-### Data Order
+#### Data Order
 
   - Send
       - **uint64** <ins>offset</ins>
@@ -2884,15 +2416,15 @@ We send this to the uploading peer at the beginning of a 'F' connection, to tell
 
 In Nicotine+, these messages are matched to their message number in slskproto.py in the SlskProtoThread function, defined in slskmessages.py and callbacks for the messages are set in pynicotine.py.
 
-### The Message format
+### Distributed Message Format
 
 | Message Length | Code   | Message Contents |
 | -------------- | ------ | ---------------- |
 | uint32         | uint8  | ...              |
 
-### Message Index
+### Distributed Message Codes
 
-| Code | Message                                  | Status     |
+| Code | Message Function                         | Status     |
 | ---- | ---------------------------------------- | ---------- |
 | 0    | [Ping](#distributed-code-0)              |            |
 | 3    | [Search Request](#distributed-code-3)    |            |
@@ -2901,17 +2433,15 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 | 7    | [Child Depth](#distributed-code-7)       | Deprecated |
 | 93   | [Embedded Message](#distributed-code-93) |            |
 
+The Nicotine+ function names used in slskmessages.py are specified below.
+
 ## Distributed Code 0
 
-### Description
+### DistribAlive
 
 Send it every 60 sec.
 
-### Function Names
-
-  - Nicotine+: DistribAlive
-
-### Data Order
+#### Data Order
 
   - Send
       - Empty Message
@@ -2920,16 +2450,11 @@ Send it every 60 sec.
 
 ## Distributed Code 3
 
-### Description
+### DistribSearch
 
-Search request that arrives through the distributed network. 
-We transmit the search request to our child peers.
+Search request that arrives through the distributed network. We transmit the search request to our child peers.
 
-### Function Names
-
-  - Nicotine+: DistribSearch
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>unknown</ins>
@@ -2944,15 +2469,11 @@ We transmit the search request to our child peers.
 
 ## Distributed Code 4
 
-### Description
+### DistribBranchLevel
 
 We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
-### Function Names
-
-  - Nicotine+: DistribBranchLevel
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **int32** <ins>branch level</ins>
@@ -2961,15 +2482,11 @@ We tell our distributed children what our position is in our branch (xth generat
 
 ## Distributed Code 5
 
-### Description
+### DistribBranchRoot
 
 We tell our distributed children the username of the root of the branch we're in on the distributed network.
 
-### Function Names
-
-  - Nicotine+: DistribBranchRoot
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **string** <ins>branch root</ins>
@@ -2978,17 +2495,13 @@ We tell our distributed children the username of the root of the branch we're in
 
 ## Distributed Code 7
 
-### Description
+### DistribChildDepth
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
 We tell our distributed parent the maximum number of generation of children we have on the distributed network.
 
-### Function Names
-
-  - Nicotine+: DistribChildDepth
-
-### Data Order
+#### Data Order
 
   - Send
     1.  **uint32** <ins>child depth</ins>
@@ -2997,21 +2510,19 @@ We tell our distributed parent the maximum number of generation of children we h
 
 ## Distributed Code 93
 
-### Description
+### DistribEmbeddedMessage
 
-A branch root sends us an embedded distributed message. The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3). We unpack the distributed message and distribute it to our child peers.
+A branch root sends us an embedded distributed message. We unpack the distributed message and distribute it to our child peers.
 
-### Function Names
+The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3).
 
-  - Nicotine+: DistribEmbeddedMessage
-
-### Data Order
+#### Data Order
 
   - Send
-    1.  **uint8** <ins>distributed code</ins>
+    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
     2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
   - Receive
-    1.  **uint8** <ins>distributed code</ins>
+    1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
     2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
 
 # Credits
