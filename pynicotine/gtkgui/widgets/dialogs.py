@@ -166,19 +166,22 @@ class EntryDialog(MessageDialog):
         if droplist:
             dropdown = Gtk.ComboBoxText(has_entry=True, visible=True)
             self.entry = dropdown.get_child()
+            self.entry.set_visibility(visibility)
 
             for i in droplist:
                 dropdown.append_text(i)
 
             self.dialog.get_message_area().add(dropdown)
         else:
-            self.entry = Gtk.Entry(visible=True)
+            if Gtk.get_major_version() == 4 and not visibility:
+                self.entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
+            else:
+                self.entry = Gtk.Entry(visibility=visibility, visible=True)
+
             self.dialog.get_message_area().add(self.entry)
 
-        self.entry.connect("activate", lambda x: self.response(Gtk.ResponseType.OK))
-        self.entry.set_activates_default(True)
+        self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
         self.entry.set_text(default)
-        self.entry.set_visibility(visibility)
 
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
