@@ -155,7 +155,7 @@ class MessageDialog:
 class EntryDialog(MessageDialog):
 
     def __init__(self, parent, title, message, callback, callback_data=None, default="",
-                 optionmessage="", optionvalue=False, visibility=True, droplist=None):
+                 option_label="", option_value=False, visibility=True, droplist=None):
 
         super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
                          callback=callback, callback_data=callback_data, width=500,
@@ -180,8 +180,9 @@ class EntryDialog(MessageDialog):
         self.entry.set_text(default)
         self.entry.set_visibility(visibility)
 
-        if optionmessage:
-            self.option = Gtk.CheckButton(label=optionmessage, active=optionvalue, visible=True)
+        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+
+        if option_label:
             self.dialog.get_message_area().add(self.option)
 
     def get_response_value(self):
@@ -193,7 +194,7 @@ class EntryDialog(MessageDialog):
 
 class OptionDialog(MessageDialog):
 
-    def __init__(self, parent, title, message, callback, callback_data=None, checkbox_label="",
+    def __init__(self, parent, title, message, callback, callback_data=None, option_label="", option_value=False,
                  first_button=_("_No"), second_button=_("_Yes"), third_button=""):
 
         buttons = []
@@ -210,6 +211,7 @@ class OptionDialog(MessageDialog):
         super().__init__(parent=parent, title=title, message=message, message_type=Gtk.MessageType.OTHER,
                          callback=callback, callback_data=callback_data, buttons=buttons)
 
-        if checkbox_label:
-            self.checkbox = Gtk.CheckButton(label=checkbox_label, visible=bool(checkbox_label))
-            self.dialog.get_message_area().add(self.checkbox)
+        self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
+
+        if option_label:
+            self.dialog.get_message_area().add(self.option)
