@@ -23,8 +23,8 @@ import os
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.theme import get_icon
@@ -182,11 +182,12 @@ class FastConfigureAssistant(UserInterface):
 
     def on_add_share(self, *_args):
 
-        choose_dir(
+        FolderChooser(
             parent=self.FastConfigureDialog,
             title=_("Add a Shared Folder"),
-            callback=self.on_add_share_selected
-        )
+            callback=self.on_add_share_selected,
+            multiple=True
+        ).show()
 
     def on_remove_share(self, *_args):
 

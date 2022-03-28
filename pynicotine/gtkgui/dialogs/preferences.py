@@ -35,13 +35,13 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
-from pynicotine.gtkgui.widgets.filechooser import choose_dir
-from pynicotine.gtkgui.widgets.filechooser import save_file
+from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
+from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import message_dialog
+from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import get_icon
@@ -171,11 +171,11 @@ class NetworkFrame(UserInterface):
             return
 
         if logged_in != self.frame.np.logged_in:
-            message_dialog(
+            MessageDialog(
                 parent=self.preferences.dialog,
                 title=_("Password Change Rejected"),
                 message=("Since your login status changed, your password has not been changed. Please try again.")
-            )
+            ).show()
             return
 
         if not password:
@@ -199,14 +199,14 @@ class NetworkFrame(UserInterface):
                        + "\n\n"
                        + _("Enter password to use when logging in:"))
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Change Password"),
             message=message,
             visibility=False,
             callback=self.on_change_password_response,
             callback_data=self.frame.np.logged_in
-        )
+        ).show()
 
     def on_toggle_upnp(self, widget, *_args):
         self.portmap_required = widget.get_active()
@@ -338,15 +338,15 @@ class DownloadsFrame(UserInterface):
 
     def on_add_filter(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Add Download Filter"),
             message=_("Enter a new download filter:"),
             callback=self.on_add_filter_response,
-            optionvalue=True,
-            optionmessage="Escape this filter?",
+            option_value=True,
+            option_label="Escape this filter?",
             droplist=list(self.filtersiters.keys())
-        )
+        ).show()
 
     def get_filter_list(self):
 
@@ -399,16 +399,16 @@ class DownloadsFrame(UserInterface):
         iterator = self.filtersiters[dfilter]
         escapedvalue = self.filterlist.get_value(iterator, 1)
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Edit Download Filter"),
             message=_("Modify the following download filter:"),
             callback=self.on_edit_filter_response,
             default=dfilter,
-            optionvalue=escapedvalue,
-            optionmessage="Escape this filter?",
+            option_value=escapedvalue,
+            option_label="Escape this filter?",
             droplist=list(self.filtersiters.keys())
-        )
+        ).show()
 
     def get_selected_filter(self):
 
@@ -664,11 +664,12 @@ class SharesFrame(UserInterface):
 
     def on_add_shared_dir(self, *_args):
 
-        choose_dir(
+        FolderChooser(
             parent=self.preferences.dialog,
             callback=self.on_add_shared_dir_selected,
-            title=_("Add a Shared Folder")
-        )
+            title=_("Add a Shared Folder"),
+            multiple=True
+        ).show()
 
     def on_edit_shared_dir_response(self, dialog, response_id, path):
 
@@ -713,16 +714,16 @@ class SharesFrame(UserInterface):
             folder = model.get_value(iterator, 1)
             buddy_only = model.get_value(iterator, 2)
 
-            entry_dialog(
+            EntryDialog(
                 parent=self.preferences.dialog,
                 title=_("Edit Shared Folder"),
                 message=_("Enter new virtual name for '%(dir)s':") % {'dir': folder},
                 default=virtual_name,
-                optionvalue=buddy_only,
-                optionmessage="Share with buddies only?",
+                option_value=buddy_only,
+                option_label="Share with buddies only?",
                 callback=self.on_edit_shared_dir_response,
                 callback_data=path
-            )
+            ).show()
             return
 
     def on_remove_shared_dir(self, *_args):
@@ -928,12 +929,12 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Ignore User"),
             message=_("Enter the name of the user you want to ignore:"),
             callback=self.on_add_ignored_response
-        )
+        ).show()
 
     def on_remove_ignored(self, *_args):
 
@@ -976,12 +977,12 @@ class IgnoredUsersFrame(UserInterface):
 
     def on_add_ignored_ip(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Ignore IP Address"),
             message=_("Enter an IP address you want to ignore:") + " " + _("* is a wildcard"),
             callback=self.on_add_ignored_ip_response
-        )
+        ).show()
 
     def on_remove_ignored_ip(self, *_args):
 
@@ -1100,12 +1101,12 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_banned(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Ban User"),
             message=_("Enter the name of the user you want to ban:"),
             callback=self.on_add_banned_response
-        )
+        ).show()
 
     def on_remove_banned(self, *_args):
 
@@ -1149,12 +1150,12 @@ class BannedUsersFrame(UserInterface):
 
     def on_add_blocked(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Block IP Address"),
             message=_("Enter an IP address you want to block:") + " " + _("* is a wildcard"),
             callback=self.on_add_blocked_response
-        )
+        ).show()
 
     def on_remove_blocked(self, *_args):
 
@@ -1298,13 +1299,13 @@ class ChatsFrame(UserInterface):
 
     def on_add_censored(self, *_args):
 
-        entry_dialog(
+        EntryDialog(
             parent=self.preferences.dialog,
             title=_("Censor Pattern"),
             message=_("Enter a pattern you want to censor. Add spaces around the pattern if you don't "
                       "want to match strings inside words (may fail at the beginning and end of lines)."),
             callback=self.on_add_censored_response
-        )
+        ).show()
 
     def on_remove_censored(self, *_args):
 
@@ -3022,13 +3023,13 @@ class Preferences(UserInterface):
 
     def back_up_config(self, *_args):
 
-        save_file(
+        FileChooserSave(
             parent=self.frame.MainWindow,
             callback=self.back_up_config_response,
-            initialdir=os.path.dirname(config.filename),
-            initialfile="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
+            initial_folder=os.path.dirname(config.filename),
+            initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
             title=_("Pick a File Name for Config Backup")
-        )
+        ).show()
 
     def on_widget_scroll_event(self, _widget, event):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event

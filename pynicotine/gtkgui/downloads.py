@@ -28,7 +28,7 @@ import os
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.utils import open_file_path
 
 
@@ -62,23 +62,23 @@ class Downloads(TransferList):
 
     def on_try_clear_queued(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear Queued Downloads'),
             message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_response,
             callback_data="queued"
-        )
+        ).show()
 
     def on_try_clear_all(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Clear All Downloads'),
             message=_('Do you really want to clear all downloads?'),
             callback=self.on_clear_response,
             callback_data="all"
-        )
+        ).show()
 
     def folder_download_response(self, dialog, response_id, msg):
 
@@ -89,14 +89,14 @@ class Downloads(TransferList):
 
     def download_large_folder(self, username, folder, numfiles, msg):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 'num': numfiles, 'user': username, 'folder': folder},
             callback=self.folder_download_response,
             callback_data=msg
-        )
+        ).show()
 
     def on_copy_url(self, *_args):
 

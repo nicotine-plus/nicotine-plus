@@ -20,7 +20,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import human_size
 
@@ -67,12 +67,12 @@ class Statistics(UserInterface):
 
     def on_reset_statistics(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.dialog,
             title=_('Reset Transfer Statistics?'),
             message=_('Do you really want to reset transfer statistics?'),
             callback=self.on_reset_statistics_response
-        )
+        ).show()
 
     def hide(self, *_args):
         dialog_hide(self.dialog)

@@ -217,8 +217,6 @@ else:
 UINT_UNPACK = struct.Struct("<I").unpack
 DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
 
-UINT_PACK = struct.Struct("<I").pack
-
 
 class ConnectionInProgress:
     """ As all p2p connect()s are non-blocking, this class is used to
@@ -1385,8 +1383,8 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[self.server_socket]
-        conn_obj.obuf.extend(UINT_PACK(len(msg) + 4))
-        conn_obj.obuf.extend(UINT_PACK(self.servercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(self.servercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1504,8 +1502,8 @@ class SlskProtoThread(threading.Thread):
             if msg is None:
                 return
 
-            conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
-            conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
+            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_obj.__class__]))
             conn_obj.obuf.extend(msg)
 
         elif msg_obj.__class__ is PeerInit:
@@ -1518,8 +1516,8 @@ class SlskProtoThread(threading.Thread):
             if conn_obj.indirect:
                 return
 
-            conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
-            conn_obj.obuf.extend(bytes([self.peerinitcodes[msg_obj.__class__]]))
+            conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_obj.__class__]))
             conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1630,8 +1628,8 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[msg_obj.init.sock]
-        conn_obj.obuf.extend(UINT_PACK(len(msg) + 4))
-        conn_obj.obuf.extend(UINT_PACK(self.peercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(self.peercodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1857,8 +1855,8 @@ class SlskProtoThread(threading.Thread):
             return
 
         conn_obj = self._conns[msg_obj.init.sock]
-        conn_obj.obuf.extend(UINT_PACK(len(msg) + 1))
-        conn_obj.obuf.extend(bytes([self.distribcodes[msg_obj.__class__]]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(self.distribcodes[msg_obj.__class__]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)

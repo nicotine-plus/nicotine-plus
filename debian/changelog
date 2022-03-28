@@ -2,7 +2,13 @@ nicotine (3.3.0-dev1) impish; urgency=medium
 
   * Development version.
 
- -- Mat <mail@mathias.is>  Sat, 19 Feb 2022 03:50:34 +0300
+ -- Mat <mail@mathias.is>  Sat, 19 Mar 2022 21:35:54 +0300
+
+nicotine (3.2.2-1) impish; urgency=medium
+
+  * Latest upstream.
+
+ -- Mat <mail@mathias.is>  Sat, 19 Mar 2022 20:29:41 +0300
 
 nicotine (3.2.1-1) impish; urgency=medium
 

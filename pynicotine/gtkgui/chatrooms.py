@@ -38,7 +38,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.popovers.roomlist import RoomList
 from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
@@ -506,6 +506,7 @@ class ChatRoom(UserInterface):
             self.RoomOptions.remove(widget)
             self.ChatEntryBox.add(widget)
 
+        self.Speech.set_active(False)  # Public feed is jibberish and too fast for TTS
         self.ChatEntry.set_sensitive(False)
         self.ChatEntryBox.set_halign(Gtk.Align.END)
 
@@ -1105,12 +1106,12 @@ class ChatRoom(UserInterface):
 
     def on_delete_room_log(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.frame.MainWindow,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this room?'),
             callback=self.on_delete_room_log_response
-        )
+        ).show()
 
     def on_ignore_users_settings(self, *_args):
         self.frame.on_settings(page='IgnoredUsers')

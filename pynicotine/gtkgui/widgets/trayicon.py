@@ -23,7 +23,7 @@ import gi
 from gi.repository import Gtk
 
 from pynicotine.config import config
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.ui import GUI_DIR
 from pynicotine.logfacility import log
@@ -227,13 +227,13 @@ class BaseImplementation:
     def on_open_private_chat(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Start Messaging"),
             message=_('Enter the name of the user whom you want to send a message:'),
             callback=self.on_open_private_chat_response,
             droplist=users
-        )
+        ).show()
 
     def on_get_a_users_info_response(self, dialog, response_id, _data):
 
@@ -249,13 +249,13 @@ class BaseImplementation:
     def on_get_a_users_info(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request User Info"),
             message=_('Enter the name of the user whose info you want to see:'),
             callback=self.on_get_a_users_info_response,
             droplist=users
-        )
+        ).show()
 
     def on_get_a_users_shares_response(self, dialog, response_id, _data):
 
@@ -271,13 +271,13 @@ class BaseImplementation:
     def on_get_a_users_shares(self, *_args):
 
         users = (i[0] for i in config.sections["server"]["userlist"])
-        entry_dialog(
+        EntryDialog(
             parent=self.frame.application.get_active_window(),
             title=config.application_name + ": " + _("Request Shares List"),
             message=_('Enter the name of the user whose shares you want to see:'),
             callback=self.on_get_a_users_shares_response,
             droplist=users
-        )
+        ).show()
 
     def set_icon(self, status=None, force_update=False):
 
@@ -306,8 +306,7 @@ class BaseImplementation:
     def set_icon_name(self, icon_name):
         pass
 
-    @staticmethod
-    def is_visible():
+    def is_visible(self):  # pylint:disable=no-self-use
         return False
 
     def show(self):

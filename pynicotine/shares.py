@@ -400,7 +400,7 @@ class Scanner:
 
         message = slskmessages.FileSearchResult()
         stream = bytearray()
-        stream.extend(message.pack_object(len(folder)))
+        stream.extend(message.pack_uint32(len(folder)))
 
         for fileinfo in folder:
             stream.extend(message.pack_file_info(fileinfo))
@@ -570,6 +570,7 @@ class Shares:
     def load_shares(cls, shares, dbs, reset_shares=False):
 
         errors = []
+        exception = None
 
         for destination, shelvefile in dbs:
             try:

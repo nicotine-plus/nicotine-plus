@@ -64,8 +64,8 @@ def rename_process(new_name, debug_info=False):
             libc = ctypes.CDLL(None)
             libc.setproctitle(new_name)
 
-        except Exception as error:
-            errors.append(error)
+        except Exception as second_error:
+            errors.append(second_error)
             errors.append("Failed BSD style")
 
     if debug_info and errors:
@@ -254,124 +254,46 @@ def get_result_bitrate_length(filesize, attributes):
     """ Used to get the audio bitrate and length of search results and
     user browse files """
 
-    h_bitrate = ""
-    h_length = ""
+    bitrate = attributes.get(0)
+    length = attributes.get(1)
+    vbr = attributes.get(2)
+    sample_rate = attributes.get(4)
+    bit_depth = attributes.get(5)
 
-    bitrate = 0
-    length = 0
-
-    # If there are 3 entries in the attribute list
-    if len(attributes) == 3:
-
-        first = attributes[0]
-        second = attributes[1]
-        third = attributes[2]
-
-        # Sometimes the vbr indicator is in third position
-        # Known clients: Soulseek NS, Nicotine+, Museek+, SoulSeeX
-        if third in (0, 1):
-
-            if third == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: unknown (does this actually exist?)
-        elif second in (0, 1):
-
-            if second == 1:
-                h_bitrate = " (vbr)"
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = third
-            h_length = human_length(third)
-
-        # Lossless audio, length is in first position
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif third > 1:
-
-            length = first
-            h_length = human_length(first)
-
+    if bitrate is None:
+        if sample_rate and bit_depth:
             # Bitrate = sample rate (Hz) * word length (bits) * channel count
             # Bitrate = 44100 * 16 * 2
-            bitrate = (second * third * 2) // 1000
-            h_bitrate = str(bitrate)
+            bitrate = (sample_rate * bit_depth * 2) // 1000
 
         else:
+            bitrate = -1
 
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
+    if length is None:
+        if bitrate > 0:
+            # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
+            length = filesize / (bitrate * 125)
 
-    # If there are 2 entries in the attribute list
-    # Known clients: SoulseekQt
-    elif len(attributes) == 2:
-
-        first = attributes[0]
-        second = attributes[1]
-
-        # Sometimes the vbr indicator is in second position
-        # Known clients: SoulseekQt 2015-2-21 and earlier
-        if second in (0, 1):
-
-            # If it's a vbr file we can't deduce the length
-            if second == 1:
-
-                h_bitrate = " (vbr)"
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-            # If it's a constant bitrate we can deduce the length
-            else:
-
-                bitrate = first
-                h_bitrate = str(bitrate) + h_bitrate
-
-                if bitrate > 0:
-                    # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                    length = filesize / (bitrate * 125)
-                    h_length = human_length(length)
-
-        # Lossless audio without length attribute
-        # Known clients: SoulseekQt 2015-6-12 and later
-        elif first >= 8000 and second <= 64:
-
-            # Bitrate = sample rate (Hz) * word length (bits) * channel count
-            # Bitrate = 44100 * 16 * 2
-            bitrate = (first * second * 2) // 1000
-            h_bitrate = str(bitrate)
-
-            if bitrate > 0:
-                # Dividing the file size by the bitrate in Bytes should give us a good enough approximation
-                length = filesize / (bitrate * 125)
-                h_length = human_length(length)
-
-        # Sometimes the bitrate is in first position and the length in second position
-        # Known clients: SoulseekQt 2015-6-12 and later
         else:
-
-            bitrate = first
-            h_bitrate = str(bitrate) + h_bitrate
-
-            length = second
-            h_length = human_length(second)
+            length = -1
 
     # Ignore invalid values
     if bitrate <= 0:
-        h_bitrate = ""
         bitrate = 0
+        h_bitrate = ""
+
+    else:
+        h_bitrate = str(bitrate)
+
+        if vbr == 1:
+            h_bitrate += " (vbr)"
 
     if length < 0:
-        h_length = ""
         length = 0
+        h_length = ""
+
+    else:
+        h_length = human_length(length)
 
     return h_bitrate, bitrate, h_length, length
 
@@ -587,10 +509,10 @@ def write_file_and_backup(path, callback, protect=False):
             if os.path.exists(path + ".old"):
                 os.rename(path + ".old", path)
 
-        except Exception as error:
+        except Exception as second_error:
             log.add(_("Unable to restore previous file %(path)s: %(error)s"), {
                 "path": path,
-                "error": error
+                "error": second_error
             })
 
     if protect:

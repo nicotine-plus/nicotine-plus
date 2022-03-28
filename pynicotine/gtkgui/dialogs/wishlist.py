@@ -23,9 +23,9 @@ from pynicotine.config import config
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import entry_dialog
+from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
-from pynicotine.gtkgui.widgets.dialogs import option_dialog
+from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -115,14 +115,14 @@ class WishList(UserInterface):
             iterator = model.get_iter(path)
             old_wish = model.get_value(iterator, 0)
 
-            entry_dialog(
+            EntryDialog(
                 parent=self.dialog,
                 title=_("Edit Wish"),
                 message=_("Enter new value for wish '%s':") % old_wish,
                 default=old_wish,
                 callback=self.on_edit_wish_response,
                 callback_data=old_wish
-            )
+            ).show()
             return
 
     def on_remove_wish(self, *_args):
@@ -149,12 +149,12 @@ class WishList(UserInterface):
 
     def on_clear_wishlist(self, *_args):
 
-        option_dialog(
+        OptionDialog(
             parent=self.dialog,
             title=_('Clear Wishlist?'),
             message=_('Do you really want to clear your wishlist?'),
             callback=self.clear_wishlist_response
-        )
+        ).show()
 
     def add_wish(self, wish):
 

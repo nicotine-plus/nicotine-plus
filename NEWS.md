@@ -3,8 +3,8 @@ News
 
 As per GCS § 6.7, this file contains a list of user-visible, noteworthy changes. Note that this is not the same as a changelog.
 
-Version 3.3.0 (master branch)
------------------------------
+Version (Development 1)
+-----------------------
 
 Changes
 
@@ -25,9 +25,12 @@ Issues closed on GitHub
  * Question: Listening port range open on router, yet Check Port Status test fails ([#1868](https://github.com/nicotine-plus/nicotine-plus/issues/1868))
  * Make "PRIVATE FILE" a translatable string ([#1893](https://github.com/nicotine-plus/nicotine-plus/issues/1893))
  * ModuleNotFoundError: No module named 'pynicotine' ([#1953](https://github.com/nicotine-plus/nicotine-plus/issues/1953))
+ * Nicotine+ crashes or hangs after a few seconds after it's started ([#1962](https://github.com/nicotine-plus/nicotine-plus/issues/1962))
+ * Issue on macOS Monterey 12.2.1 ([#1969](https://github.com/nicotine-plus/nicotine-plus/issues/1969))
+ * 
 
-Version 3.2.2 (Release Candidate 2)
------------------------------------
+Version 3.2.2 (March 19, 2022)
+------------------------------
 
 Changes
 
