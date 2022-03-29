@@ -1,21 +1,83 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: nicotine
 Upstream-Contact: Nicotine+ Team <nicotine-team@lists.launchpad.net>
 Source: https://github.com/nicotine-plus/nicotine-plus/
 
 Files: *
-Copyright: 2001-2003 PySoulSeek Contributors
-           2003-2004 Nicotine Team
-           2004-2022 Nicotine+ Team
+Copyright: 2001-2003 Nir Arbel <nir@slsk.org>
+                     Brett W. Thompson <brettt@tfn.net>
+                     Josselin Mouette <joss@debian.org>
+                     blueboy <bluegeek@eresmas.com>
+                     Christian Swinehart <cswinehart@users.sourceforge.net>
+                     Hyriand <hyriand@thegraveyard.org>
+                     Geert Kloosterman <geertk@ai.rug.nl>
+                     Joe Halliwell <s9900164@sms.ed.ac.uk>
+                     Alexey Vyskubov <alexey.vyskubov@nokia.com>
+                     Jason Green <smacklefunky@optusnet.com.au>
+           2001-2005 Alexander Kanavin <ak@sensi.org>
+           2003-2004 Hyriand <hyriand@thegraveyard.org>
+                     osiris <osiris.contact@gmail.com>
+                     SmackleFunky
+                     (va)\*10^3
+                     sierracat
+                     Gustavo <gjc@inescporto.pt>
+                     SeeSchloss <see.github@seos.fr>
+                     vasi <djvasi@gmail.com>
+           2004-2022 Mat (mathiascode) <mail@mathias.is>
+                     Kip Warner <kip@thevertigo.com>
+                     Adam Cecile (eLvErDe) <acecile@letz-it.lu>
+                     Han Boetes <han@boetes.org>
+                     alekksander
 License: GPL-3+
 
 Files: po/*
-Copyright: 2003-2022 Nicotine+ Translators
+Copyright: 2003-2022 Han Boetes <han@boetes.org>
+                     nince78
+                     hyriand
+                     Mat (mathiascode) <mail@mathias.is>
+                     Michael Labouebe
+                     daelstorm
+                     The Librezale.org Team
+                     Kalevi
+                     Lisapple
+                     zniavre
+                     melmorabity
+                     m-balthazar
+                     ManWell
+                     flashfr
+                     systr
+                     Meokater
+                     (._.)
+                     lippel
+                     djbaloo
+                     Gianluca Boiano
+                     Nicola
+                     dbazza
+                     mantas
+                     Žygimantas Beručka
+                     mariachini
+                     Amun-Ra
+                     thine
+                     owczi
+                     b1llso
+                     yyyyyyyan
+                     Suicide|Solution
+                     SnIPeRSnIPeR
+                     Mehavoid
+                     Josef Riha
+                     tagomago
+                     Strange
+                     Silvio Orta
+                     Dreslo
+                     mitramai
+                     alimony
+                     Oğuz Ersen
+                     uniss2209
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py
 Copyright: 2017 IP2Location.com
-           2021 Nicotine+ Team
+           2021 Mat (mathiascode) <mail@mathias.is>
 License: MIT
 
 Files: pynicotine/geoip/ipcountrydb.bin
@@ -27,10 +89,15 @@ Copyright: 2016-2017 Bowtie AB
            2018-2020 Jack Marsh
 License: MIT
 
-Files: pynicotine/metadata/tinytag.py
-Copyright: 2014-2022 Tom Wallroth
-           2020-2022 Nicotine+ Team
+Files: pynicotine/metadata/*
+Copyright: 2014-2021 Tom Wallroth
+           2020-2021 Mat (mathiascode) <mail@mathias.is>
 License: MIT
+
+Files: debian/*
+Copyright: 2022 Francois Mazen <francois@mzf.fr>
+                Bastian Germann <bage@debian.org>
+License: GPL-3+
 
 License: GPL-3+
  This program is free software: you can redistribute it and/or modify
