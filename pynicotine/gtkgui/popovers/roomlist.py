@@ -30,11 +30,12 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class RoomList(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/popovers/roomlist.ui")
 
         self.frame = frame
+        self.core = core
         self.room_iters = {}
         self.initializing_feed = False
 
@@ -171,7 +172,7 @@ class RoomList(UserInterface):
 
         room = self.get_selected_room(treeview)
 
-        if room is not None and room not in self.frame.np.chatrooms.joined_rooms:
+        if room is not None and room not in self.core.chatrooms.joined_rooms:
             self.popup_room = room
             self.on_popup_join()
 
@@ -183,15 +184,15 @@ class RoomList(UserInterface):
         room = self.get_selected_room(widget)
         self.popup_room = room
 
-        menu.actions[_("Join Room")].set_enabled(room not in self.frame.np.chatrooms.joined_rooms)
-        menu.actions[_("Leave Room")].set_enabled(room in self.frame.np.chatrooms.joined_rooms)
+        menu.actions[_("Join Room")].set_enabled(room not in self.core.chatrooms.joined_rooms)
+        menu.actions[_("Leave Room")].set_enabled(room in self.core.chatrooms.joined_rooms)
 
-        menu.actions[_("Disown Private Room")].set_enabled(self.frame.np.chatrooms.is_private_room_owned(room))
-        menu.actions[_("Cancel Room Membership")].set_enabled(self.frame.np.chatrooms.is_private_room_member(room))
+        menu.actions[_("Disown Private Room")].set_enabled(self.core.chatrooms.is_private_room_owned(room))
+        menu.actions[_("Cancel Room Membership")].set_enabled(self.core.chatrooms.is_private_room_member(room))
         return False
 
     def on_popup_join(self, *_args):
-        self.frame.np.chatrooms.request_join_room(self.popup_room)
+        self.core.chatrooms.request_join_room(self.popup_room)
         self.popover.hide()
 
     def on_show_chat_feed(self, *_args):
@@ -200,29 +201,29 @@ class RoomList(UserInterface):
             return
 
         if self.feed_check.get_active():
-            self.frame.np.chatrooms.request_join_public_room()
+            self.core.chatrooms.request_join_public_room()
             self.popover.hide()
             return
 
-        self.frame.np.chatrooms.request_leave_public_room()
+        self.core.chatrooms.request_leave_public_room()
 
     def on_popup_private_room_disown(self, *_args):
-        self.frame.np.chatrooms.request_private_room_disown(self.popup_room)
+        self.core.chatrooms.request_private_room_disown(self.popup_room)
 
     def on_popup_private_room_dismember(self, *_args):
-        self.frame.np.chatrooms.request_private_room_dismember(self.popup_room)
+        self.core.chatrooms.request_private_room_dismember(self.popup_room)
 
     def on_popup_leave(self, *_args):
-        self.frame.np.chatrooms.request_leave_room(self.popup_room)
+        self.core.chatrooms.request_leave_room(self.popup_room)
 
     def on_search_room(self, *_args):
         self.room_filter.refilter()
 
     def on_refresh(self, *_args):
-        self.frame.np.chatrooms.request_room_list()
+        self.core.chatrooms.request_room_list()
 
     def on_toggle_accept_private_room(self, *_args):
-        self.frame.np.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
+        self.core.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
 
     def on_search_accelerator(self, *_args):
         """ Ctrl+F: Search rooms """

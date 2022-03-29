@@ -49,9 +49,9 @@ from pynicotine.utils import open_file_path
 
 class UserBrowses(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, frame.userbrowse_notebook, "userbrowse")
+        IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, "userbrowse")
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
@@ -124,6 +124,7 @@ class UserBrowse(UserInterface):
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
+        self.core = userbrowses.core
         self.user = user
         self.local_shares_type = None
         self.queued_path = None
@@ -662,16 +663,16 @@ class UserBrowse(UserInterface):
     def on_download_directory(self, *_args):
 
         if self.selected_folder is not None:
-            self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
+            self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares)
 
     def on_download_directory_recursive(self, *_args):
-        self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
+        self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares, prefix="", recurse=True)
 
     def on_download_directory_to_selected(self, selected, recurse):
 
         try:
-            self.frame.np.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
-                                                     prefix=os.path.join(selected, ""), recurse=recurse)
+            self.core.userbrowse.download_folder(self.user, self.selected_folder, self.shares,
+                                                 prefix=os.path.join(selected, ""), recurse=recurse)
         except OSError:  # failed to open
             log.add('Failed to open %r for reading', selected)  # notify user
 
@@ -705,8 +706,8 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.userbrowse.send_upload_attempt_notification(user)
-        self.frame.np.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
+        self.core.userbrowse.send_upload_attempt_notification(user)
+        self.core.userbrowse.upload_folder(user, folder, self.shares, recurse=recurse)
 
     def on_upload_directory_to(self, *_args, recurse=False):
 
@@ -753,7 +754,7 @@ class UserBrowse(UserInterface):
             return
 
         path = self.selected_folder + '\\'
-        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        url = self.core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
     """ Key Bindings (FolderTreeView) """
@@ -916,7 +917,7 @@ class UserBrowse(UserInterface):
             if file_data[1] not in self.selected_files:
                 continue
 
-            self.frame.np.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
+            self.core.userbrowse.download_file(self.user, folder, file_data, prefix=prefix)
 
     def on_download_files_to_selected(self, selected, _data):
 
@@ -957,10 +958,10 @@ class UserBrowse(UserInterface):
         if not user or folder is None:
             return
 
-        self.frame.np.userbrowse.send_upload_attempt_notification(user)
+        self.core.userbrowse.send_upload_attempt_notification(user)
 
         for basename, size in self.selected_files.items():
-            self.frame.np.userbrowse.upload_file(user, folder, (None, basename, size))
+            self.core.userbrowse.upload_file(user, folder, (None, basename, size))
 
     def on_upload_files(self, *_args):
 
@@ -982,7 +983,7 @@ class UserBrowse(UserInterface):
 
     def on_play_files(self, *_args):
 
-        path = self.frame.np.shares.virtual2real(self.selected_folder)
+        path = self.core.shares.virtual2real(self.selected_folder)
 
         for basename in self.selected_files:
             playfile = os.sep.join([path, basename])
@@ -996,7 +997,7 @@ class UserBrowse(UserInterface):
         if self.selected_folder is None:
             return
 
-        path = self.frame.np.shares.virtual2real(self.selected_folder)
+        path = self.core.shares.virtual2real(self.selected_folder)
         command = config.sections["ui"]["filemanager"]
 
         open_file_path(path, command)
@@ -1041,7 +1042,7 @@ class UserBrowse(UserInterface):
                              "length": model.get_value(iterator, 3)})
 
         if data:
-            FileProperties(self.frame, data, selected_size, selected_length).show()
+            FileProperties(self.frame, self.core, data, selected_size, selected_length).show()
 
     def on_copy_file_path(self, *_args):
 
@@ -1057,7 +1058,7 @@ class UserBrowse(UserInterface):
             return
 
         path = "\\".join([self.selected_folder, next(iter(self.selected_files))])
-        url = self.frame.np.userbrowse.get_soulseek_url(self.user, path)
+        url = self.core.userbrowse.get_soulseek_url(self.user, path)
         copy_text(url)
 
     """ Key Bindings (FileTreeView) """
@@ -1201,7 +1202,7 @@ class UserBrowse(UserInterface):
         self.find_search_matches()
 
     def on_save(self, *_args):
-        self.frame.np.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
+        self.core.userbrowse.save_shares_list_to_disk(self.user, list(self.shares.items()))
 
     def on_refresh(self, *_args):
 
@@ -1214,14 +1215,14 @@ class UserBrowse(UserInterface):
         self.info_bar.set_visible(False)
 
         self.set_in_progress(self.indeterminate_progress)
-        self.frame.np.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
+        self.core.userbrowse.browse_user(self.user, local_shares_type=self.local_shares_type, new_request=True)
 
     def on_close(self, *_args):
 
         self.clear_model()
 
         del self.userbrowses.pages[self.user]
-        self.frame.np.userbrowse.remove_user(self.user)
+        self.core.userbrowse.remove_user(self.user)
         self.userbrowses.remove_page(self.Main)
 
     def on_close_all_tabs(self, *_args):

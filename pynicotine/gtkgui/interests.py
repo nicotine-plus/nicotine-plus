@@ -36,12 +36,13 @@ from pynicotine.utils import human_speed
 
 class Interests(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/interests.ui")
         frame.interests_container.add(self.Main)
 
         self.frame = frame
+        self.core = core
         self.page_id = "interests"
         self.populated_recommends = False
 
@@ -183,7 +184,7 @@ class Interests(UserInterface):
     def populate_recommendations(self):
         """ Populates the lists of recommendations and similar users if empty """
 
-        if self.populated_recommends or not self.frame.np.logged_in:
+        if self.populated_recommends or not self.core.logged_in:
             return
 
         self.on_recommendations_clicked()
@@ -200,7 +201,7 @@ class Interests(UserInterface):
         thing = widget.get_text().lower()
         widget.set_text("")
 
-        if self.frame.np.interests.add_thing_i_like(thing):
+        if self.core.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
     def on_add_thing_i_dislike(self, widget, *_args):
@@ -208,14 +209,14 @@ class Interests(UserInterface):
         thing = widget.get_text().lower()
         widget.set_text("")
 
-        if self.frame.np.interests.add_thing_i_hate(thing):
+        if self.core.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
     def on_remove_thing_i_like(self, *_args):
 
         thing = self.til_popup_menu.get_user()
 
-        if not self.frame.np.interests.remove_thing_i_like(thing):
+        if not self.core.interests.remove_thing_i_like(thing):
             return
 
         self.likes_model.remove(self.likes[thing])
@@ -225,7 +226,7 @@ class Interests(UserInterface):
 
         thing = self.tidl_popup_menu.get_user()
 
-        if not self.frame.np.interests.remove_thing_i_hate(thing):
+        if not self.core.interests.remove_thing_i_hate(thing):
             return
 
         self.dislikes_model.remove(self.dislikes[thing])
@@ -236,10 +237,10 @@ class Interests(UserInterface):
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and self.frame.np.interests.add_thing_i_like(thing):
+        if state.get_boolean() and self.core.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
 
-        elif not state.get_boolean() and self.frame.np.interests.remove_thing_i_like(thing):
+        elif not state.get_boolean() and self.core.interests.remove_thing_i_like(thing):
             self.likes_model.remove(self.likes[thing])
             del self.likes[thing]
 
@@ -250,10 +251,10 @@ class Interests(UserInterface):
         if thing is None:
             thing = self.r_popup_menu.get_user()
 
-        if state.get_boolean() and thing and self.frame.np.interests.add_thing_i_hate(thing):
+        if state.get_boolean() and thing and self.core.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
 
-        elif not state.get_boolean() and self.frame.np.interests.remove_thing_i_hate(thing):
+        elif not state.get_boolean() and self.core.interests.remove_thing_i_hate(thing):
             self.dislikes_model.remove(self.dislikes[thing])
             del self.dislikes[thing]
 
@@ -262,8 +263,8 @@ class Interests(UserInterface):
     def on_recommend_item(self, _action, _state, menu):
 
         thing = menu.get_user()
-        self.frame.np.interests.request_item_recommendations(thing)
-        self.frame.np.interests.request_item_similar_users(thing)
+        self.core.interests.request_item_recommendations(thing)
+        self.core.interests.request_item_similar_users(thing)
 
     def on_recommend_search(self, _action, _state, menu):
         self.recommend_search(menu.get_user())
@@ -271,13 +272,13 @@ class Interests(UserInterface):
     def on_recommendations_clicked(self, *_args):
 
         if not self.likes and not self.dislikes:
-            self.frame.np.interests.request_global_recommendations()
+            self.core.interests.request_global_recommendations()
             return
 
-        self.frame.np.interests.request_recommendations()
+        self.core.interests.request_recommendations()
 
     def on_similar_users_clicked(self, *_args):
-        self.frame.np.interests.request_similar_users()
+        self.core.interests.request_similar_users()
 
     def set_recommendations(self, recommendations, item=None):
 
@@ -320,7 +321,7 @@ class Interests(UserInterface):
             self.recommendation_users[user] = iterator
 
             # Request user status, speed and number of shared files
-            self.frame.np.watch_user(user, force_update=True)
+            self.core.watch_user(user, force_update=True)
 
     def similar_users(self, msg):
         self.set_similar_users(msg.users)
@@ -396,8 +397,8 @@ class Interests(UserInterface):
         item = self.get_selected_item(treeview, column=1)
 
         if item is not None:
-            self.frame.np.interests.request_item_recommendations(item)
-            self.frame.np.interests.request_item_similar_users(item)
+            self.core.interests.request_item_recommendations(item)
+            self.core.interests.request_item_similar_users(item)
 
     def on_popup_ru_menu(self, menu, widget):
 
@@ -410,7 +411,7 @@ class Interests(UserInterface):
         user = self.get_selected_item(treeview, column=1)
 
         if user is not None:
-            self.frame.np.privatechats.show_user(user)
+            self.core.privatechats.show_user(user)
             self.frame.change_main_page("private")
 
     @staticmethod

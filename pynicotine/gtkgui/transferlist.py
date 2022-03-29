@@ -51,12 +51,13 @@ from pynicotine.utils import human_speed
 
 class TransferList(UserInterface):
 
-    def __init__(self, frame, transfer_type):
+    def __init__(self, frame, core, transfer_type):
 
         super().__init__("ui/" + transfer_type + "s.ui")
         getattr(frame, transfer_type + "s_content").add(self.Main)
 
         self.frame = frame
+        self.core = core
         self.type = transfer_type
         self.page_id = transfer_type + "s"
 
@@ -268,7 +269,7 @@ class TransferList(UserInterface):
         self.select_transfers()
 
         for user in self.selected_users:
-            self.frame.np.network_filter.ban_user(user)
+            self.core.network_filter.ban_user(user)
 
     def on_file_search(self, *_args):
 
@@ -627,13 +628,13 @@ class TransferList(UserInterface):
 
     def retry_transfers(self):
         for transfer in self.selected_transfers:
-            getattr(self.frame.np.transfers, "retry_" + self.type)(transfer)
+            getattr(self.core.transfers, "retry_" + self.type)(transfer)
 
     def abort_transfers(self, clear=False):
 
         for transfer in self.selected_transfers:
             if transfer.status != "Finished":
-                self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
+                self.core.transfers.abort_transfer(transfer, send_fail_message=True)
 
                 if not clear:
                     transfer.status = self.aborted_status
@@ -656,8 +657,8 @@ class TransferList(UserInterface):
             if not self.users[user]:
                 del self.users[user]
 
-        if transfer in self.frame.np.transfers.transfer_request_times:
-            del self.frame.np.transfers.transfer_request_times[transfer]
+        if transfer in self.core.transfers.transfer_request_times:
+            del self.core.transfers.transfer_request_times[transfer]
 
         if not cleartreeviewonly:
             self.transfer_list.remove(transfer)
@@ -673,7 +674,7 @@ class TransferList(UserInterface):
 
         for transfer in self.transfer_list.copy():
             if transfer.status in status:
-                self.frame.np.transfers.abort_transfer(transfer, send_fail_message=True)
+                self.core.transfers.abort_transfer(transfer, send_fail_message=True)
                 self.remove_specific(transfer)
 
     def clear(self):
@@ -860,7 +861,7 @@ class TransferList(UserInterface):
             })
 
         if data:
-            FileProperties(self.frame, data, total_size=selected_size, download_button=False).show()
+            FileProperties(self.frame, self.core, data, total_size=selected_size, download_button=False).show()
 
     def on_copy_file_path(self, *_args):
 

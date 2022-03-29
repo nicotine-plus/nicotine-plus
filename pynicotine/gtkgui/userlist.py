@@ -46,11 +46,12 @@ from pynicotine.utils import human_speed
 
 class UserList(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/buddylist.ui")
 
         self.frame = frame
+        self.core = core
         self.page_id = "userlist"
 
         # Columns
@@ -230,7 +231,7 @@ class UserList(UserInterface):
             return
 
         widget.set_text("")
-        self.frame.np.userlist.add_user(username)
+        self.core.userlist.add_user(username)
 
     def update(self):
 
@@ -308,7 +309,7 @@ class UserList(UserInterface):
             self.on_add_note()
             return
 
-        self.frame.np.privatechats.show_user(user)
+        self.core.privatechats.show_user(user)
         self.frame.change_main_page("private")
 
     def on_popup_menu(self, menu, _widget):
@@ -318,7 +319,7 @@ class UserList(UserInterface):
         menu.toggle_user_items()
         menu.populate_private_rooms(self.popup_menu_private_rooms)
 
-        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.frame.np.login_username)
+        private_rooms_enabled = (self.popup_menu_private_rooms.items and menu.user != self.core.login_username)
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def get_user_status(self, msg):
@@ -454,7 +455,7 @@ class UserList(UserInterface):
                 hlast_seen, note, _status, _speed, _file_count, _last_seen, country) = i
             user_list.append([user, note, notify, prioritized, trusted, hlast_seen, country])
 
-        self.frame.np.userlist.save_user_list(user_list)
+        self.core.userlist.save_user_list(user_list)
 
     def save_columns(self):
         save_columns("buddy_list", self.UserListTree.get_columns())
@@ -534,7 +535,7 @@ class UserList(UserInterface):
         ).show()
 
     def on_remove_user(self, *_args):
-        self.frame.np.userlist.remove_user(self.get_selected_username())
+        self.core.userlist.remove_user(self.get_selected_username())
 
     def server_disconnect(self):
 

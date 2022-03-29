@@ -27,11 +27,12 @@ from pynicotine.utils import human_size
 
 class Statistics(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/statistics.ui")
 
         self.frame = frame
+        self.core = core
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.Main,
@@ -63,7 +64,7 @@ class Statistics(UserInterface):
         dialog.destroy()
 
         if response_id == 2:
-            self.frame.np.statistics.reset_stats()
+            self.core.statistics.reset_stats()
 
     def on_reset_statistics(self, *_args):
 

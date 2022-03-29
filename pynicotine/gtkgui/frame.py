@@ -78,7 +78,7 @@ from pynicotine.utils import open_uri
 
 class NicotineFrame(UserInterface):
 
-    def __init__(self, application, network_processor, use_trayicon, start_hidden, bindip, port, ci_mode):
+    def __init__(self, application, core, use_trayicon, start_hidden, bindip, port, ci_mode):
 
         if not ci_mode:
             # Show errors in the GUI from here on
@@ -86,7 +86,7 @@ class NicotineFrame(UserInterface):
             threading.excepthook = self.on_critical_error_threading  # Python >= 3.8 only
 
         self.application = application
-        self.np = network_processor
+        self.core = self.np = core
         self.ci_mode = ci_mode
         self.current_page_id = ""
         self.checking_update = False
@@ -152,9 +152,9 @@ class NicotineFrame(UserInterface):
 
         """ Tray Icon/Notifications """
 
-        self.tray_icon = TrayIcon(self, use_trayicon)
-        self.notifications = Notifications(self)
-        self.statistics = Statistics(self)
+        self.tray_icon = TrayIcon(self, core, use_trayicon)
+        self.notifications = Notifications(self, core)
+        self.statistics = Statistics(self, core)
 
         """ Notebook Tabs """
 
@@ -162,15 +162,15 @@ class NicotineFrame(UserInterface):
         self.initialize_main_tabs()
 
         # Initialize other notebooks
-        self.interests = Interests(self)
-        self.chatrooms = ChatRooms(self)
-        self.search = Searches(self)
-        self.downloads = Downloads(self)
-        self.uploads = Uploads(self)
-        self.userlist = UserList(self)
-        self.privatechat = self.private = PrivateChats(self)
-        self.userinfo = UserInfos(self)
-        self.userbrowse = UserBrowses(self)
+        self.interests = Interests(self, core)
+        self.chatrooms = ChatRooms(self, core)
+        self.search = Searches(self, core)
+        self.downloads = Downloads(self, core)
+        self.uploads = Uploads(self, core)
+        self.userlist = UserList(self, core)
+        self.privatechat = self.private = PrivateChats(self, core)
+        self.userinfo = UserInfos(self, core)
+        self.userbrowse = UserBrowses(self, core)
 
         """ Actions and Menu """
 
@@ -195,13 +195,13 @@ class NicotineFrame(UserInterface):
 
         """ Connect """
 
-        connect_ready = network_processor.start(self, self.network_callback)
+        connect_ready = core.start(self, self.network_callback)
 
         if not connect_ready:
             self.connect_action.set_enabled(False)
 
         elif config.sections["server"]["auto_connect_startup"]:
-            self.np.connect()
+            core.connect()
 
         """ Show Window """
 
@@ -353,7 +353,7 @@ class NicotineFrame(UserInterface):
 
     def network_callback(self, msgs):
         # High priority to ensure there are no delays
-        GLib.idle_add(self.np.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
+        GLib.idle_add(self.core.network_event, msgs, priority=GLib.PRIORITY_HIGH_IDLE)
 
     def server_login(self):
         self.set_widget_online_status(True)
@@ -413,34 +413,34 @@ class NicotineFrame(UserInterface):
     # File
 
     def on_connect(self, *_args):
-        self.np.connect()
+        self.core.connect()
 
     def on_disconnect(self, *_args):
-        self.np.disconnect()
+        self.core.disconnect()
 
     def on_away(self, *_args):
-        self.np.set_away_mode(not self.np.away, save_state=True)
+        self.core.set_away_mode(not self.core.away, save_state=True)
 
     def on_get_privileges(self, *_args):
 
         import urllib.parse
 
-        login = urllib.parse.quote(self.np.login_username)
+        login = urllib.parse.quote(self.core.login_username)
         open_uri(config.privileges_url % login)
-        self.np.request_check_privileges()
+        self.core.request_check_privileges()
 
     def on_fast_configure(self, *_args):
 
         if self.preferences is not None and self.preferences.dialog.get_property("visible"):
             return
 
-        self.fastconfigure = FastConfigureAssistant(self)
+        self.fastconfigure = FastConfigureAssistant(self, self.core)
         self.fastconfigure.show()
 
     def on_settings(self, *_args, page=None):
 
         if self.preferences is None:
-            self.preferences = Preferences(self)
+            self.preferences = Preferences(self, self.core)
 
         if self.fastconfigure is not None and self.fastconfigure.FastConfigureDialog.get_property("visible"):
             return
@@ -559,13 +559,13 @@ class NicotineFrame(UserInterface):
         self.on_settings(page='Shares')
 
     def on_rescan_shares(self, *_args):
-        self.np.shares.rescan_shares()
+        self.core.shares.rescan_shares()
 
     def on_browse_public_shares(self, *_args):
-        self.np.userbrowse.browse_local_public_shares(new_request=True)
+        self.core.userbrowse.browse_local_public_shares(new_request=True)
 
     def on_browse_buddy_shares(self, *_args):
-        self.np.userbrowse.browse_local_buddy_shares(new_request=True)
+        self.core.userbrowse.browse_local_buddy_shares(new_request=True)
 
     # Help
 
@@ -848,7 +848,7 @@ class NicotineFrame(UserInterface):
         self.application.set_accels_for_action("app.close", ["<Primary>q"])
 
         action = Gio.SimpleAction(name="force_quit")
-        action.connect("activate", self.np.quit)
+        action.connect("activate", self.core.quit)
         self.application.add_action(action)
         self.application.set_accels_for_action("app.force_quit", ["<Primary><Alt>q"])
 
@@ -1413,7 +1413,7 @@ class NicotineFrame(UserInterface):
         if not username:
             return
 
-        self.np.userinfo.request_user_info(username)
+        self.core.userinfo.request_user_info(username)
         widget.set_text("")
 
     """ Browse Shares """
@@ -1426,15 +1426,15 @@ class NicotineFrame(UserInterface):
             return
 
         if entry_text.startswith("slsk://"):
-            self.np.userbrowse.open_soulseek_url(entry_text)
+            self.core.userbrowse.open_soulseek_url(entry_text)
         else:
-            self.np.userbrowse.browse_user(entry_text)
+            self.core.userbrowse.browse_user(entry_text)
 
         widget.set_text("")
 
     def on_load_from_disk_selected(self, selected, _data):
         for filename in selected:
-            self.np.userbrowse.load_shares_list_from_disk(filename)
+            self.core.userbrowse.load_shares_list_from_disk(filename)
 
     def on_load_from_disk(self, *_args):
 
@@ -1466,7 +1466,7 @@ class NicotineFrame(UserInterface):
         if not username:
             return
 
-        self.np.privatechats.show_user(username)
+        self.core.privatechats.show_user(username)
         widget.set_text("")
 
     def on_create_room_response(self, dialog, response_id, room):
@@ -1476,7 +1476,7 @@ class NicotineFrame(UserInterface):
 
         if response_id == 2:
             # Create a new room
-            self.np.chatrooms.request_join_room(room, private)
+            self.core.chatrooms.request_join_room(room, private)
 
     def on_create_room(self, widget, *_args):
 
@@ -1485,7 +1485,7 @@ class NicotineFrame(UserInterface):
         if not room:
             return False
 
-        if room not in self.np.chatrooms.server_rooms and room not in self.np.chatrooms.private_rooms:
+        if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
             OptionDialog(
                 parent=self.MainWindow,
                 title=_('Create New Room?'),
@@ -1496,14 +1496,14 @@ class NicotineFrame(UserInterface):
             ).show()
 
         else:
-            self.np.chatrooms.request_join_room(room)
+            self.core.chatrooms.request_join_room(room)
 
         widget.set_text("")
         return True
 
     def update_completions(self):
-        self.np.chatrooms.update_completions()
-        self.np.privatechats.update_completions()
+        self.core.chatrooms.update_completions()
+        self.core.privatechats.update_completions()
 
     """ Away Mode """
 
@@ -1525,16 +1525,16 @@ class NicotineFrame(UserInterface):
             self.auto_away = True
             self.away_timer = None
 
-            if not self.np.away:
-                self.np.set_away_mode(True)
+            if not self.core.away:
+                self.core.set_away_mode(True)
 
             return
 
         if self.auto_away:
             self.auto_away = False
 
-            if self.np.away:
-                self.np.set_away_mode(False)
+            if self.core.away:
+                self.core.set_away_mode(False)
 
         # Reset away timer
         self.remove_away_timer()
@@ -1542,7 +1542,7 @@ class NicotineFrame(UserInterface):
 
     def create_away_timer(self):
 
-        if self.np.away or not self.np.logged_in:
+        if self.core.away or not self.core.logged_in:
             return
 
         away_interval = config.sections["server"]["autoaway"]
@@ -1770,7 +1770,7 @@ class NicotineFrame(UserInterface):
         config.sections["transfers"]["usealtlimits"] = not state
 
         self.update_alternative_speed_icon(not state)
-        self.np.transfers.update_limits()
+        self.core.transfers.update_limits()
         self.tray_icon.set_alternative_speed_limit(not state)
 
     """ Termination """
@@ -1786,14 +1786,14 @@ class NicotineFrame(UserInterface):
 
         dialog.destroy()
         loop.quit()
-        self.np.quit()
+        self.core.quit()
 
     def on_critical_error(self, exc_type, exc_value, exc_traceback):
 
         from traceback import format_tb
 
         # Check if exception occurred in a plugin
-        if self.np.pluginhandler is not None:
+        if self.core.pluginhandler is not None:
             traceback = exc_traceback
 
             while True:
@@ -1802,11 +1802,11 @@ class NicotineFrame(UserInterface):
 
                 filename = traceback.tb_frame.f_code.co_filename
 
-                for plugin_name in self.np.pluginhandler.enabled_plugins:
-                    path = self.np.pluginhandler.findplugin(plugin_name)
+                for plugin_name in self.core.pluginhandler.enabled_plugins:
+                    path = self.core.pluginhandler.findplugin(plugin_name)
 
                     if filename.startswith(path):
-                        self.np.pluginhandler.show_plugin_error(
+                        self.core.pluginhandler.show_plugin_error(
                             plugin_name, exc_type, exc_value, exc_traceback)
                         return
 
@@ -1856,7 +1856,7 @@ class NicotineFrame(UserInterface):
             if remember:
                 config.sections["ui"]["exitdialog"] = 0
 
-            self.np.quit()
+            self.core.quit()
 
         elif response_id == 3:  # 'Run in Background'
             if remember:
@@ -1888,7 +1888,7 @@ class NicotineFrame(UserInterface):
     def on_quit(self, *_args, remember=False):
 
         if config.sections["ui"]["exitdialog"] == 0:  # 0: 'Quit program'
-            self.np.quit()
+            self.core.quit()
             return True
 
         self.show_exit_dialog(remember)
@@ -1927,7 +1927,7 @@ class NicotineFrame(UserInterface):
 
 class Application(Gtk.Application):
 
-    def __init__(self, network_processor, tray_icon, start_hidden, bindip, port, ci_mode, multi_instance):
+    def __init__(self, core, tray_icon, start_hidden, bindip, port, ci_mode, multi_instance):
 
         super().__init__(application_id=config.application_id)
         GLib.set_application_name(config.application_name)
@@ -1936,7 +1936,7 @@ class Application(Gtk.Application):
         if multi_instance:
             self.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
 
-        self.network_processor = network_processor
+        self.core = core
         self.tray_icon = tray_icon
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
@@ -1963,7 +1963,7 @@ class Application(Gtk.Application):
 
             NicotineFrame(
                 self,
-                self.network_processor,
+                self.core,
                 self.tray_icon,
                 self.start_hidden,
                 self.bindip,

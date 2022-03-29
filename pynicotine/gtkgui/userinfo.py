@@ -44,9 +44,9 @@ from pynicotine.utils import human_speed
 
 class UserInfos(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, frame.userinfo_notebook, "userinfo")
+        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, "userinfo")
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
     def on_switch_info_page(self, _notebook, page, _page_num):
@@ -117,6 +117,7 @@ class UserInfo(UserInterface):
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
+        self.core = userinfos.core
 
         self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
         self.descr_textview = TextView(self.descr)
@@ -421,23 +422,23 @@ class UserInfo(UserInterface):
         self.frame.interests.recommend_search(popup.get_user())
 
     def on_send_message(self, *_args):
-        self.frame.np.privatechats.show_user(self.user)
+        self.core.privatechats.show_user(self.user)
         self.frame.change_main_page("private")
 
     def on_show_ip_address(self, *_args):
-        self.frame.np.request_ip_address(self.user)
+        self.core.request_ip_address(self.user)
 
     def on_browse_user(self, *_args):
-        self.frame.np.userbrowse.browse_user(self.user)
+        self.core.userbrowse.browse_user(self.user)
 
     def on_add_to_list(self, *_args):
-        self.frame.np.userlist.add_user(self.user)
+        self.core.userlist.add_user(self.user)
 
     def on_ban_user(self, *_args):
-        self.frame.np.network_filter.ban_user(self.user)
+        self.core.network_filter.ban_user(self.user)
 
     def on_ignore_user(self, *_args):
-        self.frame.np.network_filter.ignore_user(self.user)
+        self.core.network_filter.ignore_user(self.user)
 
     def on_save_picture_response(self, selected, _data):
 
@@ -482,12 +483,12 @@ class UserInfo(UserInterface):
         self.info_bar.set_visible(False)
         self.progressbar.set_fraction(0.0)
 
-        self.frame.np.userinfo.request_user_info(self.user)
+        self.core.userinfo.request_user_info(self.user)
 
     def on_close(self, *_args):
 
         del self.userinfos.pages[self.user]
-        self.frame.np.userinfo.remove_user(self.user)
+        self.core.userinfo.remove_user(self.user)
         self.userinfos.remove_page(self.Main)
 
     def on_close_all_tabs(self, *_args):

@@ -35,11 +35,12 @@ from pynicotine.utils import open_uri
 
 class FastConfigureAssistant(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/fastconfigure.ui")
 
         self.frame = frame
+        self.core = core
         set_dialog_properties(self.FastConfigureDialog, frame.MainWindow)
 
         for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):
@@ -90,7 +91,7 @@ class FastConfigureAssistant(UserInterface):
         )
 
         # portpage
-        url = config.portchecker_url % str(self.frame.np.protothread.listenport)
+        url = config.portchecker_url % str(self.core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.checkmyport.set_markup(text)
         self.checkmyport.connect("activate-link", lambda x, url: open_uri(url))
@@ -214,8 +215,8 @@ class FastConfigureAssistant(UserInterface):
         config.sections["transfers"]["shared"] = self.shared_folders
 
         # Rescan shares
-        self.frame.np.shares.rescan_shares()
-        self.frame.np.connect()
+        self.core.shares.rescan_shares()
+        self.core.connect()
 
         self.FastConfigureDialog.destroy()
 

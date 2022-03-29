@@ -32,11 +32,12 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class ChatHistory(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/popovers/chathistory.ui")
 
         self.frame = frame
+        self.core = core
         self.iters = {}
 
         self.model = Gtk.ListStore(str, str)
@@ -110,5 +111,5 @@ class ChatHistory(UserInterface):
         iterator = self.model.get_iter(path)
         username = self.model.get_value(iterator, 0)
 
-        self.frame.np.privatechats.show_user(username)
+        self.core.privatechats.show_user(username)
         self.popover.hide()

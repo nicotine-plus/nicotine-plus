@@ -34,9 +34,10 @@ from pynicotine.logfacility import log
 
 class BaseImplementation:
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.frame = frame
+        self.core = core
         self.menu = None
         self.status = "disconnect"
         self.custom_icons = False
@@ -89,7 +90,7 @@ class BaseImplementation:
         self.menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit"), self.frame.np.quit)
+        self.create_item(_("Quit"), self.core.quit)
 
     def update_show_hide_label(self):
 
@@ -220,7 +221,7 @@ class BaseImplementation:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.privatechats.show_user(user)
+        self.core.privatechats.show_user(user)
         self.frame.change_main_page("private")
         self.frame.show()
 
@@ -243,7 +244,7 @@ class BaseImplementation:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.userinfo.request_user_info(user)
+        self.core.userinfo.request_user_info(user)
         self.frame.show()
 
     def on_get_a_users_info(self, *_args):
@@ -265,7 +266,7 @@ class BaseImplementation:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.userbrowse.browse_user(user)
+        self.core.userbrowse.browse_user(user)
         self.frame.show()
 
     def on_get_a_users_shares(self, *_args):
@@ -288,9 +289,9 @@ class BaseImplementation:
             self.status = status
 
         # Check for hilites, and display hilite icon if there is a room or private hilite
-        if (self.frame.np.notifications
-                and (self.frame.np.notifications.chat_hilites["rooms"]
-                     or self.frame.np.notifications.chat_hilites["private"])):
+        if (self.core.notifications
+                and (self.core.notifications.chat_hilites["rooms"]
+                     or self.core.notifications.chat_hilites["private"])):
             icon_name = "msg"
         else:
             # If there is no hilite, display the status
@@ -318,9 +319,9 @@ class BaseImplementation:
 
 class AppIndicatorImplementation(BaseImplementation):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        super().__init__(frame)
+        super().__init__(frame, core)
 
         try:
             # Check if AyatanaAppIndicator3 is available
@@ -375,9 +376,9 @@ class AppIndicatorImplementation(BaseImplementation):
 
 class StatusIconImplementation(BaseImplementation):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        super().__init__(frame)
+        super().__init__(frame, core)
 
         if not hasattr(Gtk, "StatusIcon") or sys.platform == "darwin":
             # Tray icons don't work as expected on macOS
@@ -420,9 +421,10 @@ class StatusIconImplementation(BaseImplementation):
 
 class TrayIcon:
 
-    def __init__(self, frame, use_trayicon):
+    def __init__(self, frame, core, use_trayicon):
 
         self.frame = frame
+        self.core = core
         self.available = True
         self.implementation = None
 
@@ -443,14 +445,14 @@ class TrayIcon:
 
         if self.implementation is None:
             try:
-                self.implementation = AppIndicatorImplementation(self.frame)
+                self.implementation = AppIndicatorImplementation(self.frame, self.core)
 
             except AttributeError:
                 try:
-                    self.implementation = StatusIconImplementation(self.frame)
+                    self.implementation = StatusIconImplementation(self.frame, self.core)
 
                 except AttributeError:
-                    self.implementation = BaseImplementation(self.frame)
+                    self.implementation = BaseImplementation(self.frame, self.core)
                     self.available = False
 
             self.set_server_actions_sensitive(False)
