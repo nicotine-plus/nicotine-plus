@@ -33,9 +33,10 @@ from pynicotine.logfacility import log
 
 class Notifications:
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.frame = frame
+        self.core = core
         self.application = Gio.Application.get_default()
 
         if sys.platform == "win32":
@@ -45,7 +46,7 @@ class Notifications:
 
         item = room if location == "rooms" else user
 
-        if self.frame.np.notifications.add_hilite_item(location, item):
+        if self.core.notifications.add_hilite_item(location, item):
             self.frame.tray_icon.set_icon()
 
         if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
@@ -58,7 +59,7 @@ class Notifications:
 
         item = room if location == "rooms" else user
 
-        if self.frame.np.notifications.remove_hilite_item(location, item):
+        if self.core.notifications.remove_hilite_item(location, item):
             self.set_title(item)
             self.frame.tray_icon.set_icon()
 
@@ -66,8 +67,8 @@ class Notifications:
 
         app_name = config.application_name
 
-        if (not self.frame.np.notifications.chat_hilites["rooms"]
-                and not self.frame.np.notifications.chat_hilites["private"]):
+        if (not self.core.notifications.chat_hilites["rooms"]
+                and not self.core.notifications.chat_hilites["private"]):
             # Reset Title
             self.frame.MainWindow.set_title(app_name)
             return
@@ -75,17 +76,17 @@ class Notifications:
         if not config.sections["notifications"]["notification_window_title"]:
             return
 
-        if self.frame.np.notifications.chat_hilites["private"]:
+        if self.core.notifications.chat_hilites["private"]:
             # Private Chats have a higher priority
-            user = self.frame.np.notifications.chat_hilites["private"][-1]
+            user = self.core.notifications.chat_hilites["private"][-1]
 
             self.frame.MainWindow.set_title(
                 app_name + " - " + _("Private Message from %(user)s") % {'user': user}
             )
 
-        elif self.frame.np.notifications.chat_hilites["rooms"]:
+        elif self.core.notifications.chat_hilites["rooms"]:
             # Allow for the possibility the username is not available
-            room = self.frame.np.notifications.chat_hilites["rooms"][-1]
+            room = self.core.notifications.chat_hilites["rooms"][-1]
 
             if user is None:
                 self.frame.MainWindow.set_title(

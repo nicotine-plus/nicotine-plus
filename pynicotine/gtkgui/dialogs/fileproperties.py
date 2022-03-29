@@ -28,11 +28,12 @@ from pynicotine.utils import humanize
 
 class FileProperties(UserInterface):
 
-    def __init__(self, frame, properties, download_button=True):
+    def __init__(self, frame, core, properties, download_button=True):
 
         super().__init__("ui/dialogs/fileproperties.ui")
 
         self.frame = frame
+        self.core = core
         self.properties = properties
 
         self.dialog = generic_dialog(
@@ -71,8 +72,8 @@ class FileProperties(UserInterface):
 
     def on_download_item(self, *_args):
         properties = self.properties[self.current_index]
-        self.frame.np.transfers.get_file(properties["user"], properties["fn"], size=properties["size"],
-                                         bitrate=properties.get("bitrate"), length=properties.get("length"))
+        self.core.transfers.get_file(properties["user"], properties["fn"], size=properties["size"],
+                                     bitrate=properties.get("bitrate"), length=properties.get("length"))
 
     def update_title(self):
 

@@ -34,7 +34,7 @@ from pynicotine.utils import open_file_path
 
 class Downloads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.path_separator = '/'
         self.path_label = _("Path")
@@ -42,7 +42,7 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.aborted_status = "Paused"
 
-        TransferList.__init__(self, frame, transfer_type="download")
+        TransferList.__init__(self, frame, core, transfer_type="download")
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
@@ -85,7 +85,7 @@ class Downloads(TransferList):
         dialog.destroy()
 
         if response_id == 2:
-            self.frame.np.transfers.folder_contents_response(msg)
+            self.core.transfers.folder_contents_response(msg)
 
     def download_large_folder(self, username, folder, numfiles, msg):
 
@@ -103,7 +103,7 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = self.frame.np.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
+            url = self.core.userbrowse.get_soulseek_url(transfer.user, transfer.filename)
             copy_text(url)
 
     def on_copy_dir_url(self, *_args):
@@ -111,7 +111,7 @@ class Downloads(TransferList):
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
-            url = self.frame.np.userbrowse.get_soulseek_url(
+            url = self.core.userbrowse.get_soulseek_url(
                 transfer.user, transfer.filename.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
 
@@ -144,7 +144,7 @@ class Downloads(TransferList):
                 # If this file doesn't exist anymore, it may have finished downloading and have been renamed.
                 # Try looking in the download directory and match the original filename and size.
 
-                download_path = self.frame.np.transfers.get_existing_download_path(
+                download_path = self.core.transfers.get_existing_download_path(
                     transfer.user, transfer.filename, transfer.path, transfer.size)
 
                 if download_path:
@@ -164,7 +164,7 @@ class Downloads(TransferList):
             folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
             if user not in requested_users and folder not in requested_folders:
-                self.frame.np.userbrowse.browse_user(user, path=folder)
+                self.core.userbrowse.browse_user(user, path=folder)
 
                 requested_users.add(user)
                 requested_folders.add(folder)

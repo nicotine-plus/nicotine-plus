@@ -39,6 +39,7 @@ class ChatEntry:
     def __init__(self, frame, entry, completion, entity, message_class, send_message, command_list, is_chatroom=False):
 
         self.frame = frame
+        self.core = frame.core
         self.entry = entry
         self.completion = completion
         self.entity = entity
@@ -73,7 +74,7 @@ class ChatEntry:
 
     def on_enter(self, *_args):
 
-        if not self.frame.np.logged_in:
+        if not self.core.logged_in:
             return
 
         text = self.entry.get_text()
@@ -122,14 +123,14 @@ class ChatEntry:
             arg_self = "" if self.is_chatroom else self.entity
 
         if cmd in ("/alias", "/al"):
-            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechats
             parent.echo_message(self.entity, add_alias(args))
 
             if config.sections["words"]["aliases"]:
                 self.frame.update_completions()
 
         elif cmd in ("/unalias", "/un"):
-            parent = self.frame.np.chatrooms if self.is_chatroom else self.frame.np.privatechats
+            parent = self.core.chatrooms if self.is_chatroom else self.core.privatechats
             parent.echo_message(self.entity, unalias(args))
 
             if config.sections["words"]["aliases"]:
@@ -137,21 +138,21 @@ class ChatEntry:
 
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
-                self.frame.np.userinfo.request_user_info(arg_self)
+                self.core.userinfo.request_user_info(arg_self)
                 self.frame.change_main_page("userinfo")
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
-                self.frame.np.userbrowse.browse_user(arg_self)
+                self.core.userbrowse.browse_user(arg_self)
                 self.frame.change_main_page("userbrowse")
 
         elif cmd == "/ip":
             if arg_self:
-                self.frame.np.request_ip_address(arg_self)
+                self.core.request_ip_address(arg_self)
 
         elif cmd == "/pm":
             if args:
-                self.frame.np.privatechats.show_user(args)
+                self.core.privatechats.show_user(args)
                 self.frame.change_main_page("private")
 
         elif cmd in ("/m", "/msg"):
@@ -164,74 +165,74 @@ class ChatEntry:
                     msg = args_split[1]
 
                 if msg:
-                    self.frame.np.privatechats.show_user(user)
-                    self.frame.np.privatechats.send_message(user, msg)
+                    self.core.privatechats.show_user(user)
+                    self.core.privatechats.send_message(user, msg)
                     self.frame.change_main_page("private")
 
         elif cmd in ("/s", "/search"):
             if args:
-                self.frame.np.search.do_search(args, "global")
+                self.core.search.do_search(args, "global")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
-                self.frame.np.search.do_search(args_split[1], "user", user=args_split[0])
+                self.core.search.do_search(args_split[1], "user", user=args_split[0])
                 self.frame.change_main_page("search")
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
-                self.frame.np.search.do_search(args, "rooms")
+                self.core.search.do_search(args, "rooms")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
-                self.frame.np.search.do_search(args, "buddies")
+                self.core.search.do_search(args, "buddies")
                 self.frame.change_main_page("search")
 
         elif cmd in ("/j", "/join"):
             if args:
-                self.frame.np.queue.append(slskmessages.JoinRoom(args))
+                self.core.queue.append(slskmessages.JoinRoom(args))
 
         elif cmd in ("/l", "/leave", "/p", "/part"):
             if args:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(args))
+                self.core.queue.append(slskmessages.LeaveRoom(args))
             else:
-                self.frame.np.queue.append(slskmessages.LeaveRoom(self.entity))
+                self.core.queue.append(slskmessages.LeaveRoom(self.entity))
 
         elif cmd in ("/ad", "/add", "/buddy"):
             if args:
-                self.frame.np.userlist.add_user(args)
+                self.core.userlist.add_user(args)
 
         elif cmd in ("/rem", "/unbuddy"):
             if args:
-                self.frame.np.userlist.remove_user(args)
+                self.core.userlist.remove_user(args)
 
         elif cmd == "/ban":
             if args:
-                self.frame.np.network_filter.ban_user(args)
+                self.core.network_filter.ban_user(args)
 
         elif cmd == "/ignore":
             if args:
-                self.frame.np.network_filter.ignore_user(args)
+                self.core.network_filter.ignore_user(args)
 
         elif cmd == "/ignoreip":
             if args:
-                self.frame.np.network_filter.ignore_ip(args)
+                self.core.network_filter.ignore_ip(args)
 
         elif cmd == "/unban":
             if args:
-                self.frame.np.network_filter.unban_user(args)
+                self.core.network_filter.unban_user(args)
 
         elif cmd == "/unignore":
             if args:
-                self.frame.np.network_filter.unignore_user(args)
+                self.core.network_filter.unignore_user(args)
 
         elif cmd == "/ctcpversion":
             if arg_self:
-                self.frame.np.privatechats.show_user(arg_self)
-                self.frame.np.privatechats.send_message(arg_self, self.frame.np.privatechats.CTCP_VERSION)
+                self.core.privatechats.show_user(arg_self)
+                self.core.privatechats.send_message(arg_self, self.core.privatechats.CTCP_VERSION)
 
         elif cmd in ("/clear", "/cl"):
             if self.is_chatroom:
@@ -251,21 +252,21 @@ class ChatEntry:
             self.frame.privatechat.pages[self.entity].on_close()
 
         elif cmd == "/now":
-            self.frame.np.now_playing.display_now_playing(
+            self.core.now_playing.display_now_playing(
                 callback=lambda np_message: self.send_message(self.entity, np_message))
 
         elif cmd == "/rescan":
-            self.frame.np.shares.rescan_shares()
+            self.core.shares.rescan_shares()
 
         elif cmd == "/toggle":
             if args:
-                self.frame.np.pluginhandler.toggle_plugin(args)
+                self.core.pluginhandler.toggle_plugin(args)
 
         elif self.is_chatroom:
-            self.frame.np.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_public_command_event(self.entity, cmd[1:], args)
 
         elif not self.is_chatroom:
-            self.frame.np.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
+            self.core.pluginhandler.trigger_private_command_event(self.entity, cmd[1:], args)
 
     def on_tab_complete_accelerator(self, widget, state, backwards=False):
         """ Tab and Shift+Tab: tab complete chat """

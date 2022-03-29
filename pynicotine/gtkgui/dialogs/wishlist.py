@@ -34,7 +34,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 
 class WishList(UserInterface):
 
-    def __init__(self, frame, searches):
+    def __init__(self, frame, core, searches):
 
         super().__init__("ui/dialogs/wishlist.ui")
 
@@ -49,6 +49,7 @@ class WishList(UserInterface):
         )
 
         self.frame = frame
+        self.core = core
         self.searches = searches
         self.timer = None
         self.wishes = {}
@@ -85,7 +86,7 @@ class WishList(UserInterface):
         wish_exists = (wish in self.wishes)
         self.wish_entry.set_text("")
 
-        self.frame.np.search.add_wish(wish)
+        self.core.search.add_wish(wish)
 
         if not wish_exists:
             return
@@ -103,8 +104,8 @@ class WishList(UserInterface):
         if not wish:
             return
 
-        self.frame.np.search.remove_wish(old_wish)
-        self.frame.np.search.add_wish(wish)
+        self.core.search.remove_wish(old_wish)
+        self.core.search.add_wish(wish)
         self.select_wish(wish)
 
     def on_edit_wish(self, *_args):
@@ -132,7 +133,7 @@ class WishList(UserInterface):
         for path in reversed(paths):
             iterator = model.get_iter(path)
             wish = model.get_value(iterator, 0)
-            self.frame.np.search.remove_wish(wish)
+            self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
         return True
@@ -143,7 +144,7 @@ class WishList(UserInterface):
 
         if response_id == 2:
             for wish in self.wishes.copy():
-                self.frame.np.search.remove_wish(wish)
+                self.core.search.remove_wish(wish)
 
         self.wish_entry.grab_focus()
 
@@ -181,8 +182,8 @@ class WishList(UserInterface):
         self.list_view.grab_focus()
 
     def set_interval(self, msg):
-        self.frame.np.search.do_wishlist_search_interval()
-        self.timer = GLib.timeout_add_seconds(msg.seconds, self.frame.np.search.do_wishlist_search_interval)
+        self.core.search.do_wishlist_search_interval()
+        self.timer = GLib.timeout_add_seconds(msg.seconds, self.core.search.do_wishlist_search_interval)
 
     def server_disconnect(self):
 

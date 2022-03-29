@@ -242,7 +242,7 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, notebook, page_id):
+    def __init__(self, frame, core, notebook, page_id):
 
         self.notebook = notebook
         self.notebook.set_show_tabs(False)
@@ -250,6 +250,7 @@ class IconNotebook:
         self.notebook.connect("switch-page", self.on_switch_page)
 
         self.frame = frame
+        self.core = core
         self.page_id = page_id
         self.unread_button = Gtk.MenuButton(
             tooltip_text=_("Unread Tabs"),
@@ -338,8 +339,8 @@ class IconNotebook:
         if user is not None:
             status = 0
 
-            if user in self.frame.np.user_statuses:
-                status = self.frame.np.user_statuses[user] or 0
+            if user in self.core.user_statuses:
+                status = self.core.user_statuses[user] or 0
 
             self.set_user_status(page, text, status)
 

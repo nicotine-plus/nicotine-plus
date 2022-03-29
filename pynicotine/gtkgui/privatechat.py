@@ -49,9 +49,9 @@ from pynicotine.utils import open_log
 
 class PrivateChats(IconNotebook):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, frame.private_notebook, "private")
+        IconNotebook.__init__(self, frame, core, frame.private_notebook, "private")
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         self.completion = ChatCompletion()
@@ -71,7 +71,7 @@ class PrivateChats(IconNotebook):
                 GLib.idle_add(lambda: tab.ChatLine.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
 
                 self.completion.set_entry(tab.ChatLine)
-                tab.set_completion_list(list(self.frame.np.privatechats.completion_list))
+                tab.set_completion_list(list(self.core.privatechats.completion_list))
 
                 self.command_help.popover.unparent()
                 tab.ShowChatHelp.set_popover(self.command_help.popover)
@@ -105,7 +105,7 @@ class PrivateChats(IconNotebook):
             self.set_user_status(page.Main, msg.user, msg.status)
             page.update_remote_username_tag(msg.status)
 
-        if msg.user == self.frame.np.login_username:
+        if msg.user == self.core.login_username:
             for page in self.pages.values():
                 # We've enabled/disabled away mode, update our username color in all chats
                 page.update_local_username_tag(msg.status)
@@ -173,13 +173,14 @@ class PrivateChat(UserInterface):
         self.user = user
         self.chats = chats
         self.frame = chats.frame
+        self.core = chats.core
 
         self.opened = False
         self.offline_message = False
         self.status = 0
 
-        if user in self.frame.np.user_statuses:
-            self.status = self.frame.np.user_statuses[user] or 0
+        if user in self.core.user_statuses:
+            self.status = self.core.user_statuses[user] or 0
 
         # Text Search
         TextSearchBar(self.ChatScroll, self.SearchBar, self.SearchEntry,
@@ -189,7 +190,7 @@ class PrivateChat(UserInterface):
 
         # Chat Entry
         ChatEntry(self.frame, self.ChatLine, chats.completion, user, slskmessages.MessageUser,
-                  self.frame.np.privatechats.send_message, self.frame.np.privatechats.CMDS)
+                  self.core.privatechats.send_message, self.core.privatechats.CMDS)
 
         self.Log.set_active(config.sections["logging"]["privatechat"])
 
@@ -370,7 +371,7 @@ class PrivateChat(UserInterface):
 
     def send_message(self, text):
 
-        my_username = self.frame.np.login_username
+        my_username = self.core.login_username
 
         if text.startswith("/me "):
             line = "* %s %s" % (my_username, text[4:])
@@ -408,10 +409,10 @@ class PrivateChat(UserInterface):
         color = get_user_status_color(self.status)
         self.tag_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=self.user)
 
-        if not self.frame.np.logged_in:
+        if not self.core.logged_in:
             color = "useroffline"
         else:
-            color = "useraway" if self.frame.np.away else "useronline"
+            color = "useraway" if self.core.away else "useronline"
 
         my_username = config.sections["server"]["login"]
         self.tag_my_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=my_username)
@@ -440,7 +441,7 @@ class PrivateChat(UserInterface):
 
         self.frame.notifications.clear("private", self.user)
         del self.chats.pages[self.user]
-        self.frame.np.privatechats.remove_user(self.user)
+        self.core.privatechats.remove_user(self.user)
 
         self.chats.remove_page(self.Main)
 

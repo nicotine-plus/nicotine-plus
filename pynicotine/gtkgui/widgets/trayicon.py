@@ -34,7 +34,7 @@ from pynicotine.logfacility import log
 
 class TrayIcon:
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         try:
             # Check if AyatanaAppIndicator3 is available
@@ -54,6 +54,7 @@ class TrayIcon:
                 self.appindicator = None
 
         self.frame = frame
+        self.core = core
         self.tray_icon = None
         self.custom_icons = False
         self.final_icon_path = None
@@ -106,7 +107,7 @@ class TrayIcon:
         self.tray_popup_menu.append(Gtk.SeparatorMenuItem())
 
         self.create_item(_("Preferences"), self.frame.on_settings)
-        self.create_item(_("Quit"), self.frame.np.quit)
+        self.create_item(_("Quit"), self.core.quit)
 
     def on_downloads(self, *_args):
         self.frame.change_main_page("downloads")
@@ -124,7 +125,7 @@ class TrayIcon:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.privatechats.show_user(user)
+        self.core.privatechats.show_user(user)
         self.frame.change_main_page("private")
         self.frame.show()
 
@@ -147,7 +148,7 @@ class TrayIcon:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.userinfo.request_user_info(user)
+        self.core.userinfo.request_user_info(user)
         self.frame.show()
 
     def on_get_a_users_info(self, *_args):
@@ -169,7 +170,7 @@ class TrayIcon:
         if response_id != Gtk.ResponseType.OK or not user:
             return
 
-        self.frame.np.userbrowse.browse_user(user)
+        self.core.userbrowse.browse_user(user)
         self.frame.show()
 
     def on_get_a_users_shares(self, *_args):
@@ -361,9 +362,9 @@ class TrayIcon:
             self.tray_status["status"] = status
 
         # Check for hilites, and display hilite icon if there is a room or private hilite
-        if (self.frame.np.notifications
-                and (self.frame.np.notifications.chat_hilites["rooms"]
-                     or self.frame.np.notifications.chat_hilites["private"])):
+        if (self.core.notifications
+                and (self.core.notifications.chat_hilites["rooms"]
+                     or self.core.notifications.chat_hilites["private"])):
             icon_name = "msg"
         else:
             # If there is no hilite, display the status

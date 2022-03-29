@@ -64,6 +64,7 @@ class NetworkFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.core = preferences.core
         self.portmap_required = False
 
         self.options = {
@@ -90,16 +91,16 @@ class NetworkFrame(UserInterface):
         if server["server"] is not None:
             self.Server.set_text("%s:%i" % (server["server"][0], server["server"][1]))
 
-        if self.frame.np.protothread.listenport is None:
+        if self.core.protothread.listenport is None:
             self.CurrentPort.set_text(_("Listening port is not set"))
         else:
             text = _("Public IP address is <b>%(ip)s</b> and active listening port is <b>%(port)s</b>") % {
-                "ip": self.frame.np.user_ip_address or _("unknown"),
-                "port": self.frame.np.protothread.listenport
+                "ip": self.core.user_ip_address or _("unknown"),
+                "port": self.core.protothread.listenport
             }
             self.CurrentPort.set_markup(text)
 
-        url = config.portchecker_url % str(self.frame.np.protothread.listenport)
+        url = config.portchecker_url % str(self.core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
         self.CheckPortLabel.set_markup(text)
         self.CheckPortLabel.connect("activate-link", lambda x, url: open_uri(url))
@@ -170,7 +171,7 @@ class NetworkFrame(UserInterface):
         if response_id != Gtk.ResponseType.OK:
             return
 
-        if logged_in != self.frame.np.logged_in:
+        if logged_in != self.core.logged_in:
             MessageDialog(
                 parent=self.preferences.dialog,
                 title=_("Password Change Rejected"),
@@ -182,16 +183,16 @@ class NetworkFrame(UserInterface):
             self.on_change_password()
             return
 
-        if not self.frame.np.logged_in:
+        if not self.core.logged_in:
             config.sections["server"]["passw"] = password
             config.write_configuration()
             return
 
-        self.frame.np.request_change_password(password)
+        self.core.request_change_password(password)
 
     def on_change_password(self, *_args):
 
-        if self.frame.np.logged_in:
+        if self.core.logged_in:
             message = _("Enter a new password for your Soulseek account:")
         else:
             message = (_("You are currently logged out of the Soulseek network. If you want to change "
@@ -205,7 +206,7 @@ class NetworkFrame(UserInterface):
             message=message,
             visibility=False,
             callback=self.on_change_password_response,
-            callback_data=self.frame.np.logged_in
+            callback_data=self.core.logged_in
         ).show()
 
     def on_toggle_upnp(self, widget, *_args):
@@ -1988,6 +1989,7 @@ class NowPlayingFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.core = preferences.core
 
         self.options = {
             "players": {
@@ -2011,7 +2013,7 @@ class NowPlayingFrame(UserInterface):
         # Suppy the information needed for the Now Playing class to return a song
         self.test_now_playing.connect(
             "clicked",
-            self.frame.np.now_playing.display_now_playing,
+            self.core.now_playing.display_now_playing,
             self.set_now_playing_example,  # Callback to update the song displayed
             self.get_player,               # Callback to retrieve selected player
             self.get_command,              # Callback to retrieve command text
@@ -2446,8 +2448,8 @@ class PluginsFrame(UserInterface):
                     if value is not None:
                         config.sections["plugins"][self.plugin.lower()][name] = value
 
-                self.settings.frame.np.pluginhandler.plugin_settings(
-                    self.plugin, self.settings.frame.np.pluginhandler.enabled_plugins[self.plugin])
+                self.settings.core.pluginhandler.plugin_settings(
+                    self.plugin, self.settings.core.pluginhandler.enabled_plugins[self.plugin])
 
             self.destroy()
 
@@ -2459,6 +2461,7 @@ class PluginsFrame(UserInterface):
 
         self.preferences = preferences
         self.frame = preferences.frame
+        self.core = preferences.core
 
         self.options = {
             "plugins": {
@@ -2498,11 +2501,11 @@ class PluginsFrame(UserInterface):
         self.on_plugins_enable()
         self.pluginsiters = {}
         self.plugins_model.clear()
-        plugins = sorted(self.frame.np.pluginhandler.list_installed_plugins())
+        plugins = sorted(self.core.pluginhandler.list_installed_plugins())
 
         for plugin in plugins:
             try:
-                info = self.frame.np.pluginhandler.get_plugin_info(plugin)
+                info = self.core.pluginhandler.get_plugin_info(plugin)
             except OSError:
                 continue
 
@@ -2536,7 +2539,7 @@ class PluginsFrame(UserInterface):
         }
 
     def check_properties_button(self, plugin):
-        self.PluginProperties.set_sensitive(bool(self.frame.np.pluginhandler.get_plugin_settings(plugin)))
+        self.PluginProperties.set_sensitive(bool(self.core.pluginhandler.get_plugin_settings(plugin)))
 
     def on_select_plugin(self, selection):
 
@@ -2547,7 +2550,7 @@ class PluginsFrame(UserInterface):
             info = {}
         else:
             self.selected_plugin = model.get_value(iterator, 2)
-            info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
+            info = self.core.pluginhandler.get_plugin_info(self.selected_plugin)
 
         self.PluginName.set_markup("<b>%(name)s</b>" % {"name": info.get("Name", self.selected_plugin)})
         self.PluginVersion.set_markup("<b>%(version)s</b>" % {"version": info.get("Version", '-')})
@@ -2568,9 +2571,9 @@ class PluginsFrame(UserInterface):
         self.plugins_model.set(iterator, 0, not value)
 
         if not value:
-            self.frame.np.pluginhandler.enable_plugin(plugin)
+            self.core.pluginhandler.enable_plugin(plugin)
         else:
-            self.frame.np.pluginhandler.disable_plugin(plugin)
+            self.core.pluginhandler.disable_plugin(plugin)
 
         self.check_properties_button(plugin)
 
@@ -2579,14 +2582,14 @@ class PluginsFrame(UserInterface):
         if self.PluginsEnable.get_active():
             # Enable all selected plugins
             for plugin in self.get_enabled_plugins():
-                self.frame.np.pluginhandler.enable_plugin(plugin)
+                self.core.pluginhandler.enable_plugin(plugin)
 
             self.check_properties_button(self.selected_plugin)
             return
 
         # Disable all plugins
-        for plugin in self.frame.np.pluginhandler.enabled_plugins.copy():
-            self.frame.np.pluginhandler.disable_plugin(plugin)
+        for plugin in self.core.pluginhandler.enabled_plugins.copy():
+            self.core.pluginhandler.disable_plugin(plugin)
 
         self.PluginProperties.set_sensitive(False)
 
@@ -2607,12 +2610,12 @@ class PluginsFrame(UserInterface):
         if self.selected_plugin is None:
             return
 
-        plugin_info = self.frame.np.pluginhandler.get_plugin_info(self.selected_plugin)
+        plugin_info = self.core.pluginhandler.get_plugin_info(self.selected_plugin)
         dialog = self.PluginPreferencesDialog(self, plugin_info.get("Name", self.selected_plugin))
 
         dialog.add_options(
             self.selected_plugin,
-            self.frame.np.pluginhandler.get_plugin_settings(self.selected_plugin)
+            self.core.pluginhandler.get_plugin_settings(self.selected_plugin)
         )
 
         dialog_show(dialog)
@@ -2620,11 +2623,12 @@ class PluginsFrame(UserInterface):
 
 class Preferences(UserInterface):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/preferences.ui")
 
         self.frame = frame
+        self.core = core
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.main,
@@ -2930,7 +2934,7 @@ class Preferences(UserInterface):
             config.sections[key].update(data)
 
         if portmap_required:
-            self.frame.np.upnp.add_port_mapping()
+            self.core.upnp.add_port_mapping()
 
         if theme_required:
             # Dark mode
@@ -2957,22 +2961,22 @@ class Preferences(UserInterface):
             self.frame.update_completions()
 
         if ip_block_required:
-            self.frame.np.network_filter.close_blocked_ip_connections()
+            self.core.network_filter.close_blocked_ip_connections()
 
         if search_required:
             self.frame.search.populate_search_history()
 
         # UPnP
         if not config.sections["server"]["upnp"]:
-            self.frame.np.upnp.cancel_timer()
+            self.core.upnp.cancel_timer()
 
         # Chatrooms
         self.frame.chatrooms.toggle_chat_buttons()
 
         # Transfers
-        self.frame.np.transfers.update_limits()
-        self.frame.np.transfers.update_download_filters()
-        self.frame.np.transfers.check_upload_queue()
+        self.core.transfers.update_limits()
+        self.core.transfers.update_download_filters()
+        self.core.transfers.check_upload_queue()
 
         # Tray icon
         if not config.sections["ui"]["trayicon"] and self.frame.tray_icon.is_visible():
@@ -3004,14 +3008,14 @@ class Preferences(UserInterface):
             self.frame.connect_action.set_enabled(False)
             self.frame.on_fast_configure()
 
-        elif self.frame.np.protothread.server_disconnected:
+        elif self.core.protothread.server_disconnected:
             self.frame.connect_action.set_enabled(True)
 
         if not settings_closed:
             return
 
         if rescan_required:
-            self.frame.np.shares.rescan_shares()
+            self.core.shares.rescan_shares()
 
         self.hide()
 

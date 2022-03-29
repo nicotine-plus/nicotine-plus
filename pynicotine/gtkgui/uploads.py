@@ -33,7 +33,7 @@ from pynicotine.utils import open_file_path
 
 class Uploads(TransferList):
 
-    def __init__(self, frame):
+    def __init__(self, frame, core):
 
         self.path_separator = '\\'
         self.path_label = _("Folder")
@@ -41,7 +41,7 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
-        TransferList.__init__(self, frame, transfer_type="upload")
+        TransferList.__init__(self, frame, core, transfer_type="upload")
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
@@ -82,7 +82,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename)
+            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename)
             copy_text(url)
 
     def on_copy_dir_url(self, *_args):
@@ -91,7 +91,7 @@ class Uploads(TransferList):
 
         if transfer:
             user = config.sections["server"]["login"]
-            url = self.frame.np.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
+            url = self.core.userbrowse.get_soulseek_url(user, transfer.filename.rsplit('\\', 1)[0] + '\\')
             copy_text(url)
 
     def on_open_file_manager(self, *_args):
@@ -125,7 +125,7 @@ class Uploads(TransferList):
         user = config.sections["server"]["login"]
         folder = transfer.filename.rsplit('\\', 1)[0] + '\\'
 
-        self.frame.np.userbrowse.browse_user(user, path=folder)
+        self.core.userbrowse.browse_user(user, path=folder)
 
     def on_abort_user(self, *_args):
 
