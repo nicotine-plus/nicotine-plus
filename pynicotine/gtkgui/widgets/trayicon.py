@@ -155,16 +155,19 @@ class BaseImplementation:
 
     @staticmethod
     def check_icon_path(icon_name, icon_path, icon_type="local"):
-        """ Check if tray icons exist in the specified icon path """
+        """
+        Check if tray icons exist in the specified icon path.
+        There are two naming schemes for tray icons:
+        - System-wide/local icons: "org.nicotine_plus.Nicotine-<icon_name>"
+        - Custom icons: "trayicon_<icon_name>"
+        """
 
         if not icon_path:
             return False
 
         if icon_type == "local":
-            # System-wide icons: "org.nicotine_plus.Nicotine-<icon_name>"
             icon_scheme = config.application_id + "-" + icon_name + "."
         else:
-            # Custom icon theme: "trayicon_<icon_name>"
             icon_scheme = "trayicon_" + icon_name + "."
 
         try:
