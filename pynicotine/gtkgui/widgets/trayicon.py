@@ -200,6 +200,9 @@ class TrayIcon:
         - Custom icons: "trayicon_<icon_name>"
         """
 
+        if not icon_path:
+            return False
+
         if icon_type == "local":
             icon_scheme = config.application_id + "-" + icon_name + "."
         else:
