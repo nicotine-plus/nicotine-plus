@@ -51,6 +51,6 @@ I stumbled across [this quote](http://www.bash.org/?10159):
 - When connecting to the default Soulseek server, you agree to abide by the Soulseek [rules](https://www.slsknet.org/news/node/681) and [terms of service](https://www.slsknet.org/news/node/682).
 - Nicotine+ does not collect any user data. Different policies may apply to the default Soulseek server, which is not operated by the Nicotine+ Team.
 
-# License
+# Authors
 
-Nicotine+ is released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later. For a list of contributors, see [AUTHORS.md](AUTHORS.md).
+Nicotine+ exists thanks to the [core contributors](AUTHORS.md), [translators](TRANSLATORS.md) and [other contributions](https://github.com/nicotine-plus/nicotine-plus/graphs/contributors). Nicotine+ is free and open source software, released under the terms of the [GNU Public License v3](https://www.gnu.org/licenses/gpl-3.0-standalone.html) or later.
