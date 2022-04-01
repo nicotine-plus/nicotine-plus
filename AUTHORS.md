@@ -84,7 +84,7 @@
 
 # Nicotine Team
 
-### Hyriand
+### Ingmar K. Steen (Hyriand)
  - Maintainer (2003–2004)
 
 ### daelstorm
@@ -145,7 +145,7 @@
 ### Christian Swinehart
  - Fink package maintainer
 
-### Hyriand
+### Ingmar K. Steen (Hyriand)
  - Patches for upload bandwidth management, banning,
    various UI improvements and more
 

@@ -41,8 +41,62 @@ Copyright: 2001-2003, 2009 Alexander Kanavin (alexbk/hedonist)
            2021-2022 slook
 License: GPL-3+
 
-Files: po/*
-Copyright: 2003-2022 Nicotine+ Translators
+Files: po/*.po
+Copyright: 2003-2004 Ingmar K. Steen (Hyriand)
+                     dbazza
+                     mathsped
+                     Dreslo
+                     Julien Wajsberg (flashfr)
+                     Wojciech Owczarek (owczi)
+                     Markus Magnuson (alimony)
+           2004 lippel
+           2004-2009 daelstorm
+           2006 systr
+                Felipe Nogaroto Gonzalez (Suicide|Solution)
+           2006-2020 David Balazs (djbaloo)
+           2006-2008 Jozef Říha
+           2006-2009 Žygimantas Beručka
+           2006-2007 Kari Viittanen (Kalevi)
+                     Julen
+           2007 nicola
+                nince78
+                Meokater
+                (._.)
+                thine
+                Amun-Ra
+                ManWell
+                Silvio Orta
+           2007-2022 zniavre
+           2009 Nils
+                Kenny Verstraete
+           2009-2010 Monsieur Poisson
+           2016-2017 Michael Labouebe (gfarmerfr)
+           2017-2022 mariachini
+           2020 yyyyyyyan
+                m-balthazar
+                mantas
+           2020-2022 Mat (mathiascode)
+                     Gianluca Boiano
+           2021 mitramai
+                Strange
+                Allan Nordhøy (comradekingu)
+                burnmail123
+                Nicolas Abril
+           2021-2022 melmorabity
+                     slook
+                     Han Boetes (hboetes)
+                     Oğuz Ersen
+                     MELERIX
+                     Lisapple
+                     Mehavoid
+                     tagomago
+           2022 SnIPeRSnIPeR
+                b1llso
+                Guilherme Santos
+                uniss2209
+                hadwin
+                Gabboxl
+                Szia Tomi
 License: GPL-3+
 
 Files: pynicotine/geoip/ip2location.py
