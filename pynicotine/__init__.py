@@ -153,34 +153,6 @@ def rescan_shares():
     return 0
 
 
-def run_headless(core, ci_mode):
-    """ Run application in headless (no GUI) mode """
-
-    import time
-
-    from pynicotine.config import config
-    from pynicotine.logfacility import log
-
-    config.load_config()
-    log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
-
-    connect_ready = core.start()
-
-    if not connect_ready and not ci_mode:
-        return 1
-
-    connect_success = core.connect()
-
-    if not connect_success and not ci_mode:
-        return 1
-
-    while not core.shutdown:
-        time.sleep(0.2)
-
-    config.write_configuration()
-    return 0
-
-
 def run():
     """ Run application and return its exit code """
 
@@ -230,7 +202,8 @@ def run():
 
     # Run without a GUI
     if headless:
-        return run_headless(core, ci_mode)
+        from pynicotine.cli import run_cli
+        return run_cli(core, ci_mode)
 
     # Initialize GTK-based GUI
     from pynicotine.gtkgui import run_gui

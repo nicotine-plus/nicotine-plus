@@ -295,9 +295,7 @@ class NicotineCore:
         if self.shares:
             self.shares.quit()
 
-        if self.ui_callback:
-            self.ui_callback.quit()
-
+        self.ui_callback.quit()
         config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
@@ -372,9 +370,7 @@ class NicotineCore:
         self.userinfo.server_disconnect()
         self.userbrowse.server_disconnect()
         self.interests.server_disconnect()
-
-        if self.ui_callback:
-            self.ui_callback.server_disconnect()
+        self.ui_callback.server_disconnect()
 
         self.login_username = None
 
@@ -394,9 +390,7 @@ class NicotineCore:
 
         # Reset away message users
         self.privatechats.set_away_mode(is_away)
-
-        if self.ui_callback:
-            self.ui_callback.set_away_mode(is_away)
+        self.ui_callback.set_away_mode(is_away)
 
     def request_change_password(self, password):
         self.queue.append(slskmessages.ChangePassword(password))
@@ -530,8 +524,7 @@ class NicotineCore:
         self.transfers.transfer_timeout(msg)
 
     def set_connection_stats(self, msg):
-        if self.ui_callback:
-            self.ui_callback.set_connection_stats(msg)
+        self.ui_callback.set_connection_stats(msg)
 
     """
     Incoming Server Messages
@@ -559,9 +552,7 @@ class NicotineCore:
             self.userlist.server_login()
             self.privatechats.server_login()
             self.chatrooms.server_login()
-
-            if self.ui_callback:
-                self.ui_callback.server_login()
+            self.ui_callback.server_login()
 
             if msg.banner:
                 log.add(msg.banner)
