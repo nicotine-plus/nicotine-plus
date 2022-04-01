@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on March 26, 2022
+Last updated on April 01, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -99,8 +99,9 @@ These combinations are actively used by clients. More combinations are possible,
 
   - SoulseekQt (2015-2-21 and earlier):
       - {0: *bitrate*, 2: *VBR*}
+      - {0: *bitrate*, 1: *length*, 2: *VBR*}
 
-  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), SoulSeeX, Museek+, Nicotine+:
+  - Soulseek NS, SoulSeeX, Museek+, Nicotine+:
       - {0: *bitrate*, 1: *length*, 2: *VBR*}
 
   - slskd, Soulseek.NET, Seeker:
