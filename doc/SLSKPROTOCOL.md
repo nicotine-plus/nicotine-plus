@@ -259,18 +259,18 @@ We send this to the server right after the connection has been established. Serv
 *Data Order:*
   - Send Login Attempt
     1.  **string** <ins>username</ins>
-    2.  **string** <ins>password</ins> A non-empty string is required
-    3.  **uint32** <ins>version number</ins> *160* for Nicotine+
-    4.  **string** <ins>hash</ins> MD5 hex digest of concatenated username & password
-    5.  **uint32** <ins>minor version</ins> *0x13000000* for 157 ns 13e, *0x11000000* for 157 ns 13c
+    2.  **string** <ins>password</ins> *A non-empty string is required*
+    3.  **uint32** <ins>version number</ins> **160** for Nicotine+
+    4.  **string** <ins>hash</ins> *MD5 hex digest of concatenated username & password*
+    5.  **uint32** <ins>minor version</ins> **0x13000000** for 157 ns 13e, **0x11000000** for 157 ns 13c
   - Receive Login Success
-    1.  **bool** <ins>success</ins> 1
-    2.  **string** <ins>greet</ins> A MOTD string
+    1.  **bool** <ins>success</ins> **1**
+    2.  **string** <ins>greet</ins> *MOTD string*
     3.  **uint32** <ins>Your IP Address</ins>
-    4.  **string** <ins>hash</ins> MD5 hex digest of the password string (Windows SoulseekQt uses this hash to determine if it's connected to the official server)
+    4.  **string** <ins>hash</ins> *MD5 hex digest of the password string (Windows SoulseekQt uses this hash to determine if it's connected to the official server)*
   - Receive Login Failure
-    1.  **bool** <ins>failure</ins> *0*
-    2.  **string** <ins>reason</ins> Almost always: *Bad Password* (sometimes it's a banned message or another error).
+    1.  **bool** <ins>failure</ins> **0**
+    2.  **string** <ins>reason</ins> *Almost always:* **Bad Password** *(sometimes it's a banned message or another error).*
 
 ## Server Code 2
 
@@ -380,7 +380,7 @@ Server responds with this message when we join a room. Contains users list with 
     2.  **bool** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of users in room</ins> **For private rooms, also contain owner and operators**
+    2.  **uint32** <ins>number of users in room</ins> *For private rooms, also contain owner and operators*
     3.  Iterate the <ins>number of users</ins>
         1.  **string** <ins>username</ins>
     4.  **uint32** <ins>number of statuses</ins>
@@ -399,7 +399,7 @@ Server responds with this message when we join a room. Contains users list with 
     11. Iterate the <ins>number of user countries</ins>
         1.  **string** <ins>countrycode</ins> *Uppercase country code*
     12. **string** <ins>owner</ins> **If private room**
-    13. **uint32** <ins>number of operators in room</ins> **If private room**
+    13. **uint32** <ins>number of operators in room</ins> *If private room*
     14. Iterate the <ins>number of operators</ins>
         1.  **string** <ins>operator</ins>
 
@@ -486,7 +486,7 @@ Chat phrase sent to someone or received by us in private.
     2.  **uint32** <ins>timestamp</ins>
     3.  **string** <ins>username</ins>
     4.  **string** <ins>message</ins>
-    5.  **bool** <ins>new message</ins> **1 if message is new, 0 if message is re-sent (e.g. if recipient was offline)**
+    5.  **bool** <ins>new message</ins> **1** if message is new, **0** if message is re-sent (e.g. if recipient was offline)
 
 ## Server Code 23
 
@@ -633,8 +633,7 @@ The server sends this to indicate if someone has download slots available or not
       - *No Message*
   - Receive
     1.  **string** <ins>username</ins>
-    2.  **bool** <ins>slotsfree</ins> *Can
-        immediately download*
+    2.  **bool** <ins>slotsfree</ins> *Can immediately download*
 
 ## Server Code 41
 
@@ -1618,8 +1617,7 @@ The server sends us a list of operators in a specific room, that we can remove o
       - *No Message*
   - Receive
     1.  **string** <ins>room</ins>
-    2.  **uint32** <ins>number of operators in
-        room</ins>
+    2.  **uint32** <ins>number of operators in room</ins>
     3.  Iterate the <ins>number of operators</ins>
         1.  **string** <ins>operator</ins>
 
@@ -1870,7 +1868,7 @@ A peer responds with a list of shared files after we've sent a [GetSharedFileLis
         1.  **string** <ins>directory</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always 1*
+            1.  **uint8** <ins>code</ins> *value is always* **1**
             2.  **string** <ins>filename</ins>
             3.  **unit64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins>
@@ -1878,13 +1876,13 @@ A peer responds with a list of shared files after we've sent a [GetSharedFileLis
             6.  Iterate for <ins>number of attributes</ins>
                 1.  **uint32** <ins>attribute code</ins> *see [File Attribute Types](#file-attribute-types)*
                 2.  **uint32** <ins>attribute value</ins>
-    4.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
+    4.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
     5.  **uint32** <ins>number of private directories</ins>
     6.  Iterate <ins>number of private directories</ins>
         1.  **string** <ins>directory</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always 1*
+            1.  **uint8** <ins>code</ins> *value is always* **1**
             2.  **string** <ins>filename</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins>
@@ -1921,7 +1919,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     2.  **uint32** <ins>token</ins>
     3.  **uint32** <ins>number of results</ins>
     4.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>code</ins> *value is always 1*
+        1.  **uint8** <ins>code</ins> *value is always* **1**
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>file size</ins>
         4.  **string** <ins>file extension</ins> *(SoulseekNS requires "mp3" to show attributes)*
@@ -1932,7 +1930,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     5.  **bool** <ins>slotfree</ins>
     6.  **uint32** <ins>avgspeed</ins>
     7.  **uint32** <ins>queue length</ins>
-    8.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
+    8.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
     9.  **uint32** <ins>number of privately shared results</ins>
     10. Iterate for <ins>number of privately shared results</ins>
         1.  **uint8** <ins>code</ins> *value is always 1*
@@ -1949,7 +1947,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     3.  **uint32** <ins>token</ins>
     4.  **uint32** <ins>number of results</ins>
     5.  Iterate for <ins>number of results</ins>
-        1.  **uint8** <ins>code</ins> *value is always 1*
+        1.  **uint8** <ins>code</ins> *value is always* **1**
         2.  **string** <ins>filename</ins>
         3.  **uint64** <ins>size</ins>
         4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
@@ -1960,7 +1958,7 @@ A peer sends this message when it has a file search match. The token is taken fr
     6.  **bool** <ins>slotfree</ins>
     7.  **uint32** <ins>avgspeed</ins>
     8.  **uint32** <ins>queue length</ins>
-    9.  **uint32** <ins>unknown</ins> *official clients always send a value of 0*
+    9.  **uint32** <ins>unknown</ins> *official clients always send a value of* **0**
     10.  **uint32** <ins>number of privately shared results</ins>
     11.  Iterate for <ins>number of privately shared results</ins>
          1.  **uint8** <ins>code</ins> *value is always 1*
@@ -1995,10 +1993,10 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
     1.  **string** <ins>description</ins>
     2.  Check contents of <ins>picture</ins>
           - If <ins>picture</ins> is not empty
-            1.  **bool** <ins>has picture</ins> 1
+            1.  **bool** <ins>has picture</ins> **1**
             2.  **string** <ins>picture</ins>
           - If <ins>picture</ins> is empty
-            1.  **bool** <ins>has picture</ins> 0
+            1.  **bool** <ins>has picture</ins> **0**
     3.  **uint32** <ins>totalupl</ins>
     4.  **uint32** <ins>queuesize</ins>
     5.  **bool** <ins>slotsfree</ins> *Can immediately upload*
@@ -2045,7 +2043,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always 1*
+            1.  **uint8** <ins>code</ins> *value is always* **1**
             2.  **string** <ins>file</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
@@ -2060,7 +2058,7 @@ A peer responds with the contents of a particular folder (with all subfolders) a
         1.  **string** <ins>dir</ins>
         2.  **uint32** <ins>number of files</ins>
         3.  Iterate <ins>number of files</ins>
-            1.  **uint8** <ins>code</ins> *value is always 1*
+            1.  **uint8** <ins>code</ins> *value is always* **1**
             2.  **string** <ins>file</ins>
             3.  **uint64** <ins>file size</ins>
             4.  **string** <ins>file extension</ins> *(Always blank from SoulseekQt clients)*
