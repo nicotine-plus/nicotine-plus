@@ -76,22 +76,18 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 ### File Attribute Types
 
-| Code | Value             |
-| ---- | ----------------- |
-| 0    | Bitrate (kbps)    |
-| 1    | Length (seconds)  |
-| 2    | VBR (0 or 1)      |
-| 3    | Encoder (unused)  |
-| 4    | Sample Rate (Hz)  |
-| 5    | Bit Depth (bits)  |
+| Code | Attribute (unit) |
+| ---- | ---------------- |
+| 0    | Bitrate (kbps)   |
+| 1    | Length (seconds) |
+| 2    | VBR (0 or 1)     |
+| 3    | Encoder (unused) |
+| 4    | Sample Rate (Hz) |
+| 5    | Bit Depth (bits) |
 
-#### File Attribute Combinations
+*File Attribute Combinations:*
 
-  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX, slskd (lossy formats):
-      - {0: *bitrate*, 1: *length*, 2: *VBR*}
-
-  - SoulseekQt (2015-2-21 and earlier):
-      - {0: *bitrate*, 2: *VBR*}
+These combinations are actively used by clients. More combinations are possible, of course.
 
   - SoulseekQt (2015-6-12 and later):
       - {0: *bitrate*}
@@ -101,8 +97,15 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
       - {1: *length*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
       - {0: *bitrate*, 1: *length*, 4: *sample rate*, 5: *bit depth*} (WV)
 
-  - slskd (lossless formats):
-      - {1: *length*, 4: *sample rate*, 5: *bit depth*}
+  - SoulseekQt (2015-2-21 and earlier):
+      - {0: *bitrate*, 2: *VBR*}
+
+  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), SoulSeeX, Museek+, Nicotine+:
+      - {0: *bitrate*, 1: *length*, 2: *VBR*}
+
+  - slskd, Soulseek.NET, Seeker:
+      - {0: *bitrate*, 1: *length*, 2: *VBR*} (lossy formats)
+      - {1: *length*, 4: *sample rate*, 5: *bit depth*} (lossless formats)
 
 # Server Messages
 
@@ -130,7 +133,7 @@ and callbacks for the messages are set in pynicotine.py.
 
 ### Server Message Codes
 
-| Code | Message Function                                  | Status     |
+| Code | Message                                           | Status     |
 | ---- | ------------------------------------------------- | ---------- |
 | 1    | [Login](#server-code-1)                           |            |
 | 2    | [Set Listen Port](#server-code-2)                 |            |
@@ -229,8 +232,6 @@ and callbacks for the messages are set in pynicotine.py.
 | 1001 | [Can't Connect To Peer](#server-code-1001)        |            |
 | 1003 | [Can't Create Room](#server-code-1003)            |            |
 
-The Nicotine+ function names used in slskmessages.py are specified below.
-
 ## Server Code 1
 
 ### Login
@@ -239,39 +240,37 @@ We send this to the server right after the connection has been established. Serv
 
 #### Sending Login Example
 
-| Description | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
-| ----------- | -------------- | ------------ | --------------- | ----------------------- | --------------- | ----------------------- |
-| Human       | 72             | 1            | 8               | username                | 8               | password                |
-| Hex         | 48 00 00 00    | 01 00 00 00  | 08 00 00 00     | 75 73 65 72 6e 61 6d 65 | 08 00 00 00     | 70 61 73 73 77 6f 72 64 |
+*Message:*
+| *Data*    | Message Length | Message Code | Username Length | Username                | Password Length | Password                |
+| --------- | -------------- | ------------ | --------------- | ----------------------- | --------------- | ----------------------- |
+| **Human** | 72             | 1            | 8               | username                | 8               | password                |
+| **Hex**   | 48 00 00 00    | 01 00 00 00  | 08 00 00 00     | 75 73 65 72 6e 61 6d 65 | 08 00 00 00     | 70 61 73 73 77 6f 72 64 |
 
-*Message, continued*
+*... continued:*
+| *Data*    | Version     | Length      | Hash                                                                                            | Minor Version |
+| --------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
+| **Human** | 160         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1             |
+| **Hex**   | a0 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00   |
 
-| Description | Version     | Length      | Hash                                                                                            | Minor Version |
-| ----------- | ----------- | ----------- | ----------------------------------------------------------------------------------------------- | ------------- |
-| Human       | 160         | 32          | d51c9a7e9353746a6020f9602d452929                                                                | 1             |
-| Hex         | a0 00 00 00 | 20 00 00 00 | 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 | 01 00 00 00   |
+*Message as a Hex Stream:*
+  - **48 00 00 00 01 00 00 00 08 00 00 00 75 73 65 72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00
+      00 00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36 30 32 64 34 35 32 39 32 39 01 00 00 00**
 
-*Message as a Hex Stream* **48 00 00 00 01 00 00 00 08 00 00 00 75 73 65
-72 6e 61 6d 65 08 00 00 00 70 61 73 73 77 6f 72 64 a0 00 00 00 20 00 00
-00 64 35 31 63 39 61 37 65 39 33 35 33 37 34 36 61 36 30 32 30 66 39 36
-30 32 64 34 35 32 39 32 39 01 00 00 00**
-
-#### Data Order
-
-  - Send
+*Data Order:*
+  - Send Login Attempt
     1.  **string** <ins>username</ins>
-    2.  **string** <ins>password</ins> **A non-empty string is required**
+    2.  **string** <ins>password</ins> A non-empty string is required
     3.  **uint32** <ins>version number</ins> *160* for Nicotine+
-    4.  **string** <ins>MD5 hex digest of concatenated username & password</ins>
-    5.  **uint32** <ins>minor version</ins> Minor version (0x13000000 for 157 ns 13e, 0x11000000 for 157 ns 13c)
+    4.  **string** <ins>hash</ins> MD5 hex digest of concatenated username & password
+    5.  **uint32** <ins>minor version</ins> *0x13000000* for 157 ns 13e, *0x11000000* for 157 ns 13c
   - Receive Login Success
     1.  **bool** <ins>success</ins> 1
     2.  **string** <ins>greet</ins> A MOTD string
     3.  **uint32** <ins>Your IP Address</ins>
-    4.  **string** <ins>MD5 hex digest of the password string</ins> *Windows Soulseek uses this hash to determine if it's connected to the official server*
+    4.  **string** <ins>hash</ins> MD5 hex digest of the password string (Windows SoulseekQt uses this hash to determine if it's connected to the official server)
   - Receive Login Failure
     1.  **bool** <ins>failure</ins> *0*
-    2.  **string** <ins>reason</ins> Almost always: *Bad Password*; sometimes it's a banned message or another error.
+    2.  **string** <ins>reason</ins> Almost always: *Bad Password* (sometimes it's a banned message or another error).
 
 ## Server Code 2
 
@@ -281,8 +280,7 @@ We send this to the server to indicate the port number that we listen on (2234 b
 
 If this value is set to zero, or the message is not sent upon login (which defaults the listen port to 0), remote clients handling a [ConnectToPeer](#server-code-18) message will fail to properly purge the request.  Confirmed in SoulseekQt 2020.3.12, but probably impacts most or all other versions.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>port</ins>
     2.  **bool** <ins>use obfuscation</ins>
@@ -296,8 +294,7 @@ If this value is set to zero, or the message is not sent upon login (which defau
 
 We send this to the server to ask for a peer's address (IP address and port), given the peer's username.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -313,8 +310,7 @@ We send this to the server to ask for a peer's address (IP address and port), gi
 
 Used to be kept updated about a user's stats. When a user's stats have changed, the server sends a [GetUserStats](#server-code-36) response message with the new user stats.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -335,8 +331,7 @@ Used to be kept updated about a user's stats. When a user's stats have changed, 
 
 Used when we no longer want to be kept updated about a user's stats.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -348,8 +343,7 @@ Used when we no longer want to be kept updated about a user's stats.
 
 The server tells us if a user has gone away or has returned.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -363,8 +357,7 @@ The server tells us if a user has gone away or has returned.
 
 Either we want to say something in the chatroom, or someone else did.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>message</ins>
@@ -381,8 +374,7 @@ We send this message to the server when we want to join a room. If the room does
 
 Server responds with this message when we join a room. Contains users list with data on everyone.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **uint32** <ins>private</ins> *If the room doesn't exist, should the new room be private?*
@@ -417,8 +409,7 @@ Server responds with this message when we join a room. Contains users list with 
 
 We send this to the server when we want to leave a room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
   - Receive
@@ -430,8 +421,7 @@ We send this to the server when we want to leave a room.
 
 The server tells us someone has just joined a room we're in.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -451,8 +441,7 @@ The server tells us someone has just joined a room we're in.
 
 The server tells us someone has just left a room we're in.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -467,8 +456,7 @@ Either we ask server to tell someone else we want to establish a connection with
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>username</ins>
@@ -489,8 +477,7 @@ See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 Chat phrase sent to someone or received by us in private.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **string** <ins>message</ins>
@@ -507,8 +494,7 @@ Chat phrase sent to someone or received by us in private.
 
 We send this to the server to confirm that we received a private message. If we don't send it, the server will keep sending the chat phrase to us.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>message ID</ins>
   - Receive
@@ -522,8 +508,7 @@ We send this to the server to confirm that we received a private message. If we 
 
 We send this to the server when we search for something in a room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     1.  **uint32** <ins>room id</ins>
@@ -539,8 +524,7 @@ We send this to the server when we search for something. Alternatively, the serv
 
 The token is a number generated by the client and is used to track the search results.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>search query</ins>
@@ -558,8 +542,7 @@ We send our new status to the server. Status is a way to define whether we're av
 *1 = Away  
 2 = Online*
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **int32** <ins>status</ins> *see [Status Codes](#status-codes)*
   - Receive
@@ -573,8 +556,7 @@ We send our new status to the server. Status is a way to define whether we're av
 
 We test if the server responds.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -586,8 +568,7 @@ We test if the server responds.
 
 **OBSOLETE, no longer used**
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>
@@ -603,8 +584,7 @@ We test if the server responds.
 
 We used to send this after a finished download to let the server update the speed statistics for a user.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>speed</ins>
@@ -617,8 +597,7 @@ We used to send this after a finished download to let the server update the spee
 
 We send this to server to indicate the number of folder and files that we share.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>dirs</ins>
     2.  **uint32** <ins>files</ins>
@@ -631,8 +610,7 @@ We send this to server to indicate the number of folder and files that we share.
 
 The server sends this to indicate a change in a user's statistics, if we've requested to watch the user in [AddUser](#server-code-5) previously. A user's stats can also be requested by sending a [GetUserStats](#server-code-36) message to the server, but [AddUser](#server-code-5) should be used instead.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -650,8 +628,7 @@ The server sends this to indicate a change in a user's statistics, if we've requ
 
 The server sends this to indicate if someone has download slots available or not.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -665,8 +642,7 @@ The server sends this to indicate if someone has download slots available or not
 
 The server sends this if someone else logged in under our nickname, and then disconnects us.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -678,8 +654,7 @@ The server sends this if someone else logged in under our nickname, and then dis
 
 We send this to the server when we search a specific user's shares. The token is a number generated by the client and is used to track the search results.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>
@@ -695,8 +670,7 @@ We send this to the server when we search a specific user's shares. The token is
 
 We send this to the server when we add an item to our likes list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -710,8 +684,7 @@ We send this to the server when we add an item to our likes list.
 
 We send this to the server when we remove an item from our likes list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -725,8 +698,7 @@ We send this to the server when we remove an item from our likes list.
 
 The server sends us a list of personal recommendations and a number for each.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -747,8 +719,7 @@ The server sends us a list of personal recommendations and a number for each.
 
 The server sends us a list of global recommendations and a number for each.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -769,8 +740,7 @@ The server sends us a list of global recommendations and a number for each.
 
 We ask the server for a user's liked and hated interests. The server responds with a list of interests.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -790,8 +760,7 @@ We ask the server for a user's liked and hated interests. The server responds wi
 
 We send this to the server to run an admin command (e.g. to ban or silence a user) if we have admin status on the server.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>command</ins>
     2.  **uint32** <ins>number of command arguments</ins>
@@ -808,8 +777,7 @@ We send this to the server to run an admin command (e.g. to ban or silence a use
 
 The server sends this to indicate change in place in queue while we're waiting for files from another peer.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>req</ins>
@@ -827,8 +795,7 @@ The server sends this to indicate change in place in queue while we're waiting f
 
 The server tells us a new room has been added.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -842,8 +809,7 @@ The server tells us a new room has been added.
 
 The server tells us a room has been removed.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -855,8 +821,7 @@ The server tells us a room has been removed.
 
 The server tells us a list of rooms and the number of users in them. When connecting to the server, the server only sends us rooms with at least 5 users. A few select rooms are also excluded, such as nicotine and The Lobby. Requesting the room list yields a response containing the missing rooms.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -899,8 +864,7 @@ The server tells us a list of rooms and the number of users in them. When connec
 
 We send this to search for an exact file name and folder, to find other sources.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>filename</ins>
@@ -921,8 +885,7 @@ We send this to search for an exact file name and folder, to find other sources.
 
 A global message from the server admin has arrived.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -936,8 +899,7 @@ A global message from the server admin has arrived.
 
 We send this to get a global list of all users online.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -968,8 +930,7 @@ We send this to get a global list of all users online.
 
 Server message for tunneling a chat message.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>
@@ -989,8 +950,7 @@ Server message for tunneling a chat message.
 
 The server sends us a list of privileged users, a.k.a. users who have donated.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1004,8 +964,7 @@ The server sends us a list of privileged users, a.k.a. users who have donated.
 
 We inform the server if we have a distributed parent or not. If not, the server eventually sends us a [PossibleParents](#server-code-102) message with a list of possible parents to connect to. If no candidates are found, no such message is sent by the server, and we eventually become a branch root.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **bool** <ins>have parents</ins>
   - Receive
@@ -1019,8 +978,7 @@ We inform the server if we have a distributed parent or not. If not, the server 
 
 We send the IP address of our parent to the server.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **ip** <ins>ip</ins>
   - Receive
@@ -1032,8 +990,7 @@ We send the IP address of our parent to the server.
 
 The server informs us about the minimum upload speed required to become a parent in the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1045,8 +1002,7 @@ The server informs us about the minimum upload speed required to become a parent
 
 The server sends us a speed ratio determining the number of children we can have in the distributed network. The maximum number of children is our upload speed divided by the speed ratio.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1058,8 +1014,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 **OBSOLETE, no longer sent by the server**
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1071,8 +1026,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 **OBSOLETE, no longer sent by the server**
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1084,8 +1038,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 **OBSOLETE, no longer sent by the server**
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1097,8 +1050,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 **OBSOLETE, no longer sent by the server**
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1112,8 +1064,7 @@ The server sends us a speed ratio determining the number of children we can have
 
 The server sends us the username of a new privileged user, which we add to our list of global privileged users.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1125,8 +1076,7 @@ The server sends us the username of a new privileged user, which we add to our l
 
 We ask the server how much time we have left of our privileges. The server responds with the remaining time, in seconds.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -1138,8 +1088,7 @@ We ask the server how much time we have left of our privileges. The server respo
 
 The server sends us an embedded distributed message. The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3). If we receive such a message, we are a branch root in the distributed network, and we distribute the embedded message (not the unpacked distributed message) to our child peers.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1152,8 +1101,7 @@ The server sends us an embedded distributed message. The only type of distribute
 
 We tell the server if we want to accept child nodes.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **bool** <ins>accept</ins>
   - Receive
@@ -1167,8 +1115,7 @@ The server send us a list of max 10 possible distributed parents to connect to. 
 
 The received list always contains users whose upload speed is higher than our own. If we have the highest upload speed on the server, we become a branch root, and start receiving [SearchRequest](#server-code-93) messages directly from the server.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1184,8 +1131,7 @@ The received list always contains users whose upload speed is higher than our ow
 
 We send the server one of our wishlist search queries at each interval.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>search query</ins>
@@ -1200,8 +1146,7 @@ The server tells us the wishlist search interval.
 
 This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1213,8 +1158,7 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -1231,8 +1175,7 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
 The server sends us a list of recommendations related to a specific item, which is usually present in the like/dislike list or an existing recommendation list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -1250,8 +1193,7 @@ The server sends us a list of recommendations related to a specific item, which 
 
 The server sends us a list of similar users related to a specific item, which is usually present in the like/dislike list or recommendation list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -1268,8 +1210,7 @@ The server returns a list of tickers in a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1287,8 +1228,7 @@ The server sends us a new ticker that was added to a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1304,8 +1244,7 @@ The server informs us that a ticker was removed from a chat room.
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1320,8 +1259,7 @@ We send this to the server when we change our own ticker in a chat room. Sending
 
 Tickers are customizable, user-specific messages that appear on chat room walls.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>ticker</ins>
@@ -1336,8 +1274,7 @@ Tickers are customizable, user-specific messages that appear on chat room walls.
 
 We send this to the server when we add an item to our hate list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -1351,8 +1288,7 @@ We send this to the server when we add an item to our hate list.
 
 We send this to the server when we remove an item from our hate list.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>item</ins>
   - Receive
@@ -1366,8 +1302,7 @@ We send this to the server to search files shared by users who have joined a spe
 
 The token is a number generated by the client and is used to track the search results.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **uint32** <ins>token</ins>
@@ -1381,8 +1316,7 @@ The token is a number generated by the client and is used to track the search re
 
 We send this after a finished upload to let the server update the speed statistics for ourselves.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>speed</ins>
   - Receive
@@ -1396,8 +1330,7 @@ We send this after a finished upload to let the server update the speed statisti
 
 We ask the server whether a user is privileged or not.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
   - Receive
@@ -1410,8 +1343,7 @@ We ask the server whether a user is privileged or not.
 
 We give (part of) our privileges, specified in days, to another user on the network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>days</ins>
@@ -1424,8 +1356,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 **DEPRECATED, sent by Soulseek NS but not SoulseekQt**
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>username</ins>
@@ -1439,8 +1370,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 **DEPRECATED, no longer used**
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
   - Receive
@@ -1452,8 +1382,7 @@ We give (part of) our privileges, specified in days, to another user on the netw
 
 We tell the server what our position is in our branch (xth generation) on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>branch level</ins>
   - Receive
@@ -1465,8 +1394,7 @@ We tell the server what our position is in our branch (xth generation) on the di
 
 We tell the server the username of the root of the branch we're in on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>branch root</ins>
   - Receive
@@ -1480,8 +1408,7 @@ We tell the server the username of the root of the branch we're in on the distri
 
 We tell the server the maximum number of generation of children we have on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>child depth</ins>
   - Receive
@@ -1493,8 +1420,7 @@ We tell the server the maximum number of generation of children we have on the d
 
 The server asks us to reset our distributed parent and children.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1506,8 +1432,7 @@ The server asks us to reset our distributed parent and children.
 
 The server sends us a list of room users that we can alter (add operator abilities / dismember).
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  *No Message*
   - Receive
@@ -1522,8 +1447,7 @@ The server sends us a list of room users that we can alter (add operator abiliti
 
 We send this to inform the server that we've added a user to a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>username</ins>
@@ -1537,8 +1461,7 @@ We send this to inform the server that we've added a user to a private room.
 
 We send this to inform the server that we've removed a user from a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>username</ins>
@@ -1552,8 +1475,7 @@ We send this to inform the server that we've removed a user from a private room.
 
 We send this to the server to remove our own membership of a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
   - Receive
@@ -1565,8 +1487,7 @@ We send this to the server to remove our own membership of a private room.
 
 We send this to the server to stop owning a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
   - Receive
@@ -1580,8 +1501,7 @@ We send this to the server to stop owning a private room.
 
 Unknown purporse
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
   - Receive
@@ -1593,8 +1513,7 @@ Unknown purporse
 
 The server sends us this message when we are added to a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1606,8 +1525,7 @@ The server sends us this message when we are added to a private room.
 
 The server sends us this message when we are removed from a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1619,8 +1537,7 @@ The server sends us this message when we are removed from a private room.
 
 We send this when we want to enable or disable invitations to private rooms.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **bool** <ins>enable</ins>
   - Receive
@@ -1632,8 +1549,7 @@ We send this when we want to enable or disable invitations to private rooms.
 
 We send this to the server to change our password. We receive a response if our password changes.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>pass</ins>
   - Receive
@@ -1645,8 +1561,7 @@ We send this to the server to change our password. We receive a response if our 
 
 We send this to the server to add private room operator abilities to a user.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>username</ins>
@@ -1660,8 +1575,7 @@ We send this to the server to add private room operator abilities to a user.
 
 We send this to the server to remove private room operator abilities from a user.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>room</ins>
     2.  **string** <ins>username</ins>
@@ -1675,8 +1589,7 @@ We send this to the server to remove private room operator abilities from a user
 
 The server send us this message when we're given operator abilities in a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1688,8 +1601,7 @@ The server send us this message when we're given operator abilities in a private
 
 The server send us this message when our operator abilities are removed in a private room.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1701,8 +1613,7 @@ The server send us this message when our operator abilities are removed in a pri
 
 The server sends us a list of operators in a specific room, that we can remove operator abilities from.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1718,8 +1629,7 @@ The server sends us a list of operators in a specific room, that we can remove o
 
 Sends a broadcast private message to the given list of users.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>number of users</ins>
     2.  Iterate the <ins>number of users</ins>
@@ -1736,8 +1646,7 @@ Sends a broadcast private message to the given list of users.
 
 We ask the server to send us messages from all public rooms, also known as public room feed.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -1751,8 +1660,7 @@ We ask the server to send us messages from all public rooms, also known as publi
 
 We ask the server to stop sending us messages from all public rooms, also known as public room feed.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -1766,8 +1674,7 @@ We ask the server to stop sending us messages from all public rooms, also known 
 
 The server sends this when a new message has been written in the public room feed (every single line written in every public room).
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1783,8 +1690,7 @@ The server sends this when a new message has been written in the public room fee
 
 The server returns a list of related search terms for a search query.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>query</ins>
   - Receive
@@ -1802,8 +1708,7 @@ We send this to say we can't connect to peer after it has asked us to connect. W
 
 This message means a connection can't be established either way. See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>username</ins>
@@ -1819,8 +1724,7 @@ Server tells us a new room cannot be created.
 
 This message only seems to be sent if you try to create a room with the same name as an existing private room. In other cases, such as using a room name with leading or trailing spaces, only a private message containing an error message is sent.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -1842,12 +1746,10 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 
 ### Peer Init Message Codes
 
-| Code | Message Function                     |
+| Code | Message                              |
 | ---- | ------------------------------------ |
 | 0    | [Pierce Firewall](#peer-init-code-0) |
 | 1    | [Peer Init](#peer-init-code-1)       |
-
-The Nicotine+ function names used in slskmessages.py are specified below.
 
 ## Peer Connection Message Order
 
@@ -1870,8 +1772,7 @@ This is the very first message sent by the peer that established a connection, i
 
 The token is taken from the [ConnectToPeer](#server-code-18) server message. See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-#### Data Order
-
+*Data Order:*
   - Send
       - **uint32** <ins>token</ins> *Unique Number*
   - Receive
@@ -1885,8 +1786,7 @@ This message is sent by the peer that initiated a connection, not necessarily a 
 
 See also: [Peer Connection Message Order](#peer-connection-message-order)
 
-#### Data Order
-
+*Data Order:*
   - Send
       - **string** <ins>username</ins> *Local Username*
       - **string** <ins>type</ins> **P, F or D** *see [Connection Types](#connection-types)*
@@ -1912,7 +1812,7 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 
 ### Peer Message Codes
 
-| Code | Message Function                           | Status                     |
+| Code | Message                                    | Status                     |
 | ---- | ------------------------------------------ | -------------------------- |
 | 1    | Private Message                            | Obsolete, contents unknown |
 | 4    | [Shares Request](#peer-code-4)             |                            |
@@ -1941,16 +1841,13 @@ In Nicotine, these messages are matched to their message number in slskproto.py 
 | 51   | [Place In Queue Request](#peer-code-51)    |                            |
 | 52   | [Upload Queue Notification](#peer-code-52) | Deprecated                 |
 
-The Nicotine+ function names used in slskmessages.py are specified below.
-
 ## Peer Code 4
 
 ### GetShareFileList
 
 We send this to a peer to ask for a list of shared files.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -1962,8 +1859,7 @@ We send this to a peer to ask for a list of shared files.
 
 A peer responds with a list of shared files after we've sent a [GetSharedFileList](#peer-code-4).
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  Iterate thru shares database
         1.  **data**
@@ -2005,8 +1901,7 @@ A peer responds with a list of shared files after we've sent a [GetSharedFileLis
 
 We send this to the peer when we search for a file. Alternatively, the peer sends this to tell us it is searching for a file.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **string** <ins>query</ins>
@@ -2020,8 +1915,7 @@ We send this to the peer when we search for a file. Alternatively, the peer send
 
 A peer sends this message when it has a file search match. The token is taken from original [FileSearch](#server-code-26), [UserSearch](#server-code-42) or [RoomSearch](#server-code-120) server message.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>username</ins>
     2.  **uint32** <ins>token</ins>
@@ -2084,8 +1978,7 @@ A peer sends this message when it has a file search match. The token is taken fr
 
 We ask the other peer to send us their user information, picture and all.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -2097,8 +1990,7 @@ We ask the other peer to send us their user information, picture and all.
 
 A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>description</ins>
     2.  Check contents of <ins>picture</ins>
@@ -2130,8 +2022,7 @@ A peer responds with this after we've sent a [UserInfoRequest](#peer-code-15).
 
 We ask the peer to send us the contents of a single folder.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>number of files in directory</ins>
     2.  Iterate <ins>number of files in directory</ins>
@@ -2147,8 +2038,7 @@ We ask the peer to send us the contents of a single folder.
 
 A peer responds with the contents of a particular folder (with all subfolders) after we've sent a [FolderContentsRequest](#peer-code-36).
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>number of folders</ins>
     2.  Iterate for <ins>number of folders</ins>
@@ -2187,8 +2077,7 @@ This message is sent by a peer once they are ready to start uploading a file to 
 
 This message was formely used to send a download request (direction 0) as well, but Nicotine+, Museek+ and the official clients use the [QueueUpload](#peer-code-43) peer message for this purpose today.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>direction</ins> **0 or 1** *see [Transfer Directions](#transfer-directions)*
     2.  **uint32** <ins>token</ins>
@@ -2212,8 +2101,7 @@ Response to [TransferRequest](#peer-code-40)
 
 We (or the other peer) either agrees, or tells the reason for rejecting the file download.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
@@ -2235,8 +2123,7 @@ Response to [TransferRequest](#peer-code-40)
 
 We (or the other peer) either agrees, or tells the reason for rejecting the file upload.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>token</ins>
     2.  **bool** <ins>allowed</ins>
@@ -2254,8 +2141,7 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
 
 **OBSOLETE, no longer used**
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
   - Receive
@@ -2267,8 +2153,7 @@ We (or the other peer) either agrees, or tells the reason for rejecting the file
 
 This message is used to tell a peer that an upload should be queued on their end. Once the recipient is ready to transfer the requested file, they will send a [TransferRequest](#peer-code-40) to us.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
   - Receive
@@ -2280,8 +2165,7 @@ This message is used to tell a peer that an upload should be queued on their end
 
 The peer replies with the upload queue placement of the requested file.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
     2.  **uint32** <ins>place</ins>
@@ -2295,8 +2179,7 @@ The peer replies with the upload queue placement of the requested file.
 
 This message is sent whenever a file connection of an active upload closes. Soulseek NS clients can also send this message when a file can not be read. The recipient either re-queues the upload (download on their end), or ignores the message if the transfer finished.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
   - Receive
@@ -2308,8 +2191,7 @@ This message is sent whenever a file connection of an active upload closes. Soul
 
 This message is sent to reject [QueueUpload](#peer-code-43) attempts and previously queued files. The reason for rejection will appear in the transfer list of the recipient.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
     2.  **string** <ins>reason</ins>
@@ -2323,8 +2205,7 @@ This message is sent to reject [QueueUpload](#peer-code-43) attempts and previou
 
 This message is sent when asking for the upload queue placement of a file.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>filename</ins>
   - Receive
@@ -2338,8 +2219,7 @@ This message is sent when asking for the upload queue placement of a file.
 
 This message is sent to inform a peer about an upload attempt initiated by us.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -2361,13 +2241,11 @@ These messages are sent to peers over a 'F' connection, and do not have messages
 
 ### File Connection Messages
 
-| Message Function                          |
+| Message                                   |
 | ----------------------------------------- |
 | [File Download Init](#file-download-init) |
 | [File Upload Init](#file-upload-init)     |
 | [File Offset](#file-offset)               |
-
-The Nicotine+ function names used in slskmessages.py are specified below.
 
 ## File Download Init
 
@@ -2375,8 +2253,7 @@ The Nicotine+ function names used in slskmessages.py are specified below.
 
 We receive this from a peer via a 'F' connection when they want to start uploading a file to us. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - *No Message*
   - Receive
@@ -2388,8 +2265,7 @@ We receive this from a peer via a 'F' connection when they want to start uploadi
 
 We send this to a peer via a 'F' connection to tell them that we want to start uploading a file. The token is the same as the one previously included in the [TransferRequest](#peer-code-40) peer message.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - **uint32** <ins>token</ins>
   - Receive
@@ -2401,8 +2277,7 @@ We send this to a peer via a 'F' connection to tell them that we want to start u
 
 We send this to the uploading peer at the beginning of a 'F' connection, to tell them how many bytes of the file we've previously downloaded. If none, the offset is 0.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - **uint64** <ins>offset</ins>
   - Receive
@@ -2424,7 +2299,7 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 
 ### Distributed Message Codes
 
-| Code | Message Function                         | Status     |
+| Code | Message                                  | Status     |
 | ---- | ---------------------------------------- | ---------- |
 | 0    | [Ping](#distributed-code-0)              |            |
 | 3    | [Search Request](#distributed-code-3)    |            |
@@ -2433,16 +2308,13 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 | 7    | [Child Depth](#distributed-code-7)       | Deprecated |
 | 93   | [Embedded Message](#distributed-code-93) |            |
 
-The Nicotine+ function names used in slskmessages.py are specified below.
-
 ## Distributed Code 0
 
 ### DistribAlive
 
 Send it every 60 sec.
 
-#### Data Order
-
+*Data Order:*
   - Send
       - Empty Message
   - Receive
@@ -2454,8 +2326,7 @@ Send it every 60 sec.
 
 Search request that arrives through the distributed network. We transmit the search request to our child peers.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>unknown</ins>
     2.  **string** <ins>username</ins>
@@ -2473,8 +2344,7 @@ Search request that arrives through the distributed network. We transmit the sea
 
 We tell our distributed children what our position is in our branch (xth generation) on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **int32** <ins>branch level</ins>
   - Receive
@@ -2486,8 +2356,7 @@ We tell our distributed children what our position is in our branch (xth generat
 
 We tell our distributed children the username of the root of the branch we're in on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **string** <ins>branch root</ins>
   - Receive
@@ -2501,8 +2370,7 @@ We tell our distributed children the username of the root of the branch we're in
 
 We tell our distributed parent the maximum number of generation of children we have on the distributed network.
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint32** <ins>child depth</ins>
   - Receive
@@ -2516,8 +2384,7 @@ A branch root sends us an embedded distributed message. We unpack the distribute
 
 The only type of distributed message sent at present is [DistribSearch](#distributed-code-3) (distributed code 3).
 
-#### Data Order
-
+*Data Order:*
   - Send
     1.  **uint8** <ins>distributed code</ins> *see [Distributed Message Codes](#distributed-message-codes)*
     2.  **bytes** <ins>distributed message</ins> *Raw message associated with distributed code*
