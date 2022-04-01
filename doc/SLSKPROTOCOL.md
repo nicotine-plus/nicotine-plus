@@ -1157,6 +1157,8 @@ This interval is almost always 12 minutes, or 2 minutes for privileged users.
 
 **DEPRECATED, used in Soulseek NS but not SoulseekQt**
 
+The server sends us a list of similar users related to our interests.
+
 *Data Order:*
   - Send
       - Empty Message
@@ -1702,9 +1704,9 @@ The server returns a list of related search terms for a search query.
 
 ### CantConnectToPeer
 
-We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this.
+We send this to say we can't connect to peer after it has asked us to connect. We receive this if we asked peer to connect and it can't do this. This message means a connection can't be established either way.
 
-This message means a connection can't be established either way. See also: [Peer Connection Message Order](#peer-connection-message-order)
+See also: [Peer Connection Message Order](#peer-connection-message-order)
 
 *Data Order:*
   - Send
