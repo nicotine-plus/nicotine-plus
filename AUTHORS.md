@@ -6,11 +6,6 @@
  - Maintainer (2020–present)
  - Developer
 
-### Kip Warner
- - Maintainer (2018–2020)
- - Developer
- - Debianization
-
 ### eLvErDe
  - Maintainer (2013–2016)
  - Domain name administrator
@@ -31,7 +26,7 @@
  - Tester
  - Accessibility improvements
 
-## Retired
+## Inactive
 
 ### daelstorm
  - Maintainer (2004–2009)
@@ -44,6 +39,11 @@
 ### Michael Labouebe (gfarmerfr)
  - Maintainer (2016–2017)
  - Developer
+
+### Kip Warner
+ - Maintainer (2018–2020)
+ - Developer
+ - Debianization
 
 ### gallows (aka 'burp O')
  - Developer
@@ -84,8 +84,6 @@
 
 # Nicotine Team
 
-## Retired
-
 ### Hyriand
  - Maintainer (2003–2004)
 
@@ -124,8 +122,6 @@
 ---
 
 # PySoulSeek Contributors
-
-## Retired
 
 ### Alexander Kanavin
  - Maintainer (2001–2003)
