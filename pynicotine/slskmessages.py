@@ -1504,6 +1504,7 @@ class WishlistSearch(FileSearch):
     """ Server code: 103 """
     """ We send the server one of our wishlist search queries at each interval. """
 
+
 class WishlistInterval(ServerMessage):
     """ Server code: 104 """
     """ The server tells us the wishlist search interval. """
