@@ -35,11 +35,6 @@ class About:
    - Maintainer (2020–present)
    - Developer
 
-> Kip Warner
-   - Maintainer (2018–2020)
-   - Developer
-   - Debianization
-
 > eLvErDe
    - Maintainer (2013–2016)
    - Domain name administrator
@@ -61,7 +56,7 @@ class About:
    - Accessibility improvements
 
 
-Retired Contributors
+Inactive
 
 > daelstorm
    - Maintainer (2004–2009)
@@ -74,6 +69,11 @@ Retired Contributors
 > Michael Labouebe (gfarmerfr)
    - Maintainer (2016–2017)
    - Developer
+
+> Kip Warner
+   - Maintainer (2018–2020)
+   - Developer
+   - Debianization
 
 > gallows (aka &apos;burp O&apos;)
    - Developer
