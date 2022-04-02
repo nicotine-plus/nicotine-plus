@@ -28,13 +28,14 @@ class Application:
 
         self.core = core
         self.ci_mode = ci_mode
+        self.network_msgs = []
 
         config.load_config()
         log.log_levels = set(["download", "upload"] + config.sections["logging"]["debugmodes"])
 
     def run(self):
 
-        connect_ready = self.core.start(self)
+        connect_ready = self.core.start(self, self.network_callback)
 
         if not connect_ready and not self.ci_mode:
             return 1
@@ -45,9 +46,17 @@ class Application:
             return 1
 
         while not self.core.shutdown:
-            time.sleep(0.2)
+            if self.network_msgs:
+                msgs = list(self.network_msgs)
+                self.network_msgs.clear()
+                self.core.network_event(msgs)
+
+            time.sleep(1 / 60)
 
         config.write_configuration()
+
+    def network_callback(self, msgs):
+        self.network_msgs += msgs
 
     def show_scan_progress(self):
         pass
