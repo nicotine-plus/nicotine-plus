@@ -38,13 +38,16 @@ class Application:
         connect_ready = self.core.start(self, self.network_callback)
 
         if not connect_ready and not self.ci_mode:
+            # No username or password specified, exit code 1
             return 1
 
         connect_success = self.core.connect()
 
         if not connect_success and not self.ci_mode:
+            # Network error, exit code 1
             return 1
 
+        # Main loop, process messages from networking thread
         while not self.core.shutdown:
             if self.network_msgs:
                 msgs = list(self.network_msgs)
@@ -53,7 +56,9 @@ class Application:
 
             time.sleep(1 / 60)
 
+        # Shut down with exit code 0 (success)
         config.write_configuration()
+        return 0
 
     def network_callback(self, msgs):
         self.network_msgs += msgs
