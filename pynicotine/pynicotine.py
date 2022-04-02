@@ -296,7 +296,6 @@ class NicotineCore:
             self.shares.quit()
 
         self.ui_callback.quit()
-        config.write_configuration()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,

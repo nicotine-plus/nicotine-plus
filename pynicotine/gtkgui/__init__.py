@@ -76,5 +76,5 @@ def run_gui(core, trayicon, hidden, bindip, port, ci_mode, multi_instance):
         log.add(error)
         return 1
 
-    from pynicotine.gtkgui.frame import Application
+    from pynicotine.gtkgui.application import Application
     return Application(core, trayicon, hidden, bindip, port, ci_mode, multi_instance).run()
