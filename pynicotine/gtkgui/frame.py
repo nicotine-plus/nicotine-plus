@@ -86,12 +86,14 @@ class NicotineFrame(UserInterface):
 
         self.application = application
         self.core = self.np = core
+        self.start_hidden = start_hidden
         self.ci_mode = ci_mode
         self.current_page_id = ""
         self.checking_update = False
         self.auto_away = False
         self.away_timer = None
         self.away_cooldown_time = 0
+        self.gesture_click = None
         self.scan_progress_indeterminate = False
         self.bindip = bindip
         self.port = port
@@ -194,85 +196,9 @@ class NicotineFrame(UserInterface):
         set_global_style()
         self.update_visuals()
 
-        """ Connect """
+    """ Initialize """
 
-        connect_ready = core.start(self, self.network_callback)
-
-        if not connect_ready:
-            self.connect_action.set_enabled(False)
-
-        elif config.sections["server"]["auto_connect_startup"]:
-            core.connect()
-
-        """ Show Window """
-
-        self.update_window_properties()
-        self.application.add_window(self.window)
-
-        # Check command line option and config option
-        if not start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.window.present_with_time(Gdk.CURRENT_TIME)
-
-        if not connect_ready:
-            # Set up fast configure dialog
-            self.on_fast_configure()
-
-    """ Window State """
-
-    def on_window_hide_unhide(self, *_args):
-
-        if self.window.get_property("visible"):
-            self.window.hide()
-            return
-
-        self.show()
-
-    def on_window_active_changed(self, window, param):
-
-        if not window.get_property(param.name):
-            return
-
-        self.chatrooms.clear_notifications()
-        self.privatechat.clear_notifications()
-        self.on_cancel_auto_away()
-
-        if Gtk.get_major_version() == 3 and window.get_urgency_hint():
-            window.set_urgency_hint(False)
-
-    def on_window_visible_changed(self, *_args):
-        self.tray_icon.update_show_hide_label()
-
-    def save_window_state(self):
-
-        if Gtk.get_major_version() == 4:
-            width, height = self.window.get_default_size()
-        else:
-            width, height = self.window.get_size()
-            xpos, ypos = self.window.get_position()
-
-            config.sections["ui"]["xposition"] = xpos
-            config.sections["ui"]["yposition"] = ypos
-
-        config.sections["ui"]["height"] = height
-        config.sections["ui"]["width"] = width
-
-        config.sections["ui"]["maximized"] = self.window.is_maximized()
-        config.sections["ui"]["last_tab_id"] = self.current_page_id
-
-        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
-            page.save_columns()
-
-    def show(self):
-
-        self.window.present_with_time(Gdk.CURRENT_TIME)
-
-        if Gtk.get_major_version() == 3:
-            # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.window.deiconify()
-
-    """ Init UI """
-
-    def update_window_properties(self):
+    def init_window_properties(self):
 
         # Clear notifications when main window is focused
         self.window.connect("notify::is-active", self.on_window_active_changed)
@@ -362,6 +288,36 @@ class NicotineFrame(UserInterface):
 
         threading.Thread.__init__ = init_thread_excepthook
 
+    def on_startup(self):
+
+        connect_ready = self.core.start(self, self.network_callback)
+
+        if not connect_ready:
+            self.connect_action.set_enabled(False)
+
+        elif config.sections["server"]["auto_connect_startup"]:
+            self.core.connect()
+
+    def on_activate(self):
+
+        active_window = self.application.get_active_window()
+
+        if active_window:
+            # Show the window of the running application instance
+            active_window.present_with_time(Gdk.CURRENT_TIME)
+            return
+
+        self.init_window_properties()
+        self.application.add_window(self.window)
+
+        # Check command line option and config option
+        if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
+            self.window.present_with_time(Gdk.CURRENT_TIME)
+
+        if not self.connect_action.get_enabled():
+            # Set up fast configure dialog
+            self.on_fast_configure()
+
     def init_spell_checker(self):
 
         try:
@@ -375,6 +331,59 @@ class NicotineFrame(UserInterface):
     def update_visuals(self):
         for widget in list(self.__dict__.values()):
             update_widget_visuals(widget)
+
+    """ Window State """
+
+    def on_window_hide_unhide(self, *_args):
+
+        if self.window.get_property("visible"):
+            self.window.hide()
+            return
+
+        self.show()
+
+    def on_window_active_changed(self, window, param):
+
+        if not window.get_property(param.name):
+            return
+
+        self.chatrooms.clear_notifications()
+        self.privatechat.clear_notifications()
+        self.on_cancel_auto_away()
+
+        if Gtk.get_major_version() == 3 and window.get_urgency_hint():
+            window.set_urgency_hint(False)
+
+    def on_window_visible_changed(self, *_args):
+        self.tray_icon.update_show_hide_label()
+
+    def save_window_state(self):
+
+        if Gtk.get_major_version() == 4:
+            width, height = self.window.get_default_size()
+        else:
+            width, height = self.window.get_size()
+            xpos, ypos = self.window.get_position()
+
+            config.sections["ui"]["xposition"] = xpos
+            config.sections["ui"]["yposition"] = ypos
+
+        config.sections["ui"]["height"] = height
+        config.sections["ui"]["width"] = width
+
+        config.sections["ui"]["maximized"] = self.window.is_maximized()
+        config.sections["ui"]["last_tab_id"] = self.current_page_id
+
+        for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
+            page.save_columns()
+
+    def show(self):
+
+        self.window.present_with_time(Gdk.CURRENT_TIME)
+
+        if Gtk.get_major_version() == 3:
+            # Fix for Windows where minimized window is not shown when unhiding from tray
+            self.window.deiconify()
 
     """ Connection """
 
@@ -1925,6 +1934,17 @@ class NicotineFrame(UserInterface):
         self.show_exit_dialog(remember)
         return True
 
+    def on_shutdown(self):
+
+        # Explicitly hide tray icon, otherwise it will not disappear on Windows
+        self.tray_icon.hide()
+
+        # Save window state (window size, position, columns)
+        self.save_window_state()
+
+        log.remove_listener(self.log_callback)
+        config.write_configuration()
+
     def hide(self):
 
         if not self.window.get_property("visible"):
@@ -1943,65 +1963,4 @@ class NicotineFrame(UserInterface):
         config.write_configuration()
 
     def quit(self):
-
-        # Explicitly hide tray icon, otherwise it will not disappear on Windows
-        self.tray_icon.hide()
-
-        # Save window state (window size, position, columns)
-        self.save_window_state()
-
-        log.remove_listener(self.log_callback)
-
-        # Terminate GtkApplication
         self.application.quit()
-
-
-class Application(Gtk.Application):
-
-    def __init__(self, core, tray_icon, start_hidden, bindip, port, ci_mode, multi_instance):
-
-        super().__init__(application_id=config.application_id)
-        GLib.set_application_name(config.application_name)
-        GLib.set_prgname(config.application_id)
-
-        if multi_instance:
-            self.set_flags(Gio.ApplicationFlags.NON_UNIQUE)
-
-        self.core = core
-        self.tray_icon = tray_icon
-        self.start_hidden = start_hidden
-        self.ci_mode = ci_mode
-        self.bindip = bindip
-        self.port = port
-
-        try:
-            Gtk.ListStore.insert_with_valuesv
-
-        except AttributeError:
-            # GTK 4 replacement
-            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values
-
-        try:
-            Gtk.Box.add
-
-        except AttributeError:
-            # GTK 4 replacement
-            Gtk.Box.add = Gtk.Box.append
-
-    def do_activate(self):  # pylint:disable=arguments-differ
-        if not self.get_windows():
-            # Only allow one instance of the main window
-
-            NicotineFrame(
-                self,
-                self.core,
-                self.tray_icon,
-                self.start_hidden,
-                self.bindip,
-                self.port,
-                self.ci_mode
-            )
-            return
-
-        # Show the window of the running application instance
-        self.get_active_window().present_with_time(Gdk.CURRENT_TIME)
