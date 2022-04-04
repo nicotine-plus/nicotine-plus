@@ -120,13 +120,14 @@ class UserBrowse:
             self.browse_local_buddy_shares(path, new_request)
             return
 
+        user_exists = (username in self.users)
         self.show_user(username, path=path, switch_page=switch_page)
 
         if not self.core.logged_in:
             self.show_connection_error(username)
             return
 
-        if username not in self.users or new_request:
+        if not user_exists or new_request:
             self.core.send_message_to_peer(username, slskmessages.GetSharedFileList(None))
 
     def load_shares_list_from_disk(self, filename):
