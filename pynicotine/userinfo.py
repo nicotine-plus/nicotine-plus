@@ -56,6 +56,10 @@ class UserInfo:
         self.add_user(user)
         self.show_user(user, switch_page)
 
+        if not self.core.logged_in:
+            self.show_connection_error(user)
+            return
+
         # Request user description, picture and queue information
         self.core.send_message_to_peer(user, slskmessages.UserInfoRequest(None))
 

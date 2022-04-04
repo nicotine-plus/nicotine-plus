@@ -1303,26 +1303,31 @@ class SlskProtoThread(threading.Thread):
                             self.max_distrib_children = msg.avgspeed // self.distrib_parent_speed_ratio
 
                     elif msg_class is GetPeerAddress:
+                        user = msg.user
                         pending_init_msgs = self._init_msgs.pop(msg.user, [])
 
                         if msg.port == 0:
                             log.add_conn(
                                 "Server reported port 0 for user %(user)s", {
-                                    'user': msg.user
+                                    'user': user
                                 }
                             )
 
                         addr = (msg.ip_address, msg.port)
+                        user_offline = (addr == ("0.0.0.0", 0))
 
                         for init in pending_init_msgs:
                             # We now have the IP address for a user we previously didn't know,
                             # attempt a direct connection to the peer/user
-                            init.addr = addr
-                            self.connect_to_peer(msg.user, addr, init)
+                            if user_offline:
+                                self._callback_msgs.append(ShowConnectionErrorMessage(user, list(init.outgoing_msgs)))
+                            else:
+                                init.addr = addr
+                                self.connect_to_peer(user, addr, init)
 
                         # We already store a local IP address for our username
                         # Port 0 means the user is offline or bugged, don't store address
-                        if msg.user != self.server_username and msg.port != 0:
+                        if user != self.server_username and msg.port != 0:
                             self.user_addresses[msg.user] = addr
 
                     elif msg_class is Relogged:
