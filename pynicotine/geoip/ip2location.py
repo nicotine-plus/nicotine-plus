@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2021 Nicotine+ Team
+# Copyright (c) 2021-2022 Nicotine+ Contributors
 # Copyright (c) 2017 IP2Location.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy

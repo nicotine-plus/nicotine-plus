@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2021-2022 Nicotine+ Team
+# COPYRIGHT (C) 2021-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2021 Inso-m-niaC
 #
 # GNU GENERAL PUBLIC LICENSE

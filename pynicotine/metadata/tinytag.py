@@ -6,7 +6,7 @@
 
 # MIT License
 
-# Copyright (c) 2020-2022 Nicotine+ Team
+# Copyright (c) 2020-2022 Nicotine+ Contributors
 # Copyright (c) 2014-2022 Tom Wallroth
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
