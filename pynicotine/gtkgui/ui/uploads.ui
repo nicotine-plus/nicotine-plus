@@ -178,7 +178,7 @@
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Clear Uploa_ds…</property>
+                        <property name="label" translatable="yes">Clear _All…</property>
                         <property name="use-underline">True</property>
                       </object>
                     </child>

@@ -65,7 +65,7 @@ class Uploads(TransferList):
             ("#" + _("Failed"), self.on_clear_failed),
             ("#" + _("Queued…"), self.on_try_clear_queued),
             ("", None),
-            ("#" + _("Clear All…"), self.on_try_clear_all),
+            ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
 
