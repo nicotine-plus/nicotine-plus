@@ -199,7 +199,7 @@ class TransferList(UserInterface):
             ("#" + self.abort_label, self.on_abort_transfer),
             ("#" + _("_Clear"), self.on_clear_transfer),
             ("", None),
-            (">" + _("Clear Groups"), self.popup_menu_clear),
+            (">" + _("Clear All"), self.popup_menu_clear),
             (">" + _("Copy"), self.popup_menu_copy),
             (">" + _("User(s)"), self.popup_menu_users)
         )
