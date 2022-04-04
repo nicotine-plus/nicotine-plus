@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2020 Lene Preuss <lene.preuss@gmail.com>
 #
 # GNU GENERAL PUBLIC LICENSE

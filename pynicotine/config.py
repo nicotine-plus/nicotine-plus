@@ -1,4 +1,4 @@
-# COPYRIGHT (C) 2020-2022 Nicotine+ Team
+# COPYRIGHT (C) 2020-2022 Nicotine+ Contributors
 # COPYRIGHT (C) 2016-2017 Michael Labouebe <gfarmerfr@free.fr>
 # COPYRIGHT (C) 2016-2018 Mutnick <mutnick@techie.com>
 # COPYRIGHT (C) 2008-2011 Quinox <quinox@users.sf.net>
@@ -63,8 +63,8 @@ class Config:
         self.application_id = "org.nicotine_plus.Nicotine"
         self.summary = _("Graphical client for the Soulseek peer-to-peer network")
         self.author = "Nicotine+ Team"
-        self.copyright = """© 2004–2022 Nicotine+ Team
-© 2003–2004 Nicotine Team
+        self.copyright = """© 2004–2022 Nicotine+ Contributors
+© 2003–2004 Nicotine Contributors
 © 2001–2003 PySoulSeek Contributors"""
 
         self.website_url = "https://nicotine-plus.org/"
