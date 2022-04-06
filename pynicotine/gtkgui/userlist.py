@@ -526,7 +526,7 @@ class UserList(UserInterface):
         note = self.usersmodel.get_value(iterator, 9) or ""
 
         EntryDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Add User Note"),
             message=_("Add a note about user %s:") % user,
             callback=self.on_add_note_response,

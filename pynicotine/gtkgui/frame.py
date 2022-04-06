@@ -113,26 +113,26 @@ class NicotineFrame(UserInterface):
         if Gtk.get_major_version() == 4:
             self.header_bar.set_show_title_buttons(True)
 
-            self.MainPaned.set_resize_start_child(True)
-            self.MainPaned.set_resize_end_child(False)
-            self.ChatroomsPane.set_resize_end_child(False)
+            self.horizontal_paned.set_resize_start_child(True)
+            self.horizontal_paned.set_resize_end_child(False)
+            self.chatrooms_paned.set_resize_end_child(False)
 
-            self.NotebooksPane.set_resize_start_child(True)
-            self.NotebooksPane.set_shrink_start_child(False)
-            self.NotebooksPane.set_resize_end_child(False)
-            self.NotebooksPane.set_shrink_end_child(False)
+            self.vertical_paned.set_resize_start_child(True)
+            self.vertical_paned.set_shrink_start_child(False)
+            self.vertical_paned.set_resize_end_child(False)
+            self.vertical_paned.set_shrink_end_child(False)
         else:
             self.header_bar.set_has_subtitle(False)
             self.header_bar.set_show_close_button(True)
 
-            self.MainPaned.child_set_property(self.NotebooksPane, "resize", True)
-            self.MainPaned.child_set_property(self.userlist_pane, "resize", False)
-            self.ChatroomsPane.child_set_property(self.userlist_pane_chatrooms, "resize", False)
+            self.horizontal_paned.child_set_property(self.vertical_paned, "resize", True)
+            self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
+            self.chatrooms_paned.child_set_property(self.chatrooms_userlist_container, "resize", False)
 
-            self.NotebooksPane.child_set_property(self.MainNotebook, "resize", True)
-            self.NotebooksPane.child_set_property(self.MainNotebook, "shrink", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "resize", False)
-            self.NotebooksPane.child_set_property(self.DebugLog, "shrink", False)
+            self.vertical_paned.child_set_property(self.notebook, "resize", True)
+            self.vertical_paned.child_set_property(self.notebook, "shrink", False)
+            self.vertical_paned.child_set_property(self.DebugLog, "resize", False)
+            self.vertical_paned.child_set_property(self.DebugLog, "shrink", False)
 
         """ Logging """
 
@@ -188,7 +188,7 @@ class NicotineFrame(UserInterface):
 
         """ Tab Signals """
 
-        self.MainNotebook.connect("page-reordered", self.on_page_reordered)
+        self.notebook.connect("page-reordered", self.on_page_reordered)
 
         """ Apply UI Customizations """
 
@@ -200,22 +200,22 @@ class NicotineFrame(UserInterface):
     def init_window_properties(self):
 
         # Clear notifications when main window is focused
-        self.MainWindow.connect("notify::is-active", self.on_window_active_changed)
-        self.MainWindow.connect("notify::visible", self.on_window_visible_changed)
+        self.window.connect("notify::is-active", self.on_window_active_changed)
+        self.window.connect("notify::visible", self.on_window_visible_changed)
 
         # Auto-away mode
         if Gtk.get_major_version() == 4:
             self.gesture_click = Gtk.GestureClick()
-            self.MainWindow.add_controller(self.gesture_click)
+            self.window.add_controller(self.gesture_click)
 
             key_controller = Gtk.EventControllerKey()
             key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
             key_controller.connect("key-released", self.on_cancel_auto_away)
-            self.MainWindow.add_controller(key_controller)
+            self.window.add_controller(key_controller)
 
         else:
-            self.gesture_click = Gtk.GestureMultiPress(widget=self.MainWindow)
-            self.MainWindow.connect("key-release-event", self.on_cancel_auto_away)
+            self.gesture_click = Gtk.GestureMultiPress(widget=self.window)
+            self.window.connect("key-release-event", self.on_cancel_auto_away)
 
         self.gesture_click.set_button(0)
         self.gesture_click.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
@@ -223,29 +223,29 @@ class NicotineFrame(UserInterface):
 
         # System window close (X)
         if Gtk.get_major_version() == 4:
-            self.MainWindow.connect("close-request", self.on_close_request)
+            self.window.connect("close-request", self.on_close_request)
         else:
-            self.MainWindow.connect("delete-event", self.on_close_request)
+            self.window.connect("delete-event", self.on_close_request)
 
         # Set main window title and icon
-        self.MainWindow.set_title(config.application_name)
+        self.window.set_title(config.application_name)
 
         main_icon = get_icon("n")
 
         if main_icon and Gtk.get_major_version() == 3:
             icon_data = ICON_THEME.lookup_by_gicon(main_icon, 128, 0).load_icon()
-            self.MainWindow.set_default_icon(icon_data)
+            self.window.set_default_icon(icon_data)
         else:
-            self.MainWindow.set_default_icon_name(config.application_id)
+            self.window.set_default_icon_name(config.application_id)
 
         # Set main window size
         width = config.sections["ui"]["width"]
         height = config.sections["ui"]["height"]
 
         if Gtk.get_major_version() == 4:
-            self.MainWindow.set_default_size(width, height)
+            self.window.set_default_size(width, height)
         else:
-            self.MainWindow.resize(width, height)
+            self.window.resize(width, height)
 
         # Set main window position
         if Gtk.get_major_version() == 3:
@@ -253,13 +253,13 @@ class NicotineFrame(UserInterface):
             ypos = config.sections["ui"]["yposition"]
 
             if min(xpos, ypos) < 0:
-                self.MainWindow.set_position(Gtk.WindowPosition.CENTER)
+                self.window.set_position(Gtk.WindowPosition.CENTER)
             else:
-                self.MainWindow.move(xpos, ypos)
+                self.window.move(xpos, ypos)
 
         # Maximize main window if necessary
         if config.sections["ui"]["maximized"]:
-            self.MainWindow.maximize()
+            self.window.maximize()
 
     def on_startup(self):
 
@@ -281,11 +281,11 @@ class NicotineFrame(UserInterface):
             return
 
         self.init_window_properties()
-        self.application.add_window(self.MainWindow)
+        self.application.add_window(self.window)
 
         # Check command line option and config option
         if not self.start_hidden and not config.sections["ui"]["startup_hidden"]:
-            self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+            self.window.present_with_time(Gdk.CURRENT_TIME)
 
         if not self.connect_action.get_enabled():
             # Set up fast configure dialog
@@ -309,8 +309,8 @@ class NicotineFrame(UserInterface):
 
     def on_window_hide_unhide(self, *_args):
 
-        if self.MainWindow.get_property("visible"):
-            self.MainWindow.hide()
+        if self.window.get_property("visible"):
+            self.window.hide()
             return
 
         self.show()
@@ -333,10 +333,10 @@ class NicotineFrame(UserInterface):
     def save_window_state(self):
 
         if Gtk.get_major_version() == 4:
-            width, height = self.MainWindow.get_default_size()
+            width, height = self.window.get_default_size()
         else:
-            width, height = self.MainWindow.get_size()
-            xpos, ypos = self.MainWindow.get_position()
+            width, height = self.window.get_size()
+            xpos, ypos = self.window.get_position()
 
             config.sections["ui"]["xposition"] = xpos
             config.sections["ui"]["yposition"] = ypos
@@ -344,7 +344,7 @@ class NicotineFrame(UserInterface):
         config.sections["ui"]["height"] = height
         config.sections["ui"]["width"] = width
 
-        config.sections["ui"]["maximized"] = self.MainWindow.is_maximized()
+        config.sections["ui"]["maximized"] = self.window.is_maximized()
         config.sections["ui"]["last_tab_id"] = self.current_page_id
 
         for page in (self.userlist, self.chatrooms, self.downloads, self.uploads):
@@ -352,11 +352,11 @@ class NicotineFrame(UserInterface):
 
     def show(self):
 
-        self.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+        self.window.present_with_time(Gdk.CURRENT_TIME)
 
         if Gtk.get_major_version() == 3:
             # Fix for Windows where minimized window is not shown when unhiding from tray
-            self.MainWindow.deiconify()
+            self.window.deiconify()
 
     """ Connection """
 
@@ -508,21 +508,21 @@ class NicotineFrame(UserInterface):
 
         page_id = self.userlist.page_id
 
-        if self.userlist.container.get_parent() == self.userlist_pane:
+        if self.userlist.container.get_parent() == self.buddy_list_container:
 
             if mode == "always":
                 return
 
-            self.userlist_pane.remove(self.userlist.container)
-            self.userlist_pane.hide()
+            self.buddy_list_container.remove(self.userlist.container)
+            self.buddy_list_container.hide()
 
-        elif self.userlist.container.get_parent() == self.userlist_pane_chatrooms:
+        elif self.userlist.container.get_parent() == self.chatrooms_userlist_container:
 
             if mode == "chatrooms":
                 return
 
-            self.userlist_pane_chatrooms.remove(self.userlist.container)
-            self.userlist_pane_chatrooms.hide()
+            self.chatrooms_userlist_container.remove(self.userlist.container)
+            self.chatrooms_userlist_container.hide()
 
         elif self.userlist.container.get_parent() == self.userlist_content:
 
@@ -534,16 +534,16 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            self.userlist_pane.add(self.userlist.container)
+            self.buddy_list_container.add(self.userlist.container)
             self.userlist.toolbar.show()
-            self.userlist_pane.show()
+            self.buddy_list_container.show()
             return
 
         if mode == "chatrooms":
 
-            self.userlist_pane_chatrooms.add(self.userlist.container)
+            self.chatrooms_userlist_container.add(self.userlist.container)
             self.userlist.toolbar.show()
-            self.userlist_pane_chatrooms.show()
+            self.chatrooms_userlist_container.show()
             return
 
         self.userlist.toolbar.hide()
@@ -599,7 +599,7 @@ class NicotineFrame(UserInterface):
     def _on_check_latest(self):
 
         def create_dialog(title, message):
-            MessageDialog(parent=self.MainWindow, title=title, message=message).show()
+            MessageDialog(parent=self.window, title=title, message=message).show()
 
         try:
             hlatest, latest, date = get_latest_version()
@@ -665,7 +665,7 @@ class NicotineFrame(UserInterface):
         state = config.sections["server"]["away"]
         self.away_action = Gio.SimpleAction(name="away", state=GLib.Variant("b", state), enabled=False)
         self.away_action.connect("change-state", self.on_away)
-        self.MainWindow.add_action(self.away_action)
+        self.window.add_action(self.away_action)
         self.application.set_accels_for_action("win.away", ["<Primary>h"])
 
         self.get_privileges_action = Gio.SimpleAction(name="getprivileges", enabled=False)
@@ -690,18 +690,18 @@ class NicotineFrame(UserInterface):
         state = config.sections["ui"]["dark_mode"]
         self.dark_mode_action = Gio.SimpleAction(name="preferdarkmode", state=GLib.Variant("b", state))
         self.dark_mode_action.connect("change-state", self.on_prefer_dark_mode)
-        self.MainWindow.add_action(self.dark_mode_action)
+        self.window.add_action(self.dark_mode_action)
 
         state = config.sections["ui"]["header_bar"]
         action = Gio.SimpleAction(name="showheaderbar", state=GLib.Variant("b", state))
         action.set_enabled(sys.platform != "darwin")  # Disable header bar on macOS for now due to GTK 3 perf issues
         action.connect("change-state", self.on_show_header_bar)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = not config.sections["logging"]["logcollapsed"]
         action = Gio.SimpleAction(name="showlog", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_show_log)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
         self.application.set_accels_for_action("win.showlog", ["<Primary>l"])
         self.set_show_log(state)
 
@@ -713,7 +713,7 @@ class NicotineFrame(UserInterface):
         self.toggle_buddy_list_action = Gio.SimpleAction(
             name="togglebuddylist", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", state))
         self.toggle_buddy_list_action.connect("change-state", self.on_toggle_buddy_list)
-        self.MainWindow.add_action(self.toggle_buddy_list_action)
+        self.window.add_action(self.toggle_buddy_list_action)
         self.set_toggle_buddy_list(state, force_show=False)
 
         # Shares
@@ -768,7 +768,7 @@ class NicotineFrame(UserInterface):
         self.search_mode_action = Gio.SimpleAction(
             name="searchmode", parameter_type=GLib.VariantType("s"), state=GLib.Variant("s", "global"))
         self.search_mode_action.connect("change-state", self.search.on_search_mode)
-        self.MainWindow.add_action(self.search_mode_action)
+        self.window.add_action(self.search_mode_action)
 
         action = Gio.SimpleAction(name="wishlist")
         action.connect("activate", self.search.wish_list.show)
@@ -779,23 +779,23 @@ class NicotineFrame(UserInterface):
 
         action = Gio.SimpleAction(name="tabclose")
         action.connect("activate", self.on_tab_close)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
         self.application.set_accels_for_action("win.tabclose", ["<Primary>F4", "<Primary>w"])
 
         action = Gio.SimpleAction(name="tabcycle")
         action.connect("activate", self.on_tab_cycle)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
         self.application.set_accels_for_action("win.tabcycle", ["<Primary>Tab"])
 
         action = Gio.SimpleAction(name="reversetabcycle")
         action.connect("activate", self.on_tab_cycle, True)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
         self.application.set_accels_for_action("win.reversetabcycle", ["<Primary><Shift>Tab"])
 
         for num in range(1, 10):
             action = Gio.SimpleAction(name="primarytab" + str(num))
             action.connect("activate", self.on_change_primary_tab, num)
-            self.MainWindow.add_action(action)
+            self.window.add_action(action)
             self.application.set_accels_for_action("win.primarytab" + str(num),
                                                    ["<Primary>" + str(num), "<Alt>" + str(num)])
 
@@ -804,42 +804,42 @@ class NicotineFrame(UserInterface):
         state = ("download" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logdownloads", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_downloads)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("upload" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="loguploads", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_uploads)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("search" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logsearches", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_searches)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("chat" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logchat", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_chat)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("connection" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logconnections", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_connections)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("message" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logmessages", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_messages)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("transfer" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logtransfers", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_transfers)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         state = ("miscellaneous" in config.sections["logging"]["debugmodes"])
         action = Gio.SimpleAction(name="logmiscellaneous", state=GLib.Variant("b", state))
         action.connect("change-state", self.on_debug_miscellaneous)
-        self.MainWindow.add_action(action)
+        self.window.add_action(action)
 
         # Status Bar
 
@@ -1010,15 +1010,15 @@ class NicotineFrame(UserInterface):
     def show_header_bar(self, page_id):
         """ Set a headerbar for the main window (client side decorations enabled) """
 
-        if self.MainWindow.get_titlebar() != self.header_bar:
-            self.MainWindow.set_titlebar(self.header_bar)
+        if self.window.get_titlebar() != self.header_bar:
+            self.window.set_titlebar(self.header_bar)
 
             self.application.set_accels_for_action("app.menu", ["F10"])
-            self.MainWindow.set_show_menubar(False)
+            self.window.set_show_menubar(False)
 
             if Gtk.get_major_version() == 3:
                 # Avoid "Untitled window" in certain desktop environments
-                self.header_bar.set_title(self.MainWindow.get_title())
+                self.header_bar.set_title(self.window.get_title())
 
         title_widget = getattr(self, page_id + "_title")
         title_widget.get_parent().remove(title_widget)
@@ -1046,17 +1046,17 @@ class NicotineFrame(UserInterface):
     def show_toolbar(self, page_id):
         """ Show the non-CSD toolbar """
 
-        if not self.MainWindow.get_show_menubar():
-            self.MainWindow.set_show_menubar(True)
+        if not self.window.get_show_menubar():
+            self.window.set_show_menubar(True)
 
             # Don't override builtin accelerator for menu bar
             self.application.set_accels_for_action("app.menu", [])
             self.header_menu.get_popover().hide()
 
-            if self.MainWindow.get_titlebar():
-                self.MainWindow.unrealize()
-                self.MainWindow.set_titlebar(None)
-                self.MainWindow.map()
+            if self.window.get_titlebar():
+                self.window.unrealize()
+                self.window.set_titlebar(None)
+                self.window.map()
 
         toolbar = getattr(self, page_id + "_toolbar")
         toolbar.show()
@@ -1101,9 +1101,9 @@ class NicotineFrame(UserInterface):
         ]
 
         # Initialize tabs labels
-        for i in range(self.MainNotebook.get_n_pages()):
+        for i in range(self.notebook.get_n_pages()):
             tab_id, tab_text, tab_icon_name = tab_data[i]
-            page = self.MainNotebook.get_nth_page(i)
+            page = self.notebook.get_nth_page(i)
             page.page_id = tab_id
 
             tab_label = TabLabel(tab_text)
@@ -1112,8 +1112,8 @@ class NicotineFrame(UserInterface):
 
             # Apply tab label
             setattr(self, tab_id + "_tab_label", tab_label)
-            self.MainNotebook.set_tab_label(page, tab_label)
-            self.MainNotebook.set_tab_reorderable(page, True)
+            self.notebook.set_tab_label(page, tab_label)
+            self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
 
     def on_switch_page(self, notebook, page, _page_num):
@@ -1130,7 +1130,7 @@ class NicotineFrame(UserInterface):
 
         self.set_active_header_bar(page.page_id)
 
-        if page == self.chatroomsvbox:
+        if page == self.chatrooms_page:
             curr_page_num = self.chatrooms.get_current_page()
             curr_page = self.chatrooms.get_nth_page(curr_page_num)
 
@@ -1139,7 +1139,7 @@ class NicotineFrame(UserInterface):
             else:
                 GLib.idle_add(lambda: self.ChatroomsEntry.grab_focus() == -1)
 
-        elif page == self.privatevbox:
+        elif page == self.private_page:
             curr_page_num = self.privatechat.get_current_page()
             curr_page = self.privatechat.get_nth_page(curr_page_num)
 
@@ -1148,21 +1148,21 @@ class NicotineFrame(UserInterface):
             else:
                 GLib.idle_add(lambda: self.PrivateChatEntry.grab_focus() == -1)
 
-        elif page == self.uploadsvbox:
+        elif page == self.uploads_page:
             self.uploads.update(forceupdate=True)
             self.remove_tab_hilite(self.uploads.page_id)
 
             if self.uploads.container.get_visible():
                 GLib.idle_add(lambda: self.uploads.list_view.grab_focus() == -1)
 
-        elif page == self.downloadsvbox:
+        elif page == self.downloads_page:
             self.downloads.update(forceupdate=True)
             self.remove_tab_hilite(self.downloads.page_id)
 
             if self.downloads.container.get_visible():
                 GLib.idle_add(lambda: self.downloads.list_view.grab_focus() == -1)
 
-        elif page == self.searchvbox:
+        elif page == self.search_page:
             curr_page_num = self.search.get_current_page()
             curr_page = self.search.get_nth_page(curr_page_num)
 
@@ -1171,7 +1171,7 @@ class NicotineFrame(UserInterface):
 
             GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
 
-        elif page == self.userinfovbox:
+        elif page == self.userinfo_page:
             curr_page_num = self.userinfo.get_current_page()
             curr_page = self.userinfo.get_nth_page(curr_page_num)
 
@@ -1180,7 +1180,7 @@ class NicotineFrame(UserInterface):
             else:
                 GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
 
-        elif page == self.userbrowsevbox:
+        elif page == self.userbrowse_page:
             curr_page_num = self.userbrowse.get_current_page()
             curr_page = self.userbrowse.get_nth_page(curr_page_num)
 
@@ -1189,13 +1189,13 @@ class NicotineFrame(UserInterface):
             else:
                 GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
 
-        elif page == self.userlistvbox:
+        elif page == self.userlist_page:
             self.userlist.update()
 
             if self.userlist.container.get_visible():
                 GLib.idle_add(lambda: self.userlist.list_view.grab_focus() == -1)
 
-        elif page == self.interestsvbox:
+        elif page == self.interests_page:
             self.interests.populate_recommendations()
             GLib.idle_add(lambda: self.interests.likes_list_view.grab_focus() == -1)
 
@@ -1203,8 +1203,8 @@ class NicotineFrame(UserInterface):
 
         page_ids = []
 
-        for i in range(self.MainNotebook.get_n_pages()):
-            page = self.MainNotebook.get_nth_page(i)
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
             page_ids.append(page.page_id)
 
         config.sections["ui"]["modes_order"] = page_ids
@@ -1259,8 +1259,8 @@ class NicotineFrame(UserInterface):
 
         visible_pages = []
 
-        for i in range(self.MainNotebook.get_n_pages()):
-            page = self.MainNotebook.get_nth_page(i)
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
 
             if page.get_visible():
                 visible_pages.append(page)
@@ -1268,8 +1268,8 @@ class NicotineFrame(UserInterface):
         if len(visible_pages) < tab_num:
             return False
 
-        page_num = self.MainNotebook.page_num(visible_pages[tab_num - 1])
-        self.MainNotebook.set_current_page(page_num)
+        page_num = self.notebook.page_num(visible_pages[tab_num - 1])
+        self.notebook.set_current_page(page_num)
         return True
 
     def request_tab_hilite(self, page_id, mentioned=False):
@@ -1285,12 +1285,12 @@ class NicotineFrame(UserInterface):
         self.show_tab(page_id)
 
         try:
-            page = getattr(self, page_id + "vbox")
+            page = getattr(self, page_id + "_page")
         except AttributeError:
             return
 
-        page_num = self.MainNotebook.page_num(page)
-        self.MainNotebook.set_current_page(page_num)
+        page_num = self.notebook.page_num(page)
+        self.notebook.set_current_page(page_num)
 
     def show_tab(self, page_id):
 
@@ -1298,27 +1298,27 @@ class NicotineFrame(UserInterface):
             self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant("s", "tab"))
 
         try:
-            page = getattr(self, page_id + "vbox")
+            page = getattr(self, page_id + "_page")
         except AttributeError:
             return
 
         config.sections["ui"]["modes_visible"][page_id] = True
         page.show()
 
-        self.MainNotebook.set_show_tabs(True)
+        self.notebook.set_show_tabs(True)
 
     def hide_tab(self, page_id):
 
         try:
-            page = getattr(self, page_id + "vbox")
+            page = getattr(self, page_id + "_page")
         except AttributeError:
             return
 
         config.sections["ui"]["modes_visible"][page_id] = False
         page.hide()
 
-        if self.MainNotebook.get_n_pages() <= 1:
-            self.MainNotebook.set_show_tabs(False)
+        if self.notebook.get_n_pages() <= 1:
+            self.notebook.set_show_tabs(False)
 
     def set_main_tabs_order(self):
 
@@ -1326,8 +1326,8 @@ class NicotineFrame(UserInterface):
 
         for page_id in config.sections["ui"]["modes_order"]:
             try:
-                page = getattr(self, page_id + "vbox")
-                self.MainNotebook.reorder_child(page, order)
+                page = getattr(self, page_id + "_page")
+                self.notebook.reorder_child(page, order)
             except AttributeError:
                 pass
 
@@ -1337,8 +1337,8 @@ class NicotineFrame(UserInterface):
 
         visible_tab_found = False
 
-        for i in range(self.MainNotebook.get_n_pages()):
-            page_id = self.MainNotebook.get_nth_page(i).page_id
+        for i in range(self.notebook.get_n_pages()):
+            page_id = self.notebook.get_nth_page(i).page_id
 
             if config.sections["ui"]["modes_visible"].get(page_id, True):
                 visible_tab_found = True
@@ -1359,10 +1359,10 @@ class NicotineFrame(UserInterface):
         last_tab_id = config.sections["ui"]["last_tab_id"]
 
         try:
-            page = getattr(self, last_tab_id + "vbox")
+            page = getattr(self, last_tab_id + "_page")
 
             if page.get_visible():
-                self.MainNotebook.set_current_page(self.MainNotebook.page_num(page))
+                self.notebook.set_current_page(self.notebook.page_num(page))
                 return
 
         except AttributeError:
@@ -1370,14 +1370,14 @@ class NicotineFrame(UserInterface):
 
     def set_tab_expand(self, page):
 
-        tab_label = self.MainNotebook.get_tab_label(page)
+        tab_label = self.notebook.get_tab_label(page)
         tab_position = config.sections["ui"]["tabmain"]
         expand = tab_position in ("Top", "Bottom")
 
         if Gtk.get_major_version() == 4:
-            self.MainNotebook.get_page(page).set_property("tab-expand", expand)
+            self.notebook.get_page(page).set_property("tab-expand", expand)
         else:
-            self.MainNotebook.child_set_property(page, "tab-expand", expand)
+            self.notebook.child_set_property(page, "tab-expand", expand)
 
         tab_label.set_centered(expand)
 
@@ -1392,7 +1392,7 @@ class NicotineFrame(UserInterface):
         }
 
         # Main notebook
-        self.MainNotebook.set_tab_pos(positions.get(config.sections["ui"]["tabmain"], default_pos))
+        self.notebook.set_tab_pos(positions.get(config.sections["ui"]["tabmain"], default_pos))
 
         # Other notebooks
         self.chatrooms.set_tab_pos(positions.get(config.sections["ui"]["tabrooms"], default_pos))
@@ -1456,7 +1456,7 @@ class NicotineFrame(UserInterface):
                     {'folder': sharesdir, 'error': msg})
 
         FileChooser(
-            parent=self.MainWindow,
+            parent=self.window,
             title=_("Select a Saved Shares List File"),
             callback=self.on_load_from_disk_selected,
             initial_folder=sharesdir,
@@ -1496,7 +1496,7 @@ class NicotineFrame(UserInterface):
 
         if room not in self.core.chatrooms.server_rooms and room not in self.core.chatrooms.private_rooms:
             OptionDialog(
-                parent=self.MainWindow,
+                parent=self.window,
                 title=_('Create New Room?'),
                 message=_('Do you really want to create a new room "%s"?') % room,
                 option_label=_("Make room private"),
@@ -1873,17 +1873,17 @@ class NicotineFrame(UserInterface):
             if remember:
                 config.sections["ui"]["exitdialog"] = 2
 
-            if self.MainWindow.get_property("visible"):
+            if self.window.get_property("visible"):
                 self.hide()
 
     def show_exit_dialog(self, remember=True):
 
         OptionDialog(
-            parent=self.MainWindow,
+            parent=self.window,
             title=_('Quit Nicotine+'),
             message=_('Do you really want to exit?'),
             second_button=_("_Quit"),
-            third_button=_("_Run in Background") if self.MainWindow.get_property("visible") else None,
+            third_button=_("_Run in Background") if self.window.get_property("visible") else None,
             option_label=_("Remember choice") if remember else None,
             callback=self.show_exit_dialog_response
         ).show()
@@ -1918,7 +1918,7 @@ class NicotineFrame(UserInterface):
 
     def hide(self):
 
-        if not self.MainWindow.get_property("visible"):
+        if not self.window.get_property("visible"):
             return
 
         # Save window state, incase application is killed later
@@ -1928,7 +1928,7 @@ class NicotineFrame(UserInterface):
             log.add(_("Nicotine+ is running in the background"))
 
         # Run in Background
-        self.MainWindow.hide()
+        self.window.hide()
 
         # Save config, incase application is killed later
         config.write_configuration()

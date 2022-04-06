@@ -41,7 +41,7 @@ class FastConfigure(UserInterface):
 
         self.frame = frame
         self.core = core
-        set_dialog_properties(self.dialog, frame.MainWindow)
+        set_dialog_properties(self.dialog, frame.window)
 
         for page in (self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page):
             self.dialog.append_page(page)

@@ -63,7 +63,7 @@ class Downloads(TransferList):
     def on_try_clear_queued(self, *_args):
 
         OptionDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_('Clear Queued Downloads'),
             message=_('Do you really want to clear all queued downloads?'),
             callback=self.on_clear_response,
@@ -73,7 +73,7 @@ class Downloads(TransferList):
     def on_try_clear_all(self, *_args):
 
         OptionDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_('Clear All Downloads'),
             message=_('Do you really want to clear all downloads?'),
             callback=self.on_clear_response,
@@ -90,7 +90,7 @@ class Downloads(TransferList):
     def download_large_folder(self, username, folder, numfiles, msg):
 
         OptionDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Download %(num)i files?") % {'num': numfiles},
             message=_("Do you really want to download %(num)i files from %(user)s's folder %(folder)s?") % {
                 'num': numfiles, 'user': username, 'folder': folder},
