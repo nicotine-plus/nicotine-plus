@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="reset_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_Reset…</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_reset_statistics"/>
+    <style>
+      <class name="destructive-action"/>
+    </style>
+  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
@@ -359,37 +368,6 @@
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
                 <property name="xalign">0</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="margin-top">26</property>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">True</property>
-            <signal name="clicked" handler="on_reset_statistics"/>
-            <child>
-              <object class="GtkBox">
-                <property name="visible">True</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="icon-name">edit-clear-symbolic</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">_Reset Statistics…</property>
-                    <property name="use-underline">True</property>
-                  </object>
-                </child>
               </object>
             </child>
           </object>

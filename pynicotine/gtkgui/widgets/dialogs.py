@@ -33,6 +33,7 @@ def generic_dialog(parent=None, content_box=None, quit_callback=None,
         default_width=width,
         default_height=height
     )
+    dialog.get_style_context().add_class("generic-dialog")
 
     if content_box:
         dialog.get_content_area().add(content_box)

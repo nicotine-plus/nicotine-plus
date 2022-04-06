@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
@@ -40,6 +42,7 @@ class Statistics(UserInterface):
             title=_("Transfer Statistics"),
             width=450
         )
+        self.dialog.add_action_widget(self.reset_button, Gtk.ResponseType.HELP)
 
         # Initialize stats
         for stat_id in config.defaults["statistics"]:

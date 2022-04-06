@@ -16,6 +16,48 @@
       <widget name="country_label"/>
     </widgets>
   </object>
+  <object class="GtkButton" id="previous_button">
+    <property name="visible">True</property>
+    <property name="tooltip-text" translatable="yes">Previous file</property>
+    <signal name="clicked" handler="on_previous"/>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">True</property>
+        <property name="icon-name">go-previous-symbolic</property>
+      </object>
+    </child>
+    <style>
+      <class name="image-button"/>
+    </style>
+  </object>
+  <object class="GtkButton" id="next_button">
+    <property name="visible">True</property>
+    <property name="tooltip-text" translatable="yes">Next file</property>
+    <signal name="clicked" handler="on_next"/>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">True</property>
+        <property name="icon-name">go-next-symbolic</property>
+      </object>
+    </child>
+    <style>
+      <class name="image-button"/>
+    </style>
+  </object>
+  <object class="GtkButton" id="download_button">
+    <property name="visible">True</property>
+    <property name="tooltip-text" translatable="yes">Download file</property>
+    <signal name="clicked" handler="on_download_item"/>
+    <child>
+      <object class="GtkImage">
+        <property name="visible">True</property>
+        <property name="icon-name">document-save-symbolic</property>
+      </object>
+    </child>
+    <style>
+      <class name="image-button"/>
+    </style>
+  </object>
   <object class="GtkBox" id="Main">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
@@ -23,12 +65,6 @@
     <property name="margin-end">18</property>
     <property name="margin-top">18</property>
     <property name="margin-bottom">18</property>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-      </object>
-    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -277,73 +313,6 @@
                 <property name="ellipsize">end</property>
               </object>
             </child>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="margin-top">18</property>
-        <property name="spacing">6</property>
-        <property name="valign">end</property>
-        <property name="vexpand">True</property>
-        <child>
-          <object class="GtkButton" id="download">
-            <property name="visible">True</property>
-            <property name="tooltip-text" translatable="yes">Download file</property>
-            <signal name="clicked" handler="on_download_item"/>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="icon-name">document-save-symbolic</property>
-              </object>
-            </child>
-            <style>
-              <class name="image-button"/>
-            </style>
-          </object>
-        </child>
-        <child>
-          <object class="GtkBox" id="navigation_buttons">
-            <property name="visible">True</property>
-            <property name="halign">end</property>
-            <property name="hexpand">True</property>
-            <child>
-              <object class="GtkButton" id="previous">
-                <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Previous file</property>
-                <signal name="clicked" handler="on_previous"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="icon-name">go-previous-symbolic</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="image-button"/>
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="next">
-                <property name="visible">True</property>
-                <property name="tooltip-text" translatable="yes">Next file</property>
-                <signal name="clicked" handler="on_next"/>
-                <child>
-                  <object class="GtkImage">
-                    <property name="visible">True</property>
-                    <property name="icon-name">go-next-symbolic</property>
-                  </object>
-                </child>
-                <style>
-                  <class name="image-button"/>
-                </style>
-              </object>
-            </child>
-            <style>
-              <class name="linked"/>
-            </style>
           </object>
         </child>
       </object>

@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
+  <object class="GtkButton" id="cancel_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_Cancel</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_cancel"/>
+  </object>
+  <object class="GtkButton" id="export_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_Export…</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_back_up_config"/>
+  </object>
+  <object class="GtkButton" id="apply_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_Apply</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_apply"/>
+  </object>
+  <object class="GtkButton" id="ok_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">_OK</property>
+    <property name="use-underline">True</property>
+    <signal name="clicked" handler="on_ok"/>
+  </object>
   <object class="GtkBox" id="main">
     <property name="visible">True</property>
     <property name="height-request">300</property>
