@@ -36,7 +36,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.chatrooms import ChatRooms
 from pynicotine.gtkgui.dialogs.about import About
-from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigureAssistant
+from pynicotine.gtkgui.dialogs.fastconfigure import FastConfigure
 from pynicotine.gtkgui.dialogs.preferences import Preferences
 from pynicotine.gtkgui.dialogs.shortcuts import Shortcuts
 from pynicotine.gtkgui.dialogs.statistics import Statistics
@@ -100,7 +100,7 @@ class NicotineFrame(UserInterface):
         self.port = port
 
         # Initialize these windows/dialogs later when necessary
-        self.fastconfigure = None
+        self.fast_configure = None
         self.preferences = None
         self.shortcuts = None
         self.spell_checker = None
@@ -443,15 +443,15 @@ class NicotineFrame(UserInterface):
         if self.preferences is not None and self.preferences.dialog.get_property("visible"):
             return
 
-        self.fastconfigure = FastConfigureAssistant(self, self.core)
-        self.fastconfigure.show()
+        self.fast_configure = FastConfigure(self, self.core)
+        self.fast_configure.show()
 
     def on_settings(self, *_args, page=None):
 
         if self.preferences is None:
             self.preferences = Preferences(self, self.core)
 
-        if self.fastconfigure is not None and self.fastconfigure.FastConfigureDialog.get_property("visible"):
+        if self.fast_configure is not None and self.fast_configure.dialog.get_property("visible"):
             return
 
         self.preferences.set_settings()
