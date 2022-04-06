@@ -10,7 +10,7 @@
       <class name="destructive-action"/>
     </style>
   </object>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="main_container">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="margin-start">18</property>
@@ -44,14 +44,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_downloads_session</property>
+                <property name="mnemonic_widget">started_downloads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="started_downloads_session">
+              <object class="GtkLabel" id="started_downloads_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -70,14 +70,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_downloads_session</property>
+                <property name="mnemonic_widget">completed_downloads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="completed_downloads_session">
+              <object class="GtkLabel" id="completed_downloads_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -96,14 +96,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">downloaded_size_session</property>
+                <property name="mnemonic_widget">downloaded_size_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="downloaded_size_session">
+              <object class="GtkLabel" id="downloaded_size_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -127,14 +127,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_uploads_session</property>
+                <property name="mnemonic_widget">started_uploads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="started_uploads_session">
+              <object class="GtkLabel" id="started_uploads_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -153,14 +153,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_uploads_session</property>
+                <property name="mnemonic_widget">completed_uploads_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="completed_uploads_session">
+              <object class="GtkLabel" id="completed_uploads_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -179,14 +179,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">uploaded_size_session</property>
+                <property name="mnemonic_widget">uploaded_size_session_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="uploaded_size_session">
+              <object class="GtkLabel" id="uploaded_size_session_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -221,14 +221,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_downloads_total</property>
+                <property name="mnemonic_widget">started_downloads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="started_downloads_total">
+              <object class="GtkLabel" id="started_downloads_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -247,14 +247,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Downloads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_downloads_total</property>
+                <property name="mnemonic_widget">completed_downloads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="completed_downloads_total">
+              <object class="GtkLabel" id="completed_downloads_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -273,14 +273,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Downloaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">downloaded_size_total</property>
+                <property name="mnemonic_widget">downloaded_size_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="downloaded_size_total">
+              <object class="GtkLabel" id="downloaded_size_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -304,14 +304,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Started Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">started_uploads_total</property>
+                <property name="mnemonic_widget">started_uploads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="started_uploads_total">
+              <object class="GtkLabel" id="started_uploads_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -330,14 +330,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Completed Uploads</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">completed_uploads_total</property>
+                <property name="mnemonic_widget">completed_uploads_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="completed_uploads_total">
+              <object class="GtkLabel" id="completed_uploads_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
@@ -356,14 +356,14 @@
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Uploaded Size</property>
                 <property name="xalign">1</property>
-                <property name="mnemonic_widget">uploaded_size_total</property>
+                <property name="mnemonic_widget">uploaded_size_total_label</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
               </object>
             </child>
             <child>
-              <object class="GtkLabel" id="uploaded_size_total">
+              <object class="GtkLabel" id="uploaded_size_total_label">
                 <property name="visible">True</property>
                 <property name="selectable">True</property>
                 <property name="ellipsize">end</property>
