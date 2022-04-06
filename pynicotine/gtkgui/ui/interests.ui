@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="spacing">6</property>
     <child>
-      <object class="GtkPaned" id="InterestsPaned">
+      <object class="GtkPaned">
         <property name="visible">True</property>
         <property name="hexpand">True</property>
         <child>
-          <object class="GtkBox" id="LikesDislikes">
+          <object class="GtkBox">
             <property name="width-request">240</property>
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
@@ -34,7 +34,7 @@
                 <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkEntry" id="AddLikeEntry">
+                  <object class="GtkEntry">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="margin-start">6</property>
@@ -54,7 +54,7 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkTreeView" id="LikesList">
+                          <object class="GtkTreeView" id="likes_list_view">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <child internal-child="selection">
@@ -89,7 +89,7 @@
                 <property name="spacing">12</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkEntry" id="AddDislikeEntry">
+                  <object class="GtkEntry">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="margin-start">6</property>
@@ -109,7 +109,7 @@
                         <property name="visible">True</property>
                         <property name="vexpand">True</property>
                         <child>
-                          <object class="GtkTreeView" id="DislikesList">
+                          <object class="GtkTreeView" id="dislikes_list_view">
                             <property name="visible">True</property>
                             <property name="hexpand">True</property>
                             <child internal-child="selection">
@@ -126,7 +126,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkFlowBox" id="RecommendationsVbox">
+          <object class="GtkFlowBox">
             <property name="visible">True</property>
             <property name="column-spacing">1</property>
             <property name="row-spacing">1</property>
@@ -150,7 +150,7 @@
                         <property name="margin-bottom">6</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkLabel" id="RecommendationsLabel">
+                          <object class="GtkLabel" id="recommendations_label">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
@@ -162,7 +162,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="RecommendationsButton">
+                          <object class="GtkButton" id="recommendations_button">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
@@ -190,7 +190,7 @@
                             <property name="visible">True</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkTreeView" id="RecommendationsList">
+                              <object class="GtkTreeView" id="recommendations_list_view">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="search-column">1</property>
@@ -216,7 +216,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="GtkBox" id="SimilarUsers">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="orientation">vertical</property>
                     <property name="width-request">320</property>
@@ -229,7 +229,7 @@
                         <property name="margin-bottom">6</property>
                         <property name="spacing">12</property>
                         <child>
-                          <object class="GtkLabel" id="SimilarUsersLabel">
+                          <object class="GtkLabel" id="similar_users_label">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
                             <property name="margin-start">6</property>
@@ -241,7 +241,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkButton" id="SimilarUsersButton">
+                          <object class="GtkButton" id="similar_users_button">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="valign">center</property>
@@ -269,7 +269,7 @@
                             <property name="visible">True</property>
                             <property name="vexpand">True</property>
                             <child>
-                              <object class="GtkTreeView" id="RecommendationUsersList">
+                              <object class="GtkTreeView" id="similar_users_list_view">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="has-tooltip">True</property>

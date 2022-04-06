@@ -1197,7 +1197,7 @@ class NicotineFrame(UserInterface):
 
         elif page == self.interestsvbox:
             self.interests.populate_recommendations()
-            GLib.idle_add(lambda: self.interests.LikesList.grab_focus() == -1)
+            GLib.idle_add(lambda: self.interests.likes_list_view.grab_focus() == -1)
 
     def on_page_reordered(self, *_args):
 
