@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAssistant" id="FastConfigureDialog">
+  <object class="GtkAssistant" id="dialog">
     <property name="modal">True</property>
     <property name="default-width">720</property>
     <property name="default-height">450</property>
@@ -9,7 +9,7 @@
     <signal name="close" handler="on_close"/>
     <signal name="prepare" handler="on_prepare"/>
   </object>
-  <object class="GtkBox" id="welcomepage">
+  <object class="GtkBox" id="welcome_page">
     <property name="visible">True</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
@@ -19,7 +19,7 @@
     <property name="orientation">vertical</property>
     <property name="spacing">24</property>
     <child>
-      <object class="GtkImage" id="icon">
+      <object class="GtkImage" id="main_icon">
         <property name="visible">True</property>
         <property name="halign">center</property>
         <property name="pixel-size">128</property>
@@ -102,7 +102,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="userpasspage">
+  <object class="GtkBox" id="account_page">
     <property name="visible">True</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
@@ -160,7 +160,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="username">
+                  <object class="GtkEntry" id="username_entry">
                     <property name="visible">True</property>
                     <property name="width-chars">20</property>
                     <signal name="changed" handler="on_entry_changed"/>
@@ -191,7 +191,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="password">
+                  <object class="GtkEntry" id="password_entry">
                     <property name="visible">True</property>
                     <property name="visibility">False</property>
                     <property name="width-chars">20</property>
@@ -205,7 +205,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="portpage">
+  <object class="GtkBox" id="port_page">
     <property name="visible">True</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
@@ -253,7 +253,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="checkmyport">
+      <object class="GtkLabel" id="check_port_label">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Check Port Status</property>
         <property name="halign">center</property>
@@ -264,7 +264,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="sharepage">
+  <object class="GtkBox" id="share_page">
     <property name="visible">True</property>
     <property name="margin-start">30</property>
     <property name="margin-end">30</property>
@@ -288,7 +288,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="downloaddir">
+          <object class="GtkButton" id="download_folder_button">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
           </object>
@@ -323,10 +323,10 @@
           <object class="GtkFrame">
             <property name="visible">True</property>
             <child>
-              <object class="GtkScrolledWindow" id="shareddirectories">
+              <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkTreeView" id="shareddirectoriestree">
+                  <object class="GtkTreeView" id="shares_list">
                     <property name="visible">True</property>
                     <property name="rubber-banding">True</property>
                     <property name="vexpand">True</property>
@@ -347,7 +347,7 @@
             <property name="halign">center</property>
             <property name="spacing">12</property>
             <child>
-              <object class="GtkButton" id="addshare">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Add…</property>
                 <property name="use-underline">True</property>
@@ -355,7 +355,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="removeshares">
+              <object class="GtkButton">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Remove</property>
                 <property name="use-underline">True</property>
@@ -367,7 +367,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="summarypage">
+  <object class="GtkBox" id="summary_page">
     <property name="visible">True</property>
     <property name="halign">center</property>
     <property name="valign">center</property>
@@ -405,7 +405,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkLabel" id="labelnoshare">
+          <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Donating to Soulseek grants you privileges for a certain time period. If you have privileges, your downloads will be queued ahead of non-privileged users.</property>
             <property name="xalign">0</property>
@@ -417,7 +417,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkLabel" id="privileges">
+      <object class="GtkLabel" id="privileges_label">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Get Soulseek Privileges…</property>
         <property name="margin-start">14</property>

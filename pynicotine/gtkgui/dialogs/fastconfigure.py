@@ -33,7 +33,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.utils import open_uri
 
 
-class FastConfigureAssistant(UserInterface):
+class FastConfigure(UserInterface):
 
     def __init__(self, frame, core):
 
@@ -41,26 +41,27 @@ class FastConfigureAssistant(UserInterface):
 
         self.frame = frame
         self.core = core
-        set_dialog_properties(self.FastConfigureDialog, frame.MainWindow)
+        set_dialog_properties(self.dialog, frame.MainWindow)
 
-        for page in (self.welcomepage, self.userpasspage, self.portpage, self.sharepage, self.summarypage):
-            self.FastConfigureDialog.append_page(page)
+        for page in (self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page):
+            self.dialog.append_page(page)
 
             if Gtk.get_major_version() == 3:
-                self.FastConfigureDialog.child_set_property(page, "has-padding", False)
+                self.dialog.child_set_property(page, "has-padding", False)
 
-        self.FastConfigureDialog.set_page_type(self.welcomepage, Gtk.AssistantPageType.CUSTOM)
-        self.FastConfigureDialog.set_page_type(self.summarypage, Gtk.AssistantPageType.SUMMARY)
+        self.dialog.set_page_type(self.welcome_page, Gtk.AssistantPageType.CUSTOM)
+        self.dialog.set_page_type(self.summary_page, Gtk.AssistantPageType.SUMMARY)
 
         logo = get_icon("n")
 
         if logo:
-            self.icon.set_property("gicon", logo)
+            self.main_icon.set_property("gicon", logo)
         else:
-            self.icon.set_property("icon-name", config.application_id)
+            self.main_icon.set_property("icon-name", config.application_id)
 
-        # Page specific, sharepage
-        self.downloaddir = FileChooserButton(self.downloaddir, self.FastConfigureDialog, "folder")
+        # Page specific, share_page
+        self.download_folder_button = FileChooserButton(
+            self.download_folder_button, self.dialog, "folder")
 
         self.shared_folders = None
         self.sharelist = Gtk.ListStore(
@@ -70,37 +71,33 @@ class FastConfigureAssistant(UserInterface):
 
         self.column_numbers = list(range(self.sharelist.get_n_columns()))
         initialise_columns(
-            frame, None, self.shareddirectoriestree,
+            frame, None, self.shares_list,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), 0, "text", None]
         )
 
-        self.shareddirectoriestree.set_model(self.sharelist)
+        self.shares_list.set_model(self.sharelist)
 
     def show(self):
 
         if config.need_config():
             self.cancel_button.hide()
 
-        # userpasspage
-        self.username.set_text(
-            config.sections["server"]["login"]
-        )
-        self.password.set_text(
-            config.sections["server"]["passw"]
-        )
+        # account_page
+        self.username_entry.set_text(config.sections["server"]["login"])
+        self.password_entry.set_text(config.sections["server"]["passw"])
 
-        # portpage
+        # port_page
         url = config.portchecker_url % str(self.core.protothread.listenport)
         text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
-        self.checkmyport.set_markup(text)
-        self.checkmyport.connect("activate-link", lambda x, url: open_uri(url))
+        self.check_port_label.set_markup(text)
+        self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))
 
-        # sharepage
+        # share_page
         self.shared_folders = config.sections["transfers"]["shared"][:]
 
         if config.sections['transfers']['downloaddir']:
-            self.downloaddir.set_path(
+            self.download_folder_button.set_path(
                 config.sections['transfers']['downloaddir']
             )
 
@@ -116,41 +113,33 @@ class FastConfigureAssistant(UserInterface):
         login = urllib.parse.quote(config.sections["server"]["login"])
         url = config.privileges_url % login
         text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
-        self.privileges.set_markup(text)
-        self.privileges.connect("activate-link", lambda x, url: open_uri(url))
+        self.privileges_label.set_markup(text)
+        self.privileges_label.connect("activate-link", lambda x, url: open_uri(url))
 
-        dialog_show(self.FastConfigureDialog)
+        dialog_show(self.dialog)
 
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
 
         complete = False
-        pageid = self.FastConfigureDialog.get_current_page()
-        page = self.FastConfigureDialog.get_nth_page(pageid)
+        pageid = self.dialog.get_current_page()
+        page = self.dialog.get_nth_page(pageid)
 
         if not page:
             return
 
-        name = Gtk.Buildable.get_name(page)
-
-        if name == 'welcomepage':
+        if page in (self.welcome_page, self.port_page, self.summary_page):
             complete = True
 
-        elif name == 'userpasspage':
-            if len(self.username.get_text()) > 0 and len(self.password.get_text()) > 0:
+        elif page == self.account_page:
+            if len(self.username_entry.get_text()) > 0 and len(self.password_entry.get_text()) > 0:
                 complete = True
 
-        elif name == 'portpage':
-            complete = True
-
-        elif name == 'sharepage':
-            if self.downloaddir.get_path():
+        elif page == self.share_page:
+            if self.download_folder_button.get_path():
                 complete = True
 
-        elif name == 'summarypage':
-            complete = True
-
-        self.FastConfigureDialog.set_page_complete(page, complete)
+        self.dialog.set_page_complete(page, complete)
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
@@ -184,7 +173,7 @@ class FastConfigureAssistant(UserInterface):
     def on_add_share(self, *_args):
 
         FolderChooser(
-            parent=self.FastConfigureDialog,
+            parent=self.dialog,
             title=_("Add a Shared Folder"),
             callback=self.on_add_share_selected,
             multiple=True
@@ -192,33 +181,33 @@ class FastConfigureAssistant(UserInterface):
 
     def on_remove_share(self, *_args):
 
-        model, paths = self.shareddirectoriestree.get_selection().get_selected_rows()
+        model, paths = self.shares_list.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
     def on_set_up(self, *_args):
-        self.FastConfigureDialog.next_page()
-        self.username.grab_focus()
+        self.dialog.next_page()
+        self.username_entry.grab_focus()
 
     def on_prepare(self, *_args):
         self.reset_completeness()
 
     def on_close(self, *_args):
 
-        # userpasspage
-        config.sections["server"]["login"] = self.username.get_text()
-        config.sections["server"]["passw"] = self.password.get_text()
+        # account_page
+        config.sections["server"]["login"] = self.username_entry.get_text()
+        config.sections["server"]["passw"] = self.password_entry.get_text()
 
-        # sharepage
-        config.sections['transfers']['downloaddir'] = self.downloaddir.get_path()
+        # share_page
+        config.sections['transfers']['downloaddir'] = self.download_folder_button.get_path()
         config.sections["transfers"]["shared"] = self.shared_folders
 
         # Rescan shares
         self.core.shares.rescan_shares()
         self.core.connect()
 
-        self.FastConfigureDialog.destroy()
+        self.dialog.destroy()
 
     def on_cancel(self, *_args):
-        self.FastConfigureDialog.destroy()
+        self.dialog.destroy()
