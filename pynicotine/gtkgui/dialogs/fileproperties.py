@@ -103,22 +103,22 @@ class FileProperties(UserInterface):
         country = properties.get("country") or ""
 
         self.path_value_label.set_text(str(path))
-        self.path_box.set_visible(bool(path))
+        self.path_row.set_visible(bool(path))
 
         self.bitrate_value_label.set_text(str(bitrate))
-        self.bitrate_box.set_visible(bool(bitrate))
+        self.bitrate_row.set_visible(bool(bitrate))
 
         self.length_value_label.set_text(str(length))
-        self.length_box.set_visible(bool(length))
+        self.length_row.set_visible(bool(length))
 
         self.queue_value_label.set_text(str(humanize(queue_position)))
-        self.queue_box.set_visible(bool(queue_position))
+        self.queue_row.set_visible(bool(queue_position))
 
         self.speed_value_label.set_text(str(human_speed(speed)))
-        self.speed_box.set_visible(bool(speed))
+        self.speed_row.set_visible(bool(speed))
 
         self.country_value_label.set_text(str(country))
-        self.country_box.set_visible(bool(country))
+        self.country_row.set_visible(bool(country))
 
         self.update_title()
 
