@@ -100,7 +100,7 @@ class PopupMenu:
         state = GLib.Variant("b", False) if stateful else None
         action = Gio.SimpleAction(name=action_id, state=state)
 
-        self.frame.MainWindow.add_action(action)
+        self.frame.window.add_action(action)
         return action
 
     def _create_menu_item(self, item):
@@ -329,7 +329,7 @@ class PopupMenu:
         self.model.remove_all()
 
         for action in self.actions:
-            self.frame.MainWindow.remove_action(action)
+            self.frame.window.remove_action(action)
 
         self.actions.clear()
         self.items.clear()
@@ -562,7 +562,7 @@ class PopupMenu:
             message += "\n\n" + error
 
         EntryDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Gift Privileges"),
             message=message,
             callback=self.on_give_privileges_response

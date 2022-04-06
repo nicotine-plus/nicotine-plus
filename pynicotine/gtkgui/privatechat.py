@@ -298,7 +298,7 @@ class PrivateChat(UserInterface):
     def on_delete_chat_log(self, *_args):
 
         OptionDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this user?'),
             callback=self.on_delete_chat_log_response
@@ -309,7 +309,7 @@ class PrivateChat(UserInterface):
         self.chats.request_tab_hilite(self.Main)
 
         if (self.chats.get_current_page() == self.chats.page_num(self.Main)
-                and self.frame.current_page_id == self.chats.page_id and self.frame.MainWindow.is_active()):
+                and self.frame.current_page_id == self.chats.page_id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 

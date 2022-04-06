@@ -76,12 +76,12 @@ class ChatRooms(IconNotebook):
         self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
 
         if Gtk.get_major_version() == 4:
-            self.frame.ChatroomsPane.set_resize_start_child(True)
+            self.frame.chatrooms_paned.set_resize_start_child(True)
 
             # Scroll to the focused widget
             self.command_help.container.get_child().set_scroll_to_focus(True)
         else:
-            self.frame.ChatroomsPane.child_set_property(self.frame.chatrooms_container, "resize", True)
+            self.frame.chatrooms_paned.child_set_property(self.frame.chatrooms_container, "resize", True)
 
         self.update_visuals()
 
@@ -716,7 +716,7 @@ class ChatRoom(UserInterface):
         self.chatrooms.request_tab_hilite(self.Main, mentioned)
 
         if (self.chatrooms.get_current_page() == self.chatrooms.page_num(self.Main)
-                and self.frame.current_page_id == self.chatrooms.page_id and self.frame.MainWindow.is_active()):
+                and self.frame.current_page_id == self.chatrooms.page_id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 
@@ -1110,7 +1110,7 @@ class ChatRoom(UserInterface):
     def on_delete_room_log(self, *_args):
 
         OptionDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_('Delete Logged Messages?'),
             message=_('Do you really want to permanently delete all logged messages for this room?'),
             callback=self.on_delete_room_log_response

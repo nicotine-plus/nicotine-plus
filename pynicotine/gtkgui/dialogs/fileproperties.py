@@ -37,7 +37,7 @@ class FileProperties(UserInterface):
         self.properties = properties
 
         self.dialog = generic_dialog(
-            parent=frame.MainWindow,
+            parent=frame.window,
             content_box=self.container,
             title=_("File Properties"),
             width=600,

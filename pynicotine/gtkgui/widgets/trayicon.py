@@ -346,7 +346,7 @@ class TrayIcon:
         if self.tray_icon is None:
             return
 
-        if self.frame.MainWindow.get_property("visible"):
+        if self.frame.window.get_property("visible"):
             text = _("Hide Nicotine+")
         else:
             text = _("Show Nicotine+")

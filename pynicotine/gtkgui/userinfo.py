@@ -460,7 +460,7 @@ class UserInfo(UserInterface):
             return
 
         FileChooserSave(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             callback=self.on_save_picture_response,
             initial_folder=config.sections["transfers"]["downloaddir"],
             initial_file="%s %s.jpg" % (self.user, time.strftime("%Y-%m-%d %H_%M_%S"))

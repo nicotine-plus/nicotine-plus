@@ -163,11 +163,11 @@ class TransferList(UserInterface):
         state = GLib.Variant("s", verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
         action = Gio.SimpleAction(name="%sgrouping" % transfer_type, parameter_type=GLib.VariantType("s"), state=state)
         action.connect("change-state", self.on_toggle_tree)
-        frame.MainWindow.add_action(action)
+        frame.window.add_action(action)
         action.change_state(state)
 
         menu = create_grouping_menu(
-            frame.MainWindow, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
+            frame.window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
         grouping_button.set_menu_model(menu)
 
         self.expand_button.connect("toggled", self.on_expand_tree)

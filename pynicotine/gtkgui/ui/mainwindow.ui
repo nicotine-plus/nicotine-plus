@@ -37,29 +37,29 @@
       </object>
     </child>
   </object>
-  <object class="GtkApplicationWindow" id="MainWindow">
+  <object class="GtkApplicationWindow" id="window">
     <child>
-      <object class="GtkBox" id="MainContent">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="width-request">580</property>
         <child>
-          <object class="GtkPaned" id="MainPaned">
+          <object class="GtkPaned" id="horizontal_paned">
             <property name="visible">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkPaned" id="NotebooksPane">
+              <object class="GtkPaned" id="vertical_paned">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkNotebook" id="MainNotebook">
+                  <object class="GtkNotebook" id="notebook">
                     <property name="visible">True</property>
                     <property name="show-border">False</property>
                     <property name="scrollable">True</property>
                     <signal name="switch-page" handler="on_switch_page"/>
                     <!-- Search -->
                     <child>
-                      <object class="GtkBox" id="searchvbox">
+                      <object class="GtkBox" id="search_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -304,7 +304,7 @@
                     </child>
                     <!-- Downloads -->
                     <child>
-                      <object class="GtkBox" id="downloadsvbox">
+                      <object class="GtkBox" id="downloads_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -545,7 +545,7 @@
                     </child>
                     <!-- Uploads -->
                     <child>
-                      <object class="GtkBox" id="uploadsvbox">
+                      <object class="GtkBox" id="uploads_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -786,7 +786,7 @@
                     </child>
                     <!-- Browse Shares -->
                     <child>
-                      <object class="GtkBox" id="userbrowsevbox">
+                      <object class="GtkBox" id="userbrowse_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -965,7 +965,7 @@
                     </child>
                     <!-- User Info -->
                     <child>
-                      <object class="GtkBox" id="userinfovbox">
+                      <object class="GtkBox" id="userinfo_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -1127,7 +1127,7 @@
                     </child>
                     <!-- Private Chat -->
                     <child>
-                      <object class="GtkBox" id="privatevbox">
+                      <object class="GtkBox" id="private_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -1276,7 +1276,7 @@
                     </child>
                     <!-- Buddies -->
                     <child>
-                      <object class="GtkBox" id="userlistvbox">
+                      <object class="GtkBox" id="userlist_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox">
@@ -1396,10 +1396,10 @@
                     </child>
                     <!-- Chat Rooms -->
                     <child>
-                      <object class="GtkBox" id="chatroomsvbox">
+                      <object class="GtkBox" id="chatrooms_page">
                         <property name="visible">False</property>
                         <child>
-                          <object class="GtkPaned" id="ChatroomsPane">
+                          <object class="GtkPaned" id="chatrooms_paned">
                             <property name="visible">False</property>
                             <child>
                               <object class="GtkBox" id="chatrooms_container">
@@ -1561,7 +1561,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="userlist_pane_chatrooms">
+                              <object class="GtkBox" id="chatrooms_userlist_container">
                                 <property name="visible">False</property>
                               </object>
                             </child>
@@ -1571,7 +1571,7 @@
                     </child>
                     <!-- Interests -->
                     <child>
-                      <object class="GtkBox" id="interestsvbox">
+                      <object class="GtkBox" id="interests_page">
                         <property name="visible">False</property>
                         <child>
                           <object class="GtkBox" id="interests_container">
@@ -1657,7 +1657,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkBox" id="userlist_pane">
+              <object class="GtkBox" id="buddy_list_container">
                 <property name="visible">False</property>
               </object>
             </child>

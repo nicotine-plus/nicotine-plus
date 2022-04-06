@@ -407,7 +407,7 @@ class Search(UserInterface):
         Accelerator("<Alt>Return", self.ResultsList, self.on_file_properties_accelerator)
 
         # Grouping
-        menu = create_grouping_menu(self.frame.MainWindow, config.sections["searches"]["group_searches"], self.on_group)
+        menu = create_grouping_menu(self.frame.window, config.sections["searches"]["group_searches"], self.on_group)
         self.ResultGrouping.set_menu_model(menu)
 
         self.ExpandButton.set_active(config.sections["searches"]["expand_searches"])
@@ -1192,7 +1192,7 @@ class Search(UserInterface):
     def on_download_files_to(self, *_args):
 
         FolderChooser(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]
@@ -1243,7 +1243,7 @@ class Search(UserInterface):
     def on_download_folders_to(self, *_args):
 
         FolderChooser(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Select Destination Folder"),
             callback=self.on_download_folders_to_selected,
             initial_folder=config.sections["transfers"]["downloaddir"]

@@ -679,7 +679,7 @@ class UserBrowse(UserInterface):
             str_title = _("Select Destination Folder")
 
         FolderChooser(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=str_title,
             callback=self.on_download_directory_to_selected,
             callback_data=recurse,
@@ -725,7 +725,7 @@ class UserBrowse(UserInterface):
             str_title = _("Upload Folder To User")
 
         EntryDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=str_title,
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_directory_to_response,
@@ -935,7 +935,7 @@ class UserBrowse(UserInterface):
             path = download_folder
 
         FolderChooser(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_("Select Destination Folder for File(s)"),
             callback=self.on_download_files_to_selected,
             initial_folder=path
@@ -969,7 +969,7 @@ class UserBrowse(UserInterface):
 
         users.sort()
         EntryDialog(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             title=_('Upload File(s) To User'),
             message=_('Enter the name of the user you want to upload to:'),
             callback=self.on_upload_files_response,

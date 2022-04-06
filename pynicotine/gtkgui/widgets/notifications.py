@@ -50,8 +50,8 @@ class Notifications:
             self.frame.tray_icon.set_icon()
 
         if (Gtk.get_major_version() == 3 and config.sections["ui"]["urgencyhint"]
-                and not self.frame.MainWindow.is_active()):
-            self.frame.MainWindow.set_urgency_hint(True)
+                and not self.frame.window.is_active()):
+            self.frame.window.set_urgency_hint(True)
 
         self.set_title(user)
 
@@ -70,7 +70,7 @@ class Notifications:
         if (not self.core.notifications.chat_hilites["rooms"]
                 and not self.core.notifications.chat_hilites["private"]):
             # Reset Title
-            self.frame.MainWindow.set_title(app_name)
+            self.frame.window.set_title(app_name)
             return
 
         if not config.sections["notifications"]["notification_window_title"]:
@@ -80,7 +80,7 @@ class Notifications:
             # Private Chats have a higher priority
             user = self.core.notifications.chat_hilites["private"][-1]
 
-            self.frame.MainWindow.set_title(
+            self.frame.window.set_title(
                 app_name + " - " + _("Private Message from %(user)s") % {'user': user}
             )
 
@@ -89,11 +89,11 @@ class Notifications:
             room = self.core.notifications.chat_hilites["rooms"][-1]
 
             if user is None:
-                self.frame.MainWindow.set_title(
+                self.frame.window.set_title(
                     app_name + " - " + _("You've been mentioned in the %(room)s room") % {'room': room}
                 )
             else:
-                self.frame.MainWindow.set_title(
+                self.frame.window.set_title(
                     app_name + " - " + _("%(user)s mentioned you in the %(room)s room") % {'user': user, 'room': room}
                 )
 

@@ -335,7 +335,7 @@ Ukrainian
             authors=self.AUTHORS.splitlines(),
             translator_credits=self.TRANSLATORS + config.translations_url
         )
-        set_dialog_properties(self.dialog, frame.MainWindow)
+        set_dialog_properties(self.dialog, frame.window)
         main_icon = get_icon("n")
 
         if not main_icon:

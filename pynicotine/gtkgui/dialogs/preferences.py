@@ -2630,7 +2630,7 @@ class Preferences(UserInterface):
         self.frame = frame
         self.core = core
         self.dialog = generic_dialog(
-            parent=frame.MainWindow,
+            parent=frame.window,
             content_box=self.container,
             quit_callback=self.on_cancel,
             title=_("Preferences"),
@@ -2989,9 +2989,9 @@ class Preferences(UserInterface):
         self.frame.set_tab_positions()
         self.frame.set_main_tabs_visibility()
 
-        for i in range(self.frame.MainNotebook.get_n_pages()):
-            page = self.frame.MainNotebook.get_nth_page(i)
-            tab_label = self.frame.MainNotebook.get_tab_label(page)
+        for i in range(self.frame.notebook.get_n_pages()):
+            page = self.frame.notebook.get_nth_page(i)
+            tab_label = self.frame.notebook.get_tab_label(page)
             tab_label.set_text(tab_label.get_text())
             self.frame.set_tab_expand(page)
 
@@ -3020,7 +3020,7 @@ class Preferences(UserInterface):
         self.hide()
 
         if not config.sections["ui"]["trayicon"]:
-            self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
+            self.frame.window.present_with_time(Gdk.CURRENT_TIME)
 
     @staticmethod
     def on_back_up_config_response(selected, _data):
@@ -3029,7 +3029,7 @@ class Preferences(UserInterface):
     def on_back_up_config(self, *_args):
 
         FileChooserSave(
-            parent=self.frame.MainWindow,
+            parent=self.frame.window,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
             initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
