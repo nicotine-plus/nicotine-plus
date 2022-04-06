@@ -2631,7 +2631,7 @@ class Preferences(UserInterface):
         self.core = core
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.main,
+            content_box=self.container,
             quit_callback=self.on_cancel,
             title=_("Preferences"),
             width=960,
@@ -2648,7 +2648,7 @@ class Preferences(UserInterface):
         if Gtk.get_major_version() == 4:
             self.viewport.set_scroll_to_focus(True)
         else:
-            self.viewport.set_focus_vadjustment(self.container.get_vadjustment())
+            self.viewport.set_focus_vadjustment(self.content.get_vadjustment())
             self.ok_button.set_can_default(True)
 
         self.dialog.set_default_response(Gtk.ResponseType.OK)
@@ -3040,14 +3040,14 @@ class Preferences(UserInterface):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and pass scroll event
         to container (GTK 3) """
 
-        self.container.event(event)
+        self.content.event(event)
         return True
 
     def on_widget_scroll(self, _controller, _scroll_x, scroll_y):
         """ Prevent scrolling in GtkComboBoxText and GtkSpinButton and emulate scrolling
         in the container (GTK 4) """
 
-        adjustment = self.container.get_vadjustment()
+        adjustment = self.content.get_vadjustment()
         value = adjustment.get_value()
 
         if scroll_y < 0:
@@ -3098,7 +3098,7 @@ class Preferences(UserInterface):
         self.viewport.set_property("child", self.pages[page_id].Main)
 
         # Scroll to the top
-        self.container.get_vadjustment().set_value(0)
+        self.content.get_vadjustment().set_value(0)
 
     def on_cancel(self, *_args):
         self.hide()
@@ -3115,7 +3115,7 @@ class Preferences(UserInterface):
     def hide(self):
 
         # Scroll to the top
-        self.container.get_vadjustment().set_value(0)
+        self.content.get_vadjustment().set_value(0)
 
         dialog_hide(self.dialog)
 

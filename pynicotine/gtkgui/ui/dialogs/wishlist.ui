@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="height-request">300</property>
