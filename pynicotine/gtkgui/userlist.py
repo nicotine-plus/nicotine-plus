@@ -76,7 +76,7 @@ class UserList(UserInterface):
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            frame, "buddy_list", self.UserListTree,
+            frame, "buddy_list", self.list_view,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
             ["user", _("User"), 250, "text", None],
@@ -104,18 +104,18 @@ class UserList(UserInterface):
         cols["country"].get_widget().hide()
 
         for render in cols["trusted"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 5)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 5)
 
         for render in cols["notify"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 6)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 6)
 
         for render in cols["privileged"].get_cells():
-            render.connect('toggled', self.cell_toggle_callback, self.UserListTree, 7)
+            render.connect('toggled', self.cell_toggle_callback, self.list_view, 7)
 
         for render in cols["comments"].get_cells():
-            render.connect('edited', self.cell_edited_callback, self.UserListTree, 9)
+            render.connect('edited', self.cell_edited_callback, self.list_view, 9)
 
-        self.UserListTree.set_model(self.usersmodel)
+        self.list_view.set_model(self.usersmodel)
 
         # Lists
         for row in config.sections["server"]["userlist"]:
@@ -132,7 +132,7 @@ class UserList(UserInterface):
         # Popup menus
         self.popup_menu_private_rooms = PopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(frame, self.UserListTree, self.on_popup_menu)
+        self.popup_menu = popup = PopupMenu(frame, self.list_view, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.add_items(
             ("", None),
@@ -239,7 +239,7 @@ class UserList(UserInterface):
             return
 
         self.frame.userlist_status_page.set_visible(not self.user_iterators)
-        self.Main.set_visible(self.user_iterators)
+        self.container.set_visible(self.user_iterators)
 
     def update_visuals(self):
 
@@ -291,7 +291,7 @@ class UserList(UserInterface):
 
     def get_selected_username(self):
 
-        model, iterator = self.UserListTree.get_selection().get_selected()
+        model, iterator = self.list_view.get_selection().get_selected()
 
         if iterator is None:
             return None
@@ -458,7 +458,7 @@ class UserList(UserInterface):
         self.core.userlist.save_user_list(user_list)
 
     def save_columns(self):
-        save_columns("buddy_list", self.UserListTree.get_columns())
+        save_columns("buddy_list", self.list_view.get_columns())
 
     def on_trusted(self, action, state):
 

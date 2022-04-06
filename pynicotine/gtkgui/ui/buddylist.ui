@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="hexpand">True</property>
     <child>
-      <object class="GtkBox" id="BuddiesToolbar">
+      <object class="GtkBox" id="buddy_list_toolbar">
         <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
@@ -25,7 +25,7 @@
           </object>
         </child>
         <child>
-          <object class="GtkEntry" id="AddUserEntry">
+          <object class="GtkEntry">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
             <property name="height-request">0</property>
@@ -47,7 +47,7 @@
             <property name="visible">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkTreeView" id="UserListTree">
+              <object class="GtkTreeView" id="list_view">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>

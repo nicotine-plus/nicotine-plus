@@ -508,46 +508,46 @@ class NicotineFrame(UserInterface):
 
         page_id = self.userlist.page_id
 
-        if self.userlist.Main.get_parent() == self.userlist_pane:
+        if self.userlist.container.get_parent() == self.userlist_pane:
 
             if mode == "always":
                 return
 
-            self.userlist_pane.remove(self.userlist.Main)
+            self.userlist_pane.remove(self.userlist.container)
             self.userlist_pane.hide()
 
-        elif self.userlist.Main.get_parent() == self.userlist_pane_chatrooms:
+        elif self.userlist.container.get_parent() == self.userlist_pane_chatrooms:
 
             if mode == "chatrooms":
                 return
 
-            self.userlist_pane_chatrooms.remove(self.userlist.Main)
+            self.userlist_pane_chatrooms.remove(self.userlist.container)
             self.userlist_pane_chatrooms.hide()
 
-        elif self.userlist.Main.get_parent() == self.userlist_content:
+        elif self.userlist.container.get_parent() == self.userlist_content:
 
             if mode == "tab":
                 return
 
-            self.userlist_content.remove(self.userlist.Main)
+            self.userlist_content.remove(self.userlist.container)
             self.hide_tab(page_id)
 
         if mode == "always":
 
-            self.userlist_pane.add(self.userlist.Main)
-            self.userlist.BuddiesToolbar.show()
+            self.userlist_pane.add(self.userlist.container)
+            self.userlist.buddy_list_toolbar.show()
             self.userlist_pane.show()
             return
 
         if mode == "chatrooms":
 
-            self.userlist_pane_chatrooms.add(self.userlist.Main)
-            self.userlist.BuddiesToolbar.show()
+            self.userlist_pane_chatrooms.add(self.userlist.container)
+            self.userlist.buddy_list_toolbar.show()
             self.userlist_pane_chatrooms.show()
             return
 
-        self.userlist.BuddiesToolbar.hide()
-        self.userlist_content.add(self.userlist.Main)
+        self.userlist.buddy_list_toolbar.hide()
+        self.userlist_content.add(self.userlist.container)
 
         if force_show:
             self.show_tab(page_id)
@@ -1192,8 +1192,8 @@ class NicotineFrame(UserInterface):
         elif page == self.userlistvbox:
             self.userlist.update()
 
-            if self.userlist.Main.get_visible():
-                GLib.idle_add(lambda: self.userlist.UserListTree.grab_focus() == -1)
+            if self.userlist.container.get_visible():
+                GLib.idle_add(lambda: self.userlist.list_view.grab_focus() == -1)
 
         elif page == self.interestsvbox:
             self.interests.populate_recommendations()
