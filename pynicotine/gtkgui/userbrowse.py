@@ -44,6 +44,7 @@ from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.logfacility import log
 from pynicotine.utils import get_result_bitrate_length
 from pynicotine.utils import human_size
+from pynicotine.utils import humanize
 from pynicotine.utils import open_file_path
 
 
@@ -128,6 +129,8 @@ class UserBrowse(UserInterface):
         self.user = user
         self.local_shares_type = None
         self.queued_path = None
+        self.num_folders = 0
+        self.share_size = 0
 
         self.shares = {}
         self.dir_iters = {}
@@ -356,9 +359,11 @@ class UserBrowse(UserInterface):
             files.sort()
 
         self.shares = dict(shares)
+        self.share_size = size + private_size
+        self.num_folders = num_folders + num_private_folders
 
-        self.share_size_label.set_text(human_size(size + private_size))
-        self.num_folders_label.set_text(str(num_folders + num_private_folders))
+        self.share_size_label.set_text(human_size(self.share_size))
+        self.num_folders_label.set_text(humanize(self.num_folders))
 
         if self.expand_button.get_active():
             self.folder_list_view.expand_all()
