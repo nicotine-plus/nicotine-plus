@@ -37,7 +37,7 @@ class Statistics(UserInterface):
         self.core = core
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.Main,
+            content_box=self.main_container,
             quit_callback=self.hide,
             title=_("Transfer Statistics"),
             width=450
@@ -59,8 +59,8 @@ class Statistics(UserInterface):
             session_value = str(session_value)
             total_value = str(total_value)
 
-        getattr(self, stat_id + "_session").set_text(session_value)
-        getattr(self, stat_id + "_total").set_text(total_value)
+        getattr(self, stat_id + "_session_label").set_text(session_value)
+        getattr(self, stat_id + "_total_label").set_text(total_value)
 
     def on_reset_statistics_response(self, dialog, response_id, _data):
 

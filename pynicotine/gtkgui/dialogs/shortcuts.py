@@ -35,7 +35,7 @@ class Shortcuts(UserInterface):
 
         if hasattr(Gtk.Entry.props, "show-emoji-icon"):
             # Emoji picker only available in GTK 3.24+
-            self.emoji.show()
+            self.emoji_shortcut.show()
 
         # Workaround for off-centered dialog on first run
         dialog_show(self.dialog)
