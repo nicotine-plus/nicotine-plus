@@ -326,7 +326,7 @@
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
                 <child>
-                  <object class="GtkTreeView" id="shares_list">
+                  <object class="GtkTreeView" id="shares_list_view">
                     <property name="visible">True</property>
                     <property name="rubber-banding">True</property>
                     <property name="vexpand">True</property>

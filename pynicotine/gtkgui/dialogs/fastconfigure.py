@@ -71,12 +71,12 @@ class FastConfigure(UserInterface):
 
         self.column_numbers = list(range(self.sharelist.get_n_columns()))
         initialise_columns(
-            frame, None, self.shares_list,
+            frame, None, self.shares_list_view,
             ["virtual_folder", _("Virtual Folder"), 0, "text", None],
             ["folder", _("Folder"), 0, "text", None]
         )
 
-        self.shares_list.set_model(self.sharelist)
+        self.shares_list_view.set_model(self.sharelist)
 
     def show(self):
 
@@ -181,7 +181,7 @@ class FastConfigure(UserInterface):
 
     def on_remove_share(self, *_args):
 
-        model, paths = self.shares_list.get_selection().get_selected_rows()
+        model, paths = self.shares_list_view.get_selection().get_selected_rows()
 
         for path in reversed(paths):
             model.remove(model.get_iter(path))
