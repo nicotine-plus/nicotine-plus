@@ -2625,28 +2625,30 @@ class Preferences(UserInterface):
         super().__init__("ui/dialogs/preferences.ui")
 
         self.frame = frame
-        self.dialog = dialog = generic_dialog(
+        self.dialog = generic_dialog(
             parent=frame.MainWindow,
             content_box=self.main,
-            quit_callback=self.on_delete,
+            quit_callback=self.on_cancel,
             title=_("Preferences"),
             width=960,
             height=650
         )
 
-        dialog.add_buttons(
-            _("Cancel"), Gtk.ResponseType.CANCEL,
-            _("Export"), Gtk.ResponseType.HELP,
-            _("Apply"), Gtk.ResponseType.APPLY,
-            _("OK"), Gtk.ResponseType.OK
-        )
+        for button, response_type in ((self.cancel_button, Gtk.ResponseType.CANCEL),
+                                      (self.export_button, Gtk.ResponseType.HELP),
+                                      (self.apply_button, Gtk.ResponseType.APPLY),
+                                      (self.ok_button, Gtk.ResponseType.OK)):
+            self.dialog.add_action_widget(button, response_type)
 
-        dialog.set_default_response(Gtk.ResponseType.OK)
-        dialog.connect("response", self.on_response)
+        # Scroll to focused widgets
+        if Gtk.get_major_version() == 4:
+            self.viewport.set_scroll_to_focus(True)
+        else:
+            self.viewport.set_focus_vadjustment(self.container.get_vadjustment())
+            self.ok_button.set_can_default(True)
 
-        style_context = dialog.get_style_context()
-        style_context.add_class("preferences")
-        style_context.add_class("preferences-border")
+        self.dialog.set_default_response(Gtk.ResponseType.OK)
+        self.dialog.get_style_context().add_class("preferences-border")
 
         self.pages = {}
         self.page_ids = [
@@ -2674,12 +2676,6 @@ class Preferences(UserInterface):
             box.add(label)
 
             self.preferences_list.insert(box, -1)
-
-        # Scroll to focused widgets
-        if Gtk.get_major_version() == 4:
-            self.viewport.set_scroll_to_focus(True)
-        else:
-            self.viewport.set_focus_vadjustment(self.container.get_vadjustment())
 
         self.set_active_page("Network")
         self.update_visuals()
@@ -3017,18 +3013,20 @@ class Preferences(UserInterface):
         if rescan_required:
             self.frame.np.shares.rescan_shares()
 
+        self.hide()
+
         if not config.sections["ui"]["trayicon"]:
             self.frame.MainWindow.present_with_time(Gdk.CURRENT_TIME)
 
     @staticmethod
-    def back_up_config_response(selected, _data):
+    def on_back_up_config_response(selected, _data):
         config.write_config_backup(selected)
 
-    def back_up_config(self, *_args):
+    def on_back_up_config(self, *_args):
 
         FileChooserSave(
             parent=self.frame.MainWindow,
-            callback=self.back_up_config_response,
+            callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
             initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
             title=_("Pick a File Name for Config Backup")
@@ -3098,24 +3096,16 @@ class Preferences(UserInterface):
         # Scroll to the top
         self.container.get_vadjustment().set_value(0)
 
-    def on_delete(self, *_args):
+    def on_cancel(self, *_args):
         self.hide()
         return True
 
-    def on_response(self, _dialog, response_id):
+    def on_apply(self, *_args):
+        self.update_settings()
+        return True
 
-        if response_id == Gtk.ResponseType.OK:
-            self.update_settings(settings_closed=True)
-
-        elif response_id == Gtk.ResponseType.APPLY:
-            self.update_settings()
-            return True
-
-        elif response_id == Gtk.ResponseType.HELP:
-            self.back_up_config()
-            return True
-
-        self.hide()
+    def on_ok(self, *_args):
+        self.update_settings(settings_closed=True)
         return True
 
     def hide(self):

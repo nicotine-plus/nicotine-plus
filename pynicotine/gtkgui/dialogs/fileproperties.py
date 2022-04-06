@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gtk
+
 from pynicotine.gtkgui.widgets.ui import UserInterface
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
 from pynicotine.gtkgui.widgets.dialogs import generic_dialog
@@ -41,7 +43,12 @@ class FileProperties(UserInterface):
             height=0
         )
 
-        self.download.set_visible(download_button)
+        for button, response_type in ((self.previous_button, Gtk.ResponseType.HELP),
+                                      (self.next_button, Gtk.ResponseType.HELP),
+                                      (self.download_button, Gtk.ResponseType.NONE)):
+            self.dialog.add_action_widget(button, response_type)
+
+        self.download_button.set_visible(download_button)
         self.current_index = 0
 
     def on_previous(self, *_args):
@@ -78,7 +85,9 @@ class FileProperties(UserInterface):
         """ Updates the UI with properties for the selected file """
 
         properties = self.properties[self.current_index]
-        self.navigation_buttons.set_visible(len(self.properties) > 1)
+
+        for button in (self.previous_button, self.next_button):
+            button.set_visible(len(self.properties) > 1)
 
         self.filename_value.set_text(str(properties["filename"]))
         self.folder_value.set_text(str(properties["directory"]))

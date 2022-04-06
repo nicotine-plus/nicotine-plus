@@ -147,7 +147,7 @@ def set_global_css():
         margin: 0;
     }
 
-    .preferences .dialog-action-box {
+    .generic-dialog .dialog-action-box {
         /* Add missing spacing to dialog action buttons */
         padding: 6px;
     }
