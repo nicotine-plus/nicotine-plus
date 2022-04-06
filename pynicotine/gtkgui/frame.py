@@ -1721,37 +1721,39 @@ class NicotineFrame(UserInterface):
     """ Status Bar """
 
     def set_status_text(self, msg):
-        self.Statusbar.set_text(msg)
-        self.Statusbar.set_tooltip_text(msg)
+        self.status_label.set_text(msg)
+        self.status_label.set_tooltip_text(msg)
 
     def set_user_status(self, status):
-        self.UserStatus.set_text(status)
+        self.user_status_label.set_text(status)
 
     def set_connection_stats(self, msg):
 
         total_conns = repr(msg.total_conns)
 
-        if self.SocketStatus.get_text() != total_conns:
-            self.SocketStatus.set_text(repr(msg.total_conns))
+        if self.connections_label.get_text() != total_conns:
+            self.connections_label.set_text(repr(msg.total_conns))
 
         download_bandwidth = human_speed(msg.download_bandwidth)
-        self.download_status.set_text("%(speed)s (%(num)i)" % {'num': msg.download_conns, 'speed': download_bandwidth})
+        self.download_status_label.set_text("%(speed)s (%(num)i)" % {
+            'num': msg.download_conns, 'speed': download_bandwidth})
         self.tray_icon.set_download_status(_("Downloads: %(speed)s") % {'speed': download_bandwidth})
 
         upload_bandwidth = human_speed(msg.upload_bandwidth)
-        self.upload_status.set_text("%(speed)s (%(num)i)" % {'num': msg.upload_conns, 'speed': upload_bandwidth})
+        self.upload_status_label.set_text("%(speed)s (%(num)i)" % {
+            'num': msg.upload_conns, 'speed': upload_bandwidth})
         self.tray_icon.set_upload_status(_("Uploads: %(speed)s") % {'speed': upload_bandwidth})
 
     def show_scan_progress(self):
         self.scan_progress_indeterminate = True
-        GLib.idle_add(self.SharesProgress.show)
+        GLib.idle_add(self.scan_progress_bar.show)
 
     def set_scan_progress(self, value):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.SharesProgress.set_fraction, value)
+        GLib.idle_add(self.scan_progress_bar.set_fraction, value)
 
     def set_scan_indeterminate(self):
-        self.SharesProgress.pulse()
+        self.scan_progress_bar.pulse()
         GLib.timeout_add(500, self.pulse_scan_progress)
 
     def pulse_scan_progress(self):
@@ -1760,7 +1762,7 @@ class NicotineFrame(UserInterface):
 
     def hide_scan_progress(self):
         self.scan_progress_indeterminate = False
-        GLib.idle_add(self.SharesProgress.hide)
+        GLib.idle_add(self.scan_progress_bar.hide)
 
     def update_alternative_speed_icon(self, active):
 
@@ -1769,7 +1771,7 @@ class NicotineFrame(UserInterface):
         else:
             icon_name = "media-seek-backward-symbolic"
 
-        self.AltSpeedIcon.set_property("icon-name", icon_name)
+        self.alt_speed_icon.set_property("icon-name", icon_name)
 
     def on_alternative_speed_limit(self, *_args):
 

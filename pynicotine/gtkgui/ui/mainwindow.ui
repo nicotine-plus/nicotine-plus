@@ -152,7 +152,7 @@
                                         <child>
                                           <object class="GtkComboBoxText" id="SearchCombo">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
@@ -807,7 +807,7 @@
                                     <child>
                                       <object class="GtkBox" id="userbrowse_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -986,7 +986,7 @@
                                     <child>
                                       <object class="GtkBox" id="userinfo_title">
                                         <property name="visible">True</property>
-                                        <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
+                                        <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                         <property name="hexpand">True</property>
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
@@ -1435,7 +1435,7 @@
                                         <child>
                                           <object class="GtkBox" id="chatrooms_title">
                                             <property name="visible">True</property>
-                                            <property name="sensitive" bind-source="UserStatusButton" bind-property="sensitive" bind-flags="sync-create"/>
+                                            <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="halign">start</property>
                                             <property name="spacing">4</property>
@@ -1684,7 +1684,7 @@
             <property name="visible">True</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkLabel" id="Statusbar">
+              <object class="GtkLabel" id="status_label">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
                 <property name="hexpand">True</property>
@@ -1699,7 +1699,7 @@
                 <property name="visible">True</property>
                 <property name="spacing">18</property>
                 <child>
-                  <object class="GtkProgressBar" id="SharesProgress">
+                  <object class="GtkProgressBar" id="scan_progress_bar">
                     <property name="visible">False</property>
                     <property name="valign">center</property>
                     <property name="pulse-step">0.8</property>
@@ -1733,7 +1733,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="SocketStatus">
+                          <object class="GtkLabel" id="connections_label">
                             <property name="visible">True</property>
                             <property name="label">0</property>
                             <attributes>
@@ -1764,7 +1764,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="download_status">
+                          <object class="GtkLabel" id="download_status_label">
                             <property name="visible">True</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
@@ -1794,7 +1794,7 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="upload_status">
+                          <object class="GtkLabel" id="upload_status_label">
                             <property name="visible">True</property>
                             <attributes>
                               <attribute name="weight" value="normal"/>
@@ -1809,11 +1809,11 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkButton" id="UserStatusButton">
+                  <object class="GtkButton" id="user_status_button">
                     <property name="visible">True</property>
                     <property name="action-name">win.away</property>
                     <child>
-                      <object class="GtkLabel" id="UserStatus">
+                      <object class="GtkLabel" id="user_status_label">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Offline</property>
                         <attributes>
@@ -1827,12 +1827,12 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton" id="AltSpeedButton">
+                  <object class="GtkToggleButton">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Enable alternative download and upload speed limits</property>
                     <property name="action-name">app.altspeedlimit</property>
                     <child>
-                      <object class="GtkImage" id="AltSpeedIcon">
+                      <object class="GtkImage" id="alt_speed_icon">
                         <property name="visible">True</property>
                         <property name="icon-name">media-seek-backward-symbolic</property>
                       </object>
