@@ -10,7 +10,7 @@
       <class name="destructive-action"/>
     </style>
   </object>
-  <object class="GtkBox" id="main_container">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <property name="margin-start">18</property>

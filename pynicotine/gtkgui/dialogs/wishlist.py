@@ -41,7 +41,7 @@ class WishList(UserInterface):
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
             modal=False,
-            content_box=self.main,
+            content_box=self.container,
             quit_callback=self.hide,
             title=_("Wishlist"),
             width=600,

@@ -37,7 +37,7 @@ class Statistics(UserInterface):
         self.core = core
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.main_container,
+            content_box=self.container,
             quit_callback=self.hide,
             title=_("Transfer Statistics"),
             width=450
