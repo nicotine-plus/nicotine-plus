@@ -553,18 +553,18 @@ class NicotineFrame(UserInterface):
         if mode == "always":
 
             self.userlist_pane.add(self.userlist.container)
-            self.userlist.buddy_list_toolbar.show()
+            self.userlist.toolbar.show()
             self.userlist_pane.show()
             return
 
         if mode == "chatrooms":
 
             self.userlist_pane_chatrooms.add(self.userlist.container)
-            self.userlist.buddy_list_toolbar.show()
+            self.userlist.toolbar.show()
             self.userlist_pane_chatrooms.show()
             return
 
-        self.userlist.buddy_list_toolbar.hide()
+        self.userlist.toolbar.hide()
         self.userlist_content.add(self.userlist.container)
 
         if force_show:

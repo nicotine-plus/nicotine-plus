@@ -6,7 +6,7 @@
     <property name="orientation">vertical</property>
     <property name="hexpand">True</property>
     <child>
-      <object class="GtkBox" id="buddy_list_toolbar">
+      <object class="GtkBox" id="toolbar">
         <property name="visible">True</property>
         <property name="margin-start">6</property>
         <property name="margin-end">6</property>
