@@ -38,7 +38,7 @@ class FileProperties(UserInterface):
 
         self.dialog = generic_dialog(
             parent=frame.MainWindow,
-            content_box=self.Main,
+            content_box=self.main_container,
             title=_("File Properties"),
             width=600,
             height=0
@@ -90,10 +90,10 @@ class FileProperties(UserInterface):
         for button in (self.previous_button, self.next_button):
             button.set_visible(len(self.properties) > 1)
 
-        self.filename_value.set_text(str(properties["filename"]))
-        self.folder_value.set_text(str(properties["directory"]))
-        self.filesize_value.set_text("%s (%s B)" % (human_size(properties["size"]), humanize(properties["size"])))
-        self.username_value.set_text(str(properties["user"]))
+        self.filename_value_label.set_text(str(properties["filename"]))
+        self.folder_value_label.set_text(str(properties["directory"]))
+        self.filesize_value_label.set_text("%s (%s B)" % (human_size(properties["size"]), humanize(properties["size"])))
+        self.username_value_label.set_text(str(properties["user"]))
 
         path = properties.get("path") or ""
         bitrate = properties.get("bitrate") or ""
@@ -102,23 +102,23 @@ class FileProperties(UserInterface):
         speed = properties.get("speed") or 0
         country = properties.get("country") or ""
 
-        self.path_value.set_text(str(path))
-        self.path.set_visible(bool(path))
+        self.path_value_label.set_text(str(path))
+        self.path_box.set_visible(bool(path))
 
-        self.bitrate_value.set_text(str(bitrate))
-        self.bitrate.set_visible(bool(bitrate))
+        self.bitrate_value_label.set_text(str(bitrate))
+        self.bitrate_box.set_visible(bool(bitrate))
 
-        self.length_value.set_text(str(length))
-        self.length.set_visible(bool(length))
+        self.length_value_label.set_text(str(length))
+        self.length_box.set_visible(bool(length))
 
-        self.queue_value.set_text(str(humanize(queue_position)))
-        self.queue.set_visible(bool(queue_position))
+        self.queue_value_label.set_text(str(humanize(queue_position)))
+        self.queue_box.set_visible(bool(queue_position))
 
-        self.speed_value.set_text(str(human_speed(speed)))
-        self.speed.set_visible(bool(speed))
+        self.speed_value_label.set_text(str(human_speed(speed)))
+        self.speed_box.set_visible(bool(speed))
 
-        self.country_value.set_text(str(country))
-        self.country.set_visible(bool(country))
+        self.country_value_label.set_text(str(country))
+        self.country_box.set_visible(bool(country))
 
         self.update_title()
 
