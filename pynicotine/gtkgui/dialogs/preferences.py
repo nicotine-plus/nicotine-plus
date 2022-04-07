@@ -3027,7 +3027,7 @@ class Preferences(UserInterface):
     def on_back_up_config(self, *_args):
 
         FileChooserSave(
-            parent=self.frame.window,
+            parent=self.dialog,
             callback=self.on_back_up_config_response,
             initial_folder=os.path.dirname(config.filename),
             initial_file="config backup %s.tar.bz2" % (time.strftime("%Y-%m-%d %H_%M_%S")),
