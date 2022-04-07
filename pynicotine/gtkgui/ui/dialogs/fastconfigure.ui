@@ -9,15 +9,8 @@
   </object>
   <object class="GtkButton" id="next_button">
     <property name="visible">True</property>
-    <property name="label" translatable="yes">_Next</property>
     <property name="use-underline">True</property>
     <signal name="clicked" handler="on_next"/>
-  </object>
-  <object class="GtkButton" id="finish_button">
-    <property name="visible">True</property>
-    <property name="label" translatable="yes">_Finish</property>
-    <property name="use-underline">True</property>
-    <signal name="clicked" handler="hide"/>
   </object>
   <object class="GtkStack" id="stack">
     <property name="visible">True</property>

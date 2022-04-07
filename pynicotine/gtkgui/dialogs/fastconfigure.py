@@ -49,8 +49,7 @@ class FastConfigure(UserInterface):
             parent=frame.window,
             content_box=self.stack,
             buttons=[(self.previous_button, Gtk.ResponseType.HELP),
-                     (self.next_button, Gtk.ResponseType.APPLY),
-                     (self.finish_button, Gtk.ResponseType.APPLY)],
+                     (self.next_button, Gtk.ResponseType.APPLY)],
             quit_callback=self.hide,
             title=_("Setup Assistant"),
             width=720,
@@ -91,29 +90,29 @@ class FastConfigure(UserInterface):
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
 
-        self.finished = False
-        complete = False
+        page_complete = False
         page = self.stack.get_visible_child()
+        self.finished = (page == self.summary_page)
+        next_label = _("_Finish") if page == self.summary_page else _("_Next")
 
         if page in (self.welcome_page, self.port_page, self.summary_page):
-            complete = True
-
-            if page == self.summary_page:
-                self.finished = True
+            page_complete = True
 
         elif page == self.account_page:
             if len(self.username_entry.get_text()) > 0 and len(self.password_entry.get_text()) > 0:
-                complete = True
+                page_complete = True
 
         elif page == self.share_page:
             if self.download_folder_button.get_path():
-                complete = True
+                page_complete = True
 
-        self.next_button.set_sensitive(complete)
-        self.finish_button.set_visible(page == self.summary_page)
+        if self.next_button.get_label() != next_label:
+            self.next_button.set_label(next_label)
+
+        self.next_button.set_sensitive(page_complete)
 
         for button in (self.previous_button, self.next_button):
-            button.set_visible(page not in (self.welcome_page, self.summary_page))
+            button.set_visible(page != self.welcome_page)
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
