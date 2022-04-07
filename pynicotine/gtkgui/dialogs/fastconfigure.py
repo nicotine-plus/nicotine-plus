@@ -164,6 +164,10 @@ class FastConfigure(UserInterface):
 
     def on_next(self, *_args):
 
+        if self.finished:
+            self.hide()
+            return True
+
         page = self.stack.get_visible_child()
         page_index = self.pages.index(page)
 
