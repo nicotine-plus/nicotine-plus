@@ -179,6 +179,18 @@ def set_global_css():
         padding-left: 10px;
         padding-right: 10px;
     }
+
+    /* Headings */
+
+    .title-1 {
+        font-weight: 800;
+        font-size: 20pt;
+    }
+
+    .title-2 {
+        font-weight: 800;
+        font-size: 15pt;
+    }
     """
 
     css_gtk3_20 = b"""

@@ -270,10 +270,9 @@
                                             <property name="label" translatable="yes">Search Files</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -513,10 +512,9 @@
                                             <property name="label" translatable="yes">Downloads</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -754,10 +752,9 @@
                                             <property name="label" translatable="yes">Uploads</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -931,10 +928,9 @@
                                             <property name="label" translatable="yes">Browse Shares</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -1093,10 +1089,9 @@
                                             <property name="label" translatable="yes">User Info</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -1242,10 +1237,9 @@
                                             <property name="label" translatable="yes">Private Chat</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -1364,10 +1358,9 @@
                                             <property name="label" translatable="yes">Buddies</property>
                                             <property name="justify">center</property>
                                             <property name="wrap">True</property>
-                                            <attributes>
-                                              <attribute name="weight" value="ultrabold"/>
-                                              <attribute name="size" value="20480"/>
-                                            </attributes>
+                                            <style>
+                                              <class name="title-1"/>
+                                            </style>
                                           </object>
                                         </child>
                                         <child>
@@ -1530,10 +1523,9 @@
                                                 <property name="label" translatable="yes">Chat Rooms</property>
                                                 <property name="justify">center</property>
                                                 <property name="wrap">True</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="ultrabold"/>
-                                                  <attribute name="size" value="20480"/>
-                                                </attributes>
+                                                <style>
+                                                  <class name="title-1"/>
+                                                </style>
                                               </object>
                                             </child>
                                             <child>

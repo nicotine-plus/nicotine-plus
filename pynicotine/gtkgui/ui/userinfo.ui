@@ -46,10 +46,9 @@
                             <property name="margin-top">12</property>
                             <property name="wrap-mode">word-char</property>
                             <property name="wrap">True</property>
-                            <attributes>
-                              <attribute name="weight" value="ultrabold"/>
-                              <attribute name="size" value="15360"/>
-                            </attributes>
+                            <style>
+                              <class name="title-2"/>
+                            </style>
                           </object>
                         </child>
                         <child>
