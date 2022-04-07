@@ -25,8 +25,9 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.filechooser import FileChooserButton
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
+from pynicotine.gtkgui.widgets.dialogs import dialog_hide
 from pynicotine.gtkgui.widgets.dialogs import dialog_show
-from pynicotine.gtkgui.widgets.dialogs import set_dialog_properties
+from pynicotine.gtkgui.widgets.dialogs import generic_dialog
 from pynicotine.gtkgui.widgets.theme import get_icon
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.ui import UserInterface
@@ -41,16 +42,24 @@ class FastConfigure(UserInterface):
 
         self.frame = frame
         self.core = core
-        set_dialog_properties(self.dialog, frame.window)
+        self.pages = [self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page]
+        self.finished = False
 
-        for page in (self.welcome_page, self.account_page, self.port_page, self.share_page, self.summary_page):
-            self.dialog.append_page(page)
+        self.dialog = generic_dialog(
+            parent=frame.window,
+            content_box=self.stack,
+            buttons=[(self.previous_button, Gtk.ResponseType.HELP),
+                     (self.next_button, Gtk.ResponseType.APPLY)],
+            quit_callback=self.hide,
+            title=_("Setup Assistant"),
+            width=720,
+            height=450
+        )
 
-            if Gtk.get_major_version() == 3:
-                self.dialog.child_set_property(page, "has-padding", False)
+        if Gtk.get_major_version() == 3:
+            self.next_button.set_can_default(True)
 
-        self.dialog.set_page_type(self.welcome_page, Gtk.AssistantPageType.CUSTOM)
-        self.dialog.set_page_type(self.summary_page, Gtk.AssistantPageType.SUMMARY)
+        self.dialog.set_default_response(Gtk.ResponseType.APPLY)
 
         logo = get_icon("n")
 
@@ -78,58 +87,18 @@ class FastConfigure(UserInterface):
 
         self.shares_list_view.set_model(self.sharelist)
 
-    def show(self):
-
-        if config.need_config():
-            self.cancel_button.hide()
-
-        # account_page
-        self.username_entry.set_text(config.sections["server"]["login"])
-        self.password_entry.set_text(config.sections["server"]["passw"])
-
-        # port_page
-        url = config.portchecker_url % str(self.core.protothread.listenport)
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
-        self.check_port_label.set_markup(text)
-        self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))
-
-        # share_page
-        self.shared_folders = config.sections["transfers"]["shared"][:]
-
-        if config.sections['transfers']['downloaddir']:
-            self.download_folder_button.set_path(
-                config.sections['transfers']['downloaddir']
-            )
-
-        self.sharelist.clear()
-
-        for entry in self.shared_folders:
-            virtual_name, path = entry
-            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [str(virtual_name), str(path)])
-
-        # completepage
-        import urllib.parse
-
-        login = urllib.parse.quote(config.sections["server"]["login"])
-        url = config.privileges_url % login
-        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
-        self.privileges_label.set_markup(text)
-        self.privileges_label.connect("activate-link", lambda x, url: open_uri(url))
-
-        dialog_show(self.dialog)
-
     def reset_completeness(self):
         """ Turns on the complete flag if everything required is filled in. """
 
+        self.finished = False
         complete = False
-        pageid = self.dialog.get_current_page()
-        page = self.dialog.get_nth_page(pageid)
-
-        if not page:
-            return
+        page = self.stack.get_visible_child()
 
         if page in (self.welcome_page, self.port_page, self.summary_page):
             complete = True
+
+            if page == self.summary_page:
+                self.finished = True
 
         elif page == self.account_page:
             if len(self.username_entry.get_text()) > 0 and len(self.password_entry.get_text()) > 0:
@@ -139,7 +108,10 @@ class FastConfigure(UserInterface):
             if self.download_folder_button.get_path():
                 complete = True
 
-        self.dialog.set_page_complete(page, complete)
+        self.next_button.set_sensitive(complete)
+
+        for button in (self.previous_button, self.next_button):
+            button.set_visible(page not in (self.welcome_page, self.summary_page))
 
     def on_entry_changed(self, *_args):
         self.reset_completeness()
@@ -186,14 +158,28 @@ class FastConfigure(UserInterface):
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
-    def on_set_up(self, *_args):
-        self.dialog.next_page()
-        self.username_entry.grab_focus()
+    def on_next(self, *_args):
 
-    def on_prepare(self, *_args):
+        page = self.stack.get_visible_child()
+        page_index = self.pages.index(page)
+
+        self.stack.set_visible_child(self.pages[page_index + 1])
         self.reset_completeness()
 
-    def on_close(self, *_args):
+    def on_previous(self, *_args):
+
+        page = self.stack.get_visible_child()
+        page_index = self.pages.index(page)
+
+        self.stack.set_visible_child(self.pages[page_index - 1])
+        self.reset_completeness()
+
+    def hide(self, *_args):
+
+        dialog_hide(self.dialog)
+
+        if not self.finished:
+            return True
 
         # account_page
         config.sections["server"]["login"] = self.username_entry.get_text()
@@ -206,8 +192,44 @@ class FastConfigure(UserInterface):
         # Rescan shares
         self.core.shares.rescan_shares()
         self.core.connect()
+        return True
 
-        self.dialog.destroy()
+    def show(self):
 
-    def on_cancel(self, *_args):
-        self.dialog.destroy()
+        self.stack.set_visible_child(self.welcome_page)
+        self.reset_completeness()
+
+        # account_page
+        self.username_entry.set_text(config.sections["server"]["login"])
+        self.password_entry.set_text(config.sections["server"]["passw"])
+
+        # port_page
+        url = config.portchecker_url % str(self.core.protothread.listenport)
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Check Port Status") + "</a>"
+        self.check_port_label.set_markup(text)
+        self.check_port_label.connect("activate-link", lambda x, url: open_uri(url))
+
+        # share_page
+        self.shared_folders = config.sections["transfers"]["shared"][:]
+
+        if config.sections['transfers']['downloaddir']:
+            self.download_folder_button.set_path(
+                config.sections['transfers']['downloaddir']
+            )
+
+        self.sharelist.clear()
+
+        for entry in self.shared_folders:
+            virtual_name, path = entry
+            self.sharelist.insert_with_valuesv(-1, self.column_numbers, [str(virtual_name), str(path)])
+
+        # completepage
+        import urllib.parse
+
+        login = urllib.parse.quote(config.sections["server"]["login"])
+        url = config.privileges_url % login
+        text = "<a href='" + url + "' title='" + url + "'>" + _("Get Soulseek Privileges…") + "</a>"
+        self.privileges_label.set_markup(text)
+        self.privileges_label.connect("activate-link", lambda x, url: open_uri(url))
+
+        dialog_show(self.dialog)
