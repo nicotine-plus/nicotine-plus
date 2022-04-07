@@ -443,7 +443,9 @@ class NicotineFrame(UserInterface):
         if self.preferences is not None and self.preferences.dialog.get_property("visible"):
             return
 
-        self.fast_configure = FastConfigure(self, self.core)
+        if self.fast_configure is None:
+            self.fast_configure = FastConfigure(self, self.core)
+
         self.fast_configure.show()
 
     def on_settings(self, *_args, page=None):
