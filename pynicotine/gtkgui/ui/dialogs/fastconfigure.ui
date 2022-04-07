@@ -44,10 +44,9 @@
                 <property name="label" translatable="yes">Welcome to Nicotine+</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
-                <attributes>
-                  <attribute name="weight" value="ultrabold"/>
-                  <attribute name="size" value="20480"/>
-                </attributes>
+                <style>
+                  <class name="title-1"/>
+                </style>
               </object>
             </child>
             <child>
@@ -372,10 +371,9 @@
             <property name="label" translatable="yes">You are ready to use Nicotine+!</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
-            <attributes>
-              <attribute name="weight" value="ultrabold"/>
-              <attribute name="size" value="18432"/>
-            </attributes>
+            <style>
+              <class name="title-1"/>
+            </style>
           </object>
         </child>
         <child>
