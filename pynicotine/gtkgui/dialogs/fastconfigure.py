@@ -49,7 +49,8 @@ class FastConfigure(UserInterface):
             parent=frame.window,
             content_box=self.stack,
             buttons=[(self.previous_button, Gtk.ResponseType.HELP),
-                     (self.next_button, Gtk.ResponseType.APPLY)],
+                     (self.next_button, Gtk.ResponseType.APPLY),
+                     (self.finish_button, Gtk.ResponseType.APPLY)],
             quit_callback=self.hide,
             title=_("Setup Assistant"),
             width=720,
@@ -109,6 +110,7 @@ class FastConfigure(UserInterface):
                 complete = True
 
         self.next_button.set_sensitive(complete)
+        self.finish_button.set_visible(page == self.summary_page)
 
         for button in (self.previous_button, self.next_button):
             button.set_visible(page not in (self.welcome_page, self.summary_page))
