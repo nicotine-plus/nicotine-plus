@@ -1155,14 +1155,14 @@ class NicotineFrame(UserInterface):
             self.remove_tab_hilite(self.uploads.page_id)
 
             if self.uploads.container.get_visible():
-                GLib.idle_add(lambda: self.uploads.list_view.grab_focus() == -1)
+                GLib.idle_add(lambda: self.uploads.tree_view.grab_focus() == -1)
 
         elif page == self.downloads_page:
             self.downloads.update(forceupdate=True)
             self.remove_tab_hilite(self.downloads.page_id)
 
             if self.downloads.container.get_visible():
-                GLib.idle_add(lambda: self.downloads.list_view.grab_focus() == -1)
+                GLib.idle_add(lambda: self.downloads.tree_view.grab_focus() == -1)
 
         elif page == self.search_page:
             curr_page_num = self.search.get_current_page()

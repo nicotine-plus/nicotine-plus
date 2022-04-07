@@ -68,10 +68,10 @@ class TransferList(UserInterface):
         if Gtk.get_major_version() == 4:
             self.clear_all_button.set_has_frame(False)
 
-        Accelerator("t", self.list_view, self.on_abort_transfers_accelerator)
-        Accelerator("r", self.list_view, self.on_retry_transfers_accelerator)
-        Accelerator("Delete", self.list_view, self.on_clear_transfers_accelerator)
-        Accelerator("<Alt>Return", self.list_view, self.on_file_properties_accelerator)
+        Accelerator("t", self.tree_view, self.on_abort_transfers_accelerator)
+        Accelerator("r", self.tree_view, self.on_retry_transfers_accelerator)
+        Accelerator("Delete", self.tree_view, self.on_clear_transfers_accelerator)
+        Accelerator("<Alt>Return", self.tree_view, self.on_file_properties_accelerator)
 
         self.last_ui_update = 0
         self.transfer_list = []
@@ -131,7 +131,7 @@ class TransferList(UserInterface):
 
         self.column_numbers = list(range(self.transfersmodel.get_n_columns()))
         self.cols = cols = initialise_columns(
-            frame, transfer_type, self.list_view,
+            frame, transfer_type, self.tree_view,
             ["user", _("User"), 200, "text", None],
             ["path", self.path_label, 400, "text", None],
             ["filename", _("Filename"), 400, "text", None],
@@ -155,7 +155,7 @@ class TransferList(UserInterface):
         cols["time_elapsed"].set_sort_column_id(14)
         cols["time_left"].set_sort_column_id(15)
 
-        self.list_view.set_model(self.transfersmodel)
+        self.tree_view.set_model(self.transfersmodel)
 
         self.status_page = getattr(frame, "%ss_status_page" % transfer_type)
         self.expand_button = getattr(frame, "Expand%ss" % transfer_type.title())
@@ -184,7 +184,7 @@ class TransferList(UserInterface):
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = PopupMenu(frame, self.list_view, self.on_popup_menu)
+        self.popup_menu = PopupMenu(frame, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -221,7 +221,7 @@ class TransferList(UserInterface):
         self.update()
 
     def save_columns(self):
-        save_columns(self.type, self.list_view.get_columns())
+        save_columns(self.type, self.tree_view.get_columns())
 
     def update_visuals(self):
 
@@ -233,7 +233,7 @@ class TransferList(UserInterface):
         self.selected_transfers.clear()
         self.selected_users.clear()
 
-        model, paths = self.list_view.get_selection().get_selected_rows()
+        model, paths = self.tree_view.get_selection().get_selected_rows()
 
         for path in paths:
             iterator = model.get_iter(path)
@@ -621,10 +621,10 @@ class TransferList(UserInterface):
         self.update_num_users_files()
 
         if expand_user:
-            self.list_view.expand_row(self.transfersmodel.get_path(self.users[user]), False)
+            self.tree_view.expand_row(self.transfersmodel.get_path(self.users[user]), False)
 
         if expand_folder:
-            self.list_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
+            self.tree_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
     def retry_transfers(self):
         for transfer in self.selected_transfers:
@@ -725,11 +725,11 @@ class TransferList(UserInterface):
 
         if expanded:
             icon_name = "go-up-symbolic"
-            self.list_view.expand_all()
+            self.tree_view.expand_all()
 
         else:
             icon_name = "go-down-symbolic"
-            collapse_treeview(self.list_view, self.tree_users)
+            collapse_treeview(self.tree_view, self.tree_users)
 
         expand_button_icon.set_property("icon-name", icon_name)
 
@@ -742,7 +742,7 @@ class TransferList(UserInterface):
         active = mode != "ungrouped"
 
         config.sections["transfers"]["group%ss" % self.type] = mode
-        self.list_view.set_show_expanders(active)
+        self.tree_view.set_show_expanders(active)
         self.expand_button.set_visible(active)
 
         self.tree_users = mode
@@ -797,8 +797,8 @@ class TransferList(UserInterface):
 
         selected_user = args[-1]
 
-        sel = self.list_view.get_selection()
-        fmodel = self.list_view.get_model()
+        sel = self.tree_view.get_selection()
+        fmodel = self.tree_view.get_model()
         sel.unselect_all()
 
         iterator = fmodel.get_iter_first()

@@ -13,7 +13,7 @@
             <property name="visible">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkTreeView" id="list_view">
+              <object class="GtkTreeView" id="tree_view">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>
