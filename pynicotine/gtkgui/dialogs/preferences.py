@@ -2628,17 +2628,15 @@ class Preferences(UserInterface):
         self.dialog = generic_dialog(
             parent=frame.window,
             content_box=self.container,
+            buttons=[(self.cancel_button, Gtk.ResponseType.CANCEL),
+                     (self.export_button, Gtk.ResponseType.HELP),
+                     (self.apply_button, Gtk.ResponseType.APPLY),
+                     (self.ok_button, Gtk.ResponseType.OK)],
             quit_callback=self.on_cancel,
             title=_("Preferences"),
             width=960,
             height=650
         )
-
-        for button, response_type in ((self.cancel_button, Gtk.ResponseType.CANCEL),
-                                      (self.export_button, Gtk.ResponseType.HELP),
-                                      (self.apply_button, Gtk.ResponseType.APPLY),
-                                      (self.ok_button, Gtk.ResponseType.OK)):
-            self.dialog.add_action_widget(button, response_type)
 
         # Scroll to focused widgets
         if Gtk.get_major_version() == 4:

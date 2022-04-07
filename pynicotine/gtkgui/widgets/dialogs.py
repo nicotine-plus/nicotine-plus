@@ -24,7 +24,7 @@ from pynicotine.config import config
 """ Dialogs """
 
 
-def generic_dialog(parent=None, content_box=None, quit_callback=None,
+def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=None,
                    title="Dialog", width=400, height=400, modal=True):
 
     dialog = Gtk.Dialog(
@@ -37,6 +37,10 @@ def generic_dialog(parent=None, content_box=None, quit_callback=None,
 
     if content_box:
         dialog.get_content_area().add(content_box)
+
+    if buttons:
+        for button, response_type in buttons:
+            dialog.add_action_widget(button, response_type)
 
     set_dialog_properties(dialog, parent, quit_callback, modal)
     return dialog

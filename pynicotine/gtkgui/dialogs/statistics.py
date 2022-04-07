@@ -38,11 +38,11 @@ class Statistics(UserInterface):
         self.dialog = generic_dialog(
             parent=frame.window,
             content_box=self.container,
+            buttons=[(self.reset_button, Gtk.ResponseType.HELP)],
             quit_callback=self.hide,
             title=_("Transfer Statistics"),
             width=450
         )
-        self.dialog.add_action_widget(self.reset_button, Gtk.ResponseType.HELP)
 
         # Initialize stats
         for stat_id in config.defaults["statistics"]:
