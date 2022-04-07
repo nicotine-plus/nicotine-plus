@@ -16,6 +16,7 @@
   <object class="GtkStack" id="stack">
     <property name="visible">True</property>
     <property name="transition-type">slide-left-right</property>
+    <signal name="notify::visible-child" handler="on_page_change"/>
     <child>
       <object class="GtkBox" id="welcome_page">
         <property name="visible">True</property>

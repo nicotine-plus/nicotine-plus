@@ -158,13 +158,15 @@ class FastConfigure(UserInterface):
         for path in reversed(paths):
             model.remove(model.get_iter(path))
 
+    def on_page_change(self, *_args):
+        self.reset_completeness()
+
     def on_next(self, *_args):
 
         page = self.stack.get_visible_child()
         page_index = self.pages.index(page)
 
         self.stack.set_visible_child(self.pages[page_index + 1])
-        self.reset_completeness()
 
     def on_previous(self, *_args):
 
@@ -172,7 +174,6 @@ class FastConfigure(UserInterface):
         page_index = self.pages.index(page)
 
         self.stack.set_visible_child(self.pages[page_index - 1])
-        self.reset_completeness()
 
     def hide(self, *_args):
 
@@ -197,7 +198,6 @@ class FastConfigure(UserInterface):
     def show(self):
 
         self.stack.set_visible_child(self.welcome_page)
-        self.reset_completeness()
 
         # account_page
         self.username_entry.set_text(config.sections["server"]["login"])
