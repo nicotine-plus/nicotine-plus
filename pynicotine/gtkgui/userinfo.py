@@ -55,19 +55,20 @@ class UserInfos(IconNotebook):
             return
 
         for tab in self.pages.values():
-            if tab.Main == page:
-                GLib.idle_add(lambda: tab.descr.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
+            if tab.container == page:
+                GLib.idle_add(
+                    lambda: tab.description_view.textview.grab_focus() == -1)  # pylint:disable=cell-var-from-loop
                 break
 
     def show_user(self, user, switch_page=True):
 
         if user not in self.pages:
             self.pages[user] = page = UserInfo(self, user)
-            self.append_page(page.Main, user, page.on_close, user=user)
-            page.set_label(self.get_tab_label_inner(page.Main))
+            self.append_page(page.container, user, page.on_close, user=user)
+            page.set_label(self.get_tab_label_inner(page.container))
 
         if switch_page:
-            self.set_current_page(self.page_num(self.pages[user].Main))
+            self.set_current_page(self.page_num(self.pages[user].container))
             self.frame.change_main_page("userinfo")
 
     def show_connection_error(self, user):
@@ -86,7 +87,7 @@ class UserInfos(IconNotebook):
 
         if msg.user in self.pages:
             page = self.pages[msg.user]
-            self.set_user_status(page.Main, msg.user, msg.status)
+            self.set_user_status(page.container, msg.user, msg.status)
 
     def set_user_country(self, user, country_code):
         if user in self.pages:
@@ -106,7 +107,7 @@ class UserInfos(IconNotebook):
 
     def server_disconnect(self):
         for user, page in self.pages.items():
-            self.set_user_status(page.Main, user, 0)
+            self.set_user_status(page.container, user, 0)
 
 
 class UserInfo(UserInterface):
@@ -119,9 +120,9 @@ class UserInfo(UserInterface):
         self.frame = userinfos.frame
         self.core = userinfos.core
 
-        self.info_bar = InfoBar(self.InfoBar, Gtk.MessageType.INFO)
-        self.descr_textview = TextView(self.descr)
-        self.UserLabel.set_text(user)
+        self.info_bar = InfoBar(self.info_bar, Gtk.MessageType.INFO)
+        self.description_view = TextView(self.description_view)
+        self.user_label.set_text(user)
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
@@ -146,26 +147,26 @@ class UserInfo(UserInterface):
 
         self.like_column_numbers = list(range(self.likes_store.get_n_columns()))
         cols = initialise_columns(
-            self.frame, None, self.Likes,
+            self.frame, None, self.likes_list_view,
             ["likes", _("Likes"), 0, "text", None]
         )
         cols["likes"].set_sort_column_id(0)
 
         self.likes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.Likes.set_model(self.likes_store)
+        self.likes_list_view.set_model(self.likes_store)
 
         # Set up dislikes list
-        self.hates_store = Gtk.ListStore(str)
+        self.dislikes_store = Gtk.ListStore(str)
 
-        self.hate_column_numbers = list(range(self.hates_store.get_n_columns()))
+        self.hate_column_numbers = list(range(self.dislikes_store.get_n_columns()))
         cols = initialise_columns(
-            self.frame, None, self.Hates,
+            self.frame, None, self.dislikes_list_view,
             ["dislikes", _("Dislikes"), 0, "text", None]
         )
         cols["dislikes"].set_sort_column_id(0)
 
-        self.hates_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
-        self.Hates.set_model(self.hates_store)
+        self.dislikes_store.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+        self.dislikes_list_view.set_model(self.dislikes_store)
 
         # Popup menus
         self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
@@ -182,10 +183,10 @@ class UserInfo(UserInterface):
                     ("", None),
                     ("#" + _("_Search for Item"), self.on_interest_recommend_search, popup))
 
-        popup = PopupMenu(self.frame, self.Likes, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.likes_list_view, self.on_popup_interest_menu)
         popup.add_items(*get_interest_items(popup))
 
-        popup = PopupMenu(self.frame, self.Hates, self.on_popup_interest_menu)
+        popup = PopupMenu(self.frame, self.dislikes_list_view, self.on_popup_interest_menu)
         popup.add_items(*get_interest_items(popup))
 
         popup = PopupMenu(self.frame, self.picture_view)
@@ -335,8 +336,8 @@ class UserInfo(UserInterface):
         self.set_finished()
 
     def set_finished(self):
-        self.userinfos.request_tab_hilite(self.Main)
-        self.progressbar.set_fraction(1.0)
+        self.userinfos.request_tab_hilite(self.container)
+        self.progress_bar.set_fraction(1.0)
 
     def message_progress(self, msg):
 
@@ -347,7 +348,7 @@ class UserInfo(UserInterface):
         else:
             fraction = float(msg.position) / msg.total
 
-        self.progressbar.set_fraction(fraction)
+        self.progress_bar.set_fraction(fraction)
 
     """ Network Messages """
 
@@ -357,12 +358,12 @@ class UserInfo(UserInterface):
             return
 
         if msg.descr:
-            self.descr_textview.clear()
-            self.descr_textview.append_line(msg.descr, showstamp=False, scroll=False)
+            self.description_view.clear()
+            self.description_view.append_line(msg.descr, showstamp=False, scroll=False)
 
-        self.uploads.set_text(humanize(msg.totalupl))
-        self.queuesize.set_text(humanize(msg.queuesize))
-        self.slotsavail.set_text(_("Yes") if msg.slotsavail else _("No"))
+        self.upload_slots_label.set_text(humanize(msg.totalupl))
+        self.queued_uploads_label.set_text(humanize(msg.queuesize))
+        self.free_upload_slots_label.set_text(_("Yes") if msg.slotsavail else _("No"))
 
         self.picture_data = None
         self.load_picture(msg.pic)
@@ -373,10 +374,10 @@ class UserInfo(UserInterface):
     def get_user_stats(self, msg):
 
         if msg.avgspeed > 0:
-            self.speed.set_text(human_speed(msg.avgspeed))
+            self.upload_speed_label.set_text(human_speed(msg.avgspeed))
 
-        self.filesshared.set_text(humanize(msg.files))
-        self.dirsshared.set_text(humanize(msg.dirs))
+        self.shared_files_label.set_text(humanize(msg.files))
+        self.shared_folders_label.set_text(humanize(msg.dirs))
 
     def set_user_country(self, country_code):
 
@@ -386,18 +387,18 @@ class UserInfo(UserInterface):
         else:
             country_text = _("Unknown")
 
-        self.country.set_text(country_text)
+        self.country_label.set_text(country_text)
 
     def user_interests(self, msg):
 
         self.likes_store.clear()
-        self.hates_store.clear()
+        self.dislikes_store.clear()
 
         for like in msg.likes:
             self.likes_store.insert_with_valuesv(-1, self.like_column_numbers, [like])
 
         for hate in msg.hates:
-            self.hates_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
+            self.dislikes_store.insert_with_valuesv(-1, self.hate_column_numbers, [hate])
 
     """ Callbacks """
 
@@ -487,7 +488,7 @@ class UserInfo(UserInterface):
     def on_refresh(self, *_args):
 
         self.info_bar.set_visible(False)
-        self.progressbar.set_fraction(0.0)
+        self.progress_bar.set_fraction(0.0)
 
         self.core.userinfo.request_user_info(self.user)
 
@@ -500,7 +501,7 @@ class UserInfo(UserInterface):
 
         del self.userinfos.pages[self.user]
         self.core.userinfo.remove_user(self.user)
-        self.userinfos.remove_page(self.Main)
+        self.userinfos.remove_page(self.container)
 
     def on_close_all_tabs(self, *_args):
         self.userinfos.remove_all_pages()

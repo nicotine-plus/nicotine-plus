@@ -35,22 +35,22 @@ class FileProperties(UserInterface):
         self.frame = frame
         self.core = core
         self.properties = properties
+        self.current_index = 0
+
+        buttons = [(self.previous_button, Gtk.ResponseType.HELP),
+                   (self.next_button, Gtk.ResponseType.HELP)]
+
+        if download_button:
+            buttons.append((self.download_button, Gtk.ResponseType.NONE))
 
         self.dialog = generic_dialog(
             parent=frame.window,
             content_box=self.container,
+            buttons=buttons,
             title=_("File Properties"),
             width=600,
             height=0
         )
-
-        for button, response_type in ((self.previous_button, Gtk.ResponseType.HELP),
-                                      (self.next_button, Gtk.ResponseType.HELP),
-                                      (self.download_button, Gtk.ResponseType.NONE)):
-            self.dialog.add_action_widget(button, response_type)
-
-        self.download_button.set_visible(download_button)
-        self.current_index = 0
 
     def on_previous(self, *_args):
 
