@@ -15,7 +15,6 @@
   </object>
   <object class="GtkStack" id="stack">
     <property name="visible">True</property>
-    <property name="homogeneous">True</property>
     <property name="transition-type">slide-left-right</property>
     <child>
       <object class="GtkBox" id="welcome_page">
