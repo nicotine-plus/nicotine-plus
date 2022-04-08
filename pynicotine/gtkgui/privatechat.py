@@ -83,7 +83,7 @@ class PrivateChats(IconNotebook):
 
                 # If the tab hasn't been opened previously, scroll chat to bottom
                 if not tab.opened:
-                    GLib.idle_add(tab.chat_textview.scroll_bottom)
+                    GLib.idle_add(tab.chat_view.scroll_bottom)
                     tab.opened = True
 
                 # Remove hilite if selected tab belongs to a user in the hilite list
@@ -193,10 +193,10 @@ class PrivateChat(UserInterface):
         if user in self.core.user_statuses:
             self.status = self.core.user_statuses[user] or 0
 
-        self.chat_textview = TextView(self.chat_textview, font="chatfont")
+        self.chat_view = TextView(self.chat_view, font="chatfont")
 
         # Text Search
-        self.search_bar = TextSearchBar(self.chat_textview.textview, self.search_bar, self.search_entry,
+        self.search_bar = TextSearchBar(self.chat_view.textview, self.search_bar, self.search_entry,
                                         controller_widget=self.container, focus_widget=self.chat_entry)
 
         # Chat Entry
@@ -207,7 +207,7 @@ class PrivateChat(UserInterface):
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_textview.textview, connect_events=False)
+        self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_view.textview, connect_events=False)
         self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
@@ -218,18 +218,18 @@ class PrivateChat(UserInterface):
                 ("#" + _("_Close Tab"), self.on_close)
             )
 
-        popup = PopupMenu(self.frame, self.chat_textview.textview, self.on_popup_menu_chat)
+        popup = PopupMenu(self.frame, self.chat_view.textview, self.on_popup_menu_chat)
         popup.add_items(
             ("#" + _("Find…"), self.on_find_chat_log),
             ("", None),
-            ("#" + _("Copy"), self.chat_textview.on_copy_text),
-            ("#" + _("Copy Link"), self.chat_textview.on_copy_link),
-            ("#" + _("Copy All"), self.chat_textview.on_copy_all_text),
+            ("#" + _("Copy"), self.chat_view.on_copy_text),
+            ("#" + _("Copy Link"), self.chat_view.on_copy_link),
+            ("#" + _("Copy All"), self.chat_view.on_copy_all_text),
             ("", None),
             ("#" + _("View Chat Log"), self.on_view_chat_log),
             ("#" + _("Delete Chat Log…"), self.on_delete_chat_log),
             ("", None),
-            ("#" + _("Clear Message View"), self.chat_textview.on_clear_all_text),
+            ("#" + _("Clear Message View"), self.chat_view.on_clear_all_text),
             ("", None),
             (">" + _("User"), self.popup_menu_user_tab),
         )
@@ -267,16 +267,16 @@ class PrivateChat(UserInterface):
                 except UnicodeDecodeError:
                     line = line.decode("latin-1")
 
-                self.chat_textview.append_line(line, self.tag_hilite, timestamp_format="", scroll=False)
+                self.chat_view.append_line(line, self.tag_hilite, timestamp_format="", scroll=False)
 
     def server_login(self):
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_textview.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- reconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
 
     def server_disconnect(self):
 
         timestamp_format = config.sections["logging"]["private_timestamp"]
-        self.chat_textview.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
+        self.chat_view.append_line(_("--- disconnected ---"), self.tag_hilite, timestamp_format=timestamp_format)
         self.status = -1
         self.offline_message = False
 
@@ -291,8 +291,8 @@ class PrivateChat(UserInterface):
 
         self.popup_menu_user_tab.toggle_user_items()
 
-        menu.actions[_("Copy")].set_enabled(self.chat_textview.get_has_selection())
-        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_textview.get_url_for_selected_pos()))
+        menu.actions[_("Copy")].set_enabled(self.chat_view.get_has_selection())
+        menu.actions[_("Copy Link")].set_enabled(bool(self.chat_view.get_url_for_selected_pos()))
 
     def on_popup_menu_user(self, _menu, _widget):
         self.popup_menu_user_tab.toggle_user_items()
@@ -313,7 +313,7 @@ class PrivateChat(UserInterface):
         if response_id == 2:
             delete_log(config.sections["logging"]["privatelogsdir"], self.user)
             self.chats.history.remove_user(self.user)
-            self.chat_textview.clear()
+            self.chat_view.clear()
 
     def on_delete_chat_log(self, *_args):
 
@@ -367,15 +367,15 @@ class PrivateChat(UserInterface):
             tag = usertag = self.tag_hilite
 
             if not self.offline_message:
-                self.chat_textview.append_line(_("* Message(s) sent while you were offline."), tag,
-                                               timestamp_format=timestamp_format)
+                self.chat_view.append_line(_("* Message(s) sent while you were offline."), tag,
+                                           timestamp_format=timestamp_format)
                 self.offline_message = True
 
         else:
             self.offline_message = False
 
-        self.chat_textview.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
-                                       username=self.user, usertag=usertag)
+        self.chat_view.append_line(line, tag, timestamp=timestamp, timestamp_format=timestamp_format,
+                                   username=self.user, usertag=usertag)
 
         if self.speech_toggle.get_active():
             self.core.notifications.new_tts(
@@ -396,7 +396,7 @@ class PrivateChat(UserInterface):
         if hasattr(self, "tag_" + str(message_type)):
             tag = getattr(self, "tag_" + str(message_type))
 
-        self.chat_textview.append_line(text, tag, timestamp_format=timestamp_format)
+        self.chat_view.append_line(text, tag, timestamp_format=timestamp_format)
 
     def send_message(self, text):
 
@@ -409,8 +409,8 @@ class PrivateChat(UserInterface):
             line = "[%s] %s" % (my_username, text)
             tag = self.tag_local
 
-        self.chat_textview.append_line(line, tag, timestamp_format=config.sections["logging"]["private_timestamp"],
-                                       username=my_username, usertag=self.tag_my_username)
+        self.chat_view.append_line(line, tag, timestamp_format=config.sections["logging"]["private_timestamp"],
+                                   username=my_username, usertag=self.tag_my_username)
 
         if self.log_toggle.get_active():
             timestamp_format = config.sections["logging"]["log_timestamp"]
@@ -433,13 +433,13 @@ class PrivateChat(UserInterface):
 
     def create_tags(self):
 
-        self.tag_remote = self.chat_textview.create_tag("chatremote")
-        self.tag_local = self.chat_textview.create_tag("chatlocal")
-        self.tag_action = self.chat_textview.create_tag("chatme")
-        self.tag_hilite = self.chat_textview.create_tag("chathilite")
+        self.tag_remote = self.chat_view.create_tag("chatremote")
+        self.tag_local = self.chat_view.create_tag("chatlocal")
+        self.tag_action = self.chat_view.create_tag("chatme")
+        self.tag_hilite = self.chat_view.create_tag("chathilite")
 
         color = get_user_status_color(self.status)
-        self.tag_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=self.user)
+        self.tag_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=self.user)
 
         if not self.core.logged_in:
             color = "useroffline"
@@ -447,7 +447,7 @@ class PrivateChat(UserInterface):
             color = "useraway" if self.core.away else "useronline"
 
         my_username = config.sections["server"]["login"]
-        self.tag_my_username = self.chat_textview.create_tag(color, callback=self.user_name_event, username=my_username)
+        self.tag_my_username = self.chat_view.create_tag(color, callback=self.user_name_event, username=my_username)
 
     def update_remote_username_tag(self, status):
 
@@ -457,17 +457,17 @@ class PrivateChat(UserInterface):
         self.status = status
 
         color = get_user_status_color(status)
-        self.chat_textview.update_tag(self.tag_username, color)
+        self.chat_view.update_tag(self.tag_username, color)
 
     def update_local_username_tag(self, status):
         color = get_user_status_color(status)
-        self.chat_textview.update_tag(self.tag_my_username, color)
+        self.chat_view.update_tag(self.tag_my_username, color)
 
     def update_tags(self):
 
         for tag in (self.tag_remote, self.tag_local, self.tag_action, self.tag_hilite,
                     self.tag_username, self.tag_my_username):
-            self.chat_textview.update_tag(tag)
+            self.chat_view.update_tag(tag)
 
     def on_close(self, *_args):
 

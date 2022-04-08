@@ -35,7 +35,7 @@ class RoomWall(UserInterface):
         self.room = room
         self.room_wall_textview = TextView(self.message_view)
 
-        room.ShowRoomWall.set_popover(self.popover)
+        room.room_wall_button.set_popover(self.popover)
 
     def update_message_list(self):
 

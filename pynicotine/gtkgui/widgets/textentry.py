@@ -240,7 +240,7 @@ class ChatEntry:
             else:
                 parent = self.frame.privatechat.pages[self.entity]
 
-            parent.chat_textview.clear()
+            parent.chat_view.clear()
 
         elif cmd in ("/a", "/away"):
             self.frame.on_away()
