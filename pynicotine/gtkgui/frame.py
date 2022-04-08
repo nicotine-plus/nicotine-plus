@@ -134,7 +134,7 @@ class NicotineFrame(UserInterface):
         """ Logging """
 
         self.log_textview = TextView(self.LogWindow)
-        TextSearchBar(self.LogWindow, self.LogSearchBar, self.LogSearchEntry)
+        TextSearchBar(self.LogWindow, self.activity_search_bar, self.activity_search_entry)
 
         self.create_log_context_menu()
         log.add_listener(self.log_callback)
@@ -1740,7 +1740,7 @@ class NicotineFrame(UserInterface):
         menu.actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
 
     def on_find_log_window(self, *_args):
-        self.LogSearchBar.set_search_mode(True)
+        self.activity_search_bar.set_search_mode(True)
 
     @staticmethod
     def on_view_debug_logs(*_args):
