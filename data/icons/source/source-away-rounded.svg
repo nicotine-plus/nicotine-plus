@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="48"
    height="48"
    version="1.1"
    id="svg10"
    sodipodi:docname="source-away-rounded.svg"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <metadata
      id="metadata16">
     <rdf:RDF>
@@ -21,7 +21,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -29,10 +28,10 @@
      id="defs14">
     <inkscape:path-effect
        effect="fillet_chamfer"
-       id="path-effect836"
+       id="path-effect826"
        is_visible="true"
        lpeversion="1"
-       satellites_param="F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1"
+       satellites_param="F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1"
        unit="px"
        method="auto"
        mode="F"
@@ -46,7 +45,7 @@
        hide_knots="false" />
     <inkscape:path-effect
        effect="fillet_chamfer"
-       id="path-effect834"
+       id="path-effect824"
        is_visible="true"
        lpeversion="1"
        satellites_param="F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,0,0,1 @ F,0,0,1,0,2,0,1 @ F,0,0,1,0,2,0,1"
@@ -72,35 +71,34 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1016"
+     inkscape:window-height="1011"
      id="namedview12"
      showgrid="true"
-     inkscape:zoom="11.696725"
-     inkscape:cx="48.203029"
-     inkscape:cy="33.634534"
+     inkscape:zoom="5.8483624"
+     inkscape:cx="26.58864"
+     inkscape:cy="23.254373"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg10"
-     inkscape:document-rotation="0">
+     inkscape:document-rotation="0"
+     inkscape:pagecheckerboard="0">
     <inkscape:grid
        type="xygrid"
        id="grid841" />
   </sodipodi:namedview>
   <path
-     d="m 0,6 v 40 a 2,2 45 0 0 2,2 H 7 A 2,2 135 0 0 9,46 V 15 l 1,0 c 1.104569,0 2.930938,-0.01448 3.946082,0.402844 1.600161,0.65782 2.993226,2.050876 3.651057,3.651034 C 18.014477,20.069041 18,21.895431 18,23 v 23 a 2,2 45 0 0 2,2 h 5 a 2,2 135 0 0 2,-2 l 0,-4 h 6 v 4 a 2,2 45 0 0 2,2 h 5 a 2,2 135 0 0 2,-2 v -4 h 4 a 2,2 135 0 0 2,-2 v -2 a 2,2 45 0 0 -2,-2 h -4 v -9 h -9 v 9 H 27 V 23 C 27,21.895431 26.978806,20.09831 26.75801,19.017735 25.907154,14.853649 22.624241,7.1537611 13.995393,6.1166518 12.899374,5.9849203 11.104569,6 10,6 Z"
+     d="m 0,5 v 41 c 0,1.104569 0.8954305,2 2,2 h 5 c 1.1045695,0 2,-0.895431 2,-2 V 15 h 1 c 1.104569,0 2.930938,-0.01448 3.946082,0.402844 1.600161,0.65782 2.993226,2.050876 3.651057,3.651034 C 18.014477,20.069041 18,21.895431 18,23 v 23 c 0,1.104569 0.895431,2 2,2 h 5 c 1.104569,0 2,-0.895431 2,-2 v -4 h 6 v 4 c 0,1.104569 0.895431,2 2,2 h 5 c 1.104569,0 2,-0.895431 2,-2 v -4 h 4 c 1.104569,0 2,-0.895431 2,-2 v -5 l -2,-2 h -4 v -7 l -2,-2 h -5 l -2,2 v 7 H 27 V 23 C 10,3 27,23 10,3 H 2 Z"
      fill="#d38c2d"
      id="path2"
-     sodipodi:nodetypes="ccccssccccccccccccccssc"
-     inkscape:path-effect="#path-effect836"
-     inkscape:original-d="M 0,6 V 48 H 9 V 15 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -6 h -6 v -9 h -9 v 9 H 27 V 21 C 27,18 24,6 12,6 Z" />
+     sodipodi:nodetypes="ccccsscccccccccccccccccccccccccccccc" />
   <path
      d="m 0,5 v 38 a 2,2 45 0 0 2,2 H 7 A 2,2 135 0 0 9,43 V 12 h 1 c 1.104569,0 2.930938,-0.01448 3.946082,0.402844 1.600161,0.65782 2.993226,2.050876 3.651057,3.651034 C 18.014477,17.069041 18,18.895431 18,20 v 23 a 2,2 45 0 0 2,2 h 5 a 2,2 135 0 0 2,-2 l 0,-4 h 6 v 4 a 2,2 45 0 0 2,2 h 5 a 2,2 135 0 0 2,-2 v -4 h 4 a 2,2 135 0 0 2,-2 v -2 a 2,2 45 0 0 -2,-2 h -4 v -7 a 2,2 45 0 0 -2,-2 h -5 a 2,2 135 0 0 -2,2 v 7 H 27 V 20 C 27,18.895431 26.978806,17.09831 26.75801,16.017735 25.907154,11.853649 22.624241,4.1537611 13.995393,3.1166518 12.899374,2.9849203 11.104569,3 10,3 H 2 A 2,2 135 0 0 0,5 Z"
      fill="#f9aa40"
      id="path4"
      sodipodi:nodetypes="ccccssccccccccccccccssc"
-     inkscape:path-effect="#path-effect834"
-     inkscape:original-d="M 0,3 V 45 H 9 V 12 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -6 h -6 v -9 h -9 v 9 H 27 V 18 C 27,15 24,3 12,3 Z" />
+     inkscape:original-d="M 0,3 V 45 H 9 V 12 h 3 c 3,0 6,3 6,6 v 27 h 9 v -6 h 6 v 6 h 9 v -6 h 6 v -6 h -6 v -9 h -9 v 9 H 27 V 18 C 27,15 24,3 12,3 Z"
+     inkscape:path-effect="#path-effect826" />
   <circle
      cx="39"
      cy="11"
