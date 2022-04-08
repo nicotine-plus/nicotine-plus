@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkBox" id="Main">
+  <object class="GtkBox" id="container">
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
         <property name="visible">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkSearchBar" id="SearchBar">
+          <object class="GtkSearchBar" id="search_bar">
             <property name="visible">True</property>
             <property name="show-close-button">True</property>
             <child>
-              <object class="GtkSearchEntry" id="SearchEntry">
+              <object class="GtkSearchEntry" id="search_entry">
                 <property name="visible">True</property>
                 <property name="max-width-chars">75</property>
               </object>
@@ -27,7 +27,7 @@
                 <property name="visible">True</property>
                 <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkTextView" id="ChatScroll">
+                  <object class="GtkTextView" id="chat_textview">
                     <property name="visible">True</property>
                     <property name="hexpand">True</property>
                     <property name="editable">False</property>
@@ -54,14 +54,14 @@
             <property name="margin-bottom">8</property>
             <property name="spacing">6</property>
             <child>
-              <object class="GtkEntry" id="ChatLine">
+              <object class="GtkEntry" id="chat_entry">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="width-chars">8</property>
               </object>
             </child>
             <child>
-              <object class="GtkToggleButton" id="Speech">
+              <object class="GtkToggleButton" id="speech_toggle">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Toggle Text-to-Speech</property>
                 <property name="active">True</property>
@@ -77,7 +77,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuButton" id="ShowChatHelp">
+              <object class="GtkMenuButton" id="help_button">
                 <property name="visible">True</property>
                 <property name="tooltip-text" translatable="yes">Private chat command help</property>
                 <child>
@@ -92,7 +92,7 @@
               </object>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Log">
+              <object class="GtkCheckButton" id="log_toggle">
                 <property name="label" translatable="yes">_Log</property>
                 <property name="visible">True</property>
                 <property name="use-underline">True</property>

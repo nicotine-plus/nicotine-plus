@@ -618,19 +618,19 @@ class TextSearchBar:
     def on_hide_search_accelerator(self, *_args):
         """ Escape: hide search bar """
 
-        self.hide_search_bar()
+        self.hide()
         return True
 
     def on_show_search_accelerator(self, *_args):
         """ Ctrl+F: show search bar """
 
-        self.show_search_bar()
+        self.show()
         return True
 
-    def show_search_bar(self):
+    def show(self):
         self.search_bar.set_search_mode(True)
         self.entry.grab_focus()
 
-    def hide_search_bar(self):
+    def hide(self):
         self.search_bar.set_search_mode(False)
         self.focus_widget.grab_focus()
