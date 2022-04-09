@@ -29,7 +29,7 @@ from gi.repository import Gtk
 
 from pynicotine.config import config
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
-from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import get_status_icon
@@ -131,9 +131,9 @@ class UserList(UserInterface):
             CompletionEntry(combo_box.get_child(), self.usersmodel, column=2)
 
         # Popup menus
-        self.popup_menu_private_rooms = PopupMenu(self.frame)
+        self.popup_menu_private_rooms = UserPopupMenu(self.frame)
 
-        self.popup_menu = popup = PopupMenu(frame, self.list_view, self.on_popup_menu)
+        self.popup_menu = popup = UserPopupMenu(frame, self.list_view, self.on_popup_menu)
         popup.setup_user_menu(page="userlist")
         popup.add_items(
             ("", None),

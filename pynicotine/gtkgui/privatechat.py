@@ -35,6 +35,7 @@ from pynicotine.config import config
 from pynicotine.gtkgui.popovers.chathistory import ChatHistory
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
@@ -207,8 +208,8 @@ class PrivateChat(UserInterface):
 
         self.toggle_chat_buttons()
 
-        self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_view.textview, connect_events=False)
-        self.popup_menu_user_tab = PopupMenu(self.frame, None, self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(self.frame, self.chat_view.textview, connect_events=False)
+        self.popup_menu_user_tab = UserPopupMenu(self.frame, None, self.on_popup_menu_user)
 
         for menu in (self.popup_menu_user_chat, self.popup_menu_user_tab):
             menu.setup_user_menu(user, page="privatechat")
