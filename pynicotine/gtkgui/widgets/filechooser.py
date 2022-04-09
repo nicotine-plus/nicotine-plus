@@ -120,6 +120,11 @@ class ImageChooser(FileChooser):
 
         super().__init__(parent, callback, callback_data, title, initial_folder)
 
+        # Only show image files
+        file_filter = Gtk.FileFilter()
+        file_filter.add_pixbuf_formats()
+        self.file_chooser.set_filter(file_filter)
+
         if Gtk.get_major_version() == 3:
             # Image preview
             self.file_chooser.connect("update-preview", self.on_update_image_preview)
