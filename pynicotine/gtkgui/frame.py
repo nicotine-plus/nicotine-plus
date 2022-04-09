@@ -409,13 +409,13 @@ class NicotineFrame(UserInterface):
             return
 
         if self.current_page_id == self.userbrowse.page_id:
-            GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
+            GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
 
         if self.current_page_id == self.userinfo.page_id:
-            GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
+            GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
 
         if self.current_page_id == self.search.page_id:
-            GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
+            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
 
     """ Action Callbacks """
 
@@ -1139,7 +1139,7 @@ class NicotineFrame(UserInterface):
             if curr_page is not None:
                 self.chatrooms.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
-                GLib.idle_add(lambda: self.ChatroomsEntry.grab_focus() == -1)
+                GLib.idle_add(lambda: self.chatrooms_entry.grab_focus() == -1)
 
         elif page == self.private_page:
             curr_page_num = self.privatechat.get_current_page()
@@ -1148,7 +1148,7 @@ class NicotineFrame(UserInterface):
             if curr_page is not None:
                 self.privatechat.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
-                GLib.idle_add(lambda: self.PrivateChatEntry.grab_focus() == -1)
+                GLib.idle_add(lambda: self.private_entry.grab_focus() == -1)
 
         elif page == self.uploads_page:
             self.uploads.update(forceupdate=True)
@@ -1171,7 +1171,7 @@ class NicotineFrame(UserInterface):
             if curr_page is not None:
                 self.search.notebook.emit("switch-page", curr_page, curr_page_num)
 
-            GLib.idle_add(lambda: self.SearchEntry.grab_focus() == -1)
+            GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
 
         elif page == self.userinfo_page:
             curr_page_num = self.userinfo.get_current_page()
@@ -1180,7 +1180,7 @@ class NicotineFrame(UserInterface):
             if curr_page is not None:
                 self.userinfo.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
-                GLib.idle_add(lambda: self.UserInfoEntry.grab_focus() == -1)
+                GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
 
         elif page == self.userbrowse_page:
             curr_page_num = self.userbrowse.get_current_page()
@@ -1189,7 +1189,7 @@ class NicotineFrame(UserInterface):
             if curr_page is not None:
                 self.userbrowse.notebook.emit("switch-page", curr_page, curr_page_num)
             else:
-                GLib.idle_add(lambda: self.UserBrowseEntry.grab_focus() == -1)
+                GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
 
         elif page == self.userlist_page:
             self.userlist.update()
@@ -1410,7 +1410,7 @@ class NicotineFrame(UserInterface):
 
     def on_search(self, *_args):
         self.search.on_search()
-        self.SearchEntry.set_text("")
+        self.search_entry.set_text("")
 
     """ User Info """
 

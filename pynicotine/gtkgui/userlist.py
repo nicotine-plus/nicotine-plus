@@ -123,7 +123,8 @@ class UserList(UserInterface):
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        for combo_box in (self.frame.UserSearchCombo, self.frame.UserInfoCombo, self.frame.UserBrowseCombo):
+        for combo_box in (self.frame.user_search_combobox, self.frame.userinfo_combobox,
+                          self.frame.userbrowse_combobox):
             combo_box.set_model(self.usersmodel)
             combo_box.set_entry_text_column(2)
 

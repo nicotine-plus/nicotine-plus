@@ -84,7 +84,7 @@
                                         <property name="spacing">4</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkMenuButton" id="SearchMode">
+                                          <object class="GtkMenuButton" id="search_mode_button">
                                             <property name="visible">True</property>
                                             <property name="tooltip-text" translatable="yes">Search scope</property>
                                             <child>
@@ -92,7 +92,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="spacing">6</property>
                                                 <child>
-                                                  <object class="GtkLabel" id="SearchModeLabel">
+                                                  <object class="GtkLabel" id="search_mode_label">
                                                     <property name="visible">True</property>
                                                     <property name="use-underline">True</property>
                                                   </object>
@@ -108,7 +108,7 @@
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkComboBoxText" id="RoomSearchCombo">
+                                          <object class="GtkComboBoxText" id="room_search_combobox">
                                             <property name="visible">False</property>
                                             <property name="has-entry">True</property>
                                             <items>
@@ -116,7 +116,7 @@
                                             </items>
                                             <property name="active-id">joined</property>
                                             <child internal-child="entry">
-                                              <object class="GtkEntry" id="RoomSearchEntry">
+                                              <object class="GtkEntry" id="room_search_entry">
                                                 <property name="max-width-chars">20</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Room…</property>
@@ -131,11 +131,11 @@
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkComboBoxText" id="UserSearchCombo">
+                                          <object class="GtkComboBoxText" id="user_search_combobox">
                                             <property name="visible">False</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
-                                              <object class="GtkEntry" id="UserSearchEntry">
+                                              <object class="GtkEntry" id="user_search_entry">
                                                 <property name="max-width-chars">20</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
@@ -150,13 +150,13 @@
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkComboBoxText" id="SearchCombo">
+                                          <object class="GtkComboBoxText" id="search_combobox">
                                             <property name="visible">True</property>
                                             <property name="sensitive" bind-source="user_status_button" bind-property="sensitive" bind-flags="sync-create"/>
                                             <property name="hexpand">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
-                                              <object class="GtkEntry" id="SearchEntry">
+                                              <object class="GtkEntry" id="search_entry">
                                                 <property name="max-width-chars">75</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Search term…</property>
@@ -181,7 +181,7 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton" id="WishList">
+                                          <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <property name="action-name">app.wishlist</property>
                                             <child>
@@ -338,18 +338,18 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic_widget">DownloadUsersButton</property>
+                                                <property name="mnemonic_widget">download_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="DownloadUsersButton">
+                                              <object class="GtkButton" id="download_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
-                                                  <object class="GtkLabel" id="DownloadUsers">
+                                                  <object class="GtkLabel" id="download_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <attributes>
@@ -378,18 +378,18 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic_widget">DownloadFilesButton</property>
+                                                <property name="mnemonic_widget">download_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="DownloadFilesButton">
+                                              <object class="GtkButton" id="download_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
-                                                  <object class="GtkLabel" id="DownloadFiles">
+                                                  <object class="GtkLabel" id="download_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <attributes>
@@ -419,11 +419,11 @@
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <child>
-                                              <object class="GtkToggleButton" id="ExpandDownloads">
+                                              <object class="GtkToggleButton" id="downloads_expand_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                                 <child>
-                                                  <object class="GtkImage" id="ExpandDownloadsImage">
+                                                  <object class="GtkImage" id="downloads_expand_icon">
                                                     <property name="visible">True</property>
                                                     <property name="icon-name">go-down-symbolic</property>
                                                   </object>
@@ -434,7 +434,7 @@
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkMenuButton" id="ToggleTreeDownloads">
+                                              <object class="GtkMenuButton" id="downloads_grouping_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
                                                 <child>
@@ -578,18 +578,18 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Users</property>
-                                                <property name="mnemonic_widget">UploadUsersButton</property>
+                                                <property name="mnemonic_widget">upload_users_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="UploadUsersButton">
+                                              <object class="GtkButton" id="upload_users_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
-                                                  <object class="GtkLabel" id="UploadUsers">
+                                                  <object class="GtkLabel" id="upload_users_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <attributes>
@@ -618,18 +618,18 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="label" translatable="yes">Files</property>
-                                                <property name="mnemonic_widget">UploadFilesButton</property>
+                                                <property name="mnemonic_widget">upload_files_button</property>
                                                 <attributes>
                                                   <attribute name="weight" value="bold"/>
                                                 </attributes>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkButton" id="UploadFilesButton">
+                                              <object class="GtkButton" id="upload_files_button">
                                                 <property name="visible">True</property>
                                                 <property name="action-name">app.transferstatistics</property>
                                                 <child>
-                                                  <object class="GtkLabel" id="UploadFiles">
+                                                  <object class="GtkLabel" id="upload_files_label">
                                                     <property name="visible">True</property>
                                                     <property name="label">0</property>
                                                     <attributes>
@@ -659,11 +659,11 @@
                                           <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <child>
-                                              <object class="GtkToggleButton" id="ExpandUploads">
+                                              <object class="GtkToggleButton" id="uploads_expand_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">Expand / Collapse all</property>
                                                 <child>
-                                                  <object class="GtkImage" id="ExpandUploadsImage">
+                                                  <object class="GtkImage" id="uploads_expand_icon">
                                                     <property name="visible">True</property>
                                                     <property name="icon-name">go-down-symbolic</property>
                                                   </object>
@@ -674,7 +674,7 @@
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkMenuButton" id="ToggleTreeUploads">
+                                              <object class="GtkMenuButton" id="uploads_grouping_button">
                                                 <property name="visible">True</property>
                                                 <property name="tooltip-text" translatable="yes">File grouping mode</property>
                                                 <child>
@@ -809,11 +809,11 @@
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkComboBoxText" id="UserBrowseCombo">
+                                          <object class="GtkComboBoxText" id="userbrowse_combobox">
                                             <property name="visible">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
-                                              <object class="GtkEntry" id="UserBrowseEntry">
+                                              <object class="GtkEntry" id="userbrowse_entry">
                                                 <property name="max-width-chars">45</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
@@ -838,7 +838,7 @@
                                         <property name="spacing">6</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkButton" id="LoadFromDisk">
+                                          <object class="GtkButton">
                                             <property name="visible">True</property>
                                             <signal name="clicked" handler="on_load_from_disk"/>
                                             <child>
@@ -987,11 +987,11 @@
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkComboBoxText" id="UserInfoCombo">
+                                          <object class="GtkComboBoxText" id="userinfo_combobox">
                                             <property name="visible">True</property>
                                             <property name="has-entry">True</property>
                                             <child internal-child="entry">
-                                              <object class="GtkEntry" id="UserInfoEntry">
+                                              <object class="GtkEntry" id="userinfo_entry">
                                                 <property name="max-width-chars">45</property>
                                                 <property name="width-chars">5</property>
                                                 <property name="placeholder-text" translatable="yes">Username…</property>
@@ -1148,7 +1148,7 @@
                                         <property name="spacing">4</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkEntry" id="PrivateChatEntry">
+                                          <object class="GtkEntry" id="private_entry">
                                             <property name="visible">True</property>
                                             <property name="max-width-chars">40</property>
                                             <property name="width-chars">5</property>
@@ -1160,7 +1160,7 @@
                                           </object>
                                         </child>
                                         <child>
-                                          <object class="GtkMenuButton" id="PrivateChatHistory">
+                                          <object class="GtkMenuButton" id="private_history_button">
                                             <property name="visible">True</property>
                                             <child>
                                               <object class="GtkBox">
@@ -1310,7 +1310,7 @@
                                         <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
-                                          <object class="GtkEntry" id="AddUserEntry">
+                                          <object class="GtkEntry">
                                             <property name="visible">True</property>
                                             <property name="max-width-chars">45</property>
                                             <property name="width-chars">5</property>
@@ -1434,7 +1434,7 @@
                                             <property name="spacing">4</property>
                                             <property name="valign">center</property>
                                             <child>
-                                              <object class="GtkEntry" id="ChatroomsEntry">
+                                              <object class="GtkEntry" id="chatrooms_entry">
                                                 <property name="visible">True</property>
                                                 <property name="max-width-chars">40</property>
                                                 <property name="width-chars">5</property>
@@ -1446,7 +1446,7 @@
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkMenuButton" id="RoomList">
+                                              <object class="GtkMenuButton" id="room_list_button">
                                                 <property name="visible">True</property>
                                                 <child>
                                                   <object class="GtkBox">

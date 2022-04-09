@@ -75,12 +75,12 @@ class RoomList(UserInterface):
         self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
-        CompletionEntry(frame.ChatroomsEntry, self.room_model, column=0)
+        CompletionEntry(frame.chatrooms_entry, self.room_model, column=0)
 
         if Gtk.get_major_version() == 4:
-            frame.RoomList.get_first_child().get_style_context().add_class("arrow-button")
+            frame.room_list_button.get_first_child().get_style_context().add_class("arrow-button")
 
-        frame.RoomList.set_popover(self.popover)
+        frame.room_list_button.set_popover(self.popover)
 
     @staticmethod
     def get_selected_room(treeview):

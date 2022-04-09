@@ -193,7 +193,7 @@ class Interests(UserInterface):
         self.populated_recommends = True
 
     def recommend_search(self, item):
-        self.frame.SearchEntry.set_text(item)
+        self.frame.search_entry.set_text(item)
         self.frame.change_main_page("search")
 
     def on_add_thing_i_like(self, widget, *_args):

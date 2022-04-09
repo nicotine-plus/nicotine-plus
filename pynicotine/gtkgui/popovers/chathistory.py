@@ -52,12 +52,12 @@ class ChatHistory(UserInterface):
         self.cols["user"].set_sort_column_id(0)
         self.cols["latest_message"].set_sort_column_id(1)
 
-        CompletionEntry(frame.PrivateChatEntry, self.model, column=0)
+        CompletionEntry(frame.private_entry, self.model, column=0)
 
         if Gtk.get_major_version() == 4:
-            frame.PrivateChatHistory.get_first_child().get_style_context().add_class("arrow-button")
+            frame.private_history_button.get_first_child().get_style_context().add_class("arrow-button")
 
-        frame.PrivateChatHistory.set_popover(self.popover)
+        frame.private_history_button.set_popover(self.popover)
         self.load_users()
 
     def load_users(self):

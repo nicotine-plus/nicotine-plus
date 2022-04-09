@@ -80,14 +80,14 @@ class Searches(IconNotebook):
             ("O" + self.modes["user"], "win.searchmode", "user")
         )
         mode_menu.update_model()
-        frame.SearchMode.set_menu_model(mode_menu.model)
-        frame.SearchModeLabel.set_label(self.modes["global"])
+        frame.search_mode_button.set_menu_model(mode_menu.model)
+        frame.search_mode_label.set_label(self.modes["global"])
 
         if Gtk.get_major_version() == 4:
-            frame.SearchMode.get_first_child().get_style_context().add_class("arrow-button")
+            frame.search_mode_button.get_first_child().get_style_context().add_class("arrow-button")
 
-        CompletionEntry(frame.RoomSearchEntry, frame.RoomSearchCombo.get_model())
-        CompletionEntry(frame.SearchEntry, frame.SearchCombo.get_model())
+        CompletionEntry(frame.room_search_entry, frame.room_search_combobox.get_model())
+        CompletionEntry(frame.search_entry, frame.search_combobox.get_model())
 
         self.wish_list = WishList(frame, core, self)
         self.populate_search_history()
@@ -109,36 +109,36 @@ class Searches(IconNotebook):
         action.set_state(state)
         search_mode = state.get_string()
 
-        self.frame.SearchModeLabel.set_label(self.modes[search_mode])
+        self.frame.search_mode_label.set_label(self.modes[search_mode])
 
-        self.frame.UserSearchCombo.set_visible(search_mode == "user")
-        self.frame.RoomSearchCombo.set_visible(search_mode == "rooms")
+        self.frame.user_search_combobox.set_visible(search_mode == "user")
+        self.frame.room_search_combobox.set_visible(search_mode == "rooms")
 
         # Hide popover after click
-        self.frame.SearchMode.get_popover().hide()
+        self.frame.search_mode_button.get_popover().hide()
 
     def on_search(self):
 
-        text = self.frame.SearchEntry.get_text().strip()
+        text = self.frame.search_entry.get_text().strip()
 
         if not text:
             return
 
         mode = self.frame.search_mode_action.get_state().get_string()
-        room = self.frame.RoomSearchEntry.get_text()
-        user = self.frame.UserSearchEntry.get_text()
+        room = self.frame.room_search_entry.get_text()
+        user = self.frame.user_search_entry.get_text()
 
         self.core.search.do_search(text, mode, room=room, user=user)
 
     def populate_search_history(self):
 
-        self.frame.SearchCombo.remove_all()
+        self.frame.search_combobox.remove_all()
 
         if not config.sections["searches"]["enable_history"]:
             return
 
         for term in config.sections["searches"]["history"]:
-            self.frame.SearchCombo.append_text(str(term))
+            self.frame.search_combobox.append_text(str(term))
 
     def do_search(self, token, search_term, mode, room=None, user=None):
 
@@ -161,12 +161,12 @@ class Searches(IconNotebook):
 
     def clear_search_history(self):
 
-        self.frame.SearchEntry.set_text("")
+        self.frame.search_entry.set_text("")
 
         config.sections["searches"]["history"] = []
         config.write_configuration()
 
-        self.frame.SearchCombo.remove_all()
+        self.frame.search_combobox.remove_all()
 
     def clear_filter_history(self):
 

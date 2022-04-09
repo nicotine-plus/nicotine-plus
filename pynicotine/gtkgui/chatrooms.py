@@ -182,7 +182,7 @@ class ChatRooms(IconNotebook):
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(True)
         else:
-            self.frame.RoomSearchCombo.append_text(msg.room)
+            self.frame.room_search_combobox.append_text(msg.room)
 
     def leave_room(self, msg):
 
@@ -197,11 +197,11 @@ class ChatRooms(IconNotebook):
         if msg.room == "Public ":
             self.roomlist.toggle_public_feed(False)
         else:
-            self.frame.RoomSearchCombo.remove_all()
-            self.frame.RoomSearchCombo.append_text("Joined Rooms ")
+            self.frame.room_search_combobox.remove_all()
+            self.frame.room_search_combobox.append_text("Joined Rooms ")
 
             for room in self.pages:
-                self.frame.RoomSearchCombo.append_text(room)
+                self.frame.room_search_combobox.append_text(room)
 
     def private_room_users(self, msg):
         pass

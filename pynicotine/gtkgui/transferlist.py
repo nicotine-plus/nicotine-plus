@@ -54,16 +54,11 @@ class TransferList(UserInterface):
     def __init__(self, frame, core, transfer_type):
 
         super().__init__("ui/" + transfer_type + "s.ui")
-        getattr(frame, transfer_type + "s_content").add(self.container)
 
         self.frame = frame
         self.core = core
         self.type = transfer_type
         self.page_id = transfer_type + "s"
-
-        self.user_counter = getattr(frame, "%sUsers" % transfer_type.title())
-        self.file_counter = getattr(frame, "%sFiles" % transfer_type.title())
-        grouping_button = getattr(frame, "ToggleTree%ss" % transfer_type.title())
 
         if Gtk.get_major_version() == 4:
             self.clear_all_button.set_has_frame(False)
@@ -157,9 +152,6 @@ class TransferList(UserInterface):
 
         self.tree_view.set_model(self.transfersmodel)
 
-        self.status_page = getattr(frame, "%ss_status_page" % transfer_type)
-        self.expand_button = getattr(frame, "Expand%ss" % transfer_type.title())
-
         state = GLib.Variant("s", verify_grouping_mode(config.sections["transfers"]["group%ss" % transfer_type]))
         action = Gio.SimpleAction(name="%sgrouping" % transfer_type, parameter_type=GLib.VariantType("s"), state=state)
         action.connect("change-state", self.on_toggle_tree)
@@ -168,7 +160,7 @@ class TransferList(UserInterface):
 
         menu = create_grouping_menu(
             frame.window, config.sections["transfers"]["group%ss" % transfer_type], self.on_toggle_tree)
-        grouping_button.set_menu_model(menu)
+        self.grouping_button.set_menu_model(menu)
 
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
@@ -278,7 +270,7 @@ class TransferList(UserInterface):
         if not transfer:
             return
 
-        self.frame.SearchEntry.set_text(transfer.filename.rsplit("\\", 1)[1])
+        self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
         self.frame.change_main_page("search")
 
     def translate_status(self, status):
@@ -720,7 +712,6 @@ class TransferList(UserInterface):
 
     def on_expand_tree(self, widget):
 
-        expand_button_icon = getattr(self.frame, "Expand%ssImage" % self.type.title())
         expanded = widget.get_active()
 
         if expanded:
@@ -731,7 +722,7 @@ class TransferList(UserInterface):
             icon_name = "go-down-symbolic"
             collapse_treeview(self.tree_view, self.tree_users)
 
-        expand_button_icon.set_property("icon-name", icon_name)
+        self.expand_icon.set_property("icon-name", icon_name)
 
         config.sections["transfers"]["%ssexpanded" % self.type] = expanded
         config.write_configuration()
