@@ -927,6 +927,10 @@ class SlskProtoThread(threading.Thread):
             })
             return
 
+        if not init.indirect:
+            # Also request indirect connection in case the user's port is closed
+            self.connect_to_peer_indirect(init)
+
         self._init_msgs[user + init.conn_type] = init
         self._queue.append(InitPeerConn(addr, init))
 
@@ -935,10 +939,6 @@ class SlskProtoThread(threading.Thread):
             'user': user,
             'addr': addr
         })
-
-        if not init.indirect:
-            # Also request indirect connection in case the user's port is closed
-            self.connect_to_peer_indirect(init)
 
     def connect_error(self, error, conn_obj):
 
