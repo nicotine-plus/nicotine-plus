@@ -218,31 +218,17 @@ UINT_UNPACK = struct.Struct("<I").unpack
 DOUBLE_UINT_UNPACK = struct.Struct("<II").unpack
 
 
-class ConnectionInProgress:
-    """ As all p2p connect()s are non-blocking, this class is used to
-    hold data about a connection that is not yet established """
-
-    __slots__ = ("sock", "addr", "lastactive", "init", "login")
-
-    def __init__(self, sock=None, addr=None, init=None, login=None):
-        self.sock = sock
-        self.addr = addr
-        self.init = init
-        self.login = login
-        self.lastactive = time.time()
-
-
 class Connection:
     """ Holds data about a connection. sock is a socket object,
     addr is (ip, port) pair, ibuf and obuf are input and output msgBuffer,
     init is a PeerInit object (see slskmessages docstrings). """
 
-    __slots__ = ("sock", "addr", "init", "ibuf", "obuf", "events", "lastactive", "lastreadlength")
+    __slots__ = ("sock", "addr", "events", "ibuf", "obuf", "lastactive", "lastreadlength")
 
     def __init__(self, sock=None, addr=None, events=None):
+
         self.sock = sock
         self.addr = addr
-        self.init = None
         self.events = events
         self.ibuf = bytearray()
         self.obuf = bytearray()
@@ -250,12 +236,25 @@ class Connection:
         self.lastreadlength = 100 * 1024
 
 
+class ServerConnection(Connection):
+
+    __slots__ = ("login",)
+
+    def __init__(self, sock=None, addr=None, events=None, login=None):
+
+        super().__init__(sock, addr, events)
+
+        self.login = login
+
+
 class PeerConnection(Connection):
 
-    __slots__ = ("fileinit", "filedown", "fileupl", "filereadbytes", "bytestoread", "indirect", "lastcallback")
+    __slots__ = ("init", "indirect", "fileinit", "filedown", "fileupl", "filereadbytes", "bytestoread", "lastcallback")
 
     def __init__(self, sock=None, addr=None, events=None, init=None, indirect=False):
-        Connection.__init__(self, sock, addr, events)
+
+        super().__init__(sock, addr, events)
+
         self.init = init
         self.indirect = indirect
         self.fileinit = None
@@ -597,7 +596,7 @@ class SlskProtoThread(threading.Thread):
             self.server_timer = None
 
     def server_disconnect(self):
-        """ We've disconnected from the server, clean up """
+        """ We're disconnecting from the server, clean up """
 
         self.server_disconnected = True
         self.server_socket = None
@@ -943,7 +942,7 @@ class SlskProtoThread(threading.Thread):
 
     def connect_error(self, error, conn_obj):
 
-        if conn_obj.login:
+        if conn_obj.sock is self.server_socket:
             server_address, port = conn_obj.addr
 
             log.add(
@@ -991,10 +990,12 @@ class SlskProtoThread(threading.Thread):
             "token": self._token
         })
 
-    def establish_outgoing_connection(self, sock, addr, events, init):
+    def establish_outgoing_peer_connection(self, conn_obj):
 
-        self._conns[sock] = PeerConnection(sock=sock, addr=addr, events=events, init=init, indirect=init.indirect)
+        sock = conn_obj.sock
+        self._conns[sock] = conn_obj
 
+        init = conn_obj.init
         user = init.target_user
         conn_type = init.conn_type
         token = init.token
@@ -1035,6 +1036,45 @@ class SlskProtoThread(threading.Thread):
                 })
 
         self.process_conn_messages(init)
+
+    def establish_outgoing_server_connection(self, conn_obj):
+
+        self._conns[self.server_socket] = conn_obj
+        addr = conn_obj.addr
+
+        log.add(
+            _("Connected to server %(host)s:%(port)s, logging in…"), {
+                'host': addr[0],
+                'port': addr[1]
+            }
+        )
+
+        login, password = conn_obj.login
+        self.user_addresses[login] = (self.bindip or '127.0.0.1', self.listenport)
+        conn_obj.login = True
+
+        self.server_address = addr
+        self.server_username = login
+        self.server_timeout_value = -1
+
+        self._queue.append(
+            Login(
+                login, password,
+                # Soulseek client version
+                # NS and SoulseekQt use 157
+                # We use a custom version number for Nicotine+
+                160,
+
+                # Soulseek client minor version
+                # 17 stands for 157 ns 13c, 19 for 157 ns 13e
+                # SoulseekQt seems to go higher than this
+                # We use a custom minor version for Nicotine+
+                1
+            )
+        )
+
+        if self.listenport is not None:
+            self._queue.append(SetWaitPort(self.listenport))
 
     def replace_existing_connection(self, init):
 
@@ -1098,7 +1138,7 @@ class SlskProtoThread(threading.Thread):
 
             self._calc_upload_limit_function()
 
-        if conn_obj.init is None:
+        if conn_obj.__class__ is ServerConnection:
             return
 
         conn_type = conn_obj.init.conn_type
@@ -1194,7 +1234,8 @@ class SlskProtoThread(threading.Thread):
 
         try:
             self.server_socket = server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            conn_obj = ConnectionInProgress(server_socket, msg_obj.addr, login=msg_obj.login)
+            events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            conn_obj = ServerConnection(sock=server_socket, addr=msg_obj.addr, events=events, login=msg_obj.login)
 
             server_socket.setblocking(0)
 
@@ -1209,7 +1250,7 @@ class SlskProtoThread(threading.Thread):
 
             server_socket.connect_ex(msg_obj.addr)
 
-            self.selector.register(server_socket, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            self.selector.register(server_socket, events)
             self._connsinprogress[server_socket] = conn_obj
             self._numsockets += 1
 
@@ -1375,9 +1416,11 @@ class SlskProtoThread(threading.Thread):
 
     def process_server_output(self, msg_obj):
 
+        msg_class = msg_obj.__class__
+
         if self.server_socket not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
+                'type': msg_class,
                 'msg_obj': vars(msg_obj)
             })
             return
@@ -1389,7 +1432,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[self.server_socket]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(self.servercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(self.servercodes[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1492,15 +1535,17 @@ class SlskProtoThread(threading.Thread):
 
     def process_peer_init_output(self, msg_obj):
 
+        msg_class = msg_obj.__class__
+
         if msg_obj.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
+                'type': msg_class,
                 'msg_obj': vars(msg_obj)
             })
             return
 
         # Pack peer init messages
-        if msg_obj.__class__ is PierceFireWall:
+        if msg_class is PierceFireWall:
             conn_obj = self._conns[msg_obj.sock]
             msg = self.pack_network_message(msg_obj)
 
@@ -1508,10 +1553,10 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_obj.__class__]))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_class]))
             conn_obj.obuf.extend(msg)
 
-        elif msg_obj.__class__ is PeerInit:
+        elif msg_class is PeerInit:
             conn_obj = self._conns[msg_obj.sock]
             msg = self.pack_network_message(msg_obj)
 
@@ -1522,7 +1567,7 @@ class SlskProtoThread(threading.Thread):
                 return
 
             conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_obj.__class__]))
+            conn_obj.obuf.extend(msg_obj.pack_uint8(self.peerinitcodes[msg_class]))
             conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1535,7 +1580,8 @@ class SlskProtoThread(threading.Thread):
 
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            conn_obj = ConnectionInProgress(sock, msg_obj.addr, msg_obj.init)
+            events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            conn_obj = PeerConnection(sock=sock, addr=msg_obj.addr, events=events, init=msg_obj.init)
 
             sock.setblocking(0)
 
@@ -1547,7 +1593,7 @@ class SlskProtoThread(threading.Thread):
 
             sock.connect_ex(msg_obj.addr)
 
-            self.selector.register(sock, selectors.EVENT_READ | selectors.EVENT_WRITE)
+            self.selector.register(sock, events)
             self._connsinprogress[sock] = conn_obj
             self._numsockets += 1
 
@@ -1619,9 +1665,11 @@ class SlskProtoThread(threading.Thread):
 
     def process_peer_output(self, msg_obj):
 
+        msg_class = msg_obj.__class__
+
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
+                'type': msg_class,
                 'msg_obj': vars(msg_obj)
             })
             return
@@ -1634,7 +1682,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 4))
-        conn_obj.obuf.extend(msg_obj.pack_uint32(self.peercodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(msg_obj.pack_uint32(self.peercodes[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1708,15 +1756,17 @@ class SlskProtoThread(threading.Thread):
 
     def process_file_output(self, msg_obj):
 
+        msg_class = msg_obj.__class__
+
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
+                'type': msg_class,
                 'msg_obj': vars(msg_obj)
             })
             return
 
         # Pack file messages
-        if msg_obj.__class__ is FileUploadInit:
+        if msg_class is FileUploadInit:
             msg = self.pack_network_message(msg_obj)
 
             if msg is None:
@@ -1728,7 +1778,7 @@ class SlskProtoThread(threading.Thread):
 
             self._callback_msgs.append(msg_obj)
 
-        elif msg_obj.__class__ is FileOffset:
+        elif msg_class is FileOffset:
             msg = self.pack_network_message(msg_obj)
 
             if msg is None:
@@ -1846,9 +1896,11 @@ class SlskProtoThread(threading.Thread):
 
     def process_distrib_output(self, msg_obj):
 
+        msg_class = msg_obj.__class__
+
         if msg_obj.init.sock not in self._conns:
             log.add_conn("Cannot send the message over the closed connection: %(type)s %(msg_obj)s", {
-                'type': msg_obj.__class__,
+                'type': msg_class,
                 'msg_obj': vars(msg_obj)
             })
             return
@@ -1861,7 +1913,7 @@ class SlskProtoThread(threading.Thread):
 
         conn_obj = self._conns[msg_obj.init.sock]
         conn_obj.obuf.extend(msg_obj.pack_uint32(len(msg) + 1))
-        conn_obj.obuf.extend(msg_obj.pack_uint8(self.distribcodes[msg_obj.__class__]))
+        conn_obj.obuf.extend(msg_obj.pack_uint8(self.distribcodes[msg_class]))
         conn_obj.obuf.extend(msg)
 
         self.modify_connection_events(conn_obj, selectors.EVENT_READ | selectors.EVENT_WRITE)
@@ -1891,8 +1943,7 @@ class SlskProtoThread(threading.Thread):
 
     def process_conn_output(self):
         """ Processes messages sent by the main thread. queue holds the messages,
-        conns and connsinprogress are dictionaries holding Connection and
-        ConnectionInProgress messages. """
+        conns and connsinprogress are dictionaries holding Connection messages. """
 
         msg_list = self._queue.copy()
         self._queue.clear()
@@ -1939,7 +1990,7 @@ class SlskProtoThread(threading.Thread):
 
             elif msg_class is ServerDisconnect:
                 self.manual_server_disconnect = True
-                self.close_connection(self._conns, self.server_socket)
+                self.server_disconnect()
 
             elif msg_class is DownloadFile and msg_obj.sock in self._conns:
                 self._conns[msg_obj.sock].filedown = msg_obj
@@ -1968,7 +2019,7 @@ class SlskProtoThread(threading.Thread):
                 self._upload_limit = msg_obj.limit * 1024
                 self._calc_upload_limit_function()
 
-            elif msg_obj.__class__ is SendNetworkMessage:
+            elif msg_class is SendNetworkMessage:
                 self.send_message_to_peer(msg_obj.user, msg_obj.message, msg_obj.addr)
 
     def read_data(self, conn_obj):
@@ -2154,58 +2205,21 @@ class SlskProtoThread(threading.Thread):
                         # Check if the socket has any data for us
                         sock_in_progress.recv(1, socket.MSG_PEEK)
 
-                except OSError as error:
-                    self.connect_error(error, conn_obj)
-                    self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
-
-                else:
                     if sock_in_progress in output_list:
                         # Connection has been established
 
-                        addr = conn_obj.addr
-                        events = selectors.EVENT_READ | selectors.EVENT_WRITE
+                        conn_obj.lastactive = time.time()
 
                         if sock_in_progress is self.server_socket:
-                            self._conns[self.server_socket] = Connection(
-                                sock=self.server_socket, addr=addr, events=events)
-
-                            log.add(
-                                _("Connected to server %(host)s:%(port)s, logging in…"), {
-                                    'host': addr[0],
-                                    'port': addr[1]
-                                }
-                            )
-
-                            login, password = conn_obj.login
-                            self.user_addresses[login] = (self.bindip or '127.0.0.1', self.listenport)
-                            conn_obj.login = True
-
-                            self.server_address = addr
-                            self.server_username = login
-                            self.server_timeout_value = -1
-
-                            self._queue.append(
-                                Login(
-                                    login, password,
-                                    # Soulseek client version
-                                    # NS and SoulseekQt use 157
-                                    # We use a custom version number for Nicotine+
-                                    160,
-
-                                    # Soulseek client minor version
-                                    # 17 stands for 157 ns 13c, 19 for 157 ns 13e
-                                    # SoulseekQt seems to go higher than this
-                                    # We use a custom minor version for Nicotine+
-                                    1
-                                )
-                            )
-
-                            if self.listenport is not None:
-                                self._queue.append(SetWaitPort(self.listenport))
+                            self.establish_outgoing_server_connection(conn_obj)
                         else:
-                            self.establish_outgoing_connection(sock_in_progress, addr, events, conn_obj.init)
+                            self.establish_outgoing_peer_connection(conn_obj)
 
                         del self._connsinprogress[sock_in_progress]
+
+                except OSError as error:
+                    self.connect_error(error, conn_obj)
+                    self.close_connection(self._connsinprogress, sock_in_progress, callback=False)
 
             # Process read/write for active connections
             for sock in self._conns.copy():
