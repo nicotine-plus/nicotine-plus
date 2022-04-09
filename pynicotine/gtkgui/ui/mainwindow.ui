@@ -1553,7 +1553,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="chatrooms_userlist_container">
+                              <object class="GtkBox" id="chatrooms_buddy_list_container">
                                 <property name="visible">False</property>
                               </object>
                             </child>
