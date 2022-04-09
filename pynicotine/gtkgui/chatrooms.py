@@ -637,10 +637,10 @@ class ChatRoom(UserInterface):
         menu.actions[_("Private Rooms")].set_enabled(private_rooms_enabled)
 
     def on_find_activity_log(self, *_args):
-        self.activity_search_bar.set_search_mode(True)
+        self.activity_search_bar.show()
 
     def on_find_room_log(self, *_args):
-        self.chat_search_bar.set_search_mode(True)
+        self.chat_search_bar.show()
 
     @staticmethod
     def get_selected_username(treeview):
