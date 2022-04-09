@@ -41,7 +41,15 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
+        self.user_counter = frame.upload_users_label
+        self.file_counter = frame.upload_files_label
+        self.expand_button = frame.uploads_expand_button
+        self.expand_icon = frame.uploads_expand_icon
+        self.grouping_button = frame.uploads_grouping_button
+        self.status_page = frame.uploads_status_page
+
         TransferList.__init__(self, frame, core, transfer_type="upload")
+        frame.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),

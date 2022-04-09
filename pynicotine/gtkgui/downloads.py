@@ -42,7 +42,15 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.aborted_status = "Paused"
 
+        self.user_counter = frame.download_users_label
+        self.file_counter = frame.download_files_label
+        self.expand_button = frame.downloads_expand_button
+        self.expand_icon = frame.downloads_expand_icon
+        self.grouping_button = frame.downloads_grouping_button
+        self.status_page = frame.downloads_status_page
+
         TransferList.__init__(self, frame, core, transfer_type="download")
+        frame.downloads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),

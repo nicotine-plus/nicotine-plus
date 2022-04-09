@@ -436,7 +436,7 @@ class PopupMenu:
     def on_search_user(self, *_args):
 
         self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
-        self.frame.UserSearchEntry.set_text(self.user)
+        self.frame.user_search_entry.set_text(self.user)
         self.frame.change_main_page("search")
 
     def on_send_message(self, *_args):
