@@ -76,11 +76,11 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="feed_check">
+                  <object class="GtkCheckButton" id="public_feed_toggle">
                     <property name="label" translatable="yes">_Show feed of public chat room messages</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
-                    <signal name="toggled" handler="on_show_chat_feed"/>
+                    <signal name="toggled" handler="on_toggle_public_feed"/>
                   </object>
                 </child>
               </object>
@@ -90,7 +90,7 @@
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkCheckButton" id="private_room_check">
+                  <object class="GtkCheckButton" id="private_room_toggle">
                     <property name="label" translatable="yes">_Accept private room invitations</property>
                     <property name="visible">True</property>
                     <property name="use-underline">True</property>
