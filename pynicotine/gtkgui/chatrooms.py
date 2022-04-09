@@ -180,7 +180,7 @@ class ChatRooms(IconNotebook):
             self.set_current_page(page_num)
 
         if msg.room == "Public ":
-            self.roomlist.toggle_feed_check(True)
+            self.roomlist.toggle_public_feed(True)
         else:
             self.frame.RoomSearchCombo.append_text(msg.room)
 
@@ -198,7 +198,7 @@ class ChatRooms(IconNotebook):
         del self.pages[msg.room]
 
         if msg.room == "Public ":
-            self.roomlist.toggle_feed_check(False)
+            self.roomlist.toggle_public_feed(False)
         else:
             self.frame.RoomSearchCombo.remove_all()
             self.frame.RoomSearchCombo.append_text("Joined Rooms ")
@@ -1066,7 +1066,7 @@ class ChatRoom(UserInterface):
             del config.sections["columns"]["chat_room"][self.room]
 
         if self.room == "Public ":
-            self.chatrooms.roomlist.feed_check.set_active(False)
+            self.chatrooms.roomlist.public_feed_toggle.set_active(False)
             return
 
         self.core.chatrooms.request_leave_room(self.room)

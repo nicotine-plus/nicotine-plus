@@ -71,8 +71,8 @@ class RoomList(UserInterface):
             ("#" + _("Cancel Room Membership"), self.on_popup_private_room_dismember)
         )
 
-        self.private_room_check.set_active(config.sections["server"]["private_chatrooms"])
-        self.private_room_check.connect("toggled", self.on_toggle_accept_private_room)
+        self.private_room_toggle.set_active(config.sections["server"]["private_chatrooms"])
+        self.private_room_toggle.connect("toggled", self.on_toggle_accept_private_room)
 
         Accelerator("<Primary>f", self.popover, self.on_search_accelerator)
         CompletionEntry(frame.ChatroomsEntry, self.room_model, column=0)
@@ -146,10 +146,10 @@ class RoomList(UserInterface):
         if sort_column is not None and sort_type is not None:
             self.room_model.set_sort_column_id(sort_column, sort_type)
 
-    def toggle_feed_check(self, active):
+    def toggle_public_feed(self, active):
 
         self.initializing_feed = True
-        self.feed_check.set_active(active)
+        self.public_feed_toggle.set_active(active)
         self.initializing_feed = False
 
     def update_room(self, room, user_count, private=False, owned=False):
@@ -195,12 +195,12 @@ class RoomList(UserInterface):
         self.core.chatrooms.request_join_room(self.popup_room)
         self.popover.hide()
 
-    def on_show_chat_feed(self, *_args):
+    def on_toggle_public_feed(self, *_args):
 
         if self.initializing_feed:
             return
 
-        if self.feed_check.get_active():
+        if self.public_feed_toggle.get_active():
             self.core.chatrooms.request_join_public_room()
             self.popover.hide()
             return
@@ -223,7 +223,7 @@ class RoomList(UserInterface):
         self.core.chatrooms.request_room_list()
 
     def on_toggle_accept_private_room(self, *_args):
-        self.core.chatrooms.request_private_room_toggle(self.private_room_check.get_active())
+        self.core.chatrooms.request_private_room_toggle(self.private_room_toggle.get_active())
 
     def on_search_accelerator(self, *_args):
         """ Ctrl+F: Search rooms """
