@@ -1138,7 +1138,7 @@ class SlskProtoThread(threading.Thread):
 
             self._calc_upload_limit_function()
 
-        if conn_obj.__class__ is ServerConnection:
+        if conn_obj.__class__ is ServerConnection or conn_obj.init is None:
             return
 
         conn_type = conn_obj.init.conn_type
