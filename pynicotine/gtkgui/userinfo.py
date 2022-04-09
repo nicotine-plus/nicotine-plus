@@ -33,6 +33,7 @@ from pynicotine.gtkgui.widgets.filechooser import FileChooserSave
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textview import TextView
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
@@ -200,7 +201,7 @@ class UserInfo(UserInterface):
         self.dislikes_list_view.set_model(self.dislikes_store)
 
         # Popup menus
-        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userinfo")
         popup.add_items(
             ("", None),
@@ -443,12 +444,9 @@ class UserInfo(UserInterface):
     def on_tab_popup(self, *_args):
         self.user_popup.toggle_user_items()
 
-    @staticmethod
-    def on_popup_interest_menu(menu, widget):
+    def on_popup_interest_menu(self, menu, widget):
 
-        model, iterator = widget.get_selection().get_selected()
-        item = model.get_value(iterator, 0)
-        menu.set_user(item)
+        item = self.frame.interests.get_selected_item(widget, column=0)
 
         menu.actions[_("I _Like This")].set_state(
             GLib.Variant("b", item in config.sections["interests"]["likes"])
@@ -458,13 +456,16 @@ class UserInfo(UserInterface):
         )
 
     def on_like_recommendation(self, action, state, popup):
-        self.frame.interests.on_like_recommendation(action, state, popup.get_user())
+        item = self.frame.interests.get_selected_item(popup.parent, column=0)
+        self.frame.interests.on_like_recommendation(action, state, item)
 
     def on_dislike_recommendation(self, action, state, popup):
-        self.frame.interests.on_dislike_recommendation(action, state, popup.get_user())
+        item = self.frame.interests.get_selected_item(popup.parent, column=0)
+        self.frame.interests.on_dislike_recommendation(action, state, item)
 
     def on_interest_recommend_search(self, _action, _state, popup):
-        self.frame.interests.recommend_search(popup.get_user())
+        item = self.frame.interests.get_selected_item(popup.parent, column=0)
+        self.frame.interests.recommend_search(item)
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)

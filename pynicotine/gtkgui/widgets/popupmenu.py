@@ -202,123 +202,6 @@ class PopupMenu:
         for item in items:
             self.pending_items.append(item)
 
-    def setup_user_menu(self, user=None, page=""):
-
-        user_label = "U"
-
-        if user is not None:
-            self.user = user
-            user_label += self.user
-
-        self.add_items(
-            (user_label, self.on_copy_user),
-            ("", None)
-        )
-
-        if page != "privatechat":
-            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
-
-        if page != "userinfo":
-            self.add_items(("#" + _("Show User I_nfo"), self.on_get_user_info))
-
-        if page != "userbrowse":
-            self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
-
-        if page != "userlist":
-            self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
-
-        self.add_items(
-            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
-            ("", None),
-            ("$" + _("Ban User"), self.on_ban_user),
-            ("$" + _("Ignore User"), self.on_ignore_user),
-            ("", None),
-            ("$" + _("Ban IP Address"), self.on_block_user),
-            ("$" + _("Ignore IP Address"), self.on_ignore_ip),
-            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
-        )
-
-    def set_num_selected_files(self, num_files):
-
-        self.actions["selected_files"].set_enabled(False)
-        self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
-        self.model.remove(0)
-        self.model.prepend_item(self.items["selected_files"])
-
-    def set_user(self, user):
-
-        if not user or self.user == user:
-            return
-
-        self.user = user
-
-        if not self.useritem:
-            return
-
-        self.useritem.set_label(user)
-        self.model.remove(0)
-        self.model.prepend_item(self.useritem)
-
-    def get_user(self):
-        return self.user
-
-    def toggle_user_items(self):
-
-        self.editing = True
-        self.actions[_("_Gift Privileges…")].set_enabled(bool(self.core.privileges_left))
-
-        add_to_list = _("_Add to Buddy List")
-
-        if add_to_list in self.actions:
-            self.actions[add_to_list].set_state(
-                GLib.Variant("b", self.user in (i[0] for i in config.sections["server"]["userlist"]))
-            )
-
-        self.actions[_("Ban User")].set_state(GLib.Variant("b", self.core.network_filter.is_user_banned(self.user)))
-        self.actions[_("Ignore User")].set_state(
-            GLib.Variant("b", self.core.network_filter.is_user_ignored(self.user)))
-        self.actions[_("Ban IP Address")].set_state(
-            GLib.Variant("b", self.core.network_filter.get_cached_blocked_user_ip(self.user) or False))
-        self.actions[_("Ignore IP Address")].set_state(
-            GLib.Variant("b", self.core.network_filter.get_cached_ignored_user_ip(self.user) or False))
-
-        self.editing = False
-
-    def populate_private_rooms(self, popup):
-
-        popup.clear()
-
-        if self.user is None:
-            return
-
-        popup.set_user(self.user)
-
-        for room, data in self.core.chatrooms.private_rooms.items():
-            is_owned = self.core.chatrooms.is_private_room_owned(room)
-            is_operator = self.core.chatrooms.is_private_room_operator(room)
-
-            if not is_owned and not is_operator:
-                continue
-
-            if self.user in data["users"]:
-                popup.add_items(
-                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
-            else:
-                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
-
-            if not is_owned:
-                continue
-
-            if self.user in data["operators"]:
-                popup.add_items(
-                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
-            else:
-                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
-
-            popup.add_items(("", None))
-
-        popup.update_model()
-
     def clear(self):
 
         for submenu in self.submenus:
@@ -432,6 +315,131 @@ class PopupMenu:
         self.gesture_press.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.gesture_press.set_touch_only(True)
         self.gesture_press.connect("pressed", self._callback)
+
+
+class FilePopupMenu(PopupMenu):
+
+    def set_num_selected_files(self, num_files):
+
+        self.actions["selected_files"].set_enabled(False)
+        self.items["selected_files"].set_label(_("%s File(s) Selected") % num_files)
+        self.model.remove(0)
+        self.model.prepend_item(self.items["selected_files"])
+
+
+class UserPopupMenu(PopupMenu):
+
+    def setup_user_menu(self, user=None, page=""):
+
+        user_label = "U"
+
+        if user is not None:
+            self.user = user
+            user_label += self.user
+
+        self.add_items(
+            (user_label, self.on_copy_user),
+            ("", None)
+        )
+
+        if page != "privatechat":
+            self.add_items(("#" + _("Send M_essage"), self.on_send_message))
+
+        if page != "userinfo":
+            self.add_items(("#" + _("Show User I_nfo"), self.on_get_user_info))
+
+        if page != "userbrowse":
+            self.add_items(("#" + _("_Browse Files"), self.on_browse_user))
+
+        if page != "userlist":
+            self.add_items(("$" + _("_Add to Buddy List"), self.on_add_to_list))
+
+        self.add_items(
+            ("#" + _("_Gift Privileges…"), self.on_give_privileges),
+            ("", None),
+            ("$" + _("Ban User"), self.on_ban_user),
+            ("$" + _("Ignore User"), self.on_ignore_user),
+            ("", None),
+            ("$" + _("Ban IP Address"), self.on_block_user),
+            ("$" + _("Ignore IP Address"), self.on_ignore_ip),
+            ("#" + _("Show IP A_ddress"), self.on_show_ip_address)
+        )
+
+    def set_user(self, user):
+
+        if not user or self.user == user:
+            return
+
+        self.user = user
+
+        if not self.useritem:
+            return
+
+        self.useritem.set_label(user)
+        self.model.remove(0)
+        self.model.prepend_item(self.useritem)
+
+    def get_user(self):
+        return self.user
+
+    def toggle_user_items(self):
+
+        self.editing = True
+        self.actions[_("_Gift Privileges…")].set_enabled(bool(self.core.privileges_left))
+
+        add_to_list = _("_Add to Buddy List")
+
+        if add_to_list in self.actions:
+            self.actions[add_to_list].set_state(
+                GLib.Variant("b", self.user in (i[0] for i in config.sections["server"]["userlist"]))
+            )
+
+        self.actions[_("Ban User")].set_state(GLib.Variant("b", self.core.network_filter.is_user_banned(self.user)))
+        self.actions[_("Ignore User")].set_state(
+            GLib.Variant("b", self.core.network_filter.is_user_ignored(self.user)))
+        self.actions[_("Ban IP Address")].set_state(
+            GLib.Variant("b", self.core.network_filter.get_cached_blocked_user_ip(self.user) or False))
+        self.actions[_("Ignore IP Address")].set_state(
+            GLib.Variant("b", self.core.network_filter.get_cached_ignored_user_ip(self.user) or False))
+
+        self.editing = False
+
+    def populate_private_rooms(self, popup):
+
+        popup.clear()
+
+        if self.user is None:
+            return
+
+        popup.set_user(self.user)
+
+        for room, data in self.core.chatrooms.private_rooms.items():
+            is_owned = self.core.chatrooms.is_private_room_owned(room)
+            is_operator = self.core.chatrooms.is_private_room_operator(room)
+
+            if not is_owned and not is_operator:
+                continue
+
+            if self.user in data["users"]:
+                popup.add_items(
+                    ("#" + _("Remove from Private Room %s") % room, popup.on_private_room_remove_user, room))
+            else:
+                popup.add_items(("#" + _("Add to Private Room %s") % room, popup.on_private_room_add_user, room))
+
+            if not is_owned:
+                continue
+
+            if self.user in data["operators"]:
+                popup.add_items(
+                    ("#" + _("Remove as Operator of %s") % room, popup.on_private_room_remove_operator, room))
+            else:
+                popup.add_items(("#" + _("Add as Operator of %s") % room, popup.on_private_room_add_operator, room))
+
+            popup.add_items(("", None))
+
+        popup.update_model()
+
+    """ Events """
 
     def on_search_user(self, *_args):
 

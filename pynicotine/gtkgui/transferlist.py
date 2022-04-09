@@ -35,6 +35,8 @@ from pynicotine.gtkgui.dialogs.fileproperties import FileProperties
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import collapse_treeview
 from pynicotine.gtkgui.widgets.treeview import create_grouping_menu
@@ -173,7 +175,7 @@ class TransferList(UserInterface):
         self.expand_button.connect("toggled", self.on_expand_tree)
         self.expand_button.set_active(config.sections["transfers"]["%ssexpanded" % transfer_type])
 
-        self.popup_menu_users = PopupMenu(frame)
+        self.popup_menu_users = UserPopupMenu(frame)
         self.popup_menu_clear = PopupMenu(frame)
         self.clear_all_button.set_menu_model(self.popup_menu_clear.model)
 
@@ -184,7 +186,7 @@ class TransferList(UserInterface):
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = PopupMenu(frame, self.tree_view, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(frame, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -705,7 +707,7 @@ class TransferList(UserInterface):
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = PopupMenu(self.frame)
+                popup = UserPopupMenu(self.frame)
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()

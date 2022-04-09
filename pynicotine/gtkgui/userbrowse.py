@@ -36,6 +36,8 @@ from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.infobar import InfoBar
 from pynicotine.gtkgui.widgets.dialogs import EntryDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.theme import update_widget_visuals
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import save_columns
@@ -187,7 +189,7 @@ class UserBrowse(UserInterface):
         self.folder_tree_view.set_model(self.dir_store)
 
         # Popup Menu (folder_tree_view)
-        self.user_popup = popup = PopupMenu(self.frame, None, self.on_tab_popup)
+        self.user_popup = popup = UserPopupMenu(self.frame, None, self.on_tab_popup)
         popup.setup_user_menu(user, page="userbrowse")
         popup.add_items(
             ("", None),
@@ -257,7 +259,7 @@ class UserBrowse(UserInterface):
             column.connect("notify::x-offset", self.on_column_position_changed)
 
         # Popup Menu (file_list_view)
-        self.file_popup_menu = PopupMenu(self.frame, self.file_list_view, self.on_file_popup_menu)
+        self.file_popup_menu = FilePopupMenu(self.frame, self.file_list_view, self.on_file_popup_menu)
 
         if user == config.sections["server"]["login"]:
             self.file_popup_menu.add_items(

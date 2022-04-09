@@ -41,6 +41,7 @@ from pynicotine.gtkgui.popovers.roomwall import RoomWall
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import ChatCompletion
 from pynicotine.gtkgui.widgets.textentry import ChatEntry
 from pynicotine.gtkgui.widgets.textentry import TextSearchBar
@@ -477,11 +478,11 @@ class ChatRoom(UserInterface):
 
         self.usersmodel.set_sort_column_id(2, Gtk.SortType.ASCENDING)
 
-        self.popup_menu_private_rooms_chat = PopupMenu(self.frame)
-        self.popup_menu_private_rooms_list = PopupMenu(self.frame)
+        self.popup_menu_private_rooms_chat = UserPopupMenu(self.frame)
+        self.popup_menu_private_rooms_list = UserPopupMenu(self.frame)
 
-        self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_view.textview, connect_events=False)
-        self.popup_menu_user_list = PopupMenu(self.frame, self.users_list_view, self.on_popup_menu_user)
+        self.popup_menu_user_chat = UserPopupMenu(self.frame, self.chat_view.textview, connect_events=False)
+        self.popup_menu_user_list = UserPopupMenu(self.frame, self.users_list_view, self.on_popup_menu_user)
 
         for menu, menu_private_rooms in (
             (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),

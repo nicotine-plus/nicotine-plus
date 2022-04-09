@@ -40,6 +40,8 @@ from pynicotine.gtkgui.widgets.accelerator import Accelerator
 from pynicotine.gtkgui.widgets.filechooser import FolderChooser
 from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import FilePopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.textentry import CompletionEntry
 from pynicotine.gtkgui.widgets.theme import get_flag_icon_name
 from pynicotine.gtkgui.widgets.theme import set_widget_fg_bg_css
@@ -399,7 +401,7 @@ class Search(UserInterface):
         self.update_visuals()
 
         # Popup menus
-        self.popup_menu_users = PopupMenu(self.frame)
+        self.popup_menu_users = UserPopupMenu(self.frame)
 
         self.popup_menu_copy = PopupMenu(self.frame)
         self.popup_menu_copy.add_items(
@@ -408,7 +410,7 @@ class Search(UserInterface):
             ("#" + _("Copy Folder U_RL"), self.on_copy_dir_url)
         )
 
-        self.popup_menu = PopupMenu(self.frame, self.tree_view, self.on_popup_menu)
+        self.popup_menu = FilePopupMenu(self.frame, self.tree_view, self.on_popup_menu)
         self.popup_menu.add_items(
             ("#" + "selected_files", None),
             ("", None),
@@ -1008,7 +1010,7 @@ class Search(UserInterface):
         # Multiple users, create submenus for each user
         if len(self.selected_users) > 1:
             for user in self.selected_users:
-                popup = PopupMenu(self.frame)
+                popup = UserPopupMenu(self.frame)
                 self.add_popup_menu_user(popup, user)
                 self.popup_menu_users.add_items((">" + user, popup))
                 self.popup_menu_users.update_model()

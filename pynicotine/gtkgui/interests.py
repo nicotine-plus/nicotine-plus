@@ -26,6 +26,7 @@ from gi.repository import Gtk
 from pynicotine.config import config
 from pynicotine.gtkgui.application import GTK_API_VERSION
 from pynicotine.gtkgui.widgets.popupmenu import PopupMenu
+from pynicotine.gtkgui.widgets.popupmenu import UserPopupMenu
 from pynicotine.gtkgui.widgets.treeview import initialise_columns
 from pynicotine.gtkgui.widgets.treeview import show_user_status_tooltip
 from pynicotine.gtkgui.widgets.theme import get_status_icon
@@ -152,7 +153,7 @@ class Interests(UserInterface):
                     -1, self.dislikes_column_numbers, [thing])
 
         # Popup menus
-        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view, self.on_popup_til_menu)
+        self.til_popup_menu = popup = PopupMenu(self.frame, self.likes_list_view)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
             ("#" + _("_Search for Item"), self.on_recommend_search, popup),
@@ -160,7 +161,7 @@ class Interests(UserInterface):
             ("#" + _("_Remove Item"), self.on_remove_thing_i_like)
         )
 
-        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view, self.on_popup_til_menu)
+        self.tidl_popup_menu = popup = PopupMenu(self.frame, self.dislikes_list_view)
         popup.add_items(
             ("#" + _("Re_commendations for Item"), self.on_recommend_item, popup),
             ("#" + _("_Search for Item"), self.on_recommend_search, popup),
@@ -177,7 +178,7 @@ class Interests(UserInterface):
             ("#" + _("_Search for Item"), self.on_recommend_search, popup)
         )
 
-        popup = PopupMenu(self.frame, self.similar_users_list_view, self.on_popup_ru_menu)
+        popup = UserPopupMenu(self.frame, self.similar_users_list_view, self.on_popup_ru_menu)
         popup.setup_user_menu()
 
         self.update_visuals()
@@ -230,7 +231,7 @@ class Interests(UserInterface):
 
     def on_remove_thing_i_like(self, *_args):
 
-        thing = self.til_popup_menu.get_user()
+        thing = self.get_selected_item(self.likes_list_view, column=0)
 
         if not self.core.interests.remove_thing_i_like(thing):
             return
@@ -240,7 +241,7 @@ class Interests(UserInterface):
 
     def on_remove_thing_i_dislike(self, *_args):
 
-        thing = self.tidl_popup_menu.get_user()
+        thing = self.get_selected_item(self.dislikes_list_view, column=0)
 
         if not self.core.interests.remove_thing_i_hate(thing):
             return
@@ -251,7 +252,7 @@ class Interests(UserInterface):
     def on_like_recommendation(self, action, state, thing=None):
 
         if thing is None:
-            thing = self.r_popup_menu.get_user()
+            thing = self.get_selected_item(self.recommendations_list_view, column=1)
 
         if state.get_boolean() and self.core.interests.add_thing_i_like(thing):
             self.likes[thing] = self.likes_model.insert_with_valuesv(-1, self.likes_column_numbers, [thing])
@@ -265,7 +266,7 @@ class Interests(UserInterface):
     def on_dislike_recommendation(self, action, state, thing=None):
 
         if thing is None:
-            thing = self.r_popup_menu.get_user()
+            thing = self.get_selected_item(self.recommendations_list_view, column=1)
 
         if state.get_boolean() and thing and self.core.interests.add_thing_i_hate(thing):
             self.dislikes[thing] = self.dislikes_model.insert_with_valuesv(-1, self.dislikes_column_numbers, [thing])
@@ -278,12 +279,16 @@ class Interests(UserInterface):
 
     def on_recommend_item(self, _action, _state, menu):
 
-        thing = menu.get_user()
-        self.core.interests.request_item_recommendations(thing)
-        self.core.interests.request_item_similar_users(thing)
+        column = 1 if menu.parent == self.recommendations_list_view else 0
+        item = self.get_selected_item(menu.parent, column)
+        self.core.interests.request_item_recommendations(item)
+        self.core.interests.request_item_similar_users(item)
 
     def on_recommend_search(self, _action, _state, menu):
-        self.recommend_search(menu.get_user())
+
+        column = 1 if menu.parent == self.recommendations_list_view else 0
+        item = self.get_selected_item(menu.parent, column)
+        self.recommend_search(item)
 
     def on_recommendations_clicked(self, *_args):
 
@@ -391,15 +396,9 @@ class Interests(UserInterface):
 
         return model.get_value(iterator, column)
 
-    def on_popup_til_menu(self, menu, widget):
-
-        item = self.get_selected_item(widget, column=0)
-        menu.set_user(item)
-
     def on_popup_r_menu(self, menu, widget):
 
         item = self.get_selected_item(widget, column=1)
-        menu.set_user(item)
 
         menu.actions[_("I _Like This")].set_state(
             GLib.Variant("b", item in config.sections["interests"]["likes"])
