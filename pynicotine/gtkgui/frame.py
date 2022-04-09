@@ -127,7 +127,7 @@ class NicotineFrame(UserInterface):
 
             self.horizontal_paned.child_set_property(self.vertical_paned, "resize", True)
             self.horizontal_paned.child_set_property(self.buddy_list_container, "resize", False)
-            self.chatrooms_paned.child_set_property(self.chatrooms_userlist_container, "resize", False)
+            self.chatrooms_paned.child_set_property(self.chatrooms_buddy_list_container, "resize", False)
 
             self.vertical_paned.child_set_property(self.notebook, "resize", True)
             self.vertical_paned.child_set_property(self.notebook, "shrink", False)
@@ -518,13 +518,13 @@ class NicotineFrame(UserInterface):
             self.buddy_list_container.remove(self.userlist.container)
             self.buddy_list_container.hide()
 
-        elif self.userlist.container.get_parent() == self.chatrooms_userlist_container:
+        elif self.userlist.container.get_parent() == self.chatrooms_buddy_list_container:
 
             if mode == "chatrooms":
                 return
 
-            self.chatrooms_userlist_container.remove(self.userlist.container)
-            self.chatrooms_userlist_container.hide()
+            self.chatrooms_buddy_list_container.remove(self.userlist.container)
+            self.chatrooms_buddy_list_container.hide()
 
         elif self.userlist.container.get_parent() == self.userlist_content:
 
@@ -543,9 +543,9 @@ class NicotineFrame(UserInterface):
 
         if mode == "chatrooms":
 
-            self.chatrooms_userlist_container.add(self.userlist.container)
+            self.chatrooms_buddy_list_container.add(self.userlist.container)
             self.userlist.toolbar.show()
-            self.chatrooms_userlist_container.show()
+            self.chatrooms_buddy_list_container.show()
             return
 
         self.userlist.toolbar.hide()

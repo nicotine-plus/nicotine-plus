@@ -354,14 +354,14 @@ class ChatRoom(UserInterface):
         self.room = room
 
         if Gtk.get_major_version() == 4:
-            self.userlist_paned.set_resize_start_child(True)
-            self.userlist_paned.set_shrink_start_child(False)
-            self.userlist_paned.set_resize_end_child(False)
+            self.users_paned.set_resize_start_child(True)
+            self.users_paned.set_shrink_start_child(False)
+            self.users_paned.set_resize_end_child(False)
             self.chat_paned.set_shrink_end_child(False)
         else:
-            self.userlist_paned.child_set_property(self.chat_paned, "resize", True)
-            self.userlist_paned.child_set_property(self.chat_paned, "shrink", False)
-            self.userlist_paned.child_set_property(self.userlist_container, "resize", False)
+            self.users_paned.child_set_property(self.chat_paned, "resize", True)
+            self.users_paned.child_set_property(self.chat_paned, "shrink", False)
+            self.users_paned.child_set_property(self.users_container, "resize", False)
             self.chat_paned.child_set_property(self.chat_container, "shrink", False)
 
         self.tickers = Tickers()
@@ -409,12 +409,12 @@ class ChatRoom(UserInterface):
             Pango.Weight,         # (9)  username_weight
             Pango.Underline       # (10) username_underline
         )
-        self.userlist_view.set_model(self.usersmodel)
+        self.users_list_view.set_model(self.usersmodel)
 
         self.column_numbers = list(range(self.usersmodel.get_n_columns()))
         attribute_columns = (9, 10)
         self.cols = cols = initialise_columns(
-            self.frame, ("chat_room", room), self.userlist_view,
+            self.frame, ("chat_room", room), self.users_list_view,
             ["status", _("Status"), 25, "icon", None],
             ["country", _("Country"), 25, "icon", None],
             ["user", _("User"), 155, "text", attribute_columns],
@@ -440,7 +440,7 @@ class ChatRoom(UserInterface):
         self.popup_menu_private_rooms_list = PopupMenu(self.frame)
 
         self.popup_menu_user_chat = PopupMenu(self.frame, self.chat_view.textview, connect_events=False)
-        self.popup_menu_user_list = PopupMenu(self.frame, self.userlist_view, self.on_popup_menu_user)
+        self.popup_menu_user_list = PopupMenu(self.frame, self.users_list_view, self.on_popup_menu_user)
 
         for menu, menu_private_rooms in (
             (self.popup_menu_user_chat, self.popup_menu_private_rooms_chat),
@@ -499,7 +499,7 @@ class ChatRoom(UserInterface):
         if self.room != "Public ":
             return
 
-        for widget in (self.activity_container, self.userlist_container, self.chat_entry,
+        for widget in (self.activity_container, self.users_container, self.chat_entry,
                        self.room_wall_button, self.help_button):
             widget.hide()
 
@@ -992,7 +992,7 @@ class ChatRoom(UserInterface):
             self.chat_view.update_tag(tag)
 
     def save_columns(self):
-        save_columns("chat_room", self.userlist_view.get_columns(), subpage=self.room)
+        save_columns("chat_room", self.users_list_view.get_columns(), subpage=self.room)
 
     def server_disconnect(self):
 
