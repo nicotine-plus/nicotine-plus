@@ -131,13 +131,13 @@ class NicotineFrame(UserInterface):
 
             self.vertical_paned.child_set_property(self.notebook, "resize", True)
             self.vertical_paned.child_set_property(self.notebook, "shrink", False)
-            self.vertical_paned.child_set_property(self.DebugLog, "resize", False)
-            self.vertical_paned.child_set_property(self.DebugLog, "shrink", False)
+            self.vertical_paned.child_set_property(self.log_container, "resize", False)
+            self.vertical_paned.child_set_property(self.log_container, "shrink", False)
 
         """ Logging """
 
-        self.log_textview = TextView(self.LogWindow)
-        TextSearchBar(self.LogWindow, self.activity_search_bar, self.activity_search_entry)
+        self.log_view = TextView(self.log_view)
+        self.log_search_bar = TextSearchBar(self.log_view.textview, self.log_search_bar, self.log_search_entry)
 
         self.create_log_context_menu()
         log.add_listener(self.log_callback)
@@ -493,10 +493,10 @@ class NicotineFrame(UserInterface):
 
     def set_show_log(self, show):
 
-        self.DebugLog.set_visible(show)
+        self.log_container.set_visible(show)
 
         if show:
-            self.log_textview.scroll_bottom()
+            self.log_view.scroll_bottom()
 
     def on_show_log(self, action, *_args):
 
@@ -1622,18 +1622,18 @@ class NicotineFrame(UserInterface):
             ("$" + _("[Debug] Miscellaneous"), "win.logmiscellaneous"),
         )
 
-        PopupMenu(self, self.LogWindow, self.on_popup_menu_log).add_items(
+        PopupMenu(self, self.log_view.textview, self.on_popup_menu_log).add_items(
             ("#" + _("_Find…"), self.on_find_log_window),
             ("", None),
-            ("#" + _("_Copy"), self.log_textview.on_copy_text),
-            ("#" + _("Copy _All"), self.log_textview.on_copy_all_text),
+            ("#" + _("_Copy"), self.log_view.on_copy_text),
+            ("#" + _("Copy _All"), self.log_view.on_copy_all_text),
             ("", None),
             ("#" + _("_Open Log Folder"), self.on_view_debug_logs),
             ("#" + _("Open _Transfer Log"), self.on_view_transfer_log),
             ("", None),
             (">" + _("_Log Categories"), popup_menu_log_categories),
             ("", None),
-            ("#" + _("Clear Log View"), self.log_textview.on_clear_all_text)
+            ("#" + _("Clear Log View"), self.log_view.on_clear_all_text)
         )
 
     def log_callback(self, _timestamp_format, msg, level):
@@ -1650,14 +1650,14 @@ class NicotineFrame(UserInterface):
         if level not in ("transfer", "connection", "message", "miscellaneous"):
             self.set_status_text(msg)
 
-        self.log_textview.append_line(msg, find_urls=False)
+        self.log_view.append_line(msg, find_urls=False)
         return False
 
     def on_popup_menu_log(self, menu, _textview):
-        menu.actions[_("_Copy")].set_enabled(self.log_textview.get_has_selection())
+        menu.actions[_("_Copy")].set_enabled(self.log_view.get_has_selection())
 
     def on_find_log_window(self, *_args):
-        self.activity_search_bar.set_search_mode(True)
+        self.log_search_bar.show()
 
     @staticmethod
     def on_view_debug_logs(*_args):
