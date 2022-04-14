@@ -47,7 +47,6 @@ class Downloads(TransferList):
         self.expand_button = frame.downloads_expand_button
         self.expand_icon = frame.downloads_expand_icon
         self.grouping_button = frame.downloads_grouping_button
-        self.status_page = frame.downloads_status_page
 
         TransferList.__init__(self, frame, core, transfer_type="download")
         frame.downloads_content.add(self.container)

@@ -46,7 +46,6 @@ class Uploads(TransferList):
         self.expand_button = frame.uploads_expand_button
         self.expand_icon = frame.uploads_expand_icon
         self.grouping_button = frame.uploads_grouping_button
-        self.status_page = frame.uploads_status_page
 
         TransferList.__init__(self, frame, core, transfer_type="upload")
         frame.uploads_content.add(self.container)

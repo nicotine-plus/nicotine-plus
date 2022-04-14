@@ -477,7 +477,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="downloads_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="downloads_content" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -717,7 +717,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="uploads_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="uploads_content" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1323,7 +1323,7 @@
                             </child>
                             <child>
                               <object class="GtkBox" id="userlist_status_page">
-                                <property name="visible">True</property>
+                                <property name="visible" bind-source="userlist_content" bind-property="visible" bind-flags="bidirectional|invert-boolean|sync-create"/>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -1603,7 +1603,7 @@
                 <!-- Log Pane -->
                 <child>
                   <object class="GtkBox" id="log_container">
-                    <property name="visible">True</property>
+                    <property name="visible" bind-source="log_history_button" bind-property="active" bind-flags="bidirectional|sync-create"/>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkSearchBar" id="log_search_bar">
@@ -1822,7 +1822,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkToggleButton">
+                  <object class="GtkToggleButton" id="log_history_button">
                     <property name="visible">True</property>
                     <property name="tooltip-text" translatable="yes">Show log history</property>
                     <property name="action-name">win.showlog</property>

@@ -327,8 +327,7 @@ class TransferList(UserInterface):
                     self.update_parent_row(user_iter, username)
 
         # Show tab description if necessary
-        self.status_page.set_visible(not self.transfer_list)
-        self.container.set_visible(self.transfer_list)
+        self.container.get_parent().set_visible(self.transfer_list)
 
     @staticmethod
     def get_hqueue_position(queue_position):
