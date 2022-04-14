@@ -89,6 +89,12 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 These combinations are actively used by clients. More combinations are possible, of course.
 
+  - Soulseek NS, SoulseekQt (2015-2-21 and earlier), Nicotine+, Museek+, SoulSeeX, slskd (lossy formats):
+      - {0: *bitrate*, 1: *length*, 2: *VBR*}
+
+  - SoulseekQt (2015-2-21 and earlier):
+      - {0: *bitrate*, 2: *VBR*}
+
   - SoulseekQt (2015-6-12 and later):
       - {0: *bitrate*}
       - {1: *length*}
@@ -97,16 +103,8 @@ These combinations are actively used by clients. More combinations are possible,
       - {1: *length*, 4: *sample rate*, 5: *bit depth*} (FLAC, WAV, APE)
       - {0: *bitrate*, 1: *length*, 4: *sample rate*, 5: *bit depth*} (WV)
 
-  - SoulseekQt (2015-2-21 and earlier):
-      - {0: *bitrate*, 2: *VBR*}
-      - {0: *bitrate*, 1: *length*, 2: *VBR*}
-
-  - Soulseek NS, SoulSeeX, Museek+, Nicotine+:
-      - {0: *bitrate*, 1: *length*, 2: *VBR*}
-
-  - slskd, Soulseek.NET, Seeker:
-      - {0: *bitrate*, 1: *length*, 2: *VBR*} (lossy formats)
-      - {1: *length*, 4: *sample rate*, 5: *bit depth*} (lossless formats)
+  - slskd (lossless formats):
+      - {1: *length*, 4: *sample rate*, 5: *bit depth*}
 
 # Server Messages
 
