@@ -14,18 +14,19 @@
         <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                     <property name="height-request">475</property>
                     <property name="width-request">675</property>
                     <child>
                       <object class="GtkTreeView" id="list_view">
                         <property name="visible">True</property>
-                        <property name="hexpand">True</property>
                         <signal name="row-activated" handler="on_row_activated"/>
                       </object>
                     </child>

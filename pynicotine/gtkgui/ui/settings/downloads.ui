@@ -395,6 +395,7 @@
         <property name="visible">True</property>
         <property name="spacing">12</property>
         <property name="orientation">vertical</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
@@ -426,6 +427,7 @@
         <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -434,6 +436,8 @@
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="height-request">200</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkTreeView" id="FilterView">
                         <property name="visible">True</property>

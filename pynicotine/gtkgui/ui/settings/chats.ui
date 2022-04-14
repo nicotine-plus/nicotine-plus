@@ -613,6 +613,7 @@
     <child>
       <object class="GtkFlowBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <property name="homogeneous">True</property>
         <property name="column-spacing">18</property>
         <property name="row-spacing">24</property>
@@ -686,6 +687,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">0</property>
@@ -700,6 +702,7 @@
                     <child>
                       <object class="GtkFrame">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -840,6 +843,7 @@
                     <property name="visible">True</property>
                     <property name="spacing">12</property>
                     <property name="orientation">vertical</property>
+                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">0</property>
@@ -854,6 +858,7 @@
                     <child>
                       <object class="GtkFrame">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>

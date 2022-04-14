@@ -64,6 +64,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="search_toolbar">
@@ -308,6 +309,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="downloads_toolbar">
@@ -548,6 +550,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="uploads_toolbar">
@@ -788,6 +791,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="userbrowse_toolbar">
@@ -966,6 +970,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="userinfo_toolbar">
@@ -1127,6 +1132,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="private_toolbar">
@@ -1290,6 +1296,7 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkBox" id="userlist_toolbar">
@@ -1409,6 +1416,7 @@
                         <child>
                           <object class="GtkPaned" id="chatrooms_paned">
                             <property name="visible">False</property>
+                            <property name="hexpand">True</property>
                             <child>
                               <object class="GtkBox" id="chatrooms_container">
                                 <property name="visible">True</property>
@@ -1635,15 +1643,15 @@
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="min-content-height">90</property>
-                            <property name="vexpand">True</property>
+                            <property name="hexpand">True</property>
                             <child>
                               <object class="GtkTextView" id="log_view">
                                 <property name="visible">True</property>
-                                <property name="hexpand">True</property>
                                 <property name="editable">False</property>
                                 <property name="wrap-mode">word-char</property>
                                 <property name="cursor-visible">False</property>
