@@ -493,8 +493,6 @@ class NicotineFrame(UserInterface):
 
     def set_show_log(self, show):
 
-        self.log_container.set_visible(show)
-
         if show:
             self.log_view.scroll_bottom()
 
