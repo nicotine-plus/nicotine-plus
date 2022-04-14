@@ -34,7 +34,7 @@
                   <object class="GtkCheckButton" id="DarkMode">
                     <property name="label" translatable="yes">Prefer dark mode</property>
                     <property name="visible">True</property>
-                    <property name="tooltip_text" translatable="yes">Note that the operating system&apos;s theme may take precedence.</property>
+                    <property name="tooltip_text" translatable="yes">Nicotine+ can only ask GTK to enable the dark theme, it cannot force the light theme, and the operating system&apos;s theme may take precedence.</property>
                     <signal name="toggled" handler="on_theme_changed"/>
                   </object>
                 </child>
