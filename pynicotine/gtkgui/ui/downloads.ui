@@ -8,14 +8,14 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="vexpand">True</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkTreeView" id="tree_view">
                 <property name="visible">True</property>
-                <property name="hexpand">True</property>
                 <property name="has-tooltip">True</property>
                 <property name="enable-tree-lines">True</property>
                 <property name="rubber-banding">True</property>

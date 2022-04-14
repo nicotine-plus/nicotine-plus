@@ -11,6 +11,7 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkRevealer">
@@ -42,6 +43,7 @@
                         <property name="visible">True</property>
                         <property name="spacing">12</property>
                         <property name="orientation">vertical</property>
+                        <property name="vexpand">True</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -72,14 +74,14 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
-                                <property name="vexpand">True</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkTextView" id="description_view">
                                     <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
                                     <property name="editable">false</property>
                                     <property name="cursor-visible">false</property>
                                     <property name="pixels-above-lines">1</property>
@@ -337,14 +339,14 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
-                                <property name="vexpand">True</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkTreeView" id="likes_list_view">
                                     <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
                                   </object>
                                 </child>
                               </object>
@@ -354,14 +356,14 @@
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
+                            <property name="vexpand">True</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
-                                <property name="vexpand">True</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkTreeView" id="dislikes_list_view">
                                     <property name="visible">True</property>
-                                    <property name="hexpand">True</property>
                                   </object>
                                 </child>
                               </object>

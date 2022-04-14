@@ -5,7 +5,8 @@
     <property name="visible">True</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">False</property>
+        <property name="visible">True</property>
+        <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkSearchBar" id="search_bar">
@@ -23,14 +24,14 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkScrolledWindow">
                 <property name="visible">True</property>
-                <property name="vexpand">True</property>
+                <property name="hexpand">True</property>
                 <child>
                   <object class="GtkTextView" id="chat_view">
                     <property name="visible">True</property>
-                    <property name="hexpand">True</property>
                     <property name="editable">False</property>
                     <property name="wrap-mode">word-char</property>
                     <property name="cursor-visible">False</property>
