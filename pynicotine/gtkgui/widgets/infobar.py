@@ -30,7 +30,7 @@ class InfoBar:
         self.info_bar.connect("response", self._hide)
 
         self.revealer = self.info_bar.get_ancestor(Gtk.Revealer)
-        self.label = Gtk.Label(wrap=True, visible=True)
+        self.label = Gtk.Label(wrap=True, visible=True, xalign=0)
 
         if Gtk.get_major_version() == 4:
             self.info_bar.add_child(self.label)
