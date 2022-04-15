@@ -1845,13 +1845,13 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 
 ### Modern Peer Connection Message Order
 
-*Used by SoulseekQt, Nicotine+, Soulseek.NET-based clients (slskd, Seeker)*
+*Used by SoulseekQt, Nicotine+ 3.2.1 and later, Soulseek.NET-based clients (slskd, Seeker)*
 
 1.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token (indirect connection request)
 2.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection request)
 3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token.  
-If User A's *PeerInit* message arrives, a connection is established, and user A is free to send peer messages.  
-Otherwise, once the *ConnectToPeer* message arrives from the Server, User B proceeds with step 4.
+If User B receives the *PeerInit* message, a connection is established, and user A is free to send peer messages.  
+Otherwise, once User B receives the *ConnectToPeer* message from the Server, User B proceeds with step 4.
 4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token included in the *ConnectToPeer* message.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
 If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
@@ -1862,7 +1862,7 @@ Unlike SoulseekQt, Nicotine+ and Soulseek.NET-based clients skip step 5 in favor
 
 ### Legacy Peer Connection Message Order
 
-*Used by Soulseek NS, Museek+, soulseeX*
+*Used by Soulseek NS, Nicotine+ 3.2.0 and earlier, Museek+, soulseeX*
 
 1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
