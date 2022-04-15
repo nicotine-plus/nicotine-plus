@@ -62,7 +62,6 @@ If you find any inconsistencies, errors or omissions in the documentation, pleas
 
 | Code | Status  |
 | ---- | ------- |
-| -1   | Unknown |
 | 0    | Offline |
 | 1    | Away    |
 | 2    | Online  |
