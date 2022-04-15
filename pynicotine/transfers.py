@@ -551,8 +551,9 @@ class Transfers:
         username = msg.user
         user_offline = (msg.status <= 0)
         download_statuses = ("Queued", "Getting status", "Too many files", "Too many megabytes", "Pending shutdown.",
-                             "User logged off", "Cannot connect", "Remote file error", "Cancelled")
-        upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Cannot connect", "Cancelled")
+                             "User logged off", "Connection timeout", "Remote file error", "Cancelled")
+        upload_statuses = ("Getting status", "Disallowed extension", "User logged off", "Connection timeout",
+                           "Cancelled")
 
         for i in reversed(self.downloads.copy()):
             if username == i.user and (i.status in download_statuses or i.status.startswith("User limit of")):
@@ -594,7 +595,7 @@ class Transfers:
             if i.user != username or i.filename != filename:
                 continue
 
-            i.status = "Cannot connect"
+            i.status = "Connection timeout"
             i.token = None
 
             self.update_download(i)
@@ -608,7 +609,7 @@ class Transfers:
             if i.token != token:
                 continue
 
-            i.status = "Cannot connect"
+            i.status = "Connection timeout"
             i.token = None
             i.queue_position = 0
 
@@ -928,7 +929,7 @@ class Transfers:
             "user": transfer.user
         })
 
-        transfer.status = "Cannot connect"
+        transfer.status = "Connection timeout"
         transfer.token = None
 
         self.core.watch_user(transfer.user)
@@ -2057,7 +2058,7 @@ class Transfers:
         """ Find failed or stuck downloads and attempt to queue them. Also ask for the queue
         position of downloads. """
 
-        statuslist_failed = ("Cannot connect", "Local file error", "Remote file error")
+        statuslist_failed = ("Connection timeout", "Local file error", "Remote file error")
         statuslist_limited = ("Too many files", "Too many megabytes")
         reset_count = False
 
