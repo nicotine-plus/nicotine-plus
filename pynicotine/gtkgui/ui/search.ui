@@ -159,7 +159,7 @@
                 <property name="margin-start">12</property>
                 <property name="margin-end">6</property>
                 <child>
-                  <object class="GtkFlowBox" id="FiltersFlowBox">
+                  <object class="GtkFlowBox">
                     <property name="visible">True</property>
                     <property name="column-spacing">12</property>
                     <property name="row-spacing">6</property>
