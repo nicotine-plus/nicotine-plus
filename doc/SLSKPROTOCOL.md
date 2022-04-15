@@ -1,6 +1,6 @@
 # Soulseek Protocol Documentation
 
-Last updated on April 01, 2022
+Last updated on April 15, 2022
 
 Since the official Soulseek client and server is proprietary software, this documentation has been compiled thanks to years of reverse engineering efforts. To preserve the health of the Soulseek network, please do not modify or extend the protocol in ways that negatively impact the network.
 
@@ -1843,7 +1843,26 @@ In Nicotine+, these messages are matched to their message number in slskproto.py
 | 0    | [Pierce Firewall](#peer-init-code-0) |
 | 1    | [Peer Init](#peer-init-code-1)       |
 
-## Peer Connection Message Order
+### Modern Peer Connection Message Order
+
+*Used by SoulseekQt, Nicotine+, Soulseek.NET-based clients (slskd, Seeker)*
+
+1.  User A sends [ConnectToPeer](#server-code-18) to the Server with a unique token (indirect connection request)
+2.  User A sends a [PeerInit](#peer-init-code-1) to User B (direct connection request)
+3.  The Server sends a [ConnectToPeer](#server-code-18) response to User B with the same token.  
+If User A's *PeerInit* message arrives, a connection is established, and user A is free to send peer messages.  
+Otherwise, once the *ConnectToPeer* message arrives from the Server, User B proceeds with step 4.
+4.  User B sends a [PierceFireWall](#peer-init-code-0) to User A with the token included in the *ConnectToPeer* message.  
+If this succeeds, a connection is established, and User A is free to send peer messages.  
+If this fails, User B retries for ~1 minute. If this still fails, no connection is possible, and User B proceeds with step 5.
+5.  User B sends a [CantConnectToPeer](#server-code-1001) to the Server.
+6.  The Server sends a [CantConnectToPeer](#server-code-1001) response to User A.
+
+Unlike SoulseekQt, Nicotine+ and Soulseek.NET-based clients skip step 5 in favor of letting the connection attempt time out on User A's end.
+
+### Legacy Peer Connection Message Order
+
+*Used by Soulseek NS, Museek+, soulseeX*
 
 1.  User A sends a [PeerInit](#peer-init-code-1) to User B.  
 If this succeeds, a connection is established, and User A is free to send peer messages.  
