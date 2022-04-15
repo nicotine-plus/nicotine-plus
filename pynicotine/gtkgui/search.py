@@ -881,7 +881,7 @@ class Search(UserInterface):
         if filters["filterbr"] and not self.check_digit(filters["filterbr"], row[10].get_uint(), False):
             return False
 
-        if filters["filterslot"] and row[15].get_uint64() > 0:
+        if filters["filterslot"] and row[15].get_uint() > 0:
             return False
 
         if filters["filtercc"] and not self.check_country(filters["filtercc"], row[12]):
