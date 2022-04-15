@@ -902,7 +902,7 @@ class Search(UserInterface):
         if filters["filtertype"] and not self.check_file_type(filters["filtertype"], row[11]):
             return False
 
-        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_uint64(), False):
+        if filters["filterlength"] and not self.check_digit(filters["filterlength"], row[16].get_uint(), False):
             return False
 
         return True
