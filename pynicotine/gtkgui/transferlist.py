@@ -91,7 +91,7 @@ class TransferList(UserInterface):
             "Queued (privileged)": _("Queued (privileged)"),
             "Getting status": _("Getting status"),
             "Transferring": _("Transferring"),
-            "Cannot connect": _("Cannot connect"),
+            "Connection timeout": _("Connection timeout"),
             "Pending shutdown.": _("Pending shutdown"),
             "User logged off": _("User logged off"),
             "Disallowed extension": _("Disallowed extension"),  # Sent by Soulseek NS for filtered extensions

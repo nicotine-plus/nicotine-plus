@@ -151,11 +151,11 @@ class Uploads(TransferList):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Cannot connect", "Local file error", "Remote file error"])
+        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error"])
 
     def on_clear_finished_aborted(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished"])
 
     def on_clear_finished_failed(self, *_args):
         self.clear_transfers(["Aborted", "Cancelled", "Disallowed extension", "User logged off", "Finished",
-                              "Cannot connect", "Local file error", "Remote file error"])
+                              "Connection timeout", "Local file error", "Remote file error"])

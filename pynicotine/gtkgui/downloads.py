@@ -175,7 +175,7 @@ class Downloads(TransferList):
         self.clear_transfers(["Finished", "Filtered"])
 
     def on_clear_failed(self, *_args):
-        self.clear_transfers(["Cannot connect", "Local file error", "Remote file error", "File not shared"])
+        self.clear_transfers(["Connection timeout", "Local file error", "Remote file error", "File not shared"])
 
     def on_clear_filtered(self, *_args):
         self.clear_transfers(["Filtered"])
