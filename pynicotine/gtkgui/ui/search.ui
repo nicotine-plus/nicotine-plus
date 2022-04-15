@@ -166,7 +166,7 @@
                     <property name="max-children-per-line">7</property>
                     <property name="selection-mode">none</property>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterInBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -195,7 +195,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterOutBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -224,7 +224,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterTypeBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -253,7 +253,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterSizeBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -282,7 +282,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterBitrateBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -311,7 +311,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterLengthBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -340,7 +340,7 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkFlowBoxChild" id="FilterCountryBox">
+                      <object class="GtkFlowBoxChild">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
@@ -371,7 +371,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkBox" id="FilterFreeSlotBox">
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
