@@ -26,7 +26,12 @@ Issues closed on GitHub
  * Make "PRIVATE FILE" a translatable string ([#1893](https://github.com/nicotine-plus/nicotine-plus/issues/1893))
  * ModuleNotFoundError: No module named 'pynicotine' ([#1953](https://github.com/nicotine-plus/nicotine-plus/issues/1953))
  * Nicotine+ crashes or hangs after a few seconds after it's started ([#1962](https://github.com/nicotine-plus/nicotine-plus/issues/1962))
+ * Immediate crash on Solus Linux - no stdout ([#1965](https://github.com/nicotine-plus/nicotine-plus/issues/1965))
  * Issue on macOS Monterey 12.2.1 ([#1969](https://github.com/nicotine-plus/nicotine-plus/issues/1969))
+ * Windows: Instant crash at startup since version 3.2.1 - upgrade install ([#1974](https://github.com/nicotine-plus/nicotine-plus/issues/1974))
+ * Linux: Nicotine+ not working (no stdout) ([1978](https://github.com/nicotine-plus/nicotine-plus/issues/1978))
+ * Question: UPnP is not available on this network ([#1981](https://github.com/nicotine-plus/nicotine-plus/issues/1981))
+ * \[3.3.0.dev1\] Breakage on latest master ([#1982](https://github.com/nicotine-plus/nicotine-plus/issues/1982))
  * 
 
 Version 3.2.2 (March 19, 2022)
