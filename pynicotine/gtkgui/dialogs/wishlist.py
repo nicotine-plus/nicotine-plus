@@ -38,6 +38,8 @@ class WishList(UserInterface):
 
         super().__init__("ui/dialogs/wishlist.ui")
 
+        self.container, self.list_view, self.wish_entry = self.widgets
+
         self.dialog = generic_dialog(
             parent=frame.window,
             modal=False,

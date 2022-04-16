@@ -100,6 +100,7 @@ class TabLabel(Gtk.Box):
             self.close_button.add_controller(gesture_click)
 
         else:
+            # pylint: disable=maybe-no-member
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
 
         self.close_button.get_style_context().add_class("flat")

@@ -50,6 +50,8 @@ class UserList(UserInterface):
 
         super().__init__("ui/buddylist.ui")
 
+        self.container, self.list_view, self.toolbar = self.widgets
+
         self.frame = frame
         self.core = core
         self.page_id = "userlist"

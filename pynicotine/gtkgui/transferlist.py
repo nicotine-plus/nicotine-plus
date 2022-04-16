@@ -53,9 +53,14 @@ from pynicotine.utils import human_speed
 
 class TransferList(UserInterface):
 
+    path_separator = path_label = retry_label = abort_label = aborted_status = None
+    user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+
     def __init__(self, frame, core, transfer_type):
 
         super().__init__("ui/" + transfer_type + "s.ui")
+
+        self.clear_all_button, self.container, self.tree_view = self.widgets
 
         self.frame = frame
         self.core = core
@@ -855,12 +860,27 @@ class TransferList(UserInterface):
         if data:
             FileProperties(self.frame, self.core, data, total_size=selected_size, download_button=False).show()
 
+    def on_copy_url(self, *_args):
+        pass
+
+    def on_copy_dir_url(self, *_args):
+        pass
+
     def on_copy_file_path(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             copy_text(transfer.filename)
+
+    def on_play_files(self, *_args):
+        pass
+
+    def on_open_file_manager(self, *_args):
+        pass
+
+    def on_browse_folder(self, *_args):
+        pass
 
     def on_retry_transfer(self, *_args):
         self.select_transfers()

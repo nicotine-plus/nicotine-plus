@@ -117,6 +117,12 @@ class UserInfo(UserInterface):
 
         super().__init__("ui/userinfo.ui")
 
+        (self.container, self.country_label, self.description_view, self.dislikes_list_view,
+         self.free_upload_slots_label, self.horizontal_paned, self.info_bar, self.likes_list_view,
+         self.picture_container, self.picture_view, self.placeholder_picture, self.progress_bar,
+         self.queued_uploads_label, self.shared_files_label, self.shared_folders_label, self.upload_slots_label,
+         self.upload_speed_label, self.user_label) = self.widgets
+
         self.userinfos = userinfos
         self.frame = userinfos.frame
         self.core = userinfos.core

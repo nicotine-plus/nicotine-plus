@@ -74,7 +74,9 @@ class ChatRooms(IconNotebook):
         self.autojoin_rooms = set()
         self.completion = ChatCompletion()
         self.roomlist = RoomList(frame, core)
+
         self.command_help = UserInterface("ui/popovers/chatroomcommands.ui")
+        self.command_help.container, self.command_help.popover = self.command_help.widgets
 
         if Gtk.get_major_version() == 4:
             self.frame.chatrooms_paned.set_resize_start_child(True)
@@ -348,6 +350,12 @@ class ChatRoom(UserInterface):
     def __init__(self, chatrooms, room, users):
 
         super().__init__("ui/chatrooms.ui")
+
+        (self.activity_container, self.activity_search_bar, self.activity_search_entry, self.activity_view,
+         self.auto_join_toggle, self.chat_container, self.chat_entry, self.chat_entry_row, self.chat_paned,
+         self.chat_search_bar, self.chat_search_entry, self.chat_view, self.container, self.help_button,
+         self.log_toggle, self.room_options_container, self.room_wall_button, self.speech_toggle, self.users_button,
+         self.users_container, self.users_label, self.users_list_view, self.users_paned) = self.widgets
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame

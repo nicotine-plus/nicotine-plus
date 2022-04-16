@@ -34,6 +34,9 @@ class RoomList(UserInterface):
 
         super().__init__("ui/popovers/roomlist.ui")
 
+        (self.list_view, self.popover, self.private_room_toggle, self.public_feed_toggle, self.refresh_button,
+         self.search_entry) = self.widgets
+
         self.frame = frame
         self.core = core
         self.room_iters = {}

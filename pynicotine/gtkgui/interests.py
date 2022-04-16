@@ -40,6 +40,11 @@ class Interests(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/interests.ui")
+
+        (self.container, self.dislikes_list_view, self.likes_list_view,
+         self.recommendations_button, self.recommendations_label, self.recommendations_list_view,
+         self.similar_users_button, self.similar_users_label, self.similar_users_list_view) = self.widgets
+
         frame.interests_container.add(self.container)
 
         self.frame = frame

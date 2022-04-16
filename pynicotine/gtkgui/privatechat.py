@@ -59,7 +59,9 @@ class PrivateChats(IconNotebook):
 
         self.completion = ChatCompletion()
         self.history = ChatHistory(frame, core)
+
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+        self.command_help.container, self.command_help.popover = self.command_help.widgets
 
         if Gtk.get_major_version() == 4:
             # Scroll to the focused widget
@@ -181,6 +183,9 @@ class PrivateChat(UserInterface):
     def __init__(self, chats, user):
 
         super().__init__("ui/privatechat.ui")
+
+        (self.chat_entry, self.chat_view, self.container, self.help_button, self.log_toggle, self.search_bar,
+         self.search_entry, self.speech_toggle) = self.widgets
 
         self.user = user
         self.chats = chats

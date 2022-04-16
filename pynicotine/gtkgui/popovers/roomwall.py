@@ -30,6 +30,8 @@ class RoomWall(UserInterface):
 
         super().__init__("ui/popovers/roomwall.ui")
 
+        self.list_view, self.message_entry, self.message_view, self.popover = self.widgets
+
         self.frame = frame
         self.core = core
         self.room = room

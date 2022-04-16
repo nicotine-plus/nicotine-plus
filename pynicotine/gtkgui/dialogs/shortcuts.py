@@ -30,6 +30,8 @@ class Shortcuts(UserInterface):
 
         super().__init__("ui/dialogs/shortcuts.ui")
 
+        self.dialog, self.emoji_shortcut = self.widgets
+
         self.frame = frame
         set_dialog_properties(self.dialog, frame.window, quit_callback=self.hide)
 

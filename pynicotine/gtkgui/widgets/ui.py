@@ -56,15 +56,19 @@ class UserInterface:
                 builder.add_from_string(UI_DATA[filename])
                 builder.connect_signals(self)
 
+            widgets = []
+
             for obj in builder.get_objects():
                 try:
                     obj_name = Gtk.Buildable.get_name(obj)
 
                     if not obj_name.startswith("_"):
-                        setattr(self, obj_name, obj)
+                        widgets.append(obj)
 
                 except TypeError:
                     pass
+
+            self.widgets = sorted(widgets, key=lambda widget: Gtk.Buildable.get_name(widget))
 
         except Exception as error:
             log.add(_("Failed to load ui file %(file)s: %(error)s"), {

@@ -83,7 +83,6 @@ disable=missing-class-docstring,
         too-many-instance-attributes,
         cyclic-import,
         consider-using-with,
-        no-member,
         duplicate-code,
         consider-using-f-string,
         no-value-for-parameter

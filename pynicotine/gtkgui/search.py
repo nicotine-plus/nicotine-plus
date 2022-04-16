@@ -255,6 +255,12 @@ class Search(UserInterface):
 
         super().__init__("ui/search.ui")
 
+        # pylint: disable=invalid-name
+        (self.AddWish, self.AddWishIcon, self.AddWishLabel, self.Counter, self.CounterButton, self.ExpandButton,
+         self.FilterBitrate, self.FilterCountry, self.FilterFreeSlot, self.FilterIn, self.FilterLabel, self.FilterOut,
+         self.FilterSize, self.FilterType, self.FiltersContainer, self.Main, self.ResultGrouping, self.ResultsList,
+         self.ShowFilters, self.expand) = self.widgets
+
         self.searches = searches
         self.frame = searches.frame
         self.core = searches.core
