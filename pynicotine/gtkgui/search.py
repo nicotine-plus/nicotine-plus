@@ -64,7 +64,7 @@ class Searches(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.search_notebook, "search")
+        IconNotebook.__init__(self, frame, core, frame.search_notebook, frame.search_page)
         self.notebook.connect("switch-page", self.on_switch_search_page)
 
         self.modes = {
@@ -97,7 +97,7 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.search_page.id:
             return
 
         for tab in self.pages.values():

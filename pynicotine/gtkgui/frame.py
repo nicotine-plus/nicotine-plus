@@ -521,13 +521,13 @@ class NicotineFrame(UserInterface):
         if not status:
             return
 
-        if self.current_page_id == self.userbrowse.page_id:
+        if self.current_page_id == self.userbrowse_page.id:
             GLib.idle_add(lambda: self.userbrowse_entry.grab_focus() == -1)
 
-        if self.current_page_id == self.userinfo.page_id:
+        if self.current_page_id == self.userinfo_page.id:
             GLib.idle_add(lambda: self.userinfo_entry.grab_focus() == -1)
 
-        if self.current_page_id == self.search.page_id:
+        if self.current_page_id == self.search_page.id:
             GLib.idle_add(lambda: self.search_entry.grab_focus() == -1)
 
     """ Action Callbacks """
@@ -619,8 +619,6 @@ class NicotineFrame(UserInterface):
 
     def set_toggle_buddy_list(self, mode, force_show=True):
 
-        page_id = self.userlist.page_id
-
         if self.userlist.container.get_parent() == self.buddy_list_container:
 
             if mode == "always":
@@ -643,7 +641,7 @@ class NicotineFrame(UserInterface):
                 return
 
             self.userlist_content.remove(self.userlist.container)
-            self.hide_tab(page_id)
+            self.hide_tab(self.userlist_page)
 
         if mode == "always":
 
@@ -663,7 +661,7 @@ class NicotineFrame(UserInterface):
         self.userlist_content.add(self.userlist.container)
 
         if force_show:
-            self.show_tab(page_id)
+            self.show_tab(self.userlist_page)
 
     def on_toggle_buddy_list(self, action, state):
         """ Function used to switch around the UI the BuddyList position """
@@ -1217,14 +1215,13 @@ class NicotineFrame(UserInterface):
         for i in range(self.notebook.get_n_pages()):
             tab_id, tab_text, tab_icon_name = tab_data[i]
             page = self.notebook.get_nth_page(i)
-            page.page_id = tab_id
+            page.id = tab_id
 
             tab_label = TabLabel(tab_text)
             tab_label.set_start_icon_name(tab_icon_name)
             tab_label.show()
 
             # Apply tab label
-            setattr(self, tab_id + "_tab_label", tab_label)
             self.notebook.set_tab_label(page, tab_label)
             self.notebook.set_tab_reorderable(page, True)
             self.set_tab_expand(page)
@@ -1241,7 +1238,7 @@ class NicotineFrame(UserInterface):
             current_page.get_children()[0].hide()
             page.get_children()[0].show()
 
-        self.set_active_header_bar(page.page_id)
+        self.set_active_header_bar(page.id)
 
         if page == self.chatrooms_page:
             curr_page_num = self.chatrooms.get_current_page()
@@ -1263,14 +1260,14 @@ class NicotineFrame(UserInterface):
 
         elif page == self.uploads_page:
             self.uploads.update(forceupdate=True)
-            self.remove_tab_hilite(self.uploads.page_id)
+            self.remove_tab_hilite(self.uploads_page)
 
             if self.uploads.container.get_visible():
                 GLib.idle_add(lambda: self.uploads.tree_view.grab_focus() == -1)
 
         elif page == self.downloads_page:
             self.downloads.update(forceupdate=True)
-            self.remove_tab_hilite(self.downloads.page_id)
+            self.remove_tab_hilite(self.downloads_page)
 
             if self.downloads.container.get_visible():
                 GLib.idle_add(lambda: self.downloads.tree_view.grab_focus() == -1)
@@ -1318,7 +1315,7 @@ class NicotineFrame(UserInterface):
 
         for i in range(self.notebook.get_n_pages()):
             page = self.notebook.get_nth_page(i)
-            page_ids.append(page.page_id)
+            page_ids.append(page.id)
 
         config.sections["ui"]["modes_order"] = page_ids
 
@@ -1327,10 +1324,6 @@ class NicotineFrame(UserInterface):
 
         notebook_name = self.current_page_id
         notebook = getattr(self, notebook_name)
-
-        if not isinstance(notebook, IconNotebook):
-            return False
-
         page = notebook.get_nth_page(notebook.get_current_page())
 
         if page is None:
@@ -1345,10 +1338,6 @@ class NicotineFrame(UserInterface):
 
         notebook_name = self.current_page_id
         notebook = getattr(self, notebook_name)
-
-        if not isinstance(notebook, IconNotebook):
-            return False
-
         num_pages = notebook.get_n_pages()
         current_page = notebook.get_current_page()
 
@@ -1385,49 +1374,34 @@ class NicotineFrame(UserInterface):
         self.notebook.set_current_page(page_num)
         return True
 
-    def request_tab_hilite(self, page_id, mentioned=False):
-        tab_label = getattr(self, page_id + "_tab_label")
+    def request_tab_hilite(self, page, mentioned=False):
+        tab_label = self.notebook.get_tab_label(page)
         tab_label.request_hilite(mentioned)
 
-    def remove_tab_hilite(self, page_id):
-        tab_label = getattr(self, page_id + "_tab_label")
+    def remove_tab_hilite(self, page):
+        tab_label = self.notebook.get_tab_label(page)
         tab_label.remove_hilite()
 
-    def change_main_page(self, page_id):
+    def change_main_page(self, page):
 
-        self.show_tab(page_id)
-
-        try:
-            page = getattr(self, page_id + "_page")
-        except AttributeError:
-            return
+        self.show_tab(page)
 
         page_num = self.notebook.page_num(page)
         self.notebook.set_current_page(page_num)
 
-    def show_tab(self, page_id):
+    def show_tab(self, page):
 
-        if page_id == self.userlist.page_id:
+        if page == self.userlist_page:
             self.on_toggle_buddy_list(self.toggle_buddy_list_action, GLib.Variant("s", "tab"))
 
-        try:
-            page = getattr(self, page_id + "_page")
-        except AttributeError:
-            return
-
-        config.sections["ui"]["modes_visible"][page_id] = True
+        config.sections["ui"]["modes_visible"][page.id] = True
         page.show()
 
         self.notebook.set_show_tabs(True)
 
-    def hide_tab(self, page_id):
+    def hide_tab(self, page):
 
-        try:
-            page = getattr(self, page_id + "_page")
-        except AttributeError:
-            return
-
-        config.sections["ui"]["modes_visible"][page_id] = False
+        config.sections["ui"]["modes_visible"][page.id] = False
         page.hide()
 
         if self.notebook.get_n_pages() <= 1:
@@ -1435,34 +1409,29 @@ class NicotineFrame(UserInterface):
 
     def set_main_tabs_order(self):
 
-        order = 0
+        for i in range(self.notebook.get_n_pages()):
+            page = self.notebook.get_nth_page(i)
+            order = config.sections["ui"]["modes_order"].index(page.id)
 
-        for page_id in config.sections["ui"]["modes_order"]:
-            try:
-                page = getattr(self, page_id + "_page")
-                self.notebook.reorder_child(page, order)
-            except AttributeError:
-                pass
-
-            order += 1
+            self.notebook.reorder_child(page, order)
 
     def set_main_tabs_visibility(self):
 
         visible_tab_found = False
 
         for i in range(self.notebook.get_n_pages()):
-            page_id = self.notebook.get_nth_page(i).page_id
+            page = self.notebook.get_nth_page(i)
 
-            if config.sections["ui"]["modes_visible"].get(page_id, True):
+            if config.sections["ui"]["modes_visible"].get(page.id, True):
                 visible_tab_found = True
-                self.show_tab(page_id)
+                self.show_tab(page)
                 continue
 
-            self.hide_tab(page_id)
+            self.hide_tab(page)
 
         if not visible_tab_found:
             # Ensure at least one tab is visible
-            self.show_tab("search")
+            self.show_tab(self.search_page)
 
     def set_last_session_tab(self):
 

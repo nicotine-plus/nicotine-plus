@@ -243,7 +243,7 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, core, notebook, page_id):
+    def __init__(self, frame, core, notebook, parent_page):
 
         self.notebook = notebook
         self.notebook.set_show_tabs(False)
@@ -252,7 +252,7 @@ class IconNotebook:
 
         self.frame = frame
         self.core = core
-        self.page_id = page_id
+        self.parent_page = parent_page
         self.unread_button = Gtk.MenuButton(
             tooltip_text=_("Unread Tabs"),
             halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=False
@@ -410,9 +410,9 @@ class IconNotebook:
 
         page_active = (self.get_nth_page(self.get_current_page()) == page)
 
-        if self.frame.current_page_id != self.page_id or not page_active:
+        if self.frame.current_page_id != self.parent_page.id or not page_active:
             # Highlight top-level tab
-            self.frame.request_tab_hilite(self.page_id, mentioned)
+            self.frame.request_tab_hilite(self.parent_page, mentioned)
 
         if page_active:
             return
@@ -448,7 +448,7 @@ class IconNotebook:
 
         if not self.unread_pages:
             self.unread_button.hide()
-            self.frame.remove_tab_hilite(self.page_id)
+            self.frame.remove_tab_hilite(self.parent_page)
 
     def set_unread_page(self, _action, _state, page):
         self.notebook.set_current_page(self.page_num(page))

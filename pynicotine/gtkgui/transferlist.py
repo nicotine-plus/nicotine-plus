@@ -65,7 +65,6 @@ class TransferList(UserInterface):
         self.frame = frame
         self.core = core
         self.type = transfer_type
-        self.page_id = transfer_type + "s"
 
         if Gtk.get_major_version() == 4:
             self.clear_all_button.set_has_frame(False)
@@ -278,7 +277,7 @@ class TransferList(UserInterface):
             return
 
         self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
-        self.frame.change_main_page("search")
+        self.frame.change_main_page(self.frame.search_page)
 
     def translate_status(self, status):
 
@@ -625,8 +624,7 @@ class TransferList(UserInterface):
             self.tree_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
     def retry_transfers(self):
-        for transfer in self.selected_transfers:
-            getattr(self.core.transfers, "retry_" + self.type)(transfer)
+        pass
 
     def abort_transfers(self, clear=False):
 

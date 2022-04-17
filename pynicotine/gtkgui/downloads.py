@@ -42,6 +42,7 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.aborted_status = "Paused"
 
+        self.page_id = frame.downloads_page.id
         self.user_counter = frame.download_users_label
         self.file_counter = frame.download_files_label
         self.expand_button = frame.downloads_expand_button
@@ -64,8 +65,9 @@ class Downloads(TransferList):
         )
         self.popup_menu_clear.update_model()
 
-    def switch_tab(self):
-        self.frame.change_main_page("downloads")
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            self.core.transfers.retry_download(transfer)
 
     def on_try_clear_queued(self, *_args):
 

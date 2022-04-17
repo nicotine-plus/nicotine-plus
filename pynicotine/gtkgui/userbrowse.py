@@ -54,12 +54,12 @@ class UserBrowses(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, "userbrowse")
+        IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, frame.userbrowse_page)
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.userbrowse_page.id:
             return
 
         for tab in self.pages.values():
@@ -86,7 +86,7 @@ class UserBrowses(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.page_num(page.container))
-            self.frame.change_main_page("userbrowse")
+            self.frame.change_main_page(self.frame.userbrowse_page)
 
     def show_connection_error(self, user):
         if user in self.pages:

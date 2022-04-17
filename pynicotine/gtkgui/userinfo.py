@@ -47,12 +47,12 @@ class UserInfos(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, "userinfo")
+        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, frame.userinfo_page)
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
     def on_switch_info_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.userinfo_page.id:
             return
 
         for tab in self.pages.values():
@@ -70,7 +70,7 @@ class UserInfos(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].container))
-            self.frame.change_main_page("userinfo")
+            self.frame.change_main_page(self.frame.userinfo_page)
 
     def show_connection_error(self, user):
         if user in self.pages:
@@ -431,7 +431,7 @@ class UserInfo(UserInterface):
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

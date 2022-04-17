@@ -54,7 +54,6 @@ class UserList(UserInterface):
 
         self.frame = frame
         self.core = core
-        self.page_id = "userlist"
 
         # Columns
         self.user_iterators = {}
@@ -312,7 +311,7 @@ class UserList(UserInterface):
             return
 
         self.core.privatechats.show_user(user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
 
     def on_popup_menu(self, menu, _widget):
 

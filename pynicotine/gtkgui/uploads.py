@@ -41,6 +41,7 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
+        self.page_id = frame.uploads_page.id
         self.user_counter = frame.upload_users_label
         self.file_counter = frame.upload_files_label
         self.expand_button = frame.uploads_expand_button
@@ -62,6 +63,10 @@ class Uploads(TransferList):
             ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
+
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            self.core.transfers.retry_upload(transfer)
 
     def on_try_clear_queued(self, *_args):
 

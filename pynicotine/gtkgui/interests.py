@@ -49,7 +49,7 @@ class Interests(UserInterface):
 
         self.frame = frame
         self.core = core
-        self.page_id = "interests"
+
         self.populated_recommends = False
 
         # Columns
@@ -177,7 +177,7 @@ class Interests(UserInterface):
         self.recommendations_button.set_sensitive(True)
         self.similar_users_button.set_sensitive(True)
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.interests_page.id:
             # Only populate recommendations if the tab is open on login
             return
 
@@ -200,7 +200,7 @@ class Interests(UserInterface):
 
     def recommend_search(self, item):
         self.frame.search_entry.set_text(item)
-        self.frame.change_main_page("search")
+        self.frame.change_main_page(self.frame.search_page)
 
     def on_add_thing_i_like(self, widget, *_args):
 
@@ -416,7 +416,7 @@ class Interests(UserInterface):
 
         if user is not None:
             self.core.privatechats.show_user(user)
-            self.frame.change_main_page("private")
+            self.frame.change_main_page(self.frame.private_page)
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):

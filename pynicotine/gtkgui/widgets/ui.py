@@ -46,29 +46,15 @@ class UserInterface:
                         UI_DATA[filename] = file_handle.read()
 
             if Gtk.get_major_version() == 4:
-                builder = Gtk.Builder(self)
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
+                self.builder = Gtk.Builder(self)
+                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+                self.builder.add_from_string(UI_DATA[filename])
                 Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
             else:
-                builder = Gtk.Builder()
-                builder.set_translation_domain(TRANSLATION_DOMAIN)
-                builder.add_from_string(UI_DATA[filename])
-                builder.connect_signals(self)
-
-            widgets = []
-
-            for obj in builder.get_objects():
-                try:
-                    obj_name = Gtk.Buildable.get_name(obj)
-
-                    if not obj_name.startswith("_"):
-                        widgets.append(obj)
-
-                except TypeError:
-                    pass
-
-            self.widgets = sorted(widgets, key=lambda widget: Gtk.Buildable.get_name(widget))
+                self.builder = Gtk.Builder()
+                self.builder.set_translation_domain(TRANSLATION_DOMAIN)
+                self.builder.add_from_string(UI_DATA[filename])
+                self.builder.connect_signals(self)
 
         except Exception as error:
             log.add(_("Failed to load ui file %(file)s: %(error)s"), {
@@ -76,3 +62,20 @@ class UserInterface:
                 "error": error
             })
             sys.exit()
+
+    @property
+    def widgets(self):
+
+        widgets = []
+
+        for obj in self.builder.get_objects():
+            try:
+                obj_name = Gtk.Buildable.get_name(obj)
+
+                if not obj_name.startswith("_"):
+                    widgets.append(obj)
+
+            except TypeError:
+                pass
+
+        return sorted(widgets, key=lambda widget: Gtk.Buildable.get_name(widget))
