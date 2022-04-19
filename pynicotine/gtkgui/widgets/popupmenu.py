@@ -85,7 +85,8 @@ class PopupMenu:
             parent = parent.get_parent()
 
         if Gtk.get_major_version() == 4:
-            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model, Gtk.PopoverMenuFlags.NESTED)
+            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model,  # pylint: disable=no-member
+                                                                  Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(parent)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)
@@ -443,11 +444,11 @@ class UserPopupMenu(PopupMenu):
 
         self.frame.search_mode_action.change_state(GLib.Variant("s", "user"))
         self.frame.user_search_entry.set_text(self.user)
-        self.frame.change_main_page("search")
+        self.frame.change_main_page(self.frame.search_page)
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

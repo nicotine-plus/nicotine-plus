@@ -39,6 +39,23 @@ class FastConfigure(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/fastconfigure.ui")
+        (
+            self.account_page,
+            self.check_port_label,
+            self.download_folder_button,
+            self.main_icon,
+            self.next_button,
+            self.password_entry,
+            self.port_page,
+            self.previous_button,
+            self.privileges_label,
+            self.share_page,
+            self.shares_list_view,
+            self.stack,
+            self.summary_page,
+            self.username_entry,
+            self.welcome_page
+        ) = self.widgets
 
         self.frame = frame
         self.core = core

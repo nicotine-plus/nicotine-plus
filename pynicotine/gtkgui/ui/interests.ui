@@ -57,9 +57,6 @@
                         <child>
                           <object class="GtkTreeView" id="likes_list_view">
                             <property name="visible">True</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
-                            </child>
                           </object>
                         </child>
                       </object>
@@ -112,9 +109,6 @@
                         <child>
                           <object class="GtkTreeView" id="dislikes_list_view">
                             <property name="visible">True</property>
-                            <child internal-child="selection">
-                              <object class="GtkTreeSelection"/>
-                            </child>
                           </object>
                         </child>
                       </object>
@@ -195,9 +189,6 @@
                                 <property name="visible">True</property>
                                 <property name="search-column">1</property>
                                 <signal name="row-activated" handler="on_r_row_activated"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
-                                </child>
                               </object>
                             </child>
                           </object>
@@ -276,9 +267,6 @@
                                 <property name="search-column">1</property>
                                 <signal name="query-tooltip" handler="on_tooltip"/>
                                 <signal name="row-activated" handler="on_ru_row_activated"/>
-                                <child internal-child="selection">
-                                  <object class="GtkTreeSelection"/>
-                                </child>
                               </object>
                             </child>
                           </object>

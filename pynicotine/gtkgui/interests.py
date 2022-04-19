@@ -40,11 +40,26 @@ class Interests(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/interests.ui")
-        frame.interests_container.add(self.container)
+        (
+            self.container,
+            self.dislikes_list_view,
+            self.likes_list_view,
+            self.recommendations_button,
+            self.recommendations_label,
+            self.recommendations_list_view,
+            self.similar_users_button,
+            self.similar_users_label,
+            self.similar_users_list_view
+        ) = self.widgets
+
+        if Gtk.get_major_version() == 4:
+            frame.interests_container.append(self.container)
+        else:
+            frame.interests_container.add(self.container)
 
         self.frame = frame
         self.core = core
-        self.page_id = "interests"
+
         self.populated_recommends = False
 
         # Columns
@@ -172,7 +187,7 @@ class Interests(UserInterface):
         self.recommendations_button.set_sensitive(True)
         self.similar_users_button.set_sensitive(True)
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.interests_page.id:
             # Only populate recommendations if the tab is open on login
             return
 
@@ -195,7 +210,7 @@ class Interests(UserInterface):
 
     def recommend_search(self, item):
         self.frame.search_entry.set_text(item)
-        self.frame.change_main_page("search")
+        self.frame.change_main_page(self.frame.search_page)
 
     def on_add_thing_i_like(self, widget, *_args):
 
@@ -411,7 +426,7 @@ class Interests(UserInterface):
 
         if user is not None:
             self.core.privatechats.show_user(user)
-            self.frame.change_main_page("private")
+            self.frame.change_main_page(self.frame.private_page)
 
     @staticmethod
     def on_tooltip(widget, pos_x, pos_y, _keyboard_mode, tooltip):

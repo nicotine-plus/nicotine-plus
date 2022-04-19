@@ -53,14 +53,21 @@ from pynicotine.utils import human_speed
 
 class TransferList(UserInterface):
 
+    path_separator = path_label = retry_label = abort_label = aborted_status = None
+    page_id = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+
     def __init__(self, frame, core, transfer_type):
 
         super().__init__("ui/" + transfer_type + "s.ui")
+        (
+            self.clear_all_button,
+            self.container,
+            self.tree_view
+        ) = self.widgets
 
         self.frame = frame
         self.core = core
         self.type = transfer_type
-        self.page_id = transfer_type + "s"
 
         if Gtk.get_major_version() == 4:
             self.clear_all_button.set_has_frame(False)
@@ -273,7 +280,7 @@ class TransferList(UserInterface):
             return
 
         self.frame.search_entry.set_text(transfer.filename.rsplit("\\", 1)[1])
-        self.frame.change_main_page("search")
+        self.frame.change_main_page(self.frame.search_page)
 
     def translate_status(self, status):
 
@@ -620,8 +627,7 @@ class TransferList(UserInterface):
             self.tree_view.expand_row(self.transfersmodel.get_path(self.paths[user_path]), False)
 
     def retry_transfers(self):
-        for transfer in self.selected_transfers:
-            getattr(self.core.transfers, "retry_" + self.type)(transfer)
+        pass
 
     def abort_transfers(self, clear=False):
 
@@ -855,12 +861,27 @@ class TransferList(UserInterface):
         if data:
             FileProperties(self.frame, self.core, data, total_size=selected_size, download_button=False).show()
 
+    def on_copy_url(self, *_args):
+        pass
+
+    def on_copy_dir_url(self, *_args):
+        pass
+
     def on_copy_file_path(self, *_args):
 
         transfer = next(iter(self.selected_transfers), None)
 
         if transfer:
             copy_text(transfer.filename)
+
+    def on_play_files(self, *_args):
+        pass
+
+    def on_open_file_manager(self, *_args):
+        pass
+
+    def on_browse_folder(self, *_args):
+        pass
 
     def on_retry_transfer(self, *_args):
         self.select_transfers()

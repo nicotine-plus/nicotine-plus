@@ -24,6 +24,8 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -41,6 +43,7 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
+        self.page_id = frame.uploads_page.id
         self.user_counter = frame.upload_users_label
         self.file_counter = frame.upload_files_label
         self.expand_button = frame.uploads_expand_button
@@ -48,7 +51,11 @@ class Uploads(TransferList):
         self.grouping_button = frame.uploads_grouping_button
 
         TransferList.__init__(self, frame, core, transfer_type="upload")
-        frame.uploads_content.add(self.container)
+
+        if Gtk.get_major_version() == 4:
+            frame.uploads_content.append(self.container)
+        else:
+            frame.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),
@@ -62,6 +69,10 @@ class Uploads(TransferList):
             ("#" + _("Everything…"), self.on_try_clear_all),
         )
         self.popup_menu_clear.update_model()
+
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            self.core.transfers.retry_upload(transfer)
 
     def on_try_clear_queued(self, *_args):
 

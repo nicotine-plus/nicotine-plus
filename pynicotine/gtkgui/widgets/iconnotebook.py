@@ -91,6 +91,7 @@ class TabLabel(Gtk.Box):
 
         if Gtk.get_major_version() == 4:
             self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic")
+            self.append(self.close_button)  # pylint: disable=no-member
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             gesture_click = Gtk.GestureClick()
@@ -100,12 +101,13 @@ class TabLabel(Gtk.Box):
             self.close_button.add_controller(gesture_click)
 
         else:
-            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic", Gtk.IconSize.BUTTON)
+            self.close_button = Gtk.Button.new_from_icon_name("window-close-symbolic",
+                                                              Gtk.IconSize.BUTTON)  # pylint: disable=no-member
+            self.add(self.close_button)  # pylint: disable=no-member
 
         self.close_button.get_style_context().add_class("flat")
         self.close_button.set_tooltip_text(_("Close tab"))
         self.close_button.show()
-        self.add(self.close_button)
 
         if self.close_callback is not None:
             self.close_button.connect("clicked", self.close_callback)
@@ -125,20 +127,29 @@ class TabLabel(Gtk.Box):
             # Left align close button on macOS
             self._add_close_button()
 
-        self.add(self.eventbox)
-        self.eventbox.add(self.box)
+        if Gtk.get_major_version() == 4:
+            self.append(self.eventbox)        # pylint: disable=no-member
+            self.eventbox.append(self.box)    # pylint: disable=no-member
+
+            self.box.append(self.start_icon)  # pylint: disable=no-member
+            self.box.append(self.label)       # pylint: disable=no-member
+            self.box.append(self.end_icon)    # pylint: disable=no-member
+
+        else:
+            self.add(self.eventbox)           # pylint: disable=no-member
+            self.eventbox.add(self.box)       # pylint: disable=no-member
+
+            self.box.add(self.start_icon)     # pylint: disable=no-member
+            self.box.add(self.label)          # pylint: disable=no-member
+            self.box.add(self.end_icon)       # pylint: disable=no-member
+
+        if sys.platform != "darwin":
+            self._add_close_button()
 
         if self.centered:
             self.set_halign(Gtk.Align.CENTER)
         else:
             self.set_halign(Gtk.Align.FILL)
-
-        self.box.add(self.start_icon)
-        self.box.add(self.label)
-        self.box.add(self.end_icon)
-
-        if sys.platform != "darwin":
-            self._add_close_button()
 
     def _set_text_color(self, color):
 
@@ -242,7 +253,7 @@ class IconNotebook:
     - Dropdown menu for unread tabs
     """
 
-    def __init__(self, frame, core, notebook, page_id):
+    def __init__(self, frame, core, notebook, parent_page):
 
         self.notebook = notebook
         self.notebook.set_show_tabs(False)
@@ -251,7 +262,7 @@ class IconNotebook:
 
         self.frame = frame
         self.core = core
-        self.page_id = page_id
+        self.parent_page = parent_page
         self.unread_button = Gtk.MenuButton(
             tooltip_text=_("Unread Tabs"),
             halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER, visible=False
@@ -260,8 +271,8 @@ class IconNotebook:
 
         if Gtk.get_major_version() == 4:
             self.window = self.notebook.get_root()
-            self.unread_button.set_has_frame(False)
-            self.unread_button.set_icon_name("emblem-important-symbolic")
+            self.unread_button.set_has_frame(False)                        # pylint: disable=no-member
+            self.unread_button.set_icon_name("emblem-important-symbolic")  # pylint: disable=no-member
 
             # GTK 4 workaround to prevent notebook tabs from being activated when pressing close button
             controllers = self.notebook.observe_controllers()
@@ -275,7 +286,7 @@ class IconNotebook:
 
         else:
             self.window = self.notebook.get_toplevel()
-            self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))
+            self.unread_button.set_image(Gtk.Image(icon_name="emblem-important-symbolic"))  # pylint: disable=no-member
 
         style_context = self.unread_button.get_style_context()
         for style_class in ("circular", "flat"):
@@ -324,7 +335,7 @@ class IconNotebook:
 
         if Gtk.get_major_version() == 4:
             label_tab.gesture_click = Gtk.GestureClick()
-            label_tab.add_controller(label_tab.gesture_click)
+            label_tab.add_controller(label_tab.gesture_click)  # pylint: disable=no-member
 
             page.get_first_child().hide()
         else:
@@ -409,9 +420,9 @@ class IconNotebook:
 
         page_active = (self.get_nth_page(self.get_current_page()) == page)
 
-        if self.frame.current_page_id != self.page_id or not page_active:
+        if self.frame.current_page_id != self.parent_page.id or not page_active:
             # Highlight top-level tab
-            self.frame.request_tab_hilite(self.page_id, mentioned)
+            self.frame.request_tab_hilite(self.parent_page, mentioned)
 
         if page_active:
             return
@@ -447,7 +458,7 @@ class IconNotebook:
 
         if not self.unread_pages:
             self.unread_button.hide()
-            self.frame.remove_tab_hilite(self.page_id)
+            self.frame.remove_tab_hilite(self.parent_page)
 
     def set_unread_page(self, _action, _state, page):
         self.notebook.set_current_page(self.page_num(page))

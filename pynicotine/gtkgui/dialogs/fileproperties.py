@@ -32,6 +32,38 @@ class FileProperties(UserInterface):
     def __init__(self, frame, core, properties, total_size=0, total_length=0, download_button=True):
 
         super().__init__("ui/dialogs/fileproperties.ui")
+        (
+            self.bitrate_label,
+            self.bitrate_row,
+            self.bitrate_value_label,
+            self.container,
+            self.country_label,
+            self.country_row,
+            self.country_value_label,
+            self.download_button,
+            self.filename_label,
+            self.filename_value_label,
+            self.filesize_label,
+            self.filesize_value_label,
+            self.folder_label,
+            self.folder_value_label,
+            self.length_label,
+            self.length_row,
+            self.length_value_label,
+            self.next_button,
+            self.path_label,
+            self.path_row,
+            self.path_value_label,
+            self.previous_button,
+            self.queue_label,
+            self.queue_row,
+            self.queue_value_label,
+            self.speed_label,
+            self.speed_row,
+            self.speed_value_label,
+            self.username_label,
+            self.username_value_label
+        ) = self.widgets
 
         self.frame = frame
         self.core = core

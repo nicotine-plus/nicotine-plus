@@ -175,7 +175,7 @@ def initialise_columns(frame, treeview_name, treeview, *args):
             if column_id == "country":
                 if Gtk.get_major_version() == 4:
                     # Custom icon size defined in theme.py
-                    renderer.set_property("icon-size", Gtk.IconSize.NORMAL)
+                    renderer.set_property("icon-size", Gtk.IconSize.NORMAL)  # pylint: disable=no-member
                 else:
                     # Use the same size as the original icon
                     renderer.set_property("stock-size", 0)

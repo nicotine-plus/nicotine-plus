@@ -64,7 +64,7 @@ class Searches(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.search_notebook, "search")
+        IconNotebook.__init__(self, frame, core, frame.search_notebook, frame.search_page)
         self.notebook.connect("switch-page", self.on_switch_search_page)
 
         self.modes = {
@@ -97,7 +97,7 @@ class Searches(IconNotebook):
 
     def on_switch_search_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.search_page.id:
             return
 
         for tab in self.pages.values():
@@ -254,6 +254,30 @@ class Search(UserInterface):
     def __init__(self, searches, text, token, mode, mode_label, showtab):
 
         super().__init__("ui/search.ui")
+
+        # pylint: disable=invalid-name
+        (
+            self.AddWish,
+            self.AddWishIcon,
+            self.AddWishLabel,
+            self.Counter,
+            self.CounterButton,
+            self.ExpandButton,
+            self.FilterBitrate,
+            self.FilterCountry,
+            self.FilterFreeSlot,
+            self.FilterIn,
+            self.FilterLabel,
+            self.FilterOut,
+            self.FilterSize,
+            self.FilterType,
+            self.FiltersContainer,
+            self.Main,
+            self.ResultGrouping,
+            self.ResultsList,
+            self.ShowFilters,
+            self.expand
+        ) = self.widgets
 
         self.searches = searches
         self.frame = searches.frame

@@ -47,12 +47,12 @@ class UserInfos(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, "userinfo")
+        IconNotebook.__init__(self, frame, core, frame.userinfo_notebook, frame.userinfo_page)
         self.notebook.connect("switch-page", self.on_switch_info_page)
 
     def on_switch_info_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.userinfo_page.id:
             return
 
         for tab in self.pages.values():
@@ -70,7 +70,7 @@ class UserInfos(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.page_num(self.pages[user].container))
-            self.frame.change_main_page("userinfo")
+            self.frame.change_main_page(self.frame.userinfo_page)
 
     def show_connection_error(self, user):
         if user in self.pages:
@@ -116,6 +116,26 @@ class UserInfo(UserInterface):
     def __init__(self, userinfos, user):
 
         super().__init__("ui/userinfo.ui")
+        (
+            self.container,
+            self.country_label,
+            self.description_view,
+            self.dislikes_list_view,
+            self.free_upload_slots_label,
+            self.horizontal_paned,
+            self.info_bar,
+            self.likes_list_view,
+            self.picture_container,
+            self.picture_view,
+            self.placeholder_picture,
+            self.progress_bar,
+            self.queued_uploads_label,
+            self.shared_files_label,
+            self.shared_folders_label,
+            self.upload_slots_label,
+            self.upload_speed_label,
+            self.user_label
+        ) = self.widgets
 
         self.userinfos = userinfos
         self.frame = userinfos.frame
@@ -127,7 +147,6 @@ class UserInfo(UserInterface):
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-            self.picture_view.set_child(self.picture)
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
@@ -135,8 +154,9 @@ class UserInfo(UserInterface):
 
         else:
             self.picture = Gtk.Image(visible=True)
-            self.picture_view.add(self.picture)
             self.picture_view.connect("scroll-event", self.on_scroll_event)
+
+        self.picture_view.set_property("child", self.picture)
 
         self.user = user
         self.picture_data = None
@@ -425,7 +445,7 @@ class UserInfo(UserInterface):
 
     def on_send_message(self, *_args):
         self.core.privatechats.show_user(self.user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
 
     def on_show_ip_address(self, *_args):
         self.core.request_ip_address(self.user)

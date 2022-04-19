@@ -49,10 +49,14 @@ class UserList(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/buddylist.ui")
+        (
+            self.container,
+            self.list_view,
+            self.toolbar
+        ) = self.widgets
 
         self.frame = frame
         self.core = core
-        self.page_id = "userlist"
 
         # Columns
         self.user_iterators = {}
@@ -310,7 +314,7 @@ class UserList(UserInterface):
             return
 
         self.core.privatechats.show_user(user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
 
     def on_popup_menu(self, menu, _widget):
 
