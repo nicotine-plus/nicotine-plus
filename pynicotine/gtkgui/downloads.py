@@ -25,6 +25,8 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -50,7 +52,11 @@ class Downloads(TransferList):
         self.grouping_button = frame.downloads_grouping_button
 
         TransferList.__init__(self, frame, core, transfer_type="download")
-        frame.downloads_content.add(self.container)
+
+        if Gtk.get_major_version() == 4:
+            frame.downloads_content.append(self.container)
+        else:
+            frame.downloads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),

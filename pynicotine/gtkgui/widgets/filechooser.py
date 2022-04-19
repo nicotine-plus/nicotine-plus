@@ -71,7 +71,7 @@ class FileChooser:
 
         else:
             # Display network shares
-            self.file_chooser.set_local_only(False)
+            self.file_chooser.set_local_only(False)  # pylint: disable=no-member
 
         self.file_chooser.set_current_folder(initial_folder)
 
@@ -130,7 +130,7 @@ class ImageChooser(FileChooser):
             self.file_chooser.connect("update-preview", self.on_update_image_preview)
 
             self.preview = Gtk.Image()
-            self.file_chooser.set_preview_widget(self.preview)
+            self.file_chooser.set_preview_widget(self.preview)  # pylint: disable=no-member
 
     def on_update_image_preview(self, chooser):
 
@@ -167,7 +167,7 @@ class FileChooserSave(FileChooser):
 
         if Gtk.get_major_version() == 3:
             # Display hidden files
-            self.file_chooser.set_show_hidden(True)
+            self.file_chooser.set_show_hidden(True)  # pylint: disable=no-member
 
         self.file_chooser.set_current_name(initial_file)
 
@@ -193,19 +193,20 @@ class FileChooserButton:
         else:
             icon_name = "text-x-generic-symbolic"
 
-        self.icon = Gtk.Image(icon_name=icon_name)
-        self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6, xalign=0)
+        self.icon = Gtk.Image(icon_name=icon_name, visible=True)
+        self.label = Gtk.Label(label=_("(None)"), ellipsize=Pango.EllipsizeMode.END, width_chars=6,
+                               xalign=0, visible=True)
 
-        box = Gtk.Box(spacing=6)
-        box.add(self.icon)
-        box.add(self.label)
+        box = Gtk.Box(spacing=6, visible=True)
 
         if Gtk.get_major_version() == 4:
-            self.button.set_child(box)
+            box.append(self.icon)   # pylint: disable=no-member
+            box.append(self.label)  # pylint: disable=no-member
         else:
-            self.button.add(box)
-            self.button.show_all()
+            box.add(self.icon)   # pylint: disable=no-member
+            box.add(self.label)  # pylint: disable=no-member
 
+        self.button.set_property("child", box)
         self.button.connect("clicked", self.open_file_chooser)
 
     def open_file_chooser_response(self, selected, _data):

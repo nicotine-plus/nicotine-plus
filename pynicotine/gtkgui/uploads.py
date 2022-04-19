@@ -24,6 +24,8 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -49,7 +51,11 @@ class Uploads(TransferList):
         self.grouping_button = frame.uploads_grouping_button
 
         TransferList.__init__(self, frame, core, transfer_type="upload")
-        frame.uploads_content.add(self.container)
+
+        if Gtk.get_major_version() == 4:
+            frame.uploads_content.append(self.container)
+        else:
+            frame.uploads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Aborted / Failed"), self.on_clear_finished_failed),

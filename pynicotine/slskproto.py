@@ -200,10 +200,10 @@ else:
 
         MAXFILELIMIT = 10240
     else:
-        _SOFTLIMIT, MAXFILELIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)
+        _SOFTLIMIT, MAXFILELIMIT = resource.getrlimit(resource.RLIMIT_NOFILE)     # pylint: disable=no-member
 
     try:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))
+        resource.setrlimit(resource.RLIMIT_NOFILE, (MAXFILELIMIT, MAXFILELIMIT))  # pylint: disable=no-member
 
     except Exception as rlimit_error:
         log.add("Failed to set RLIMIT_NOFILE: %s", rlimit_error)
@@ -1199,22 +1199,22 @@ class SlskProtoThread(threading.Thread):
         dead. """
 
         if hasattr(socket, 'SO_KEEPALIVE'):
-            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=maybe-no-member
+            server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)  # pylint: disable=no-member
 
         if hasattr(socket, 'TCP_KEEPINTVL'):
             server_socket.setsockopt(socket.IPPROTO_TCP,
-                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=maybe-no-member
+                                     socket.TCP_KEEPINTVL, interval)  # pylint: disable=no-member
 
         if hasattr(socket, 'TCP_KEEPCNT'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=maybe-no-member
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, count)  # pylint: disable=no-member
 
         if hasattr(socket, 'TCP_KEEPIDLE'):
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=maybe-no-member
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, idle)  # pylint: disable=no-member
 
         elif hasattr(socket, 'TCP_KEEPALIVE'):
             # macOS fallback
 
-            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=maybe-no-member
+            server_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, idle)  # pylint: disable=no-member
 
         elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
             # Windows fallback
@@ -1222,7 +1222,7 @@ class SlskProtoThread(threading.Thread):
             # https://docs.microsoft.com/en-us/windows/win32/winsock/so-keepalive
 
             server_socket.ioctl(
-                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=maybe-no-member
+                socket.SIO_KEEPALIVE_VALS,  # pylint: disable=no-member
                 (
                     1,
                     idle * 1000,

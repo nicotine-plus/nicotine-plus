@@ -54,7 +54,7 @@ from pynicotine.utils import human_speed
 class TransferList(UserInterface):
 
     path_separator = path_label = retry_label = abort_label = aborted_status = None
-    user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+    page_id = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, frame, core, transfer_type):
 

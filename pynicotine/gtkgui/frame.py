@@ -644,20 +644,32 @@ class NicotineFrame(UserInterface):
 
         if mode == "always":
 
-            self.buddy_list_container.add(self.userlist.container)
+            if Gtk.get_major_version() == 4:
+                self.buddy_list_container.append(self.userlist.container)
+            else:
+                self.buddy_list_container.add(self.userlist.container)
+
             self.userlist.toolbar.show()
             self.buddy_list_container.show()
             return
 
         if mode == "chatrooms":
 
-            self.chatrooms_buddy_list_container.add(self.userlist.container)
+            if Gtk.get_major_version() == 4:
+                self.chatrooms_buddy_list_container.append(self.userlist.container)
+            else:
+                self.chatrooms_buddy_list_container.add(self.userlist.container)
+
             self.userlist.toolbar.show()
             self.chatrooms_buddy_list_container.show()
             return
 
         self.userlist.toolbar.hide()
-        self.userlist_content.add(self.userlist.container)
+
+        if Gtk.get_major_version() == 4:
+            self.userlist_content.append(self.userlist.container)
+        else:
+            self.userlist_content.add(self.userlist.container)
 
         if force_show:
             self.show_tab(self.userlist_page)
@@ -1132,11 +1144,16 @@ class NicotineFrame(UserInterface):
 
         title_widget = getattr(self, page_id + "_title")
         title_widget.get_parent().remove(title_widget)
-        self.header_title.add(title_widget)
 
         end_widget = getattr(self, page_id + "_end")
         end_widget.get_parent().remove(end_widget)
-        self.header_end_container.add(end_widget)
+
+        if Gtk.get_major_version() == 4:
+            self.header_title.append(title_widget)
+            self.header_end_container.append(end_widget)
+        else:
+            self.header_title.add(title_widget)
+            self.header_end_container.add(end_widget)
 
     def hide_current_header_bar(self):
         """ Hide the current CSD headerbar """
@@ -1150,8 +1167,13 @@ class NicotineFrame(UserInterface):
         self.header_end_container.remove(end_widget)
 
         toolbar = getattr(self, self.current_page_id + "_toolbar_contents")
-        toolbar.add(title_widget)
-        toolbar.add(end_widget)
+
+        if Gtk.get_major_version() == 4:
+            toolbar.append(title_widget)
+            toolbar.append(end_widget)
+        else:
+            toolbar.add(title_widget)
+            toolbar.add(end_widget)
 
     def show_toolbar(self, page_id):
         """ Show the non-CSD toolbar """
@@ -1408,9 +1430,12 @@ class NicotineFrame(UserInterface):
 
     def set_main_tabs_order(self):
 
-        for i in range(self.notebook.get_n_pages()):
-            page = self.notebook.get_nth_page(i)
-            order = config.sections["ui"]["modes_order"].index(page.id)
+        for order, page_id in enumerate(config.sections["ui"]["modes_order"]):
+            try:
+                page = getattr(self, page_id + "_page")
+
+            except AttributeError:
+                continue
 
             self.notebook.reorder_child(page, order)
 
@@ -1442,12 +1467,11 @@ class NicotineFrame(UserInterface):
         try:
             page = getattr(self, last_tab_id + "_page")
 
-            if page.get_visible():
-                self.notebook.set_current_page(self.notebook.page_num(page))
-                return
-
         except AttributeError:
-            pass
+            return
+
+        if page.get_visible():
+            self.notebook.set_current_page(self.notebook.page_num(page))
 
     def set_tab_expand(self, page):
 

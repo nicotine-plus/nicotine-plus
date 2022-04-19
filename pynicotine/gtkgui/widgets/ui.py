@@ -49,12 +49,27 @@ class UserInterface:
                 self.builder = Gtk.Builder(self)
                 self.builder.set_translation_domain(TRANSLATION_DOMAIN)
                 self.builder.add_from_string(UI_DATA[filename])
-                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id
+                Gtk.Buildable.get_name = Gtk.Buildable.get_buildable_id  # pylint: disable=no-member
             else:
                 self.builder = Gtk.Builder()
                 self.builder.set_translation_domain(TRANSLATION_DOMAIN)
                 self.builder.add_from_string(UI_DATA[filename])
-                self.builder.connect_signals(self)
+                self.builder.connect_signals(self)                       # pylint: disable=no-member
+
+            self.widgets = self.builder.get_objects()
+
+            for obj in list(self.widgets):
+                try:
+                    obj_name = Gtk.Buildable.get_name(obj)
+                    if not obj_name.startswith("_"):
+                        continue
+
+                except TypeError:
+                    pass
+
+                self.widgets.remove(obj)
+
+            self.widgets.sort(key=Gtk.Buildable.get_name)
 
         except Exception as error:
             log.add(_("Failed to load ui file %(file)s: %(error)s"), {
@@ -62,20 +77,3 @@ class UserInterface:
                 "error": error
             })
             sys.exit()
-
-    @property
-    def widgets(self):
-
-        widgets = []
-
-        for obj in self.builder.get_objects():
-            try:
-                obj_name = Gtk.Buildable.get_name(obj)
-
-                if not obj_name.startswith("_"):
-                    widgets.append(obj)
-
-            except TypeError:
-                pass
-
-        return sorted(widgets, key=lambda widget: Gtk.Buildable.get_name(widget))

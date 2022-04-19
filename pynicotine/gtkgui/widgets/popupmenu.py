@@ -85,7 +85,8 @@ class PopupMenu:
             parent = parent.get_parent()
 
         if Gtk.get_major_version() == 4:
-            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model, Gtk.PopoverMenuFlags.NESTED)
+            self.popup_menu = Gtk.PopoverMenu.new_from_model_full(self.model,  # pylint: disable=no-member
+                                                                  Gtk.PopoverMenuFlags.NESTED)
             self.popup_menu.set_parent(parent)
             self.popup_menu.set_halign(Gtk.Align.START)
             self.popup_menu.set_has_arrow(False)

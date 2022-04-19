@@ -147,7 +147,6 @@ class UserInfo(UserInterface):
 
         if Gtk.get_major_version() == 4:
             self.picture = Gtk.Picture(can_shrink=False, halign=Gtk.Align.CENTER, valign=Gtk.Align.CENTER)
-            self.picture_view.set_child(self.picture)
 
             self.scroll_controller = Gtk.EventControllerScroll(flags=Gtk.EventControllerScrollFlags.VERTICAL)
             self.scroll_controller.connect("scroll", self.on_scroll)
@@ -155,8 +154,9 @@ class UserInfo(UserInterface):
 
         else:
             self.picture = Gtk.Image(visible=True)
-            self.picture_view.add(self.picture)
             self.picture_view.connect("scroll-event", self.on_scroll_event)
+
+        self.picture_view.set_property("child", self.picture)
 
         self.user = user
         self.picture_data = None
