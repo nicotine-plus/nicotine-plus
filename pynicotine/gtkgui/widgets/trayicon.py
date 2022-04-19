@@ -110,11 +110,11 @@ class TrayIcon:
         self.create_item(_("Quit"), self.core.quit)
 
     def on_downloads(self, *_args):
-        self.frame.change_main_page("downloads")
+        self.frame.change_main_page(self.frame.downloads_page)
         self.frame.show()
 
     def on_uploads(self, *_args):
-        self.frame.change_main_page("uploads")
+        self.frame.change_main_page(self.frame.uploads_page)
         self.frame.show()
 
     def on_open_private_chat_response(self, dialog, response_id, _data):
@@ -126,7 +126,7 @@ class TrayIcon:
             return
 
         self.core.privatechats.show_user(user)
-        self.frame.change_main_page("private")
+        self.frame.change_main_page(self.frame.private_page)
         self.frame.show()
 
     def on_open_private_chat(self, *_args):

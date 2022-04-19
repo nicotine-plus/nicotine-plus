@@ -35,6 +35,7 @@ class ChatHistory(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/popovers/chathistory.ui")
+        self.list_view, self.popover = self.widgets
 
         self.frame = frame
         self.core = core

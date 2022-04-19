@@ -36,7 +36,10 @@ def generic_dialog(parent=None, content_box=None, buttons=None, quit_callback=No
     dialog.get_style_context().add_class("generic-dialog")
 
     if content_box:
-        dialog.get_content_area().add(content_box)
+        if Gtk.get_major_version() == 4:
+            dialog.get_content_area().append(content_box)
+        else:
+            dialog.get_content_area().add(content_box)
 
     if buttons:
         for button, response_type in buttons:
@@ -124,6 +127,7 @@ class MessageDialog:
             message_type=message_type, default_width=width,
             text=title, secondary_text=message
         )
+        self.container = self.dialog.get_message_area()
 
         if not callback:
             def callback(dialog, *_args):
@@ -141,9 +145,9 @@ class MessageDialog:
             self.dialog.add_button(button_label, response_type)
 
         if Gtk.get_major_version() == 4:
-            label = self.dialog.get_message_area().get_last_child()
+            label = self.container.get_last_child()
         else:
-            label = self.dialog.get_message_area().get_children()[-1]
+            label = self.container.get_children()[-1]
 
         label.set_selectable(True)
 
@@ -176,14 +180,20 @@ class EntryDialog(MessageDialog):
             for i in droplist:
                 dropdown.append_text(i)
 
-            self.dialog.get_message_area().add(dropdown)
+            if Gtk.get_major_version() == 4:
+                self.container.append(dropdown)
+            else:
+                self.container.add(dropdown)
         else:
             if Gtk.get_major_version() == 4 and not visibility:
                 self.entry = Gtk.PasswordEntry(show_peek_icon=True, visible=True)
             else:
                 self.entry = Gtk.Entry(visibility=visibility, visible=True)
 
-            self.dialog.get_message_area().add(self.entry)
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.entry)
+            else:
+                self.container.add(self.entry)
 
         self.entry.connect("activate", lambda x: self.dialog.response(Gtk.ResponseType.OK))
         self.entry.set_text(default)
@@ -191,7 +201,10 @@ class EntryDialog(MessageDialog):
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
         if option_label:
-            self.dialog.get_message_area().add(self.option)
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.option)
+            else:
+                self.container.add(self.option)
 
     def get_response_value(self):
         return self.entry.get_text()
@@ -222,4 +235,7 @@ class OptionDialog(MessageDialog):
         self.option = Gtk.CheckButton(label=option_label, active=option_value, visible=bool(option_label))
 
         if option_label:
-            self.dialog.get_message_area().add(self.option)
+            if Gtk.get_major_version() == 4:
+                self.container.append(self.option)
+            else:
+                self.container.add(self.option)

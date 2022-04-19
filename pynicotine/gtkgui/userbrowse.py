@@ -52,12 +52,12 @@ class UserBrowses(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, "userbrowse")
+        IconNotebook.__init__(self, frame, core, frame.userbrowse_notebook, frame.userbrowse_page)
         self.notebook.connect("switch-page", self.on_switch_browse_page)
 
     def on_switch_browse_page(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.userbrowse_page.id:
             return
 
         for tab in self.pages.values():
@@ -84,7 +84,7 @@ class UserBrowses(IconNotebook):
 
         if switch_page:
             self.set_current_page(self.page_num(page.container))
-            self.frame.change_main_page("userbrowse")
+            self.frame.change_main_page(self.frame.userbrowse_page)
 
     def show_connection_error(self, user):
         if user in self.pages:
@@ -122,11 +122,27 @@ class UserBrowse(UserInterface):
     def __init__(self, userbrowses, user):
 
         super().__init__("ui/userbrowse.ui")
+        (
+            self.container,
+            self.expand_button,
+            self.expand_icon,
+            self.file_list_view,
+            self.folder_tree_view,
+            self.info_bar,
+            self.num_folders_button,
+            self.num_folders_label,
+            self.progress_bar,
+            self.refresh_button,
+            self.search_entry,
+            self.share_size_button,
+            self.share_size_label
+        ) = self.widgets
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame
         self.core = userbrowses.core
         self.user = user
+        self.indeterminate_progress = False
         self.local_shares_type = None
         self.queued_path = None
         self.num_folders = 0

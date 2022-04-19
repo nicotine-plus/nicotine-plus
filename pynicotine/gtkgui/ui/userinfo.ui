@@ -326,9 +326,6 @@
                                   <object class="GtkTreeView" id="likes_list_view">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
-                                    <child internal-child="selection">
-                                      <object class="GtkTreeSelection"/>
-                                    </child>
                                   </object>
                                 </child>
                               </object>
@@ -346,9 +343,6 @@
                                   <object class="GtkTreeView" id="dislikes_list_view">
                                     <property name="visible">True</property>
                                     <property name="hexpand">True</property>
-                                    <child internal-child="selection">
-                                      <object class="GtkTreeSelection"/>
-                                    </child>
                                   </object>
                                 </child>
                               </object>

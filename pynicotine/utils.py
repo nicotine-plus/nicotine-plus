@@ -116,7 +116,7 @@ def open_file_path(file_path, command=None):
             execute_command(command, file_path)
 
         elif sys.platform == "win32":
-            os.startfile(file_path)
+            os.startfile(file_path)  # pylint: disable=no-member
 
         elif sys.platform == "darwin":
             execute_command("open $", file_path)

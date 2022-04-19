@@ -91,17 +91,17 @@ class SlskProtoTest(unittest.TestCase):
             sleep(SLSKPROTO_RUN_TIME)
 
             if hasattr(socket, 'TCP_KEEPIDLE'):
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 4)
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 4)  # pylint: disable=no-member
 
             elif hasattr(socket, 'TCP_KEEPALIVE'):
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 3)
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 3)  # pylint: disable=no-member
 
             elif hasattr(socket, 'SIO_KEEPALIVE_VALS'):
-                self.assertEqual(proto.server_socket.ioctl.call_count, 1)
-                self.assertEqual(proto.server_socket.setsockopt.call_count, 1)
+                self.assertEqual(proto.server_socket.ioctl.call_count, 1)       # pylint: disable=no-member
+                self.assertEqual(proto.server_socket.setsockopt.call_count, 1)  # pylint: disable=no-member
 
-            self.assertEqual(proto.server_socket.setblocking.call_count, 1)
-            self.assertEqual(proto.server_socket.connect_ex.call_count, 1)
+            self.assertEqual(proto.server_socket.setblocking.call_count, 1)     # pylint: disable=no-member
+            self.assertEqual(proto.server_socket.connect_ex.call_count, 1)      # pylint: disable=no-member
 
             proto.abort()
             self.assertIsNone(proto.server_socket)

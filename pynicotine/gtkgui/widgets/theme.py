@@ -239,20 +239,23 @@ def set_global_css():
     global_css_provider = Gtk.CssProvider()
 
     if Gtk.get_major_version() == 4:
-        Gtk.StyleContext.add_provider_for_screen = Gtk.StyleContext.add_provider_for_display
-        screen = Gdk.Display.get_default()
         css = css + css_gtk3_20 + css_gtk4
-    else:
-        screen = Gdk.Screen.get_default()
 
+        global_css_provider.load_from_data(css)
+
+        Gtk.StyleContext.add_provider_for_display(  # pylint: disable=no-member
+            Gdk.Display.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+    else:
         if not Gtk.check_version(3, 20, 0):
             css = css + css_gtk3_20
 
-    global_css_provider.load_from_data(css)
+        global_css_provider.load_from_data(css)
 
-    Gtk.StyleContext.add_provider_for_screen(
-        screen, global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-    )
+        Gtk.StyleContext.add_provider_for_screen(  # pylint: disable=no-member
+            Gdk.Screen.get_default(), global_css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
 
 def set_global_style():
@@ -266,9 +269,9 @@ def set_global_style():
 ICONS = {}
 
 if Gtk.get_major_version() == 4:
-    ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())
+    ICON_THEME = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())  # pylint: disable=no-member
 else:
-    ICON_THEME = Gtk.IconTheme.get_default()
+    ICON_THEME = Gtk.IconTheme.get_default()  # pylint: disable=no-member
 
 
 def get_icon(icon_name):

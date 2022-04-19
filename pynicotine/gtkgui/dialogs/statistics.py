@@ -32,6 +32,22 @@ class Statistics(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/dialogs/statistics.ui")
+        (
+            self.completed_downloads_session_label,
+            self.completed_downloads_total_label,
+            self.completed_uploads_session_label,
+            self.completed_uploads_total_label,
+            self.container,
+            self.downloaded_size_session_label,
+            self.downloaded_size_total_label,
+            self.reset_button,
+            self.started_downloads_session_label,
+            self.started_downloads_total_label,
+            self.started_uploads_session_label,
+            self.started_uploads_total_label,
+            self.uploaded_size_session_label,
+            self.uploaded_size_total_label
+        ) = self.widgets
 
         self.frame = frame
         self.core = core

@@ -48,14 +48,7 @@ class Application(Gtk.Application):
 
         except AttributeError:
             # GTK 4 replacement
-            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values
-
-        try:
-            Gtk.Box.add
-
-        except AttributeError:
-            # GTK 4 replacement
-            Gtk.Box.add = Gtk.Box.append
+            Gtk.ListStore.insert_with_valuesv = Gtk.ListStore.insert_with_values  # pylint: disable=no-member
 
     def do_startup(self):  # pylint:disable=arguments-differ
 

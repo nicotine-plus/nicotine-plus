@@ -139,12 +139,12 @@ class ChatEntry:
         elif cmd in ("/w", "/whois", "/info"):
             if arg_self:
                 self.core.userinfo.request_user_info(arg_self)
-                self.frame.change_main_page("userinfo")
+                self.frame.change_main_page(self.frame.userinfo_page)
 
         elif cmd in ("/b", "/browse"):
             if arg_self:
                 self.core.userbrowse.browse_user(arg_self)
-                self.frame.change_main_page("userbrowse")
+                self.frame.change_main_page(self.frame.userbrowse_page)
 
         elif cmd == "/ip":
             if arg_self:
@@ -153,7 +153,7 @@ class ChatEntry:
         elif cmd == "/pm":
             if args:
                 self.core.privatechats.show_user(args)
-                self.frame.change_main_page("private")
+                self.frame.change_main_page(self.frame.private_page)
 
         elif cmd in ("/m", "/msg"):
             if args:
@@ -167,29 +167,29 @@ class ChatEntry:
                 if msg:
                     self.core.privatechats.show_user(user)
                     self.core.privatechats.send_message(user, msg)
-                    self.frame.change_main_page("private")
+                    self.frame.change_main_page(self.frame.private_page)
 
         elif cmd in ("/s", "/search"):
             if args:
                 self.core.search.do_search(args, "global")
-                self.frame.change_main_page("search")
+                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/us", "/usearch"):
             args_split = args.split(" ", maxsplit=1)
 
             if len(args_split) == 2:
                 self.core.search.do_search(args_split[1], "user", user=args_split[0])
-                self.frame.change_main_page("search")
+                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/rs", "/rsearch"):
             if args:
                 self.core.search.do_search(args, "rooms")
-                self.frame.change_main_page("search")
+                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/bs", "/bsearch"):
             if args:
                 self.core.search.do_search(args, "buddies")
-                self.frame.change_main_page("search")
+                self.frame.change_main_page(self.frame.search_page)
 
         elif cmd in ("/j", "/join"):
             if args:

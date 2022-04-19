@@ -202,11 +202,11 @@ class BasePlugin:
         """ Convenience function to send a message to the same user/room
         a plugin command runs for """
 
-        if self.parent.command_source is None:
+        if self.parent.command_source is None:  # pylint: disable=no-member
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source
+        public_command, source = self.parent.command_source  # pylint: disable=no-member
         function = self.send_public if public_command else self.send_private
 
         function(source, text)
@@ -215,11 +215,11 @@ class BasePlugin:
         """ Convenience function to display a raw message the same window
         a plugin command runs from """
 
-        if self.parent.command_source is None:
+        if self.parent.command_source is None:  # pylint: disable=no-member
             # Function was not called from a command
             return
 
-        public_command, source = self.parent.command_source
+        public_command, source = self.parent.command_source  # pylint: disable=no-member
         function = self.echo_public if public_command else self.echo_private
 
         function(source, text, message_type)

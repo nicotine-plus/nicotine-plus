@@ -51,11 +51,13 @@ class PrivateChats(IconNotebook):
 
     def __init__(self, frame, core):
 
-        IconNotebook.__init__(self, frame, core, frame.private_notebook, "private")
+        IconNotebook.__init__(self, frame, core, frame.private_notebook, frame.private_page)
         self.notebook.connect("switch-page", self.on_switch_chat)
 
         self.completion = ChatCompletion()
+
         self.command_help = UserInterface("ui/popovers/privatechatcommands.ui")
+        self.command_help.container, self.command_help.popover = self.command_help.widgets
 
         if Gtk.get_major_version() == 4:
             # Scroll to the focused widget
@@ -63,7 +65,7 @@ class PrivateChats(IconNotebook):
 
     def on_switch_chat(self, _notebook, page, _page_num):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.private_page.id:
             return
 
         for user, tab in self.pages.items():
@@ -87,7 +89,7 @@ class PrivateChats(IconNotebook):
 
     def clear_notifications(self):
 
-        if self.frame.current_page_id != self.page_id:
+        if self.frame.current_page_id != self.frame.private_page.id:
             return
 
         page = self.get_nth_page(self.get_current_page())
@@ -169,6 +171,15 @@ class PrivateChat(UserInterface):
     def __init__(self, chats, user):
 
         super().__init__("ui/privatechat.ui")
+        (
+            self.chat_entry,
+            self.chat_view,
+            self.container,
+            self.help_button,
+            self.log_toggle,
+            self.search_bar,
+            self.search_entry
+        ) = self.widgets
 
         self.user = user
         self.chats = chats
@@ -310,7 +321,7 @@ class PrivateChat(UserInterface):
         self.chats.request_tab_hilite(self.container)
 
         if (self.chats.get_current_page() == self.chats.page_num(self.container)
-                and self.frame.current_page_id == self.chats.page_id and self.frame.window.is_active()):
+                and self.frame.current_page_id == self.frame.private_page.id and self.frame.window.is_active()):
             # Don't show notifications if the chat is open and the window is in use
             return
 

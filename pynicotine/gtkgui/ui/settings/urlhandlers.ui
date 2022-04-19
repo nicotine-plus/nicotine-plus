@@ -6,7 +6,7 @@
     <property name="spacing">30</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkBox" id="ProtocolContainer">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="spacing">18</property>
         <property name="orientation">vertical</property>

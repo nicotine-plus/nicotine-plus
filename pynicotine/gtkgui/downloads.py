@@ -25,6 +25,8 @@
 
 import os
 
+from gi.repository import Gtk
+
 from pynicotine.config import config
 from pynicotine.gtkgui.transferlist import TransferList
 from pynicotine.gtkgui.utils import copy_text
@@ -42,6 +44,7 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.aborted_status = "Paused"
 
+        self.page_id = frame.downloads_page.id
         self.user_counter = frame.download_users_label
         self.file_counter = frame.download_files_label
         self.expand_button = frame.downloads_expand_button
@@ -49,7 +52,11 @@ class Downloads(TransferList):
         self.grouping_button = frame.downloads_grouping_button
 
         TransferList.__init__(self, frame, core, transfer_type="download")
-        frame.downloads_content.add(self.container)
+
+        if Gtk.get_major_version() == 4:
+            frame.downloads_content.append(self.container)
+        else:
+            frame.downloads_content.add(self.container)
 
         self.popup_menu_clear.add_items(
             ("#" + _("Finished / Filtered"), self.on_clear_finished_filtered),
@@ -64,8 +71,9 @@ class Downloads(TransferList):
         )
         self.popup_menu_clear.update_model()
 
-    def switch_tab(self):
-        self.frame.change_main_page("downloads")
+    def retry_transfers(self):
+        for transfer in self.selected_transfers:
+            self.core.transfers.retry_download(transfer)
 
     def on_try_clear_queued(self, *_args):
 
