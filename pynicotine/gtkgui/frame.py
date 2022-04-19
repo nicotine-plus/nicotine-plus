@@ -50,7 +50,6 @@ from pynicotine.gtkgui.userinfo import UserInfos
 from pynicotine.gtkgui.userlist import UserList
 from pynicotine.gtkgui.utils import copy_text
 from pynicotine.gtkgui.widgets.filechooser import FileChooser
-from pynicotine.gtkgui.widgets.iconnotebook import IconNotebook
 from pynicotine.gtkgui.widgets.iconnotebook import TabLabel
 from pynicotine.gtkgui.widgets.dialogs import MessageDialog
 from pynicotine.gtkgui.widgets.dialogs import OptionDialog

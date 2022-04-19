@@ -183,9 +183,16 @@ class PrivateChat(UserInterface):
     def __init__(self, chats, user):
 
         super().__init__("ui/privatechat.ui")
-
-        (self.chat_entry, self.chat_view, self.container, self.help_button, self.log_toggle, self.search_bar,
-         self.search_entry, self.speech_toggle) = self.widgets
+        (
+            self.chat_entry,
+            self.chat_view,
+            self.container,
+            self.help_button,
+            self.log_toggle,
+            self.search_bar,
+            self.search_entry,
+            self.speech_toggle
+        ) = self.widgets
 
         self.user = user
         self.chats = chats

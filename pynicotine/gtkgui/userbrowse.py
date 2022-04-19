@@ -124,10 +124,21 @@ class UserBrowse(UserInterface):
     def __init__(self, userbrowses, user):
 
         super().__init__("ui/userbrowse.ui")
-
-        (self.container, self.expand_button, self.expand_icon, self.file_list_view, self.folder_tree_view,
-         self.info_bar, self.num_folders_button, self.num_folders_label, self.progress_bar, self.refresh_button,
-         self.search_entry, self.share_size_button, self.share_size_label) = self.widgets
+        (
+            self.container,
+            self.expand_button,
+            self.expand_icon,
+            self.file_list_view,
+            self.folder_tree_view,
+            self.info_bar,
+            self.num_folders_button,
+            self.num_folders_label,
+            self.progress_bar,
+            self.refresh_button,
+            self.search_entry,
+            self.share_size_button,
+            self.share_size_label
+        ) = self.widgets
 
         self.userbrowses = userbrowses
         self.frame = userbrowses.frame

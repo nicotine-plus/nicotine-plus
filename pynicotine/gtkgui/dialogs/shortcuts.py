@@ -29,7 +29,6 @@ class Shortcuts(UserInterface):
     def __init__(self, frame):
 
         super().__init__("ui/dialogs/shortcuts.ui")
-
         self.dialog, self.emoji_shortcut = self.widgets
 
         self.frame = frame

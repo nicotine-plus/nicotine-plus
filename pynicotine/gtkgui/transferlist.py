@@ -59,8 +59,11 @@ class TransferList(UserInterface):
     def __init__(self, frame, core, transfer_type):
 
         super().__init__("ui/" + transfer_type + "s.ui")
-
-        self.clear_all_button, self.container, self.tree_view = self.widgets
+        (
+            self.clear_all_button,
+            self.container,
+            self.tree_view
+        ) = self.widgets
 
         self.frame = frame
         self.core = core

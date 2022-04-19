@@ -49,8 +49,11 @@ class UserList(UserInterface):
     def __init__(self, frame, core):
 
         super().__init__("ui/buddylist.ui")
-
-        self.container, self.list_view, self.toolbar = self.widgets
+        (
+            self.container,
+            self.list_view,
+            self.toolbar
+        ) = self.widgets
 
         self.frame = frame
         self.core = core

@@ -350,12 +350,31 @@ class ChatRoom(UserInterface):
     def __init__(self, chatrooms, room, users):
 
         super().__init__("ui/chatrooms.ui")
-
-        (self.activity_container, self.activity_search_bar, self.activity_search_entry, self.activity_view,
-         self.auto_join_toggle, self.chat_container, self.chat_entry, self.chat_entry_row, self.chat_paned,
-         self.chat_search_bar, self.chat_search_entry, self.chat_view, self.container, self.help_button,
-         self.log_toggle, self.room_options_container, self.room_wall_button, self.speech_toggle, self.users_button,
-         self.users_container, self.users_label, self.users_list_view, self.users_paned) = self.widgets
+        (
+            self.activity_container,
+            self.activity_search_bar,
+            self.activity_search_entry,
+            self.activity_view,
+            self.auto_join_toggle,
+            self.chat_container,
+            self.chat_entry,
+            self.chat_entry_row,
+            self.chat_paned,
+            self.chat_search_bar,
+            self.chat_search_entry,
+            self.chat_view,
+            self.container,
+            self.help_button,
+            self.log_toggle,
+            self.room_options_container,
+            self.room_wall_button,
+            self.speech_toggle,
+            self.users_button,
+            self.users_container,
+            self.users_label,
+            self.users_list_view,
+            self.users_paned
+        ) = self.widgets
 
         self.chatrooms = chatrooms
         self.frame = chatrooms.frame
