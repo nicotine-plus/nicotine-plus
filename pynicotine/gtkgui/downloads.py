@@ -44,7 +44,7 @@ class Downloads(TransferList):
         self.abort_label = _("P_ause")
         self.aborted_status = "Paused"
 
-        self.page_id = frame.downloads_page.id
+        self.transfer_page = frame.downloads_page
         self.user_counter = frame.download_users_label
         self.file_counter = frame.download_files_label
         self.expand_button = frame.downloads_expand_button

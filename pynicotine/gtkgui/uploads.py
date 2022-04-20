@@ -43,7 +43,7 @@ class Uploads(TransferList):
         self.abort_label = _("_Abort")
         self.aborted_status = "Aborted"
 
-        self.page_id = frame.uploads_page.id
+        self.transfer_page = frame.uploads_page
         self.user_counter = frame.upload_users_label
         self.file_counter = frame.upload_files_label
         self.expand_button = frame.uploads_expand_button
