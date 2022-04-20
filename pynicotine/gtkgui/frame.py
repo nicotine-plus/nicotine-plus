@@ -85,7 +85,7 @@ class NicotineFrame(UserInterface):
             threading.excepthook = self.on_critical_error_threading  # Python >= 3.8 only
 
         self.application = application
-        self.core = self.np = core
+        self.core = self.np = core  # pylint:disable=invalid-name
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
         self.current_page_id = ""
