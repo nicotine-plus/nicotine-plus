@@ -156,12 +156,7 @@ def rescan_shares():
 def run():
     """ Run application and return its exit code """
 
-    import io
     import sys
-
-    # Always use UTF-8 for print()
-    if sys.stdout is not None:
-        sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
     if getattr(sys, 'frozen', False):
         import os
