@@ -1034,7 +1034,7 @@ class Transfers:
                     # Ensure file name doesn't exceed 255 characters in length
                     incomplete_name = os.path.join(
                         incompletedir, prefix + base_name[:255 - len(prefix) - len(extension)] + extension)
-                    file_handle = open(incomplete_name, 'ab+')
+                    file_handle = open(incomplete_name, 'ab+')  # pylint: disable=consider-using-with
 
                     if self.config.sections["transfers"]["lock"]:
                         try:
@@ -1127,7 +1127,7 @@ class Transfers:
             try:
                 # Open File
                 real_path = self.core.shares.virtual2real(i.filename)
-                file_handle = open(real_path, "rb")
+                file_handle = open(real_path, "rb")  # pylint: disable=consider-using-with
                 offset = file_handle.tell()
 
             except OSError as error:
