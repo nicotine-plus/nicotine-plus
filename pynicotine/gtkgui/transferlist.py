@@ -53,7 +53,7 @@ from pynicotine.utils import human_speed
 class TransferList(UserInterface):
 
     path_separator = path_label = retry_label = abort_label = aborted_status = None
-    page_id = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
+    transfer_page = user_counter = file_counter = expand_button = expand_icon = grouping_button = None
 
     def __init__(self, frame, core, transfer_type):
 
@@ -261,8 +261,8 @@ class TransferList(UserInterface):
             self.selected_users.append(transfer.user)
 
     def new_transfer_notification(self, finished=False):
-        if self.frame.current_page_id != self.page_id:
-            self.frame.request_tab_hilite(self.page_id, mentioned=finished)
+        if self.frame.current_page_id != self.transfer_page.id:
+            self.frame.request_tab_hilite(self.transfer_page, mentioned=finished)
 
     def on_ban(self, *_args):
 
@@ -296,7 +296,7 @@ class TransferList(UserInterface):
 
     def update_model(self, transfer=None, forceupdate=False, update_parent=True):
 
-        if not forceupdate and self.frame.current_page_id != self.page_id:
+        if not forceupdate and self.frame.current_page_id != self.transfer_page.id:
             # No need to do unnecessary work if transfers are not visible
             return
 
