@@ -16,7 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import io
 import os
+import sys
 import time
 
 from pynicotine.config import config
@@ -26,36 +28,40 @@ class Logger:
 
     def __init__(self):
 
+        # Always use UTF-8 for print()
+        if sys.stdout is not None:
+            sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
+
         self.listeners = set()
         self.log_levels = None
         self.file_name = "debug_" + str(int(time.time()))
+        self.prefixes = {
+            "download": "Download",
+            "upload": "Upload",
+            "search": "Search",
+            "chat": "Chat",
+            "connection": "Conn",
+            "message": "Msg",
+            "transfer": "Transfer",
+            "miscellaneous": "Misc"
+        }
 
-    @staticmethod
-    def set_msg_prefix(level, msg):
+        self.add_listener(self.log_console)
 
-        if level == "download":
-            prefix = "Download"
-        elif level == "upload":
-            prefix = "Upload"
-        elif level == "search":
-            prefix = "Search"
-        elif level == "chat":
-            prefix = "Chat"
-        elif level == "connection":
-            prefix = "Conn"
-        elif level == "message":
-            prefix = "Msg"
-        elif level == "transfer":
-            prefix = "Transfer"
-        elif level == "miscellaneous":
-            prefix = "Misc"
-        else:
-            prefix = ""
+    def add_listener(self, callback):
+        self.listeners.add(callback)
+
+    def remove_listener(self, callback):
+        self.listeners.discard(callback)
+
+    def set_msg_prefix(self, level, msg):
+
+        prefix = self.prefixes.get(level)
 
         if prefix:
             msg = "[%s] %s" % (prefix, msg)
 
-        return str(msg)
+        return msg
 
     def add(self, msg, msg_args=None, level=None):
 
@@ -111,8 +117,8 @@ class Logger:
     def add_conn(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="connection")
 
-    def add_msg_contents(self, msg, msg_args=None):
-        self.add(msg, msg_args=msg_args, level="message")
+    def add_msg_contents(self, msg):
+        self.add(msg, msg_args=None, level="message")
 
     def add_transfer(self, msg, msg_args=None):
         self.add(msg, msg_args=msg_args, level="transfer")
@@ -134,14 +140,13 @@ class Logger:
         except AttributeError:
             return vars(obj)
 
-    def add_listener(self, callback):
-        self.listeners.add(callback)
-
-    def remove_listener(self, callback):
+    @staticmethod
+    def log_console(timestamp_format, msg, _level):
         try:
-            self.listeners.remove(callback)
-        except KeyError:
-            self.add("Failed to remove listener %s, does not exist.", callback)
+            print("[" + time.strftime(timestamp_format) + "] " + msg)
+        except OSError:
+            # stdout is gone
+            pass
 
     def log_transfer(self, msg, msg_args=None):
 
@@ -178,19 +183,4 @@ class Logger:
                      {"filename": filename, "error": error})
 
 
-class Console:
-
-    def __init__(self, logger):
-        logger.add_listener(self.console_logger)
-
-    @staticmethod
-    def console_logger(timestamp_format, msg, _level):
-        try:
-            print("[" + time.strftime(timestamp_format) + "] " + msg)
-        except OSError:
-            # stdout is gone
-            pass
-
-
 log = Logger()
-Console(log)
