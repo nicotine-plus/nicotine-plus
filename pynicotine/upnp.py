@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import threading
-import time
-import select
 import socket
 
 from pynicotine.logfacility import log
@@ -147,82 +145,53 @@ class SSDP:
         log.add_debug("UPnP: Added device to list")
 
     @staticmethod
-    def get_routers(private_ip=None):
+    def get_routers(private_ip):
 
         log.add_debug("UPnP: Discovering... delay=%s seconds", SSDP.response_time_secs)
 
         # Create a UDP socket and set its timeout
-        sock = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
-        sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, SSDP.response_time_secs)
-        sock.setblocking(False)
-
-        if private_ip:
+        with socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP) as sock:
+            sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, SSDP.response_time_secs)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+            sock.settimeout(SSDP.response_time_secs)
             sock.bind((private_ip, 0))
 
-        # Protocol 1
-        wan_ip1_sent = False
-        wan_ip1 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
+            # Protocol 1
+            wan_ip1 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:1")
+            wan_ppp1 = SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+            wan_igd1 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
 
-        wan_ppp1_sent = False
-        wan_ppp1 = SSDPRequest("urn:schemas-upnp-org:service:WANPPPConnection:1")
+            wan_ip1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            log.add_debug("UPnP: Sent M-SEARCH IP request 1")
 
-        wan_igd1_sent = False
-        wan_igd1 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:1")
+            wan_ppp1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
 
-        # Protocol 2
-        wan_ip2_sent = False
-        wan_ip2 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
+            wan_igd1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
 
-        wan_igd2_sent = False
-        wan_igd2 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
+            # Protocol 2
+            wan_ip2 = SSDPRequest("urn:schemas-upnp-org:service:WANIPConnection:2")
+            wan_igd2 = SSDPRequest("urn:schemas-upnp-org:device:InternetGatewayDevice:2")
 
-        routers = []
-        time_end = time.time() + SSDP.response_time_secs
+            wan_ip2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            log.add_debug("UPnP: Sent M-SEARCH IP request 2")
 
-        while time.time() < time_end:
-            readable, writable, _ = select.select([sock], [sock], [sock], 0)
+            wan_igd2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
+            log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
 
-            for sock in readable:
-                msg, _sender = sock.recvfrom(4096)
-                SSDP.add_router(routers, SSDPResponse(msg.decode('utf-8')))
+            routers = []
 
-            for sock in writable:
-                if not wan_ip1_sent:
-                    wan_ip1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug("UPnP: Sent M-SEARCH IP request 1")
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_ip1_sent = True
+            while True:
+                try:
+                    message = sock.recv(4096)
+                    SSDP.add_router(routers, SSDPResponse(message.decode('utf-8')))
 
-                if not wan_ppp1_sent:
-                    wan_ppp1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug("UPnP: Sent M-SEARCH PPP request 1")
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_ppp1_sent = True
+                except socket.error:
+                    break
 
-                if not wan_igd1_sent:
-                    wan_igd1.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug("UPnP: Sent M-SEARCH IGD request 1")
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_igd1_sent = True
+            log.add_debug("UPnP: %s device(s) detected", str(len(routers)))
 
-                if not wan_ip2_sent:
-                    wan_ip2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug("UPnP: Sent M-SEARCH IP request 2")
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_ip2_sent = True
-
-                if not wan_igd2_sent:
-                    wan_igd2.sendto(sock, (SSDP.multicast_host, SSDP.multicast_port))
-                    log.add_debug("UPnP: Sent M-SEARCH IGD request 2")
-                    time_end = time.time() + SSDP.response_time_secs
-                    wan_igd2_sent = True
-
-            # Cooldown
-            time.sleep(0.01)
-
-        log.add_debug("UPnP: %s device(s) detected", str(len(routers)))
-
-        sock.close()
         return routers
 
 
@@ -301,22 +270,19 @@ class UPnP:
     def find_local_ip_address():
 
         # Create a UDP socket
-        local_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as local_socket:
 
-        # Send a broadcast packet on a local address (doesn't need to be reachable,
-        # but MacOS requires port to be non-zero)
-        local_socket.connect(("10.255.255.255", 1))
+            # Send a broadcast packet on a local address (doesn't need to be reachable,
+            # but MacOS requires port to be non-zero)
+            local_socket.connect(("10.255.255.255", 1))
 
-        # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP.
-        ip_address = local_socket.getsockname()[0]
-
-        # Close the socket
-        local_socket.close()
+            # This returns the "primary" IP on the local box, even if that IP is a NAT/private/internal IP
+            ip_address = local_socket.getsockname()[0]
 
         return ip_address
 
     @staticmethod
-    def find_router(private_ip=None):
+    def find_router(private_ip):
 
         routers = SSDP.get_routers(private_ip)
         router = next((r for r in routers if r.search_target == "urn:schemas-upnp-org:service:WANIPConnection:2"), None)
