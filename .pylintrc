@@ -3,11 +3,7 @@
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
 # run arbitrary code.
-extension-pkg-allow-list=_gdbm,
-                         fcntl,
-                         mmap,
-                         resource,
-                         zlib
+extension-pkg-allow-list=
 
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
@@ -15,11 +11,20 @@ extension-pkg-allow-list=_gdbm,
 # for backward compatibility.)
 extension-pkg-whitelist=
 
+# Return non-zero exit code if any of these messages/categories are detected,
+# even if score is above --fail-under value. Syntax same as enable. Messages
+# specified are enabled, while categories only check already-enabled messages.
+fail-on=
+
 # Specify a score threshold to be exceeded before program exits with error.
 fail-under=10.0
 
 # Files or directories to be skipped. They should be base names, not paths.
 ignore=metadata
+
+# Add files or directories matching the regex patterns to the ignore-list. The
+# regex matches against paths and can be in Posix or Windows format.
+ignore-paths=
 
 # Files or directories matching the regex patterns are skipped. The regex
 # matches against base names, not paths.
@@ -44,6 +49,10 @@ load-plugins=
 
 # Pickle collected data for later comparisons.
 persistent=yes
+
+# Minimum Python version to use for version dependent checks. Will default to
+# the version used to run pylint.
+py-version=3.5
 
 # When enabled, pylint would attempt to guess common misconfiguration and emit
 # user-friendly hints instead of false-positive error messages.
@@ -78,7 +87,8 @@ disable=missing-class-docstring,
         import-outside-toplevel,
         pointless-string-statement,
         duplicate-code,
-        consider-using-f-string
+        consider-using-f-string,
+        no-value-for-parameter
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -121,7 +131,7 @@ max-nested-blocks=6
 # inconsistent-return-statements if a never returning function is called then
 # it will be considered as an explicit return statement and no message will be
 # printed.
-never-returning-functions=sys.exit
+never-returning-functions=sys.exit,argparse.parse_error
 
 
 [BASIC]
@@ -197,8 +207,7 @@ good-names=i,
            k,
            ex,
            Run,
-           _,
-           np
+           _
 
 # Good variable names regexes, separated by a comma. If names match any regex,
 # they will always be accepted
@@ -252,7 +261,7 @@ variable-naming-style=snake_case
 [FORMAT]
 
 # Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
-expected-line-ending-format=
+expected-line-ending-format=LF
 
 # Regexp for a line that is allowed to be longer than the limit.
 ignore-long-lines=^\s*(# )?<?https?://\S+>?$
@@ -302,14 +311,17 @@ notes=FIXME,
 
 [SIMILARITIES]
 
-# Ignore comments when computing similarities.
+# Comments are removed from the similarity computation
 ignore-comments=yes
 
-# Ignore docstrings when computing similarities.
+# Docstrings are removed from the similarity computation
 ignore-docstrings=yes
 
-# Ignore imports when computing similarities.
+# Imports are removed from the similarity computation
 ignore-imports=no
+
+# Signatures are removed from the similarity computation
+ignore-signatures=no
 
 # Minimum lines number of a similarity.
 min-similarity-lines=4
@@ -322,6 +334,10 @@ max-spelling-suggestions=4
 
 # Spelling dictionary name. Available dictionaries: en_US (hunspell).
 spelling-dict=
+
+# List of comma separated words that should be considered directives if they
+# appear and the beginning of a comment and should not be checked.
+spelling-ignore-comment-directives=fmt: on,fmt: off,noqa:,noqa,nosec,isort:skip,mypy:
 
 # List of comma separated words that should not be checked.
 spelling-ignore-words=
@@ -358,7 +374,7 @@ contextmanager-decorators=contextlib.contextmanager
 generated-members=
 
 # Tells whether missing members accessed in mixin class should be ignored. A
-# mixin class is detected if its name ends with "mixin" (case insensitive).
+# class is considered mixin if its name matches the mixin-class-rgx option.
 ignore-mixin-members=yes
 
 # Tells whether to warn about missing members when the owner of the attribute
@@ -395,6 +411,10 @@ missing-member-hint-distance=1
 # The total number of similar names that should be taken in consideration when
 # showing a hint for a missing member.
 missing-member-max-choices=1
+
+# Regex pattern to define which classes are considered mixins ignore-mixin-
+# members is set to 'yes'
+mixin-class-rgx=.*[Mm]ixin
 
 # List of decorators that change the signature of a decorated function.
 signature-mutators=
@@ -461,6 +481,14 @@ valid-metaclass-classmethod-first-arg=cls
 
 [DESIGN]
 
+# List of regular expressions of class ancestor names to ignore when counting
+# public methods (see R0903)
+exclude-too-few-public-methods=
+
+# List of qualified class names to ignore when counting class parents (see
+# R0901)
+ignored-parents=
+
 # Maximum number of arguments for function / method.
 max-args=12
 
@@ -480,11 +508,7 @@ max-locals=30
 max-parents=7
 
 # Maximum number of public methods for a class (see R0904).
-<<<<<<< HEAD
-max-public-methods=135
-=======
 max-public-methods=140
->>>>>>> 49c91ba8 (GUI: move Application class to separate file)
 
 # Maximum number of return / yield for function / method body.
 max-returns=12
@@ -511,7 +535,7 @@ allow-wildcard-with-all=no
 analyse-fallback-blocks=no
 
 # Deprecated modules which should not be used, separated by a comma.
-deprecated-modules=optparse,tkinter.tix
+deprecated-modules=
 
 # Output a graph (.gv or any supported image format) of external dependencies
 # to the given file (report RP0402 must not be disabled).

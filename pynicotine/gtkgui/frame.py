@@ -84,7 +84,7 @@ class NicotineFrame(UserInterface):
             self.init_exception_handler()
 
         self.application = application
-        self.core = self.np = core
+        self.core = self.np = core  # pylint:disable=invalid-name
         self.start_hidden = start_hidden
         self.ci_mode = ci_mode
         self.current_page_id = ""
