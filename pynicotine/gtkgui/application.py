@@ -59,8 +59,12 @@ class Application(Gtk.Application):
         self.frame.on_startup()
 
     def do_activate(self):  # pylint:disable=arguments-differ
-        self.frame.on_activate()
+        if self.frame:
+            self.frame.on_activate()
 
     def do_shutdown(self):  # pylint:disable=arguments-differ
-        self.frame.on_shutdown()
+
+        if self.frame:
+            self.frame.on_shutdown()
+
         Gtk.Application.do_shutdown(self)
