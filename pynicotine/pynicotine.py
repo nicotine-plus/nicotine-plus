@@ -295,7 +295,8 @@ class NicotineCore:
         if self.shares:
             self.shares.quit()
 
-        self.ui_callback.quit()
+        if self.ui_callback:
+            self.ui_callback.quit()
 
         log.add(_("Quit %(program)s %(version)s, %(status)s!"), {
             "program": config.application_name,
