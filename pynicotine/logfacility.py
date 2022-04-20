@@ -16,9 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import io
 import os
-import sys
 import time
 
 from pynicotine.config import config
@@ -27,10 +25,6 @@ from pynicotine.config import config
 class Logger:
 
     def __init__(self):
-
-        # Always use UTF-8 for print()
-        if sys.stdout is not None:
-            sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8", line_buffering=True)
 
         self.listeners = set()
         self.log_levels = None
